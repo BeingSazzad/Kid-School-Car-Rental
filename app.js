@@ -15,13 +15,14 @@ const screens = [
   'home'
 ];
 
-let currentScreen = 'splash';
-
 // Navigation router
 window.navigateTo = function(screenName) {
   if (!screens.includes(screenName)) return;
 
   currentScreen = screenName;
+  if (window.location.hash !== `#${screenName}`) {
+    window.location.hash = screenName;
+  }
 
   // Hide all screens, show target screen
   document.querySelectorAll('.screen-view').forEach(el => {
@@ -31,16 +32,8 @@ window.navigateTo = function(screenName) {
   const targetEl = document.getElementById(`screen-${screenName}`);
   if (targetEl) {
     targetEl.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
-
-  // Update desktop showcase tabs
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    if (btn.dataset.screen === screenName) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
 
   // Screen specific triggers
   if (screenName === 'authSuccess') {
@@ -50,12 +43,19 @@ window.navigateTo = function(screenName) {
   }
 };
 
-// Desktop tabs click handling
-document.getElementById('screenTabs')?.addEventListener('click', (e) => {
-  const btn = e.target.closest('.tab-btn');
-  if (btn && btn.dataset.screen) {
-    window.navigateTo(btn.dataset.screen);
+// Listen for browser hash changes (e.g. back button or manual hash change)
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.replace('#', '');
+  if (hash && screens.includes(hash) && hash !== currentScreen) {
+    window.navigateTo(hash);
   }
+});
+
+// Set initial screen: defaults to home so user immediately sees home screen
+window.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash ? window.location.hash.replace('#', '') : '';
+  const initial = (hash && screens.includes(hash)) ? hash : 'home';
+  window.navigateTo(initial);
 });
 
 // OTP Input Logic

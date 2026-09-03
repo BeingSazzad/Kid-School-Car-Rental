@@ -17,29 +17,8 @@
 </head>
 <body>
 
-  <!-- Screen Switcher Navigation Bar (Desktop Showcase) -->
-  <header class="showcase-nav">
-    <div class="nav-brand">
-      <img src="/assets/logo.png" alt="Logo" class="nav-logo" />
-      <span class="nav-title">Home2School Figma Clone</span>
-    </div>
-    <nav class="screen-tabs" id="screenTabs">
-      <button class="tab-btn active" data-screen="splash">Splash</button>
-      <button class="tab-btn" data-screen="onboarding1">Onboard 1</button>
-      <button class="tab-btn" data-screen="onboarding2">Onboard 2</button>
-      <button class="tab-btn" data-screen="onboarding3">Onboard 3</button>
-      <button class="tab-btn" data-screen="authWelcome">Welcome</button>
-      <button class="tab-btn" data-screen="authOtp">OTP</button>
-      <button class="tab-btn" data-screen="authProfile">Profile</button>
-      <button class="tab-btn" data-screen="authPhoto">Photo</button>
-      <button class="tab-btn" data-screen="authSuccess">Success</button>
-      <button class="tab-btn highlight" data-screen="home">Home</button>
-    </nav>
-  </header>
-
-  <!-- Centered 430px Mobile Device Container -->
-  <main class="device-wrapper">
-    <div class="device-shell" id="appShell">
+  <!-- Centered 430px Mobile Container -->
+  <main class="app-screen-container" id="appShell">
 
       <!-- ================= 1. SPLASH SCREEN ================= -->
       <section class="screen-view active" id="screen-splash" style="background-color: var(--color-brand-navy);">
@@ -474,14 +453,7 @@
 
           <!-- Hero Promo Card: Safe Ride / Brighter Future -->
           <div class="home-hero-card">
-            <img src="/assets/home_van_banner.jpg" alt="School Van" class="hero-card-bg-img" />
-            <div class="hero-card-scrim">
-              <div class="hero-card-texts">
-                <h3 class="hero-line-navy">Safe Ride</h3>
-                <h3 class="hero-line-orange">Brighter Future</h3>
-                <p class="hero-subtext">Trusted school transportation for your child's everyday journey</p>
-              </div>
-            </div>
+            <img src="/assets/home_hero_card.png" alt="Safe Ride - Brighter Future" class="hero-card-full-img" />
           </div>
 
           <!-- Quick Actions Section -->
@@ -602,8 +574,6 @@
 
         <div class="home-indicator"></div>
       </section>
-
-    </div>
   </main>
 
   <script src="/app.js"></script>
