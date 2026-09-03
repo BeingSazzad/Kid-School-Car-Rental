@@ -2668,50 +2668,87 @@
       </div>
 
       <div class="screen-scroll-body">
-        <div style="display: flex; flex-direction: column; align-items: center; margin: 10px 0 16px;">
+        <!-- Avatar Profile Hero -->
+        <div style="display: flex; flex-direction: column; align-items: center; margin: 8px 0 14px;">
           <div style="position: relative;">
-            <div id="avatarPreviewContainer" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 3px solid var(--color-fade); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            <div id="avatarPreviewContainer" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12);">
               <img src="/assets/avatar_john.png" alt="Sadia Khan" style="width:100%;height:100%;object-fit:cover;" />
             </div>
-            <button onclick="triggerPhotoUpload()" style="position: absolute; bottom: 0; right: 0; background: var(--color-primary); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <button onclick="triggerPhotoUpload()" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-primary); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
               <i data-lucide="camera" style="width:13px;height:13px;"></i>
             </button>
           </div>
           <input type="file" id="photoFileInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)" />
-          <button onclick="triggerPhotoUpload()" style="background: none; border: none; color: var(--color-primary); font-size: 13px; font-weight: 700; margin-top: 8px; cursor: pointer;">Change Photo</button>
+          <div style="font-size: 11.5px; font-weight: 700; color: #1D4ED8; background: #EFF6FF; padding: 2px 10px; border-radius: 99px; margin-top: 8px;">Verified Parent • 3 Children</div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Full Legal Name</label>
-          <input type="text" class="form-input" id="parentProfileName" value="Sadia Khan" />
+        <!-- Section 1: Guardian Identity -->
+        <div class="profile-form-section-card">
+          <div class="profile-section-title">
+            <i data-lucide="user-check" style="width:14px;height:14px;"></i>
+            <span>Guardian Identity</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Full Legal Name</label>
+            <div class="input-box-wrapper">
+              <i data-lucide="user" class="input-box-icon"></i>
+              <input type="text" class="form-input" id="parentProfileName" value="Sadia Khan" placeholder="Your full legal name" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Relationship to Children</label>
+            <div class="input-box-wrapper">
+              <i data-lucide="heart" class="input-box-icon"></i>
+              <select class="form-input" id="parentProfileRelation" style="cursor: pointer;">
+                <option value="Mother" selected>Mother</option>
+                <option value="Father">Father</option>
+                <option value="Guardian">Legal Guardian</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Primary Mobile Number (Verified)</label>
-          <input type="tel" class="form-input" id="parentProfilePhone" value="+1 (416) 555-0192" />
+        <!-- Section 2: Contact & Pickup Details -->
+        <div class="profile-form-section-card">
+          <div class="profile-section-title">
+            <i data-lucide="map-pin" style="width:14px;height:14px;"></i>
+            <span>Contact &amp; Commute Coordinates</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <span>Primary Mobile Number</span>
+              <span style="color:#16A34A;font-size:10.5px;">✓ Verified</span>
+            </label>
+            <div class="input-box-wrapper">
+              <i data-lucide="phone" class="input-box-icon"></i>
+              <input type="tel" class="form-input" id="parentProfilePhone" value="+1 (416) 555-0192" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-box-wrapper">
+              <i data-lucide="mail" class="input-box-icon"></i>
+              <input type="email" class="form-input" id="parentProfileEmail" value="sadia.khan@example.com" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Primary Home Address (Pickup)</label>
+            <div class="input-box-wrapper">
+              <i data-lucide="home" class="input-box-icon"></i>
+              <input type="text" class="form-input" id="parentProfileAddress" value="12 Elm Street, Toronto, ON" />
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" id="parentProfileEmail" value="sadia.khan@example.com" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Primary Home Address</label>
-          <input type="text" class="form-input" id="parentProfileAddress" value="12 Elm Street, Toronto, ON" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Relationship to Children</label>
-          <select class="form-input" id="parentProfileRelation" style="height: 48px;">
-            <option value="Mother" selected>Mother</option>
-            <option value="Father">Father</option>
-            <option value="Guardian">Legal Guardian</option>
-          </select>
-        </div>
-
-        <div style="margin-top: 14px; margin-bottom: 20px;">
-          <button class="btn-primary" onclick="savePersonalInfo()">Save Changes</button>
+        <!-- Save Action -->
+        <div style="margin-top: 10px; margin-bottom: 24px;">
+          <button class="btn-primary" onclick="savePersonalInfo()">Save Profile Changes</button>
+          <p style="text-align: center; font-size: 11.5px; color: #94A3B8; margin-top: 8px;">🔒 Data securely synced with verified driver handoffs only.</p>
         </div>
       </div>
 
