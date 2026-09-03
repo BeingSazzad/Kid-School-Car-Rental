@@ -2686,62 +2686,50 @@
         <button onclick="markNotificationsAsRead()" style="background:none;border:none;color:var(--color-primary);font-size:12.5px;font-weight:700;cursor:pointer;">Mark Read</button>
       </div>
 
-      <div class="screen-scroll-body">
-        <div class="filters-scroll-bar" style="margin-bottom: 4px;">
-          <button class="filter-chip-btn active" onclick="filterNotifications('all', this)">All (4)</button>
-          <button class="filter-chip-btn" onclick="filterNotifications('trip', this)">Trips</button>
-          <button class="filter-chip-btn" onclick="filterNotifications('safety', this)">Safety</button>
-        </div>
-
-        <div class="notification-card unread" data-category="trip" onclick="navigateTo('tracking')">
-          <div class="notif-icon-circle blue">
-            <i data-lucide="navigation"></i>
-          </div>
-          <div class="notif-content-block">
-            <div class="notif-title-row">
-              <span class="notif-title-text">Driver 5 Mins Away</span>
-              <span class="notif-time-text">Just now</span>
+      <div class="screen-scroll-body" style="padding-top: 8px;">
+        <div class="notifications-feed-list">
+          <div class="notification-card unread" onclick="navigateTo('tracking')">
+            <span class="notif-indicator-dot"></span>
+            <div class="notif-content-block">
+              <div class="notif-title-row">
+                <span class="notif-title-text">Driver 5 Mins Away</span>
+                <span class="notif-time-text">Just now</span>
+              </div>
+              <p class="notif-desc-text">Tariq Ahmed is approaching 12 Elm Street for morning school pickup.</p>
             </div>
-            <p class="notif-desc-text">Tariq Ahmed is approaching 12 Elm Street for morning school pickup.</p>
           </div>
-        </div>
 
-        <div class="notification-card unread" data-category="trip" onclick="navigateTo('bookings')">
-          <div class="notif-icon-circle green">
-            <i data-lucide="calendar-check"></i>
-          </div>
-          <div class="notif-content-block">
-            <div class="notif-title-row">
-              <span class="notif-title-text">Schedule Confirmed</span>
-              <span class="notif-time-text">1 hr ago</span>
+          <div class="notification-card unread" onclick="navigateTo('bookings')">
+            <span class="notif-indicator-dot"></span>
+            <div class="notif-content-block">
+              <div class="notif-title-row">
+                <span class="notif-title-text">Schedule Confirmed</span>
+                <span class="notif-time-text">1 hr ago</span>
+              </div>
+              <p class="notif-desc-text">Recurring school commute for Arman &amp; Emma confirmed for next week.</p>
             </div>
-            <p class="notif-desc-text">Recurring school commute for Arman & Emma confirmed for next week.</p>
           </div>
-        </div>
 
-        <div class="notification-card" data-category="safety" onclick="navigateTo('profileEmergency')">
-          <div class="notif-icon-circle orange">
-            <i data-lucide="shield-check"></i>
-          </div>
-          <div class="notif-content-block">
-            <div class="notif-title-row">
-              <span class="notif-title-text">Safety Protocol Active</span>
-              <span class="notif-time-text">Yesterday</span>
+          <div class="notification-card" onclick="navigateTo('profileEmergency')">
+            <span class="notif-indicator-dot"></span>
+            <div class="notif-content-block">
+              <div class="notif-title-row">
+                <span class="notif-title-text">Safety Protocol Active</span>
+                <span class="notif-time-text">Yesterday</span>
+              </div>
+              <p class="notif-desc-text">All 3 emergency safety contacts verified and synced with school dispatch.</p>
             </div>
-            <p class="notif-desc-text">All 3 emergency safety contacts verified and synced with school dispatch.</p>
           </div>
-        </div>
 
-        <div class="notification-card" data-category="trip" onclick="navigateTo('rating')">
-          <div class="notif-icon-circle purple">
-            <i data-lucide="star"></i>
-          </div>
-          <div class="notif-content-block">
-            <div class="notif-title-row">
-              <span class="notif-title-text">Rate Your Last Ride</span>
-              <span class="notif-time-text">May 21</span>
+          <div class="notification-card" onclick="navigateTo('rating')">
+            <span class="notif-indicator-dot"></span>
+            <div class="notif-content-block">
+              <div class="notif-title-row">
+                <span class="notif-title-text">Rate Your Last Ride</span>
+                <span class="notif-time-text">May 21</span>
+              </div>
+              <p class="notif-desc-text">Help maintain high safety standards by leaving feedback for Tariq Ahmed.</p>
             </div>
-            <p class="notif-desc-text">Help maintain high safety standards by leaving feedback for Tariq Ahmed.</p>
           </div>
         </div>
       </div>
@@ -3239,11 +3227,11 @@
             Home2School operates strictly under verified guardian custody transfer protocols. Drivers and walking escorts are mandated to verify child identity and hand off minors only to certified school staff or verified parents.
           </p>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>Verified Guardian Sign-off at school gates.</span>
           </div>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>Real-time photo verification upon student pickup.</span>
           </div>
         </div>
@@ -3257,11 +3245,11 @@
             Recurring subscriptions can be cancelled or paused with 24-hour advance notice before the scheduled school commute week. Unused days are credited immediately back to your in-app wallet.
           </p>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>Zero penalty cancellation up to 24h prior.</span>
           </div>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>In-App Wallet credits never expire.</span>
           </div>
         </div>
@@ -3275,11 +3263,11 @@
             Student real-time telemetry and geofencing coordinates are encrypted end-to-end (AES-256) and are accessible only to verified parents and emergency dispatch during active trips. Data is purged after 30 days.
           </p>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>AES-256 bank-grade encrypted location feeds.</span>
           </div>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>Automated 30-day telemetry purging cycle.</span>
           </div>
         </div>
@@ -3388,11 +3376,11 @@
             We hold child privacy to the highest global standards. Photos, names, and school rosters are never shared with third parties or advertisers. All driver access to minor data is strictly temporary and locked during active commute hours.
           </p>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>No commercial advertising or data broker sharing.</span>
           </div>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>Parent custody phone numbers are masked with secure proxy numbers.</span>
           </div>
         </div>
@@ -3406,11 +3394,11 @@
             Live route telemetry is encrypted in transit and at rest using AES-256 standards. Location streaming is enabled only from vehicle engine start until safe school hand-off verification.
           </p>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>Telemetry broadcast restricted to authorized guardians.</span>
           </div>
           <div class="legal-point-row">
-            <i data-lucide="check-circle-2"></i>
+            <span class="legal-bullet-dot"></span>
             <span>Automated 30-day deletion cycle for historic route breadcrumbs.</span>
           </div>
         </div>
