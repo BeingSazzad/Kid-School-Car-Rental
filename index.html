@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Home2School — Child Transportation & Car Booking</title>
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  
+  <!-- Google Fonts: Manrope (400, 500, 600, 700, 800) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/style.css" />
+  <!-- Canvas Confetti for Celebration screen -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Screen Switcher Navigation Bar (Desktop Showcase) -->
+  <header class="showcase-nav">
+    <div class="nav-brand">
+      <img src="/assets/logo.png" alt="Logo" class="nav-logo" />
+      <span class="nav-title">Home2School Figma Clone</span>
+    </div>
+    <nav class="screen-tabs" id="screenTabs">
+      <button class="tab-btn active" data-screen="splash">Splash</button>
+      <button class="tab-btn" data-screen="onboarding1">Onboard 1</button>
+      <button class="tab-btn" data-screen="onboarding2">Onboard 2</button>
+      <button class="tab-btn" data-screen="onboarding3">Onboard 3</button>
+      <button class="tab-btn" data-screen="authWelcome">Welcome</button>
+      <button class="tab-btn" data-screen="authOtp">OTP</button>
+      <button class="tab-btn" data-screen="authProfile">Profile</button>
+      <button class="tab-btn" data-screen="authPhoto">Photo</button>
+      <button class="tab-btn" data-screen="authSuccess">Success</button>
+      <button class="tab-btn highlight" data-screen="home">Home</button>
+    </nav>
+  </header>
+
+  <!-- Centered 430px Mobile Device Container -->
+  <main class="device-wrapper">
+    <div class="device-shell" id="appShell">
+
+      <!-- ================= 1. SPLASH SCREEN ================= -->
+      <section class="screen-view active" id="screen-splash" style="background-color: var(--color-brand-navy);">
+        <div class="status-bar light">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <div class="splash-body" onclick="navigateTo('onboarding1')">
+          <div class="splash-logo-container pulse-animation">
+            <img src="/assets/logo.png" alt="Home2School Logo" class="splash-logo" />
+          </div>
+          <span class="splash-hint">Tap anywhere to enter</span>
+        </div>
+
+        <div class="home-indicator light"></div>
+      </section>
+
+
+      <!-- ================= 2. ONBOARDING 1: VERIFIED & TRUSTED ================= -->
+      <section class="screen-view" id="screen-onboarding1">
+        <div class="status-bar light">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <div class="onboarding-bg" style="background-image: url('/assets/onboarding1.jpg');">
+          <div class="gradient-scrim-top"></div>
+          <div class="gradient-scrim-bottom"></div>
+        </div>
+
+        <div class="onboarding-content">
+          <h1 class="onboarding-title">Verified &amp; Trusted</h1>
+          <p class="onboarding-desc">All providers are background verified and rated by parents like you.</p>
+
+          <div class="onboarding-controls">
+            <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
+            <div class="pagination-dots">
+              <span class="dot active"></span>
+              <span class="dot" onclick="navigateTo('onboarding2')"></span>
+              <span class="dot" onclick="navigateTo('onboarding3')"></span>
+            </div>
+            <button class="btn-circle-orange" onclick="navigateTo('onboarding2')" aria-label="Next">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="home-indicator light"></div>
+      </section>
+
+
+      <!-- ================= 3. ONBOARDING 2: REAL-TIME TRACKING ================= -->
+      <section class="screen-view" id="screen-onboarding2">
+        <div class="status-bar light">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <div class="onboarding-bg" style="background-image: url('/assets/onboarding2.jpg');">
+          <div class="gradient-scrim-top"></div>
+          <div class="gradient-scrim-bottom"></div>
+        </div>
+
+        <div class="onboarding-content">
+          <h1 class="onboarding-title">Real-time Tracking</h1>
+          <p class="onboarding-desc">Track your child's trip in real-time and get instant updates.</p>
+
+          <div class="onboarding-controls">
+            <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
+            <div class="pagination-dots">
+              <span class="dot" onclick="navigateTo('onboarding1')"></span>
+              <span class="dot active"></span>
+              <span class="dot" onclick="navigateTo('onboarding3')"></span>
+            </div>
+            <button class="btn-circle-orange" onclick="navigateTo('onboarding3')" aria-label="Next">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="home-indicator light"></div>
+      </section>
+
+
+      <!-- ================= 4. ONBOARDING 3: STAY CONNECTED ================= -->
+      <section class="screen-view" id="screen-onboarding3">
+        <div class="status-bar light">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <div class="onboarding-bg" style="background-image: url('/assets/onboarding3.jpg');">
+          <div class="gradient-scrim-top"></div>
+          <div class="gradient-scrim-bottom"></div>
+        </div>
+
+        <div class="onboarding-content">
+          <h1 class="onboarding-title">Stay Connected</h1>
+          <p class="onboarding-desc">Communicate with providers and get updates at every step of the journey.</p>
+
+          <div class="onboarding-controls">
+            <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
+            <div class="pagination-dots">
+              <span class="dot" onclick="navigateTo('onboarding1')"></span>
+              <span class="dot" onclick="navigateTo('onboarding2')"></span>
+              <span class="dot active"></span>
+            </div>
+            <button class="btn-circle-orange" onclick="navigateTo('authWelcome')" aria-label="Get Started">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="home-indicator light"></div>
+      </section>
+
+
+      <!-- ================= 5. AUTH 1: WELCOME & PHONE ================= -->
+      <section class="screen-view" id="screen-authWelcome" style="background-color: #FFFFFF;">
+        <div class="status-bar dark">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <!-- Top Car Image with Wave -->
+        <div class="auth-hero-container">
+          <img src="/assets/auth_hero.jpg" alt="School Car Ride" class="auth-hero-img" />
+          <svg class="wave-divider" viewBox="0 0 430 36" fill="none">
+            <path d="M0 36H430V15C340 32 260 2 170 12C95 20 40 32 0 15V36Z" fill="#FFFFFF" />
+          </svg>
+        </div>
+
+        <div class="auth-content">
+          <div>
+            <h1 class="welcome-heading">
+              Welcome to <span class="brand-text">Home2School</span> <span class="orange-heart">🧡</span>
+            </h1>
+            <p class="welcome-sub">Sign in or create your account using your mobile number.</p>
+
+            <!-- Phone Input Form -->
+            <form onsubmit="event.preventDefault(); navigateTo('authOtp');" class="phone-form">
+              <div class="phone-input-row">
+                <div class="country-picker">
+                  <span class="flag-icon">🇨🇦</span>
+                  <span class="country-code">+1</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <input type="tel" class="phone-text-field" placeholder="Enter mobile number" value="(416) 555-0192" required />
+              </div>
+
+              <!-- Action Button: 48px height, 18px extra bold -->
+              <button type="submit" class="btn-primary">Continue</button>
+
+              <div class="otp-hint-row">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>We'll send a one-time code to verify your number.</span>
+              </div>
+            </form>
+          </div>
+
+          <!-- Privacy Notice Card -->
+          <div class="privacy-card">
+            <div class="privacy-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+            </div>
+            <div class="privacy-text">
+              <h4>Your privacy is our priority</h4>
+              <p>Your number is secure and will never be shared.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-indicator"></div>
+      </section>
+
+
+      <!-- ================= 6. AUTH 2: OTP VERIFICATION ================= -->
+      <section class="screen-view" id="screen-authOtp" style="background-color: #FFFFFF;">
+        <div class="status-bar dark">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <div class="top-nav-bar">
+          <button class="back-btn" onclick="navigateTo('authWelcome')">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </div>
+
+        <div class="auth-subpage-content">
+          <h1 class="page-title">Verify Your Number</h1>
+          <p class="page-subtitle">Enter the 4-digit code sent to</p>
+          <p class="target-phone-text">+1 (416) *******2</p>
+
+          <!-- 4-digit OTP Boxes matching Figma (4, 8, 6, empty) -->
+          <div class="otp-inputs-grid">
+            <input type="text" maxlength="1" class="otp-box active" value="4" />
+            <input type="text" maxlength="1" class="otp-box active" value="8" />
+            <input type="text" maxlength="1" class="otp-box active" value="6" />
+            <input type="text" maxlength="1" class="otp-box" placeholder="" autofocus />
+          </div>
+
+          <div class="resend-block">
+            <span>Didn't receive code?</span>
+            <span class="countdown-text">Resend code in <strong>00:25</strong></span>
+          </div>
+
+          <div class="bottom-action-wrap">
+            <button class="btn-primary" onclick="navigateTo('authProfile')">Continue</button>
+          </div>
+        </div>
+
+        <div class="home-indicator"></div>
+      </section>
+
+
+      <!-- ================= 7. AUTH 3: PROFILE DETAILS ================= -->
+      <section class="screen-view" id="screen-authProfile" style="background-color: #FFFFFF;">
+        <div class="status-bar dark">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <div class="top-nav-bar">
+          <button class="back-btn" onclick="navigateTo('authOtp')">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </div>
+
+        <div class="auth-subpage-content">
+          <div class="text-center">
+            <h1 class="page-title">Let's get to know you</h1>
+            <p class="page-subtitle">Please provide your basic information</p>
+          </div>
+
+          <form onsubmit="event.preventDefault(); navigateTo('authPhoto');" class="profile-fields-form">
+            <!-- Full Name -->
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <div class="input-with-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <input type="text" class="form-input" placeholder="Enter your full name" value="Sadia Khan" required />
+              </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <div class="input-with-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <input type="email" class="form-input" placeholder="Enter your email address" value="sadia.khan@example.com" required />
+              </div>
+            </div>
+
+            <!-- Relationship -->
+            <div class="form-group">
+              <label class="form-label">Relationship</label>
+              <div class="select-wrapper">
+                <select class="form-select">
+                  <option value="Mother" selected>Mother</option>
+                  <option value="Father">Father</option>
+                  <option value="Guardian">Guardian</option>
+                  <option value="Grandparent">Grandparent</option>
+                </select>
+                <svg class="select-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+
+            <div class="bottom-action-wrap">
+              <button type="submit" class="btn-primary">Continue</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="home-indicator"></div>
+      </section>
+
+
+      <!-- ================= 8. AUTH 4: ADD PHOTO ================= -->
+      <section class="screen-view" id="screen-authPhoto" style="background-color: #FFFFFF;">
+        <div class="status-bar dark">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <div class="top-nav-bar">
+          <button class="back-btn" onclick="navigateTo('authProfile')">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </div>
+
+        <div class="auth-subpage-content">
+          <div class="text-center">
+            <h1 class="page-title">Add Your Photo</h1>
+            <p class="page-subtitle">Add a profile photo to personalize your account</p>
+          </div>
+
+          <div class="avatar-picker-wrap" onclick="triggerPhotoUpload()">
+            <div class="dashed-avatar-ring"></div>
+            <div class="inner-avatar-circle" id="avatarPreviewContainer">
+              <svg width="74" height="74" viewBox="0 0 24 24" fill="none" stroke="#1E293B" stroke-width="1.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <div class="camera-floating-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            </div>
+            <input type="file" id="photoFileInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)" />
+          </div>
+
+          <p class="change-later-note">You can change this later</p>
+
+          <div class="bottom-action-wrap">
+            <button class="btn-primary" onclick="navigateTo('authSuccess')">Continue</button>
+            <button class="btn-secondary-link" onclick="navigateTo('authSuccess')">Skip for now</button>
+          </div>
+        </div>
+
+        <div class="home-indicator"></div>
+      </section>
+
+
+      <!-- ================= 9. AUTH 5: SUCCESS CELEBRATION ================= -->
+      <section class="screen-view" id="screen-authSuccess" style="background-color: #FFFFFF;">
+        <div class="status-bar dark">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <div class="success-screen-body">
+          <div class="success-middle-content">
+            <!-- Confetti & Checkmark Graphic -->
+            <div class="confetti-badge-wrap">
+              <!-- Geometric confetti particles SVG -->
+              <svg class="confetti-particles-svg" viewBox="0 0 140 140" fill="none">
+                <rect x="70" y="8" width="4" height="12" rx="2" transform="rotate(15 70 8)" fill="#F36621" />
+                <circle cx="98" cy="20" r="3.5" fill="#3B82F6" />
+                <rect x="36" y="24" width="10" height="4" rx="2" transform="rotate(-30 36 24)" fill="#EAB308" />
+                <circle cx="16" cy="65" r="4" fill="#06B6D4" />
+                <rect x="22" y="86" width="12" height="4" rx="2" transform="rotate(25 22 86)" fill="#3B82F6" />
+                <circle cx="124" cy="68" r="3.5" fill="#8B5CF6" />
+                <rect x="114" y="92" width="10" height="4" rx="2" transform="rotate(-40 114 92)" fill="#F36621" />
+                <rect x="95" y="112" width="4" height="10" rx="2" transform="rotate(45 95 112)" fill="#8B5CF6" />
+                <circle cx="50" cy="115" r="3" fill="#EC4899" />
+              </svg>
+
+              <!-- Central Navy Checkmark Circle -->
+              <div class="navy-check-circle">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+
+            <h1 class="welcome-name-title">Welcome, Sadia!</h1>
+            <p class="account-created-sub">Your account has been created successfully.</p>
+          </div>
+
+          <div class="bottom-action-wrap">
+            <button class="btn-primary" onclick="navigateTo('home')">Get Started</button>
+          </div>
+        </div>
+
+        <div class="home-indicator"></div>
+      </section>
+
+
+      <!-- ================= 10. HOME SCREEN (NODE 21008-3626) ================= -->
+      <section class="screen-view" id="screen-home" style="background-color: #FFFFFF;">
+        <div class="status-bar dark">
+          <span class="sb-time">9:41</span>
+          <div class="sb-icons">
+            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+            <div class="battery-icon"><div class="battery-level"></div></div>
+          </div>
+        </div>
+
+        <!-- Scrollable Home Content -->
+        <div class="home-scroll-body">
+          <!-- Top Profile Header -->
+          <div class="home-header-row">
+            <div class="user-profile-group">
+              <div class="user-avatar-wrap">
+                <img src="/assets/avatar_john.png" alt="John Avatar" class="user-avatar-img" />
+              </div>
+              <div class="user-welcome-texts">
+                <h2 class="user-greeting">Hello, John 👋</h2>
+                <p class="user-question">Where would you like to go?</p>
+              </div>
+            </div>
+
+            <!-- Bell Button with Notification Dot -->
+            <button class="bell-btn" aria-label="Notifications">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span class="unread-badge-dot"></span>
+            </button>
+          </div>
+
+          <!-- Hero Promo Card: Safe Ride / Brighter Future -->
+          <div class="home-hero-card">
+            <img src="/assets/home_van_banner.jpg" alt="School Van" class="hero-card-bg-img" />
+            <div class="hero-card-scrim">
+              <div class="hero-card-texts">
+                <h3 class="hero-line-navy">Safe Ride</h3>
+                <h3 class="hero-line-orange">Brighter Future</h3>
+                <p class="hero-subtext">Trusted school transportation for your child's everyday journey</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Section -->
+          <div class="section-block">
+            <h3 class="section-heading">Quick Actions</h3>
+            <div class="quick-actions-grid">
+              <!-- Action 1: New Booking (Featured Navy Card) -->
+              <div class="action-card navy" onclick="alert('Booking flow triggered')">
+                <div class="action-icon-circle white-glass">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="12" y1="14" x2="12" y2="18"></line><line x1="10" y1="16" x2="14" y2="16"></line></svg>
+                </div>
+                <h4 class="card-title-white">New Booking</h4>
+                <p class="card-desc-white">Book a school trip</p>
+              </div>
+
+              <!-- Action 2: My Children -->
+              <div class="action-card light" onclick="alert('Children profiles triggered')">
+                <div class="action-icon-circle blue-tint">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                </div>
+                <h4 class="card-title-navy">My Children</h4>
+                <p class="card-desc-muted">Manage profiles</p>
+              </div>
+
+              <!-- Action 3: My Bookings -->
+              <div class="action-card light horizontal" onclick="alert('My bookings list triggered')">
+                <div class="action-icon-circle red-tint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+                <h4 class="card-title-navy">My Bookings</h4>
+              </div>
+
+              <!-- Action 4: Safety & Help -->
+              <div class="action-card light horizontal" onclick="alert('Safety and Help center triggered')">
+                <div class="action-icon-circle orange-tint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F36621" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                </div>
+                <h4 class="card-title-navy">Safety &amp; Help</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming Trips Section -->
+          <div class="section-block">
+            <div class="section-header-row">
+              <h3 class="section-heading">Upcoming Trips</h3>
+              <a href="#see-all" class="link-see-all">See All <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+            </div>
+
+            <!-- Trip Card -->
+            <div class="trip-card">
+              <div class="trip-card-top">
+                <!-- Date Box: May 22 Wed -->
+                <div class="date-badge-box">
+                  <span class="db-month">MAY</span>
+                  <span class="db-day">22</span>
+                  <span class="db-weekday">Wed</span>
+                </div>
+
+                <!-- Timeline Route Details -->
+                <div class="route-timeline">
+                  <!-- Drop-off Point -->
+                  <div class="timeline-stop">
+                    <span class="dot-marker green"></span>
+                    <div class="timeline-connector"></div>
+                    <div class="stop-texts">
+                      <div class="stop-time-title">
+                        <strong>07:45 AM</strong> <span class="type-pill">• Drop-off</span>
+                      </div>
+                      <div class="stop-location">Home <span class="arrow-sym">→</span> Dhanmondi Tutorial</div>
+                    </div>
+                  </div>
+
+                  <!-- Pick-up Point -->
+                  <div class="timeline-stop">
+                    <span class="dot-marker orange"></span>
+                    <div class="stop-texts">
+                      <div class="stop-time-title">
+                        <strong>01:15 PM</strong> <span class="type-pill">• Pick-up</span>
+                      </div>
+                      <div class="stop-location">Dhanmondi Tutorial <span class="arrow-sym">→</span> Home</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Meta Row -->
+              <div class="trip-card-footer">
+                <div class="repeat-info">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                  <span>Repeats: Mon, Tue, Wed, Thu, Sun</span>
+                </div>
+                <div class="both-way-badge">⇄ Both-way</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-tab-bar">
+          <button class="tab-item active">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>Home</span>
+          </button>
+          <button class="tab-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Trips</span>
+          </button>
+          <button class="tab-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Inbox</span>
+          </button>
+          <button class="tab-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>Profile</span>
+          </button>
+        </nav>
+
+        <div class="home-indicator"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
