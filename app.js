@@ -570,18 +570,28 @@ function renderBookingDetails(bookingId) {
   // Children passengers
   const passWrap = document.getElementById('detailPassengersWrap');
   if (passWrap) {
-    passWrap.innerHTML = children.map(c => `
-      <div style="display:flex; align-items:center; justify-content:space-between; padding: 6px 0;">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <img src="/assets/avatar_john.png" alt="${c.name}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;" />
-          <div>
-            <div style="font-size:14px;font-weight:800;color:var(--color-title);">${c.name}</div>
-            <div style="font-size:12px;color:var(--color-body);">${c.grade} • ${c.school}</div>
+    passWrap.innerHTML = children.map((c, idx) => {
+      const initials = c.name.split(' ').map(n => n[0]).join('');
+      const colorClass = c.id === 'arman' ? 'navy' : c.id === 'emma' ? 'blue' : 'orange';
+      return `
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; padding: 10px 0; ${idx < children.length - 1 ? 'border-bottom: 1px solid var(--color-stroke);' : ''}">
+          <div style="display:flex; align-items:flex-start; gap:12px;">
+            <div class="child-monogram-avatar ${colorClass}" style="width:38px; height:38px; font-size:13px; margin-top: 2px;">${initials}</div>
+            <div>
+              <div style="font-size:14px;font-weight:800;color:var(--color-title);">${c.name}</div>
+              <div style="font-size:12px;color:var(--color-body); margin-top: 2px;">${c.grade} • ${c.school}</div>
+              ${c.notes ? `
+                <div style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; color:var(--color-primary); background:var(--color-fade); padding:3px 9px; border-radius:6px; margin-top:6px; border:1px solid rgba(27,43,104,0.08); white-space:nowrap;">
+                  <i data-lucide="shield" style="width:12px;height:12px;color:var(--color-secondary);"></i>
+                  <span>${c.notes}</span>
+                </div>` : ''}
+            </div>
           </div>
+          <span style="font-size:11px; font-weight:700; color:#15803D; background:#F0FDF4; padding:3px 9px; border-radius:99px; border:1px solid #DCFCE7; white-space:nowrap; margin-top: 2px;">Confirmed</span>
         </div>
-        <span style="font-size:11.5px;background:#E2E8F0;padding:2px 8px;border-radius:6px;font-weight:700;">${c.notes}</span>
-      </div>
-    `).join('');
+      `;
+    }).join('');
+    if (window.lucide) window.lucide.createIcons();
   }
 
   // Route breakdown
