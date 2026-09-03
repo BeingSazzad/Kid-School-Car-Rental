@@ -1521,72 +1521,79 @@ svg.lucide {
   line-height: 1.4;
 }
 
-/* 4. State C: Trip In Progress Hero Card */
+/* 4. State C: Trip In Progress Hero Card (World-Class Redesign) */
 .active-trip-hero-card {
   background-color: #FFFFFF;
-  border-radius: var(--radius-lg);
-  border: 1.5px solid #F2600C;
-  box-shadow: 0 6px 20px rgba(242, 96, 12, 0.12);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-stroke);
+  box-shadow: 0 4px 20px rgba(27, 43, 104, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .active-trip-header {
-  background: linear-gradient(90deg, #1B2B68 0%, #263C8C 100%);
-  color: #FFFFFF;
-  padding: 12px 16px;
+  background-color: #FFFFFF;
+  padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid var(--color-stroke);
 }
 
 .live-pill-tag {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background-color: #F2600C;
-  color: #FFFFFF;
-  padding: 3px 8px;
+  gap: 7px;
+  background-color: #F0FDF4;
+  color: #15803D;
+  padding: 4px 11px;
   border-radius: var(--radius-pill);
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 800;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.03em;
+  border: 1px solid #DCFCE7;
 }
 
 .live-dot-pulse {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background-color: #FFFFFF;
-  animation: pulseLiveDot 1.4s infinite ease-in-out;
+  background-color: #16A34A;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+  animation: pulseLiveDot 1.6s infinite ease-in-out;
 }
 
 @keyframes pulseLiveDot {
   0% {
-    transform: scale(0.9);
-    opacity: 0.8;
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
   }
-
-  50% {
-    transform: scale(1.4);
-    opacity: 1;
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 5px rgba(22, 163, 74, 0);
   }
-
   100% {
-    transform: scale(0.9);
-    opacity: 0.8;
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
   }
 }
 
 .active-trip-eta-badge {
-  font-size: 13px;
-  font-weight: 800;
-  color: #FEF08A;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background-color: var(--color-fade);
+  padding: 4px 11px;
+  border-radius: var(--radius-pill);
 }
 
 .active-trip-body {
-  padding: 16px;
+  padding: 16px 18px 18px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -1601,90 +1608,178 @@ svg.lucide {
 .child-chip-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
-.child-avatar-sm {
-  width: 40px;
-  height: 40px;
+.child-avatar-cluster {
+  display: flex;
+  align-items: center;
+}
+
+.child-avatar-cluster .avatar-circle {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--color-secondary);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  font-weight: 800;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.child-avatar-cluster .avatar-circle.overlap {
+  margin-left: -12px;
+  background: linear-gradient(135deg, var(--color-secondary) 0%, #EA580C 100%);
 }
 
 .child-name-text {
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 800;
   color: var(--color-title);
+  letter-spacing: -0.1px;
 }
 
 .child-dest-text {
   font-size: 12px;
   color: var(--color-body);
+  margin-top: 2px;
 }
 
-/* Simulated Map Thumbnail */
+.status-chip-onboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* Realistic Sleek Map Preview Module */
 .map-preview-thumb {
-  height: 120px;
+  height: 128px;
   border-radius: var(--radius-md);
-  background: #E2E8F0;
+  background-color: #F8FAFC;
   position: relative;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border: 1px solid var(--color-stroke);
   cursor: pointer;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
-.map-bg-grid {
+.map-street-grid-layer {
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(circle at 50% 50%, #E0F2FE 0%, #BAE6FD 100%),
-    linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
-  background-size: 100% 100%, 20px 20px, 20px 20px;
+  background-image: 
+    linear-gradient(#E2E8F0 1px, transparent 1px),
+    linear-gradient(90deg, #E2E8F0 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.7;
+}
+
+.map-water-accent {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 90px;
+  height: 90px;
+  background-color: #E0F2FE;
+  border-radius: 50%;
+  opacity: 0.5;
 }
 
 .map-route-line-svg {
   position: absolute;
   width: 100%;
   height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.map-pin-marker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.map-pin-marker.start {
+  width: 22px;
+  height: 22px;
+  background-color: #10B981;
+  color: #FFFFFF;
+  top: 75px;
+  left: 24px;
+}
+
+.map-pin-marker.end {
+  width: 24px;
+  height: 24px;
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  top: 45px;
+  right: 24px;
 }
 
 .car-marker-animated {
   position: absolute;
   width: 32px;
   height: 32px;
-  background-color: var(--color-primary);
+  background-color: var(--color-secondary);
   color: #FFFFFF;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid #FFFFFF;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  top: 45%;
-  left: 45%;
-  animation: moveCarMarker 4s infinite alternate ease-in-out;
+  box-shadow: 0 4px 12px rgba(242, 96, 12, 0.35);
+  top: 32%;
+  left: 48%;
+  animation: moveCarSmooth 4s infinite alternate ease-in-out;
 }
 
-@keyframes moveCarMarker {
-  0% {
-    transform: translate(-10px, -5px);
-  }
-
-  100% {
-    transform: translate(15px, 10px);
-  }
+@keyframes moveCarSmooth {
+  0% { transform: translate(-12px, 12px); }
+  100% { transform: translate(14px, -8px); }
 }
 
+.map-overlay-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(27, 43, 104, 0.88);
+  backdrop-filter: blur(6px);
+  color: #FFFFFF;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.15s ease;
+}
+
+.map-preview-thumb:hover .map-overlay-badge {
+  background: var(--color-primary);
+}
+
+/* Driver Row and Actions */
 .active-driver-contact-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 10px;
+  padding-top: 12px;
   border-top: 1px solid var(--color-stroke);
 }
 
@@ -1695,10 +1790,11 @@ svg.lucide {
 }
 
 .driver-mini-avatar {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   object-fit: cover;
+  border: 1.5px solid var(--color-stroke);
 }
 
 .driver-mini-name {
@@ -1710,16 +1806,21 @@ svg.lucide {
 .driver-mini-sub {
   font-size: 11.5px;
   color: var(--color-body);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 1px;
 }
 
 .active-contact-buttons {
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 
 .btn-icon-contact {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1px solid var(--color-stroke);
   background-color: var(--color-fade);
@@ -1734,6 +1835,29 @@ svg.lucide {
 .btn-icon-contact:hover {
   background-color: #E2E8F0;
   color: var(--color-secondary);
+}
+
+.btn-track-action {
+  height: 36px;
+  padding: 0 14px;
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-family);
+  font-size: 12.5px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.18);
+}
+
+.btn-track-action:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
 }
 
 /* 5. Segmented Controls */
