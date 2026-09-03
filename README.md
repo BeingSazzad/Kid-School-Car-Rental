@@ -9,6 +9,17 @@ A pixel-faithful, responsive mobile web application for **Home2School**, reprodu
 
 ## 🎨 Global Design System Specifications
 
+### 🎯 Figma Color Palette Tokens
+| Token Name | Hex Code | Purpose & Usage |
+|---|---|---|
+| **Primary** | `#1B2B68` | Royal Navy for main action buttons (`48px`), active cards, branding |
+| **Secondary** | `#F2600C` | Vibrant Brand Orange for next buttons, badges, highlights, active states |
+| **Fade** | `#F0F3FA` | Soft background surface for inputs, cards, date blocks, chips |
+| **Title** | `#1A1D24` | Primary high-contrast text color for headings, titles, and labels |
+| **Body** | `#6B7280` | Muted neutral gray for secondary body copy, descriptions, subtext |
+| **Stroke** | `#ECECF0` | Clean subtle border color for inputs, card dividers, and outlines |
+
+### 📐 Layout & Typography Tokens
 | Token | Specification | Figma Value |
 |---|---|---|
 | **Reference Viewport** | 430 × 932 px | Centered desktop preview & responsive mobile |
@@ -16,8 +27,6 @@ A pixel-faithful, responsive mobile web application for **Home2School**, reprodu
 | **Typography** | Font Family | **Manrope** (Google Fonts: 400, 500, 600, 700, 800) |
 | **Action Buttons** | Height & Typography | **48 px height**, **18 px ExtraBold (font-weight 800)** |
 | **Border Radii** | Small / Medium / Large / Pill | `8px`, `12px`, `16px`, `9999px` |
-| **Brand Colors** | Deep Navy | `#1B2B68` (Splash) & `#1B2B68` (Primary Action & Card) |
-| **Accent Colors** | Vibrant Orange | `#F2600C` / `#F2600C` |
 | **Status Bar** | iOS Native | 9:41, Cellular, Wi-Fi, Battery |
 
 ---

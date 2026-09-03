@@ -4,11 +4,19 @@
    ========================================================== */
 
 :root {
-  /* Brand & Core Palette */
-  --color-brand-navy: #1B2B68;
-  --color-primary-navy: #1B2B68;
+  /* Figma Design System Core Tokens */
+  --color-primary: #1B2B68;
+  --color-secondary: #F2600C;
+  --color-fade: #F0F3FA;
+  --color-title: #1A1D24;
+  --color-body: #6B7280;
+  --color-stroke: #ECECF0;
+
+  /* Aliases & Semantic Mappings */
+  --color-brand-navy: var(--color-primary);
+  --color-primary-navy: var(--color-primary);
   --color-primary-hover: #263C8C;
-  --color-accent-orange: #F2600C;
+  --color-accent-orange: var(--color-secondary);
   --color-accent-orange-hover: #D85307;
   --color-accent-orange-light: #FFF4ED;
   --color-accent-blue: #0284C7;
@@ -18,14 +26,14 @@
 
   /* Neutrals & Surfaces */
   --color-bg-screen: #FFFFFF;
-  --color-bg-subtle: #F8FAFC;
-  --color-bg-input: #F8FAFC;
-  --color-border: #E2E8F0;
-  --color-border-focus: #1B2B68;
+  --color-bg-subtle: var(--color-fade);
+  --color-bg-input: var(--color-fade);
+  --color-border: var(--color-stroke);
+  --color-border-focus: var(--color-primary);
 
   /* Typography */
-  --color-text-main: #0F172A;
-  --color-text-muted: #64748B;
+  --color-text-main: var(--color-title);
+  --color-text-muted: var(--color-body);
   --color-text-light: #94A3B8;
   --color-text-white: #FFFFFF;
 
@@ -99,7 +107,7 @@ body {
 }
 
 .nav-title {
-  color: #F8FAFC;
+  color: #F0F3FA;
   font-size: 16px;
   font-weight: 800;
   letter-spacing: -0.2px;
@@ -225,7 +233,7 @@ body {
 }
 
 .status-bar.light { color: #FFFFFF; }
-.status-bar.dark { color: #0F172A; }
+.status-bar.dark { color: #1A1D24; }
 
 .sb-time { letter-spacing: -0.2px; }
 
@@ -294,7 +302,7 @@ body {
   width: 140px;
   height: 5px;
   border-radius: 100px;
-  background-color: #0F172A;
+  background-color: #1A1D24;
   z-index: 60;
   pointer-events: none;
 }
@@ -875,7 +883,7 @@ body {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: #E2E8F0;
+  background-color: #ECECF0;
   display: flex;
   align-items: center;
   justify-content: center;

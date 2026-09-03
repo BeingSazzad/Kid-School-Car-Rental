@@ -1,29 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Brand & Theme Colors */
-  --color-brand-navy: #1B2B68;
-  --color-primary-navy: #1B2B68;
-  --color-navy-hover: #17244a;
-  --color-accent-orange: #F2600C;
-  --color-accent-orange-hover: #e05512;
+  /* Figma Design System Core Tokens */
+  --color-primary: #1B2B68;
+  --color-secondary: #F2600C;
+  --color-fade: #F0F3FA;
+  --color-title: #1A1D24;
+  --color-body: #6B7280;
+  --color-stroke: #ECECF0;
+
+  /* Aliases & Semantic Mappings */
+  --color-brand-navy: var(--color-primary);
+  --color-primary-navy: var(--color-primary);
+  --color-navy-hover: #263C8C;
+  --color-accent-orange: var(--color-secondary);
+  --color-accent-orange-hover: #D85307;
   --color-accent-orange-light: #FFF4ED;
   --color-accent-blue: #0284C7;
-  --color-accent-blue-light: #E0F2FE;
+  --color-accent-blue-light: #EFF6FF;
   --color-success: #10B981;
   --color-success-light: #D1FAE5;
   
   /* Neutral / Surface */
   --color-bg-app: #FFFFFF;
-  --color-bg-subtle: #F8FAFC;
+  --color-bg-subtle: var(--color-fade);
   --color-bg-card: #FFFFFF;
-  --color-bg-input: #F8FAFC;
-  --color-border-subtle: #E2E8F0;
-  --color-border-focus: #1B2B68;
+  --color-bg-input: var(--color-fade);
+  --color-border-subtle: var(--color-stroke);
+  --color-border-focus: var(--color-primary);
 
   /* Typography Colors */
-  --color-text-main: #0F172A;
-  --color-text-muted: #64748B;
+  --color-text-main: var(--color-title);
+  --color-text-muted: var(--color-body);
   --color-text-light: #94A3B8;
   --color-text-white: #FFFFFF;
 
@@ -166,7 +174,7 @@ html, body {
 }
 
 .ios-status-bar.dark-text {
-  color: #0F172A;
+  color: #1A1D24;
 }
 
 .ios-status-bar.light-text {
@@ -192,7 +200,7 @@ html, body {
   width: 140px;
   height: 5px;
   border-radius: 100px;
-  background-color: #0F172A;
+  background-color: #1A1D24;
   z-index: 60;
   pointer-events: none;
 }
