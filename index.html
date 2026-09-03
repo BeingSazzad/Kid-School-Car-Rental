@@ -3438,66 +3438,73 @@
       </div>
 
       <div class="screen-scroll-body">
-        <!-- Safety Alert Callout -->
-        <div style="background-color: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius-md); padding: 12px 14px; display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
-          <i data-lucide="alert-triangle" style="width:20px;height:20px;color:#DC2626;flex-shrink:0;"></i>
-          <div style="font-size: 12.5px; color: #991B1B; line-height: 1.4;">
-            <strong>Immediate Safety Threat?</strong> If your child is in urgent danger, dial <strong>911</strong> first or call our 24/7 hotline <strong>1-800-KID-RIDE</strong>.
-          </div>
+        <!-- Safety Hotline Alert Pill -->
+        <div class="emergency-quick-alert">
+          <i data-lucide="phone-call" style="width:14px;height:14px;color:#DC2626;flex-shrink:0;"></i>
+          <span>Immediate danger? Call <strong>911</strong> or 24/7 Hotline <strong>1-800-KID-RIDE</strong></span>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Select Issue Category</label>
-          <input type="hidden" id="reportCategorySelect" value="Safety or Driving Concern" />
-          <div class="report-category-grid">
-            <button type="button" class="report-cat-btn active" onclick="selectReportCategory('Safety or Driving Concern', this)">
-              <div style="display:flex;align-items:center;gap:6px;">
-                <i data-lucide="shield-alert" style="width:16px;height:16px;color:#DC2626;"></i>
+        <div class="profile-form-section-card">
+          <div class="profile-section-title">
+            <i data-lucide="alert-circle"></i>
+            <span>Incident Details</span>
+          </div>
+
+          <!-- Category Pills -->
+          <div class="form-group">
+            <label class="form-label">Issue Category</label>
+            <input type="hidden" id="reportCategorySelect" value="Safety / Driving" />
+            <div class="report-chips-group">
+              <button type="button" class="report-cat-btn active" onclick="selectReportCategory('Safety / Driving', this)">
+                <i data-lucide="shield-alert"></i>
                 <span>Safety / Driving</span>
-              </div>
-              <small style="font-size:11px;color:#64748B;font-weight:400;">Speed, vehicle, behavior</small>
-            </button>
-            <button type="button" class="report-cat-btn" onclick="selectReportCategory('Driver Delay / Late Pickup', this)">
-              <div style="display:flex;align-items:center;gap:6px;">
-                <i data-lucide="clock" style="width:16px;height:16px;color:#D97706;"></i>
+              </button>
+              <button type="button" class="report-cat-btn" onclick="selectReportCategory('Driver Delay', this)">
+                <i data-lucide="clock"></i>
                 <span>Driver Delay</span>
-              </div>
-              <small style="font-size:11px;color:#64748B;font-weight:400;">Late arrival or no-show</small>
-            </button>
-            <button type="button" class="report-cat-btn" onclick="selectReportCategory('Lost Item in Vehicle', this)">
-              <div style="display:flex;align-items:center;gap:6px;">
-                <i data-lucide="briefcase" style="width:16px;height:16px;color:#2563EB;"></i>
+              </button>
+              <button type="button" class="report-cat-btn" onclick="selectReportCategory('Lost Item', this)">
+                <i data-lucide="briefcase"></i>
                 <span>Lost Item</span>
-              </div>
-              <small style="font-size:11px;color:#64748B;font-weight:400;">Bag, jacket, glasses</small>
-            </button>
-            <button type="button" class="report-cat-btn" onclick="selectReportCategory('Billing or Overcharge', this)">
-              <div style="display:flex;align-items:center;gap:6px;">
-                <i data-lucide="credit-card" style="width:16px;height:16px;color:#16A34A;"></i>
+              </button>
+              <button type="button" class="report-cat-btn" onclick="selectReportCategory('Billing Issue', this)">
+                <i data-lucide="credit-card"></i>
                 <span>Billing Issue</span>
-              </div>
-              <small style="font-size:11px;color:#64748B;font-weight:400;">Receipt, wallet discrepancy</small>
-            </button>
+              </button>
+            </div>
+          </div>
+
+          <!-- Related Trip Selector with icon & box -->
+          <div class="form-group">
+            <label class="form-label">Related Commute or Trip</label>
+            <div class="input-box-wrapper">
+              <i data-lucide="calendar" class="input-box-icon"></i>
+              <select class="form-input" id="reportTripSelect" style="cursor: pointer;">
+                <option value="today-morning">Today 07:30 AM • Tariq Ahmed (Arman &amp; Emma)</option>
+                <option value="yesterday-return">Yesterday 01:00 PM • Tariq Ahmed (Arman)</option>
+                <option value="general">General App / Service Inquiry</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Description Area with proper border & padding -->
+          <div class="form-group">
+            <label class="form-label">What Happened?</label>
+            <div class="textarea-box-wrapper">
+              <textarea class="form-textarea" id="reportDescriptionInput" rows="4" placeholder="Briefly describe what happened so dispatch can investigate..."></textarea>
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Related Child / Trip</label>
-          <select class="form-input" id="reportTripSelect" style="height: 48px;">
-            <option value="today-morning">Today Morning • Tariq Ahmed (Arman &amp; Emma)</option>
-            <option value="yesterday-return">Yesterday Return • Tariq Ahmed (Arman)</option>
-            <option value="general">General App / Service Inquiry</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Describe What Happened</label>
-          <textarea class="form-input" id="reportDescriptionInput" style="height: 100px; padding: 12px; resize: none; font-size: 13.5px;" placeholder="Please give as much detail as possible. Our safety dispatch investigates all reports immediately..."></textarea>
-        </div>
-
-        <div style="margin-top: 10px; margin-bottom: 24px;">
-          <button class="btn-primary" onclick="submitIssueReport()" style="background-color: #DC2626; border-color: #DC2626;">Submit Incident Report</button>
-          <p style="text-align: center; font-size: 11.5px; color: #94A3B8; margin-top: 8px;">A safety supervisor reviews every report in under 15 minutes.</p>
+        <div style="margin-top: 4px; margin-bottom: 20px;">
+          <button class="btn-primary" onclick="submitIssueReport()" style="width: 100%; box-shadow: var(--shadow-button);">
+            <span>Submit Incident Report</span>
+            <i data-lucide="send" style="width:14px;height:14px;display:inline-block;vertical-align:-1px;"></i>
+          </button>
+          <p style="text-align: center; font-size: 11.5px; color: var(--color-body); margin-top: 8px;">
+            <i data-lucide="clock" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;color:var(--color-primary);"></i>
+            A safety supervisor investigates and responds in under 15 minutes.
+          </p>
         </div>
       </div>
 
