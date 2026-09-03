@@ -77,8 +77,8 @@ export default function AuthWelcomeScreen({ onContinue }) {
               gap: '6px'
             }}>
               <span>Welcome to</span>
-              <span style={{ color: '#101935' }}>Home2School</span>
-              <span style={{ color: '#F36621', fontSize: '20px' }}>🧡</span>
+              <span style={{ color: '#1B2B68' }}>Home2School</span>
+              <span style={{ color: '#F2600C', fontSize: '20px' }}>🧡</span>
             </h1>
           </div>
 

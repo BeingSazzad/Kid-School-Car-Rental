@@ -111,7 +111,7 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
         <p style={{
           fontSize: '15px',
           fontWeight: 700,
-          color: '#101935',
+          color: '#1B2B68',
           marginBottom: '36px'
         }}>
           +1 (416) *******2
@@ -138,7 +138,7 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
                 width: '64px',
                 height: '68px',
                 borderRadius: '14px',
-                border: digit ? '2px solid #101935' : '1.5px solid #E2E8F0',
+                border: digit ? '2px solid #1B2B68' : '1.5px solid #E2E8F0',
                 backgroundColor: digit ? '#FFFFFF' : '#F8FAFC',
                 textAlign: 'center',
                 fontSize: '26px',
@@ -165,7 +165,7 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
           <span>Didn't receive code?</span>
           {countdown > 0 ? (
             <span style={{ fontWeight: 600, color: '#0F172A' }}>
-              Resend code in <strong style={{ color: '#101935' }}>00:{countdown < 10 ? `0${countdown}` : countdown}</strong>
+              Resend code in <strong style={{ color: '#1B2B68' }}>00:{countdown < 10 ? `0${countdown}` : countdown}</strong>
             </span>
           ) : (
             <button
@@ -173,7 +173,7 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#F36621',
+                color: '#F2600C',
                 fontWeight: 700,
                 fontSize: '14px',
                 cursor: 'pointer'

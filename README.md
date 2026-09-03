@@ -16,15 +16,15 @@ A pixel-faithful, responsive mobile web application for **Home2School**, reprodu
 | **Typography** | Font Family | **Manrope** (Google Fonts: 400, 500, 600, 700, 800) |
 | **Action Buttons** | Height & Typography | **48 px height**, **18 px ExtraBold (font-weight 800)** |
 | **Border Radii** | Small / Medium / Large / Pill | `8px`, `12px`, `16px`, `9999px` |
-| **Brand Colors** | Deep Navy | `#0D1945` (Splash) & `#101935` (Primary Action & Card) |
-| **Accent Colors** | Vibrant Orange | `#F36621` / `#FA5A1E` |
+| **Brand Colors** | Deep Navy | `#1B2B68` (Splash) & `#1B2B68` (Primary Action & Card) |
+| **Accent Colors** | Vibrant Orange | `#F2600C` / `#F2600C` |
 | **Status Bar** | iOS Native | 9:41, Cellular, Wi-Fi, Battery |
 
 ---
 
 ## 📱 Implemented Screens
 
-1. **Splash Screen**: Deep Navy branding (`#0D1945`), centered Home2School circular emblem with gentle pulse animation, tap-to-enter hint.
+1. **Splash Screen**: Deep Navy branding (`#1B2B68`), centered Home2School circular emblem with gentle pulse animation, tap-to-enter hint.
 2. **Onboarding 1 (Verified & Trusted)**: Authentic driver, parent and student photo, feature copy, 3-dot pagination, skip, circular orange next button.
 3. **Onboarding 2 (Real-time Tracking)**: 3D route map on smartphone visual, copy, pagination, orange arrow button.
 4. **Onboarding 3 (Stay Connected)**: Parent holding smartphone with live driver chat & pickup status chips ("Provider is on the way", "Ethan has been picked up", "Ethan has arrived at school").

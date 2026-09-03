@@ -107,7 +107,7 @@ export default function HomeScreen({ onNavigateAction }) {
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              backgroundColor: '#F36621',
+              backgroundColor: '#F2600C',
               border: '1.5px solid #FFFFFF'
             }} />
           </button>
@@ -149,7 +149,7 @@ export default function HomeScreen({ onNavigateAction }) {
               <h3 style={{
                 fontSize: '18px',
                 fontWeight: 800,
-                color: '#101935',
+                color: '#1B2B68',
                 lineHeight: '1.15'
               }}>
                 Safe Ride
@@ -157,7 +157,7 @@ export default function HomeScreen({ onNavigateAction }) {
               <h3 style={{
                 fontSize: '18px',
                 fontWeight: 800,
-                color: '#F36621',
+                color: '#F2600C',
                 lineHeight: '1.15',
                 marginBottom: '6px'
               }}>
@@ -195,7 +195,7 @@ export default function HomeScreen({ onNavigateAction }) {
             <div 
               onClick={() => onNavigateAction && onNavigateAction('New Booking')}
               style={{
-                backgroundColor: '#101935',
+                backgroundColor: '#1B2B68',
                 borderRadius: '16px',
                 padding: '16px 14px',
                 color: '#FFFFFF',
@@ -317,7 +317,7 @@ export default function HomeScreen({ onNavigateAction }) {
                 justifyContent: 'center',
                 flexShrink: 0
               }}>
-                <ShieldAlert size={20} color="#F36621" />
+                <ShieldAlert size={20} color="#F2600C" />
               </div>
               <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A' }}>
                 Safety & Help
@@ -429,7 +429,7 @@ export default function HomeScreen({ onNavigateAction }) {
                     width: '8px',
                     height: '8px',
                     borderRadius: '50%',
-                    backgroundColor: '#F36621',
+                    backgroundColor: '#F2600C',
                     marginTop: '5px',
                     flexShrink: 0
                   }} />
@@ -499,7 +499,7 @@ export default function HomeScreen({ onNavigateAction }) {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '3px',
-            color: activeTab === 'home' ? '#F36621' : '#94A3B8',
+            color: activeTab === 'home' ? '#F2600C' : '#94A3B8',
             cursor: 'pointer'
           }}
         >
@@ -516,7 +516,7 @@ export default function HomeScreen({ onNavigateAction }) {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '3px',
-            color: activeTab === 'trips' ? '#F36621' : '#94A3B8',
+            color: activeTab === 'trips' ? '#F2600C' : '#94A3B8',
             cursor: 'pointer'
           }}
         >
@@ -533,7 +533,7 @@ export default function HomeScreen({ onNavigateAction }) {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '3px',
-            color: activeTab === 'messages' ? '#F36621' : '#94A3B8',
+            color: activeTab === 'messages' ? '#F2600C' : '#94A3B8',
             cursor: 'pointer'
           }}
         >
@@ -550,7 +550,7 @@ export default function HomeScreen({ onNavigateAction }) {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '3px',
-            color: activeTab === 'profile' ? '#F36621' : '#94A3B8',
+            color: activeTab === 'profile' ? '#F2600C' : '#94A3B8',
             cursor: 'pointer'
           }}
         >

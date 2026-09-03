@@ -11,7 +11,7 @@ export default function AuthSuccessScreen({ userName = "Sadia", onGetStarted }) 
         particleCount: 80,
         spread: 70,
         origin: { y: 0.45 },
-        colors: ['#F36621', '#101935', '#0284C7', '#F59E0B', '#10B981']
+        colors: ['#F2600C', '#1B2B68', '#0284C7', '#F59E0B', '#10B981']
       });
     } catch {
       // safe fallback
@@ -59,14 +59,14 @@ export default function AuthSuccessScreen({ userName = "Sadia", onGetStarted }) 
             {/* Background confetti graphic particles */}
             <svg width="140" height="140" viewBox="0 0 140 140" fill="none" style={{ position: 'absolute', inset: 0 }}>
               {/* Top particles */}
-              <rect x="70" y="8" width="4" height="12" rx="2" transform="rotate(15 70 8)" fill="#F36621" />
+              <rect x="70" y="8" width="4" height="12" rx="2" transform="rotate(15 70 8)" fill="#F2600C" />
               <circle cx="98" cy="20" r="3.5" fill="#3B82F6" />
               <rect x="36" y="24" width="10" height="4" rx="2" transform="rotate(-30 36 24)" fill="#EAB308" />
               {/* Side particles */}
               <circle cx="16" cy="65" r="4" fill="#06B6D4" />
               <rect x="22" y="86" width="12" height="4" rx="2" transform="rotate(25 22 86)" fill="#3B82F6" />
               <circle cx="124" cy="68" r="3.5" fill="#8B5CF6" />
-              <rect x="114" y="92" width="10" height="4" rx="2" transform="rotate(-40 114 92)" fill="#F36621" />
+              <rect x="114" y="92" width="10" height="4" rx="2" transform="rotate(-40 114 92)" fill="#F2600C" />
               <rect x="95" y="112" width="4" height="10" rx="2" transform="rotate(45 95 112)" fill="#8B5CF6" />
               <circle cx="50" cy="115" r="3" fill="#EC4899" />
             </svg>
@@ -76,7 +76,7 @@ export default function AuthSuccessScreen({ userName = "Sadia", onGetStarted }) 
               width: '74px',
               height: '74px',
               borderRadius: '50%',
-              backgroundColor: '#101935',
+              backgroundColor: '#1B2B68',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

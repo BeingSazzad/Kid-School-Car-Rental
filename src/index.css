@@ -2,10 +2,10 @@
 
 :root {
   /* Brand & Theme Colors */
-  --color-brand-navy: #0D1945;
-  --color-primary-navy: #101935;
+  --color-brand-navy: #1B2B68;
+  --color-primary-navy: #1B2B68;
   --color-navy-hover: #17244a;
-  --color-accent-orange: #F36621;
+  --color-accent-orange: #F2600C;
   --color-accent-orange-hover: #e05512;
   --color-accent-orange-light: #FFF4ED;
   --color-accent-blue: #0284C7;
@@ -19,7 +19,7 @@
   --color-bg-card: #FFFFFF;
   --color-bg-input: #F8FAFC;
   --color-border-subtle: #E2E8F0;
-  --color-border-focus: #101935;
+  --color-border-focus: #1B2B68;
 
   /* Typography Colors */
   --color-text-main: #0F172A;
@@ -45,11 +45,11 @@
 
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 12px rgba(16, 25, 53, 0.06);
-  --shadow-lg: 0 10px 25px rgba(16, 25, 53, 0.09);
+  --shadow-md: 0 4px 12px rgba(27, 43, 104, 0.06);
+  --shadow-lg: 0 10px 25px rgba(27, 43, 104, 0.09);
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-button: 0 4px 12px rgba(16, 25, 53, 0.15);
-  --shadow-orange: 0 4px 14px rgba(243, 102, 33, 0.35);
+  --shadow-button: 0 4px 12px rgba(27, 43, 104, 0.15);
+  --shadow-orange: 0 4px 14px rgba(242, 96, 12, 0.35);
 
   /* Font Family */
   --font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -148,7 +148,7 @@ html, body {
   background: var(--color-accent-orange);
   color: #FFFFFF;
   border-color: var(--color-accent-orange);
-  box-shadow: 0 0 12px rgba(243, 102, 33, 0.4);
+  box-shadow: 0 0 12px rgba(242, 96, 12, 0.4);
 }
 
 /* Status Bar */
@@ -277,7 +277,7 @@ html, body {
 .input-field-container:focus-within {
   border-color: var(--color-primary-navy);
   background: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(16, 25, 53, 0.08);
+  box-shadow: 0 0 0 3px rgba(27, 43, 104, 0.08);
 }
 
 .input-text {

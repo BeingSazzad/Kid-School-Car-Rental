@@ -139,7 +139,7 @@ export default function AuthPhotoScreen({ onContinue, onSkip, onBack }) {
               width: '38px',
               height: '38px',
               borderRadius: '50%',
-              backgroundColor: '#101935',
+              backgroundColor: '#1B2B68',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
