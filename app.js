@@ -39,7 +39,9 @@ const screens = [
   'profilePayments',
   'faq',
   'legal',
-  'about'
+  'about',
+  'privacy',
+  'report'
 ];
 
 /* ==========================================================
@@ -1029,4 +1031,87 @@ window.toggleFaq = function (headerEl) {
     if (window.lucide) window.lucide.createIcons();
   }
 };
+
+window.filterFaqTopics = function (topic, btnEl) {
+  if (btnEl) {
+    const parent = btnEl.parentElement;
+    if (parent) {
+      parent.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+  }
+
+  const items = document.querySelectorAll('.faq-accordion-item');
+  const headers = document.querySelectorAll('.faq-topic-header');
+
+  items.forEach(item => {
+    if (topic === 'all' || item.dataset.topic === topic) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+
+  headers.forEach(header => {
+    if (topic === 'all' || header.dataset.topic === topic) {
+      header.style.display = 'flex';
+    } else {
+      header.style.display = 'none';
+    }
+  });
+};
+
+window.searchFaq = function (query) {
+  const q = (query || '').toLowerCase().trim();
+  const items = document.querySelectorAll('.faq-accordion-item');
+  const headers = document.querySelectorAll('.faq-topic-header');
+
+  if (!q) {
+    items.forEach(item => item.style.display = 'block');
+    headers.forEach(header => header.style.display = 'flex');
+    return;
+  }
+
+  headers.forEach(header => header.style.display = 'none');
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    if (text.includes(q)) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+};
+
+window.selectReportCategory = function (category, btnEl) {
+  if (btnEl) {
+    const parent = btnEl.parentElement;
+    if (parent) {
+      parent.querySelectorAll('.report-cat-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+  }
+  const select = document.getElementById('reportCategorySelect');
+  if (select) select.value = category;
+};
+
+window.submitIssueReport = function () {
+  const desc = document.getElementById('reportDescriptionInput')?.value?.trim();
+
+  if (!desc) {
+    alert('Please describe what happened so our dispatch team can investigate.');
+    return;
+  }
+
+  const ticketId = 'H2S-' + Math.floor(1000 + Math.random() * 9000);
+  alert(`✓ Incident report submitted successfully.\n\nTicket Reference: ${ticketId}\nOur Safety Operations & Dispatch team will investigate and follow up via phone/SMS within 15 minutes.`);
+
+  if (document.getElementById('reportDescriptionInput')) {
+    document.getElementById('reportDescriptionInput').value = '';
+  }
+
+  window.navigateTo('profile');
+};
+
+
 

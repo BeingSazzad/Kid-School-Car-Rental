@@ -2428,12 +2428,32 @@
             <span style="font-size: 13px; color: var(--color-body);">→</span>
           </div>
 
+          <div class="profile-menu-item" onclick="navigateTo('report')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap" style="color: #DC2626; background-color: #FEF2F2;">
+                <i data-lucide="alert-triangle"></i>
+              </div>
+              <span class="menu-title-text" style="color: #991B1B;">Report an Issue</span>
+            </div>
+            <span style="font-size: 11px; font-weight: 700; color: #DC2626; background: #FEF2F2; padding: 2px 8px; border-radius: 99px;">24/7 Priority</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="navigateTo('privacy')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="shield"></i>
+              </div>
+              <span class="menu-title-text">Privacy Policy</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-body);">→</span>
+          </div>
+
           <div class="profile-menu-item" onclick="navigateTo('legal')">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="file-text"></i>
               </div>
-              <span class="menu-title-text">Terms &amp; Privacy Policy</span>
+              <span class="menu-title-text">Terms of Service</span>
             </div>
             <span style="font-size: 13px; color: var(--color-body);">→</span>
           </div>
@@ -2955,48 +2975,97 @@
       </div>
 
       <div class="screen-scroll-body">
-        <div style="position: relative;">
-          <input type="text" class="form-input" placeholder="Search questions..." style="padding-left: 36px; height: 42px; border-radius: 99px;" />
-          <i data-lucide="search" style="position:absolute;left:12px;top:13px;width:16px;height:16px;color:#94A3B8;"></i>
+        <!-- Search Bar with Standard Minimal Style -->
+        <div style="position: relative; margin-bottom: 10px;">
+          <input type="text" class="form-input" oninput="searchFaq(this.value)" placeholder="Search questions or safety policies..." style="padding-left: 38px; height: 42px; border-radius: var(--radius-pill); background-color: var(--color-fade); border: 1px solid var(--color-stroke);" />
+          <i data-lucide="search" style="position:absolute;left:14px;top:13px;width:16px;height:16px;color:#64748B;"></i>
         </div>
 
-        <div class="faq-accordion-item open">
-          <div class="faq-header-row" onclick="toggleFaq(this)">
-            <span class="faq-question-text">How are drivers background-checked?</span>
-            <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+        <!-- Clean Topic Filters (Simple & Focused) -->
+        <div class="filters-scroll-bar" style="margin-bottom: 14px;">
+          <button class="filter-chip-btn active" onclick="filterFaqTopics('all', this)">All Questions</button>
+          <button class="filter-chip-btn" onclick="filterFaqTopics('safety', this)">Safety &amp; Rides</button>
+          <button class="filter-chip-btn" onclick="filterFaqTopics('billing', this)">Billing &amp; Refunds</button>
+        </div>
+
+        <!-- Unified FAQ Accordion Group (Standard Spacing, Zero Excessive Gaps) -->
+        <div class="faq-accordion-group">
+          <!-- Question 1 -->
+          <div class="faq-accordion-item open" data-topic="safety">
+            <div class="faq-header-row" onclick="toggleFaq(this)">
+              <span class="faq-question-text">How are drivers background-checked and vetted?</span>
+              <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+            </div>
+            <div class="faq-body-text">
+              Every Home2School driver passes a multi-tier vulnerable sector criminal record check, clean driving abstract verification, annual vehicle inspection, and in-person orientation before accepting student rides.
+            </div>
           </div>
-          <div class="faq-body-text">
-            Every Home2School driver must pass a multi-tier vulnerable sector criminal record check, clean driving abstract verification, annual vehicle inspection, and in-person orientation before accepting student rides.
+
+          <!-- Question 2 -->
+          <div class="faq-accordion-item" data-topic="safety">
+            <div class="faq-header-row" onclick="toggleFaq(this)">
+              <span class="faq-question-text">Can parents track child rides with live GPS?</span>
+              <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+            </div>
+            <div class="faq-body-text">
+              Yes! During active school commutes, parents receive live telemetry showing vehicle position, estimated arrival times, driver status, and instant push notifications upon pickup and safe school drop-off.
+            </div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="faq-accordion-item" data-topic="safety">
+            <div class="faq-header-row" onclick="toggleFaq(this)">
+              <span class="faq-question-text">Can I book for multiple children attending different schools?</span>
+              <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+            </div>
+            <div class="faq-body-text">
+              Yes! In Step 1, select all children traveling. The system matches you with neighborhood providers certified for sequential drop-off routes with multi-child sibling discounts automatically applied.
+            </div>
+          </div>
+
+          <!-- Question 4 -->
+          <div class="faq-accordion-item" data-topic="safety">
+            <div class="faq-header-row" onclick="toggleFaq(this)">
+              <span class="faq-question-text">What happens if a driver is delayed in morning traffic?</span>
+              <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+            </div>
+            <div class="faq-body-text">
+              If a driver encounters delays beyond 5 minutes, our automated tracking algorithm immediately alerts parents via SMS and push notification, and standby dispatch is notified.
+            </div>
+          </div>
+
+          <!-- Question 5 -->
+          <div class="faq-accordion-item" data-topic="billing">
+            <div class="faq-header-row" onclick="toggleFaq(this)">
+              <span class="faq-question-text">Can I pause or cancel during school vacations?</span>
+              <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+            </div>
+            <div class="faq-body-text">
+              Absolutely. You can pause recurring bookings from the Bookings tab up to 24 hours in advance with zero penalty fees, and unused days remain as credit in your In-App Wallet.
+            </div>
+          </div>
+
+          <!-- Question 6 -->
+          <div class="faq-accordion-item" data-topic="billing">
+            <div class="faq-header-row" onclick="toggleFaq(this)">
+              <span class="faq-question-text">How are multi-child sibling discounts applied?</span>
+              <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+            </div>
+            <div class="faq-body-text">
+              When booking for 2 or more children on the same commute route, a $10–$20 weekly sibling discount is automatically deducted directly on the Booking Summary invoice.
+            </div>
           </div>
         </div>
 
-        <div class="faq-accordion-item">
-          <div class="faq-header-row" onclick="toggleFaq(this)">
-            <span class="faq-question-text">Can I book for multiple children attending different schools?</span>
-            <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+        <!-- Contact Support & Report Action Card (Zero Overlap) -->
+        <div style="background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 16px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+          <div>
+            <div style="font-size: 13.5px; font-weight: 700; color: #0F172A;">Have an issue or concern?</div>
+            <div style="font-size: 12px; color: #64748B; margin-top: 2px;">Dispatch responds within 15 mins</div>
           </div>
-          <div class="faq-body-text">
-            Yes! In Step 1, select all children traveling. If children attend different schools, the system matches you with neighborhood providers certified for sequential drop-off routes with multi-child discounts automatically applied.
-          </div>
-        </div>
-
-        <div class="faq-accordion-item">
-          <div class="faq-header-row" onclick="toggleFaq(this)">
-            <span class="faq-question-text">What happens if a driver is running late?</span>
-            <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
-          </div>
-          <div class="faq-body-text">
-            If a driver encounters unexpected traffic or delays beyond 5 minutes, our automated tracking algorithm immediately sends push notifications to parents and offers an emergency backup standby driver dispatch.
-          </div>
-        </div>
-
-        <div class="faq-accordion-item">
-          <div class="faq-header-row" onclick="toggleFaq(this)">
-            <span class="faq-question-text">Can I pause or cancel during school vacations?</span>
-            <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
-          </div>
-          <div class="faq-body-text">
-            Absolutely. You can pause recurring bookings from the Bookings tab up to 24 hours in advance with zero penalty fees, and your credit remains in your In-App Wallet.
+          <div style="display: flex; gap: 8px;">
+            <button onclick="navigateTo('report')" class="btn-pill-action" style="background: #FEF2F2 !important; color: #DC2626 !important; border: 1px solid #FECACA !important; box-shadow: none !important;">Report</button>
+            <a href="tel:18005437433" class="btn-pill-action">Call</a>
           </div>
         </div>
       </div>
@@ -3023,26 +3092,59 @@
         <span style="width: 26px;"></span>
       </div>
 
-      <div class="screen-scroll-body" style="gap: 14px;">
-        <div class="details-section-box">
-          <div class="details-section-label">1. Child Safety &amp; Supervision</div>
-          <p style="font-size: 12.5px; color: var(--color-body); line-height: 1.5;">
+      <div class="screen-scroll-body">
+        <div class="legal-policy-card">
+          <div class="legal-card-header">
+            <span class="legal-badge">01</span>
+            <span class="legal-title">Child Safety &amp; Custody Handoff Protocol</span>
+          </div>
+          <p class="legal-desc">
             Home2School operates strictly under verified guardian custody transfer protocols. Drivers and walking escorts are mandated to verify child identity and hand off minors only to certified school staff or verified parents.
           </p>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>Verified Guardian Sign-off at school gates.</span>
+          </div>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>Real-time photo verification upon student pickup.</span>
+          </div>
         </div>
 
-        <div class="details-section-box">
-          <div class="details-section-label">2. Cancellation &amp; Refund Policy</div>
-          <p style="font-size: 12.5px; color: var(--color-body); line-height: 1.5;">
+        <div class="legal-policy-card">
+          <div class="legal-card-header">
+            <span class="legal-badge">02</span>
+            <span class="legal-title">Recurring Commute Pausing &amp; Refund Policy</span>
+          </div>
+          <p class="legal-desc">
             Recurring subscriptions can be cancelled or paused with 24-hour advance notice before the scheduled school commute week. Unused days are credited immediately back to your in-app wallet.
           </p>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>Zero penalty cancellation up to 24h prior.</span>
+          </div>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>In-App Wallet credits never expire.</span>
+          </div>
         </div>
 
-        <div class="details-section-box">
-          <div class="details-section-label">3. Live GPS Telemetry &amp; Privacy</div>
-          <p style="font-size: 12.5px; color: var(--color-body); line-height: 1.5;">
+        <div class="legal-policy-card">
+          <div class="legal-card-header">
+            <span class="legal-badge">03</span>
+            <span class="legal-title">Encrypted GPS Telemetry &amp; Minor Privacy</span>
+          </div>
+          <p class="legal-desc">
             Student real-time telemetry and geofencing coordinates are encrypted end-to-end (AES-256) and are accessible only to verified parents and emergency dispatch during active trips. Data is purged after 30 days.
           </p>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>AES-256 bank-grade encrypted location feeds.</span>
+          </div>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>Automated 30-day telemetry purging cycle.</span>
+          </div>
         </div>
       </div>
 
@@ -3068,48 +3170,200 @@
         <span style="width: 26px;"></span>
       </div>
 
-      <div class="screen-scroll-body" style="text-align: center; gap: 16px;">
-        <div style="width: 72px; height: 72px; border-radius: 20px; background-color: var(--color-primary); color: #fff; display: flex; align-items: center; justify-content: center; margin: 16px auto 0; box-shadow: 0 8px 24px rgba(27, 43, 104, 0.25);">
-          <i data-lucide="car" style="width: 38px; height: 38px;"></i>
+      <div class="screen-scroll-body" style="text-align: center; gap: 14px;">
+        <!-- Clean Brand Hero -->
+        <div style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, var(--color-primary) 0%, #2563EB 100%); color: #fff; display: flex; align-items: center; justify-content: center; margin: 12px auto 0; box-shadow: 0 6px 18px rgba(37, 99, 235, 0.22);">
+          <i data-lucide="car" style="width: 30px; height: 30px;"></i>
         </div>
 
         <div>
-          <h2 style="font-size: 22px; font-weight: 800; color: var(--color-title);">Home2School</h2>
-          <p style="font-size: 13.5px; color: var(--color-body); margin-top: 4px;">Safe, Trusted School Car Rides for Children</p>
-          <span style="display: inline-block; font-size: 11.5px; font-weight: 700; background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 99px; margin-top: 8px;">Version 2.4 (Production MVP)</span>
+          <h2 style="font-size: 20px; font-weight: 800; color: #0F172A; letter-spacing: -0.02em;">Home2School</h2>
+          <p style="font-size: 13px; color: #64748B; margin-top: 3px;">Safe, Verified School Commutes for Children</p>
+          <span style="display: inline-block; font-size: 11px; font-weight: 700; background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 99px; margin-top: 8px;">Version 2.4 (Production MVP)</span>
         </div>
 
-        <div class="provider-stats-grid" style="width: 100%;">
-          <div class="stat-metric-card">
-            <div class="stat-metric-val">10K+</div>
-            <div class="stat-metric-lbl">Safe Rides</div>
+        <!-- Unified Minimal Metric Strip -->
+        <div class="about-unified-stats">
+          <div class="about-stat-col">
+            <div class="about-stat-val">10K+</div>
+            <div class="about-stat-lbl">Safe Rides</div>
           </div>
-          <div class="stat-metric-card">
-            <div class="stat-metric-val">100%</div>
-            <div class="stat-metric-lbl">Vetted Drivers</div>
+          <div class="about-stat-col">
+            <div class="about-stat-val">100%</div>
+            <div class="about-stat-lbl">Vetted Drivers</div>
           </div>
-          <div class="stat-metric-card">
-            <div class="stat-metric-val">4.9 ★</div>
-            <div class="stat-metric-lbl">Parent Rating</div>
+          <div class="about-stat-col">
+            <div class="about-stat-val">4.9 ★</div>
+            <div class="about-stat-lbl">Parent Trust</div>
           </div>
         </div>
 
+        <!-- Mission Card -->
         <div class="details-section-box" style="text-align: left;">
-          <div class="details-section-label">Our Mission</div>
-          <p style="font-size: 13px; color: var(--color-title); line-height: 1.5;">
-            Home2School was created by parents to solve daily school commute anxiety. We connect families with certified, community-verified neighborhood drivers and walking escorts to make school mornings safe, peaceful, and predictable.
+          <div class="details-section-label">Our Mission &amp; Promise</div>
+          <p style="font-size: 13px; color: #475569; line-height: 1.6;">
+            Home2School was created by parents to eliminate daily school commute anxiety. We connect neighborhood families with certified, community-verified drivers and walking escorts to make morning drop-offs and afternoon pickups safe, peaceful, and predictable.
           </p>
         </div>
 
-        <div class="details-section-box" style="text-align: left;">
-          <div class="details-section-label">24/7 Support Hotline</div>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
+        <!-- 24/7 Support Hotline Card (ZERO Overlap) -->
+        <div class="details-section-box" style="text-align: left; margin-bottom: 20px;">
+          <div class="details-section-label">24/7 Emergency Support</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
             <div>
-              <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">1-800-KID-RIDE</div>
-              <div style="font-size: 12px; color: var(--color-body);">support@home2school.app</div>
+              <div style="font-size: 14px; font-weight: 800; color: #0F172A;">1-800-KID-RIDE</div>
+              <div style="font-size: 11.5px; color: #64748B; margin-top: 2px;">support@home2school.app</div>
             </div>
-            <a href="tel:18005437433" class="btn-primary" style="height: 38px; padding: 0 16px; font-size: 13px; text-decoration: none; display: flex; align-items: center;">Call</a>
+            <a href="tel:18005437433" class="btn-pill-action">Call</a>
           </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 33. PRIVACY POLICY SCREEN ================= -->
+    <section class="screen-view" id="screen-privacy" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Privacy Policy</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <div class="legal-policy-card">
+          <div class="legal-card-header">
+            <span class="legal-badge">01</span>
+            <span class="legal-title">Student Data &amp; COPPA Protection</span>
+          </div>
+          <p class="legal-desc">
+            We hold child privacy to the highest global standards. Photos, names, and school rosters are never shared with third parties or advertisers. All driver access to minor data is strictly temporary and locked during active commute hours.
+          </p>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>No commercial advertising or data broker sharing.</span>
+          </div>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>Parent custody phone numbers are masked with secure proxy numbers.</span>
+          </div>
+        </div>
+
+        <div class="legal-policy-card">
+          <div class="legal-card-header">
+            <span class="legal-badge">02</span>
+            <span class="legal-title">Real-Time GPS &amp; Geofencing Privacy</span>
+          </div>
+          <p class="legal-desc">
+            Live route telemetry is encrypted in transit and at rest using AES-256 standards. Location streaming is enabled only from vehicle engine start until safe school hand-off verification.
+          </p>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>Telemetry broadcast restricted to authorized guardians.</span>
+          </div>
+          <div class="legal-point-row">
+            <i data-lucide="check-circle-2"></i>
+            <span>Automated 30-day deletion cycle for historic route breadcrumbs.</span>
+          </div>
+        </div>
+
+        <div class="legal-policy-card">
+          <div class="legal-card-header">
+            <span class="legal-badge">03</span>
+            <span class="legal-title">Your Rights &amp; Data Deletion</span>
+          </div>
+          <p class="legal-desc">
+            Parents can request a complete export of ride records or initiate total account and child profile deletion anytime directly from settings or by contacting privacy@home2school.app.
+          </p>
+        </div>
+
+        <div style="text-align: center; margin: 10px 0 24px;">
+          <p style="font-size: 11.5px; color: #94A3B8;">Last updated: May 2026 • Certified Student Commute Security</p>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 34. REPORT AN ISSUE SCREEN ================= -->
+    <section class="screen-view" id="screen-report" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Report an Issue</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <!-- Safety Alert Callout -->
+        <div style="background-color: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius-md); padding: 12px 14px; display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
+          <i data-lucide="alert-triangle" style="width:20px;height:20px;color:#DC2626;flex-shrink:0;"></i>
+          <div style="font-size: 12.5px; color: #991B1B; line-height: 1.4;">
+            <strong>Immediate Safety Threat?</strong> If your child is in urgent danger, dial <strong>911</strong> first or call our 24/7 hotline <strong>1-800-KID-RIDE</strong>.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Select Issue Category</label>
+          <input type="hidden" id="reportCategorySelect" value="Safety or Driving Concern" />
+          <div class="report-category-grid">
+            <button type="button" class="report-cat-btn active" onclick="selectReportCategory('Safety or Driving Concern', this)">
+              <span>🚨 Safety / Driving</span>
+              <small style="font-size:11px;color:#64748B;font-weight:400;">Speed, vehicle, behavior</small>
+            </button>
+            <button type="button" class="report-cat-btn" onclick="selectReportCategory('Driver Delay / Late Pickup', this)">
+              <span>⏱️ Driver Delay</span>
+              <small style="font-size:11px;color:#64748B;font-weight:400;">Late arrival or no-show</small>
+            </button>
+            <button type="button" class="report-cat-btn" onclick="selectReportCategory('Lost Item in Vehicle', this)">
+              <span>🎒 Lost Item</span>
+              <small style="font-size:11px;color:#64748B;font-weight:400;">Bag, jacket, glasses</small>
+            </button>
+            <button type="button" class="report-cat-btn" onclick="selectReportCategory('Billing or Overcharge', this)">
+              <span>💳 Billing Issue</span>
+              <small style="font-size:11px;color:#64748B;font-weight:400;">Receipt, wallet discrepancy</small>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Related Child / Trip</label>
+          <select class="form-input" id="reportTripSelect" style="height: 48px;">
+            <option value="today-morning">Today Morning • Tariq Ahmed (Arman &amp; Emma)</option>
+            <option value="yesterday-return">Yesterday Return • Tariq Ahmed (Arman)</option>
+            <option value="general">General App / Service Inquiry</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Describe What Happened</label>
+          <textarea class="form-input" id="reportDescriptionInput" style="height: 100px; padding: 12px; resize: none; font-size: 13.5px;" placeholder="Please give as much detail as possible. Our safety dispatch investigates all reports immediately..."></textarea>
+        </div>
+
+        <div style="margin-top: 10px; margin-bottom: 24px;">
+          <button class="btn-primary" onclick="submitIssueReport()" style="background-color: #DC2626; border-color: #DC2626;">Submit Incident Report</button>
+          <p style="text-align: center; font-size: 11.5px; color: #94A3B8; margin-top: 8px;">A safety supervisor reviews every report in under 15 minutes.</p>
         </div>
       </div>
 
