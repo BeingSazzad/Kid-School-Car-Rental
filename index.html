@@ -209,7 +209,7 @@
       <div class="auth-content">
         <div>
           <h1 class="welcome-heading">
-            Welcome to <span class="brand-text">Home2School</span> <span class="orange-heart">🧡</span>
+            Welcome to <span class="brand-text">Home2School</span> <i data-lucide="heart" style="width:18px;height:18px;color:#F97316;fill:#F97316;display:inline-block;vertical-align:middle;"></i>
           </h1>
           <p class="welcome-subtext">Safe and trusted school car rides for children.</p>
         </div>
@@ -597,7 +597,7 @@
               <img src="/assets/avatar_john.png" alt="Sadia Avatar" class="user-avatar-img" />
             </div>
             <div class="user-welcome-texts">
-              <h2 class="user-greeting">Hello, Sadia 👋</h2>
+              <h2 class="user-greeting">Hello, Sadia</h2>
               <p class="user-question">Where should we drive your children?</p>
             </div>
           </div>
@@ -868,7 +868,7 @@
             <div>
               <div class="child-manage-name">Arman Khan</div>
               <div class="child-manage-sub">Grade 4 • Greenfield International</div>
-              <div style="font-size: 11.5px; color: #64748B; margin-top: 3px;">📍 Pickup: Home (12 Elm Street)</div>
+              <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748B; margin-top: 3px;"><i data-lucide="map-pin" style="width:12px;height:12px;color:#94A3B8;"></i><span>Pickup: Home (12 Elm Street)</span></div>
             </div>
           </div>
           <button class="btn-icon-contact" onclick="navigateTo('addChild')" aria-label="Edit Child">
@@ -883,7 +883,7 @@
             <div>
               <div class="child-manage-name">Emma Khan</div>
               <div class="child-manage-sub">Grade 2 • Greenfield International</div>
-              <div style="font-size: 11.5px; color: #64748B; margin-top: 3px;">📍 Pickup: Home (12 Elm Street)</div>
+              <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748B; margin-top: 3px;"><i data-lucide="map-pin" style="width:12px;height:12px;color:#94A3B8;"></i><span>Pickup: Home (12 Elm Street)</span></div>
             </div>
           </div>
           <button class="btn-icon-contact" onclick="navigateTo('addChild')" aria-label="Edit Child">
@@ -898,7 +898,7 @@
             <div>
               <div class="child-manage-name">Zara Khan</div>
               <div class="child-manage-sub">Kindergarten • Sunshine Pre-school</div>
-              <div style="font-size: 11.5px; color: #64748B; margin-top: 3px;">📍 Pickup: Home (12 Elm Street)</div>
+              <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748B; margin-top: 3px;"><i data-lucide="map-pin" style="width:12px;height:12px;color:#94A3B8;"></i><span>Pickup: Home (12 Elm Street)</span></div>
             </div>
           </div>
           <button class="btn-icon-contact" onclick="navigateTo('addChild')" aria-label="Edit Child">
@@ -1043,7 +1043,7 @@
             <p style="font-size: 13px; color: var(--color-body); margin-top: 2px;">Select one or multiple children for
               this trip.</p>
           </div>
-          <span class="passenger-count-badge" id="passengerBadge">👥 2 Selected</span>
+          <span class="passenger-count-badge" id="passengerBadge" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="users" style="width:13px;height:13px;"></i><span id="passengerBadgeText">2 Selected</span></span>
         </div>
 
         <!-- Child Selection Card 1 -->
@@ -1207,8 +1207,8 @@
             <!-- Quick Saved Location Selector Pills -->
             <div class="quick-location-chips">
               <span class="quick-loc-label">Saved:</span>
-              <button type="button" class="quick-loc-chip active" onclick="selectQuickLocation('pickup', 'Home (12 Elm Street)', this)">🏠 Home</button>
-              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('pickup', '84 Willowbrook Crescent', this)">👵 Grandma's</button>
+              <button type="button" class="quick-loc-chip active" onclick="selectQuickLocation('pickup', 'Home (12 Elm Street)', this)"><i data-lucide="home" style="width:12px;height:12px;margin-right:4px;"></i>Home</button>
+              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('pickup', '84 Willowbrook Crescent', this)"><i data-lucide="heart" style="width:12px;height:12px;margin-right:4px;"></i>Grandma's</button>
             </div>
           </div>
 
@@ -1222,8 +1222,8 @@
             <!-- Quick School Selector Pills -->
             <div class="quick-location-chips">
               <span class="quick-loc-label">Schools:</span>
-              <button type="button" class="quick-loc-chip active" onclick="selectQuickLocation('school', 'Greenfield International School', this)">🏫 Greenfield</button>
-              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('school', 'Sunshine Pre-school', this)">🏫 Sunshine</button>
+              <button type="button" class="quick-loc-chip active" onclick="selectQuickLocation('school', 'Greenfield International School', this)"><i data-lucide="graduation-cap" style="width:12px;height:12px;margin-right:4px;"></i>Greenfield</button>
+              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('school', 'Sunshine Pre-school', this)"><i data-lucide="graduation-cap" style="width:12px;height:12px;margin-right:4px;"></i>Sunshine</button>
             </div>
           </div>
 
@@ -1707,7 +1707,7 @@
         <!-- Interactive Demo Button to Simulate Provider Acceptance -->
         <div
           style="background-color: #EFF6FF; border: 1.5px dashed #3B82F6; border-radius: var(--radius-md); padding: 12px; width: 100%;">
-          <div style="font-size: 12px; font-weight: 800; color: #1D4ED8; margin-bottom: 6px;">⚡ Demo Fast-Forward:</div>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #1D4ED8; margin-bottom: 6px;"><i data-lucide="zap" style="width:14px;height:14px;"></i><span>Demo Fast-Forward:</span></div>
           <button class="btn-primary" style="height: 38px; font-size: 13px;"
             onclick="simulateProviderAcceptance()">Simulate Provider Acceptance →</button>
         </div>
@@ -1748,8 +1748,7 @@
 
         <div>
           <span class="status-chip confirmed" style="font-size: 13px; padding: 6px 14px;">Status: Confirmed</span>
-          <h2 style="font-size: 24px; font-weight: 800; color: var(--color-title); margin: 12px 0 6px;">Booking
-            Confirmed! 🎉</h2>
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--color-title); margin: 12px 0 6px;">Booking Confirmed!</h2>
           <p style="font-size: 14px; color: var(--color-body); line-height: 1.45; max-width: 320px; margin: 0 auto;">
             Your provider has confirmed your transportation schedule. First pickup is set for 07:30 AM.
           </p>
@@ -2010,7 +2009,7 @@
           </button>
           <div style="text-align: center;">
             <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Arman &amp; Emma Khan</div>
-            <div style="font-size: 11.5px; color: #16A34A; font-weight: 700;">🟢 Live GPS Tracking Active</div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 11.5px; color: #16A34A; font-weight: 700;"><i data-lucide="radio" style="width:12px;height:12px;"></i><span>Live GPS Tracking Active</span></div>
           </div>
           <span class="live-pill-tag"><span class="live-dot-pulse"></span> LIVE</span>
         </div>
@@ -2144,8 +2143,9 @@
           </div>
 
           <!-- System Update -->
-          <div class="system-status-bubble" style="background: #FEF3C7; border-color: #FDE68A; color: #B45309;">
-            <span>🚗 Driver arrived at Home (12 Elm Street) • 07:30 AM</span>
+          <div class="system-status-bubble" style="background: #FEF3C7; border-color: #FDE68A; color: #B45309; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i data-lucide="car" style="width: 14px; height: 14px; flex-shrink: 0;"></i>
+            <span>Driver arrived at Home (12 Elm Street) • 07:30 AM</span>
           </div>
 
           <!-- Parent Message -->
@@ -2155,8 +2155,9 @@
           </div>
 
           <!-- System Update -->
-          <div class="system-status-bubble" style="background: #F0FDF4; border-color: #BBF7D0; color: #15803D;">
-            <span>🎒 Children safely boarded &amp; buckled in • 07:33 AM</span>
+          <div class="system-status-bubble" style="background: #F0FDF4; border-color: #BBF7D0; color: #15803D; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i data-lucide="shield-check" style="width: 14px; height: 14px; flex-shrink: 0;"></i>
+            <span>Children safely boarded &amp; buckled in • 07:33 AM</span>
           </div>
 
           <!-- Provider Message -->
@@ -2256,11 +2257,13 @@
               <div style="font-size: 16px; font-weight: 800; color: var(--color-title);">Arman &amp; Emma Khan</div>
               <div style="font-size: 13px; color: var(--color-body); margin-top: 2px;">Home ⇄ Greenfield International
                 School</div>
-              <div style="font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
-                📅 Mon–Fri • Outbound: 07:30 AM | Return: 01:00 PM
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
+                <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-primary); flex-shrink: 0;"></i>
+                <span>Mon–Fri • Outbound: 07:30 AM | Return: 01:00 PM</span>
               </div>
-              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">
-                👤 Provider: Tariq Ahmed (Toyota Sienna)
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748B; margin-top: 3px;">
+                <i data-lucide="user" style="width: 14px; height: 14px; color: #94A3B8; flex-shrink: 0;"></i>
+                <span>Provider: Tariq Ahmed (Toyota Sienna)</span>
               </div>
             </div>
 
@@ -2282,11 +2285,13 @@
             <div>
               <div style="font-size: 16px; font-weight: 800; color: var(--color-title);">Zara Khan (One-time)</div>
               <div style="font-size: 13px; color: var(--color-body); margin-top: 2px;">Home → Sunshine Pre-school</div>
-              <div style="font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
-                📅 Thursday, May 23 • 08:15 AM
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
+                <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-primary); flex-shrink: 0;"></i>
+                <span>Thursday, May 23 • 08:15 AM</span>
               </div>
-              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">
-                👤 Provider: Sarah Jenkins (WalkShare)
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748B; margin-top: 3px;">
+                <i data-lucide="user" style="width: 14px; height: 14px; color: #94A3B8; flex-shrink: 0;"></i>
+                <span>Provider: Sarah Jenkins (WalkShare)</span>
               </div>
             </div>
 
@@ -2678,8 +2683,7 @@
               <i data-lucide="camera" style="width:13px;height:13px;"></i>
             </button>
           </div>
-          <input type="file" id="photoFileInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)" />
-          <div style="font-size: 11.5px; font-weight: 700; color: #1D4ED8; background: #EFF6FF; padding: 2px 10px; border-radius: 99px; margin-top: 8px;">Verified Parent • 3 Children</div>
+          <div style="font-size: 11.5px; font-weight: 700; color: var(--color-primary); background: var(--color-fade); padding: 3px 12px; border-radius: var(--radius-pill); margin-top: 8px;">Verified Parent • 3 Children</div>
         </div>
 
         <!-- Section 1: Guardian Identity -->
@@ -2748,7 +2752,7 @@
         <!-- Save Action -->
         <div style="margin-top: 10px; margin-bottom: 24px;">
           <button class="btn-primary" onclick="savePersonalInfo()">Save Profile Changes</button>
-          <p style="text-align: center; font-size: 11.5px; color: #94A3B8; margin-top: 8px;">🔒 Data securely synced with verified driver handoffs only.</p>
+          <p style="text-align: center; font-size: 11.5px; color: #64748B; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 4px;"><i data-lucide="lock" style="width:12px;height:12px;color:#94A3B8;"></i><span>Data securely synced with verified driver handoffs only.</span></p>
         </div>
       </div>
 
@@ -2825,10 +2829,10 @@
 
         <div class="details-section-box" style="margin-top: 10px;">
           <div class="details-section-label">Emergency Protocol Checklist</div>
-          <div style="font-size: 12.5px; color: var(--color-body); line-height: 1.5; display: flex; flex-direction: column; gap: 6px;">
-            <div>✓ Instant SMS alert with GPS coordinates sent to all contacts upon delay.</div>
-            <div>✓ Direct two-way radio link to emergency school transport operator.</div>
-            <div>✓ 100% background-checked certified child escort procedures.</div>
+          <div style="font-size: 12.5px; color: var(--color-body); line-height: 1.5; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;"><i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10B981;flex-shrink:0;"></i><span>Instant SMS alert with GPS coordinates sent to all contacts upon delay.</span></div>
+            <div style="display: flex; align-items: center; gap: 8px;"><i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10B981;flex-shrink:0;"></i><span>Direct two-way radio link to emergency school transport operator.</span></div>
+            <div style="display: flex; align-items: center; gap: 8px;"><i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10B981;flex-shrink:0;"></i><span>100% background-checked certified child escort procedures.</span></div>
           </div>
         </div>
       </div>
@@ -3366,19 +3370,31 @@
           <input type="hidden" id="reportCategorySelect" value="Safety or Driving Concern" />
           <div class="report-category-grid">
             <button type="button" class="report-cat-btn active" onclick="selectReportCategory('Safety or Driving Concern', this)">
-              <span>🚨 Safety / Driving</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <i data-lucide="shield-alert" style="width:16px;height:16px;color:#DC2626;"></i>
+                <span>Safety / Driving</span>
+              </div>
               <small style="font-size:11px;color:#64748B;font-weight:400;">Speed, vehicle, behavior</small>
             </button>
             <button type="button" class="report-cat-btn" onclick="selectReportCategory('Driver Delay / Late Pickup', this)">
-              <span>⏱️ Driver Delay</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <i data-lucide="clock" style="width:16px;height:16px;color:#D97706;"></i>
+                <span>Driver Delay</span>
+              </div>
               <small style="font-size:11px;color:#64748B;font-weight:400;">Late arrival or no-show</small>
             </button>
             <button type="button" class="report-cat-btn" onclick="selectReportCategory('Lost Item in Vehicle', this)">
-              <span>🎒 Lost Item</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <i data-lucide="briefcase" style="width:16px;height:16px;color:#2563EB;"></i>
+                <span>Lost Item</span>
+              </div>
               <small style="font-size:11px;color:#64748B;font-weight:400;">Bag, jacket, glasses</small>
             </button>
             <button type="button" class="report-cat-btn" onclick="selectReportCategory('Billing or Overcharge', this)">
-              <span>💳 Billing Issue</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <i data-lucide="credit-card" style="width:16px;height:16px;color:#16A34A;"></i>
+                <span>Billing Issue</span>
+              </div>
               <small style="font-size:11px;color:#64748B;font-weight:400;">Receipt, wallet discrepancy</small>
             </button>
           </div>

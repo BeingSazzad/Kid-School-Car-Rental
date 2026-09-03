@@ -337,9 +337,12 @@ window.toggleChildSelection = function (childId) {
     card?.classList.add('selected');
   }
 
-  const badge = document.getElementById('passengerBadge');
-  if (badge) {
-    badge.textContent = `👥 ${list.length} Selected`;
+  const badgeText = document.getElementById('passengerBadgeText');
+  if (badgeText) {
+    badgeText.textContent = `${list.length} Selected`;
+  } else {
+    const badge = document.getElementById('passengerBadge');
+    if (badge) badge.textContent = `${list.length} Selected`;
   }
 };
 
@@ -704,11 +707,13 @@ function renderBookingsList(tab) {
           <div>
             <div style="font-size: 16px; font-weight: 800; color: var(--color-title);">${children.join(' & ')}</div>
             <div style="font-size: 13px; color: var(--color-body); margin-top: 2px;">${b.pickupLocation.split(' ')[0]} ⇄ ${b.schoolLocation}</div>
-            <div style="font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
-              📅 ${b.scheduleText}
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
+              <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-primary); flex-shrink: 0;"></i>
+              <span>${b.scheduleText}</span>
             </div>
-            <div style="font-size: 12px; color: #64748B; margin-top: 2px;">
-              👤 ${provider.name} (${provider.vehicle.split(' ')[0]})
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748B; margin-top: 3px;">
+              <i data-lucide="user" style="width: 14px; height: 14px; color: #94A3B8; flex-shrink: 0;"></i>
+              <span>${provider.name} (${provider.vehicle.split(' ')[0]})</span>
             </div>
           </div>
 
