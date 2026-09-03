@@ -181,6 +181,8 @@ window.navigateTo = function (screenName) {
     renderBookingDetails(window.appState.activeBookingId);
   } else if (screenName === 'bookingConfirmed') {
     renderBookingConfirmation();
+  } else if (screenName === 'myChildren') {
+    renderMyChildrenList();
   }
 
   // Update Bottom Tab Bar highlights
@@ -1127,6 +1129,181 @@ window.submitIssueReport = function () {
 
   window.navigateTo('profile');
 };
+
+/* ==========================================================
+   Reactive Children Management (Add & Edit Modal Logic)
+   ========================================================== */
+window.editingChildId = null;
+
+window.renderMyChildrenList = function () {
+  const container = document.getElementById('myChildrenListContainer');
+  if (!container) return;
+
+  const children = window.appState?.children || [];
+
+  if (children.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding: 24px; color: var(--color-body); font-size: 13px;">
+        No child profiles registered yet. Click "+ Add" above to register a child.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = children.map(c => {
+    const initials = c.name ? c.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'KD';
+    const colorClass = c.id === 'arman' ? 'navy' : c.id === 'emma' ? 'blue' : 'orange';
+    return `
+      <div class="child-manage-card" onclick="openEditChildModal('${c.id}')">
+        <div class="child-manage-left">
+          <div class="child-monogram-avatar ${colorClass}">${initials}</div>
+          <div>
+            <div class="child-manage-name">${c.name}</div>
+            <div class="child-manage-sub">${c.grade} • ${c.school}</div>
+          </div>
+        </div>
+        <button class="btn-icon-contact" onclick="event.stopPropagation(); openEditChildModal('${c.id}');" aria-label="Edit ${c.name}">
+          <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;"></i>
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.openAddChildModal = function () {
+  window.editingChildId = null;
+
+  const titleEl = document.getElementById('childFormTopTitle');
+  if (titleEl) titleEl.textContent = 'Add New Child';
+
+  const monogramEl = document.getElementById('childFormMonogram');
+  if (monogramEl) {
+    monogramEl.textContent = '+';
+    monogramEl.style.background = 'linear-gradient(135deg, var(--color-secondary) 0%, #EA580C 100%)';
+  }
+
+  const badgeEl = document.getElementById('childFormHeroBadge');
+  if (badgeEl) badgeEl.textContent = 'New Student Registration';
+
+  const nameInput = document.getElementById('editChildName');
+  const gradeInput = document.getElementById('editChildGrade');
+  const ageInput = document.getElementById('editChildAge');
+  const schoolInput = document.getElementById('editChildSchool');
+  const pickupInput = document.getElementById('editChildPickup');
+  const notesInput = document.getElementById('editChildNotes');
+  const submitBtn = document.getElementById('childFormSubmitBtn');
+
+  if (nameInput) nameInput.value = '';
+  if (gradeInput) gradeInput.value = 'Kindergarten';
+  if (ageInput) ageInput.value = '';
+  if (schoolInput) schoolInput.value = '';
+  if (pickupInput) pickupInput.value = 'Home (12 Elm Street, Toronto)';
+  if (notesInput) notesInput.value = '';
+  if (submitBtn) submitBtn.textContent = 'Add Child Profile';
+
+  window.navigateTo('addChild');
+};
+
+window.openEditChildModal = function (childId) {
+  window.editingChildId = childId;
+  const child = (window.appState?.children || []).find(c => c.id === childId);
+  if (!child) return;
+
+  const titleEl = document.getElementById('childFormTopTitle');
+  if (titleEl) titleEl.textContent = 'Edit Child Profile';
+
+  const initials = child.name ? child.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'KD';
+  const monogramEl = document.getElementById('childFormMonogram');
+  if (monogramEl) {
+    monogramEl.textContent = initials;
+    const bg = child.id === 'arman' ? 'linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%)' :
+               child.id === 'emma' ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' :
+               'linear-gradient(135deg, var(--color-secondary) 0%, #EA580C 100%)';
+    monogramEl.style.background = bg;
+  }
+
+  const badgeEl = document.getElementById('childFormHeroBadge');
+  if (badgeEl) badgeEl.textContent = `${child.grade} • Active Student`;
+
+  const nameInput = document.getElementById('editChildName');
+  const gradeInput = document.getElementById('editChildGrade');
+  const ageInput = document.getElementById('editChildAge');
+  const schoolInput = document.getElementById('editChildSchool');
+  const pickupInput = document.getElementById('editChildPickup');
+  const notesInput = document.getElementById('editChildNotes');
+  const submitBtn = document.getElementById('childFormSubmitBtn');
+
+  if (nameInput) nameInput.value = child.name || '';
+  if (gradeInput) {
+    if (child.grade.includes('Kindergarten')) gradeInput.value = 'Kindergarten';
+    else if (child.grade.includes('Grade 1')) gradeInput.value = 'Grade 1';
+    else if (child.grade.includes('Grade 2')) gradeInput.value = 'Grade 2';
+    else if (child.grade.includes('Grade 3')) gradeInput.value = 'Grade 3';
+    else if (child.grade.includes('Grade 4')) gradeInput.value = 'Grade 4';
+    else if (child.grade.includes('Grade 5')) gradeInput.value = 'Grade 5';
+  }
+  if (ageInput) ageInput.value = child.grade.match(/\((.*?)\)/)?.[1] || '8 Years';
+  if (schoolInput) schoolInput.value = child.school || '';
+  if (pickupInput) pickupInput.value = child.pickup || 'Home (12 Elm Street, Toronto)';
+  if (notesInput) notesInput.value = child.notes || '';
+  if (submitBtn) submitBtn.textContent = 'Save Changes';
+
+  window.navigateTo('addChild');
+};
+
+window.saveChildProfileForm = function (event) {
+  if (event) event.preventDefault();
+
+  const nameInput = document.getElementById('editChildName');
+  const gradeInput = document.getElementById('editChildGrade');
+  const ageInput = document.getElementById('editChildAge');
+  const schoolInput = document.getElementById('editChildSchool');
+  const pickupInput = document.getElementById('editChildPickup');
+  const notesInput = document.getElementById('editChildNotes');
+
+  const name = nameInput?.value?.trim();
+  const grade = gradeInput?.value || 'Grade 1';
+  const age = ageInput?.value?.trim() || '7 Years';
+  const school = schoolInput?.value?.trim() || 'Greenfield International School';
+  const pickup = pickupInput?.value?.trim() || 'Home (12 Elm Street)';
+  const notes = notesInput?.value?.trim() || '';
+
+  if (!name) {
+    alert('Please enter your child’s name.');
+    return;
+  }
+
+  if (window.editingChildId) {
+    const child = (window.appState?.children || []).find(c => c.id === window.editingChildId);
+    if (child) {
+      child.name = name;
+      child.grade = `${grade} (${age})`;
+      child.school = school;
+      child.pickup = pickup;
+      child.notes = notes;
+    }
+  } else {
+    const newId = 'child_' + Date.now();
+    window.appState.children.push({
+      id: newId,
+      name: name,
+      grade: `${grade} (${age})`,
+      school: school,
+      pickup: pickup,
+      notes: notes
+    });
+  }
+
+  window.renderMyChildrenList();
+  window.navigateTo('myChildren');
+};
+
+// Initial render
+window.renderMyChildrenList();
 
 
 

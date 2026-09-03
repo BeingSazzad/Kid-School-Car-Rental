@@ -887,59 +887,20 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">My Children</h2>
-        <button class="top-bar-action" onclick="navigateTo('addChild')">+ Add</button>
+        <button class="top-bar-action" onclick="openAddChildModal()">+ Add</button>
       </div>
 
       <div class="screen-scroll-body">
         <p style="font-size: 13.5px; color: var(--color-body);">Manage transportation details, schools, and pickup
           locations for your children.</p>
 
-        <div class="child-manage-list">
-          <!-- Child Card 1 -->
-          <div class="child-manage-card" onclick="navigateTo('addChild')">
-            <div class="child-manage-left">
-              <div class="child-monogram-avatar navy">AK</div>
-              <div>
-                <div class="child-manage-name">Arman Khan</div>
-                <div class="child-manage-sub">Grade 4 • Greenfield International</div>
-              </div>
-            </div>
-            <button class="btn-icon-contact" onclick="event.stopPropagation(); navigateTo('addChild');" aria-label="Edit Child">
-              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;"></i>
-            </button>
-          </div>
-
-          <!-- Child Card 2 -->
-          <div class="child-manage-card" onclick="navigateTo('addChild')">
-            <div class="child-manage-left">
-              <div class="child-monogram-avatar blue">EK</div>
-              <div>
-                <div class="child-manage-name">Emma Khan</div>
-                <div class="child-manage-sub">Grade 2 • Greenfield International</div>
-              </div>
-            </div>
-            <button class="btn-icon-contact" onclick="event.stopPropagation(); navigateTo('addChild');" aria-label="Edit Child">
-              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;"></i>
-            </button>
-          </div>
-
-          <!-- Child Card 3 -->
-          <div class="child-manage-card" onclick="navigateTo('addChild')">
-            <div class="child-manage-left">
-              <div class="child-monogram-avatar orange">ZK</div>
-              <div>
-                <div class="child-manage-name">Zara Khan</div>
-                <div class="child-manage-sub">Kindergarten • Sunshine Pre-school</div>
-              </div>
-            </div>
-            <button class="btn-icon-contact" onclick="event.stopPropagation(); navigateTo('addChild');" aria-label="Edit Child">
-              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;"></i>
-            </button>
-          </div>
+        <!-- Dynamic reactive child cards container -->
+        <div class="child-manage-list" id="myChildrenListContainer">
+          <!-- Rendered dynamically by renderMyChildrenList() -->
         </div>
 
         <!-- Add Another Child Dashed Button -->
-        <div class="add-child-dashed-btn" onclick="navigateTo('addChild')">
+        <div class="add-child-dashed-btn" onclick="openAddChildModal()">
           <i data-lucide="plus" style="width:20px;height:20px;"></i>
           <span>Add Another Child Profile</span>
         </div>
@@ -993,7 +954,7 @@
         <button class="back-btn" onclick="navigateTo('myChildren')">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Child Profile</h2>
+        <h2 class="top-bar-title" id="childFormTopTitle">Child Profile</h2>
         <span style="width: 26px;"></span>
       </div>
 
@@ -1001,17 +962,17 @@
         <!-- Child Avatar Hero -->
         <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 10px;">
           <div style="position: relative;">
-            <div style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); background: linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800;">
+            <div id="childFormMonogram" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); background: linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800;">
               AK
             </div>
             <button type="button" onclick="alert('Upload child photo')" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-secondary); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
               <i data-lucide="camera" style="width:13px;height:13px;"></i>
             </button>
           </div>
-          <div style="font-size: 11.5px; font-weight: 700; color: var(--color-primary); background: var(--color-fade); padding: 3px 12px; border-radius: var(--radius-pill); margin-top: 8px;">Grade 4 • 9 Years Old • Active Student</div>
+          <div id="childFormHeroBadge" style="font-size: 11.5px; font-weight: 700; color: var(--color-primary); background: var(--color-fade); padding: 3px 12px; border-radius: var(--radius-pill); margin-top: 8px;">Grade 4 • 9 Years Old • Active Student</div>
         </div>
 
-        <form onsubmit="event.preventDefault(); alert('Child profile saved!'); navigateTo('myChildren');" style="display: flex; flex-direction: column; gap: 12px;">
+        <form id="childProfileForm" onsubmit="saveChildProfileForm(event)" style="display: flex; flex-direction: column; gap: 12px;">
           <!-- Section 1: Student Identity -->
           <div class="profile-form-section-card">
             <div class="profile-section-title">
@@ -1086,7 +1047,7 @@
           </div>
 
           <div style="margin-top: 4px;">
-            <button type="submit" class="btn-primary" style="box-shadow: var(--shadow-button); width: 100%;">Save Child Profile</button>
+            <button type="submit" id="childFormSubmitBtn" class="btn-primary" style="box-shadow: var(--shadow-button); width: 100%;">Save Child Profile</button>
           </div>
 
           <p style="font-size: 11.5px; color: var(--color-body); text-align: center; margin-top: 2px;">
