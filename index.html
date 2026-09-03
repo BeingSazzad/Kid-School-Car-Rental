@@ -689,7 +689,7 @@
                   data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
             </div>
 
-            <!-- Main Next Trip Card -->
+            <!-- Trip Card 1: Both-Way Recurring Daily Commute -->
             <div class="trip-card" onclick="openBookingDetails('H2S-84920')" style="cursor: pointer;">
               <div class="trip-card-top">
                 <!-- Date Box -->
@@ -699,7 +699,7 @@
                   <span class="db-weekday">Wed</span>
                 </div>
 
-                <!-- Timeline Route Details -->
+                <!-- Timeline Route Details (Both-way) -->
                 <div class="route-timeline">
                   <!-- Drop-off Point -->
                   <div class="timeline-stop">
@@ -729,11 +729,107 @@
               <!-- Bottom Meta Row -->
               <div class="trip-card-footer">
                 <div class="repeat-info">
-                  <i data-lucide="repeat" style="width:14px;height:14px;"></i>
+                  <i data-lucide="user" style="width:14px;height:14px;color:var(--color-body);"></i>
                   <span id="homeNextTripMeta">Arman &amp; Emma • Driver Tariq A.</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:6px;">
-                  <span class="both-way-badge">⇄ Both-way</span>
+                  <span class="both-way-badge"><i data-lucide="repeat" style="width:11px;height:11px;"></i> Both-way</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--color-secondary);">Details →</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trip Card 2: One-Way Morning Ride (Zara - Pre-School) -->
+            <div class="trip-card" onclick="openBookingDetails('H2S-73190')" style="cursor: pointer;">
+              <div class="trip-card-top">
+                <!-- Date Box -->
+                <div class="date-badge-box">
+                  <span class="db-month">MAY</span>
+                  <span class="db-day">23</span>
+                  <span class="db-weekday">Thu</span>
+                </div>
+
+                <!-- Timeline Route Details (One-way) -->
+                <div class="route-timeline">
+                  <div class="timeline-stop">
+                    <span class="dot-marker green"></span>
+                    <div class="timeline-connector"></div>
+                    <div class="stop-texts">
+                      <div class="stop-time-title">
+                        <strong>08:15 AM</strong> <span class="type-pill">• Morning Pickup</span>
+                      </div>
+                      <div class="stop-location">Home (12 Elm Street)</div>
+                    </div>
+                  </div>
+
+                  <div class="timeline-stop">
+                    <span class="dot-marker orange"></span>
+                    <div class="stop-texts">
+                      <div class="stop-time-title">
+                        <strong>08:35 AM</strong> <span class="type-pill">• School Arrival</span>
+                      </div>
+                      <div class="stop-location">Sunshine Pre-school</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Meta Row -->
+              <div class="trip-card-footer">
+                <div class="repeat-info">
+                  <i data-lucide="user" style="width:14px;height:14px;color:var(--color-body);"></i>
+                  <span>Zara Khan • Sarah Jenkins (WalkShare)</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--color-secondary);">Details →</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trip Card 3: One-Way Afternoon Return (Arman - Robotics Club) -->
+            <div class="trip-card" onclick="openBookingDetails('H2S-84920')" style="cursor: pointer;">
+              <div class="trip-card-top">
+                <!-- Date Box -->
+                <div class="date-badge-box">
+                  <span class="db-month">MAY</span>
+                  <span class="db-day">24</span>
+                  <span class="db-weekday">Fri</span>
+                </div>
+
+                <!-- Timeline Route Details (One-way) -->
+                <div class="route-timeline">
+                  <div class="timeline-stop">
+                    <span class="dot-marker green"></span>
+                    <div class="timeline-connector"></div>
+                    <div class="stop-texts">
+                      <div class="stop-time-title">
+                        <strong>03:45 PM</strong> <span class="type-pill">• Late Pickup</span>
+                      </div>
+                      <div class="stop-location">Greenfield International (Gate B)</div>
+                    </div>
+                  </div>
+
+                  <div class="timeline-stop">
+                    <span class="dot-marker orange"></span>
+                    <div class="stop-texts">
+                      <div class="stop-time-title">
+                        <strong>04:10 PM</strong> <span class="type-pill">• Home Return</span>
+                      </div>
+                      <div class="stop-location">Home (12 Elm Street)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Meta Row -->
+              <div class="trip-card-footer">
+                <div class="repeat-info">
+                  <i data-lucide="user" style="width:14px;height:14px;color:var(--color-body);"></i>
+                  <span>Arman Khan • Driver Tariq A.</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
                   <span style="font-size:12px;font-weight:700;color:var(--color-secondary);">Details →</span>
                 </div>
               </div>

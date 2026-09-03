@@ -1164,6 +1164,10 @@ svg.lucide {
   gap: 16px;
 }
 
+.trip-card:not(:last-child) {
+  margin-bottom: 12px;
+}
+
 .trip-card-top {
   display: flex;
   gap: 16px;
@@ -1291,11 +1295,26 @@ svg.lucide {
 
 .both-way-badge {
   padding: 3px 8px;
-  background-color: var(--color-accent-blue-light);
-  color: #2563EB;
-  border-radius: 6px;
+  background-color: var(--color-fade);
+  color: var(--color-primary);
+  border-radius: var(--radius-xs);
   font-weight: 700;
   font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.one-way-badge {
+  padding: 3px 8px;
+  background-color: var(--color-accent-orange-light);
+  color: var(--color-secondary);
+  border-radius: var(--radius-xs);
+  font-weight: 700;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* Bottom Tab Navigation Bar */
