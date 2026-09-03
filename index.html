@@ -1089,44 +1089,101 @@
       </div>
 
       <div class="screen-scroll-body">
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px;">
-          <img src="/assets/avatar_john.png" alt="Child Avatar" class="provider-large-avatar"
-            style="border-color: var(--color-fade);" />
-          <button class="btn-secondary-link" style="color: var(--color-secondary); font-size: 13px;">Change
-            Photo</button>
+        <!-- Child Avatar Hero -->
+        <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 10px;">
+          <div style="position: relative;">
+            <div style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); background: linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800;">
+              AK
+            </div>
+            <button type="button" onclick="alert('Upload child photo')" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-secondary); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+              <i data-lucide="camera" style="width:13px;height:13px;"></i>
+            </button>
+          </div>
+          <div style="font-size: 11.5px; font-weight: 700; color: var(--color-primary); background: var(--color-fade); padding: 3px 12px; border-radius: var(--radius-pill); margin-top: 8px;">Grade 4 • 9 Years Old • Active Student</div>
         </div>
 
-        <form onsubmit="event.preventDefault(); alert('Child profile saved!'); navigateTo('myChildren');"
-          class="profile-fields-form">
-          <div class="form-group">
-            <label class="form-label">Full Name</label>
-            <input type="text" class="form-input" value="Arman Khan" required />
+        <form onsubmit="event.preventDefault(); alert('Child profile saved!'); navigateTo('myChildren');" style="display: flex; flex-direction: column; gap: 12px;">
+          <!-- Section 1: Student Identity -->
+          <div class="profile-form-section-card">
+            <div class="profile-section-title">
+              <i data-lucide="user"></i>
+              <span>Student Identity</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Full Legal Name</label>
+              <div class="input-box-wrapper">
+                <i data-lucide="user" class="input-box-icon"></i>
+                <input type="text" class="form-input" id="editChildName" value="Arman Khan" placeholder="e.g. Arman Khan" required />
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label class="form-label">Grade</label>
+                <div class="input-box-wrapper">
+                  <i data-lucide="graduation-cap" class="input-box-icon"></i>
+                  <select class="form-input" id="editChildGrade" style="cursor: pointer;">
+                    <option value="Kindergarten">Kindergarten</option>
+                    <option value="Grade 1">Grade 1</option>
+                    <option value="Grade 2">Grade 2</option>
+                    <option value="Grade 3">Grade 3</option>
+                    <option value="Grade 4" selected>Grade 4</option>
+                    <option value="Grade 5">Grade 5</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Age</label>
+                <div class="input-box-wrapper">
+                  <i data-lucide="calendar" class="input-box-icon"></i>
+                  <input type="text" class="form-input" id="editChildAge" value="9 Years" placeholder="e.g. 9 Years" required />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">School Name</label>
+              <div class="input-box-wrapper">
+                <i data-lucide="school" class="input-box-icon"></i>
+                <input type="text" class="form-input" id="editChildSchool" value="Greenfield International School" placeholder="School name" required />
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Grade / Age</label>
-            <input type="text" class="form-input" value="Grade 4 (9 years)" required />
+          <!-- Section 2: Commute & Safety Protocol -->
+          <div class="profile-form-section-card">
+            <div class="profile-section-title">
+              <i data-lucide="shield-check"></i>
+              <span>Commute &amp; Safety Protocol</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Default Pickup Location</label>
+              <div class="input-box-wrapper">
+                <i data-lucide="map-pin" class="input-box-icon"></i>
+                <input type="text" class="form-input" id="editChildPickup" value="Home (12 Elm Street, Toronto)" placeholder="Pickup address" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Safety, Equipment &amp; Medical Notes</label>
+              <div class="input-box-wrapper">
+                <i data-lucide="alert-circle" class="input-box-icon"></i>
+                <input type="text" class="form-input" id="editChildNotes" value="Wears booster seat (Provided by parent)" placeholder="e.g. Peanut allergy, booster seat" />
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">School Name</label>
-            <input type="text" class="form-input" value="Greenfield International School" required />
+          <div style="margin-top: 4px;">
+            <button type="submit" class="btn-primary" style="box-shadow: var(--shadow-button); width: 100%;">Save Child Profile</button>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Default Pickup Location</label>
-            <input type="text" class="form-input" value="Home (12 Elm Street)" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Special Safety or Medical Notes (Optional)</label>
-            <input type="text" class="form-input" placeholder="e.g. Peanut allergy, wears booster seat"
-              value="Wears booster seat" />
-          </div>
-
-          <div style="margin-top: 20px;">
-            <button type="submit" class="btn-primary">Save Child Profile</button>
-          </div>
+          <p style="font-size: 11.5px; color: var(--color-body); text-align: center; margin-top: 2px;">
+            <i data-lucide="lock" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;color:var(--color-primary);"></i>
+            Child profile data encrypted under COPPA safety regulations.
+          </p>
         </form>
       </div>
 
