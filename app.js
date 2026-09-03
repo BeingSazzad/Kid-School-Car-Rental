@@ -1,6 +1,9 @@
 /* ==========================================================
    Home2School Interactive Controller & Navigation Logic
+   Senior Product Architecture: Reactive State & Dynamic Sync
    ========================================================== */
+
+let currentScreen = 'home';
 
 const screens = [
   'splash',
@@ -11,12 +14,134 @@ const screens = [
   'authOtp',
   'authProfile',
   'authPhoto',
+  'authAddChild',
   'authSuccess',
-  'home'
+  'home',
+  'myChildren',
+  'addChild',
+  'bookingSelectChildren',
+  'bookingTripSetup',
+  'bookingSearchProviders',
+  'bookingProviderDetails',
+  'bookingSummary',
+  'bookingRequestSent',
+  'bookingConfirmed',
+  'bookingDetails',
+  'tracking',
+  'messages',
+  'bookings',
+  'profile',
+  'rating'
 ];
 
-// Navigation router
-window.navigateTo = function(screenName) {
+/* ==========================================================
+   Central Application State (Single Source of Truth)
+   ========================================================== */
+window.appState = {
+  user: {
+    name: 'Sadia Khan',
+    phone: '+1 (416) 555-0192',
+    email: 'sadia.khan@example.com',
+    role: 'Mother'
+  },
+  children: [
+    { id: 'arman', name: 'Arman Khan', grade: 'Grade 4 (9 yrs)', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Wears booster seat' },
+    { id: 'emma', name: 'Emma Khan', grade: 'Grade 2 (7 yrs)', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Sits next to brother' },
+    { id: 'zara', name: 'Zara Khan', grade: 'Kindergarten (5 yrs)', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate' }
+  ],
+  providers: [
+    { id: 'tariq', name: 'Tariq Ahmed', vehicle: 'Toyota Sienna (2023)', plate: 'SCH-4091', rating: 4.9, reviewsCount: 128, seats: 4, baseWeekly: 120, photo: '/assets/avatar_john.png', phone: '+1 (416) 555-0182' },
+    { id: 'farhana', name: 'Farhana Yasmin', vehicle: 'Honda Odyssey (2024)', plate: 'KID-2810', rating: 5.0, reviewsCount: 94, seats: 5, baseWeekly: 135, photo: '/assets/avatar_john.png', phone: '+1 (416) 555-0183' },
+    { id: 'kabir', name: 'Kabir Hossain', vehicle: 'Nissan Rogue (2022)', plate: 'SCH-9102', rating: 4.8, reviewsCount: 62, seats: 2, baseWeekly: 110, photo: '/assets/avatar_john.png', phone: '+1 (416) 555-0184' },
+    { id: 'sarah', name: 'Sarah Jenkins (WalkShare)', vehicle: 'Walking School Bus Escort', plate: 'VERIFIED-WALK', rating: 4.9, reviewsCount: 45, seats: 3, baseWeekly: 75, photo: '/assets/avatar_john.png', phone: '+1 (416) 555-0185' }
+  ],
+  selectedChildIds: ['arman', 'emma'],
+  bookingDraft: {
+    direction: 'bothway', // 'bothway' | 'oneway'
+    frequency: 'recurring', // 'recurring' | 'onetime'
+    pickupLocation: 'Home (12 Elm Street)',
+    schoolLocation: 'Greenfield International School',
+    outboundTime: '07:30 AM',
+    returnTime: '01:00 PM',
+    selectedDays: ['M', 'T', 'W', 'T', 'F'],
+    providerId: 'tariq',
+    paymentMethod: 'Visa •••• 4242'
+  },
+  bookings: [
+    {
+      id: 'H2S-84920',
+      status: 'confirmed', // 'confirmed' | 'in_progress' | 'completed' | 'cancelled'
+      childIds: ['arman', 'emma'],
+      direction: 'bothway',
+      frequency: 'recurring',
+      scheduleText: 'Mon–Fri • Outbound: 07:30 AM | Return: 01:00 PM',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Greenfield International School',
+      outboundTime: '07:30 AM',
+      returnTime: '01:00 PM',
+      providerId: 'tariq',
+      amount: 120,
+      paymentMethod: 'Visa •••• 4242',
+      createdAt: 'May 20, 2026'
+    },
+    {
+      id: 'H2S-73190',
+      status: 'pending',
+      childIds: ['zara'],
+      direction: 'oneway',
+      frequency: 'onetime',
+      scheduleText: 'Thursday, May 23 • 08:15 AM',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Sunshine Pre-school',
+      outboundTime: '08:15 AM',
+      returnTime: '',
+      providerId: 'sarah',
+      amount: 35,
+      paymentMethod: 'Visa •••• 4242',
+      createdAt: 'May 21, 2026'
+    },
+    {
+      id: 'H2S-61029',
+      status: 'completed',
+      childIds: ['arman', 'emma'],
+      direction: 'bothway',
+      frequency: 'recurring',
+      scheduleText: 'Mon–Fri (Previous Week)',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Greenfield International School',
+      outboundTime: '07:30 AM',
+      returnTime: '01:00 PM',
+      providerId: 'tariq',
+      amount: 120,
+      paymentMethod: 'Visa •••• 4242',
+      createdAt: 'May 14, 2026'
+    },
+    {
+      id: 'H2S-54012',
+      status: 'cancelled',
+      childIds: ['zara'],
+      direction: 'oneway',
+      frequency: 'onetime',
+      scheduleText: 'May 10, 2026',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Sunshine Pre-school',
+      outboundTime: '08:15 AM',
+      returnTime: '',
+      providerId: 'sarah',
+      amount: 35,
+      paymentMethod: 'Visa •••• 4242',
+      createdAt: 'May 08, 2026'
+    }
+  ],
+  activeBookingId: 'H2S-84920',
+  homeScenario: 'B', // 'A' | 'B' | 'C'
+  trackingStageIndex: 2
+};
+
+/* ==========================================================
+   Navigation Router
+   ========================================================== */
+window.navigateTo = function (screenName) {
   if (!screens.includes(screenName)) return;
 
   currentScreen = screenName;
@@ -35,8 +160,24 @@ window.navigateTo = function(screenName) {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
+  // Dynamic View Renderers
+  if (screenName === 'home') {
+    renderHome();
+  } else if (screenName === 'bookingSummary') {
+    renderBookingSummary();
+  } else if (screenName === 'bookings') {
+    renderBookingsList('upcoming');
+  } else if (screenName === 'bookingDetails') {
+    renderBookingDetails(window.appState.activeBookingId);
+  } else if (screenName === 'bookingConfirmed') {
+    renderBookingConfirmation();
+  }
+
+  // Update Bottom Tab Bar highlights
+  updateBottomTabHighlights(screenName);
+
   // Screen specific triggers
-  if (screenName === 'authSuccess') {
+  if (screenName === 'authSuccess' || screenName === 'bookingConfirmed') {
     triggerCelebrationConfetti();
   } else if (screenName === 'authOtp') {
     focusFirstEmptyOtp();
@@ -48,7 +189,36 @@ window.navigateTo = function(screenName) {
   }
 };
 
-// Listen for browser hash changes (e.g. back button or manual hash change)
+// Bottom Tab active highlight sync
+function updateBottomTabHighlights(screenName) {
+  const tabMap = {
+    home: 0,
+    bookings: 1,
+    bookingDetails: 1,
+    bookingRequestSent: 1,
+    bookingConfirmed: 1,
+    tracking: 2,
+    messages: 3,
+    profile: 4,
+    myChildren: 4
+  };
+
+  const activeIndex = tabMap[screenName];
+  if (activeIndex !== undefined) {
+    document.querySelectorAll('.bottom-tab-bar').forEach(bar => {
+      const tabs = bar.querySelectorAll('.tab-item');
+      tabs.forEach((tab, idx) => {
+        if (idx === activeIndex) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+    });
+  }
+}
+
+// Browser back/forward sync
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash.replace('#', '');
   if (hash && screens.includes(hash) && hash !== currentScreen) {
@@ -56,17 +226,619 @@ window.addEventListener('hashchange', () => {
   }
 });
 
-// Set initial screen: defaults to home so user immediately sees home screen
+// Initialization
 window.addEventListener('DOMContentLoaded', () => {
-  if (window.lucide && typeof window.lucide.createIcons === 'function') {
-    window.lucide.createIcons();
-  }
+  renderHome();
   const hash = window.location.hash ? window.location.hash.replace('#', '') : '';
   const initial = (hash && screens.includes(hash)) ? hash : 'home';
   window.navigateTo(initial);
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
 });
 
-// OTP Input Logic
+/* ==========================================================
+   Home Screen: State-Driven Logic (Scenario A / B / C)
+   ========================================================== */
+window.setHomeState = function (state) {
+  window.appState.homeScenario = state;
+  renderHome();
+};
+
+function renderHome() {
+  const state = window.appState.homeScenario;
+  const viewA = document.getElementById('homeStateAView');
+  const viewB = document.getElementById('homeStateBView');
+  const viewC = document.getElementById('homeStateCView');
+
+  const btnA = document.getElementById('btnStateA');
+  const btnB = document.getElementById('btnStateB');
+  const btnC = document.getElementById('btnStateC');
+
+  [btnA, btnB, btnC].forEach(b => b?.classList.remove('active'));
+
+  if (state === 'A') {
+    if (viewA) viewA.style.display = 'flex';
+    if (viewB) viewB.style.display = 'none';
+    if (viewC) viewC.style.display = 'none';
+    btnA?.classList.add('active');
+  } else if (state === 'B') {
+    if (viewA) viewA.style.display = 'none';
+    if (viewB) viewB.style.display = 'flex';
+    if (viewC) viewC.style.display = 'none';
+    btnB?.classList.add('active');
+
+    // Populate upcoming ride card from active booking
+    const activeBooking = window.appState.bookings.find(b => b.id === window.appState.activeBookingId) || window.appState.bookings[0];
+    if (activeBooking) {
+      const provider = window.appState.providers.find(p => p.id === activeBooking.providerId) || window.appState.providers[0];
+      const childNames = activeBooking.childIds.map(cid => {
+        const c = window.appState.children.find(ch => ch.id === cid);
+        return c ? c.name.split(' ')[0] : cid;
+      }).join(' & ');
+
+      const cardMeta = document.getElementById('homeNextTripMeta');
+      if (cardMeta) {
+        cardMeta.textContent = `${childNames} • Driver ${provider.name.split(' ')[0]} A.`;
+      }
+    }
+  } else if (state === 'C') {
+    if (viewA) viewA.style.display = 'none';
+    if (viewB) viewB.style.display = 'none';
+    if (viewC) viewC.style.display = 'flex';
+    btnC?.classList.add('active');
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+window.toggleNotificationAlert = function () {
+  alert('🔔 Home2School Updates:\n• Tariq Ahmed scheduled for 07:30 AM tomorrow\n• Weekly recurring schedule active for Arman & Emma');
+};
+
+/* ==========================================================
+   Booking Wizard: Step 1 Child Multi-Selection
+   ========================================================== */
+window.toggleChildSelection = function (childId) {
+  const list = window.appState.selectedChildIds;
+  const idx = list.indexOf(childId);
+  const card = document.getElementById(`childCard-${childId}`);
+
+  if (idx > -1) {
+    if (list.length === 1) {
+      alert('Please select at least one child for the trip.');
+      return;
+    }
+    list.splice(idx, 1);
+    card?.classList.remove('selected');
+  } else {
+    list.push(childId);
+    card?.classList.add('selected');
+  }
+
+  const badge = document.getElementById('passengerBadge');
+  if (badge) {
+    badge.textContent = `👥 ${list.length} Selected`;
+  }
+};
+
+/* ==========================================================
+   Booking Wizard: Step 2 Trip Direction & Frequency
+   ========================================================== */
+window.setTripDirection = function (dir) {
+  window.appState.bookingDraft.direction = dir;
+  const btnOne = document.getElementById('btnDirOneWay');
+  const btnBoth = document.getElementById('btnDirBothWay');
+  const returnCard = document.getElementById('returnLegCard');
+
+  if (dir === 'oneway') {
+    btnOne?.classList.add('active');
+    btnBoth?.classList.remove('active');
+    if (returnCard) returnCard.style.display = 'none';
+  } else {
+    btnOne?.classList.remove('active');
+    btnBoth?.classList.add('active');
+    if (returnCard) returnCard.style.display = 'flex';
+  }
+};
+
+window.setBookingFrequency = function (freq) {
+  window.appState.bookingDraft.frequency = freq;
+  const btnOneTime = document.getElementById('btnFreqOneTime');
+  const btnRec = document.getElementById('btnFreqRecurring');
+  const weekdaysBox = document.getElementById('weekdaySelectorBox');
+
+  if (freq === 'onetime') {
+    btnOneTime?.classList.add('active');
+    btnRec?.classList.remove('active');
+    if (weekdaysBox) weekdaysBox.style.display = 'none';
+  } else {
+    btnOneTime?.classList.remove('active');
+    btnRec?.classList.add('active');
+    if (weekdaysBox) weekdaysBox.style.display = 'flex';
+  }
+};
+
+/* ==========================================================
+   Booking Wizard: Step 3 Provider Selection
+   ========================================================== */
+window.selectProviderAndReview = function (name) {
+  const provider = window.appState.providers.find(p => p.name.includes(name) || p.id === name) || window.appState.providers[0];
+  window.appState.bookingDraft.providerId = provider.id;
+
+  const nameEl = document.getElementById('detailsProviderName');
+  const vehicleEl = document.getElementById('detailsProviderVehicle');
+
+  if (nameEl) nameEl.textContent = provider.name;
+  if (vehicleEl) vehicleEl.textContent = `${provider.vehicle} (Clean & Certified)`;
+
+  window.navigateTo('bookingProviderDetails');
+};
+
+/* ==========================================================
+   Booking Wizard: Step 4 Dynamic Summary & Calculations
+   ========================================================== */
+function calculateDraftPrice() {
+  const draft = window.appState.bookingDraft;
+  const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
+  const count = window.appState.selectedChildIds.length;
+
+  let baseRate = provider.baseWeekly;
+  if (draft.direction === 'oneway') {
+    baseRate = Math.round(baseRate * 0.6);
+  }
+
+  // 2nd and subsequent children get 20% discount
+  let discount = 0;
+  if (count > 1) {
+    discount = Math.round(baseRate * 0.2 * (count - 1));
+  }
+
+  const insurance = 8;
+  const total = (baseRate * count) - discount + insurance;
+
+  return {
+    baseRate: baseRate * count,
+    discount,
+    insurance,
+    total
+  };
+}
+
+function renderBookingSummary() {
+  const draft = window.appState.bookingDraft;
+  const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
+  const children = window.appState.selectedChildIds.map(id => {
+    const c = window.appState.children.find(ch => ch.id === id);
+    return c ? c.name : id;
+  });
+
+  const childrenEl = document.getElementById('summaryChildrenText');
+  const dirEl = document.getElementById('summaryDirectionText');
+  const outboundEl = document.getElementById('summaryOutboundText');
+  const returnEl = document.getElementById('summaryReturnText');
+  const freqEl = document.getElementById('summaryFreqText');
+  const providerEl = document.getElementById('summaryProviderText');
+
+  if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
+  if (dirEl) dirEl.textContent = draft.direction === 'bothway' ? '⇄ Both-way (Round Trip)' : '→ One-way';
+  if (outboundEl) outboundEl.textContent = `${draft.pickupLocation.split(' ')[0]} → School (${draft.outboundTime})`;
+  if (returnEl) {
+    if (draft.direction === 'bothway') {
+      returnEl.textContent = `School → ${draft.pickupLocation.split(' ')[0]} (${draft.returnTime})`;
+      returnEl.parentElement.style.display = 'flex';
+    } else {
+      returnEl.parentElement.style.display = 'none';
+    }
+  }
+  if (freqEl) freqEl.textContent = draft.frequency === 'recurring' ? 'Recurring (Mon – Fri)' : 'One-time Trip';
+  if (providerEl) providerEl.textContent = `${provider.name} (${provider.vehicle.split(' ')[0]} ${provider.vehicle.split(' ')[1] || ''})`;
+
+  // Price calculations
+  const price = calculateDraftPrice();
+  const baseEl = document.getElementById('summaryBasePriceText');
+  const discEl = document.getElementById('summaryDiscountPriceText');
+  const totalEl = document.getElementById('summaryTotalPriceText');
+
+  if (baseEl) baseEl.textContent = `$${price.baseRate}.00`;
+  if (discEl) discEl.textContent = price.discount > 0 ? `-$${price.discount}.00` : '$0.00';
+  if (totalEl) totalEl.textContent = `$${price.total}.00 / week`;
+}
+
+/* ==========================================================
+   Booking Wizard: Step 5 Submit & Simulate Acceptance
+   ========================================================== */
+window.submitBookingRequest = function () {
+  const draft = window.appState.bookingDraft;
+  const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
+  const price = calculateDraftPrice();
+
+  const newBooking = {
+    id: `H2S-${Math.floor(10000 + Math.random() * 90000)}`,
+    status: 'pending',
+    childIds: [...window.appState.selectedChildIds],
+    direction: draft.direction,
+    frequency: draft.frequency,
+    scheduleText: draft.direction === 'bothway'
+      ? `Mon–Fri • Outbound: ${draft.outboundTime} | Return: ${draft.returnTime}`
+      : `Outbound: ${draft.outboundTime}`,
+    pickupLocation: draft.pickupLocation,
+    schoolLocation: draft.schoolLocation,
+    outboundTime: draft.outboundTime,
+    returnTime: draft.returnTime,
+    providerId: provider.id,
+    amount: price.total,
+    paymentMethod: draft.paymentMethod,
+    createdAt: 'Just now'
+  };
+
+  window.appState.bookings.unshift(newBooking);
+  window.appState.activeBookingId = newBooking.id;
+
+  // Update Request Sent Screen text
+  const reqDesc = document.getElementById('requestSentDesc');
+  if (reqDesc) {
+    reqDesc.textContent = `${provider.name} has received your school ride request for reference ${newBooking.id}.`;
+  }
+
+  window.navigateTo('bookingRequestSent');
+};
+
+window.simulateProviderAcceptance = function () {
+  const active = window.appState.bookings.find(b => b.id === window.appState.activeBookingId);
+  if (active) {
+    active.status = 'confirmed';
+  }
+  window.appState.homeScenario = 'B';
+
+  triggerCelebrationConfetti();
+  setTimeout(() => {
+    window.navigateTo('bookingConfirmed');
+  }, 400);
+};
+
+function renderBookingConfirmation() {
+  const active = window.appState.bookings.find(b => b.id === window.appState.activeBookingId) || window.appState.bookings[0];
+  const provider = window.appState.providers.find(p => p.id === active.providerId) || window.appState.providers[0];
+  const children = active.childIds.map(id => {
+    const c = window.appState.children.find(ch => ch.id === id);
+    return c ? c.name : id;
+  });
+
+  const refEl = document.getElementById('confirmedRefText');
+  const providerEl = document.getElementById('confirmedProviderText');
+  const childrenEl = document.getElementById('confirmedChildrenText');
+  const totalEl = document.getElementById('confirmedTotalText');
+
+  if (refEl) refEl.textContent = active.id;
+  if (providerEl) providerEl.textContent = `${provider.name} (${provider.vehicle})`;
+  if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
+  if (totalEl) totalEl.textContent = `$${active.amount}.00 / week`;
+}
+
+/* ==========================================================
+   Dedicated Booking Details Screen (#bookingDetails)
+   ========================================================== */
+window.openBookingDetails = function (bookingId) {
+  window.appState.activeBookingId = bookingId;
+  window.navigateTo('bookingDetails');
+};
+
+function renderBookingDetails(bookingId) {
+  const booking = window.appState.bookings.find(b => b.id === bookingId) || window.appState.bookings[0];
+  if (!booking) return;
+
+  const provider = window.appState.providers.find(p => p.id === booking.providerId) || window.appState.providers[0];
+  const children = booking.childIds.map(id => window.appState.children.find(ch => ch.id === id)).filter(Boolean);
+
+  // Reference & status
+  const refEl = document.getElementById('detailRefId');
+  const statusEl = document.getElementById('detailStatusBadge');
+  const titleEl = document.getElementById('detailHeaderTitle');
+
+  if (refEl) refEl.textContent = `REF: ${booking.id}`;
+  if (titleEl) titleEl.textContent = children.map(c => c.name).join(' & ');
+  if (statusEl) {
+    statusEl.className = `status-chip ${booking.status}`;
+    statusEl.textContent = booking.status.toUpperCase();
+  }
+
+  // Children passengers
+  const passWrap = document.getElementById('detailPassengersWrap');
+  if (passWrap) {
+    passWrap.innerHTML = children.map(c => `
+      <div style="display:flex; align-items:center; justify-content:space-between; padding: 6px 0;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="/assets/avatar_john.png" alt="${c.name}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;" />
+          <div>
+            <div style="font-size:14px;font-weight:800;color:var(--color-title);">${c.name}</div>
+            <div style="font-size:12px;color:var(--color-body);">${c.grade} • ${c.school}</div>
+          </div>
+        </div>
+        <span style="font-size:11.5px;background:#E2E8F0;padding:2px 8px;border-radius:6px;font-weight:700;">${c.notes}</span>
+      </div>
+    `).join('');
+  }
+
+  // Route breakdown
+  const outTime = document.getElementById('detailOutboundTime');
+  const retTime = document.getElementById('detailReturnTime');
+  const retBox = document.getElementById('detailReturnLegBox');
+
+  if (outTime) outTime.textContent = booking.outboundTime;
+  if (retTime) retTime.textContent = booking.returnTime || 'N/A';
+  if (retBox) {
+    retBox.style.display = booking.direction === 'bothway' ? 'flex' : 'none';
+  }
+
+  // Provider info
+  const pName = document.getElementById('detailProviderName');
+  const pVeh = document.getElementById('detailProviderVehicle');
+  const pRating = document.getElementById('detailProviderRating');
+
+  if (pName) pName.textContent = provider.name;
+  if (pVeh) pVeh.textContent = `${provider.vehicle} • ${provider.plate}`;
+  if (pRating) pRating.textContent = `★ ${provider.rating} (${provider.reviewsCount} reviews)`;
+
+  // Payment
+  const pAmount = document.getElementById('detailTotalAmount');
+  const pMethod = document.getElementById('detailPayMethod');
+  if (pAmount) pAmount.textContent = `$${booking.amount}.00 / wk`;
+  if (pMethod) pMethod.textContent = booking.paymentMethod;
+
+  // Contextual Actions based on status
+  const actionsWrap = document.getElementById('detailContextualActions');
+  if (actionsWrap) {
+    if (booking.status === 'confirmed' || booking.status === 'pending') {
+      actionsWrap.innerHTML = `
+        <button class="btn-primary" onclick="navigateTo('tracking')">Track Live Ride</button>
+        <button class="btn-secondary-surface" onclick="navigateTo('messages')">Message Driver</button>
+        <button class="btn-danger-surface" onclick="cancelBooking('${booking.id}')">Cancel This Booking</button>
+      `;
+    } else if (booking.status === 'completed') {
+      actionsWrap.innerHTML = `
+        <button class="btn-primary" onclick="navigateTo('rating')">Rate Tariq Ahmed ⭐</button>
+        <button class="btn-secondary-surface" onclick="alert('Receipt emailed to ${window.appState.user.email}')">Download Official Receipt</button>
+        <button class="btn-secondary-surface" onclick="navigateTo('bookingSelectChildren')">Book Again on This Route</button>
+      `;
+    } else if (booking.status === 'cancelled') {
+      actionsWrap.innerHTML = `
+        <div style="font-size:12.5px;color:#DC2626;background:#FEE2E2;padding:10px;border-radius:var(--radius-md);text-align:center;font-weight:700;">
+          This booking was cancelled.
+        </div>
+        <button class="btn-primary" onclick="navigateTo('bookingSelectChildren')">Re-book This Route</button>
+      `;
+    }
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+window.cancelBooking = function (bookingId) {
+  if (confirm('Are you sure you want to cancel this school ride booking?')) {
+    const booking = window.appState.bookings.find(b => b.id === bookingId);
+    if (booking) {
+      booking.status = 'cancelled';
+    }
+    renderBookingDetails(bookingId);
+    renderHome();
+    alert('Booking has been cancelled.');
+  }
+};
+
+/* ==========================================================
+   Bookings Screen: Filter Tabs & Concise Cards
+   ========================================================== */
+window.switchBookingTab = function (tab) {
+  renderBookingsList(tab);
+};
+
+function renderBookingsList(tab) {
+  const btnU = document.getElementById('tabUpcoming');
+  const btnP = document.getElementById('tabPast');
+  const btnC = document.getElementById('tabCancelled');
+  const wrap = document.getElementById('bookingsListWrap');
+
+  [btnU, btnP, btnC].forEach(b => b?.classList.remove('active'));
+
+  let filtered = [];
+  if (tab === 'upcoming') {
+    btnU?.classList.add('active');
+    filtered = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending');
+  } else if (tab === 'past') {
+    btnP?.classList.add('active');
+    filtered = window.appState.bookings.filter(b => b.status === 'completed');
+  } else if (tab === 'cancelled') {
+    btnC?.classList.add('active');
+    filtered = window.appState.bookings.filter(b => b.status === 'cancelled');
+  }
+
+  if (!wrap) return;
+
+  if (filtered.length === 0) {
+    wrap.innerHTML = `
+      <div style="text-align:center; padding: 40px 20px; color:var(--color-body);">
+        <i data-lucide="calendar-x" style="width:36px;height:36px;margin-bottom:8px;color:#94A3B8;"></i>
+        <div style="font-size:15px;font-weight:700;color:var(--color-title);">No ${tab} bookings</div>
+        <p style="font-size:13px;margin-top:4px;">When you arrange rides, they will appear here.</p>
+      </div>
+    `;
+  } else {
+    wrap.innerHTML = filtered.map(b => {
+      const provider = window.appState.providers.find(p => p.id === b.providerId) || window.appState.providers[0];
+      const children = b.childIds.map(id => {
+        const c = window.appState.children.find(ch => ch.id === id);
+        return c ? c.name : id;
+      });
+
+      return `
+        <div class="booking-item-card" onclick="openBookingDetails('${b.id}')" style="cursor:pointer;">
+          <div class="booking-card-top-row">
+            <span class="status-chip ${b.status}">${b.status.toUpperCase()}</span>
+            <span style="font-size: 14px; font-weight: 800; color: var(--color-primary);">$${b.amount}/wk</span>
+          </div>
+
+          <div>
+            <div style="font-size: 16px; font-weight: 800; color: var(--color-title);">${children.join(' & ')}</div>
+            <div style="font-size: 13px; color: var(--color-body); margin-top: 2px;">${b.pickupLocation.split(' ')[0]} ⇄ ${b.schoolLocation}</div>
+            <div style="font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
+              📅 ${b.scheduleText}
+            </div>
+            <div style="font-size: 12px; color: #64748B; margin-top: 2px;">
+              👤 ${provider.name} (${provider.vehicle.split(' ')[0]})
+            </div>
+          </div>
+
+          <div class="booking-actions-row">
+            <button class="btn-booking-sub" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
+            ${b.status === 'confirmed' ? `<button class="btn-booking-sub" onclick="event.stopPropagation(); navigateTo('tracking')">Live Track</button>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+/* ==========================================================
+   Live Tracking: Progressive Lifecycle Stepper
+   ========================================================== */
+const trackingStages = [
+  { chip: 'On The Way', text: 'Tariq is driving towards your home', eta: '07:28 AM', pct: '25%' },
+  { chip: 'At Pickup', text: 'Tariq has arrived at Home (12 Elm Street)', eta: '07:30 AM', pct: '50%' },
+  { chip: 'In Progress', text: 'En route to Greenfield International', eta: '07:42 AM', pct: '70%' },
+  { chip: 'Approaching', text: 'Approaching Greenfield School drop-off zone', eta: '07:44 AM', pct: '88%' },
+  { chip: 'Completed', text: 'Children safely handed to school attendant', eta: '07:46 AM', pct: '100%' }
+];
+
+window.advanceTrackingStage = function () {
+  window.appState.trackingStageIndex = (window.appState.trackingStageIndex + 1) % trackingStages.length;
+  const stage = trackingStages[window.appState.trackingStageIndex];
+
+  const chip = document.getElementById('trackingStatusChip');
+  const stageText = document.getElementById('trackingStageText');
+  const etaText = document.getElementById('trackingEtaText');
+  const progressBar = document.getElementById('stepperProgressBar');
+  const carMarker = document.getElementById('liveMapCarMarker');
+
+  if (chip) chip.textContent = stage.chip;
+  if (stageText) stageText.textContent = stage.text;
+  if (etaText) etaText.textContent = stage.eta;
+  if (progressBar) progressBar.style.width = stage.pct;
+
+  if (carMarker) {
+    const offsets = [
+      { top: '65%', left: '25%' },
+      { top: '60%', left: '32%' },
+      { top: '48%', left: '46%' },
+      { top: '35%', left: '60%' },
+      { top: '28%', left: '72%' }
+    ];
+    const pos = offsets[window.appState.trackingStageIndex];
+    carMarker.style.top = pos.top;
+    carMarker.style.left = pos.left;
+  }
+
+  const s1 = document.getElementById('step1Node');
+  const s2 = document.getElementById('step2Node');
+  const s3 = document.getElementById('step3Node');
+  const s4 = document.getElementById('step4Node');
+
+  [s1, s2, s3, s4].forEach(n => n?.classList.remove('completed', 'active'));
+
+  const idx = window.appState.trackingStageIndex;
+  if (idx >= 0) s1?.classList.add(idx > 0 ? 'completed' : 'active');
+  if (idx >= 1) s2?.classList.add(idx > 1 ? 'completed' : 'active');
+  if (idx >= 2) s3?.classList.add(idx > 2 ? 'completed' : 'active');
+  if (idx >= 4) {
+    s4?.classList.add('completed');
+    setTimeout(() => {
+      if (confirm('🎉 Drop-off completed safely! Would you like to rate Tariq Ahmed now?')) {
+        window.navigateTo('rating');
+      }
+    }, 600);
+  }
+};
+
+/* ==========================================================
+   Messaging / Parent-Provider Chat
+   ========================================================== */
+window.sendQuickReply = function (text) {
+  appendChatMessage(text, 'parent');
+  simulateDriverReply();
+};
+
+window.handleSendChatMessage = function (e) {
+  e.preventDefault();
+  const input = document.getElementById('chatInputField');
+  if (!input || !input.value.trim()) return;
+
+  const text = input.value.trim();
+  appendChatMessage(text, 'parent');
+  input.value = '';
+
+  simulateDriverReply();
+};
+
+function appendChatMessage(text, sender) {
+  const stream = document.getElementById('chatStream');
+  if (!stream) return;
+
+  const bubble = document.createElement('div');
+  bubble.className = `chat-bubble ${sender}`;
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  bubble.innerHTML = `
+    ${text}
+    <div class="chat-timestamp">${timeStr}</div>
+  `;
+
+  stream.appendChild(bubble);
+  stream.scrollTop = stream.scrollHeight;
+}
+
+function simulateDriverReply() {
+  setTimeout(() => {
+    const replies = [
+      "Thank you, Sadia! Rest assured your children are safe with me.",
+      "Understood! Driving carefully and following the verified school route.",
+      "Just arrived at the school drop-off loop. All good!"
+    ];
+    const randomReply = replies[Math.floor(Math.random() * replies.length)];
+    appendChatMessage(randomReply, 'provider');
+  }, 1200);
+}
+
+/* ==========================================================
+   Rating System
+   ========================================================== */
+window.setRatingScore = function (score) {
+  const starsContainer = document.getElementById('ratingStars');
+  if (!starsContainer) return;
+
+  const btns = starsContainer.querySelectorAll('.star-btn');
+  btns.forEach((btn, idx) => {
+    if (idx < score) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+};
+
+/* ==========================================================
+   OTP Input Navigation Logic
+   ========================================================== */
 function focusFirstEmptyOtp() {
   const inputs = document.querySelectorAll('.otp-box');
   for (const input of inputs) {
@@ -78,7 +850,7 @@ function focusFirstEmptyOtp() {
 }
 
 document.querySelectorAll('.otp-box').forEach((box, idx, list) => {
-  box.addEventListener('input', (e) => {
+  box.addEventListener('input', () => {
     if (box.value.length > 1) {
       box.value = box.value.slice(-1);
     }
@@ -87,7 +859,6 @@ document.querySelectorAll('.otp-box').forEach((box, idx, list) => {
       if (idx < list.length - 1) {
         list[idx + 1].focus();
       } else {
-        // Auto continue on 4th digit entered
         setTimeout(() => {
           window.navigateTo('authProfile');
         }, 300);
@@ -104,24 +875,28 @@ document.querySelectorAll('.otp-box').forEach((box, idx, list) => {
   });
 });
 
-// Confetti burst for Success Screen
+/* ==========================================================
+   Confetti Burst Celebration
+   ========================================================== */
 function triggerCelebrationConfetti() {
   if (typeof confetti === 'function') {
     confetti({
-      particleCount: 90,
+      particleCount: 85,
       spread: 70,
       origin: { y: 0.45 },
-      colors: ['var(--color-secondary)', 'var(--color-primary)', '#0284C7', '#F59E0B', '#10B981']
+      colors: ['#F2600C', '#1B2B68', '#0284C7', '#F59E0B', '#10B981']
     });
   }
 }
 
-// Photo upload trigger & handler
-window.triggerPhotoUpload = function() {
+/* ==========================================================
+   Avatar Upload Handlers
+   ========================================================== */
+window.triggerPhotoUpload = function () {
   document.getElementById('photoFileInput')?.click();
 };
 
-window.handlePhotoUpload = function(event) {
+window.handlePhotoUpload = function (event) {
   const file = event.target.files?.[0];
   if (file) {
     const url = URL.createObjectURL(file);
@@ -132,21 +907,61 @@ window.handlePhotoUpload = function(event) {
   }
 };
 
-// Bottom tabs interaction on Home screen
-document.querySelectorAll('.bottom-tab-bar .tab-item').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.bottom-tab-bar .tab-item').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-  });
-});
+window.addEmergencyContact = function () {
+  const name = prompt('Enter Contact Full Name:');
+  if (!name) return;
+  const rel = prompt('Relationship (e.g. Aunt, Neighbor, Co-parent):') || 'Guardian';
+  const phone = prompt('Mobile Phone Number:') || '+1 (416) 555-0000';
 
-// Auto advance from splash after 2.5 seconds if untouched
-let splashTimer = setTimeout(() => {
-  if (currentScreen === 'splash') {
-    window.navigateTo('onboarding1');
+  const container = document.getElementById('emergencyContactsListWrap');
+  if (container) {
+    const card = document.createElement('div');
+    card.className = 'info-row-item';
+    card.innerHTML = `
+      <div class="info-row-left">
+        <i data-lucide="shield-alert" style="width:20px;height:20px;color:var(--color-secondary);"></i>
+        <div>
+          <div class="info-row-label">${name} (${rel})</div>
+          <div class="info-row-sub">${phone} • Verified</div>
+        </div>
+      </div>
+      <a href="tel:${phone}" class="info-row-action">Call</a>
+    `;
+    container.appendChild(card);
+    if (window.lucide) window.lucide.createIcons();
+    alert(`✓ Emergency contact ${name} added successfully.`);
   }
-}, 3000);
+};
 
-document.getElementById('screen-splash')?.addEventListener('click', () => {
-  clearTimeout(splashTimer);
-});
+window.addNewAddress = function () {
+  const label = prompt('Location Label (e.g. Tutor, Soccer Field):');
+  if (!label) return;
+  const address = prompt('Full Street Address:');
+  if (!address) return;
+
+  const container = document.getElementById('savedLocationsListWrap');
+  if (container) {
+    const card = document.createElement('div');
+    card.className = 'info-row-item';
+    card.innerHTML = `
+      <div class="info-row-left">
+        <i data-lucide="map-pin" style="width:20px;height:20px;color:var(--color-primary);"></i>
+        <div>
+          <div class="info-row-label">${label}</div>
+          <div class="info-row-sub">${address}</div>
+        </div>
+      </div>
+      <span class="info-row-action" onclick="alert('Address set as active for next booking')">Select</span>
+    `;
+    container.appendChild(card);
+    if (window.lucide) window.lucide.createIcons();
+    alert(`✓ Location "${label}" saved successfully.`);
+  }
+};
+
+window.addNewPaymentMethod = function () {
+  const cardNum = prompt('Enter Card Number (Demo):', '•••• •••• •••• 5592');
+  if (!cardNum) return;
+  alert('✓ New payment method added and verified with secure 3D-Secure bank protocol.');
+};
+

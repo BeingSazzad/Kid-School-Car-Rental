@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Home2School — Child Transportation & Car Booking</title>
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  
+
   <!-- Google Fonts: Manrope (400, 500, 600, 700, 800) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
 
   <link rel="stylesheet" href="/style.css" />
   <!-- Lucide Icons Official Library -->
@@ -17,498 +19,680 @@
   <!-- Canvas Confetti for Celebration screen -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
+
 <body>
 
   <!-- Centered 430px Mobile Container -->
   <main class="app-screen-container" id="appShell">
 
-      <!-- ================= 1. SPLASH SCREEN ================= -->
-      <section class="screen-view active" id="screen-splash" style="background-color: var(--color-brand-navy);">
-        <div class="status-bar light">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
-          </div>
-        </div>
-
-        <div class="splash-body" onclick="navigateTo('onboarding1')">
-          <div class="splash-logo-container pulse-animation">
-            <img src="/assets/logo.png" alt="Home2School Logo" class="splash-logo" />
-          </div>
-          <span class="splash-hint">Tap anywhere to enter</span>
-        </div>
-
-        <div class="home-indicator light"></div>
-      </section>
-
-
-      <!-- ================= 2. ONBOARDING 1: VERIFIED & TRUSTED ================= -->
-      <section class="screen-view" id="screen-onboarding1">
-        <div class="status-bar light">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
-          </div>
-        </div>
-
-        <div class="onboarding-bg" style="background-image: url('/assets/onboarding1.jpg');">
-          <div class="gradient-scrim-top"></div>
-          <div class="gradient-scrim-bottom"></div>
-        </div>
-
-        <div class="onboarding-content">
-          <h1 class="onboarding-title">Verified &amp; Trusted</h1>
-          <p class="onboarding-desc">All providers are background verified and rated by parents like you.</p>
-
-          <div class="onboarding-controls">
-            <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
-            <div class="pagination-dots">
-              <span class="dot active"></span>
-              <span class="dot" onclick="navigateTo('onboarding2')"></span>
-              <span class="dot" onclick="navigateTo('onboarding3')"></span>
-            </div>
-            <button class="btn-circle-orange" onclick="navigateTo('onboarding2')" aria-label="Next">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="home-indicator light"></div>
-      </section>
-
-
-      <!-- ================= 3. ONBOARDING 2: REAL-TIME TRACKING ================= -->
-      <section class="screen-view" id="screen-onboarding2">
-        <div class="status-bar light">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
-          </div>
-        </div>
-
-        <div class="onboarding-bg" style="background-image: url('/assets/onboarding2.jpg');">
-          <div class="gradient-scrim-top"></div>
-          <div class="gradient-scrim-bottom"></div>
-        </div>
-
-        <div class="onboarding-content">
-          <h1 class="onboarding-title">Real-time Tracking</h1>
-          <p class="onboarding-desc">Track your child's trip in real-time and get instant updates.</p>
-
-          <div class="onboarding-controls">
-            <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
-            <div class="pagination-dots">
-              <span class="dot" onclick="navigateTo('onboarding1')"></span>
-              <span class="dot active"></span>
-              <span class="dot" onclick="navigateTo('onboarding3')"></span>
-            </div>
-            <button class="btn-circle-orange" onclick="navigateTo('onboarding3')" aria-label="Next">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="home-indicator light"></div>
-      </section>
-
-
-      <!-- ================= 4. ONBOARDING 3: STAY CONNECTED ================= -->
-      <section class="screen-view" id="screen-onboarding3">
-        <div class="status-bar light">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
-          </div>
-        </div>
-
-        <div class="onboarding-bg" style="background-image: url('/assets/onboarding3.jpg');">
-          <div class="gradient-scrim-top"></div>
-          <div class="gradient-scrim-bottom"></div>
-        </div>
-
-        <div class="onboarding-content">
-          <h1 class="onboarding-title">Stay Connected</h1>
-          <p class="onboarding-desc">Communicate with providers and get updates at every step of the journey.</p>
-
-          <div class="onboarding-controls">
-            <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
-            <div class="pagination-dots">
-              <span class="dot" onclick="navigateTo('onboarding1')"></span>
-              <span class="dot" onclick="navigateTo('onboarding2')"></span>
-              <span class="dot active"></span>
-            </div>
-            <button class="btn-circle-orange" onclick="navigateTo('authWelcome')" aria-label="Get Started">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="home-indicator light"></div>
-      </section>
-
-
-      <!-- ================= 5. AUTH 1: WELCOME & PHONE ================= -->
-      <section class="screen-view" id="screen-authWelcome" style="background-color: #FFFFFF;">
-        <div class="status-bar dark">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
-          </div>
-        </div>
-
-        <!-- Top Car Image with Wave -->
-        <div class="auth-hero-container">
-          <img src="/assets/auth_hero.jpg" alt="School Car Ride" class="auth-hero-img" />
-          <svg class="wave-divider" viewBox="0 0 430 36" fill="none">
-            <path d="M0 36H430V15C340 32 260 2 170 12C95 20 40 32 0 15V36Z" fill="#FFFFFF" />
+    <!-- ================= 1. SPLASH SCREEN ================= -->
+    <section class="screen-view active" id="screen-splash" style="background-color: var(--color-brand-navy);">
+      <div class="status-bar light">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
           </svg>
-        </div>
-
-        <div class="auth-content">
-          <div>
-            <h1 class="welcome-heading">
-              Welcome to <span class="brand-text">Home2School</span> <span class="orange-heart">🧡</span>
-            </h1>
-            <p class="welcome-sub">Sign in or create your account using your mobile number.</p>
-
-            <!-- Phone Input Form -->
-            <form onsubmit="event.preventDefault(); navigateTo('authOtp');" class="phone-form">
-              <div class="phone-input-row">
-                <div class="country-picker">
-                  <span class="flag-icon">🇨🇦</span>
-                  <span class="country-code">+1</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </div>
-                <input type="tel" class="phone-text-field" placeholder="Enter mobile number" value="(416) 555-0192" required />
-              </div>
-
-              <!-- Action Button: 48px height, 18px extra bold -->
-              <button type="submit" class="btn-primary">Continue</button>
-
-              <div class="otp-hint-row">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                <span>We'll send a one-time code to verify your number.</span>
-              </div>
-            </form>
-          </div>
-
-          <!-- Privacy Notice Card -->
-          <div class="privacy-card">
-            <div class="privacy-icon-badge">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
-            </div>
-            <div class="privacy-text">
-              <h4>Your privacy is our priority</h4>
-              <p>Your number is secure and will never be shared.</p>
-            </div>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
           </div>
         </div>
+      </div>
 
-        <div class="home-indicator"></div>
-      </section>
+      <div class="splash-body" onclick="navigateTo('onboarding1')">
+        <div class="splash-logo-container pulse-animation">
+          <img src="/assets/logo.png" alt="Home2School Logo" class="splash-logo" />
+        </div>
+        <span class="splash-hint">Tap anywhere to enter</span>
+      </div>
+
+      <div class="home-indicator light"></div>
+    </section>
 
 
-      <!-- ================= 6. AUTH 2: OTP VERIFICATION ================= -->
-      <section class="screen-view" id="screen-authOtp" style="background-color: #FFFFFF;">
-        <div class="status-bar dark">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
+    <!-- ================= 2. ONBOARDING 1: VERIFIED & TRUSTED ================= -->
+    <section class="screen-view" id="screen-onboarding1">
+      <div class="status-bar light">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
           </div>
         </div>
+      </div>
 
-        <div class="top-nav-bar">
-          <button class="back-btn" onclick="navigateTo('authWelcome')">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <div class="onboarding-bg" style="background-image: url('/assets/onboarding1.jpg');">
+        <div class="gradient-scrim-top"></div>
+        <div class="gradient-scrim-bottom"></div>
+      </div>
+
+      <div class="onboarding-content">
+        <h1 class="onboarding-title">Verified &amp; Trusted</h1>
+        <p class="onboarding-desc">All providers are background verified and rated by parents like you.</p>
+
+        <div class="onboarding-controls">
+          <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
+          <div class="pagination-dots">
+            <span class="dot active"></span>
+            <span class="dot" onclick="navigateTo('onboarding2')"></span>
+            <span class="dot" onclick="navigateTo('onboarding3')"></span>
+          </div> <button class="btn-circle-orange" onclick="navigateTo('onboarding2')" aria-label="Next">
+            <i data-lucide="arrow-right" style="width:22px;height:22px;"></i>
           </button>
         </div>
+      </div>
 
-        <div class="auth-subpage-content">
-          <h1 class="page-title">Verify Your Number</h1>
-          <p class="page-subtitle">Enter the 4-digit code sent to</p>
-          <p class="target-phone-text">+1 (416) *******2</p>
+      <div class="home-indicator light"></div>
+    </section>
 
-          <!-- 4-digit OTP Boxes matching Figma (4, 8, 6, empty) -->
-          <div class="otp-inputs-grid">
-            <input type="text" maxlength="1" class="otp-box active" value="4" />
-            <input type="text" maxlength="1" class="otp-box active" value="8" />
-            <input type="text" maxlength="1" class="otp-box active" value="6" />
-            <input type="text" maxlength="1" class="otp-box" placeholder="" autofocus />
-          </div>
 
-          <div class="resend-block">
-            <span>Didn't receive code?</span>
-            <span class="countdown-text">Resend code in <strong>00:25</strong></span>
-          </div>
-
-          <div class="bottom-action-wrap">
-            <button class="btn-primary" onclick="navigateTo('authProfile')">Continue</button>
+    <!-- ================= 3. ONBOARDING 2: REAL-TIME TRACKING ================= -->
+    <section class="screen-view" id="screen-onboarding2">
+      <div class="status-bar light">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
           </div>
         </div>
+      </div>
 
-        <div class="home-indicator"></div>
-      </section>
+      <div class="onboarding-bg" style="background-image: url('/assets/onboarding2.jpg');">
+        <div class="gradient-scrim-top"></div>
+        <div class="gradient-scrim-bottom"></div>
+      </div>
 
+      <div class="onboarding-content">
+        <h1 class="onboarding-title">Real-time Tracking</h1>
+        <p class="onboarding-desc">Track your child's trip in real-time and get instant updates.</p>
 
-      <!-- ================= 7. AUTH 3: PROFILE DETAILS ================= -->
-      <section class="screen-view" id="screen-authProfile" style="background-color: #FFFFFF;">
-        <div class="status-bar dark">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
+        <div class="onboarding-controls">
+          <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
+          <div class="pagination-dots">
+            <span class="dot" onclick="navigateTo('onboarding1')"></span>
+            <span class="dot active"></span>
+            <span class="dot" onclick="navigateTo('onboarding3')"></span>
           </div>
-        </div>
-
-        <div class="top-nav-bar">
-          <button class="back-btn" onclick="navigateTo('authOtp')">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          <button class="btn-circle-orange" onclick="navigateTo('onboarding3')" aria-label="Next">
+            <i data-lucide="arrow-right" style="width:22px;height:22px;"></i>
           </button>
         </div>
+      </div>
 
-        <div class="auth-subpage-content">
-          <div class="text-center">
-            <h1 class="page-title">Let's get to know you</h1>
-            <p class="page-subtitle">Please provide your basic information</p>
+      <div class="home-indicator light"></div>
+    </section>
+
+
+    <!-- ================= 4. ONBOARDING 3: STAY CONNECTED ================= -->
+    <section class="screen-view" id="screen-onboarding3">
+      <div class="status-bar light">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
           </div>
+        </div>
+      </div>
 
-          <form onsubmit="event.preventDefault(); navigateTo('authPhoto');" class="profile-fields-form">
-            <!-- Full Name -->
-            <div class="form-group">
-              <label class="form-label">Full Name</label>
-              <div class="input-with-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <input type="text" class="form-input" placeholder="Enter your full name" value="Sadia Khan" required />
+      <div class="onboarding-bg" style="background-image: url('/assets/onboarding3.jpg');">
+        <div class="gradient-scrim-top"></div>
+        <div class="gradient-scrim-bottom"></div>
+      </div>
+
+      <div class="onboarding-content">
+        <h1 class="onboarding-title">Stay Connected</h1>
+        <p class="onboarding-desc">Communicate with providers and get updates at every step of the journey.</p>
+
+        <div class="onboarding-controls">
+          <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
+          <div class="pagination-dots">
+            <span class="dot" onclick="navigateTo('onboarding1')"></span>
+            <span class="dot" onclick="navigateTo('onboarding2')"></span>
+            <span class="dot active"></span>
+          </div>
+          <button class="btn-circle-orange" onclick="navigateTo('authWelcome')" aria-label="Get Started">
+            <i data-lucide="arrow-right" style="width:22px;height:22px;"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="home-indicator light"></div>
+    </section>
+
+
+    <!-- ================= 5. AUTH 1: WELCOME & PHONE ================= -->
+    <section class="screen-view" id="screen-authWelcome" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Car Image with Wave -->
+      <div class="auth-hero-container">
+        <img src="/assets/auth_hero.jpg" alt="School Car Ride" class="auth-hero-img" />
+        <svg class="wave-divider" viewBox="0 0 430 36" fill="none">
+          <path d="M0 36H430V15C340 32 260 2 170 12C95 20 40 32 0 15V36Z" fill="#FFFFFF" />
+        </svg>
+      </div>
+
+      <div class="auth-content">
+        <div>
+          <h1 class="welcome-heading">
+            Welcome to <span class="brand-text">Home2School</span> <span class="orange-heart">🧡</span>
+          </h1>
+          <p class="welcome-subtext">Safe and trusted school car rides for children.</p>
+        </div>
+
+        <div class="auth-card-box">
+          <h3 class="form-title">Enter your mobile number</h3>
+
+          <form onsubmit="event.preventDefault(); navigateTo('authOtp');">
+            <div class="phone-input-row">
+              <div class="country-pill">
+                <span class="flag-icon">🇨🇦</span>
+                <span class="country-code">+1</span>
               </div>
+              <input type="tel" class="phone-input-field" placeholder="(416) 000-0000" value="(416) 555-0192"
+                required />
             </div>
 
-            <!-- Email Address -->
-            <div class="form-group">
-              <label class="form-label">Email Address</label>
-              <div class="input-with-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <input type="email" class="form-input" placeholder="Enter your email address" value="sadia.khan@example.com" required />
-              </div>
-            </div>
+            <button type="submit" class="btn-primary" style="margin-top: 14px;">Continue</button>
 
-            <!-- Relationship -->
-            <div class="form-group">
-              <label class="form-label">Relationship</label>
-              <div class="select-wrapper">
-                <select class="form-select">
-                  <option value="Mother" selected>Mother</option>
-                  <option value="Father">Father</option>
-                  <option value="Guardian">Guardian</option>
-                  <option value="Grandparent">Grandparent</option>
-                </select>
-                <svg class="select-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </div>
-            </div>
-
-            <div class="bottom-action-wrap">
-              <button type="submit" class="btn-primary">Continue</button>
+            <div class="auth-disclaimer">
+              <i data-lucide="lock" style="width:14px;height:14px;color:#64748B;"></i>
+              <span>We'll send a one-time code to verify your number.</span>
             </div>
           </form>
         </div>
 
-        <div class="home-indicator"></div>
-      </section>
+        <!-- Privacy Notice Card -->
+        <div class="privacy-card">
+          <div class="privacy-icon-badge">
+            <i data-lucide="shield-check" style="width:18px;height:18px;color:#0284C7;"></i>
+          </div>
+          <div class="privacy-text">
+            <h4>Your privacy is our priority</h4>
+            <p>Your number is secure and will never be shared.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
 
 
-      <!-- ================= 8. AUTH 4: ADD PHOTO ================= -->
-      <section class="screen-view" id="screen-authPhoto" style="background-color: #FFFFFF;">
-        <div class="status-bar dark">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
+    <!-- ================= 6. AUTH 2: OTP VERIFICATION ================= -->
+    <section class="screen-view" id="screen-authOtp" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-nav-bar">
+        <button class="back-btn" onclick="navigateTo('authWelcome')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+      </div>
+
+      <div class="auth-subpage-content">
+        <h1 class="page-title">Verify Your Number</h1>
+        <p class="page-subtitle">Enter the 4-digit code sent to</p>
+        <p class="target-phone-text">+1 (416) *******2</p>
+
+        <!-- 4-digit OTP Boxes matching Figma (4, 8, 6, empty) -->
+        <div class="otp-inputs-grid">
+          <input type="text" maxlength="1" class="otp-box active" value="4" />
+          <input type="text" maxlength="1" class="otp-box active" value="8" />
+          <input type="text" maxlength="1" class="otp-box active" value="6" />
+          <input type="text" maxlength="1" class="otp-box" placeholder="" autofocus />
+        </div>
+
+        <div class="resend-block">
+          <span>Didn't receive code?</span>
+          <span class="countdown-text">Resend code in <strong>00:25</strong></span>
+        </div>
+
+        <div class="bottom-action-wrap">
+          <button class="btn-primary" onclick="navigateTo('authProfile')">Continue</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 7. AUTH 3: PROFILE DETAILS ================= -->
+    <section class="screen-view" id="screen-authProfile" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-nav-bar">
+        <button class="back-btn" onclick="navigateTo('authOtp')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+      </div>
+
+      <div class="auth-subpage-content">
+        <div class="text-center">
+          <h1 class="page-title">Let's get to know you</h1>
+          <p class="page-subtitle">Please provide your basic information</p>
+        </div>
+
+        <form onsubmit="event.preventDefault(); navigateTo('authPhoto');" class="profile-fields-form">
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <div class="input-with-icon">
+              <i data-lucide="user" style="width:18px;height:18px;color:#94A3B8;"></i>
+              <input type="text" class="form-input" placeholder="Enter your full name" value="Sadia Khan" required />
+            </div>
+          </div>
+
+          <!-- Email Address -->
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-with-icon">
+              <i data-lucide="mail" style="width:18px;height:18px;color:#94A3B8;"></i>
+              <input type="email" class="form-input" placeholder="Enter your email address"
+                value="sadia.khan@example.com" required />
+            </div>
+          </div>
+
+          <!-- Relationship -->
+          <div class="form-group">
+            <label class="form-label">Relationship</label>
+            <div class="select-wrapper">
+              <select class="form-select">
+                <option value="Mother" selected>Mother</option>
+                <option value="Father">Father</option>
+                <option value="Guardian">Guardian</option>
+                <option value="Grandparent">Grandparent</option>
+              </select>
+              <i data-lucide="chevron-down" class="select-chevron"
+                style="width:18px;height:18px;color:currentColor;"></i>
+            </div>
+          </div>
+
+          <div class="bottom-action-wrap">
+            <button type="submit" class="btn-primary">Continue</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 8. AUTH 4: ADD PHOTO ================= -->
+    <section class="screen-view" id="screen-authPhoto" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-nav-bar">
+        <button class="back-btn" onclick="navigateTo('authProfile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+      </div>
+
+      <div class="auth-subpage-content">
+        <div class="text-center">
+          <h1 class="page-title">Add Your Photo</h1>
+          <p class="page-subtitle">Add a profile photo to personalize your account</p>
+        </div>
+
+        <div class="avatar-picker-wrap" onclick="triggerPhotoUpload()">
+          <div class="dashed-avatar-ring"></div>
+          <div class="inner-avatar-circle" id="avatarPreviewContainer">
+            <i data-lucide="user" style="width:74px;height:74px;color:#1E293B;"></i>
+          </div>
+          <div class="camera-floating-badge">
+            <i data-lucide="camera" style="width:18px;height:18px;color:#FFFFFF;"></i>
+          </div>
+          <input type="file" id="photoFileInput" accept="image/*" style="display:none"
+            onchange="handlePhotoUpload(event)" />
+        </div>
+
+        <p class="change-later-note">You can change this later</p>
+
+        <div class="bottom-action-wrap">
+          <button class="btn-primary" onclick="navigateTo('authAddChild')">Continue</button>
+          <button class="btn-secondary-link" onclick="navigateTo('authAddChild')">Skip for now</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 8B. AUTH 4B: ADD CHILD (PARENT SETUP) ================= -->
+    <section class="screen-view" id="screen-authAddChild" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-nav-bar">
+        <button class="back-btn" onclick="navigateTo('authPhoto')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+      </div>
+
+      <div class="auth-subpage-content">
+        <div class="text-center">
+          <h1 class="page-title">Add Your Child</h1>
+          <p class="page-subtitle">Set up school transportation for your child</p>
+        </div>
+
+        <form onsubmit="event.preventDefault(); navigateTo('authSuccess');" class="profile-fields-form">
+          <!-- Child Full Name -->
+          <div class="form-group">
+            <label class="form-label">Child's Full Name</label>
+            <div class="input-with-icon">
+              <i data-lucide="user" style="width:18px;height:18px;color:#94A3B8;"></i>
+              <input type="text" class="form-input" id="authChildName" placeholder="e.g. Arman Khan" value="Arman Khan"
+                required />
+            </div>
+          </div>
+
+          <!-- Grade / Age -->
+          <div class="form-group">
+            <label class="form-label">Grade / Age</label>
+            <div class="input-with-icon">
+              <i data-lucide="calendar" style="width:18px;height:18px;color:#94A3B8;"></i>
+              <input type="text" class="form-input" id="authChildGrade" placeholder="e.g. Grade 4 (9 years)"
+                value="Grade 4 (9 years)" required />
+            </div>
+          </div>
+
+          <!-- School -->
+          <div class="form-group">
+            <label class="form-label">School Name</label>
+            <div class="input-with-icon">
+              <i data-lucide="book-open" style="width:18px;height:18px;color:#94A3B8;"></i>
+              <input type="text" class="form-input" id="authChildSchool"
+                placeholder="e.g. Greenfield International School" value="Greenfield International School" required />
+            </div>
+          </div>
+
+          <!-- Default Pickup -->
+          <div class="form-group">
+            <label class="form-label">Default Pickup Location</label>
+            <div class="input-with-icon">
+              <i data-lucide="map-pin" style="width:18px;height:18px;color:#94A3B8;"></i>
+              <input type="text" class="form-input" id="authChildPickup" placeholder="e.g. Home (12 Elm Street)"
+                value="Home (12 Elm Street)" required />
+            </div>
+          </div>
+
+          <div class="bottom-action-wrap">
+            <button type="submit" class="btn-primary">Save &amp; Complete Setup</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 9. AUTH 5: SUCCESS CELEBRATION ================= -->
+    <section class="screen-view" id="screen-authSuccess" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="success-screen-body">
+        <div class="success-middle-content">
+          <!-- Confetti & Checkmark Graphic -->
+          <div class="confetti-badge-wrap">
+            <svg class="confetti-particles-svg" viewBox="0 0 140 140" fill="none">
+              <rect x="70" y="8" width="4" height="12" rx="2" transform="rotate(15 70 8)" fill="#F2600C" />
+              <circle cx="98" cy="20" r="3.5" fill="#3B82F6" />
+              <rect x="36" y="24" width="10" height="4" rx="2" transform="rotate(-30 36 24)" fill="#EAB308" />
+              <circle cx="16" cy="65" r="4" fill="#06B6D4" />
+              <rect x="22" y="86" width="12" height="4" rx="2" transform="rotate(25 22 86)" fill="#3B82F6" />
+              <circle cx="124" cy="68" r="3.5" fill="#8B5CF6" />
+              <rect x="114" y="92" width="10" height="4" rx="2" transform="rotate(-40 114 92)" fill="#F2600C" />
+              <rect x="95" y="112" width="4" height="10" rx="2" transform="rotate(45 95 112)" fill="#8B5CF6" />
+              <circle cx="50" cy="115" r="3" fill="#EC4899" />
+            </svg>
+
+            <div class="navy-check-circle">
+              <i data-lucide="check" style="width:36px;height:36px;color:#FFFFFF;stroke-width:3.2;"></i>
+            </div>
+          </div>
+
+          <h1 class="welcome-name-title">Welcome, Sadia!</h1>
+          <p class="account-created-sub">Arman's school transport profile is ready.</p>
+        </div>
+
+        <div class="bottom-action-wrap">
+          <button class="btn-primary" onclick="navigateTo('home')">Go to Parent Home</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 10. HOME SCREEN (STATE-DRIVEN: A / B / C) ================= -->
+    <section class="screen-view" id="screen-home" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable Home Content -->
+      <div class="home-scroll-body">
+
+        <!-- Interactive Parent State Switcher (A / B / C Demo Selector) -->
+        <div class="state-switcher-container">
+          <span class="state-switcher-label">View State:</span>
+          <div class="state-pills-group">
+            <button class="state-pill-btn" id="btnStateA" onclick="setHomeState('A')">A: New Parent</button>
+            <button class="state-pill-btn active" id="btnStateB" onclick="setHomeState('B')">B: Upcoming</button>
+            <button class="state-pill-btn" id="btnStateC" onclick="setHomeState('C')">C: Active Ride</button>
           </div>
         </div>
 
-        <div class="top-nav-bar">
-          <button class="back-btn" onclick="navigateTo('authProfile')">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <!-- Top Profile Header -->
+        <div class="home-header-row">
+          <div class="user-profile-group" onclick="navigateTo('profile')" style="cursor:pointer;">
+            <div class="user-avatar-wrap">
+              <img src="/assets/avatar_john.png" alt="Sadia Avatar" class="user-avatar-img" />
+            </div>
+            <div class="user-welcome-texts">
+              <h2 class="user-greeting">Hello, Sadia 👋</h2>
+              <p class="user-question">Where should we drive your children?</p>
+            </div>
+          </div>
+
+          <!-- Bell Button with Notification Dot (Lucide) -->
+          <button class="bell-btn" aria-label="Notifications" onclick="toggleNotificationAlert()">
+            <i data-lucide="bell"></i>
+            <span class="unread-badge-dot"></span>
           </button>
         </div>
 
-        <div class="auth-subpage-content">
-          <div class="text-center">
-            <h1 class="page-title">Add Your Photo</h1>
-            <p class="page-subtitle">Add a profile photo to personalize your account</p>
-          </div>
+        <!-- Hero Promo Card: Safe Ride / Brighter Future -->
+        <div class="home-hero-card">
+          <img src="/assets/home_hero_card.png" alt="Safe Ride - Brighter Future" class="hero-card-full-img" />
+        </div>
 
-          <div class="avatar-picker-wrap" onclick="triggerPhotoUpload()">
-            <div class="dashed-avatar-ring"></div>
-            <div class="inner-avatar-circle" id="avatarPreviewContainer">
-              <svg width="74" height="74" viewBox="0 0 24 24" fill="none" stroke="#1E293B" stroke-width="1.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <!-- Quick Actions Section (Consistent Across States) -->
+        <div class="section-block">
+          <h3 class="section-heading">Quick Actions</h3>
+          <div class="quick-actions-grid">
+            <!-- Action 1: New Booking (Featured Navy Card) -->
+            <div class="action-card navy" onclick="navigateTo('bookingSelectChildren')">
+              <div class="action-icon-circle white-glass">
+                <i data-lucide="calendar-plus"></i>
+              </div>
+              <h4 class="card-title-white">New Booking</h4>
+              <p class="card-desc-white">Arrange school ride</p>
             </div>
-            <div class="camera-floating-badge">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+
+            <!-- Action 2: My Children -->
+            <div class="action-card light" onclick="navigateTo('myChildren')">
+              <div class="action-icon-circle blue-tint">
+                <i data-lucide="users"></i>
+              </div>
+              <h4 class="card-title-navy">My Children</h4>
+              <p class="card-desc-muted">Manage 2 profiles</p>
             </div>
-            <input type="file" id="photoFileInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)" />
-          </div>
 
-          <p class="change-later-note">You can change this later</p>
+            <!-- Action 3: My Bookings -->
+            <div class="action-card light horizontal" onclick="navigateTo('bookings')">
+              <div class="action-icon-circle red-tint">
+                <i data-lucide="calendar"></i>
+              </div>
+              <h4 class="card-title-navy">My Bookings</h4>
+            </div>
 
-          <div class="bottom-action-wrap">
-            <button class="btn-primary" onclick="navigateTo('authSuccess')">Continue</button>
-            <button class="btn-secondary-link" onclick="navigateTo('authSuccess')">Skip for now</button>
+            <!-- Action 4: Safety & Help -->
+            <div class="action-card light horizontal" onclick="navigateTo('profile')">
+              <div class="action-icon-circle orange-tint">
+                <i data-lucide="shield-check"></i>
+              </div>
+              <h4 class="card-title-navy">Safety &amp; Help</h4>
+            </div>
           </div>
         </div>
 
-        <div class="home-indicator"></div>
-      </section>
+        <!-- ================= STATE A: NEW PARENT / NO RIDES ================= -->
+        <div id="homeStateAView" style="display: none; flex-direction: column; gap: 16px;">
+          <div class="empty-trips-card">
+            <div class="empty-trips-icon">
+              <i data-lucide="calendar-x" style="width:28px;height:28px;"></i>
+            </div>
+            <h4 class="empty-trips-title">No Upcoming Rides Yet</h4>
+            <p class="empty-trips-desc">Set up school transportation for your children with background-checked local
+              providers.</p>
+            <button class="btn-primary" onclick="navigateTo('bookingSelectChildren')" style="margin-top: 4px;">Book Your
+              First Ride</button>
+          </div>
 
-
-      <!-- ================= 9. AUTH 5: SUCCESS CELEBRATION ================= -->
-      <section class="screen-view" id="screen-authSuccess" style="background-color: #FFFFFF;">
-        <div class="status-bar dark">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
+          <!-- Trust & Safety Reassurance -->
+          <div class="safety-reassurance-card">
+            <div class="reassurance-icon-badge">
+              <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
+            </div>
+            <div>
+              <div class="reassurance-title">100% Verified Providers</div>
+              <div class="reassurance-desc">Every school driver undergoes criminal record verification, driving history
+                inspection, and CPR training.</div>
+            </div>
           </div>
         </div>
 
-        <div class="success-screen-body">
-          <div class="success-middle-content">
-            <!-- Confetti & Checkmark Graphic -->
-            <div class="confetti-badge-wrap">
-              <!-- Geometric confetti particles SVG -->
-              <svg class="confetti-particles-svg" viewBox="0 0 140 140" fill="none">
-                <rect x="70" y="8" width="4" height="12" rx="2" transform="rotate(15 70 8)" fill="#F2600C" />
-                <circle cx="98" cy="20" r="3.5" fill="#3B82F6" />
-                <rect x="36" y="24" width="10" height="4" rx="2" transform="rotate(-30 36 24)" fill="#EAB308" />
-                <circle cx="16" cy="65" r="4" fill="#06B6D4" />
-                <rect x="22" y="86" width="12" height="4" rx="2" transform="rotate(25 22 86)" fill="#3B82F6" />
-                <circle cx="124" cy="68" r="3.5" fill="#8B5CF6" />
-                <rect x="114" y="92" width="10" height="4" rx="2" transform="rotate(-40 114 92)" fill="#F2600C" />
-                <rect x="95" y="112" width="4" height="10" rx="2" transform="rotate(45 95 112)" fill="#8B5CF6" />
-                <circle cx="50" cy="115" r="3" fill="#EC4899" />
-              </svg>
-
-              <!-- Central Navy Checkmark Circle -->
-              <div class="navy-check-circle">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              </div>
-            </div>
-
-            <h1 class="welcome-name-title">Welcome, Sadia!</h1>
-            <p class="account-created-sub">Your account has been created successfully.</p>
-          </div>
-
-          <div class="bottom-action-wrap">
-            <button class="btn-primary" onclick="navigateTo('home')">Get Started</button>
-          </div>
-        </div>
-
-        <div class="home-indicator"></div>
-      </section>
-
-
-      <!-- ================= 10. HOME SCREEN (NODE 21008-3626) ================= -->
-      <section class="screen-view" id="screen-home" style="background-color: #FFFFFF;">
-        <div class="status-bar dark">
-          <span class="sb-time">9:41</span>
-          <div class="sb-icons">
-            <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-            <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
-            <div class="battery-icon"><div class="battery-level"></div></div>
-          </div>
-        </div>
-
-        <!-- Scrollable Home Content -->
-        <div class="home-scroll-body">
-          <!-- Top Profile Header -->
-          <div class="home-header-row">
-            <div class="user-profile-group">
-              <div class="user-avatar-wrap">
-                <img src="/assets/avatar_john.png" alt="John Avatar" class="user-avatar-img" />
-              </div>
-              <div class="user-welcome-texts">
-                <h2 class="user-greeting">Hello, John 👋</h2>
-                <p class="user-question">Where would you like to go?</p>
-              </div>
-            </div>
-
-            <!-- Bell Button with Notification Dot -->
-            <button class="bell-btn" aria-label="Notifications">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-              <span class="unread-badge-dot"></span>
-            </button>
-          </div>
-
-          <!-- Hero Promo Card: Safe Ride / Brighter Future -->
-          <div class="home-hero-card">
-            <img src="/assets/home_hero_card.png" alt="Safe Ride - Brighter Future" class="hero-card-full-img" />
-          </div>
-
-          <!-- Quick Actions Section -->
-          <div class="section-block">
-            <h3 class="section-heading">Quick Actions</h3>
-            <div class="quick-actions-grid">
-              <!-- Action 1: New Booking (Featured Navy Card) -->
-              <div class="action-card navy" onclick="alert('Booking flow triggered')">
-                <div class="action-icon-circle white-glass">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="12" y1="14" x2="12" y2="18"></line><line x1="10" y1="16" x2="14" y2="16"></line></svg>
-                </div>
-                <h4 class="card-title-white">New Booking</h4>
-                <p class="card-desc-white">Book a school trip</p>
-              </div>
-
-              <!-- Action 2: My Children -->
-              <div class="action-card light" onclick="alert('Children profiles triggered')">
-                <div class="action-icon-circle blue-tint">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                </div>
-                <h4 class="card-title-navy">My Children</h4>
-                <p class="card-desc-muted">Manage profiles</p>
-              </div>
-
-              <!-- Action 3: My Bookings -->
-              <div class="action-card light horizontal" onclick="alert('My bookings list triggered')">
-                <div class="action-icon-circle red-tint">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                </div>
-                <h4 class="card-title-navy">My Bookings</h4>
-              </div>
-
-              <!-- Action 4: Safety & Help -->
-              <div class="action-card light horizontal" onclick="alert('Safety and Help center triggered')">
-                <div class="action-icon-circle orange-tint">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F2600C" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                </div>
-                <h4 class="card-title-navy">Safety &amp; Help</h4>
-              </div>
-            </div>
-          </div>
-
-          <!-- Upcoming Trips Section -->
+        <!-- ================= STATE B: UPCOMING RIDE ================= -->
+        <div id="homeStateBView" style="display: flex; flex-direction: column; gap: 16px;">
           <div class="section-block">
             <div class="section-header-row">
               <h3 class="section-heading">Upcoming Trips</h3>
-              <a href="#see-all" class="link-see-all">See All <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+              <a href="#bookings" onclick="navigateTo('bookings')" class="link-see-all">See All <i
+                  data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
             </div>
 
-            <!-- Trip Card -->
-            <div class="trip-card">
+            <!-- Main Next Trip Card -->
+            <div class="trip-card" onclick="openBookingDetails('H2S-84920')" style="cursor: pointer;">
               <div class="trip-card-top">
-                <!-- Date Box: May 22 Wed -->
+                <!-- Date Box -->
                 <div class="date-badge-box">
                   <span class="db-month">MAY</span>
                   <span class="db-day">22</span>
@@ -523,9 +707,9 @@
                     <div class="timeline-connector"></div>
                     <div class="stop-texts">
                       <div class="stop-time-title">
-                        <strong>07:45 AM</strong> <span class="type-pill">• Drop-off</span>
+                        <strong>07:30 AM</strong> <span class="type-pill">• Drop-off</span>
                       </div>
-                      <div class="stop-location">Home <span class="arrow-sym">→</span> Dhanmondi Tutorial</div>
+                      <div class="stop-location">Home <span class="arrow-sym">→</span> Greenfield International</div>
                     </div>
                   </div>
 
@@ -534,9 +718,9 @@
                     <span class="dot-marker orange"></span>
                     <div class="stop-texts">
                       <div class="stop-time-title">
-                        <strong>01:15 PM</strong> <span class="type-pill">• Pick-up</span>
+                        <strong>01:00 PM</strong> <span class="type-pill">• Pick-up</span>
                       </div>
-                      <div class="stop-location">Dhanmondi Tutorial <span class="arrow-sym">→</span> Home</div>
+                      <div class="stop-location">Greenfield International <span class="arrow-sym">→</span> Home</div>
                     </div>
                   </div>
                 </div>
@@ -545,39 +729,1879 @@
               <!-- Bottom Meta Row -->
               <div class="trip-card-footer">
                 <div class="repeat-info">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                  <span>Repeats: Mon, Tue, Wed, Thu, Sun</span>
+                  <i data-lucide="repeat" style="width:14px;height:14px;"></i>
+                  <span id="homeNextTripMeta">Arman &amp; Emma • Driver Tariq A.</span>
                 </div>
-                <div class="both-way-badge">⇄ Both-way</div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span class="both-way-badge">⇄ Both-way</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--color-secondary);">Details →</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Bottom Navigation Bar -->
-        <nav class="bottom-tab-bar">
-          <button class="tab-item active">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            <span>Home</span>
-          </button>
-          <button class="tab-item">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <span>Trips</span>
-          </button>
-          <button class="tab-item">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            <span>Inbox</span>
-          </button>
-          <button class="tab-item">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <span>Profile</span>
-          </button>
-        </nav>
+        <!-- ================= STATE C: ACTIVE TRIP IN PROGRESS ================= -->
+        <div id="homeStateCView" style="display: none; flex-direction: column; gap: 16px;">
+          <div class="active-trip-hero-card">
+            <div class="active-trip-header">
+              <span class="live-pill-tag"><span class="live-dot-pulse"></span> TRIP IN PROGRESS</span>
+              <span class="active-trip-eta-badge">ETA: 6 mins (07:42 AM)</span>
+            </div>
 
-        <div class="home-indicator"></div>
-      </section>
+            <div class="active-trip-body">
+              <div class="active-trip-child-row">
+                <div class="child-chip-info">
+                  <img src="/assets/avatar_john.png" alt="Child" class="child-avatar-sm" />
+                  <div>
+                    <div class="child-name-text">Arman &amp; Emma Khan</div>
+                    <div class="child-dest-text">En route to Greenfield International</div>
+                  </div>
+                </div>
+                <span class="status-chip active">On Board</span>
+              </div>
+
+              <!-- Interactive Simulated Map Thumbnail -->
+              <div class="map-preview-thumb" onclick="navigateTo('tracking')">
+                <div class="map-bg-grid"></div>
+                <svg class="map-route-line-svg" viewBox="0 0 350 120" preserveAspectRatio="none">
+                  <path d="M 20,80 Q 150,20 330,60" fill="none" stroke="#0284C7" stroke-width="4" stroke-linecap="round"
+                    stroke-dasharray="6,4" />
+                </svg>
+                <div class="car-marker-animated">
+                  <i data-lucide="car" style="width:18px;height:18px;"></i>
+                </div>
+                <span
+                  style="position: absolute; bottom: 8px; right: 12px; font-size: 11px; font-weight: 800; background: rgba(0,0,0,0.7); color: #fff; padding: 3px 8px; border-radius: 6px;">Tap
+                  to Full Screen Map →</span>
+              </div>
+
+              <!-- Driver Contact Bar -->
+              <div class="active-driver-contact-row">
+                <div class="driver-mini-info">
+                  <img src="/assets/avatar_john.png" alt="Tariq" class="driver-mini-avatar" />
+                  <div>
+                    <div class="driver-mini-name">Tariq Ahmed (Toyota Sienna)</div>
+                    <div class="driver-mini-sub">4.9 ⭐ • Background Verified</div>
+                  </div>
+                </div>
+
+                <div class="active-contact-buttons">
+                  <button class="btn-icon-contact" onclick="alert('Calling Tariq Ahmed: +1 (416) 555-0182')"
+                    aria-label="Call Driver">
+                    <i data-lucide="phone"></i>
+                  </button>
+                  <button class="btn-icon-contact" onclick="navigateTo('messages')" aria-label="Message Driver">
+                    <i data-lucide="message-square"></i>
+                  </button>
+                  <button class="btn-primary" onclick="navigateTo('tracking')"
+                    style="height: 38px; padding: 0 14px; font-size: 13px; font-weight: 800;">Track</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Universal Parent Bottom Navigation Bar -->
+      <nav class="bottom-tab-bar">
+        <button class="tab-item active" onclick="navigateTo('home')">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('bookings')">
+          <i data-lucide="calendar"></i>
+          <span>Bookings</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('tracking')">
+          <i data-lucide="navigation"></i>
+          <span>Tracking</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('messages')">
+          <i data-lucide="message-square"></i>
+          <span>Messages</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('profile')">
+          <i data-lucide="user"></i>
+          <span>Profile</span>
+        </button>
+      </nav>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 11. MY CHILDREN MANAGEMENT ================= -->
+    <section class="screen-view" id="screen-myChildren" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('home')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">My Children</h2>
+        <button class="top-bar-action" onclick="navigateTo('addChild')">+ Add</button>
+      </div>
+
+      <div class="screen-scroll-body">
+        <p style="font-size: 13.5px; color: var(--color-body);">Manage transportation details, schools, and pickup
+          locations for your children.</p>
+
+        <!-- Child Card 1 -->
+        <div class="child-manage-card">
+          <div class="child-manage-left">
+            <img src="/assets/avatar_john.png" alt="Arman" class="child-manage-avatar" />
+            <div>
+              <div class="child-manage-name">Arman Khan</div>
+              <div class="child-manage-sub">Grade 4 • Greenfield International</div>
+              <div style="font-size: 11.5px; color: #64748B; margin-top: 3px;">📍 Pickup: Home (12 Elm Street)</div>
+            </div>
+          </div>
+          <button class="btn-icon-contact" onclick="navigateTo('addChild')" aria-label="Edit Child">
+            <i data-lucide="edit-2" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+
+        <!-- Child Card 2 -->
+        <div class="child-manage-card">
+          <div class="child-manage-left">
+            <img src="/assets/avatar_john.png" alt="Emma" class="child-manage-avatar" style="border-color: #38BDF8;" />
+            <div>
+              <div class="child-manage-name">Emma Khan</div>
+              <div class="child-manage-sub">Grade 2 • Greenfield International</div>
+              <div style="font-size: 11.5px; color: #64748B; margin-top: 3px;">📍 Pickup: Home (12 Elm Street)</div>
+            </div>
+          </div>
+          <button class="btn-icon-contact" onclick="navigateTo('addChild')" aria-label="Edit Child">
+            <i data-lucide="edit-2" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+
+        <!-- Child Card 3 -->
+        <div class="child-manage-card">
+          <div class="child-manage-left">
+            <img src="/assets/avatar_john.png" alt="Zara" class="child-manage-avatar" style="border-color: #F472B6;" />
+            <div>
+              <div class="child-manage-name">Zara Khan</div>
+              <div class="child-manage-sub">Kindergarten • Sunshine Pre-school</div>
+              <div style="font-size: 11.5px; color: #64748B; margin-top: 3px;">📍 Pickup: Home (12 Elm Street)</div>
+            </div>
+          </div>
+          <button class="btn-icon-contact" onclick="navigateTo('addChild')" aria-label="Edit Child">
+            <i data-lucide="edit-2" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+
+        <!-- Add Another Child Dashed Button -->
+        <div class="add-child-dashed-btn" onclick="navigateTo('addChild')">
+          <i data-lucide="plus" style="width:20px;height:20px;"></i>
+          <span>Add Another Child Profile</span>
+        </div>
+      </div>
+
+      <nav class="bottom-tab-bar">
+        <button class="tab-item" onclick="navigateTo('home')">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('bookings')">
+          <i data-lucide="calendar"></i>
+          <span>Bookings</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('tracking')">
+          <i data-lucide="navigation"></i>
+          <span>Tracking</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('messages')">
+          <i data-lucide="message-square"></i>
+          <span>Messages</span>
+        </button>
+        <button class="tab-item active" onclick="navigateTo('profile')">
+          <i data-lucide="user"></i>
+          <span>Profile</span>
+        </button>
+      </nav>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 12. ADD CHILD FORM ================= -->
+    <section class="screen-view" id="screen-addChild" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('myChildren')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Child Profile</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <img src="/assets/avatar_john.png" alt="Child Avatar" class="provider-large-avatar"
+            style="border-color: var(--color-fade);" />
+          <button class="btn-secondary-link" style="color: var(--color-secondary); font-size: 13px;">Change
+            Photo</button>
+        </div>
+
+        <form onsubmit="event.preventDefault(); alert('Child profile saved!'); navigateTo('myChildren');"
+          class="profile-fields-form">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" value="Arman Khan" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Grade / Age</label>
+            <input type="text" class="form-input" value="Grade 4 (9 years)" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">School Name</label>
+            <input type="text" class="form-input" value="Greenfield International School" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Default Pickup Location</label>
+            <input type="text" class="form-input" value="Home (12 Elm Street)" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Special Safety or Medical Notes (Optional)</label>
+            <input type="text" class="form-input" placeholder="e.g. Peanut allergy, wears booster seat"
+              value="Wears booster seat" />
+          </div>
+
+          <div style="margin-top: 20px;">
+            <button type="submit" class="btn-primary">Save Child Profile</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 13. BOOKING STEP 1: SELECT CHILDREN ================= -->
+    <section class="screen-view" id="screen-bookingSelectChildren" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('home')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Select Children</h2>
+        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 1/4</span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: var(--color-title);">Who is traveling?</h3>
+            <p style="font-size: 13px; color: var(--color-body); margin-top: 2px;">Select one or multiple children for
+              this trip.</p>
+          </div>
+          <span class="passenger-count-badge" id="passengerBadge">👥 2 Selected</span>
+        </div>
+
+        <!-- Child Selection Card 1 -->
+        <div class="child-select-card selected" id="childCard-arman" onclick="toggleChildSelection('arman')">
+          <div class="child-card-left">
+            <img src="/assets/avatar_john.png" alt="Arman" class="child-select-avatar" />
+            <div>
+              <div class="child-info-title">Arman Khan</div>
+              <div class="child-info-sub">Grade 4 • Greenfield International School</div>
+            </div>
+          </div>
+          <div class="checkbox-custom-badge">
+            <i data-lucide="check" style="width:16px;height:16px;"></i>
+          </div>
+        </div>
+
+        <!-- Child Selection Card 2 -->
+        <div class="child-select-card selected" id="childCard-emma" onclick="toggleChildSelection('emma')">
+          <div class="child-card-left">
+            <img src="/assets/avatar_john.png" alt="Emma" class="child-select-avatar" style="border-color: #38BDF8;" />
+            <div>
+              <div class="child-info-title">Emma Khan</div>
+              <div class="child-info-sub">Grade 2 • Greenfield International School</div>
+            </div>
+          </div>
+          <div class="checkbox-custom-badge">
+            <i data-lucide="check" style="width:16px;height:16px;"></i>
+          </div>
+        </div>
+
+        <!-- Child Selection Card 3 -->
+        <div class="child-select-card" id="childCard-zara" onclick="toggleChildSelection('zara')">
+          <div class="child-card-left">
+            <img src="/assets/avatar_john.png" alt="Zara" class="child-select-avatar" style="border-color: #F472B6;" />
+            <div>
+              <div class="child-info-title">Zara Khan</div>
+              <div class="child-info-sub">Kindergarten • Sunshine Pre-school</div>
+            </div>
+          </div>
+          <div class="checkbox-custom-badge">
+            <i data-lucide="check" style="width:16px;height:16px;"></i>
+          </div>
+        </div>
+
+        <!-- Multi-Child Route Note -->
+        <div class="safety-reassurance-card" style="background: #F0FDF4; border-color: #BBF7D0;">
+          <i data-lucide="check-circle-2" style="width:20px;height:20px;color:#16A34A;"></i>
+          <div style="font-size: 12.5px; color: #166534; line-height: 1.4;">
+            <strong>Shared School Route:</strong> Arman &amp; Emma attend Greenfield School. They will ride together in
+            a single booking.
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <button class="btn-primary" onclick="navigateTo('bookingTripSetup')">Continue to Trip Setup</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 14. BOOKING STEP 2: TRIP SETUP ================= -->
+    <section class="screen-view" id="screen-bookingTripSetup" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('bookingSelectChildren')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Trip Setup</h2>
+        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 2/4</span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <!-- Section 1: Trip Frequency (Recurring vs One-time) with Clear Visual Cards -->
+        <div>
+          <label class="form-label" style="margin-bottom: 8px; display: block;">Booking Frequency</label>
+          <div class="frequency-cards-grid">
+            <button type="button" class="freq-option-card active" id="btnFreqRecurring" onclick="setBookingFrequency('recurring')">
+              <div class="freq-icon-wrap">
+                <i data-lucide="repeat"></i>
+              </div>
+              <div class="freq-text-block">
+                <div class="freq-title">Recurring</div>
+                <div class="freq-sub">Weekly school commute (Mon–Fri)</div>
+              </div>
+              <div class="freq-check-icon">
+                <i data-lucide="check-circle-2"></i>
+              </div>
+            </button>
+
+            <button type="button" class="freq-option-card" id="btnFreqOneTime" onclick="setBookingFrequency('onetime')">
+              <div class="freq-icon-wrap">
+                <i data-lucide="calendar"></i>
+              </div>
+              <div class="freq-text-block">
+                <div class="freq-title">One-Time Ride</div>
+                <div class="freq-sub">Single day or emergency trip</div>
+              </div>
+              <div class="freq-check-icon">
+                <i data-lucide="check-circle-2"></i>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Recurring School Days (Visible when Recurring) -->
+        <div class="weekday-selector-wrap" id="weekdaySelectorBox">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size: 13px; font-weight: 700; color: var(--color-title);">School Commute Days:</span>
+            <span style="font-size: 12px; font-weight: 700; color: var(--color-secondary);">Mon – Fri</span>
+          </div>
+          <div class="weekday-pills-row">
+            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">M</button>
+            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">T</button>
+            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">W</button>
+            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">T</button>
+            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">F</button>
+            <button type="button" class="day-pill-btn" onclick="this.classList.toggle('active')">S</button>
+            <button type="button" class="day-pill-btn" onclick="this.classList.toggle('active')">S</button>
+          </div>
+        </div>
+
+        <!-- Section 2: Trip Direction -->
+        <div>
+          <label class="form-label" style="margin-bottom: 8px; display: block;">Trip Direction</label>
+          <div class="segmented-control">
+            <button type="button" class="segment-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">⇄ Both-way (Round Trip)</button>
+            <button type="button" class="segment-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">→ One-way (Morning Only)</button>
+          </div>
+        </div>
+
+        <!-- Section 3: Proper Route Locations & Save Location -->
+        <div class="trip-setup-card">
+          <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-bottom: 10px; display:flex; align-items:center; gap:6px;">
+            <i data-lucide="map-pin" style="width:16px;height:16px;color:var(--color-primary);"></i>
+            <span>Route Locations</span>
+          </div>
+
+          <!-- Pickup Location Field -->
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label-sm">Pickup Address</label>
+            <div class="input-with-icon">
+              <span class="loc-dot-icon green"></span>
+              <input type="text" class="form-input" id="setupPickupLocation" placeholder="Enter pickup address" value="Home (12 Elm Street)" onchange="window.appState.bookingDraft.pickupLocation = this.value" />
+            </div>
+            <!-- Quick Saved Location Selector Pills -->
+            <div class="quick-location-chips">
+              <span class="quick-loc-label">Saved:</span>
+              <button type="button" class="quick-loc-chip active" onclick="selectQuickLocation('pickup', 'Home (12 Elm Street)', this)">🏠 Home</button>
+              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('pickup', '84 Willowbrook Crescent', this)">👵 Grandma's</button>
+            </div>
+          </div>
+
+          <!-- Drop-off / School Field -->
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label-sm">School / Drop-off</label>
+            <div class="input-with-icon">
+              <span class="loc-dot-icon orange"></span>
+              <input type="text" class="form-input" id="setupSchoolLocation" placeholder="Enter school name or drop-off" value="Greenfield International School" onchange="window.appState.bookingDraft.schoolLocation = this.value" />
+            </div>
+            <!-- Quick School Selector Pills -->
+            <div class="quick-location-chips">
+              <span class="quick-loc-label">Schools:</span>
+              <button type="button" class="quick-loc-chip active" onclick="selectQuickLocation('school', 'Greenfield International School', this)">🏫 Greenfield</button>
+              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('school', 'Sunshine Pre-school', this)">🏫 Sunshine</button>
+            </div>
+          </div>
+
+          <!-- Save Location Checkbox Option -->
+          <div class="save-location-toggle-row">
+            <label class="save-location-label" for="chkSaveLocations">
+              <input type="checkbox" id="chkSaveLocations" checked />
+              <span>Save new addresses to my Saved Locations</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Section 4: Real Date & Time Selection -->
+        <div class="trip-setup-card">
+          <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-bottom: 10px; display:flex; align-items:center; gap:6px;">
+            <i data-lucide="clock" style="width:16px;height:16px;color:var(--color-primary);"></i>
+            <span>Date &amp; Schedule Times</span>
+          </div>
+
+          <!-- Single Trip Date Picker (Visible when One-Time Ride is chosen) -->
+          <div class="form-group" id="oneTimeDatePickerBox" style="display: none; margin-bottom: 12px;">
+            <label class="form-label-sm">Ride Date</label>
+            <div class="input-with-icon">
+              <i data-lucide="calendar" style="width:18px;height:18px;color:#64748B;"></i>
+              <input type="date" class="form-input" id="setupTripDate" value="2026-05-25" onchange="window.appState.bookingDraft.tripDate = this.value" />
+            </div>
+          </div>
+
+          <!-- Recurring Start Date (Visible when Recurring is chosen) -->
+          <div class="form-group" id="recurringStartDateBox" style="margin-bottom: 12px;">
+            <label class="form-label-sm">Schedule Starts From</label>
+            <div class="input-with-icon">
+              <i data-lucide="calendar" style="width:18px;height:18px;color:#64748B;"></i>
+              <input type="date" class="form-input" id="setupStartDate" value="2026-05-25" onchange="window.appState.bookingDraft.startDate = this.value" />
+            </div>
+          </div>
+
+          <!-- Time Pickers Grid -->
+          <div class="times-grid">
+            <!-- Outbound Morning Pickup Time -->
+            <div class="time-picker-box">
+              <label class="form-label-sm">Morning Pickup</label>
+              <div class="input-with-icon">
+                <i data-lucide="sun" style="width:16px;height:16px;color:#EAB308;"></i>
+                <input type="time" class="form-input" id="setupOutboundTime" value="07:30" onchange="updateTripTime('outbound', this.value)" />
+              </div>
+            </div>
+
+            <!-- Afternoon Return Pickup Time (Hidden when One-way) -->
+            <div class="time-picker-box" id="returnTimePickerBox">
+              <label class="form-label-sm">School Dismissal</label>
+              <div class="input-with-icon">
+                <i data-lucide="sunset" style="width:16px;height:16px;color:#F97316;"></i>
+                <input type="time" class="form-input" id="setupReturnTime" value="13:00" onchange="updateTripTime('return', this.value)" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px; margin-bottom: 20px;">
+          <button type="button" class="btn-primary" onclick="proceedFromTripSetup()">Search Verified Providers</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 15. BOOKING STEP 3: SEARCH PROVIDERS ================= -->
+    <section class="screen-view" id="screen-bookingSearchProviders" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('bookingTripSetup')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Available Providers</h2>
+        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 3/4</span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <!-- Route Overview Summary Chip -->
+        <div
+          style="background-color: var(--color-fade); border: 1px solid var(--color-stroke); padding: 10px 14px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between;">
+          <div style="font-size: 13px; font-weight: 700; color: var(--color-title);">Home ⇄ Greenfield School</div>
+          <span
+            style="font-size: 12px; color: #1D4ED8; font-weight: 800; background: #EFF6FF; padding: 2px 8px; border-radius: 99px;">2
+            Seats Needed</span>
+        </div>
+
+        <!-- Quick Filter Chips Scrollbar -->
+        <div class="filters-scroll-bar">
+          <button class="filter-chip-btn active">All (4)</button>
+          <button class="filter-chip-btn">Drivers Only</button>
+          <button class="filter-chip-btn">WalkShare</button>
+          <button class="filter-chip-btn">4.8+ Rated</button>
+          <button class="filter-chip-btn">Background Verified</button>
+        </div>
+
+        <!-- Provider Card 1: Tariq Ahmed (Recommended) -->
+        <div class="provider-result-card"
+          onclick="selectProviderAndReview('Tariq Ahmed', 'Toyota Sienna', '4.9', '$120')">
+          <div class="provider-top-row">
+            <img src="/assets/avatar_john.png" alt="Tariq Ahmed" class="provider-card-avatar" />
+            <div class="provider-name-block">
+              <div class="provider-name-verified">
+                <span>Tariq Ahmed</span>
+                <span class="verified-badge-icon" title="Background Verified">
+                  <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                </span>
+              </div>
+              <div class="provider-meta-row">
+                <span class="rating-badge">★ 4.9 (128 reviews)</span>
+                <span>• 0.8 km away</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="provider-card-bottom">
+            <div class="vehicle-info-pill">
+              <i data-lucide="car" style="width:15px;height:15px;"></i>
+              <span>Toyota Sienna • 4 seats open</span>
+            </div>
+            <div>
+              <span class="price-estimate-text">$120</span>
+              <span class="price-unit-sub">/wk</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Provider Card 2: Farhana Yasmin -->
+        <div class="provider-result-card"
+          onclick="selectProviderAndReview('Farhana Yasmin', 'Honda Odyssey', '5.0', '$135')">
+          <div class="provider-top-row">
+            <img src="/assets/avatar_john.png" alt="Farhana Yasmin" class="provider-card-avatar"
+              style="border-color: #38BDF8;" />
+            <div class="provider-name-block">
+              <div class="provider-name-verified">
+                <span>Farhana Yasmin</span>
+                <span class="verified-badge-icon">
+                  <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                </span>
+              </div>
+              <div class="provider-meta-row">
+                <span class="rating-badge">★ 5.0 (94 reviews)</span>
+                <span>• 1.2 km away</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="provider-card-bottom">
+            <div class="vehicle-info-pill">
+              <i data-lucide="car" style="width:15px;height:15px;"></i>
+              <span>Honda Odyssey • 5 seats open</span>
+            </div>
+            <div>
+              <span class="price-estimate-text">$135</span>
+              <span class="price-unit-sub">/wk</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Provider Card 3: Kabir Hossain -->
+        <div class="provider-result-card"
+          onclick="selectProviderAndReview('Kabir Hossain', 'Nissan Rogue', '4.8', '$110')">
+          <div class="provider-top-row">
+            <img src="/assets/avatar_john.png" alt="Kabir Hossain" class="provider-card-avatar" />
+            <div class="provider-name-block">
+              <div class="provider-name-verified">
+                <span>Kabir Hossain</span>
+                <span class="verified-badge-icon">
+                  <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                </span>
+              </div>
+              <div class="provider-meta-row">
+                <span class="rating-badge">★ 4.8 (62 reviews)</span>
+                <span>• 1.5 km away</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="provider-card-bottom">
+            <div class="vehicle-info-pill">
+              <i data-lucide="car" style="width:15px;height:15px;"></i>
+              <span>Nissan Rogue • 2 seats open</span>
+            </div>
+            <div>
+              <span class="price-estimate-text">$110</span>
+              <span class="price-unit-sub">/wk</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Provider Card 4: WalkShare -->
+        <div class="provider-result-card"
+          onclick="selectProviderAndReview('Sarah Jenkins (WalkShare)', 'Walking School Bus', '4.9', '$75')">
+          <div class="provider-top-row">
+            <img src="/assets/avatar_john.png" alt="Sarah Jenkins" class="provider-card-avatar"
+              style="border-color: #10B981;" />
+            <div class="provider-name-block">
+              <div class="provider-name-verified">
+                <span>Sarah Jenkins (WalkShare)</span>
+                <span class="verified-badge-icon">
+                  <i data-lucide="shield-check" style="width:16px;height:16px;color:#10B981;"></i>
+                </span>
+              </div>
+              <div class="provider-meta-row">
+                <span class="rating-badge">★ 4.9 (45 reviews)</span>
+                <span>• 0.4 km away</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="provider-card-bottom">
+            <div class="vehicle-info-pill">
+              <i data-lucide="footprints" style="width:15px;height:15px;"></i>
+              <span>Walking Escort • 3 spots open</span>
+            </div>
+            <div>
+              <span class="price-estimate-text">$75</span>
+              <span class="price-unit-sub">/wk</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 16. PROVIDER DETAILS SCREEN ================= -->
+    <section class="screen-view" id="screen-bookingProviderDetails" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('bookingSearchProviders')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Provider Profile</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <!-- Hero -->
+        <div class="provider-details-hero">
+          <img src="/assets/avatar_john.png" alt="Tariq Ahmed" class="provider-large-avatar" id="detailsProviderImg" />
+          <h3 style="font-size: 20px; font-weight: 800; color: var(--color-title);" id="detailsProviderName">Tariq Ahmed
+          </h3>
+          <p style="font-size: 13px; color: var(--color-body);" id="detailsProviderVehicle">2023 Toyota Sienna (Clean
+            &amp; Certified)</p>
+
+          <div class="provider-stats-grid">
+            <div class="stat-metric-card">
+              <div class="stat-metric-val">4.9 ★</div>
+              <div class="stat-metric-lbl">128 Reviews</div>
+            </div>
+            <div class="stat-metric-card">
+              <div class="stat-metric-val">3+ Yrs</div>
+              <div class="stat-metric-lbl">Experience</div>
+            </div>
+            <div class="stat-metric-card">
+              <div class="stat-metric-val">100%</div>
+              <div class="stat-metric-lbl">On-Time Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust Badges -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="safety-check-row">
+            <i data-lucide="check-circle-2" style="width:18px;height:18px;color:#16A34A;"></i>
+            <span>Vulnerable Sector Police Record Checked</span>
+          </div>
+          <div class="safety-check-row">
+            <i data-lucide="check-circle-2" style="width:18px;height:18px;color:#16A34A;"></i>
+            <span>Child First-Aid &amp; CPR Certified</span>
+          </div>
+          <div class="safety-check-row">
+            <i data-lucide="check-circle-2" style="width:18px;height:18px;color:#16A34A;"></i>
+            <span>Commercial Rideshare Insurance Verified</span>
+          </div>
+        </div>
+
+        <!-- Parent Review Quote -->
+        <div
+          style="background-color: var(--color-fade); border-radius: var(--radius-lg); padding: 14px; border: 1px solid var(--color-stroke);">
+          <div style="font-size: 12px; font-weight: 800; color: #D97706; margin-bottom: 4px;">★★★★★ Top Parent Review
+          </div>
+          <p style="font-size: 13px; color: var(--color-title); font-style: italic; line-height: 1.4;">"Tariq has safely
+            driven our kids to Greenfield School for over 8 months. Very gentle, always punctual, and sends
+            notifications right away."</p>
+          <span
+            style="font-size: 11.5px; color: var(--color-body); font-weight: 700; margin-top: 6px; display: block;">—
+            Nadia Rahman (Parent of 2)</span>
+        </div>
+
+        <div style="margin-top: 6px;">
+          <button class="btn-primary" onclick="navigateTo('bookingSummary')">Continue / Book with this Provider</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 17. BOOKING STEP 4: SUMMARY ================= -->
+    <section class="screen-view" id="screen-bookingSummary" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('bookingProviderDetails')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Booking Summary</h2>
+        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 4/4</span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <!-- Summary Details -->
+        <div class="summary-card">
+          <div class="summary-section-title">Trip Information</div>
+
+          <div class="summary-item-row">
+            <span class="summary-item-label">Children</span>
+            <span class="summary-item-val" id="summaryChildrenText">Arman Khan &amp; Emma Khan (2)</span>
+          </div>
+
+          <div class="summary-item-row">
+            <span class="summary-item-label">Trip Direction</span>
+            <span class="summary-item-val" id="summaryDirectionText">⇄ Both-way (Round Trip)</span>
+          </div>
+
+          <div class="summary-item-row">
+            <span class="summary-item-label">Outbound Leg</span>
+            <span class="summary-item-val" id="summaryOutboundText">Home → Greenfield (07:30 AM)</span>
+          </div>
+
+          <div class="summary-item-row">
+            <span class="summary-item-label">Return Leg</span>
+            <span class="summary-item-val" id="summaryReturnText">Greenfield → Home (01:00 PM)</span>
+          </div>
+
+          <div class="summary-item-row">
+            <span class="summary-item-label">Frequency</span>
+            <span class="summary-item-val" id="summaryFreqText">Recurring (Mon – Fri)</span>
+          </div>
+
+          <div class="summary-item-row">
+            <span class="summary-item-label">Provider</span>
+            <span class="summary-item-val" id="summaryProviderText">Tariq Ahmed (Toyota Sienna)</span>
+          </div>
+        </div>
+
+        <!-- Clear Pricing Breakdown -->
+        <div class="price-calc-box">
+          <div class="summary-section-title">Pricing Summary</div>
+
+          <div class="price-row-item">
+            <span>Weekly Base Rate</span>
+            <span style="font-weight: 700; color: var(--color-title);" id="summaryBasePriceText">$140.00</span>
+          </div>
+
+          <div class="price-row-item">
+            <span>Multi-Child Discount (2nd child 20% off)</span>
+            <span style="font-weight: 700; color: #16A34A;" id="summaryDiscountPriceText">-$28.00</span>
+          </div>
+
+          <div class="price-row-item">
+            <span>Safety &amp; Real-time GPS Insurance</span>
+            <span style="font-weight: 700; color: var(--color-title);">$8.00</span>
+          </div>
+
+          <div class="price-row-item total">
+            <span>Total Weekly Amount</span>
+            <span style="color: var(--color-primary); font-size: 18px;" id="summaryTotalPriceText">$120.00 / week</span>
+          </div>
+        </div>
+
+        <!-- Guarantee Note -->
+        <div
+          style="font-size: 12px; color: var(--color-body); text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <i data-lucide="shield-check" style="width:16px;height:16px;color:var(--color-primary);"></i>
+          <span>You will not be charged until provider accepts your request.</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+          <button class="btn-primary" onclick="submitBookingRequest()">Send Booking Request</button>
+          <button class="btn-secondary-link" onclick="navigateTo('bookingTripSetup')">Edit Trip Details</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 18. BOOKING STATE: REQUEST SENT (PENDING) ================= -->
+    <section class="screen-view" id="screen-bookingRequestSent" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-scroll-body"
+        style="align-items: center; justify-content: center; text-align: center; gap: 20px;">
+        <div
+          style="width: 80px; height: 80px; border-radius: 50%; background-color: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; margin-top: 40px;">
+          <i data-lucide="clock" style="width:40px;height:40px;"></i>
+        </div>
+
+        <div>
+          <span class="status-chip pending" style="font-size: 13px; padding: 6px 14px;">Status: Pending
+            Acceptance</span>
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--color-title); margin: 12px 0 6px;">Booking Request
+            Sent!</h2>
+          <p style="font-size: 14px; color: var(--color-body); line-height: 1.45; max-width: 320px; margin: 0 auto;"
+            id="requestSentDesc">
+            Your request has been forwarded to your provider. Providers typically respond within 15 minutes.
+          </p>
+        </div>
+
+        <div
+          style="background-color: var(--color-fade); border: 1px solid var(--color-stroke); border-radius: var(--radius-md); padding: 14px 18px; width: 100%; text-align: left;">
+          <div style="font-size: 13.5px; font-weight: 800; color: var(--color-title); margin-bottom: 4px;">Trip
+            Highlights:</div>
+          <div style="font-size: 12.5px; color: var(--color-body);">• Home ⇄ Greenfield International</div>
+          <div style="font-size: 12.5px; color: var(--color-body);">• Outbound: 07:30 AM | Return: 01:00 PM</div>
+          <div style="font-size: 12.5px; color: var(--color-body);">• Status updates sent via SMS &amp; notification
+          </div>
+        </div>
+
+        <!-- Interactive Demo Button to Simulate Provider Acceptance -->
+        <div
+          style="background-color: #EFF6FF; border: 1.5px dashed #3B82F6; border-radius: var(--radius-md); padding: 12px; width: 100%;">
+          <div style="font-size: 12px; font-weight: 800; color: #1D4ED8; margin-bottom: 6px;">⚡ Demo Fast-Forward:</div>
+          <button class="btn-primary" style="height: 38px; font-size: 13px;"
+            onclick="simulateProviderAcceptance()">Simulate Provider Acceptance →</button>
+        </div>
+
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+          <button class="btn-primary" onclick="navigateTo('bookings')">View in My Bookings</button>
+          <button class="btn-secondary-link" onclick="navigateTo('messages')">Message Provider</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 19. BOOKING STATE: CONFIRMED ================= -->
+    <section class="screen-view" id="screen-bookingConfirmed" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-scroll-body"
+        style="align-items: center; justify-content: center; text-align: center; gap: 20px;">
+        <div
+          style="width: 80px; height: 80px; border-radius: 50%; background-color: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; margin-top: 40px;">
+          <i data-lucide="check" style="width:42px;height:42px;stroke-width:3.2;"></i>
+        </div>
+
+        <div>
+          <span class="status-chip confirmed" style="font-size: 13px; padding: 6px 14px;">Status: Confirmed</span>
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--color-title); margin: 12px 0 6px;">Booking
+            Confirmed! 🎉</h2>
+          <p style="font-size: 14px; color: var(--color-body); line-height: 1.45; max-width: 320px; margin: 0 auto;">
+            Your provider has confirmed your transportation schedule. First pickup is set for 07:30 AM.
+          </p>
+        </div>
+
+        <div class="summary-card" style="width: 100%; text-align: left;">
+          <div class="summary-item-row">
+            <span class="summary-item-label">Booking Reference</span>
+            <span class="summary-item-val" id="confirmedRefText">#H2S-84920</span>
+          </div>
+          <div class="summary-item-row">
+            <span class="summary-item-label">Provider</span>
+            <span class="summary-item-val" id="confirmedProviderText">Tariq Ahmed (Toyota Sienna)</span>
+          </div>
+          <div class="summary-item-row">
+            <span class="summary-item-label">Children</span>
+            <span class="summary-item-val" id="confirmedChildrenText">Arman &amp; Emma Khan</span>
+          </div>
+          <div class="summary-item-row">
+            <span class="summary-item-label">Weekly Auto-Pay</span>
+            <span class="summary-item-val" id="confirmedTotalText">$120.00 / week</span>
+          </div>
+        </div>
+
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+          <button class="btn-primary" onclick="openBookingDetails(window.appState.activeBookingId)">View Booking
+            Details</button>
+          <button class="btn-secondary-surface" onclick="navigateTo('tracking')">Live Track Ride</button>
+          <button class="btn-secondary-link" onclick="navigateTo('home')">Return to Parent Home</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 19B. BOOKING DETAILS (DEDICATED FULL SCREEN) ================= -->
+    <section class="screen-view" id="screen-bookingDetails" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('bookings')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Booking Details</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <!-- Top Header Card -->
+        <div class="booking-detail-header-card">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span class="booking-id-tag" id="detailRefId">REF: H2S-84920</span>
+            <span class="status-chip confirmed" id="detailStatusBadge">CONFIRMED</span>
+          </div>
+          <div class="booking-detail-title" id="detailHeaderTitle">Arman &amp; Emma Khan</div>
+          <div style="font-size: 13px; color: rgba(255, 255, 255, 0.85); display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="repeat" style="width: 14px; height: 14px;"></i>
+            <span>Recurring School Transportation (Mon – Fri)</span>
+          </div>
+        </div>
+
+        <!-- Section 1: Children Passengers -->
+        <div class="details-section-box">
+          <div class="details-section-label">Child Passengers</div>
+          <div id="detailPassengersWrap" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Dynamic child profiles injected here -->
+          </div>
+        </div>
+
+        <!-- Section 2: Complete Route & Timings -->
+        <div class="details-section-box">
+          <div class="details-section-label">Scheduled Route</div>
+
+          <div class="details-route-leg">
+            <div class="details-leg-icon outbound">
+              <i data-lucide="arrow-up-right"></i>
+            </div>
+            <div class="details-leg-info">
+              <div class="details-leg-title">Outbound: Home → Greenfield School</div>
+              <div class="details-leg-sub">Pickup at 12 Elm Street</div>
+            </div>
+            <div class="details-leg-time" id="detailOutboundTime">07:30 AM</div>
+          </div>
+
+          <div class="details-route-leg" id="detailReturnLegBox">
+            <div class="details-leg-icon return">
+              <i data-lucide="arrow-down-left"></i>
+            </div>
+            <div class="details-leg-info">
+              <div class="details-leg-title">Return: Greenfield School → Home</div>
+              <div class="details-leg-sub">Pickup at Main School Gate</div>
+            </div>
+            <div class="details-leg-time" id="detailReturnTime">01:00 PM</div>
+          </div>
+        </div>
+
+        <!-- Section 3: Assigned Provider & Vehicle -->
+        <div class="details-section-box">
+          <div class="details-section-label">Assigned Driver</div>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="/assets/avatar_john.png" alt="Driver"
+                style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;" />
+              <div>
+                <div style="font-size: 15px; font-weight: 800; color: var(--color-title);" id="detailProviderName">Tariq
+                  Ahmed</div>
+                <div style="font-size: 12.5px; color: var(--color-body);" id="detailProviderVehicle">Toyota Sienna
+                  (2023) • SCH-4091</div>
+                <div style="font-size: 12px; color: #D97706; font-weight: 700; margin-top: 2px;"
+                  id="detailProviderRating">★ 4.9 (128 reviews)</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 6px;">
+              <button class="btn-icon-contact" onclick="alert('Calling driver: +1 (416) 555-0182')"
+                aria-label="Call Driver">
+                <i data-lucide="phone"></i>
+              </button>
+              <button class="btn-icon-contact" onclick="navigateTo('messages')" aria-label="Message Driver">
+                <i data-lucide="message-square"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Payment Summary -->
+        <div class="details-section-box">
+          <div class="details-section-label">Payment &amp; Billing</div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 13.5px; font-weight: 700; color: var(--color-title);" id="detailPayMethod">Visa
+                •••• 4242</div>
+              <div style="font-size: 12px; color: var(--color-body);">Auto-billed weekly on Mondays</div>
+            </div>
+            <div style="font-size: 16px; font-weight: 800; color: var(--color-primary);" id="detailTotalAmount">$120.00
+              / wk</div>
+          </div>
+        </div>
+
+        <!-- Section 5: Lifecycle Status Timeline -->
+        <div class="details-section-box">
+          <div class="details-section-label">Booking Timeline</div>
+          <div class="booking-lifecycle-timeline">
+            <div class="timeline-step-item completed">
+              <span class="timeline-step-dot"></span>
+              <div class="timeline-step-name">Booking Request Submitted</div>
+              <div class="timeline-step-time">May 20, 2026 • 09:15 AM</div>
+            </div>
+            <div class="timeline-step-item completed">
+              <span class="timeline-step-dot"></span>
+              <div class="timeline-step-name">Accepted &amp; Schedule Confirmed</div>
+              <div class="timeline-step-time">May 20, 2026 • 09:28 AM</div>
+            </div>
+            <div class="timeline-step-item current">
+              <span class="timeline-step-dot"></span>
+              <div class="timeline-step-name">Next Scheduled Pickup</div>
+              <div class="timeline-step-time">Tomorrow at 07:30 AM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 6: Contextual Action Buttons -->
+        <div class="action-buttons-group-vertical" id="detailContextualActions">
+          <!-- Dynamically populated depending on status (Upcoming, In Progress, Completed, Cancelled) -->
+        </div>
+      </div>
+
+      <nav class="bottom-tab-bar">
+        <button class="tab-item" onclick="navigateTo('home')">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </button>
+        <button class="tab-item active" onclick="navigateTo('bookings')">
+          <i data-lucide="calendar"></i>
+          <span>Bookings</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('tracking')">
+          <i data-lucide="navigation"></i>
+          <span>Tracking</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('messages')">
+          <i data-lucide="message-square"></i>
+          <span>Messages</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('profile')">
+          <i data-lucide="user"></i>
+          <span>Profile</span>
+        </button>
+      </nav>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 20. LIVE TRACKING FULL SCREEN ================= -->
+    <section class="screen-view" id="screen-tracking" style="background-color: #FFFFFF;">
+      <div class="status-bar dark" style="background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tracking-map-full">
+        <!-- Live Interactive Simulated Map Canvas -->
+        <div class="map-live-canvas">
+          <svg viewBox="0 0 430 500" style="width: 100%; height: 100%; position: absolute;">
+            <!-- Road Lines -->
+            <path d="M 60,380 Q 180,240 320,140" fill="none" stroke="#FFFFFF" stroke-width="12"
+              stroke-linecap="round" />
+            <path d="M 60,380 Q 180,240 320,140" fill="none" stroke="#0284C7" stroke-width="6" stroke-linecap="round"
+              stroke-dasharray="8,6" />
+
+            <!-- Home Marker -->
+            <circle cx="60" cy="380" r="14" fill="#10B981" />
+            <text x="60" y="384" font-size="10" fill="#fff" text-anchor="middle" font-weight="bold">🏠</text>
+
+            <!-- Destination Marker -->
+            <circle cx="320" cy="140" r="16" fill="#F2600C" />
+            <text x="320" y="144" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">🏫</text>
+          </svg>
+
+          <!-- Pulsing Car Marker -->
+          <div class="car-marker-animated" id="liveMapCarMarker" style="top: 48%; left: 46%;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Top Floating Controls -->
+        <div class="tracking-floating-header">
+          <button class="back-btn" onclick="navigateTo('home')">
+            <i data-lucide="chevron-left"></i>
+          </button>
+          <div style="text-align: center;">
+            <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Arman &amp; Emma Khan</div>
+            <div style="font-size: 11.5px; color: #16A34A; font-weight: 700;">🟢 Live GPS Tracking Active</div>
+          </div>
+          <span class="live-pill-tag"><span class="live-dot-pulse"></span> LIVE</span>
+        </div>
+
+        <!-- Bottom Drawer Sheet -->
+        <div class="tracking-drawer-sheet">
+          <div class="sheet-drag-handle"></div>
+
+          <!-- Stage & ETA Header -->
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <span class="status-chip active" id="trackingStatusChip">Trip In Progress</span>
+              <h3 style="font-size: 17px; font-weight: 800; color: var(--color-title); margin-top: 4px;"
+                id="trackingStageText">En route to Greenfield International</h3>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 18px; font-weight: 800; color: var(--color-secondary);" id="trackingEtaText">07:42
+                AM</div>
+              <div style="font-size: 11.5px; color: var(--color-body);">Estimated Arrival</div>
+            </div>
+          </div>
+
+          <!-- Trip Lifecycle Stepper -->
+          <div class="trip-stepper-row">
+            <div class="stepper-track-bg"></div>
+            <div class="stepper-track-progress" id="stepperProgressBar" style="width: 65%;"></div>
+
+            <div class="step-node completed" id="step1Node">
+              <div class="step-circle-dot"><i data-lucide="check" style="width:12px;height:12px;"></i></div>
+              <span class="step-node-label">On way</span>
+            </div>
+            <div class="step-node completed" id="step2Node">
+              <div class="step-circle-dot"><i data-lucide="check" style="width:12px;height:12px;"></i></div>
+              <span class="step-node-label">Pickup</span>
+            </div>
+            <div class="step-node active" id="step3Node">
+              <div class="step-circle-dot">3</div>
+              <span class="step-node-label">In Transit</span>
+            </div>
+            <div class="step-node" id="step4Node">
+              <div class="step-circle-dot">4</div>
+              <span class="step-node-label">Drop-off</span>
+            </div>
+          </div>
+
+          <!-- Interactive Stage Simulator Button -->
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; background: var(--color-fade); padding: 8px 12px; border-radius: var(--radius-md);">
+            <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Simulation Demo:</span>
+            <button class="top-bar-action" style="padding: 4px 8px; font-size: 12px;"
+              onclick="advanceTrackingStage()">Advance to Next Stage ⏩</button>
+          </div>
+
+          <!-- Driver Mini Profile & Quick Contact -->
+          <div class="active-driver-contact-row">
+            <div class="driver-mini-info">
+              <img src="/assets/avatar_john.png" alt="Tariq Ahmed" class="driver-mini-avatar" />
+              <div>
+                <div class="driver-mini-name">Tariq Ahmed</div>
+                <div class="driver-mini-sub">Toyota Sienna • SCH-4091</div>
+              </div>
+            </div>
+
+            <div class="active-contact-buttons">
+              <button class="btn-icon-contact" onclick="alert('Calling Tariq: +1 (416) 555-0182')"
+                aria-label="Call Driver">
+                <i data-lucide="phone"></i>
+              </button>
+              <button class="btn-icon-contact" onclick="navigateTo('messages')" aria-label="Message Driver">
+                <i data-lucide="message-square"></i>
+              </button>
+              <button class="btn-icon-contact" onclick="alert('Emergency Alert Sent to School & Safety Center')"
+                aria-label="Emergency" style="color: var(--color-danger);">
+                <i data-lucide="shield-alert"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 21. MESSAGES & PARENT-PROVIDER INBOX ================= -->
+    <section class="screen-view" id="screen-messages" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Header -->
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('home')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <img src="/assets/avatar_john.png" alt="Tariq"
+            style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;" />
+          <div>
+            <div style="font-size: 15px; font-weight: 800; color: var(--color-title);">Tariq Ahmed</div>
+            <div style="font-size: 11.5px; color: #16A34A; font-weight: 600;">Active Trip • Toyota Sienna</div>
+          </div>
+        </div>
+        <button class="btn-icon-contact" onclick="alert('Calling Tariq: +1 (416) 555-0182')">
+          <i data-lucide="phone"></i>
+        </button>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-messages-area" id="chatStream">
+          <div class="system-status-bubble">
+            <i data-lucide="clock" style="width:14px;height:14px;"></i>
+            <span>Trip started • 07:22 AM</span>
+          </div>
+
+          <!-- Provider Message -->
+          <div class="chat-bubble provider">
+            Good morning Sadia! I am about 5 minutes away from your home pickup.
+            <div class="chat-timestamp">07:25 AM</div>
+          </div>
+
+          <!-- System Update -->
+          <div class="system-status-bubble" style="background: #FEF3C7; border-color: #FDE68A; color: #B45309;">
+            <span>🚗 Driver arrived at Home (12 Elm Street) • 07:30 AM</span>
+          </div>
+
+          <!-- Parent Message -->
+          <div class="chat-bubble parent">
+            Good morning Tariq! Arman and Emma are waiting at the front porch with their school backpacks.
+            <div class="chat-timestamp">07:31 AM</div>
+          </div>
+
+          <!-- System Update -->
+          <div class="system-status-bubble" style="background: #F0FDF4; border-color: #BBF7D0; color: #15803D;">
+            <span>🎒 Children safely boarded &amp; buckled in • 07:33 AM</span>
+          </div>
+
+          <!-- Provider Message -->
+          <div class="chat-bubble provider">
+            Got both of them buckled in safely! We are now heading towards Greenfield International School.
+            <div class="chat-timestamp">07:34 AM</div>
+          </div>
+        </div>
+
+        <!-- Quick Reply Chips -->
+        <div class="quick-replies-scroll">
+          <button class="quick-reply-pill" onclick="sendQuickReply('We\'re ready!')">We're ready!</button>
+          <button class="quick-reply-pill" onclick="sendQuickReply('Thank you so much!')">Thank you so much!</button>
+          <button class="quick-reply-pill" onclick="sendQuickReply('Please call me.')">Please call me.</button>
+          <button class="quick-reply-pill" onclick="sendQuickReply('Running 2 mins late')">Running 2 mins late</button>
+        </div>
+
+        <!-- Chat Input Bar -->
+        <form onsubmit="handleSendChatMessage(event)" class="chat-input-bar">
+          <input type="text" class="chat-input-field" id="chatInputField" placeholder="Type a message to Tariq..." />
+          <button type="submit" class="chat-send-btn" aria-label="Send">
+            <i data-lucide="send" style="width:18px;height:18px;"></i>
+          </button>
+        </form>
+      </div>
+
+      <nav class="bottom-tab-bar">
+        <button class="tab-item" onclick="navigateTo('home')">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('bookings')">
+          <i data-lucide="calendar"></i>
+          <span>Bookings</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('tracking')">
+          <i data-lucide="navigation"></i>
+          <span>Tracking</span>
+        </button>
+        <button class="tab-item active" onclick="navigateTo('messages')">
+          <i data-lucide="message-square"></i>
+          <span>Messages</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('profile')">
+          <i data-lucide="user"></i>
+          <span>Profile</span>
+        </button>
+      </nav>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 22. BOOKINGS MANAGEMENT (UPCOMING / PAST / CANCELLED) ================= -->
+    <section class="screen-view" id="screen-bookings" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('home')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">My Bookings</h2>
+        <button class="top-bar-action" onclick="navigateTo('bookingSelectChildren')">+ New</button>
+      </div>
+
+      <div class="screen-scroll-body">
+        <!-- Filter Tabs -->
+        <div class="segmented-control">
+          <button class="segment-btn active" id="tabUpcoming" onclick="switchBookingTab('upcoming')">Upcoming
+            (2)</button>
+          <button class="segment-btn" id="tabPast" onclick="switchBookingTab('past')">Past (6)</button>
+          <button class="segment-btn" id="tabCancelled" onclick="switchBookingTab('cancelled')">Cancelled</button>
+        </div>
+
+        <div class="bookings-list-container" id="bookingsListWrap">
+          <!-- Booking Card 1: Active Recurring Schedule -->
+          <div class="booking-item-card" onclick="openBookingDetails('H2S-84920')" style="cursor:pointer;">
+            <div class="booking-card-top-row">
+              <span class="status-chip confirmed">Confirmed • Recurring</span>
+              <span style="font-size: 14px; font-weight: 800; color: var(--color-primary);">$120/wk</span>
+            </div>
+
+            <div>
+              <div style="font-size: 16px; font-weight: 800; color: var(--color-title);">Arman &amp; Emma Khan</div>
+              <div style="font-size: 13px; color: var(--color-body); margin-top: 2px;">Home ⇄ Greenfield International
+                School</div>
+              <div style="font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
+                📅 Mon–Fri • Outbound: 07:30 AM | Return: 01:00 PM
+              </div>
+              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">
+                👤 Provider: Tariq Ahmed (Toyota Sienna)
+              </div>
+            </div>
+
+            <div class="booking-actions-row">
+              <button class="btn-booking-sub" onclick="event.stopPropagation(); openBookingDetails('H2S-84920')">View
+                Details →</button>
+              <button class="btn-booking-sub" onclick="event.stopPropagation(); navigateTo('tracking')">Live
+                Track</button>
+            </div>
+          </div>
+
+          <!-- Booking Card 2: Single Trip Booking -->
+          <div class="booking-item-card" onclick="openBookingDetails('H2S-73190')" style="cursor:pointer;">
+            <div class="booking-card-top-row">
+              <span class="status-chip pending">Pending Acceptance</span>
+              <span style="font-size: 14px; font-weight: 800; color: var(--color-primary);">$35</span>
+            </div>
+
+            <div>
+              <div style="font-size: 16px; font-weight: 800; color: var(--color-title);">Zara Khan (One-time)</div>
+              <div style="font-size: 13px; color: var(--color-body); margin-top: 2px;">Home → Sunshine Pre-school</div>
+              <div style="font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
+                📅 Thursday, May 23 • 08:15 AM
+              </div>
+              <div style="font-size: 12px; color: #64748B; margin-top: 2px;">
+                👤 Provider: Sarah Jenkins (WalkShare)
+              </div>
+            </div>
+
+            <div class="booking-actions-row">
+              <button class="btn-booking-sub" onclick="event.stopPropagation(); openBookingDetails('H2S-73190')">View
+                Details →</button>
+              <button class="btn-booking-sub" onclick="event.stopPropagation(); navigateTo('messages')">Message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="bottom-tab-bar">
+        <button class="tab-item" onclick="navigateTo('home')">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </button>
+        <button class="tab-item active" onclick="navigateTo('bookings')">
+          <i data-lucide="calendar"></i>
+          <span>Bookings</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('tracking')">
+          <i data-lucide="navigation"></i>
+          <span>Tracking</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('messages')">
+          <i data-lucide="message-square"></i>
+          <span>Messages</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('profile')">
+          <i data-lucide="user"></i>
+          <span>Profile</span>
+        </button>
+      </nav>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 23. PARENT PROFILE & SETTINGS ================= -->
+    <section class="screen-view" id="screen-profile" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('home')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Parent Profile</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <!-- Parent Profile Header -->
+        <div class="profile-user-card">
+          <img src="/assets/avatar_john.png" alt="Sadia Khan" class="profile-avatar-lg" />
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: var(--color-title);">Sadia Khan</h3>
+            <p style="font-size: 13px; color: var(--color-body);">+1 (416) 555-0192</p>
+            <div style="display: flex; gap: 6px; margin-top: 6px;">
+              <span class="status-chip confirmed" style="font-size: 11px;">Verified Mother</span>
+              <span class="status-chip active" style="font-size: 11px;">3 Children</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Child & Ride Management -->
+        <div class="profile-menu-section">
+          <div class="profile-menu-item" onclick="navigateTo('myChildren')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="users"></i>
+              </div>
+              <span class="menu-title-text">My Children</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-secondary); font-weight: 700;">3 Profiles →</span>
+          </div>
+
+          <div class="profile-menu-item"
+            onclick="alert('Saved Locations: Home, Greenfield School, Grandmother\'s House')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="map-pin"></i>
+              </div>
+              <span class="menu-title-text">Saved Locations</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-body);">3 Addresses →</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="alert('Saved Providers: Tariq Ahmed (Favorite), Farhana Yasmin')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="heart"></i>
+              </div>
+              <span class="menu-title-text">Favorite Providers</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-body);">2 Saved →</span>
+          </div>
+        </div>
+
+        <!-- Section 2: Payments & Safety -->
+        <div class="profile-menu-section">
+          <div class="profile-menu-item" onclick="alert('Payment Method: Visa ending in 4242 (Active)')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="credit-card"></i>
+              </div>
+              <span class="menu-title-text">Payment Methods &amp; Subscriptions</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-body);">Visa •••• 4242 →</span>
+          </div>
+
+          <div class="profile-menu-item"
+            onclick="alert('Emergency Contacts: Father (416-555-0199), School Main Office')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap" style="color: var(--color-danger);">
+                <i data-lucide="shield-alert"></i>
+              </div>
+              <span class="menu-title-text">Emergency Contacts &amp; Safety Hub</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-body);">2 Active →</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="alert('Help & Support: Call Support 1-800-KID-RIDE')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="help-circle"></i>
+              </div>
+              <span class="menu-title-text">Help &amp; 24/7 Support</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-body);">→</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <button class="btn-booking-sub danger" style="width: 100%; padding: 12px; font-size: 14px;"
+            onclick="navigateTo('authWelcome')">Log Out of Parent Account</button>
+        </div>
+      </div>
+
+      <nav class="bottom-tab-bar">
+        <button class="tab-item" onclick="navigateTo('home')">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('bookings')">
+          <i data-lucide="calendar"></i>
+          <span>Bookings</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('tracking')">
+          <i data-lucide="navigation"></i>
+          <span>Tracking</span>
+        </button>
+        <button class="tab-item" onclick="navigateTo('messages')">
+          <i data-lucide="message-square"></i>
+          <span>Messages</span>
+        </button>
+        <button class="tab-item active" onclick="navigateTo('profile')">
+          <i data-lucide="user"></i>
+          <span>Profile</span>
+        </button>
+      </nav>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 24. TRIP COMPLETION & RATING MODAL ================= -->
+    <section class="screen-view" id="screen-rating" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path
+              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+              fill="currentColor" />
+          </svg>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-scroll-body"
+        style="align-items: center; justify-content: center; text-align: center; gap: 16px;">
+        <img src="/assets/avatar_john.png" alt="Tariq Ahmed" class="provider-large-avatar" style="margin-top: 30px;" />
+
+        <div>
+          <h2 style="font-size: 22px; font-weight: 800; color: var(--color-title);">Rate Tariq Ahmed</h2>
+          <p style="font-size: 13.5px; color: var(--color-body); margin-top: 4px;">Trip to Greenfield International
+            completed safely.</p>
+        </div>
+
+        <!-- Interactive 5 Stars -->
+        <div class="stars-row" id="ratingStars">
+          <button class="star-btn active" onclick="setRatingScore(1)"><i data-lucide="star"
+              style="width:28px;height:28px;fill:currentColor;"></i></button>
+          <button class="star-btn active" onclick="setRatingScore(2)"><i data-lucide="star"
+              style="width:28px;height:28px;fill:currentColor;"></i></button>
+          <button class="star-btn active" onclick="setRatingScore(3)"><i data-lucide="star"
+              style="width:28px;height:28px;fill:currentColor;"></i></button>
+          <button class="star-btn active" onclick="setRatingScore(4)"><i data-lucide="star"
+              style="width:28px;height:28px;fill:currentColor;"></i></button>
+          <button class="star-btn active" onclick="setRatingScore(5)"><i data-lucide="star"
+              style="width:28px;height:28px;fill:currentColor;"></i></button>
+        </div>
+
+        <!-- Tags -->
+        <div class="rating-tags-wrap">
+          <span class="rating-tag-pill active" onclick="this.classList.toggle('active')">Safe Driving</span>
+          <span class="rating-tag-pill active" onclick="this.classList.toggle('active')">Punctual Pickup</span>
+          <span class="rating-tag-pill active" onclick="this.classList.toggle('active')">Friendly to Children</span>
+          <span class="rating-tag-pill" onclick="this.classList.toggle('active')">Clean Vehicle</span>
+          <span class="rating-tag-pill" onclick="this.classList.toggle('active')">Smooth Route</span>
+        </div>
+
+        <!-- Written review text -->
+        <textarea class="form-input" style="height: 70px; border-radius: var(--radius-md); padding: 10px; resize: none;"
+          placeholder="Leave an optional comment for other parents..."></textarea>
+
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+          <button class="btn-primary"
+            onclick="alert('Thank you for rating your provider! ⭐'); navigateTo('home');">Submit Review</button>
+          <button class="btn-secondary-link" onclick="navigateTo('home')">Skip for now</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
   </main>
 
   <script src="/app.js"></script>
 </body>
+
+</html>
+<div class="top-bar-sticky">
+  <button class="back-btn" onclick="navigateTo('profile')">
+    <i data-lucide="chevron-left"></i>
+  </button>
+  <h2 class="top-bar-title">About Home2School</h2>
+  <span style="width: 26px;"></span>
+</div>
+
+<div class="screen-scroll-body" style="text-align: center; gap: 16px;">
+  <div
+    style="width: 72px; height: 72px; border-radius: 20px; background-color: var(--color-primary); color: #fff; display: flex; align-items: center; justify-content: center; margin: 16px auto 0; box-shadow: 0 8px 24px rgba(27, 43, 104, 0.25);">
+    <i data-lucide="car" style="width: 38px; height: 38px;"></i>
+  </div>
+
+  <div>
+    <h2 style="font-size: 22px; font-weight: 800; color: var(--color-title);">Home2School</h2>
+    <p style="font-size: 13.5px; color: var(--color-body); margin-top: 4px;">Safe, Trusted School Car Rides for Children
+    </p>
+    <span
+      style="display: inline-block; font-size: 11.5px; font-weight: 700; background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 99px; margin-top: 8px;">Version
+      2.4 (Production MVP)</span>
+  </div>
+
+  <div class="provider-stats-grid" style="width: 100%;">
+    <div class="stat-metric-card">
+      <div class="stat-metric-val">10K+</div>
+      <div class="stat-metric-lbl">Safe Rides</div>
+    </div>
+    <div class="stat-metric-card">
+      <div class="stat-metric-val">100%</div>
+      <div class="stat-metric-lbl">Vetted Drivers</div>
+    </div>
+    <div class="stat-metric-card">
+      <div class="stat-metric-val">4.9 ★</div>
+      <div class="stat-metric-lbl">Parent Rating</div>
+    </div>
+  </div>
+
+  <div class="details-section-box" style="text-align: left;">
+    <div class="details-section-label">Our Mission</div>
+    <p style="font-size: 13px; color: var(--color-title); line-height: 1.5;">
+      Home2School was created by parents to solve daily school commute anxiety. We connect families with certified,
+      community-verified neighborhood drivers and walking escorts to make school mornings safe, peaceful, and
+      predictable.
+    </p>
+  </div>
+
+  <div class="details-section-box" style="text-align: left;">
+    <div class="details-section-label">24/7 Support Hotline</div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">1-800-KID-RIDE</div>
+        <div style="font-size: 12px; color: var(--color-body);">support@home2school.app</div>
+      </div>
+      <a href="tel:18005437433" class="btn-primary"
+        style="height: 38px; padding: 0 16px; font-size: 13px; text-decoration: none; display: flex; align-items: center;">Call</a>
+    </div>
+  </div>
+</div>
+
+<div class="home-indicator"></div>
+</section>
+
+</main>
+
+<script src="/app.js"></script>
+</body>
+
 </html>
