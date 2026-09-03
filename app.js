@@ -31,7 +31,15 @@ const screens = [
   'messages',
   'bookings',
   'profile',
-  'rating'
+  'rating',
+  'notifications',
+  'profilePersonalInfo',
+  'profileEmergency',
+  'profileLocations',
+  'profilePayments',
+  'faq',
+  'legal',
+  'about'
 ];
 
 /* ==========================================================
@@ -193,6 +201,7 @@ window.navigateTo = function (screenName) {
 function updateBottomTabHighlights(screenName) {
   const tabMap = {
     home: 0,
+    notifications: 0,
     bookings: 1,
     bookingDetails: 1,
     bookingRequestSent: 1,
@@ -200,7 +209,14 @@ function updateBottomTabHighlights(screenName) {
     tracking: 2,
     messages: 3,
     profile: 4,
-    myChildren: 4
+    myChildren: 4,
+    profilePersonalInfo: 4,
+    profileEmergency: 4,
+    profileLocations: 4,
+    profilePayments: 4,
+    faq: 4,
+    legal: 4,
+    about: 4
   };
 
   const activeIndex = tabMap[screenName];
@@ -963,5 +979,54 @@ window.addNewPaymentMethod = function () {
   const cardNum = prompt('Enter Card Number (Demo):', '•••• •••• •••• 5592');
   if (!cardNum) return;
   alert('✓ New payment method added and verified with secure 3D-Secure bank protocol.');
+};
+
+window.savePersonalInfo = function () {
+  const name = document.getElementById('parentProfileName')?.value;
+  const phone = document.getElementById('parentProfilePhone')?.value;
+  const email = document.getElementById('parentProfileEmail')?.value;
+  const address = document.getElementById('parentProfileAddress')?.value;
+  const relation = document.getElementById('parentProfileRelation')?.value;
+
+  if (name) window.appState.user.name = name;
+  if (phone) window.appState.user.phone = phone;
+  if (email) window.appState.user.email = email;
+  if (address) window.appState.user.address = address;
+  if (relation) window.appState.user.role = relation;
+
+  alert('✓ Personal information updated successfully.');
+  window.navigateTo('profile');
+};
+
+window.markNotificationsAsRead = function () {
+  document.querySelectorAll('.notification-card.unread').forEach(el => {
+    el.classList.remove('unread');
+  });
+  const dot = document.querySelector('.unread-badge-dot');
+  if (dot) dot.style.display = 'none';
+  alert('All notifications marked as read.');
+};
+
+window.filterNotifications = function (category, btn) {
+  const parent = btn?.closest('.filters-scroll-bar');
+  parent?.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
+  btn?.classList.add('active');
+
+  const cards = document.querySelectorAll('.notification-card');
+  cards.forEach(card => {
+    if (category === 'all' || card.dataset.category === category) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+};
+
+window.toggleFaq = function (headerEl) {
+  const item = headerEl.closest('.faq-accordion-item');
+  if (item) {
+    item.classList.toggle('open');
+    if (window.lucide) window.lucide.createIcons();
+  }
 };
 

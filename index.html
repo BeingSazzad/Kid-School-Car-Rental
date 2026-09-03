@@ -603,7 +603,7 @@
           </div>
 
           <!-- Bell Button with Notification Dot (Lucide) -->
-          <button class="bell-btn" aria-label="Notifications" onclick="toggleNotificationAlert()">
+          <button class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
             <i data-lucide="bell"></i>
             <span class="unread-badge-dot"></span>
           </button>
@@ -2353,10 +2353,18 @@
 
       <div class="screen-scroll-body">
         <!-- Parent Profile Header -->
-        <div class="profile-user-card">
-          <img src="/assets/avatar_john.png" alt="Sadia Khan" class="profile-avatar-lg" />
-          <div>
-            <h3 style="font-size: 18px; font-weight: 800; color: var(--color-title);">Sadia Khan</h3>
+        <div class="profile-user-card" onclick="navigateTo('profilePersonalInfo')" style="cursor: pointer;">
+          <div style="position: relative;">
+            <img src="/assets/avatar_john.png" alt="Sadia Khan" class="profile-avatar-lg" />
+            <span style="position: absolute; bottom: 0; right: 0; background: var(--color-primary); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #fff;">
+              <i data-lucide="edit-2" style="width:11px;height:11px;"></i>
+            </span>
+          </div>
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <h3 style="font-size: 18px; font-weight: 800; color: var(--color-title);">Sadia Khan</h3>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--color-body);"></i>
+            </div>
             <p style="font-size: 13px; color: var(--color-body);">+1 (416) 555-0192</p>
             <div style="display: flex; gap: 6px; margin-top: 6px;">
               <span class="status-chip confirmed" style="font-size: 11px;">Verified Mother</span>
@@ -2377,8 +2385,7 @@
             <span style="font-size: 13px; color: var(--color-secondary); font-weight: 700;">3 Profiles →</span>
           </div>
 
-          <div class="profile-menu-item"
-            onclick="alert('Saved Locations: Home, Greenfield School, Grandmother\'s House')">
+          <div class="profile-menu-item" onclick="navigateTo('profileLocations')">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="map-pin"></i>
@@ -2388,48 +2395,57 @@
             <span style="font-size: 13px; color: var(--color-body);">3 Addresses →</span>
           </div>
 
-          <div class="profile-menu-item" onclick="alert('Saved Providers: Tariq Ahmed (Favorite), Farhana Yasmin')">
-            <div class="menu-item-left">
-              <div class="menu-icon-wrap">
-                <i data-lucide="heart"></i>
-              </div>
-              <span class="menu-title-text">Favorite Providers</span>
-            </div>
-            <span style="font-size: 13px; color: var(--color-body);">2 Saved →</span>
-          </div>
-        </div>
-
-        <!-- Section 2: Payments & Safety -->
-        <div class="profile-menu-section">
-          <div class="profile-menu-item" onclick="alert('Payment Method: Visa ending in 4242 (Active)')">
-            <div class="menu-item-left">
-              <div class="menu-icon-wrap">
-                <i data-lucide="credit-card"></i>
-              </div>
-              <span class="menu-title-text">Payment Methods &amp; Subscriptions</span>
-            </div>
-            <span style="font-size: 13px; color: var(--color-body);">Visa •••• 4242 →</span>
-          </div>
-
-          <div class="profile-menu-item"
-            onclick="alert('Emergency Contacts: Father (416-555-0199), School Main Office')">
+          <div class="profile-menu-item" onclick="navigateTo('profileEmergency')">
             <div class="menu-item-left">
               <div class="menu-icon-wrap" style="color: var(--color-danger);">
                 <i data-lucide="shield-alert"></i>
               </div>
-              <span class="menu-title-text">Emergency Contacts &amp; Safety Hub</span>
+              <span class="menu-title-text">Emergency &amp; Safety Hub</span>
             </div>
             <span style="font-size: 13px; color: var(--color-body);">2 Active →</span>
           </div>
+        </div>
 
-          <div class="profile-menu-item" onclick="alert('Help & Support: Call Support 1-800-KID-RIDE')">
+        <!-- Section 2: Payments & Common App Information -->
+        <div class="profile-menu-section">
+          <div class="profile-menu-item" onclick="navigateTo('profilePayments')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="credit-card"></i>
+              </div>
+              <span class="menu-title-text">Payment Methods &amp; Wallet</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-body);">$45.00 Balance →</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="navigateTo('faq')">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="help-circle"></i>
               </div>
-              <span class="menu-title-text">Help &amp; 24/7 Support</span>
+              <span class="menu-title-text">Help &amp; FAQ</span>
             </div>
             <span style="font-size: 13px; color: var(--color-body);">→</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="navigateTo('legal')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="file-text"></i>
+              </div>
+              <span class="menu-title-text">Terms &amp; Privacy Policy</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-body);">→</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="navigateTo('about')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="info"></i>
+              </div>
+              <span class="menu-title-text">About Home2School</span>
+            </div>
+            <span style="font-size: 13px; color: var(--color-body);">v2.4 →</span>
           </div>
         </div>
 
@@ -2530,78 +2546,579 @@
       <div class="home-indicator"></div>
     </section>
 
+    <!-- ================= 25. NOTIFICATIONS SCREEN ================= -->
+    <section class="screen-view" id="screen-notifications" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('home')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Notifications</h2>
+        <button onclick="markNotificationsAsRead()" style="background:none;border:none;color:var(--color-primary);font-size:12.5px;font-weight:700;cursor:pointer;">Mark Read</button>
+      </div>
+
+      <div class="screen-scroll-body">
+        <div class="filters-scroll-bar" style="margin-bottom: 4px;">
+          <button class="filter-chip-btn active" onclick="filterNotifications('all', this)">All (4)</button>
+          <button class="filter-chip-btn" onclick="filterNotifications('trip', this)">Trips</button>
+          <button class="filter-chip-btn" onclick="filterNotifications('safety', this)">Safety</button>
+        </div>
+
+        <div class="notification-card unread" data-category="trip" onclick="navigateTo('tracking')">
+          <div class="notif-icon-circle blue">
+            <i data-lucide="navigation"></i>
+          </div>
+          <div class="notif-content-block">
+            <div class="notif-title-row">
+              <span class="notif-title-text">Driver 5 Mins Away</span>
+              <span class="notif-time-text">Just now</span>
+            </div>
+            <p class="notif-desc-text">Tariq Ahmed is approaching 12 Elm Street for morning school pickup.</p>
+          </div>
+        </div>
+
+        <div class="notification-card unread" data-category="trip" onclick="navigateTo('bookings')">
+          <div class="notif-icon-circle green">
+            <i data-lucide="calendar-check"></i>
+          </div>
+          <div class="notif-content-block">
+            <div class="notif-title-row">
+              <span class="notif-title-text">Schedule Confirmed</span>
+              <span class="notif-time-text">1 hr ago</span>
+            </div>
+            <p class="notif-desc-text">Recurring school commute for Arman & Emma confirmed for next week.</p>
+          </div>
+        </div>
+
+        <div class="notification-card" data-category="safety" onclick="navigateTo('profileEmergency')">
+          <div class="notif-icon-circle orange">
+            <i data-lucide="shield-check"></i>
+          </div>
+          <div class="notif-content-block">
+            <div class="notif-title-row">
+              <span class="notif-title-text">Safety Protocol Active</span>
+              <span class="notif-time-text">Yesterday</span>
+            </div>
+            <p class="notif-desc-text">All 3 emergency safety contacts verified and synced with school dispatch.</p>
+          </div>
+        </div>
+
+        <div class="notification-card" data-category="trip" onclick="navigateTo('rating')">
+          <div class="notif-icon-circle purple">
+            <i data-lucide="star"></i>
+          </div>
+          <div class="notif-content-block">
+            <div class="notif-title-row">
+              <span class="notif-title-text">Rate Your Last Ride</span>
+              <span class="notif-time-text">May 21</span>
+            </div>
+            <p class="notif-desc-text">Help maintain high safety standards by leaving feedback for Tariq Ahmed.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 26. PERSONAL INFO SCREEN ================= -->
+    <section class="screen-view" id="screen-profilePersonalInfo" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Personal Information</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <div style="display: flex; flex-direction: column; align-items: center; margin: 10px 0 16px;">
+          <div style="position: relative;">
+            <div id="avatarPreviewContainer" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 3px solid var(--color-fade); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+              <img src="/assets/avatar_john.png" alt="Sadia Khan" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
+            <button onclick="triggerPhotoUpload()" style="position: absolute; bottom: 0; right: 0; background: var(--color-primary); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+              <i data-lucide="camera" style="width:13px;height:13px;"></i>
+            </button>
+          </div>
+          <input type="file" id="photoFileInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)" />
+          <button onclick="triggerPhotoUpload()" style="background: none; border: none; color: var(--color-primary); font-size: 13px; font-weight: 700; margin-top: 8px; cursor: pointer;">Change Photo</button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Full Legal Name</label>
+          <input type="text" class="form-input" id="parentProfileName" value="Sadia Khan" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Primary Mobile Number (Verified)</label>
+          <input type="tel" class="form-input" id="parentProfilePhone" value="+1 (416) 555-0192" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" id="parentProfileEmail" value="sadia.khan@example.com" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Primary Home Address</label>
+          <input type="text" class="form-input" id="parentProfileAddress" value="12 Elm Street, Toronto, ON" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Relationship to Children</label>
+          <select class="form-input" id="parentProfileRelation" style="height: 48px;">
+            <option value="Mother" selected>Mother</option>
+            <option value="Father">Father</option>
+            <option value="Guardian">Legal Guardian</option>
+          </select>
+        </div>
+
+        <div style="margin-top: 14px; margin-bottom: 20px;">
+          <button class="btn-primary" onclick="savePersonalInfo()">Save Changes</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 27. EMERGENCY CONTACTS SCREEN ================= -->
+    <section class="screen-view" id="screen-profileEmergency" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Emergency &amp; Safety Hub</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <div style="background-color: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius-md); padding: 12px 14px; display: flex; gap: 10px; align-items: center;">
+          <i data-lucide="shield-alert" style="width:24px;height:24px;color:#DC2626;flex-shrink:0;"></i>
+          <div>
+            <div style="font-size: 13px; font-weight: 800; color: #991B1B;">24/7 Safety Network Active</div>
+            <div style="font-size: 11.5px; color: #B91C1C; line-height: 1.3;">Drivers automatically receive verified contacts during active rides.</div>
+          </div>
+        </div>
+
+        <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-top: 6px;">Verified Emergency Contacts</div>
+        <div class="info-rows-group" id="emergencyContactsListWrap">
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="phone-call" style="width:20px;height:20px;color:var(--color-primary);"></i>
+              <div>
+                <div class="info-row-label">Farhan Khan (Father)</div>
+                <div class="info-row-sub">+1 (416) 555-0199 • Primary Contact</div>
+              </div>
+            </div>
+            <a href="tel:4165550199" class="info-row-action">Call</a>
+          </div>
+
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="phone-call" style="width:20px;height:20px;color:var(--color-primary);"></i>
+              <div>
+                <div class="info-row-label">Rehana Begum (Grandmother)</div>
+                <div class="info-row-sub">+1 (416) 555-0144 • Secondary Contact</div>
+              </div>
+            </div>
+            <a href="tel:4165550144" class="info-row-action">Call</a>
+          </div>
+
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="school" style="width:20px;height:20px;color:var(--color-secondary);"></i>
+              <div>
+                <div class="info-row-label">Greenfield School Main Office</div>
+                <div class="info-row-sub">+1 (416) 555-0800 • Student Dispatch</div>
+              </div>
+            </div>
+            <a href="tel:4165550800" class="info-row-action">Call</a>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="background:var(--color-fade);color:var(--color-primary);border:1.5px dashed var(--color-primary);margin-top:4px;" onclick="addEmergencyContact()">
+          + Add Emergency Contact
+        </button>
+
+        <div class="details-section-box" style="margin-top: 10px;">
+          <div class="details-section-label">Emergency Protocol Checklist</div>
+          <div style="font-size: 12.5px; color: var(--color-body); line-height: 1.5; display: flex; flex-direction: column; gap: 6px;">
+            <div>✓ Instant SMS alert with GPS coordinates sent to all contacts upon delay.</div>
+            <div>✓ Direct two-way radio link to emergency school transport operator.</div>
+            <div>✓ 100% background-checked certified child escort procedures.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 28. SAVED LOCATIONS SCREEN ================= -->
+    <section class="screen-view" id="screen-profileLocations" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Saved Locations</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <div class="info-rows-group" id="savedLocationsListWrap">
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="home" style="width:20px;height:20px;color:var(--color-primary);"></i>
+              <div>
+                <div class="info-row-label">Home (Primary Pickup)</div>
+                <div class="info-row-sub">12 Elm Street, Toronto, ON</div>
+              </div>
+            </div>
+            <span class="status-chip confirmed" style="font-size: 11px;">Default</span>
+          </div>
+
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="school" style="width:20px;height:20px;color:var(--color-secondary);"></i>
+              <div>
+                <div class="info-row-label">Greenfield International School</div>
+                <div class="info-row-sub">Gate 2 Drop-off Loop, Toronto, ON</div>
+              </div>
+            </div>
+            <span class="info-row-action" onclick="alert('Location details loaded')">Edit</span>
+          </div>
+
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="school" style="width:20px;height:20px;color:var(--color-secondary);"></i>
+              <div>
+                <div class="info-row-label">Sunshine Pre-school</div>
+                <div class="info-row-sub">45 Bloom Avenue, Toronto, ON</div>
+              </div>
+            </div>
+            <span class="info-row-action" onclick="alert('Location details loaded')">Edit</span>
+          </div>
+
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="map-pin" style="width:20px;height:20px;color:var(--color-primary);"></i>
+              <div>
+                <div class="info-row-label">Grandmother's House</div>
+                <div class="info-row-sub">84 Willowbrook Crescent, Toronto, ON</div>
+              </div>
+            </div>
+            <span class="info-row-action" onclick="alert('Location details loaded')">Edit</span>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="background:var(--color-fade);color:var(--color-primary);border:1.5px dashed var(--color-primary);margin-top:6px;" onclick="addNewAddress()">
+          + Add New Address
+        </button>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 29. PAYMENT METHODS & WALLET ================= -->
+    <section class="screen-view" id="screen-profilePayments" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Payment Methods &amp; Wallet</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <div style="background: linear-gradient(135deg, var(--color-brand-navy) 0%, #2A3F8E 100%); border-radius: var(--radius-lg); padding: 18px; color: #fff;">
+          <div style="font-size: 12px; color: rgba(255,255,255,0.8); font-weight: 600;">In-App Parent Credit</div>
+          <div style="font-size: 32px; font-weight: 800; margin: 4px 0 10px;">$45.00</div>
+          <div style="font-size: 11.5px; color: rgba(255,255,255,0.85);">Auto-applies $10 off each multi-child recurring invoice</div>
+        </div>
+
+        <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-top: 10px;">Saved Cards &amp; Payment Options</div>
+        <div class="info-rows-group" id="savedPaymentMethodsList">
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="credit-card" style="width:20px;height:20px;color:var(--color-primary);"></i>
+              <div>
+                <div class="info-row-label">Visa ending in 4242</div>
+                <div class="info-row-sub">Expires 08/28 • Default Auto-Pay</div>
+              </div>
+            </div>
+            <span class="status-chip confirmed" style="font-size: 11px;">Default</span>
+          </div>
+
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="credit-card" style="width:20px;height:20px;color:#64748B;"></i>
+              <div>
+                <div class="info-row-label">Mastercard ending in 8831</div>
+                <div class="info-row-sub">Expires 11/27 • Backup Card</div>
+              </div>
+            </div>
+            <span class="info-row-action" style="color:var(--color-body);font-size:12px;">Secondary</span>
+          </div>
+
+          <div class="info-row-item">
+            <div class="info-row-left">
+              <i data-lucide="smartphone" style="width:20px;height:20px;color:#10B981;"></i>
+              <div>
+                <div class="info-row-label">Apple Pay</div>
+                <div class="info-row-sub">Touch ID / Face ID Enabled</div>
+              </div>
+            </div>
+            <span class="status-chip active" style="font-size: 11px;">Connected</span>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="background:var(--color-fade);color:var(--color-primary);border:1.5px dashed var(--color-primary);margin-top:4px;" onclick="addNewPaymentMethod()">
+          + Add Payment Method
+        </button>
+
+        <div class="details-section-box" style="margin-top: 10px;">
+          <div class="details-section-label">Recent Billing Receipts</div>
+          <div style="font-size: 12.5px; color: var(--color-body); display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed var(--color-stroke);">
+            <span>May 20, 2026 • Weekly Commute (2 Kids)</span>
+            <strong style="color:var(--color-title);">$120.00</strong>
+          </div>
+          <div style="font-size: 12.5px; color: var(--color-body); display: flex; justify-content: space-between; padding: 6px 0;">
+            <span>May 13, 2026 • Weekly Commute (2 Kids)</span>
+            <strong style="color:var(--color-title);">$120.00</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 30. FREQUENTLY ASKED QUESTIONS ================= -->
+    <section class="screen-view" id="screen-faq" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Help &amp; FAQ</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <div style="position: relative;">
+          <input type="text" class="form-input" placeholder="Search questions..." style="padding-left: 36px; height: 42px; border-radius: 99px;" />
+          <i data-lucide="search" style="position:absolute;left:12px;top:13px;width:16px;height:16px;color:#94A3B8;"></i>
+        </div>
+
+        <div class="faq-accordion-item open">
+          <div class="faq-header-row" onclick="toggleFaq(this)">
+            <span class="faq-question-text">How are drivers background-checked?</span>
+            <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+          </div>
+          <div class="faq-body-text">
+            Every Home2School driver must pass a multi-tier vulnerable sector criminal record check, clean driving abstract verification, annual vehicle inspection, and in-person orientation before accepting student rides.
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-header-row" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Can I book for multiple children attending different schools?</span>
+            <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+          </div>
+          <div class="faq-body-text">
+            Yes! In Step 1, select all children traveling. If children attend different schools, the system matches you with neighborhood providers certified for sequential drop-off routes with multi-child discounts automatically applied.
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-header-row" onclick="toggleFaq(this)">
+            <span class="faq-question-text">What happens if a driver is running late?</span>
+            <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+          </div>
+          <div class="faq-body-text">
+            If a driver encounters unexpected traffic or delays beyond 5 minutes, our automated tracking algorithm immediately sends push notifications to parents and offers an emergency backup standby driver dispatch.
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-header-row" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Can I pause or cancel during school vacations?</span>
+            <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
+          </div>
+          <div class="faq-body-text">
+            Absolutely. You can pause recurring bookings from the Bookings tab up to 24 hours in advance with zero penalty fees, and your credit remains in your In-App Wallet.
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 31. TERMS & PRIVACY SCREEN ================= -->
+    <section class="screen-view" id="screen-legal" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Terms &amp; Privacy Policy</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body" style="gap: 14px;">
+        <div class="details-section-box">
+          <div class="details-section-label">1. Child Safety &amp; Supervision</div>
+          <p style="font-size: 12.5px; color: var(--color-body); line-height: 1.5;">
+            Home2School operates strictly under verified guardian custody transfer protocols. Drivers and walking escorts are mandated to verify child identity and hand off minors only to certified school staff or verified parents.
+          </p>
+        </div>
+
+        <div class="details-section-box">
+          <div class="details-section-label">2. Cancellation &amp; Refund Policy</div>
+          <p style="font-size: 12.5px; color: var(--color-body); line-height: 1.5;">
+            Recurring subscriptions can be cancelled or paused with 24-hour advance notice before the scheduled school commute week. Unused days are credited immediately back to your in-app wallet.
+          </p>
+        </div>
+
+        <div class="details-section-box">
+          <div class="details-section-label">3. Live GPS Telemetry &amp; Privacy</div>
+          <p style="font-size: 12.5px; color: var(--color-body); line-height: 1.5;">
+            Student real-time telemetry and geofencing coordinates are encrypted end-to-end (AES-256) and are accessible only to verified parents and emergency dispatch during active trips. Data is purged after 30 days.
+          </p>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 32. ABOUT HOME2SCHOOL SCREEN ================= -->
+    <section class="screen-view" id="screen-about" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="navigateTo('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">About Home2School</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body" style="text-align: center; gap: 16px;">
+        <div style="width: 72px; height: 72px; border-radius: 20px; background-color: var(--color-primary); color: #fff; display: flex; align-items: center; justify-content: center; margin: 16px auto 0; box-shadow: 0 8px 24px rgba(27, 43, 104, 0.25);">
+          <i data-lucide="car" style="width: 38px; height: 38px;"></i>
+        </div>
+
+        <div>
+          <h2 style="font-size: 22px; font-weight: 800; color: var(--color-title);">Home2School</h2>
+          <p style="font-size: 13.5px; color: var(--color-body); margin-top: 4px;">Safe, Trusted School Car Rides for Children</p>
+          <span style="display: inline-block; font-size: 11.5px; font-weight: 700; background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 99px; margin-top: 8px;">Version 2.4 (Production MVP)</span>
+        </div>
+
+        <div class="provider-stats-grid" style="width: 100%;">
+          <div class="stat-metric-card">
+            <div class="stat-metric-val">10K+</div>
+            <div class="stat-metric-lbl">Safe Rides</div>
+          </div>
+          <div class="stat-metric-card">
+            <div class="stat-metric-val">100%</div>
+            <div class="stat-metric-lbl">Vetted Drivers</div>
+          </div>
+          <div class="stat-metric-card">
+            <div class="stat-metric-val">4.9 ★</div>
+            <div class="stat-metric-lbl">Parent Rating</div>
+          </div>
+        </div>
+
+        <div class="details-section-box" style="text-align: left;">
+          <div class="details-section-label">Our Mission</div>
+          <p style="font-size: 13px; color: var(--color-title); line-height: 1.5;">
+            Home2School was created by parents to solve daily school commute anxiety. We connect families with certified, community-verified neighborhood drivers and walking escorts to make school mornings safe, peaceful, and predictable.
+          </p>
+        </div>
+
+        <div class="details-section-box" style="text-align: left;">
+          <div class="details-section-label">24/7 Support Hotline</div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">1-800-KID-RIDE</div>
+              <div style="font-size: 12px; color: var(--color-body);">support@home2school.app</div>
+            </div>
+            <a href="tel:18005437433" class="btn-primary" style="height: 38px; padding: 0 16px; font-size: 13px; text-decoration: none; display: flex; align-items: center;">Call</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
   </main>
 
   <script src="/app.js"></script>
-</body>
-
-</html>
-<div class="top-bar-sticky">
-  <button class="back-btn" onclick="navigateTo('profile')">
-    <i data-lucide="chevron-left"></i>
-  </button>
-  <h2 class="top-bar-title">About Home2School</h2>
-  <span style="width: 26px;"></span>
-</div>
-
-<div class="screen-scroll-body" style="text-align: center; gap: 16px;">
-  <div
-    style="width: 72px; height: 72px; border-radius: 20px; background-color: var(--color-primary); color: #fff; display: flex; align-items: center; justify-content: center; margin: 16px auto 0; box-shadow: 0 8px 24px rgba(27, 43, 104, 0.25);">
-    <i data-lucide="car" style="width: 38px; height: 38px;"></i>
-  </div>
-
-  <div>
-    <h2 style="font-size: 22px; font-weight: 800; color: var(--color-title);">Home2School</h2>
-    <p style="font-size: 13.5px; color: var(--color-body); margin-top: 4px;">Safe, Trusted School Car Rides for Children
-    </p>
-    <span
-      style="display: inline-block; font-size: 11.5px; font-weight: 700; background: #EFF6FF; color: #1D4ED8; padding: 3px 10px; border-radius: 99px; margin-top: 8px;">Version
-      2.4 (Production MVP)</span>
-  </div>
-
-  <div class="provider-stats-grid" style="width: 100%;">
-    <div class="stat-metric-card">
-      <div class="stat-metric-val">10K+</div>
-      <div class="stat-metric-lbl">Safe Rides</div>
-    </div>
-    <div class="stat-metric-card">
-      <div class="stat-metric-val">100%</div>
-      <div class="stat-metric-lbl">Vetted Drivers</div>
-    </div>
-    <div class="stat-metric-card">
-      <div class="stat-metric-val">4.9 ★</div>
-      <div class="stat-metric-lbl">Parent Rating</div>
-    </div>
-  </div>
-
-  <div class="details-section-box" style="text-align: left;">
-    <div class="details-section-label">Our Mission</div>
-    <p style="font-size: 13px; color: var(--color-title); line-height: 1.5;">
-      Home2School was created by parents to solve daily school commute anxiety. We connect families with certified,
-      community-verified neighborhood drivers and walking escorts to make school mornings safe, peaceful, and
-      predictable.
-    </p>
-  </div>
-
-  <div class="details-section-box" style="text-align: left;">
-    <div class="details-section-label">24/7 Support Hotline</div>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">1-800-KID-RIDE</div>
-        <div style="font-size: 12px; color: var(--color-body);">support@home2school.app</div>
-      </div>
-      <a href="tel:18005437433" class="btn-primary"
-        style="height: 38px; padding: 0 16px; font-size: 13px; text-decoration: none; display: flex; align-items: center;">Call</a>
-    </div>
-  </div>
-</div>
-
-<div class="home-indicator"></div>
-</section>
-
-</main>
-
-<script src="/app.js"></script>
 </body>
 
 </html>
