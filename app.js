@@ -41,6 +41,11 @@ window.navigateTo = function(screenName) {
   } else if (screenName === 'authOtp') {
     focusFirstEmptyOtp();
   }
+
+  // Render official Lucide icons
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
 };
 
 // Listen for browser hash changes (e.g. back button or manual hash change)
@@ -53,6 +58,9 @@ window.addEventListener('hashchange', () => {
 
 // Set initial screen: defaults to home so user immediately sees home screen
 window.addEventListener('DOMContentLoaded', () => {
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
   const hash = window.location.hash ? window.location.hash.replace('#', '') : '';
   const initial = (hash && screens.includes(hash)) ? hash : 'home';
   window.navigateTo(initial);

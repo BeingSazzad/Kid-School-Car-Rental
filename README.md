@@ -9,15 +9,17 @@ A pixel-faithful, responsive mobile web application for **Home2School**, reprodu
 
 ## 🎨 Global Design System Specifications
 
-### 🎯 Figma Color Palette Tokens
-| Token Name | Hex Code | Purpose & Usage |
-|---|---|---|
-| **Primary** | `#1B2B68` | Royal Navy for main action buttons (`48px`), active cards, branding |
-| **Secondary** | `#F2600C` | Vibrant Brand Orange for next buttons, badges, highlights, active states |
-| **Fade** | `#F0F3FA` | Soft background surface for inputs, cards, date blocks, chips |
-| **Title** | `#1A1D24` | Primary high-contrast text color for headings, titles, and labels |
-| **Body** | `#6B7280` | Muted neutral gray for secondary body copy, descriptions, subtext |
-| **Stroke** | `#ECECF0` | Clean subtle border color for inputs, card dividers, and outlines |
+> 📖 **Comprehensive Design Memory Document**: See [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) for full color psychology analysis, 8pt spacing rhythm, typography scales, and Lucide iconography rules.
+
+### 🎯 Figma Color Palette Tokens & Psychology
+| Token Name | Hex Code | Psychology & Design Intent | Purpose & Usage |
+|---|---|---|---|
+| **Primary** | `#1B2B68` | **Parental Trust & Security**<br>Royal navy conveys institutional dependability and safety verification. | Main action buttons (`48px`), active cards, branding |
+| **Secondary** | `#F2600C` | **Safety & High-Visibility**<br>School bus orange captures eye for forward actions without anxiety. | Next buttons, badges, highlights, active states |
+| **Fade** | `#F0F3FA` | **Cognitive Calm**<br>Soft cool blue-gray prevents eye strain and glare. | Background surface for inputs, cards, date blocks, chips |
+| **Title** | `#1A1D24` | **Readability & Anchoring**<br>Deep obsidian tone avoiding harsh pure black. | High-contrast text color for headings, titles, and labels |
+| **Body** | `#6B7280` | **Visual Scannability**<br>Muted slate gray for secondary metadata. | Neutral gray for body copy, descriptions, subtext |
+| **Stroke** | `#ECECF0` | **Modular Scaffolding**<br>Soft structural borders separating interactive zones. | Subtle border color for inputs, card dividers, outlines |
 
 ### 📐 Layout & Typography Tokens
 | Token | Specification | Figma Value |
