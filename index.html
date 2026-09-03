@@ -984,49 +984,48 @@
         <p style="font-size: 13.5px; color: var(--color-body);">Manage transportation details, schools, and pickup
           locations for your children.</p>
 
-        <!-- Child Card 1 -->
-        <div class="child-manage-card">
-          <div class="child-manage-left">
-            <img src="/assets/avatar_john.png" alt="Arman" class="child-manage-avatar" />
-            <div>
-              <div class="child-manage-name">Arman Khan</div>
-              <div class="child-manage-sub">Grade 4 • Greenfield International</div>
-              <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748B; margin-top: 3px;"><i data-lucide="map-pin" style="width:12px;height:12px;color:#94A3B8;"></i><span>Pickup: Home (12 Elm Street)</span></div>
+        <div class="child-manage-list">
+          <!-- Child Card 1 -->
+          <div class="child-manage-card" onclick="navigateTo('addChild')">
+            <div class="child-manage-left">
+              <div class="child-monogram-avatar navy">AK</div>
+              <div>
+                <div class="child-manage-name">Arman Khan</div>
+                <div class="child-manage-sub">Grade 4 • Greenfield International</div>
+              </div>
             </div>
+            <button class="btn-icon-contact" onclick="event.stopPropagation(); navigateTo('addChild');" aria-label="Edit Child">
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;"></i>
+            </button>
           </div>
-          <button class="btn-icon-contact" onclick="navigateTo('addChild')" aria-label="Edit Child">
-            <i data-lucide="edit-2" style="width:16px;height:16px;"></i>
-          </button>
-        </div>
 
-        <!-- Child Card 2 -->
-        <div class="child-manage-card">
-          <div class="child-manage-left">
-            <img src="/assets/avatar_john.png" alt="Emma" class="child-manage-avatar" style="border-color: #38BDF8;" />
-            <div>
-              <div class="child-manage-name">Emma Khan</div>
-              <div class="child-manage-sub">Grade 2 • Greenfield International</div>
-              <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748B; margin-top: 3px;"><i data-lucide="map-pin" style="width:12px;height:12px;color:#94A3B8;"></i><span>Pickup: Home (12 Elm Street)</span></div>
+          <!-- Child Card 2 -->
+          <div class="child-manage-card" onclick="navigateTo('addChild')">
+            <div class="child-manage-left">
+              <div class="child-monogram-avatar blue">EK</div>
+              <div>
+                <div class="child-manage-name">Emma Khan</div>
+                <div class="child-manage-sub">Grade 2 • Greenfield International</div>
+              </div>
             </div>
+            <button class="btn-icon-contact" onclick="event.stopPropagation(); navigateTo('addChild');" aria-label="Edit Child">
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;"></i>
+            </button>
           </div>
-          <button class="btn-icon-contact" onclick="navigateTo('addChild')" aria-label="Edit Child">
-            <i data-lucide="edit-2" style="width:16px;height:16px;"></i>
-          </button>
-        </div>
 
-        <!-- Child Card 3 -->
-        <div class="child-manage-card">
-          <div class="child-manage-left">
-            <img src="/assets/avatar_john.png" alt="Zara" class="child-manage-avatar" style="border-color: #F472B6;" />
-            <div>
-              <div class="child-manage-name">Zara Khan</div>
-              <div class="child-manage-sub">Kindergarten • Sunshine Pre-school</div>
-              <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748B; margin-top: 3px;"><i data-lucide="map-pin" style="width:12px;height:12px;color:#94A3B8;"></i><span>Pickup: Home (12 Elm Street)</span></div>
+          <!-- Child Card 3 -->
+          <div class="child-manage-card" onclick="navigateTo('addChild')">
+            <div class="child-manage-left">
+              <div class="child-monogram-avatar orange">ZK</div>
+              <div>
+                <div class="child-manage-name">Zara Khan</div>
+                <div class="child-manage-sub">Kindergarten • Sunshine Pre-school</div>
+              </div>
             </div>
+            <button class="btn-icon-contact" onclick="event.stopPropagation(); navigateTo('addChild');" aria-label="Edit Child">
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;"></i>
+            </button>
           </div>
-          <button class="btn-icon-contact" onclick="navigateTo('addChild')" aria-label="Edit Child">
-            <i data-lucide="edit-2" style="width:16px;height:16px;"></i>
-          </button>
         </div>
 
         <!-- Add Another Child Dashed Button -->
