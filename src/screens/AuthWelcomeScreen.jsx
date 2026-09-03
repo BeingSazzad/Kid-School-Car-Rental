@@ -69,7 +69,7 @@ export default function AuthWelcomeScreen({ onContinue }) {
             <h1 style={{
               fontSize: '26px',
               fontWeight: 800,
-              color: '#0F172A',
+              color: 'var(--color-title)',
               lineHeight: '1.25',
               display: 'flex',
               alignItems: 'center',
@@ -84,7 +84,7 @@ export default function AuthWelcomeScreen({ onContinue }) {
 
           <p style={{
             fontSize: '14px',
-            color: '#64748B',
+            color: 'var(--color-body)',
             fontWeight: 400,
             marginBottom: '28px',
             lineHeight: '1.4'
@@ -99,8 +99,8 @@ export default function AuthWelcomeScreen({ onContinue }) {
               display: 'flex',
               alignItems: 'center',
               height: '52px',
-              backgroundColor: '#F8FAFC',
-              border: '1.5px solid #E2E8F0',
+              backgroundColor: 'var(--color-fade)',
+              border: '1.5px solid var(--color-stroke)',
               borderRadius: '12px',
               padding: '0 14px',
               gap: '10px'
@@ -111,15 +111,15 @@ export default function AuthWelcomeScreen({ onContinue }) {
                 alignItems: 'center',
                 gap: '6px',
                 paddingRight: '10px',
-                borderRight: '1.5px solid #E2E8F0',
+                borderRight: '1.5px solid var(--color-stroke)',
                 fontSize: '15px',
                 fontWeight: 600,
-                color: '#0F172A',
+                color: 'var(--color-title)',
                 cursor: 'pointer'
               }}>
                 <span style={{ fontSize: '18px' }}>🇨🇦</span>
                 <span>+1</span>
-                <ChevronDown size={16} color="#64748B" />
+                <ChevronDown size={16} color="var(--color-body)" />
               </div>
 
               {/* Number Input */}
@@ -137,7 +137,7 @@ export default function AuthWelcomeScreen({ onContinue }) {
                   fontFamily: 'var(--font-family)',
                   fontSize: '16px',
                   fontWeight: 500,
-                  color: '#0F172A'
+                  color: 'var(--color-title)'
                 }}
               />
             </div>
@@ -161,7 +161,7 @@ export default function AuthWelcomeScreen({ onContinue }) {
               <Info size={16} color="#0284C7" strokeWidth={2.2} />
               <span style={{
                 fontSize: '12px',
-                color: '#64748B',
+                color: 'var(--color-body)',
                 fontWeight: 500
               }}>
                 We'll send a one-time code to verify your number.
@@ -172,8 +172,8 @@ export default function AuthWelcomeScreen({ onContinue }) {
 
         {/* Privacy Assurance Box matching Figma bottom card */}
         <div style={{
-          backgroundColor: '#F8FAFC',
-          border: '1px solid #E2E8F0',
+          backgroundColor: 'var(--color-fade)',
+          border: '1px solid var(--color-stroke)',
           borderRadius: '14px',
           padding: '14px 16px',
           display: 'flex',
@@ -198,14 +198,14 @@ export default function AuthWelcomeScreen({ onContinue }) {
             <h4 style={{
               fontSize: '13.5px',
               fontWeight: 700,
-              color: '#0F172A',
+              color: 'var(--color-title)',
               marginBottom: '2px'
             }}>
               Your privacy is our priority
             </h4>
             <p style={{
               fontSize: '12px',
-              color: '#64748B',
+              color: 'var(--color-body)',
               lineHeight: '1.35'
             }}>
               Your number is secure and will never be shared.

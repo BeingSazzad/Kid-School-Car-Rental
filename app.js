@@ -103,7 +103,7 @@ function triggerCelebrationConfetti() {
       particleCount: 90,
       spread: 70,
       origin: { y: 0.45 },
-      colors: ['#F36621', '#101935', '#0284C7', '#F59E0B', '#10B981']
+      colors: ['var(--color-secondary)', 'var(--color-primary)', '#0284C7', '#F59E0B', '#10B981']
     });
   }
 }

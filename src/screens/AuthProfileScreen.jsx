@@ -45,7 +45,7 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
           }}
           aria-label="Back"
         >
-          <ChevronLeft size={28} color="#0F172A" strokeWidth={2.4} />
+          <ChevronLeft size={28} color="var(--color-title)" strokeWidth={2.4} />
         </button>
       </div>
 
@@ -63,7 +63,7 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
             <h1 style={{
               fontSize: '26px',
               fontWeight: 800,
-              color: '#0F172A',
+              color: 'var(--color-title)',
               marginBottom: '8px',
               letterSpacing: '-0.3px'
             }}>
@@ -71,7 +71,7 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
             </h1>
             <p style={{
               fontSize: '14px',
-              color: '#64748B',
+              color: 'var(--color-body)',
               fontWeight: 400
             }}>
               Please provide your basic information
@@ -86,7 +86,7 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 600,
-                color: '#0F172A',
+                color: 'var(--color-title)',
                 marginBottom: '8px'
               }}>
                 Full Name
@@ -110,7 +110,7 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 600,
-                color: '#0F172A',
+                color: 'var(--color-title)',
                 marginBottom: '8px'
               }}>
                 Email Address
@@ -134,7 +134,7 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 600,
-                color: '#0F172A',
+                color: 'var(--color-title)',
                 marginBottom: '8px'
               }}>
                 Relationship
@@ -146,14 +146,14 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
                   style={{
                     width: '100%',
                     height: '50px',
-                    backgroundColor: '#F8FAFC',
-                    border: '1.5px solid #E2E8F0',
+                    backgroundColor: 'var(--color-fade)',
+                    border: '1.5px solid var(--color-stroke)',
                     borderRadius: '12px',
                     padding: '0 40px 0 16px',
                     fontFamily: 'var(--font-family)',
                     fontSize: '15px',
                     fontWeight: 500,
-                    color: '#0F172A',
+                    color: 'var(--color-title)',
                     appearance: 'none',
                     outline: 'none',
                     cursor: 'pointer'
@@ -171,7 +171,7 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
                   transform: 'translateY(-50%)',
                   pointerEvents: 'none'
                 }}>
-                  <ChevronDown size={18} color="#64748B" />
+                  <ChevronDown size={18} color="var(--color-body)" />
                 </div>
               </div>
             </div>

@@ -91,7 +91,7 @@ export default function AuthSuccessScreen({ userName = "Sadia", onGetStarted }) 
           <h1 style={{
             fontSize: '28px',
             fontWeight: 800,
-            color: '#0F172A',
+            color: 'var(--color-title)',
             marginBottom: '10px'
           }}>
             Welcome, {userName}!
@@ -99,7 +99,7 @@ export default function AuthSuccessScreen({ userName = "Sadia", onGetStarted }) 
 
           <p style={{
             fontSize: '15px',
-            color: '#64748B',
+            color: 'var(--color-body)',
             fontWeight: 400,
             maxWidth: '300px',
             lineHeight: '1.4'

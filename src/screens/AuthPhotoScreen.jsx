@@ -47,7 +47,7 @@ export default function AuthPhotoScreen({ onContinue, onSkip, onBack }) {
           }}
           aria-label="Back"
         >
-          <ChevronLeft size={28} color="#0F172A" strokeWidth={2.4} />
+          <ChevronLeft size={28} color="var(--color-title)" strokeWidth={2.4} />
         </button>
       </div>
 
@@ -65,14 +65,14 @@ export default function AuthPhotoScreen({ onContinue, onSkip, onBack }) {
           <h1 style={{
             fontSize: '26px',
             fontWeight: 800,
-            color: '#0F172A',
+            color: 'var(--color-title)',
             marginBottom: '8px'
           }}>
             Add Your Photo
           </h1>
           <p style={{
             fontSize: '14px',
-            color: '#64748B',
+            color: 'var(--color-body)',
             maxWidth: '300px',
             margin: '0 auto 48px'
           }}>
@@ -113,7 +113,7 @@ export default function AuthPhotoScreen({ onContinue, onSkip, onBack }) {
               width: '100%',
               height: '100%',
               borderRadius: '50%',
-              backgroundColor: '#E2E8F0',
+              backgroundColor: 'var(--color-stroke)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -175,7 +175,7 @@ export default function AuthPhotoScreen({ onContinue, onSkip, onBack }) {
               border: 'none',
               fontSize: '15px',
               fontWeight: 600,
-              color: '#64748B',
+              color: 'var(--color-body)',
               cursor: 'pointer',
               padding: '6px'
             }}

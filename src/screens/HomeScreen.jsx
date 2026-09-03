@@ -66,14 +66,14 @@ export default function HomeScreen({ onNavigateAction }) {
               <h2 style={{
                 fontSize: '17px',
                 fontWeight: 800,
-                color: '#0F172A',
+                color: 'var(--color-title)',
                 lineHeight: '1.2'
               }}>
                 Hello, John 👋
               </h2>
               <p style={{
                 fontSize: '13px',
-                color: '#64748B',
+                color: 'var(--color-body)',
                 fontWeight: 500
               }}>
                 Where would you like to go?
@@ -88,7 +88,7 @@ export default function HomeScreen({ onNavigateAction }) {
               height: '42px',
               borderRadius: '50%',
               backgroundColor: '#FFFFFF',
-              border: '1.5px solid #E2E8F0',
+              border: '1.5px solid var(--color-stroke)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -98,7 +98,7 @@ export default function HomeScreen({ onNavigateAction }) {
             }}
             aria-label="Notifications"
           >
-            <Bell size={20} color="#0F172A" strokeWidth={2.2} />
+            <Bell size={20} color="var(--color-title)" strokeWidth={2.2} />
             {/* Notification unread dot */}
             <span style={{
               position: 'absolute',
@@ -121,7 +121,7 @@ export default function HomeScreen({ onNavigateAction }) {
           overflow: 'hidden',
           position: 'relative',
           boxShadow: '0 4px 16px rgba(16, 25, 53, 0.08)',
-          border: '1px solid #E2E8F0',
+          border: '1px solid var(--color-stroke)',
           backgroundColor: '#FFFFFF'
         }}>
           {/* Card background vehicle image */}
@@ -180,7 +180,7 @@ export default function HomeScreen({ onNavigateAction }) {
           <h3 style={{
             fontSize: '16px',
             fontWeight: 800,
-            color: '#0F172A',
+            color: 'var(--color-title)',
             marginBottom: '12px'
           }}>
             Quick Actions
@@ -231,10 +231,10 @@ export default function HomeScreen({ onNavigateAction }) {
             <div 
               onClick={() => onNavigateAction && onNavigateAction('My Children')}
               style={{
-                backgroundColor: '#F8FAFC',
+                backgroundColor: 'var(--color-fade)',
                 borderRadius: '16px',
                 padding: '16px 14px',
-                border: '1.5px solid #E2E8F0',
+                border: '1.5px solid var(--color-stroke)',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -254,10 +254,10 @@ export default function HomeScreen({ onNavigateAction }) {
               }}>
                 <Users size={22} color="#2563EB" />
               </div>
-              <h4 style={{ fontSize: '15px', fontWeight: 800, color: '#0F172A', marginBottom: '2px' }}>
+              <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--color-title)', marginBottom: '2px' }}>
                 My Children
               </h4>
-              <p style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>
+              <p style={{ fontSize: '12px', color: 'var(--color-body)', fontWeight: 500 }}>
                 Manage profiles
               </p>
             </div>
@@ -266,10 +266,10 @@ export default function HomeScreen({ onNavigateAction }) {
             <div 
               onClick={() => onNavigateAction && onNavigateAction('My Bookings')}
               style={{
-                backgroundColor: '#F8FAFC',
+                backgroundColor: 'var(--color-fade)',
                 borderRadius: '16px',
                 padding: '14px',
-                border: '1.5px solid #E2E8F0',
+                border: '1.5px solid var(--color-stroke)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -288,7 +288,7 @@ export default function HomeScreen({ onNavigateAction }) {
               }}>
                 <Calendar size={20} color="#EF4444" />
               </div>
-              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--color-title)' }}>
                 My Bookings
               </h4>
             </div>
@@ -297,10 +297,10 @@ export default function HomeScreen({ onNavigateAction }) {
             <div 
               onClick={() => onNavigateAction && onNavigateAction('Safety & Help')}
               style={{
-                backgroundColor: '#F8FAFC',
+                backgroundColor: 'var(--color-fade)',
                 borderRadius: '16px',
                 padding: '14px',
-                border: '1.5px solid #E2E8F0',
+                border: '1.5px solid var(--color-stroke)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -319,7 +319,7 @@ export default function HomeScreen({ onNavigateAction }) {
               }}>
                 <ShieldAlert size={20} color="#F2600C" />
               </div>
-              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--color-title)' }}>
                 Safety & Help
               </h4>
             </div>
@@ -337,7 +337,7 @@ export default function HomeScreen({ onNavigateAction }) {
             <h3 style={{
               fontSize: '16px',
               fontWeight: 800,
-              color: '#0F172A'
+              color: 'var(--color-title)'
             }}>
               Upcoming Trips
             </h3>
@@ -361,7 +361,7 @@ export default function HomeScreen({ onNavigateAction }) {
           <div style={{
             backgroundColor: '#FFFFFF',
             borderRadius: '16px',
-            border: '1.5px solid #E2E8F0',
+            border: '1.5px solid var(--color-stroke)',
             padding: '16px',
             boxShadow: '0 2px 10px rgba(0, 0, 0, 0.04)',
             display: 'flex',
@@ -371,8 +371,8 @@ export default function HomeScreen({ onNavigateAction }) {
             <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
               {/* Date Box */}
               <div style={{
-                backgroundColor: '#F8FAFC',
-                border: '1px solid #E2E8F0',
+                backgroundColor: 'var(--color-fade)',
+                border: '1px solid var(--color-stroke)',
                 borderRadius: '12px',
                 padding: '10px 14px',
                 display: 'flex',
@@ -381,10 +381,10 @@ export default function HomeScreen({ onNavigateAction }) {
                 minWidth: '56px',
                 flexShrink: 0
               }}>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748B', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-body)', textTransform: 'uppercase' }}>
                   May
                 </span>
-                <span style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', lineHeight: '1.15' }}>
+                <span style={{ fontSize: '22px', fontWeight: 800, color: 'var(--color-title)', lineHeight: '1.15' }}>
                   22
                 </span>
                 <span style={{ fontSize: '11px', fontWeight: 500, color: '#94A3B8' }}>
@@ -411,13 +411,13 @@ export default function HomeScreen({ onNavigateAction }) {
                     left: '3.5px',
                     bottom: '-14px',
                     width: '1.5px',
-                    backgroundColor: '#E2E8F0'
+                    backgroundColor: 'var(--color-stroke)'
                   }} />
                   <div>
-                    <h5 style={{ fontSize: '13.5px', fontWeight: 700, color: '#0F172A' }}>
+                    <h5 style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--color-title)' }}>
                       07:45 AM <span style={{ color: '#94A3B8', fontWeight: 400 }}>• Drop-off</span>
                     </h5>
-                    <p style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>
+                    <p style={{ fontSize: '12px', color: 'var(--color-body)', fontWeight: 500 }}>
                       Home <span style={{ color: '#94A3B8' }}>→</span> Dhanmondi Tutorial
                     </p>
                   </div>
@@ -434,10 +434,10 @@ export default function HomeScreen({ onNavigateAction }) {
                     flexShrink: 0
                   }} />
                   <div>
-                    <h5 style={{ fontSize: '13.5px', fontWeight: 700, color: '#0F172A' }}>
+                    <h5 style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--color-title)' }}>
                       01:15 PM <span style={{ color: '#94A3B8', fontWeight: 400 }}>• Pick-up</span>
                     </h5>
-                    <p style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>
+                    <p style={{ fontSize: '12px', color: 'var(--color-body)', fontWeight: 500 }}>
                       Dhanmondi Tutorial <span style={{ color: '#94A3B8' }}>→</span> Home
                     </p>
                   </div>
@@ -454,7 +454,7 @@ export default function HomeScreen({ onNavigateAction }) {
               borderTop: '1px solid #F1F5F9',
               fontSize: '12px'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748B' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--color-body)' }}>
                 <RefreshCw size={13} strokeWidth={2} />
                 <span>Repeats: Mon, Tue, Wed, Thu, Sun</span>
               </div>
@@ -483,7 +483,7 @@ export default function HomeScreen({ onNavigateAction }) {
         left: 0,
         right: 0,
         backgroundColor: '#FFFFFF',
-        borderTop: '1px solid #E2E8F0',
+        borderTop: '1px solid var(--color-stroke)',
         padding: '8px 16px 20px',
         display: 'flex',
         alignItems: 'center',

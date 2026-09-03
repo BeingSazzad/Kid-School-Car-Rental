@@ -78,7 +78,7 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
           }}
           aria-label="Back"
         >
-          <ChevronLeft size={28} color="#0F172A" strokeWidth={2.4} />
+          <ChevronLeft size={28} color="var(--color-title)" strokeWidth={2.4} />
         </button>
       </div>
 
@@ -94,7 +94,7 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
         <h1 style={{
           fontSize: '26px',
           fontWeight: 800,
-          color: '#0F172A',
+          color: 'var(--color-title)',
           marginBottom: '8px'
         }}>
           Verify Your Number
@@ -102,7 +102,7 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
 
         <p style={{
           fontSize: '14px',
-          color: '#64748B',
+          color: 'var(--color-body)',
           marginBottom: '6px'
         }}>
           Enter the 4-digit code sent to
@@ -138,12 +138,12 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
                 width: '64px',
                 height: '68px',
                 borderRadius: '14px',
-                border: digit ? '2px solid #1B2B68' : '1.5px solid #E2E8F0',
-                backgroundColor: digit ? '#FFFFFF' : '#F8FAFC',
+                border: digit ? '2px solid #1B2B68' : '1.5px solid var(--color-stroke)',
+                backgroundColor: digit ? '#FFFFFF' : 'var(--color-fade)',
                 textAlign: 'center',
                 fontSize: '26px',
                 fontWeight: 800,
-                color: '#0F172A',
+                color: 'var(--color-title)',
                 outline: 'none',
                 fontFamily: 'var(--font-family)',
                 transition: 'all 0.2s ease',
@@ -156,7 +156,7 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
         {/* Resend countdown */}
         <div style={{
           fontSize: '13.5px',
-          color: '#64748B',
+          color: 'var(--color-body)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -164,7 +164,7 @@ export default function AuthOtpScreen({ phoneNumber = "+1 (416) *******2", onVer
         }}>
           <span>Didn't receive code?</span>
           {countdown > 0 ? (
-            <span style={{ fontWeight: 600, color: '#0F172A' }}>
+            <span style={{ fontWeight: 600, color: 'var(--color-title)' }}>
               Resend code in <strong style={{ color: '#1B2B68' }}>00:{countdown < 10 ? `0${countdown}` : countdown}</strong>
             </span>
           ) : (
