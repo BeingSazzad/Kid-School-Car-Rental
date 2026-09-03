@@ -3774,7 +3774,7 @@ color: var(--color-title);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #2563EB;
+  color: var(--color-primary);
   margin-bottom: 2px;
 }
 
@@ -3809,11 +3809,10 @@ color: var(--color-title);
   background-color: #FFFFFF;
   border: 1px solid #E2E8F0;
   border-radius: 16px;
-  padding: 14px 8px;
+  padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin: 12px 0 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
@@ -3821,19 +3820,14 @@ color: var(--color-title);
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1;
-  text-align: center;
-}
-
-.about-stat-col:not(:last-child) {
-  border-right: 1px solid #F1F5F9;
+  gap: 2px;
 }
 
 .about-stat-val {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
-  color: #0F172A;
-  letter-spacing: -0.01em;
+  color: var(--color-title);
+  letter-spacing: -0.02em;
 }
 
 .about-stat-lbl {
@@ -3843,13 +3837,19 @@ color: var(--color-title);
   margin-top: 2px;
 }
 
-/* Legal Policy Cards */
+/* Legal Policy Cards: Standard 10px spacing (8-12px range) */
+.legal-policy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .legal-policy-card {
   background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 16px;
+  border: 1px solid var(--color-stroke);
+  border-radius: var(--radius-lg);
   padding: 16px 18px;
-  margin-bottom: 12px;
+  margin-bottom: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
