@@ -689,149 +689,59 @@
                   data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
             </div>
 
-            <!-- Trip Card 1: Both-Way Recurring Daily Commute -->
-            <div class="trip-card" onclick="openBookingDetails('H2S-84920')" style="cursor: pointer;">
-              <div class="trip-card-top">
-                <!-- Date Box -->
-                <div class="date-badge-box">
-                  <span class="db-month">MAY</span>
-                  <span class="db-day">22</span>
-                  <span class="db-weekday">Wed</span>
+            <div class="upcoming-trips-list">
+              <!-- Trip Card 1: Both-Way Recurring Daily Commute -->
+              <div class="trip-card-compact" onclick="openBookingDetails('H2S-84920')">
+                <div class="trip-date-block">
+                  <span class="td-month">MAY</span>
+                  <span class="td-day">22</span>
+                  <span class="td-weekday">Wed</span>
                 </div>
-
-                <!-- Timeline Route Details (Both-way) -->
-                <div class="route-timeline">
-                  <!-- Drop-off Point -->
-                  <div class="timeline-stop">
-                    <span class="dot-marker green"></span>
-                    <div class="timeline-connector"></div>
-                    <div class="stop-texts">
-                      <div class="stop-time-title">
-                        <strong>07:30 AM</strong> <span class="type-pill">• Drop-off</span>
-                      </div>
-                      <div class="stop-location">Home <span class="arrow-sym">→</span> Greenfield International</div>
-                    </div>
+                <div class="trip-compact-content">
+                  <div class="trip-compact-top">
+                    <span class="trip-compact-time">07:30 AM &amp; 01:00 PM</span>
+                    <span class="both-way-badge"><i data-lucide="repeat" style="width:11px;height:11px;"></i> Both-way</span>
                   </div>
-
-                  <!-- Pick-up Point -->
-                  <div class="timeline-stop">
-                    <span class="dot-marker orange"></span>
-                    <div class="stop-texts">
-                      <div class="stop-time-title">
-                        <strong>01:00 PM</strong> <span class="type-pill">• Pick-up</span>
-                      </div>
-                      <div class="stop-location">Greenfield International <span class="arrow-sym">→</span> Home</div>
-                    </div>
-                  </div>
+                  <div class="trip-compact-route">Home ⇄ Greenfield International</div>
+                  <div class="trip-compact-sub">Arman &amp; Emma • Driver Tariq A.</div>
                 </div>
+                <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;"></i>
               </div>
 
-              <!-- Bottom Meta Row -->
-              <div class="trip-card-footer">
-                <div class="repeat-info">
-                  <i data-lucide="user" style="width:14px;height:14px;color:var(--color-body);"></i>
-                  <span id="homeNextTripMeta">Arman &amp; Emma • Driver Tariq A.</span>
+              <!-- Trip Card 2: One-Way Morning Ride -->
+              <div class="trip-card-compact" onclick="openBookingDetails('H2S-73190')">
+                <div class="trip-date-block">
+                  <span class="td-month">MAY</span>
+                  <span class="td-day">23</span>
+                  <span class="td-weekday">Thu</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span class="both-way-badge"><i data-lucide="repeat" style="width:11px;height:11px;"></i> Both-way</span>
-                  <span style="font-size:12px;font-weight:700;color:var(--color-secondary);">Details →</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Trip Card 2: One-Way Morning Ride (Zara - Pre-School) -->
-            <div class="trip-card" onclick="openBookingDetails('H2S-73190')" style="cursor: pointer;">
-              <div class="trip-card-top">
-                <!-- Date Box -->
-                <div class="date-badge-box">
-                  <span class="db-month">MAY</span>
-                  <span class="db-day">23</span>
-                  <span class="db-weekday">Thu</span>
-                </div>
-
-                <!-- Timeline Route Details (One-way) -->
-                <div class="route-timeline">
-                  <div class="timeline-stop">
-                    <span class="dot-marker green"></span>
-                    <div class="timeline-connector"></div>
-                    <div class="stop-texts">
-                      <div class="stop-time-title">
-                        <strong>08:15 AM</strong> <span class="type-pill">• Morning Pickup</span>
-                      </div>
-                      <div class="stop-location">Home (12 Elm Street)</div>
-                    </div>
+                <div class="trip-compact-content">
+                  <div class="trip-compact-top">
+                    <span class="trip-compact-time">08:15 AM</span>
+                    <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
                   </div>
-
-                  <div class="timeline-stop">
-                    <span class="dot-marker orange"></span>
-                    <div class="stop-texts">
-                      <div class="stop-time-title">
-                        <strong>08:35 AM</strong> <span class="type-pill">• School Arrival</span>
-                      </div>
-                      <div class="stop-location">Sunshine Pre-school</div>
-                    </div>
-                  </div>
+                  <div class="trip-compact-route">Home → Sunshine Pre-school</div>
+                  <div class="trip-compact-sub">Zara Khan • Sarah Jenkins (WalkShare)</div>
                 </div>
+                <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;"></i>
               </div>
 
-              <!-- Bottom Meta Row -->
-              <div class="trip-card-footer">
-                <div class="repeat-info">
-                  <i data-lucide="user" style="width:14px;height:14px;color:var(--color-body);"></i>
-                  <span>Zara Khan • Sarah Jenkins (WalkShare)</span>
+              <!-- Trip Card 3: One-Way Afternoon Return -->
+              <div class="trip-card-compact" onclick="openBookingDetails('H2S-84920')">
+                <div class="trip-date-block">
+                  <span class="td-month">MAY</span>
+                  <span class="td-day">24</span>
+                  <span class="td-weekday">Fri</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
-                  <span style="font-size:12px;font-weight:700;color:var(--color-secondary);">Details →</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Trip Card 3: One-Way Afternoon Return (Arman - Robotics Club) -->
-            <div class="trip-card" onclick="openBookingDetails('H2S-84920')" style="cursor: pointer;">
-              <div class="trip-card-top">
-                <!-- Date Box -->
-                <div class="date-badge-box">
-                  <span class="db-month">MAY</span>
-                  <span class="db-day">24</span>
-                  <span class="db-weekday">Fri</span>
-                </div>
-
-                <!-- Timeline Route Details (One-way) -->
-                <div class="route-timeline">
-                  <div class="timeline-stop">
-                    <span class="dot-marker green"></span>
-                    <div class="timeline-connector"></div>
-                    <div class="stop-texts">
-                      <div class="stop-time-title">
-                        <strong>03:45 PM</strong> <span class="type-pill">• Late Pickup</span>
-                      </div>
-                      <div class="stop-location">Greenfield International (Gate B)</div>
-                    </div>
+                <div class="trip-compact-content">
+                  <div class="trip-compact-top">
+                    <span class="trip-compact-time">03:45 PM</span>
+                    <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
                   </div>
-
-                  <div class="timeline-stop">
-                    <span class="dot-marker orange"></span>
-                    <div class="stop-texts">
-                      <div class="stop-time-title">
-                        <strong>04:10 PM</strong> <span class="type-pill">• Home Return</span>
-                      </div>
-                      <div class="stop-location">Home (12 Elm Street)</div>
-                    </div>
-                  </div>
+                  <div class="trip-compact-route">Greenfield International → Home</div>
+                  <div class="trip-compact-sub">Arman Khan • Driver Tariq A.</div>
                 </div>
-              </div>
-
-              <!-- Bottom Meta Row -->
-              <div class="trip-card-footer">
-                <div class="repeat-info">
-                  <i data-lucide="user" style="width:14px;height:14px;color:var(--color-body);"></i>
-                  <span>Arman Khan • Driver Tariq A.</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
-                  <span style="font-size:12px;font-weight:700;color:var(--color-secondary);">Details →</span>
-                </div>
+                <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;"></i>
               </div>
             </div>
           </div>
