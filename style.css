@@ -2405,6 +2405,14 @@ svg.lucide {
   display: inline-flex;
 }
 
+.fb-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 .provider-meta-row {
   display: flex;
   align-items: center;
