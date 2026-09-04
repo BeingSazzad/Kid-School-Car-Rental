@@ -1524,7 +1524,46 @@ window.proceedFromTripSetup = function () {
     window.appState.bookingDraft.selectedDays = [];
   }
 
+  // Update Route Overview and Seats badge on Available Providers screen
+  const routeChipEl = document.getElementById('providersRouteOverview');
+  const seatsChipEl = document.getElementById('providersSeatsNeededBadge');
+  if (routeChipEl) {
+    const pShort = (window.appState.bookingDraft.pickupLocation || 'Home').split(',')[0].trim();
+    const sShort = (window.appState.bookingDraft.schoolLocation || 'School').split(',')[0].trim();
+    const arrow = window.appState.bookingDraft.direction === 'bothway' ? '⇄' : '→';
+    routeChipEl.textContent = `${pShort} ${arrow} ${sShort}`;
+  }
+  if (seatsChipEl) {
+    const numSeats = (window.appState.selectedChildIds && window.appState.selectedChildIds.length) || 2;
+    seatsChipEl.textContent = `${numSeats} Seat${numSeats > 1 ? 's' : ''} Needed`;
+  }
+
   window.navigateTo('bookingSearchProviders');
+};
+
+window.filterBookingProviders = function (filterType, btnEl) {
+  if (btnEl && btnEl.parentElement) {
+    btnEl.parentElement.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+  }
+  const cards = document.querySelectorAll('#providersResultList .provider-result-card');
+  cards.forEach(card => {
+    const cat = card.getAttribute('data-category');
+    const rating = parseFloat(card.getAttribute('data-rating') || '0');
+    const verified = card.getAttribute('data-verified') === 'true';
+
+    let show = true;
+    if (filterType === 'drivers') {
+      show = cat === 'drivers';
+    } else if (filterType === 'walkshare') {
+      show = cat === 'walkshare';
+    } else if (filterType === 'toprated') {
+      show = rating >= 4.9;
+    } else if (filterType === 'verified') {
+      show = verified;
+    }
+    card.style.display = show ? 'flex' : 'none';
+  });
 };
 
 /* ==========================================================

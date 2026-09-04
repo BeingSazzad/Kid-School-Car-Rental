@@ -4014,7 +4014,7 @@ svg.lucide {
 .clean-child-card {
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   padding: 14px 16px;
   display: flex;
   align-items: center;
@@ -4481,7 +4481,7 @@ svg.lucide {
 
 .clean-modal-card {
   background: #FFFFFF;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   width: 100%;
   max-width: 360px;
   padding: 18px;
@@ -4600,7 +4600,7 @@ svg.lucide {
 .clean-repeat-toggle-card {
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   padding: 8px 12px;
   display: flex;
   align-items: center;
@@ -4731,153 +4731,149 @@ svg.lucide {
   box-shadow: 0 2px 6px rgba(27, 43, 104, 0.24);
 }
 
-/* 3. Screen 3: Available Providers Modern Cards */
-.clean-providers-subtitle {
-  font-size: 13px;
-  color: #64748B;
-  font-weight: 500;
-  margin-bottom: 14px;
+/* 3. Screen 3: Available Providers (Restored Classic Figma UX) */
+.filters-scroll-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 6px;
+  scrollbar-width: none;
+}
+.filters-scroll-bar::-webkit-scrollbar {
+  display: none;
 }
 
-.clean-provider-card {
+.filter-chip-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-stroke);
   background: #FFFFFF;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 20px;
-  padding: 16px;
-  margin-bottom: 12px;
+  color: #475569;
+  font-family: var(--font-family);
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  transition: all 0.16s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.filter-chip-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(27, 43, 104, 0.04);
+}
+
+.filter-chip-btn.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(27, 43, 104, 0.2);
+}
+
+.provider-result-card {
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--color-stroke);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.clean-provider-card:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
-  transform: translateY(-2px);
-}
-
-.clean-pcard-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.clean-pcard-driver {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.clean-pcard-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1.5px solid #E2E8F0;
-}
-
-.clean-pcard-name {
-  font-size: 15px;
-  font-weight: 800;
-  color: #0F172A;
-  line-height: 1.2;
-}
-
-.clean-pcard-rating-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 2px;
-}
-
-.clean-pcard-rating {
-  font-size: 12px;
-  font-weight: 700;
-  color: #D97706;
-}
-
-.clean-verified-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10.5px;
-  font-weight: 700;
-  color: var(--color-primary);
-  background: rgba(27, 43, 104, 0.08);
-  padding: 2px 7px;
-  border-radius: 99px;
-}
-
-.clean-fav-btn {
-  background: none;
-  border: none;
-  color: #94A3B8;
   cursor: pointer;
-  padding: 6px;
-  transition: color 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-card);
 }
 
-.clean-fav-btn:hover {
-  color: #EF4444;
+.provider-result-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(27, 43, 104, 0.08);
 }
 
-.clean-pcard-car-row {
+.provider-top-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #F8FAFC;
-  border: 1px solid #F1F5F9;
-  border-radius: 12px;
-  padding: 8px 12px;
 }
 
-.clean-pcard-car-img {
-  width: 58px;
-  height: 38px;
-  object-fit: contain;
-  border-radius: 6px;
+.provider-card-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-fade);
+  flex-shrink: 0;
 }
 
-.clean-pcard-car-specs {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: #334155;
+.provider-name-block {
+  flex: 1;
+  min-width: 0;
 }
 
-.clean-pcard-car-seats {
-  font-size: 11.5px;
-  color: #64748B;
-  font-weight: 500;
+.provider-name-verified {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-title);
+  line-height: 1.25;
 }
 
-.clean-pcard-footer {
+.verified-badge-icon {
+  color: #0284C7;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.provider-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-body);
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 800;
+  color: #D97706;
+}
+
+.provider-card-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-stroke);
 }
 
-.clean-pcard-dist {
+.vehicle-info-pill {
   font-size: 12px;
-  color: #64748B;
+  color: #334155;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
-.clean-pcard-price strong {
-  font-size: 17px;
+.price-estimate-text {
+  font-size: 16px;
   font-weight: 800;
-  color: #0F172A;
+  color: var(--color-primary);
 }
 
-.clean-pcard-price small {
-  font-size: 12px;
+.price-unit-sub {
+  font-size: 11.5px;
   font-weight: 600;
-  color: #64748B;
+  color: var(--color-body);
 }
 
 /* 4. Screen 4: Clean Provider Profile & Reviews */
@@ -4947,7 +4943,7 @@ svg.lucide {
 .clean-veh-showcase-box {
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   padding: 14px;
   margin-bottom: 16px;
 }

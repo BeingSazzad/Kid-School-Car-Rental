@@ -1146,7 +1146,7 @@
         <!-- Sticky Bottom CTA -->
         <div class="booking-flow-sticky-footer" style="margin-top: auto;">
           <div class="booking-selected-count-label" id="passengerBadgeText">2 children selected</div>
-          <button class="btn-primary" style="height: 48px; border-radius: 99px;" onclick="navigateTo('bookingTripSetup')">Continue</button>
+          <button class="btn-primary" style="height: 48px; border-radius: var(--radius-md);" onclick="navigateTo('bookingTripSetup')">Continue</button>
         </div>
       </div>
 
@@ -1234,13 +1234,7 @@
           </div>
 
           <!-- Saved Locations Section (Dynamic with Lucide Icons) -->
-          <div class="booking-saved-locs-section" style="margin-top: 6px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
-              <span style="font-size: 10.5px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;">
-                <i data-lucide="bookmark" style="width: 11px; height: 11px; color: var(--color-primary);"></i>
-                <span>Saved Locations</span>
-              </span>
-            </div>
+          <div class="booking-saved-locs-section" style="margin-top: 4px;">
             <div class="clean-quick-locs-row" id="bookingSavedLocsList">
               <!-- Rendered dynamically by renderBookingSavedLocations() with Lucide icons -->
             </div>
@@ -1297,7 +1291,6 @@
               </div>
               <div>
                 <div class="clean-repeat-title">Recurring Commute</div>
-                <div class="clean-repeat-subtitle" id="repeatSubtitleText">Repeats every week on selected days</div>
               </div>
             </div>
             <label class="clean-switch" onclick="event.stopPropagation();">
@@ -1322,7 +1315,7 @@
 
         <!-- Sticky Bottom CTA -->
         <div class="booking-flow-sticky-footer" style="margin-top: 10px;">
-          <button type="button" class="btn-primary" style="height: 44px; border-radius: 99px; font-size: 14px;" onclick="proceedFromTripSetup()">Continue</button>
+          <button type="button" class="btn-primary" style="height: 48px; border-radius: var(--radius-md); font-size: 15px;" onclick="proceedFromTripSetup()">Continue</button>
         </div>
       </div>
 
@@ -1366,8 +1359,8 @@
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 6px;">
-              <button type="button" class="btn-secondary" style="flex: 1; height: 42px; border-radius: 99px; font-weight: 700;" onclick="closeAddLocationModal()">Cancel</button>
-              <button type="submit" class="btn-primary" style="flex: 1; height: 42px; border-radius: 99px; font-weight: 700;">Save Location</button>
+              <button type="button" class="btn-secondary" style="flex: 1; height: 42px; border-radius: var(--radius-md); font-weight: 700;" onclick="closeAddLocationModal()">Cancel</button>
+              <button type="submit" class="btn-primary" style="flex: 1; height: 42px; border-radius: var(--radius-md); font-weight: 700;">Save Location</button>
             </div>
           </form>
         </div>
@@ -1442,8 +1435,8 @@
           </div>
 
           <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn-secondary" style="flex: 1; height: 40px; border-radius: 99px; font-size: 13px; font-weight: 700;" onclick="closeMapPickerModal()">Cancel</button>
-            <button type="button" class="btn-primary" id="btnConfirmMapLocation" style="flex: 1.3; height: 40px; border-radius: 99px; font-size: 13px; font-weight: 700;" onclick="confirmMapLocation()">Confirm Pin Location</button>
+            <button type="button" class="btn-secondary" style="flex: 1; height: 40px; border-radius: var(--radius-md); font-size: 13px; font-weight: 700;" onclick="closeMapPickerModal()">Cancel</button>
+            <button type="button" class="btn-primary" id="btnConfirmMapLocation" style="flex: 1.3; height: 40px; border-radius: var(--radius-md); font-size: 13px; font-weight: 700;" onclick="confirmMapLocation()">Confirm Pin Location</button>
           </div>
         </div>
       </div>
@@ -1473,145 +1466,156 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Available Providers</h2>
-        <span style="width: 28px;"></span>
+        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 3/4</span>
       </div>
 
       <div class="screen-scroll-body" style="padding-bottom: 24px;">
-        <div class="clean-providers-subtitle">3 providers near you</div>
-
-        <!-- Provider Card 1: Tariq Ahmed -->
-        <div class="clean-provider-card" onclick="selectProviderAndReview('Tariq Ahmed', 'Toyota Sienna', '4.9', '$120')">
-          <div class="clean-pcard-header">
-            <div class="clean-pcard-driver">
-              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="clean-pcard-avatar" />
-              <div>
-                <div class="clean-pcard-name">Tariq Ahmed</div>
-                <div class="clean-pcard-rating-row">
-                  <span class="clean-pcard-rating">★ 4.9 (128)</span>
-                  <span class="clean-verified-pill">
-                    <i data-lucide="check" style="width: 10px; height: 10px;"></i>
-                    <span>Verified</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <button type="button" class="clean-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');" title="Favorite">
-              <i data-lucide="heart" style="width: 18px; height: 18px;"></i>
-            </button>
-          </div>
-
-          <div class="clean-pcard-car-row">
-            <img src="/assets/vehicle_sienna.jpg" alt="Toyota Sienna" class="clean-pcard-car-img" onerror="this.src='/assets/vehicle_sienna.jpg';" />
-            <div>
-              <div class="clean-pcard-car-specs">Toyota Sienna</div>
-              <div class="clean-pcard-car-seats">4 seats</div>
-            </div>
-          </div>
-
-          <div class="clean-pcard-footer">
-            <div class="clean-pcard-dist">
-              <i data-lucide="map-pin" style="width: 13px; height: 13px; color: #64748B;"></i>
-              <span>1.2 km away</span>
-            </div>
-            <div class="clean-pcard-price">
-              <strong>$120</strong>
-              <small>/week</small>
-            </div>
-          </div>
+        <!-- Route Overview Summary Chip -->
+        <div
+          style="background-color: var(--color-fade); border: 1.5px solid var(--color-stroke); padding: 10px 14px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div style="font-size: 13px; font-weight: 700; color: var(--color-title);" id="providersRouteOverview">Home ⇄ Greenfield School</div>
+          <span
+            style="font-size: 11.5px; color: var(--color-primary); font-weight: 800; background: rgba(27, 43, 104, 0.08); padding: 3px 9px; border-radius: var(--radius-pill);" id="providersSeatsNeededBadge">2 Seats Needed</span>
         </div>
 
-        <!-- Provider Card 2: Farhana Yasmin -->
-        <div class="clean-provider-card" onclick="selectProviderAndReview('Farhana Yasmin', 'Honda Odyssey', '4.8', '$110')">
-          <div class="clean-pcard-header">
-            <div class="clean-pcard-driver">
-              <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="clean-pcard-avatar" />
-              <div>
-                <div class="clean-pcard-name">Farhana Yasmin</div>
-                <div class="clean-pcard-rating-row">
-                  <span class="clean-pcard-rating">★ 4.8 (96)</span>
-                  <span class="clean-verified-pill">
-                    <i data-lucide="check" style="width: 10px; height: 10px;"></i>
-                    <span>Verified</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <button type="button" class="clean-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');" title="Favorite">
-              <i data-lucide="heart" style="width: 18px; height: 18px;"></i>
-            </button>
-          </div>
-
-          <div class="clean-pcard-car-row">
-            <img src="/assets/vehicle_odyssey.jpg" alt="Honda Odyssey" class="clean-pcard-car-img" onerror="this.src='/assets/vehicle_odyssey.jpg';" />
-            <div>
-              <div class="clean-pcard-car-specs">Honda Odyssey</div>
-              <div class="clean-pcard-car-seats">5 seats</div>
-            </div>
-          </div>
-
-          <div class="clean-pcard-footer">
-            <div class="clean-pcard-dist">
-              <i data-lucide="map-pin" style="width: 13px; height: 13px; color: #64748B;"></i>
-              <span>2.1 km away</span>
-            </div>
-            <div class="clean-pcard-price">
-              <strong>$110</strong>
-              <small>/week</small>
-            </div>
-          </div>
-        </div>
-
-        <!-- Provider Card 3: Kabir Hossain -->
-        <div class="clean-provider-card" onclick="selectProviderAndReview('Kabir Hossain', 'Toyota Highlander', '4.7', '$105')">
-          <div class="clean-pcard-header">
-            <div class="clean-pcard-driver">
-              <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="clean-pcard-avatar" />
-              <div>
-                <div class="clean-pcard-name">Kabir Hossain</div>
-                <div class="clean-pcard-rating-row">
-                  <span class="clean-pcard-rating">★ 4.7 (74)</span>
-                  <span class="clean-verified-pill">
-                    <i data-lucide="check" style="width: 10px; height: 10px;"></i>
-                    <span>Verified</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <button type="button" class="clean-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');" title="Favorite">
-              <i data-lucide="heart" style="width: 18px; height: 18px;"></i>
-            </button>
-          </div>
-
-          <div class="clean-pcard-car-row">
-            <img src="/assets/vehicle_highlander.jpg" alt="Toyota Highlander" class="clean-pcard-car-img" onerror="this.src='/assets/vehicle_highlander.jpg';" />
-            <div>
-              <div class="clean-pcard-car-specs">Toyota Highlander</div>
-              <div class="clean-pcard-car-seats">4 seats</div>
-            </div>
-          </div>
-
-          <div class="clean-pcard-footer">
-            <div class="clean-pcard-dist">
-              <i data-lucide="map-pin" style="width: 13px; height: 13px; color: #64748B;"></i>
-              <span>3.4 km away</span>
-            </div>
-            <div class="clean-pcard-price">
-              <strong>$105</strong>
-              <small>/week</small>
-            </div>
-          </div>
-        </div>
-
-        <!-- Filter / Sort Bottom Control -->
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-          <button type="button" class="btn-secondary" style="flex: 1; height: 42px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700;" onclick="alert('Filtered by top ratings')">
-            <i data-lucide="arrow-up-down" style="width: 14px; height: 14px;"></i>
-            <span>Sort</span>
+        <!-- Quick Filter Chips Scrollbar -->
+        <div class="filters-scroll-bar">
+          <button class="filter-chip-btn active" onclick="filterBookingProviders('all', this)">All (4)</button>
+          <button class="filter-chip-btn" onclick="filterBookingProviders('drivers', this)">Drivers Only</button>
+          <button class="filter-chip-btn" onclick="filterBookingProviders('walkshare', this)">WalkShare</button>
+          <button class="filter-chip-btn" onclick="filterBookingProviders('toprated', this)">4.8+ Rated</button>
+          <button class="filter-chip-btn" style="display:inline-flex;align-items:center;gap:4px;" onclick="filterBookingProviders('verified', this)">
+            <i data-lucide="shield-check" style="width:13px;height:13px;color:#0284C7;"></i>
+            <span>Verified</span>
           </button>
-          <button type="button" class="btn-secondary" style="flex: 1; height: 42px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700;" onclick="alert('Filters applied: 4+ seats, Verified')">
-            <i data-lucide="sliders" style="width: 14px; height: 14px;"></i>
-            <span>Filter</span>
-          </button>
+        </div>
+
+        <!-- Providers List -->
+        <div id="providersResultList" style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+          <!-- Provider Card 1: Tariq Ahmed (Recommended) -->
+          <div class="provider-result-card" data-category="drivers" data-rating="4.9" data-verified="true"
+            onclick="selectProviderAndReview('Tariq Ahmed', 'Toyota Sienna', '4.9', '$120')">
+            <div class="provider-top-row">
+              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="provider-card-avatar" />
+              <div class="provider-name-block">
+                <div class="provider-name-verified">
+                  <span>Tariq Ahmed</span>
+                  <span class="verified-badge-icon" title="Background Verified">
+                    <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                  </span>
+                </div>
+                <div class="provider-meta-row">
+                  <span class="rating-badge">★ 4.9 (128 reviews)</span>
+                  <span>• 0.8 km away</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="provider-card-bottom">
+              <div class="vehicle-info-pill">
+                <i data-lucide="car" style="width:15px;height:15px;color:var(--color-primary);"></i>
+                <span>Toyota Sienna • 4 seats open</span>
+              </div>
+              <div>
+                <span class="price-estimate-text">$120</span>
+                <span class="price-unit-sub">/wk</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Provider Card 2: Farhana Yasmin -->
+          <div class="provider-result-card" data-category="drivers" data-rating="5.0" data-verified="true"
+            onclick="selectProviderAndReview('Farhana Yasmin', 'Honda Odyssey', '5.0', '$135')">
+            <div class="provider-top-row">
+              <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="provider-card-avatar"
+                style="border-color: #38BDF8;" />
+              <div class="provider-name-block">
+                <div class="provider-name-verified">
+                  <span>Farhana Yasmin</span>
+                  <span class="verified-badge-icon">
+                    <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                  </span>
+                </div>
+                <div class="provider-meta-row">
+                  <span class="rating-badge">★ 5.0 (94 reviews)</span>
+                  <span>• 1.2 km away</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="provider-card-bottom">
+              <div class="vehicle-info-pill">
+                <i data-lucide="car" style="width:15px;height:15px;color:var(--color-primary);"></i>
+                <span>Honda Odyssey • 5 seats open</span>
+              </div>
+              <div>
+                <span class="price-estimate-text">$135</span>
+                <span class="price-unit-sub">/wk</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Provider Card 3: Kabir Hossain -->
+          <div class="provider-result-card" data-category="drivers" data-rating="4.8" data-verified="true"
+            onclick="selectProviderAndReview('Kabir Hossain', 'Toyota Highlander', '4.8', '$110')">
+            <div class="provider-top-row">
+              <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="provider-card-avatar" />
+              <div class="provider-name-block">
+                <div class="provider-name-verified">
+                  <span>Kabir Hossain</span>
+                  <span class="verified-badge-icon">
+                    <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                  </span>
+                </div>
+                <div class="provider-meta-row">
+                  <span class="rating-badge">★ 4.8 (62 reviews)</span>
+                  <span>• 1.5 km away</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="provider-card-bottom">
+              <div class="vehicle-info-pill">
+                <i data-lucide="car" style="width:15px;height:15px;color:var(--color-primary);"></i>
+                <span>Toyota Highlander • 4 seats open</span>
+              </div>
+              <div>
+                <span class="price-estimate-text">$110</span>
+                <span class="price-unit-sub">/wk</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Provider Card 4: WalkShare -->
+          <div class="provider-result-card" data-category="walkshare" data-rating="4.9" data-verified="true"
+            onclick="selectProviderAndReview('Sarah Jenkins', 'Walking School Bus', '4.9', '$75')">
+            <div class="provider-top-row">
+              <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar" />
+              <div class="provider-name-block">
+                <div class="provider-name-verified">
+                  <span>Sarah Jenkins (WalkShare)</span>
+                  <span class="verified-badge-icon">
+                    <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                  </span>
+                </div>
+                <div class="provider-meta-row">
+                  <span class="rating-badge">★ 4.9 (45 reviews)</span>
+                  <span>• 0.4 km away · Walking Group</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="provider-card-bottom">
+              <div class="vehicle-info-pill">
+                <i data-lucide="users" style="width:15px;height:15px;color:var(--color-primary);"></i>
+                <span>Walking School Bus • 3 spots open</span>
+              </div>
+              <div>
+                <span class="price-estimate-text">$75</span>
+                <span class="price-unit-sub">/wk</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1676,19 +1680,45 @@
           </div>
         </div>
 
-        <!-- Vehicle Showcase Box -->
-        <div class="clean-veh-showcase-box">
-          <div class="clean-veh-main-row">
-            <img src="/assets/vehicle_sienna.jpg" alt="Toyota Sienna" class="clean-veh-large-img" id="detailsProviderVehImg" onerror="this.src='/assets/vehicle_sienna.jpg';" />
-            <div>
-              <div class="clean-veh-title" id="detailsProviderVehTitle">Toyota Sienna</div>
-              <div class="clean-veh-sub" id="detailsProviderVehSpecs">4 seats · 2022 white</div>
+        <!-- Vehicle & Safety Verification Card -->
+        <div class="clean-veh-showcase-box" style="margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: rgba(27, 43, 104, 0.08); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                <i data-lucide="car" style="width: 22px; height: 22px;"></i>
+              </div>
+              <div>
+                <div class="clean-veh-title" id="detailsProviderVehTitle">Toyota Sienna (2023)</div>
+                <div class="clean-veh-sub" id="detailsProviderVehSpecs">4 seats · White · Plate: SCH-4091</div>
+              </div>
             </div>
+            <span style="font-size: 11px; font-weight: 700; color: #16A34A; background: #F0FDF4; border: 1px solid #DCFCE7; padding: 3px 8px; border-radius: var(--radius-pill); display: inline-flex; align-items: center; gap: 4px;">
+              <i data-lucide="shield-check" style="width: 12px; height: 12px;"></i>
+              <span>Inspected</span>
+            </span>
           </div>
-          <div class="clean-veh-thumbs-grid">
-            <img src="/assets/vehicle_sienna.jpg" alt="Exterior" class="clean-veh-thumb-img" />
-            <img src="/assets/vehicle_odyssey.jpg" alt="Interior" class="clean-veh-thumb-img" />
-            <img src="/assets/vehicle_highlander.jpg" alt="Seating" class="clean-veh-thumb-img" />
+        </div>
+
+        <!-- Trust Badges -->
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: var(--radius-md);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(27, 43, 104, 0.08); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                <i data-lucide="shield-check" style="width: 15px; height: 15px;"></i>
+              </div>
+              <span style="font-size: 12.5px; font-weight: 700; color: var(--color-title);">Police Background Record Checked</span>
+            </div>
+            <span style="font-size: 11px; font-weight: 700; color: #0284C7; background: #EFF6FF; padding: 2px 7px; border-radius: var(--radius-pill);">Verified</span>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: var(--radius-md);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(242, 96, 12, 0.09); display: flex; align-items: center; justify-content: center; color: var(--color-secondary); flex-shrink: 0;">
+                <i data-lucide="award" style="width: 15px; height: 15px;"></i>
+              </div>
+              <span style="font-size: 12.5px; font-weight: 700; color: var(--color-title);">Child First-Aid &amp; CPR Certified</span>
+            </div>
+            <span style="font-size: 11px; font-weight: 700; color: #0284C7; background: #EFF6FF; padding: 2px 7px; border-radius: var(--radius-pill);">Verified</span>
           </div>
         </div>
 
@@ -1723,7 +1753,7 @@
 
         <!-- Sticky Bottom CTA -->
         <div class="booking-flow-sticky-footer" id="detailsProviderActionsWrap">
-          <button class="btn-primary" id="btnBookWithProvider" style="height: 48px; border-radius: 99px;" onclick="navigateTo('bookingSummary')">Book with Tariq</button>
+          <button class="btn-primary" id="btnBookWithProvider" style="height: 48px; border-radius: var(--radius-md);" onclick="navigateTo('bookingSummary')">Book with Tariq</button>
         </div>
       </div>
 
