@@ -1599,11 +1599,24 @@ window.addEmergencyContact = function () {
 
 window.selectedAddressType = 'home';
 
+// Preset locations for simulated map picking
+window.simulatedMapLocations = [
+  { name: "Grandma's House", street: "84 Willowbrook Crescent, Toronto, ON", x: 48, y: 52 },
+  { name: "Greenfield Campus", street: "Gate 2 Drop-off Loop, Toronto, ON", x: 68, y: 35 },
+  { name: "Karate Club / YMCA", street: "220 Broadview Avenue, Toronto, ON", x: 30, y: 65 },
+  { name: "Kumon Learning Center", street: "512 Queen St East, Toronto, ON", x: 75, y: 70 },
+  { name: "Swim Academy", street: "90 Harborfront Quay, Toronto, ON", x: 38, y: 40 }
+];
+
 window.openAddAddressModal = function () {
   const modal = document.getElementById('addAddressModal');
   if (modal) {
     modal.style.display = 'flex';
-    document.getElementById('newAddressLabel')?.focus();
+    // Default pin position
+    window.recenterPickerLocation();
+    setTimeout(() => {
+      document.getElementById('newAddressLabel')?.focus();
+    }, 100);
   }
 };
 
@@ -1627,11 +1640,84 @@ window.selectAddressType = function (type) {
   if (type === 'other') document.getElementById('addrTypeOther')?.classList.add('active');
 };
 
+window.handleMapPickerTap = function (event) {
+  const container = document.getElementById('modalMapPickerContainer');
+  const pin = document.getElementById('modalMapPin');
+  const addrTag = document.getElementById('mapPinDetectedAddress');
+  const streetInput = document.getElementById('newAddressStreet');
+  const labelInput = document.getElementById('newAddressLabel');
+
+  if (!container || !pin) return;
+
+  const rect = container.getBoundingClientRect();
+  const x = Math.max(10, Math.min(rect.width - 10, event.clientX - rect.left));
+  const y = Math.max(30, Math.min(rect.height - 10, event.clientY - rect.top));
+
+  const pctX = (x / rect.width) * 100;
+  const pctY = (y / rect.height) * 100;
+
+  pin.style.left = `${pctX}%`;
+  pin.style.top = `${pctY}%`;
+
+  // Find nearest simulated location or generate realistic Toronto street
+  const randomLoc = window.simulatedMapLocations[Math.floor(Math.random() * window.simulatedMapLocations.length)];
+  const detectedStreet = randomLoc.street;
+  
+  if (addrTag) addrTag.innerText = detectedStreet.split(',')[0];
+  if (streetInput) streetInput.value = detectedStreet;
+
+  // If user hasn't typed a custom name yet, suggest place name
+  if (labelInput && !labelInput.value.trim()) {
+    labelInput.placeholder = `e.g. ${randomLoc.name}`;
+  }
+
+  if (window.showToast) {
+    window.showToast(`Pinned: ${detectedStreet.split(',')[0]}`);
+  }
+};
+
+window.recenterPickerLocation = function (event) {
+  if (event) event.stopPropagation();
+  const pin = document.getElementById('modalMapPin');
+  const addrTag = document.getElementById('mapPinDetectedAddress');
+  const streetInput = document.getElementById('newAddressStreet');
+  if (pin) {
+    pin.style.left = '50%';
+    pin.style.top = '52%';
+  }
+  if (addrTag) addrTag.innerText = '12 Elm Street, Toronto';
+  if (streetInput) streetInput.value = '12 Elm Street, Toronto, ON';
+};
+
+window.handleMapQuickSearch = function (query) {
+  if (!query || query.length < 2) return;
+  const match = window.simulatedMapLocations.find(l => 
+    l.name.toLowerCase().includes(query.toLowerCase()) || 
+    l.street.toLowerCase().includes(query.toLowerCase())
+  );
+  if (match) {
+    const pin = document.getElementById('modalMapPin');
+    const addrTag = document.getElementById('mapPinDetectedAddress');
+    const streetInput = document.getElementById('newAddressStreet');
+    const labelInput = document.getElementById('newAddressLabel');
+
+    if (pin) {
+      pin.style.left = `${match.x}%`;
+      pin.style.top = `${match.y}%`;
+    }
+    if (addrTag) addrTag.innerText = match.name;
+    if (streetInput) streetInput.value = match.street;
+    if (labelInput && !labelInput.value.trim()) {
+      labelInput.value = match.name;
+    }
+  }
+};
+
 window.handleSaveNewAddress = function (e) {
   e.preventDefault();
   const label = document.getElementById('newAddressLabel')?.value?.trim();
-  const street = document.getElementById('newAddressStreet')?.value?.trim();
-  if (!label || !street) return;
+  const street = document.getElementById('newAddressStreet')?.value?.trim() || "Toronto, ON";
+  if (!label) return;
 
   const iconName = window.selectedAddressType === 'school' ? 'school' : window.selectedAddressType === 'home' ? 'home' : 'map-pin';
   const container = document.getElementById('savedLocationsListWrap');
@@ -1656,7 +1742,6 @@ window.handleSaveNewAddress = function (e) {
 
   // Clear inputs and close
   document.getElementById('newAddressLabel').value = '';
-  document.getElementById('newAddressStreet').value = '';
   window.closeAddAddressModal();
   if (window.showToast) window.showToast(`✓ Added "${label}" to saved locations`);
 };
