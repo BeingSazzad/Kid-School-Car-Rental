@@ -1177,13 +1177,13 @@
             <label class="form-label-sm">Pickup Address</label>
             <div class="input-with-icon">
               <span class="loc-dot-icon green"></span>
-              <input type="text" class="form-input" id="setupPickupLocation" placeholder="Enter pickup address" value="Home (12 Elm Street)" onchange="window.appState.bookingDraft.pickupLocation = this.value" />
+              <input type="text" class="form-input" id="setupPickupLocation" placeholder="Enter pickup address" value="" onchange="window.appState.bookingDraft.pickupLocation = this.value" />
             </div>
             <!-- Quick Saved Location Selector Pills -->
             <div class="quick-location-chips">
               <span class="quick-loc-label">Saved:</span>
-              <button type="button" class="quick-loc-chip active" onclick="selectQuickLocation('pickup', 'Home (12 Elm Street)', this)"><i data-lucide="home" style="width:12px;height:12px;margin-right:4px;"></i>Home</button>
-              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('pickup', '84 Willowbrook Crescent', this)"><i data-lucide="heart" style="width:12px;height:12px;margin-right:4px;"></i>Grandma's</button>
+              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('pickup', 'Home (12 Elm Street)', this)"><i data-lucide="home" style="width:12px;height:12px;margin-right:4px;"></i>Home</button>
+              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('pickup', '84 Willowbrook Crescent', this)"><i data-lucide="map-pin" style="width:12px;height:12px;margin-right:4px;"></i>Grandma's</button>
             </div>
           </div>
 
@@ -1192,12 +1192,12 @@
             <label class="form-label-sm">School / Drop-off</label>
             <div class="input-with-icon">
               <span class="loc-dot-icon orange"></span>
-              <input type="text" class="form-input" id="setupSchoolLocation" placeholder="Enter school name or drop-off" value="Greenfield International School" onchange="window.appState.bookingDraft.schoolLocation = this.value" />
+              <input type="text" class="form-input" id="setupSchoolLocation" placeholder="Enter school name or drop-off" value="" onchange="window.appState.bookingDraft.schoolLocation = this.value" />
             </div>
             <!-- Quick School Selector Pills -->
             <div class="quick-location-chips">
               <span class="quick-loc-label">Schools:</span>
-              <button type="button" class="quick-loc-chip active" onclick="selectQuickLocation('school', 'Greenfield International School', this)"><i data-lucide="graduation-cap" style="width:12px;height:12px;margin-right:4px;"></i>Greenfield</button>
+              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('school', 'Greenfield International School', this)"><i data-lucide="graduation-cap" style="width:12px;height:12px;margin-right:4px;"></i>Greenfield</button>
               <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('school', 'Sunshine Pre-school', this)"><i data-lucide="graduation-cap" style="width:12px;height:12px;margin-right:4px;"></i>Sunshine</button>
             </div>
           </div>
@@ -1281,7 +1281,7 @@
             <label class="form-label-sm">Schedule Starts From</label>
             <div class="input-with-icon">
               <i data-lucide="calendar" style="width:18px;height:18px;color:#64748B;"></i>
-              <input type="date" class="form-input" id="setupStartDate" value="2026-05-25" onchange="window.appState.bookingDraft.startDate = this.value" />
+              <input type="date" class="form-input" id="setupStartDate" value="" onchange="window.appState.bookingDraft.startDate = this.value" />
             </div>
           </div>
 
@@ -1289,27 +1289,27 @@
             <label class="form-label-sm">Ride Date</label>
             <div class="input-with-icon">
               <i data-lucide="calendar" style="width:18px;height:18px;color:#64748B;"></i>
-              <input type="date" class="form-input" id="setupTripDate" value="2026-05-25" onchange="window.appState.bookingDraft.tripDate = this.value" />
+              <input type="date" class="form-input" id="setupTripDate" value="" onchange="window.appState.bookingDraft.tripDate = this.value" />
             </div>
           </div>
 
           <!-- Commute Times Grid -->
           <div class="times-grid">
-            <!-- Outbound Morning Pickup Time -->
+            <!-- Pickup Time -->
             <div class="time-picker-box">
-              <label class="form-label-sm">Morning Pickup</label>
+              <label class="form-label-sm">Pickup Time</label>
               <div class="input-with-icon">
-                <i data-lucide="sun" style="width:16px;height:16px;color:#EAB308;"></i>
-                <input type="time" class="form-input" id="setupOutboundTime" value="07:30" onchange="updateTripTime('outbound', this.value)" />
+                <i data-lucide="clock" style="width:16px;height:16px;color:var(--color-primary);"></i>
+                <input type="time" class="form-input" id="setupOutboundTime" value="" onchange="updateTripTime('outbound', this.value)" />
               </div>
             </div>
 
-            <!-- Afternoon Return Pickup Time (Hidden when One-way) -->
+            <!-- Return Time (Hidden when One-way) -->
             <div class="time-picker-box" id="returnTimePickerBox">
-              <label class="form-label-sm">School Dismissal</label>
+              <label class="form-label-sm">Return Time</label>
               <div class="input-with-icon">
-                <i data-lucide="sunset" style="width:16px;height:16px;color:#F97316;"></i>
-                <input type="time" class="form-input" id="setupReturnTime" value="13:00" onchange="updateTripTime('return', this.value)" />
+                <i data-lucide="clock" style="width:16px;height:16px;color:var(--color-primary);"></i>
+                <input type="time" class="form-input" id="setupReturnTime" value="" onchange="updateTripTime('return', this.value)" />
               </div>
             </div>
           </div>
@@ -3084,7 +3084,7 @@
                 <i data-lucide="home" style="width:18px;height:18px;color:var(--color-primary);"></i>
               </div>
               <div>
-                <div class="grouped-row-title">Home (Primary Pickup)</div>
+                <div class="grouped-row-title">Home</div>
                 <div class="grouped-row-sub">12 Elm Street, Toronto, ON</div>
               </div>
             </div>

@@ -62,7 +62,7 @@ window.appState = {
     { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
   ],
   savedLocations: [
-    { id: 'loc-1', name: 'Home (Primary Pickup)', street: '12 Elm Street, Toronto, ON', type: 'home', isDefault: true },
+    { id: 'loc-1', name: 'Home', street: '12 Elm Street, Toronto, ON', type: 'home', isDefault: true },
     { id: 'loc-2', name: 'Greenfield International School', street: 'Gate 2 Drop-off Loop, Toronto, ON', type: 'school', isDefault: false },
     { id: 'loc-3', name: 'Sunshine Pre-school', street: '45 Bloom Avenue, Toronto, ON', type: 'school', isDefault: false },
     { id: 'loc-4', name: "Grandmother's House", street: '84 Willowbrook Crescent, Toronto, ON', type: 'family', isDefault: false }
@@ -169,10 +169,12 @@ window.appState = {
   bookingDraft: {
     direction: 'bothway', // 'bothway' | 'oneway'
     frequency: 'recurring', // 'recurring' | 'onetime'
-    pickupLocation: 'Home (12 Elm Street)',
-    schoolLocation: 'Greenfield International School',
-    outboundTime: '07:30 AM',
-    returnTime: '01:00 PM',
+    pickupLocation: '',
+    schoolLocation: '',
+    outboundTime: '',
+    returnTime: '',
+    startDate: '',
+    tripDate: '',
     selectedDays: ['M', 'T', 'W', 'T', 'F'],
     providerId: 'tariq',
     paymentMethod: 'Visa •••• 4242'
