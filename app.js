@@ -56,9 +56,9 @@ window.appState = {
     photo: '/assets/avatar_sadia.jpg'
   },
   children: [
-    { id: 'arman', name: 'Arman Khan', grade: 'Grade 4 (9 yrs)', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Wears booster seat' },
-    { id: 'emma', name: 'Emma Khan', grade: 'Grade 2 (7 yrs)', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Sits next to brother' },
-    { id: 'zara', name: 'Zara Khan', grade: 'Kindergarten (5 yrs)', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate' }
+    { id: 'arman', name: 'Arman Khan', age: '9 yrs', grade: '9 yrs', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Wears booster seat' },
+    { id: 'emma', name: 'Emma Khan', age: '7 yrs', grade: '7 yrs', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Sits next to brother' },
+    { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: '5 yrs', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate' }
   ],
   providers: [
     { id: 'tariq', name: 'Tariq Ahmed', vehicle: 'Toyota Sienna (2023)', plate: 'SCH-4091', rating: 4.9, reviewsCount: 128, seats: 4, baseWeekly: 120, photo: '/assets/avatar_tariq.jpg', phone: '+1 (416) 555-0182' },
@@ -729,7 +729,7 @@ function renderBookingSummary() {
 
   if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
   if (dirEl) {
-    dirEl.textContent = draft.direction === 'bothway' ? '⇄ Two-Way (Round Trip)' : '→ One-Way (Morning Drop-off)';
+    dirEl.textContent = draft.direction === 'bothway' ? '⇄ Round Trip' : '→ One Way';
   }
 
   const cleanLoc = (loc) => {
@@ -898,13 +898,13 @@ function renderBookingDetails(bookingId) {
   if (subEl) {
     let subText = '';
     if (booking.direction === 'bothway' && booking.frequency === 'recurring') {
-      subText = '⇄ Two-Way (Round Trip) • Recurring Mon–Fri Commute';
+      subText = '⇄ Round Trip • Recurring (Mon–Fri)';
     } else if (booking.direction === 'oneway' && booking.frequency === 'recurring') {
-      subText = '→ One-Way (Morning Drop-off) • Recurring Mon–Fri Commute';
+      subText = '→ One Way • Recurring (Mon–Fri)';
     } else if (booking.direction === 'bothway' && booking.frequency === 'onetime') {
-      subText = `⇄ Two-Way (Round Trip) • Single Day Pass (${booking.scheduleText})`;
+      subText = '⇄ Round Trip • Day Pass';
     } else {
-      subText = `→ One-Way (Single Ride) • One-Time Trip (${booking.scheduleText})`;
+      subText = '→ One Way • Single Trip';
     }
     subEl.textContent = subText;
   }
@@ -1097,20 +1097,20 @@ function renderBookingsList(tab) {
       let typeBadgeText = '';
       let badgeClass = 'recurring';
       if (b.direction === 'bothway' && b.frequency === 'recurring') {
-        typeBadgeText = '2-Way • Recurring';
+        typeBadgeText = 'Round Trip • Recurring';
         badgeClass = 'recurring';
       } else if (b.direction === 'oneway' && b.frequency === 'recurring') {
-        typeBadgeText = '1-Way • Recurring';
+        typeBadgeText = 'One Way • Recurring';
         badgeClass = 'recurring';
       } else if (b.direction === 'bothway' && b.frequency === 'onetime') {
-        typeBadgeText = '2-Way • Day Pass';
+        typeBadgeText = 'Round Trip • Day Pass';
         badgeClass = 'onetime';
       } else {
-        typeBadgeText = '1-Way • Single Trip';
+        typeBadgeText = 'One Way • Single Trip';
         badgeClass = 'onetime';
       }
 
-      const directionChip = b.direction === 'bothway' ? 'Round Trip' : 'Morning Drop-off';
+      const directionChip = b.direction === 'bothway' ? 'Round Trip' : 'One Way';
 
       let actionsHtml = '';
       if (b.status === 'confirmed') {
@@ -1750,7 +1750,6 @@ window.openAddChildModal = function () {
   if (badgeEl) badgeEl.textContent = 'New Student Registration';
 
   const nameInput = document.getElementById('editChildName');
-  const gradeInput = document.getElementById('editChildGrade');
   const ageInput = document.getElementById('editChildAge');
   const schoolInput = document.getElementById('editChildSchool');
   const pickupInput = document.getElementById('editChildPickup');
@@ -1758,7 +1757,6 @@ window.openAddChildModal = function () {
   const submitBtn = document.getElementById('childFormSubmitBtn');
 
   if (nameInput) nameInput.value = '';
-  if (gradeInput) gradeInput.value = 'Kindergarten';
   if (ageInput) ageInput.value = '';
   if (schoolInput) schoolInput.value = '';
   if (pickupInput) pickupInput.value = 'Home (12 Elm Street, Toronto)';
@@ -1787,10 +1785,9 @@ window.openEditChildModal = function (childId) {
   }
 
   const badgeEl = document.getElementById('childFormHeroBadge');
-  if (badgeEl) badgeEl.textContent = `${child.grade} • Active Student`;
+  if (badgeEl) badgeEl.textContent = `${child.age || child.grade} • Active Student`;
 
   const nameInput = document.getElementById('editChildName');
-  const gradeInput = document.getElementById('editChildGrade');
   const ageInput = document.getElementById('editChildAge');
   const schoolInput = document.getElementById('editChildSchool');
   const pickupInput = document.getElementById('editChildPickup');
@@ -1798,15 +1795,7 @@ window.openEditChildModal = function (childId) {
   const submitBtn = document.getElementById('childFormSubmitBtn');
 
   if (nameInput) nameInput.value = child.name || '';
-  if (gradeInput) {
-    if (child.grade.includes('Kindergarten')) gradeInput.value = 'Kindergarten';
-    else if (child.grade.includes('Grade 1')) gradeInput.value = 'Grade 1';
-    else if (child.grade.includes('Grade 2')) gradeInput.value = 'Grade 2';
-    else if (child.grade.includes('Grade 3')) gradeInput.value = 'Grade 3';
-    else if (child.grade.includes('Grade 4')) gradeInput.value = 'Grade 4';
-    else if (child.grade.includes('Grade 5')) gradeInput.value = 'Grade 5';
-  }
-  if (ageInput) ageInput.value = child.grade.match(/\((.*?)\)/)?.[1] || '8 Years';
+  if (ageInput) ageInput.value = child.age || child.grade || '8 Years';
   if (schoolInput) schoolInput.value = child.school || '';
   if (pickupInput) pickupInput.value = child.pickup || 'Home (12 Elm Street, Toronto)';
   if (notesInput) notesInput.value = child.notes || '';
@@ -1819,14 +1808,12 @@ window.saveChildProfileForm = function (event) {
   if (event) event.preventDefault();
 
   const nameInput = document.getElementById('editChildName');
-  const gradeInput = document.getElementById('editChildGrade');
   const ageInput = document.getElementById('editChildAge');
   const schoolInput = document.getElementById('editChildSchool');
   const pickupInput = document.getElementById('editChildPickup');
   const notesInput = document.getElementById('editChildNotes');
 
   const name = nameInput?.value?.trim();
-  const grade = gradeInput?.value || 'Grade 1';
   const age = ageInput?.value?.trim() || '7 Years';
   const school = schoolInput?.value?.trim() || 'Greenfield International School';
   const pickup = pickupInput?.value?.trim() || 'Home (12 Elm Street)';
@@ -1841,7 +1828,8 @@ window.saveChildProfileForm = function (event) {
     const child = (window.appState?.children || []).find(c => c.id === window.editingChildId);
     if (child) {
       child.name = name;
-      child.grade = `${grade} (${age})`;
+      child.age = age;
+      child.grade = age;
       child.school = school;
       child.pickup = pickup;
       child.notes = notes;
@@ -1851,7 +1839,8 @@ window.saveChildProfileForm = function (event) {
     window.appState.children.push({
       id: newId,
       name: name,
-      grade: `${grade} (${age})`,
+      age: age,
+      grade: age,
       school: school,
       pickup: pickup,
       notes: notes

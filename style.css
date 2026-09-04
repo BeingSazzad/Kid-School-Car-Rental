@@ -9,10 +9,10 @@
   /* Figma Design System Core Tokens */
   --color-primary: #1B2B68;
   --color-secondary: #F2600C;
-  --color-fade: #F0F3FA;
+  --color-fade: #F8FAFC;
   --color-title: #1A1D24;
   --color-body: #6B7280;
-  --color-stroke: #ECECF0;
+  --color-stroke: #E2E8F0;
 
   /* Aliases & Semantic Mappings */
   --color-brand-navy: var(--color-primary);
@@ -2454,6 +2454,7 @@ svg.lucide {
 /* 9. Provider Details Screen Components */
 .provider-details-hero {
   background-color: var(--color-fade);
+  border: 1px solid var(--color-stroke);
   border-radius: var(--radius-lg);
   padding: 20px;
   display: flex;
@@ -2469,7 +2470,7 @@ svg.lucide {
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #FFFFFF;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .provider-stats-grid {
@@ -2485,6 +2486,7 @@ svg.lucide {
   border-radius: var(--radius-md);
   padding: 12px 8px;
   text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 .stat-metric-val {

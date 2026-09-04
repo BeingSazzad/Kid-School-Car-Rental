@@ -469,13 +469,13 @@
             </div>
           </div>
 
-          <!-- Grade / Age -->
+          <!-- Child Age -->
           <div class="form-group">
-            <label class="form-label">Grade / Age</label>
+            <label class="form-label">Child Age</label>
             <div class="input-with-icon">
               <i data-lucide="calendar" style="width:18px;height:18px;color:#94A3B8;"></i>
-              <input type="text" class="form-input" id="authChildGrade" placeholder="e.g. Grade 4 (9 years)"
-                value="Grade 4 (9 years)" required />
+              <input type="text" class="form-input" id="authChildAge" placeholder="e.g. 9 Years"
+                value="9 Years" required />
             </div>
           </div>
 
@@ -700,7 +700,7 @@
                 <div class="trip-compact-content">
                   <div class="trip-compact-top">
                     <span class="trip-compact-time">07:30 AM &amp; 01:00 PM</span>
-                    <span class="both-way-badge"><i data-lucide="repeat" style="width:11px;height:11px;"></i> Both-way</span>
+                    <span class="both-way-badge"><i data-lucide="repeat" style="width:11px;height:11px;"></i> Round Trip</span>
                   </div>
                   <div class="trip-compact-route">Home ⇄ Greenfield International</div>
                   <div class="trip-compact-sub">Arman &amp; Emma • Driver Tariq A.</div>
@@ -969,7 +969,7 @@
               <i data-lucide="camera" style="width:13px;height:13px;"></i>
             </button>
           </div>
-          <div id="childFormHeroBadge" style="font-size: 11.5px; font-weight: 700; color: var(--color-primary); background: var(--color-fade); padding: 3px 12px; border-radius: var(--radius-pill); margin-top: 8px;">Grade 4 • 9 Years Old • Active Student</div>
+          <div id="childFormHeroBadge" style="font-size: 11.5px; font-weight: 700; color: var(--color-primary); background: var(--color-fade); padding: 3px 12px; border-radius: var(--radius-pill); margin-top: 8px;">9 Years Old • Active Student</div>
         </div>
 
         <form id="childProfileForm" onsubmit="saveChildProfileForm(event)" style="display: flex; flex-direction: column; gap: 12px;">
@@ -988,28 +988,11 @@
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-              <div class="form-group">
-                <label class="form-label">Grade</label>
-                <div class="input-box-wrapper">
-                  <i data-lucide="graduation-cap" class="input-box-icon"></i>
-                  <select class="form-input" id="editChildGrade" style="cursor: pointer;">
-                    <option value="Kindergarten">Kindergarten</option>
-                    <option value="Grade 1">Grade 1</option>
-                    <option value="Grade 2">Grade 2</option>
-                    <option value="Grade 3">Grade 3</option>
-                    <option value="Grade 4" selected>Grade 4</option>
-                    <option value="Grade 5">Grade 5</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Age</label>
-                <div class="input-box-wrapper">
-                  <i data-lucide="calendar" class="input-box-icon"></i>
-                  <input type="text" class="form-input" id="editChildAge" value="9 Years" placeholder="e.g. 9 Years" required />
-                </div>
+            <div class="form-group">
+              <label class="form-label">Child Age</label>
+              <div class="input-box-wrapper">
+                <i data-lucide="calendar" class="input-box-icon"></i>
+                <input type="text" class="form-input" id="editChildAge" value="9 Years" placeholder="e.g. 9 Years" required />
               </div>
             </div>
 
@@ -1208,16 +1191,16 @@
           </div>
           <div class="demo-preset-grid">
             <button type="button" class="demo-preset-btn active" id="presetBtn_2way_recurring" onclick="loadTripPreset('2way_recurring')">
-              <span>⇄ 2-Way Recurring</span>
+              <span>⇄ Round • Recurring</span>
             </button>
             <button type="button" class="demo-preset-btn" id="presetBtn_1way_recurring" onclick="loadTripPreset('1way_recurring')">
-              <span>→ 1-Way Recurring</span>
+              <span>→ 1-Way • Recurring</span>
             </button>
             <button type="button" class="demo-preset-btn" id="presetBtn_2way_onetime" onclick="loadTripPreset('2way_onetime')">
-              <span>⇄ 2-Way One-Time</span>
+              <span>⇄ Round • One-Time</span>
             </button>
             <button type="button" class="demo-preset-btn" id="presetBtn_1way_onetime" onclick="loadTripPreset('1way_onetime')">
-              <span>→ 1-Way One-Time</span>
+              <span>→ 1-Way • One-Time</span>
             </button>
           </div>
         </div>
@@ -1263,8 +1246,8 @@
           <div class="form-group" style="margin-top: 4px; margin-bottom: 10px;">
             <label class="form-label-sm">Trip Direction</label>
             <div class="segmented-control">
-              <button type="button" class="segment-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">⇄ Both-way (Round Trip)</button>
-              <button type="button" class="segment-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">→ One-way (Morning Only)</button>
+              <button type="button" class="segment-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">⇄ Round Trip</button>
+              <button type="button" class="segment-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">→ One Way</button>
             </div>
           </div>
 
@@ -1682,7 +1665,7 @@
 
           <div class="summary-item-row">
             <span class="summary-item-label">Trip Direction</span>
-            <span class="summary-item-val" id="summaryDirectionText">⇄ Both-way (Round Trip)</span>
+            <span class="summary-item-val" id="summaryDirectionText">⇄ Round Trip</span>
           </div>
 
           <div class="summary-item-row">
