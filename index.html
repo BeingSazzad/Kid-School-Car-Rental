@@ -750,88 +750,82 @@
         <!-- ================= STATE C: ACTIVE TRIP IN PROGRESS ================= -->
         <div id="homeStateCView" style="display: none; flex-direction: column; gap: 16px;">
           <div class="active-trip-hero-card">
-            <!-- Header Bar -->
-            <div class="active-trip-header">
-              <div class="live-pill-tag">
-                <span class="live-dot-pulse"></span>
-                <span>TRIP IN PROGRESS</span>
+            <!-- Unified Top Row: Children & Live Status -->
+            <div class="active-trip-top-row">
+              <div class="active-trip-child-meta">
+                <div class="child-avatar-cluster">
+                  <div class="avatar-circle">AK</div>
+                  <div class="avatar-circle overlap">EK</div>
+                </div>
+                <div>
+                  <div class="child-name-text">Arman &amp; Emma Khan</div>
+                  <div class="child-dest-text">En route to Greenfield International</div>
+                </div>
               </div>
-              <div class="active-trip-eta-badge">
-                <i data-lucide="clock" style="width:12px;height:12px;"></i>
-                <span>ETA: 6 mins (07:42 AM)</span>
+              <div class="active-trip-status-col">
+                <span class="live-pill-tag">
+                  <span class="live-dot-pulse"></span>
+                  <span>On Board</span>
+                </span>
+                <span class="active-trip-eta-text">ETA 6 min (07:42 AM)</span>
               </div>
             </div>
 
-            <!-- Body -->
-            <div class="active-trip-body">
-              <!-- Children Row -->
-              <div class="active-trip-child-row">
-                <div class="child-chip-info">
-                  <div class="child-avatar-cluster">
-                    <div class="avatar-circle">AK</div>
-                    <div class="avatar-circle overlap">EK</div>
-                  </div>
-                  <div>
-                    <div class="child-name-text">Arman &amp; Emma Khan</div>
-                    <div class="child-dest-text">En route to Greenfield International</div>
-                  </div>
-                </div>
-                <span class="status-chip-onboard">
-                  <i data-lucide="shield-check" style="width:12px;height:12px;"></i>
-                  <span>On Board</span>
-                </span>
-              </div>
-
-              <!-- High-Tech Map Preview -->
-              <div class="map-preview-thumb" onclick="navigateTo('tracking')">
-                <div class="map-street-grid-layer"></div>
-                <div class="map-water-accent"></div>
-                <svg class="map-route-line-svg" viewBox="0 0 350 128" preserveAspectRatio="none">
-                  <path d="M 30,85 Q 160,20 320,60" fill="none" stroke="var(--color-primary)" stroke-width="4" stroke-linecap="round" stroke-dasharray="6,4" />
-                </svg>
-                <div class="map-pin-marker start" title="Home Pickup">
-                  <i data-lucide="home" style="width:12px;height:12px;"></i>
-                </div>
-                <div class="map-pin-marker end" title="Greenfield International">
-                  <i data-lucide="graduation-cap" style="width:13px;height:13px;"></i>
-                </div>
-                <div class="car-marker-animated">
-                  <i data-lucide="car" style="width:17px;height:17px;"></i>
-                </div>
-                <div class="map-overlay-badge">
-                  <i data-lucide="maximize-2" style="width:11px;height:11px;"></i>
-                  <span>Live Map View →</span>
+            <!-- Clean Modern Route Tracker (Zero Box/Grid Clutter) -->
+            <div class="active-route-tracker" onclick="navigateTo('tracking')" title="Tap to view live tracking" role="button" tabindex="0">
+              <div class="route-track-bar">
+                <div class="route-track-fill" style="width: 65%;"></div>
+                <div class="route-track-car" style="left: 65%;">
+                  <i data-lucide="car"></i>
                 </div>
               </div>
+              <div class="route-track-stops">
+                <div class="route-stop-point start">
+                  <span class="route-stop-dot"></span>
+                  <span class="route-stop-name">Home</span>
+                  <span class="route-stop-time">07:35 AM</span>
+                </div>
+                <div class="route-stop-point end">
+                  <span class="route-stop-name">Greenfield Int.</span>
+                  <span class="route-stop-time">07:42 AM</span>
+                  <span class="route-stop-dot"></span>
+                </div>
+              </div>
+            </div>
 
-              <!-- Driver Contact Bar -->
-              <div class="active-driver-contact-row">
-                <div class="driver-mini-info">
-                  <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-mini-avatar" />
-                  <div>
-                    <div class="driver-mini-name">Tariq Ahmed • Toyota Sienna</div>
-                    <div class="driver-mini-sub">
-                      <i data-lucide="star" style="width:11px;height:11px;fill:#F59E0B;color:#F59E0B;"></i>
-                      <span>4.9</span>
-                      <span class="verified-badge-icon" title="Verified Provider" style="margin-left:2px;">
-                        <i data-lucide="shield-check" style="width:13px;height:13px;color:#0284C7;"></i>
-                      </span>
-                    </div>
+            <!-- Driver Info & Actions Row -->
+            <div class="active-driver-contact-row">
+              <div class="driver-mini-info">
+                <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-mini-avatar" />
+                <div>
+                  <div class="driver-mini-name">
+                    <span>Tariq Ahmed</span>
+                    <span class="fb-verified-badge" title="Verified Driver">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="#1877F2">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
+                      </svg>
+                    </span>
+                  </div>
+                  <div class="driver-mini-sub">
+                    <span>Toyota Sienna</span>
+                    <span class="driver-sub-bullet">•</span>
+                    <i data-lucide="star" style="width:11px;height:11px;fill:#F59E0B;color:#F59E0B;"></i>
+                    <span>4.9</span>
                   </div>
                 </div>
+              </div>
 
-                <div class="active-contact-buttons">
-                  <button class="btn-icon-contact" onclick="alert('Calling Tariq Ahmed: +1 (416) 555-0182')" aria-label="Call Driver">
-                    <i data-lucide="phone"></i>
-                  </button>
-                  <button class="btn-icon-contact" onclick="navigateTo('messages')" aria-label="Message Driver">
-                    <i data-lucide="message-square"></i>
-                  </button>
-                  <button class="btn-track-action" onclick="navigateTo('tracking')">
-                    <span>Track</span>
-                    <i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
-                  </button>
-                </div>
+              <div class="active-contact-buttons">
+                <button class="btn-icon-contact" onclick="alert('Calling Tariq Ahmed: +1 (416) 555-0182')" aria-label="Call Driver" title="Call Driver">
+                  <i data-lucide="phone"></i>
+                </button>
+                <button class="btn-icon-contact" onclick="navigateTo('messages')" aria-label="Message Driver" title="Message Driver">
+                  <i data-lucide="message-square"></i>
+                </button>
+                <button class="btn-track-action" onclick="navigateTo('tracking')">
+                  <span>Track</span>
+                  <i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
+                </button>
               </div>
             </div>
           </div>
