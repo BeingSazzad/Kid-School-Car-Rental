@@ -124,6 +124,7 @@ window.appState = {
     {
       id: 'sarah',
       name: 'Sarah Jenkins (WalkShare)',
+      category: 'walkshare',
       vehicle: 'Walking School Bus Escort',
       plate: 'VERIFIED-WALK',
       rating: 4.9,
@@ -136,6 +137,23 @@ window.appState = {
       onTimeRate: '99.5%',
       quote: '"Sarah\'s walking school bus is the healthiest and most enjoyable commute for our son. He walks safely with neighborhood kids every morning."',
       reviewer: '— Marcus Vance (Parent of 1)'
+    },
+    {
+      id: 'elena',
+      name: 'Elena Rostova (WalkShare)',
+      category: 'walkshare',
+      vehicle: 'Greenfield Walk Escort',
+      plate: 'WALK-SAFE-02',
+      rating: 4.9,
+      reviewsCount: 38,
+      seats: 2,
+      baseWeekly: 70,
+      photo: '/assets/avatar_rehana.jpg',
+      phone: '+1 (416) 555-0186',
+      experience: '4+ Yrs',
+      onTimeRate: '100%',
+      quote: '"Elena leads the morning walking group with immense care. The children practice safe sidewalk habits while getting fresh morning air."',
+      reviewer: '— Sophia Lin (Parent of 1)'
     }
   ],
   emergencyContacts: [
@@ -174,6 +192,7 @@ window.appState = {
   bookingDraft: {
     direction: 'bothway', // 'bothway' | 'oneway'
     frequency: 'recurring', // 'recurring' | 'onetime'
+    serviceType: 'drivers', // 'all' | 'drivers' | 'walkshare'
     pickupLocation: '',
     schoolLocation: '',
     outboundTime: '',
@@ -1465,6 +1484,22 @@ window.updateTripTime = function (type, timeVal) {
   }
 };
 
+/* Service Type Selector (All | Driver | WalkShare) */
+window.setServiceType = function (serviceType) {
+  if (!window.appState.bookingDraft) {
+    window.appState.bookingDraft = {};
+  }
+  window.appState.bookingDraft.serviceType = serviceType;
+
+  const btnAll = document.getElementById('btnServiceAll');
+  const btnDriver = document.getElementById('btnServiceDriver');
+  const btnWalk = document.getElementById('btnServiceWalk');
+
+  if (btnAll) btnAll.classList.toggle('active', serviceType === 'all');
+  if (btnDriver) btnDriver.classList.toggle('active', serviceType === 'drivers');
+  if (btnWalk) btnWalk.classList.toggle('active', serviceType === 'walkshare');
+};
+
 window.proceedFromTripSetup = function () {
   const inputPickupEl = document.getElementById('setupPickupLocationInput');
   const inputSchoolEl = document.getElementById('setupSchoolLocationInput');
@@ -1508,6 +1543,14 @@ window.proceedFromTripSetup = function () {
     window.appState.bookingDraft.returnTime = '';
   }
 
+  // Detect active Service Type
+  const activeServiceBtn = document.querySelector('.clean-service-btn.active');
+  if (activeServiceBtn) {
+    if (activeServiceBtn.id === 'btnServiceAll') window.appState.bookingDraft.serviceType = 'all';
+    else if (activeServiceBtn.id === 'btnServiceDriver') window.appState.bookingDraft.serviceType = 'drivers';
+    else if (activeServiceBtn.id === 'btnServiceWalk') window.appState.bookingDraft.serviceType = 'walkshare';
+  }
+
   const toggleEl = document.getElementById('toggleRecurringRide');
   if (toggleEl) {
     window.appState.bookingDraft.frequency = toggleEl.checked ? 'recurring' : 'onetime';
@@ -1522,13 +1565,42 @@ window.proceedFromTripSetup = function () {
   }
 
   window.navigateTo('bookingSearchProviders');
+
+  // Immediately apply chosen serviceType filter on search results
+  const selectedType = window.appState.bookingDraft.serviceType || 'all';
+  window.filterBookingProviders(selectedType);
 };
 
 window.filterBookingProviders = function (filterType, btnEl) {
   if (btnEl && btnEl.parentElement) {
     btnEl.parentElement.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
     btnEl.classList.add('active');
+  } else {
+    // Sync filter chip buttons programmatically
+    const chips = document.querySelectorAll('.filters-scroll-bar .filter-chip-btn');
+    chips.forEach(b => {
+      const onclickAttr = b.getAttribute('onclick') || '';
+      if (onclickAttr.includes(`'${filterType}'`)) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    });
   }
+
+  // Sync back to bookingDraft if core service type
+  if (['all', 'drivers', 'walkshare'].includes(filterType)) {
+    if (window.appState && window.appState.bookingDraft) {
+      window.appState.bookingDraft.serviceType = filterType;
+    }
+  }
+
+  // Toggle WalkShare helper info banner for parents
+  const banner = document.getElementById('walkshareInfoBanner');
+  if (banner) {
+    banner.style.display = filterType === 'walkshare' ? 'flex' : 'none';
+  }
+
   const cards = document.querySelectorAll('#providersResultList .provider-result-card');
   cards.forEach(card => {
     const cat = card.getAttribute('data-category');
@@ -1547,10 +1619,14 @@ window.filterBookingProviders = function (filterType, btnEl) {
     }
     card.style.display = show ? 'flex' : 'none';
   });
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
 };
 
 /* ==========================================================
-   Booking Wizard & Driver Profile Viewer
+   Booking Wizard & Driver / Chaperone Profile Viewer
    ========================================================== */
 window.currentDriverProfileReturnScreen = 'home';
 window.currentDriverProfileId = 'tariq';
@@ -1573,46 +1649,88 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
 
   window.currentDriverProfileId = provider.id;
 
+  const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
+
   // Update elements in screen-bookingProviderDetails
   const imgEl = document.getElementById('detailsProviderImg');
   const nameEl = document.getElementById('detailsProviderName');
-  const vehEl = document.getElementById('detailsProviderVehicle');
   const ratingEl = document.getElementById('detailsProviderRatingVal');
   const reviewsEl = document.getElementById('detailsProviderReviewsLbl');
-  const expEl = document.getElementById('detailsProviderExperienceVal');
-  const onTimeEl = document.getElementById('detailsProviderOnTimeVal');
   const quoteEl = document.getElementById('detailsProviderQuote');
   const reviewerEl = document.getElementById('detailsProviderReviewer');
-  const actionsWrap = document.getElementById('detailsProviderActionsWrap');
   const titleEl = document.getElementById('providerDetailsTitle');
+  const bioEl = document.getElementById('detailsProviderBio');
 
-  if (titleEl) titleEl.textContent = `${provider.name.split(' ')[0]}'s Profile`;
+  if (titleEl) titleEl.textContent = isWalk ? `${provider.name.split(' ')[0]}'s Profile` : `${provider.name.split(' ')[0]}'s Profile`;
   if (imgEl) {
     imgEl.src = provider.photo || '/assets/avatar_tariq.jpg';
     imgEl.alt = provider.name;
+    imgEl.style.borderColor = isWalk ? '#10B981' : '#E2E8F0';
     imgEl.onerror = function () { this.src = '/assets/avatar_tariq.jpg'; };
   }
   if (nameEl) nameEl.textContent = provider.name;
-  if (vehEl) vehEl.textContent = `${provider.vehicle} (${provider.plate}) • Clean & Certified`;
   if (ratingEl) ratingEl.textContent = `★ ${provider.rating} (${provider.reviewsCount || 128} reviews)`;
   if (reviewsEl) reviewsEl.textContent = `${provider.reviewsCount || 128} Reviews`;
-  if (expEl) expEl.textContent = provider.experience || '5+ Yrs';
-  if (onTimeEl) onTimeEl.textContent = provider.onTimeRate || '100%';
 
+  // Stat Pillars adaptation
+  const expPillar = document.getElementById('detailsProviderExpPillar');
+  const tripsPillar = document.getElementById('detailsProviderTripsPillar');
+  const onTimePillar = document.getElementById('detailsProviderOnTimePillar');
+
+  if (expPillar) expPillar.textContent = provider.experience || '5+ Yrs';
+  if (tripsPillar) {
+    tripsPillar.textContent = isWalk ? '320+' : '500+';
+    if (tripsPillar.nextElementSibling) tripsPillar.nextElementSibling.textContent = isWalk ? 'Walks' : 'Trips';
+  }
+  if (onTimePillar) {
+    onTimePillar.textContent = provider.onTimeRate || '100%';
+    if (onTimePillar.nextElementSibling) onTimePillar.nextElementSibling.textContent = isWalk ? 'Safe Record' : 'On-time';
+  }
+
+  // Showcase Box adaptation: Vehicle vs Walk Route
   const vehTitleEl = document.getElementById('detailsProviderVehTitle');
   const vehSpecsEl = document.getElementById('detailsProviderVehSpecs');
-  const vehImgEl = document.getElementById('detailsProviderVehImg');
-  const bookBtnEl = document.getElementById('btnBookWithProvider');
+  const vehBox = document.querySelector('.clean-veh-showcase-box');
 
-  if (vehTitleEl) vehTitleEl.textContent = provider.vehicle || 'Toyota Sienna';
-  if (vehSpecsEl) vehSpecsEl.textContent = `4 seats · 2022 white · Plate: ${provider.plate || 'H2S-782'}`;
-  if (vehImgEl) {
-    if (provider.id === 'farhana') vehImgEl.src = '/assets/vehicle_odyssey.jpg';
-    else if (provider.id === 'kabir') vehImgEl.src = '/assets/vehicle_highlander.jpg';
-    else vehImgEl.src = '/assets/vehicle_sienna.jpg';
+  if (vehTitleEl) {
+    vehTitleEl.textContent = isWalk 
+      ? `Walking School Bus (${provider.vehicle || 'Escorted Route'})`
+      : (provider.vehicle || 'Toyota Sienna');
   }
+  if (vehSpecsEl) {
+    vehSpecsEl.textContent = isWalk
+      ? `0.4 km · Safe Sidewalk Route · Crossing Guard Monitored · Max 5 Kids`
+      : `4 seats · 2023 Clean · Plate: ${provider.plate || 'H2S-782'}`;
+  }
+
+  if (vehBox) {
+    const iconWrap = vehBox.querySelector('div > div > div:first-child');
+    if (iconWrap) {
+      if (isWalk) {
+        iconWrap.style.background = '#ECFDF5';
+        iconWrap.style.color = '#047857';
+        iconWrap.innerHTML = '<i data-lucide="footprints" style="width: 22px; height: 22px;"></i>';
+      } else {
+        iconWrap.style.background = 'rgba(27, 43, 104, 0.08)';
+        iconWrap.style.color = 'var(--color-primary)';
+        iconWrap.innerHTML = '<i data-lucide="car" style="width: 22px; height: 22px;"></i>';
+      }
+    }
+  }
+
+  if (bioEl) {
+    if (isWalk) {
+      bioEl.textContent = 'Certified neighborhood walking school bus leader. We walk safely as a supervised group along sidewalks, observing crossing guard signals. Children stay healthy, active, and arrive safely every morning.';
+    } else {
+      bioEl.textContent = 'Experienced school transport provider with a strong focus on child safety. Verified background check and CPR certified.';
+    }
+  }
+
+  const bookBtnEl = document.getElementById('btnBookWithProvider');
   if (bookBtnEl) {
-    bookBtnEl.textContent = `Book with ${provider.name.split(' ')[0]}`;
+    bookBtnEl.textContent = isWalk 
+      ? `Book WalkShare with ${provider.name.split(' ')[0]}`
+      : `Book with ${provider.name.split(' ')[0]}`;
     bookBtnEl.onclick = function () {
       window.appState.bookingDraft.providerId = provider.id;
       navigateTo('bookingSummary');
@@ -1644,13 +1762,14 @@ function calculateDraftPrice() {
   const draft = window.appState.bookingDraft;
   const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
   const count = window.appState.selectedChildIds.length || 1;
+  const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
 
-  let baseRate = provider.baseWeekly || 120;
+  let baseRate = provider.baseWeekly || (isWalk ? 75 : 120);
 
   if (draft.frequency === 'onetime') {
-    // One-time single trip flat rate: $35 for 1-way, $55 for 2-way round trip
-    baseRate = draft.direction === 'bothway' ? 55 : 35;
-    const insurance = 5;
+    // One-time single trip flat rate
+    baseRate = isWalk ? (draft.direction === 'bothway' ? 35 : 20) : (draft.direction === 'bothway' ? 55 : 35);
+    const insurance = isWalk ? 3 : 5;
     const discount = count > 1 ? Math.round(baseRate * 0.2 * (count - 1)) : 0;
     const total = (baseRate * count) - discount + insurance;
     return {
@@ -1672,7 +1791,7 @@ function calculateDraftPrice() {
     discount = Math.round(baseRate * 0.2 * (count - 1));
   }
 
-  const insurance = 8;
+  const insurance = isWalk ? 4 : 8;
   const total = (baseRate * count) - discount + insurance;
 
   return {
@@ -1687,6 +1806,7 @@ function calculateDraftPrice() {
 function renderBookingSummary() {
   const draft = window.appState.bookingDraft;
   const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
+  const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
   const children = window.appState.selectedChildIds.map(id => {
     const c = window.appState.children.find(ch => ch.id === id);
     return c ? c.name : id;
@@ -1720,10 +1840,11 @@ function renderBookingSummary() {
   const pickupShort = cleanLoc(draft.pickupLocation);
   const schoolShort = cleanSchool(draft.schoolLocation);
 
-  if (outboundEl) outboundEl.textContent = `${pickupShort} → ${schoolShort} (${draft.outboundTime || '07:30 AM'})`;
+  const walkSuffix = isWalk ? ' · Chaperoned Walk' : '';
+  if (outboundEl) outboundEl.textContent = `${pickupShort} → ${schoolShort} (${draft.outboundTime || '07:30 AM'}${walkSuffix})`;
   if (returnEl) {
     if (draft.direction === 'bothway') {
-      returnEl.textContent = `${schoolShort} → ${pickupShort} (${draft.returnTime || '01:00 PM'})`;
+      returnEl.textContent = `${schoolShort} → ${pickupShort} (${draft.returnTime || '01:00 PM'}${walkSuffix})`;
       returnEl.parentElement.style.display = 'flex';
     } else {
       returnEl.parentElement.style.display = 'none';
@@ -1735,7 +1856,11 @@ function renderBookingSummary() {
       ? 'Recurring (Mon – Fri Commute)' 
       : `One-Time Ride (${draft.tripDate || 'Single Day Pass'})`;
   }
-  if (providerEl) providerEl.textContent = `${provider.name} (${provider.vehicle.split('(')[0].trim()})`;
+  if (providerEl) {
+    providerEl.textContent = isWalk 
+      ? `${provider.name} (WalkShare Escort)` 
+      : `${provider.name} (${provider.vehicle.split('(')[0].trim()})`;
+  }
 
   // Price calculations & dynamic labels
   const price = calculateDraftPrice();

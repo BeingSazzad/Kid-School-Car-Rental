@@ -1209,12 +1209,8 @@
               </button>
             </div>
 
-            <!-- Divider with Circular Swap Button -->
-            <div class="clean-route-divider">
-              <button type="button" class="clean-route-swap-btn" onclick="swapPickupDropoff()" title="Swap Pickup &amp; Drop-off">
-                <i data-lucide="arrow-up-down" style="width: 14px; height: 14px;"></i>
-              </button>
-            </div>
+            <!-- Clean Route Divider (Clean subtle separator) -->
+            <div class="clean-route-divider"></div>
 
             <!-- School Point (Editable Input + Map Button) -->
             <div class="clean-route-point">
@@ -1291,7 +1287,27 @@
           </div>
         </div>
 
-        <!-- 4. Repeat (Senior Product Design iOS Switch) -->
+        <!-- 4. Service Type -->
+        <div class="clean-flow-section" style="margin-top: 14px;">
+          <div class="clean-service-header">
+            <span class="clean-service-title">Service Type</span>
+          </div>
+          <div class="clean-service-toggle">
+            <button type="button" class="clean-service-btn" id="btnServiceAll" onclick="setServiceType('all')">
+              <span>All</span>
+            </button>
+            <button type="button" class="clean-service-btn active" id="btnServiceDriver" onclick="setServiceType('drivers')">
+              <i data-lucide="car" style="width: 17px; height: 17px;"></i>
+              <span>Driver</span>
+            </button>
+            <button type="button" class="clean-service-btn" id="btnServiceWalk" onclick="setServiceType('walkshare')">
+              <i data-lucide="footprints" style="width: 17px; height: 17px;"></i>
+              <span>WalkShare</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Repeat (Senior Product Design iOS Switch) -->
         <div class="clean-flow-section">
           <div class="clean-repeat-toggle-card" onclick="const t = document.getElementById('toggleRecurringRide'); t.checked = !t.checked; handleRecurringToggleChange(t.checked);">
             <div class="clean-repeat-toggle-left">
@@ -1481,14 +1497,29 @@
       <div class="screen-scroll-body" style="padding-bottom: 24px;">
         <!-- Quick Filter Chips Scrollbar -->
         <div class="filters-scroll-bar">
-          <button class="filter-chip-btn active" onclick="filterBookingProviders('all', this)">All (4)</button>
-          <button class="filter-chip-btn" onclick="filterBookingProviders('drivers', this)">Drivers Only</button>
-          <button class="filter-chip-btn" onclick="filterBookingProviders('walkshare', this)">WalkShare</button>
-          <button class="filter-chip-btn" onclick="filterBookingProviders('toprated', this)">4.8+ Rated</button>
-          <button class="filter-chip-btn" style="display:inline-flex;align-items:center;gap:4px;" onclick="filterBookingProviders('verified', this)">
+          <button class="filter-chip-btn" id="chipFilterAll" onclick="filterBookingProviders('all', this)">All (5)</button>
+          <button class="filter-chip-btn active" id="chipFilterDrivers" onclick="filterBookingProviders('drivers', this)">Drivers Only (3)</button>
+          <button class="filter-chip-btn" id="chipFilterWalkShare" onclick="filterBookingProviders('walkshare', this)">WalkShare (2)</button>
+          <button class="filter-chip-btn" id="chipFilterTopRated" onclick="filterBookingProviders('toprated', this)">4.8+ Rated</button>
+          <button class="filter-chip-btn" id="chipFilterVerified" style="display:inline-flex;align-items:center;gap:4px;" onclick="filterBookingProviders('verified', this)">
             <i data-lucide="shield-check" style="width:13px;height:13px;color:#0284C7;"></i>
             <span>Verified</span>
           </button>
+        </div>
+
+        <!-- WalkShare Chaperone Info Card (Visible when WalkShare active) -->
+        <div id="walkshareInfoBanner" class="clean-walkshare-info-card" style="display: none;">
+          <div class="clean-walkshare-banner-top">
+            <div class="clean-walkshare-banner-badge">
+              <i data-lucide="footprints" style="width: 14px; height: 14px; color: #047857;"></i>
+              <span>WalkShare Community Chaperone</span>
+            </div>
+            <span class="clean-walkshare-safety-tag">GPS Monitored</span>
+          </div>
+          <div class="clean-walkshare-banner-title">Supervised Neighborhood Walking School Bus</div>
+          <p class="clean-walkshare-banner-desc">
+            Verified adult chaperones walk children safely to school in small groups along safe pedestrian sidewalks. Includes live step tracking, crossing guards, and high-visibility safety vests.
+          </p>
         </div>
 
         <!-- Providers List -->
@@ -1587,29 +1618,38 @@
             </div>
           </div>
 
-          <!-- Provider Card 4: WalkShare -->
-          <div class="provider-result-card" data-category="walkshare" data-rating="4.9" data-verified="true"
+          <!-- Provider Card 4: WalkShare - Sarah Jenkins -->
+          <div class="provider-result-card walkshare-card" data-category="walkshare" data-rating="4.9" data-verified="true"
             onclick="selectProviderAndReview('Sarah Jenkins', 'Walking School Bus', '4.9', '$75')">
             <div class="provider-top-row">
-              <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar" />
+              <div style="position: relative;">
+                <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar" style="border-color: #10B981;" />
+                <span class="walkshare-mini-avatar-badge" title="WalkShare Chaperone">
+                  <i data-lucide="footprints" style="width: 10px; height: 10px; color: #FFFFFF;"></i>
+                </span>
+              </div>
               <div class="provider-name-block">
                 <div class="provider-name-verified">
-                  <span>Sarah Jenkins (WalkShare)</span>
-                  <span class="verified-badge-icon">
+                  <span>Sarah Jenkins</span>
+                  <span class="verified-badge-icon" title="Pedestrian Safety &amp; CPR Certified">
                     <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                  </span>
+                  <span class="walkshare-tag">
+                    <i data-lucide="footprints" style="width:11px;height:11px;"></i>
+                    <span>WalkShare</span>
                   </span>
                 </div>
                 <div class="provider-meta-row">
                   <span class="rating-badge">★ 4.9 (45 reviews)</span>
-                  <span>• 0.4 km away · Walking Group</span>
+                  <span>• 0.4 km route · ~8 min walk</span>
                 </div>
               </div>
             </div>
 
             <div class="provider-card-bottom">
-              <div class="vehicle-info-pill">
-                <i data-lucide="users" style="width:15px;height:15px;color:var(--color-primary);"></i>
-                <span>Walking School Bus • 3 spots open</span>
+              <div class="vehicle-info-pill walkshare">
+                <i data-lucide="footprints" style="width:15px;height:15px;color:#047857;"></i>
+                <span>Walking School Bus • 3 spots open (Max 5)</span>
               </div>
               <div>
                 <span class="price-estimate-text">$75</span>
@@ -1617,6 +1657,47 @@
               </div>
             </div>
           </div>
+
+          <!-- Provider Card 5: WalkShare - Elena Rostova -->
+          <div class="provider-result-card walkshare-card" data-category="walkshare" data-rating="4.9" data-verified="true"
+            onclick="selectProviderAndReview('Elena Rostova', 'Greenfield Walking Escort', '4.9', '$70')">
+            <div class="provider-top-row">
+              <div style="position: relative;">
+                <img src="/assets/avatar_rehana.jpg" alt="Elena Rostova" class="provider-card-avatar" style="border-color: #10B981;" />
+                <span class="walkshare-mini-avatar-badge" title="WalkShare Chaperone">
+                  <i data-lucide="footprints" style="width: 10px; height: 10px; color: #FFFFFF;"></i>
+                </span>
+              </div>
+              <div class="provider-name-block">
+                <div class="provider-name-verified">
+                  <span>Elena Rostova</span>
+                  <span class="verified-badge-icon" title="Pedestrian Safety &amp; First-Aid Certified">
+                    <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                  </span>
+                  <span class="walkshare-tag">
+                    <i data-lucide="footprints" style="width:11px;height:11px;"></i>
+                    <span>WalkShare</span>
+                  </span>
+                </div>
+                <div class="provider-meta-row">
+                  <span class="rating-badge">★ 4.9 (38 reviews)</span>
+                  <span>• 0.5 km route · ~10 min walk</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="provider-card-bottom">
+              <div class="vehicle-info-pill walkshare">
+                <i data-lucide="footprints" style="width:15px;height:15px;color:#047857;"></i>
+                <span>Greenfield Walk Escort • 2 spots open (Max 5)</span>
+              </div>
+              <div>
+                <span class="price-estimate-text">$70</span>
+                <span class="price-unit-sub">/wk</span>
+              </div>
+            </div>
+          </div>
+        </div>
         </div>
       </div>
 
