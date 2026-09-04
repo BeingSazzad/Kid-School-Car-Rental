@@ -894,15 +894,18 @@ window.setTripDirection = function (dir) {
   const btnOne = document.getElementById('btnDirOneWay');
   const btnBoth = document.getElementById('btnDirBothWay');
   const returnBlock = document.getElementById('returnScheduleBlock') || document.getElementById('returnTimePickerBox');
+  const timesGrid = document.querySelector('.clean-sched-times-grid');
 
   if (dir === 'oneway') {
     btnOne?.classList.add('active');
     btnBoth?.classList.remove('active');
     if (returnBlock) returnBlock.style.display = 'none';
+    if (timesGrid) timesGrid.classList.add('is-oneway');
   } else {
     btnOne?.classList.remove('active');
     btnBoth?.classList.add('active');
-    if (returnBlock) returnBlock.style.display = 'block';
+    if (returnBlock) returnBlock.style.display = 'flex';
+    if (timesGrid) timesGrid.classList.remove('is-oneway');
   }
 };
 
@@ -1076,10 +1079,8 @@ window.applySavedBookingLocation = function (locId, btnEl) {
 
   const outLabel = document.getElementById('outboundScheduleLabel');
   const retLabel = document.getElementById('returnScheduleLabel');
-  const pName = (inputP && inputP.value ? inputP.value.split(',')[0].trim() : (dispP ? dispP.textContent.split(',')[0].trim() : 'Home'));
-  const sName = (inputS && inputS.value ? inputS.value.split(',')[0].trim() : (dispS ? dispS.textContent.split(',')[0].trim() : 'School'));
-  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound (${pName} → ${sName})</span>`;
-  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return (${sName} → ${pName})</span>`;
+  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound</span>`;
+  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return</span>`;
 
   if (btnEl && btnEl.parentElement) {
     btnEl.parentElement.querySelectorAll('.clean-quick-chip').forEach(c => c.classList.remove('active'));
@@ -1108,8 +1109,8 @@ window.syncLocationInput = function (type, val) {
   const sName = (inputS && inputS.value ? inputS.value.split(',')[0].trim() : 'School');
   const outLabel = document.getElementById('outboundScheduleLabel');
   const retLabel = document.getElementById('returnScheduleLabel');
-  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound (${pName} → ${sName})</span>`;
-  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return (${sName} → ${pName})</span>`;
+  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound</span>`;
+  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return</span>`;
 };
 
 window._currentMapPickerTarget = 'pickup';
@@ -1344,10 +1345,8 @@ window.applyPresetLocation = function (type, address, fullVal, btnEl) {
   const dispS = document.getElementById('displaySchoolAddr');
   const outLabel = document.getElementById('outboundScheduleLabel');
   const retLabel = document.getElementById('returnScheduleLabel');
-  const pName = dispP ? dispP.textContent.split(',')[0].trim() : 'Home';
-  const sName = dispS ? dispS.textContent.split(',')[0].trim() : 'School';
-  if (outLabel) outLabel.textContent = `Outbound (${pName} → ${sName})`;
-  if (retLabel) retLabel.textContent = `Return (${sName} → ${pName})`;
+  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound</span>`;
+  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return</span>`;
 
   if (btnEl && btnEl.parentElement) {
     btnEl.parentElement.querySelectorAll('.clean-quick-chip').forEach(c => c.classList.remove('active'));
@@ -2153,10 +2152,8 @@ window.swapPickupDropoff = function () {
 
   const outLabel = document.getElementById('outboundScheduleLabel');
   const retLabel = document.getElementById('returnScheduleLabel');
-  const pName = valS.split(',')[0].trim() || 'Home';
-  const sName = valP.split(',')[0].trim() || 'School';
-  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound (${pName} → ${sName})</span>`;
-  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return (${sName} → ${pName})</span>`;
+  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound</span>`;
+  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return</span>`;
 
   if (typeof showToast === 'function') showToast('Swapped pickup and drop-off locations');
 };

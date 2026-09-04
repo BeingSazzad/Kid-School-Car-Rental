@@ -4320,7 +4320,7 @@ svg.lucide {
   box-shadow: 0 4px 12px rgba(242, 96, 12, 0.2);
 }
 
-/* Schedule Dual Inputs */
+/* Schedule Card - Clean Unified Design System Component */
 .clean-dot {
   width: 6px;
   height: 6px;
@@ -4335,58 +4335,147 @@ svg.lucide {
   background: var(--color-secondary);
 }
 
-.clean-schedule-sub-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: #475569;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.clean-schedule-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.clean-schedule-pill-input {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 7px;
+.clean-schedule-card {
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  border-radius: 12px;
-  padding: 7px 11px;
-  height: 38px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #0F172A;
+  border-radius: 16px;
+  padding: 10px 14px 12px;
+}
+
+.clean-schedule-date-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 2px 6px;
   cursor: pointer;
-  transition: border-color 0.15s ease;
-  position: relative;
+  transition: opacity 0.15s ease;
 }
 
-.clean-schedule-pill-input:hover,
-.clean-schedule-pill-input:focus-within {
-  border-color: var(--color-primary);
+.clean-schedule-date-row:hover {
+  opacity: 0.85;
 }
 
-.clean-schedule-pill-input input {
+.clean-sched-icon-box {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.clean-sched-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.clean-sched-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 2px;
+}
+
+.clean-sched-val {
   border: none;
   background: transparent;
   outline: none;
   font-family: var(--font-family);
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 800;
   color: #0F172A;
+  padding: 0;
+  cursor: pointer;
   width: 100%;
 }
 
-/* Remove duplicate native clock icon in Webkit time inputs */
-.clean-schedule-pill-input input[type="time"]::-webkit-calendar-picker-indicator {
+.clean-sched-action {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  padding: 4px 9px;
+  border-radius: 99px;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  flex-shrink: 0;
+}
+
+.clean-sched-divider {
+  height: 1px;
+  background: #F1F5F9;
+  margin: 6px 0 10px;
+}
+
+.clean-sched-times-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.clean-sched-times-grid.is-oneway {
+  grid-template-columns: 1fr;
+}
+
+.clean-time-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.clean-time-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.clean-time-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 6px 10px;
+  transition: all 0.16s ease;
+  position: relative;
+}
+
+.clean-time-input-wrap:focus-within {
+  border-color: var(--color-primary);
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(27, 43, 104, 0.08);
+}
+
+.clean-time-clock-icon {
+  width: 14px;
+  height: 14px;
+  color: #64748B;
+  flex-shrink: 0;
+}
+
+.clean-time-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-family);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0F172A;
+  width: 100%;
+  cursor: pointer;
+}
+
+.clean-time-input::-webkit-calendar-picker-indicator {
   background: transparent;
   bottom: 0;
   color: transparent;

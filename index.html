@@ -1241,42 +1241,51 @@
           </div>
         </div>
 
-        <!-- 3. Schedule -->
+        <!-- 3. Schedule Section (Unified Clean Card, Zero Redundant Text) -->
         <div class="clean-flow-section">
           <div class="clean-flow-label">Schedule</div>
-          
-          <!-- Outbound -->
-          <div class="clean-schedule-sub-label" id="outboundScheduleLabel">
-            <span class="clean-dot navy"></span>
-            <span>Outbound (Home → School)</span>
-          </div>
-          <div class="clean-schedule-row">
-            <div class="clean-schedule-pill-input" onclick="openDatePicker('setupStartDate')">
-              <i data-lucide="calendar" style="width: 15px; height: 15px; color: #64748B;"></i>
-              <input type="text" id="setupOutboundDateText" value="Mon, Sep 8" readonly style="cursor: pointer;" />
-              <input type="date" id="setupStartDate" value="2026-09-08" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="handleScheduleDateChange('outbound', this.value)" />
-            </div>
-            <div class="clean-schedule-pill-input">
-              <i data-lucide="clock" style="width: 15px; height: 15px; color: #64748B;"></i>
-              <input type="time" id="setupOutboundTime" value="07:30" onchange="updateTripTime('outbound', this.value)" />
-            </div>
-          </div>
-
-          <!-- Return -->
-          <div id="returnScheduleBlock">
-            <div class="clean-schedule-sub-label" id="returnScheduleLabel">
-              <span class="clean-dot orange"></span>
-              <span>Return (School → Home)</span>
-            </div>
-            <div class="clean-schedule-row">
-              <div class="clean-schedule-pill-input" onclick="openDatePicker('setupReturnDate')">
-                <i data-lucide="calendar" style="width: 15px; height: 15px; color: #64748B;"></i>
-                <input type="text" id="setupReturnDateText" value="Mon, Sep 8" readonly style="cursor: pointer;" />
-                <input type="date" id="setupReturnDate" value="2026-09-08" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="handleScheduleDateChange('return', this.value)" />
+          <div class="clean-schedule-card">
+            <!-- Row 1: Unified Start Date Selector -->
+            <div class="clean-schedule-date-row" onclick="openDatePicker('setupStartDate')">
+              <div class="clean-sched-icon-box">
+                <i data-lucide="calendar" style="width: 17px; height: 17px; color: var(--color-primary);"></i>
               </div>
-              <div class="clean-schedule-pill-input">
-                <i data-lucide="clock" style="width: 15px; height: 15px; color: #64748B;"></i>
-                <input type="time" id="setupReturnTime" value="13:00" onchange="updateTripTime('return', this.value)" />
+              <div class="clean-sched-info">
+                <div class="clean-sched-label">START DATE</div>
+                <input type="text" id="setupOutboundDateText" class="clean-sched-val" value="Mon, Sep 8" readonly style="cursor: pointer;" />
+                <input type="date" id="setupStartDate" value="2026-09-08" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="handleScheduleDateChange('outbound', this.value)" />
+                <input type="hidden" id="setupReturnDate" value="2026-09-08" />
+                <input type="hidden" id="setupReturnDateText" value="Mon, Sep 8" />
+              </div>
+              <span class="clean-sched-action">Change</span>
+            </div>
+
+            <div class="clean-sched-divider"></div>
+
+            <!-- Row 2: Clean Timings (Zero Long Address Clutter) -->
+            <div class="clean-sched-times-grid">
+              <!-- Outbound Pickup Time -->
+              <div class="clean-time-col">
+                <div class="clean-time-header" id="outboundScheduleLabel">
+                  <span class="clean-dot navy"></span>
+                  <span>Outbound</span>
+                </div>
+                <div class="clean-time-input-wrap">
+                  <i data-lucide="clock" class="clean-time-clock-icon"></i>
+                  <input type="time" id="setupOutboundTime" class="clean-time-input" value="07:30" onchange="updateTripTime('outbound', this.value)" />
+                </div>
+              </div>
+
+              <!-- Return Drop-off Time -->
+              <div class="clean-time-col" id="returnScheduleBlock">
+                <div class="clean-time-header" id="returnScheduleLabel">
+                  <span class="clean-dot orange"></span>
+                  <span>Return</span>
+                </div>
+                <div class="clean-time-input-wrap">
+                  <i data-lucide="clock" class="clean-time-clock-icon"></i>
+                  <input type="time" id="setupReturnTime" class="clean-time-input" value="13:00" onchange="updateTripTime('return', this.value)" />
+                </div>
               </div>
             </div>
           </div>
