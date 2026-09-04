@@ -822,6 +822,9 @@
                 <button class="btn-icon-contact" onclick="navigateTo('messages')" aria-label="Message Driver" title="Message Driver">
                   <i data-lucide="message-square"></i>
                 </button>
+                <button class="btn-icon-contact sos" onclick="openEmergencySOSModal()" aria-label="Emergency SOS Alert" title="SOS Emergency Protocol">
+                  <i data-lucide="shield-alert"></i>
+                </button>
                 <button class="btn-track-action" onclick="navigateTo('tracking')">
                   <span>Track</span>
                   <i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
@@ -972,12 +975,14 @@
           <!-- Section 1: Student Identity -->
           <div class="profile-form-section-card">
             <div class="profile-section-title">
+              <i data-lucide="graduation-cap" class="profile-section-icon"></i>
               <span>Student Identity</span>
             </div>
 
             <div class="form-group">
               <label class="form-label">Full Legal Name</label>
               <div class="input-box-wrapper">
+                <i data-lucide="user" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildName" value="Arman Khan" placeholder="e.g. Arman Khan" required />
               </div>
             </div>
@@ -985,6 +990,7 @@
             <div class="form-group">
               <label class="form-label">Child Age</label>
               <div class="input-box-wrapper">
+                <i data-lucide="calendar" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildAge" value="9 Years" placeholder="e.g. 9 Years" required />
               </div>
             </div>
@@ -992,6 +998,7 @@
             <div class="form-group">
               <label class="form-label">School Name</label>
               <div class="input-box-wrapper">
+                <i data-lucide="school" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildSchool" value="Greenfield International School" placeholder="School name" required />
               </div>
             </div>
@@ -1000,12 +1007,14 @@
           <!-- Section 2: Commute & Safety Protocol -->
           <div class="profile-form-section-card">
             <div class="profile-section-title">
+              <i data-lucide="shield-check" class="profile-section-icon"></i>
               <span>Commute &amp; Safety Protocol</span>
             </div>
 
             <div class="form-group">
               <label class="form-label">Default Pickup Location</label>
               <div class="input-box-wrapper">
+                <i data-lucide="map-pin" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildPickup" value="Home (12 Elm Street, Toronto)" placeholder="Pickup address" required />
               </div>
             </div>
@@ -1013,6 +1022,7 @@
             <div class="form-group">
               <label class="form-label">Safety, Equipment &amp; Medical Notes</label>
               <div class="input-box-wrapper">
+                <i data-lucide="file-text" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildNotes" value="Wears booster seat (Provided by parent)" placeholder="e.g. Peanut allergy, booster seat" />
               </div>
             </div>
@@ -2140,8 +2150,8 @@
               <button type="button" class="btn-contact-action" onclick="navigateTo('messages')" aria-label="Message Driver" title="Message Driver">
                 <i data-lucide="message-square" style="width:15px;height:15px;"></i>
               </button>
-              <button type="button" class="btn-contact-action sos" onclick="alert('Emergency Alert Sent to School & Safety Center')"
-                aria-label="Emergency Alert" title="SOS Emergency">
+              <button type="button" class="btn-contact-action sos" onclick="openEmergencySOSModal()"
+                aria-label="Emergency Alert" title="SOS Emergency Protocol">
                 <i data-lucide="shield-alert" style="width:15px;height:15px;"></i>
               </button>
             </div>
@@ -2819,12 +2829,14 @@
         <!-- Section 1: Guardian Identity -->
         <div class="profile-form-section-card">
           <div class="profile-section-title">
+            <i data-lucide="user-check" style="width: 15px; height: 15px; color: var(--color-primary);"></i>
             <span>Guardian Identity</span>
           </div>
 
           <div class="form-group">
             <label class="form-label">Full Legal Name</label>
             <div class="input-box-wrapper">
+              <i data-lucide="user" class="input-box-icon"></i>
               <input type="text" class="form-input" id="parentProfileName" value="Sadia Khan" placeholder="Your full legal name" />
             </div>
           </div>
@@ -2832,6 +2844,7 @@
           <div class="form-group">
             <label class="form-label">Relationship to Children</label>
             <div class="input-box-wrapper">
+              <i data-lucide="heart-handshake" class="input-box-icon"></i>
               <select class="form-input" id="parentProfileRelation" style="cursor: pointer;">
                 <option value="Mother" selected>Mother</option>
                 <option value="Father">Father</option>
@@ -2844,6 +2857,7 @@
         <!-- Section 2: Contact & Pickup Details -->
         <div class="profile-form-section-card">
           <div class="profile-section-title">
+            <i data-lucide="map-pin" style="width: 15px; height: 15px; color: var(--color-primary);"></i>
             <span>Contact &amp; Commute Coordinates</span>
           </div>
 
@@ -2857,6 +2871,7 @@
               </span>
             </label>
             <div class="input-box-wrapper">
+              <i data-lucide="phone" class="input-box-icon"></i>
               <input type="tel" class="form-input" id="parentProfilePhone" value="+1 (416) 555-0192" />
             </div>
           </div>
@@ -2864,6 +2879,7 @@
           <div class="form-group">
             <label class="form-label">Email Address</label>
             <div class="input-box-wrapper">
+              <i data-lucide="mail" class="input-box-icon"></i>
               <input type="email" class="form-input" id="parentProfileEmail" value="sadia.khan@example.com" />
             </div>
           </div>
@@ -2871,6 +2887,7 @@
           <div class="form-group">
             <label class="form-label">Primary Home Address (Pickup)</label>
             <div class="input-box-wrapper">
+              <i data-lucide="map-pin" class="input-box-icon"></i>
               <input type="text" class="form-input" id="parentProfileAddress" value="12 Elm Street, Toronto, ON" />
             </div>
           </div>
@@ -2956,7 +2973,7 @@
           </div>
         </div>
 
-        <div class="add-dashed-action-btn" onclick="addEmergencyContact()">
+        <div class="add-dashed-action-btn" onclick="openAddEmergencyContactModal()" role="button" tabindex="0">
           <i data-lucide="plus" style="width:18px;height:18px;"></i>
           <span>Add Emergency Contact</span>
         </div>
@@ -3733,6 +3750,245 @@
           </button>
           <button type="button" class="btn-secondary-link" onclick="closeTransactionReceipt()">Close</button>
         </div>
+      </div>
+    </div>
+
+    <!-- ================= EMERGENCY SOS PROTOCOL MODAL ================= -->
+    <div class="emergency-sos-modal-overlay" id="emergencySOSModal" onclick="closeEmergencySOSModal(event)">
+      <div class="emergency-sos-modal-card" onclick="event.stopPropagation()">
+        <!-- Header Banner with Animated SOS Beacon -->
+        <div class="emergency-sos-modal-header">
+          <div class="emergency-header-title-group">
+            <span class="sos-beacon-pulse">
+              <span class="sos-beacon-core"></span>
+            </span>
+            <div>
+              <div class="emergency-modal-title">🚨 Emergency Safety Center</div>
+              <div class="emergency-modal-subtitle">Immediate Safety Protocol • Trip #H2S-84920</div>
+            </div>
+          </div>
+          <button type="button" class="btn-close-modal" onclick="closeEmergencySOSModal()" aria-label="Close">
+            <i data-lucide="x" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+
+        <div class="emergency-sos-modal-body">
+          <!-- Real-Time Telemetry & Escort Snapshot -->
+          <div class="emergency-telemetry-card">
+            <div class="telemetry-top-row">
+              <div class="telemetry-pill live">
+                <span class="live-pulse-dot"></span>
+                <span>Active Commute Live</span>
+              </div>
+              <div class="telemetry-speed">32 km/h • Northbound</div>
+            </div>
+            <div class="telemetry-info-grid">
+              <div class="telemetry-info-item">
+                <span class="telemetry-label">Child Passengers</span>
+                <span class="telemetry-value">Arman &amp; Emma Khan (On Board)</span>
+              </div>
+              <div class="telemetry-info-item">
+                <span class="telemetry-label">Assigned Escort</span>
+                <span class="telemetry-value">Tariq Ahmed • Toyota Sienna SCH-4091</span>
+              </div>
+              <div class="telemetry-info-item" style="grid-column: 1 / -1;">
+                <span class="telemetry-label">Current Live Location</span>
+                <span class="telemetry-value highlight">Bloor St W &amp; Bay St, Toronto • ETA School: 6 min</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 1: Immediate Priority Emergency Hotlines -->
+          <div class="sos-actions-section">
+            <div class="sos-section-title">Immediate Emergency Assistance</div>
+            
+            <a href="tel:911" class="sos-action-card sos-card-911" onclick="handleSosCall(event, '911')">
+              <div class="sos-card-icon siren">
+                <i data-lucide="phone-call"></i>
+              </div>
+              <div class="sos-card-content">
+                <div class="sos-card-title">Call 911 (Police, Fire &amp; EMS)</div>
+                <div class="sos-card-desc">Direct line to local emergency dispatch</div>
+              </div>
+              <span class="sos-card-pill">1-Tap Dial</span>
+            </a>
+
+            <a href="tel:18005555437" class="sos-action-card sos-card-dispatch" onclick="handleSosCall(event, 'dispatch')">
+              <div class="sos-card-icon dispatch">
+                <i data-lucide="shield-alert"></i>
+              </div>
+              <div class="sos-card-content">
+                <div class="sos-card-title">Call 24/7 Safety Dispatch Center</div>
+                <div class="sos-card-desc">Home2School Rapid Response Hotline (1-800-555-KIDS)</div>
+              </div>
+              <span class="sos-card-pill outline">Toll-Free</span>
+            </a>
+          </div>
+
+          <!-- Section 2: School & Escort Telemetry Broadcasts -->
+          <div class="sos-actions-section">
+            <div class="sos-section-title">School Security &amp; Escort Alerts</div>
+
+            <button type="button" class="sos-action-card sos-card-school" id="btnSosSchoolBroadcast" onclick="broadcastSchoolSecurityAlert()">
+              <div class="sos-card-icon school">
+                <i data-lucide="school"></i>
+              </div>
+              <div class="sos-card-content">
+                <div class="sos-card-title">Broadcast Alert to Greenfield Security</div>
+                <div class="sos-card-desc">Direct dispatch to Principal desk &amp; campus guard unit</div>
+              </div>
+              <i data-lucide="chevron-right" class="sos-card-chevron"></i>
+            </button>
+
+            <button type="button" class="sos-action-card sos-card-driver" id="btnSosDriverPing" onclick="requestDriverCallback()">
+              <div class="sos-card-icon driver">
+                <i data-lucide="bell-ring"></i>
+              </div>
+              <div class="sos-card-content">
+                <div class="sos-card-title">Priority Cab Ping: Tariq Ahmed</div>
+                <div class="sos-card-desc">Sounds high-priority chime on escort's dashboard tablet</div>
+              </div>
+              <i data-lucide="chevron-right" class="sos-card-chevron"></i>
+            </button>
+
+            <button type="button" class="sos-action-card sos-card-share" onclick="shareEmergencyLiveTelemetry()">
+              <div class="sos-card-icon share">
+                <i data-lucide="share-2"></i>
+              </div>
+              <div class="sos-card-content">
+                <div class="sos-card-title">Share Live GPS Telemetry Link</div>
+                <div class="sos-card-desc">Copy secure real-time tracking URL for WhatsApp/SMS</div>
+              </div>
+              <span class="sos-card-pill outline">Copy Link</span>
+            </button>
+          </div>
+
+          <!-- Section 3: Family Emergency Contacts -->
+          <div class="sos-actions-section">
+            <div class="sos-section-title">Call Family Emergency Contacts</div>
+            <div class="sos-contacts-grid" id="sosFamilyContactsContainer">
+              <a href="tel:+14165550199" class="sos-contact-pill-card">
+                <div class="contact-pill-avatar">FK</div>
+                <div class="contact-pill-info">
+                  <div class="contact-pill-name">Farhan Khan</div>
+                  <div class="contact-pill-rel">Father • Primary</div>
+                </div>
+                <div class="contact-pill-action">
+                  <i data-lucide="phone"></i>
+                  <span>Call</span>
+                </div>
+              </a>
+              <a href="tel:+14165550144" class="sos-contact-pill-card">
+                <div class="contact-pill-avatar">RB</div>
+                <div class="contact-pill-info">
+                  <div class="contact-pill-name">Rehana Begum</div>
+                  <div class="contact-pill-rel">Grandmother</div>
+                </div>
+                <div class="contact-pill-action">
+                  <i data-lucide="phone"></i>
+                  <span>Call</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="emergency-sos-modal-footer">
+          <button type="button" class="btn-sos-cancel" onclick="closeEmergencySOSModal()">
+            <span>Cancel / Safe — False Alarm</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ADD / EDIT EMERGENCY CONTACT MODAL ================= -->
+    <div class="emergency-sos-modal-overlay" id="addEmergencyContactModal" onclick="closeEmergencyContactModal(event)">
+      <div class="receipt-modal-card" style="max-width: 410px;" onclick="event.stopPropagation()">
+        <div class="receipt-modal-header" style="border-bottom: 1px solid #F1F5F9; padding: 16px 18px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="sos-card-icon dispatch" style="width: 36px; height: 36px;">
+              <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div>
+              <div style="font-size: 14.5px; font-weight: 800; color: #0F172A;" id="emergencyContactModalTitle">Add Emergency Contact</div>
+              <div style="font-size: 11px; color: #64748B;">Notified immediately during ride delays or SOS</div>
+            </div>
+          </div>
+          <button type="button" class="btn-close-modal" onclick="closeEmergencyContactModal()" aria-label="Close">
+            <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+          </button>
+        </div>
+
+        <form id="emergencyContactForm" onsubmit="saveEmergencyContactForm(event)" style="padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+          <input type="hidden" id="editEmergencyContactId" value="" />
+
+          <!-- Full Legal Name -->
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 12px; font-weight: 700; margin-bottom: 5px;">Full Legal Name</label>
+            <div class="input-box-wrapper">
+              <i data-lucide="user" class="input-box-icon"></i>
+              <input type="text" id="contactInputName" class="form-input" placeholder="e.g. Sarah Khan" required />
+            </div>
+          </div>
+
+          <!-- Relationship to Child -->
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 12px; font-weight: 700; margin-bottom: 5px;">Relationship</label>
+            <div class="emergency-rel-pills">
+              <button type="button" class="rel-pill active" onclick="setContactRel('Father')">Father</button>
+              <button type="button" class="rel-pill" onclick="setContactRel('Mother')">Mother</button>
+              <button type="button" class="rel-pill" onclick="setContactRel('Grandmother')">Grandmother</button>
+              <button type="button" class="rel-pill" onclick="setContactRel('Grandfather')">Grandfather</button>
+              <button type="button" class="rel-pill" onclick="setContactRel('Aunt')">Aunt</button>
+              <button type="button" class="rel-pill" onclick="setContactRel('Uncle')">Uncle</button>
+              <button type="button" class="rel-pill" onclick="setContactRel('Pediatrician')">Pediatrician</button>
+              <button type="button" class="rel-pill" onclick="setContactRel('Other')">Other</button>
+            </div>
+            <div class="input-box-wrapper" style="margin-top: 6px;">
+              <i data-lucide="heart-handshake" class="input-box-icon"></i>
+              <input type="text" id="contactInputRel" class="form-input" placeholder="Specify relationship" value="Father" required />
+            </div>
+          </div>
+
+          <!-- Mobile Phone Number -->
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 12px; font-weight: 700; margin-bottom: 5px;">Direct Phone Number</label>
+            <div class="input-box-wrapper">
+              <i data-lucide="phone" class="input-box-icon"></i>
+              <input type="tel" id="contactInputPhone" class="form-input" placeholder="+1 (416) 555-0199" required />
+            </div>
+          </div>
+
+          <!-- Authorizations & Checkboxes -->
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1E293B; cursor: pointer;">
+              <input type="checkbox" id="contactInputIsPrimary" style="width: 16px; height: 16px; accent-color: var(--color-primary); cursor: pointer;" />
+              <span>Set as Primary Contact (1st Responder)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1E293B; cursor: pointer;">
+              <input type="checkbox" id="contactInputPickupAuth" checked style="width: 16px; height: 16px; accent-color: var(--color-primary); cursor: pointer;" />
+              <span>Authorized for School Pickup &amp; Escort Handoff</span>
+            </label>
+          </div>
+
+          <!-- Optional Notes -->
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" style="font-size: 12px; font-weight: 700; margin-bottom: 5px;">Emergency Notes (Optional)</label>
+            <div class="input-box-wrapper">
+              <i data-lucide="file-text" class="input-box-icon"></i>
+              <input type="text" id="contactInputNotes" class="form-input" placeholder="e.g. Available after 2 PM, pediatrician, etc." />
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+            <button type="submit" class="btn-primary" style="height: 44px; font-size: 13.5px; font-weight: 700; width: 100%;">
+              <i data-lucide="check" style="width: 16px; height: 16px; margin-right: 4px;"></i>
+              <span id="btnSaveEmergencyContactText">Save Emergency Contact</span>
+            </button>
+            <button type="button" class="btn-secondary-link" onclick="closeEmergencyContactModal()">Cancel</button>
+          </div>
+        </form>
       </div>
     </div>
 

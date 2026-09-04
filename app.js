@@ -66,6 +66,35 @@ window.appState = {
     { id: 'kabir', name: 'Kabir Hossain', vehicle: 'Nissan Rogue (2022)', plate: 'SCH-9102', rating: 4.8, reviewsCount: 62, seats: 2, baseWeekly: 110, photo: '/assets/avatar_kabir.jpg', phone: '+1 (416) 555-0184' },
     { id: 'sarah', name: 'Sarah Jenkins (WalkShare)', vehicle: 'Walking School Bus Escort', plate: 'VERIFIED-WALK', rating: 4.9, reviewsCount: 45, seats: 3, baseWeekly: 75, photo: '/assets/avatar_sarah.jpg', phone: '+1 (416) 555-0185' }
   ],
+  emergencyContacts: [
+    {
+      id: 'ec-1',
+      name: 'Farhan Khan',
+      rel: 'Father',
+      phone: '+1 (416) 555-0199',
+      isPrimary: true,
+      pickupAuth: true,
+      notes: 'Available all day'
+    },
+    {
+      id: 'ec-2',
+      name: 'Rehana Begum',
+      rel: 'Grandmother',
+      phone: '+1 (416) 555-0144',
+      isPrimary: false,
+      pickupAuth: true,
+      notes: 'Lives near school'
+    },
+    {
+      id: 'ec-3',
+      name: 'Greenfield School Main Office',
+      rel: 'School Admin',
+      phone: '+1 (416) 555-0800',
+      isPrimary: false,
+      pickupAuth: false,
+      notes: 'Campus dispatch desk'
+    }
+  ],
   selectedChildIds: ['arman', 'emma'],
   bookingDraft: {
     direction: 'bothway', // 'bothway' | 'oneway'
@@ -79,10 +108,11 @@ window.appState = {
     paymentMethod: 'Visa •••• 4242'
   },
   bookings: [
-    // 1. Two-Way + Recurring (Confirmed)
+    // 1. Two-Way + Recurring (Active / In Progress)
     {
       id: 'H2S-84920',
-      status: 'confirmed',
+      status: 'in_progress',
+      activeNow: true,
       childIds: ['arman', 'emma'],
       direction: 'bothway',
       frequency: 'recurring',
@@ -341,7 +371,7 @@ window.appState = {
     }
   ],
   activeBookingId: 'H2S-84920',
-  homeScenario: 'B', // 'A' | 'B' | 'C'
+  homeScenario: 'C', // Default to Scenario C (Active Trip In Progress)
   trackingStageIndex: 2
 };
 
@@ -382,6 +412,8 @@ window.navigateTo = function (screenName) {
     renderMyChildrenList();
   } else if (screenName === 'profilePayments') {
     renderTransactions('all');
+  } else if (screenName === 'profileEmergency') {
+    renderEmergencyContactsList();
   }
 
   // Update Bottom Tab Bar highlights
@@ -507,6 +539,10 @@ function renderHome() {
     if (viewB) viewB.style.display = 'none';
     if (viewC) viewC.style.display = 'flex';
     btnC?.classList.add('active');
+  }
+
+  if (window.updateNavLiveBadges) {
+    window.updateNavLiveBadges();
   }
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -978,8 +1014,16 @@ function renderBookingDetails(bookingId) {
   if (refEl) refEl.textContent = booking.id.startsWith('#') ? booking.id : `#${booking.id}`;
   if (titleEl) titleEl.textContent = children.map(c => c.name).join(' & ');
   if (statusEl) {
-    statusEl.className = `status-chip ${booking.status}`;
-    statusEl.textContent = booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase() : '';
+    if (booking.status === 'in_progress') {
+      statusEl.className = 'status-chip in-progress';
+      statusEl.innerHTML = '<span class="live-pulse-dot"></span> In Transit';
+    } else if (booking.status === 'confirmed') {
+      statusEl.className = 'status-chip confirmed';
+      statusEl.textContent = 'Scheduled';
+    } else {
+      statusEl.className = `status-chip ${booking.status}`;
+      statusEl.textContent = booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase() : '';
+    }
   }
 
   // Direction & frequency subtitle in top card
@@ -1000,8 +1044,10 @@ function renderBookingDetails(bookingId) {
   // Children passengers
   const passWrap = document.getElementById('detailPassengersWrap');
   if (passWrap) {
+    const isLive = booking.status === 'in_progress';
     passWrap.innerHTML = children.map((c, idx) => {
       const photoSrc = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
+      const badgeText = isLive ? 'On Board' : 'Confirmed';
       return `
         <div style="display:flex; align-items:center; justify-content:space-between; padding: 8px 0; ${idx < children.length - 1 ? 'border-bottom: 1px solid #F1F5F9;' : ''}">
           <div style="display:flex; align-items:center; gap:12px;">
@@ -1011,7 +1057,7 @@ function renderBookingDetails(bookingId) {
               <div style="font-size:12px;color:var(--color-body); margin-top: 2px;">${c.age || c.grade} • ${c.school}</div>
             </div>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#15803D; background:#F0FDF4; padding:3px 8px; border-radius:99px; border:1px solid #DCFCE7; white-space:nowrap;">Confirmed</span>
+          <span style="font-size:11px; font-weight:700; color:#15803D; background:#F0FDF4; padding:3px 8px; border-radius:99px; border:1px solid #DCFCE7; white-space:nowrap;">${badgeText}</span>
         </div>
       `;
     }).join('');
@@ -1051,11 +1097,43 @@ function renderBookingDetails(bookingId) {
   // Contextual Actions based on status
   const actionsWrap = document.getElementById('detailContextualActions');
   if (actionsWrap) {
-    if (booking.status === 'confirmed' || booking.status === 'pending') {
+    if (booking.status === 'in_progress') {
       actionsWrap.innerHTML = `
-        <button class="btn-primary" onclick="navigateTo('tracking')">Track Live Ride</button>
+        <div style="background-color: #DCFCE7; border: 1px solid #BBF7D0; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 2px;">
+          <span class="live-pulse-dot"></span>
+          <div style="font-size: 12px; color: #14532D; line-height: 1.35;">
+            <strong>Live Trip in Progress:</strong> Driver Tariq Ahmed is currently en route with your children. ETA Greenfield School: <strong>07:42 AM</strong>.
+          </div>
+        </div>
+        <button class="btn-primary" onclick="navigateTo('tracking')">
+          <span class="live-pulse-dot"></span>
+          <span>Track Live GPS Ride</span>
+        </button>
         <button class="btn-secondary-surface" onclick="openChatWith('${booking.providerId}')">Message Driver</button>
+        <button class="btn-danger-surface" onclick="cancelBooking('${booking.id}')">Cancel Active Trip</button>
+      `;
+    } else if (booking.status === 'confirmed') {
+      actionsWrap.innerHTML = `
+        <div style="background-color: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 2px;">
+          <i data-lucide="calendar" style="width: 18px; height: 18px; color: #1D4ED8; flex-shrink: 0;"></i>
+          <div style="font-size: 12px; color: #1E40AF; line-height: 1.35;">
+            <strong>Upcoming Scheduled Commute:</strong> Real-time GPS tracking activates automatically 15 minutes before scheduled pickup.
+          </div>
+        </div>
+        <button class="btn-primary" onclick="openChatWith('${booking.providerId}')">
+          <i data-lucide="message-square" style="width:16px;height:16px;"></i>
+          <span>Message Driver</span>
+        </button>
+        <button class="btn-secondary-surface" onclick="alert('To modify your pickup timing or address, please message your driver or contact Home2School support.')">Modify Schedule</button>
         <button class="btn-danger-surface" onclick="cancelBooking('${booking.id}')">Cancel This Booking</button>
+      `;
+    } else if (booking.status === 'pending') {
+      actionsWrap.innerHTML = `
+        <button class="btn-primary" onclick="openChatWith('${booking.providerId}')">
+          <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
+          <span>Chat Escort</span>
+        </button>
+        <button class="btn-danger-surface" onclick="cancelBooking('${booking.id}')">Withdraw Request</button>
       `;
     } else if (booking.status === 'completed') {
       actionsWrap.innerHTML = `
@@ -1104,7 +1182,7 @@ function renderBookingsList(tab) {
   const wrap = document.getElementById('bookingsListWrap');
 
   // Dynamically update tab badges count
-  const countU = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending').length;
+  const countU = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending' || b.status === 'in_progress').length;
   const countP = window.appState.bookings.filter(b => b.status === 'completed').length;
   const countC = window.appState.bookings.filter(b => b.status === 'cancelled').length;
   if (btnU) btnU.textContent = `Upcoming (${countU})`;
@@ -1116,7 +1194,9 @@ function renderBookingsList(tab) {
   let filtered = [];
   if (tab === 'upcoming') {
     btnU?.classList.add('active');
-    filtered = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending');
+    filtered = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending' || b.status === 'in_progress');
+    // Sort so in_progress is strictly first
+    filtered.sort((a, b) => (b.status === 'in_progress' ? 1 : 0) - (a.status === 'in_progress' ? 1 : 0));
   } else if (tab === 'past') {
     btnP?.classList.add('active');
     filtered = window.appState.bookings.filter(b => b.status === 'completed');
@@ -1139,7 +1219,10 @@ function renderBookingsList(tab) {
       </div>
     `;
   } else {
-    wrap.innerHTML = filtered.map(b => {
+    const activeTrips = filtered.filter(b => b.status === 'in_progress');
+    const scheduledTrips = filtered.filter(b => b.status !== 'in_progress');
+
+    const renderCard = (b) => {
       const provider = window.appState.providers.find(p => p.id === b.providerId) || window.appState.providers[0];
       const children = b.childIds.map(id => {
         const c = window.appState.children.find(ch => ch.id === id);
@@ -1147,7 +1230,9 @@ function renderBookingsList(tab) {
       });
 
       const childText = children.length > 1 ? children.join(' & ') : (children[0] || 'Child Rider');
-      const displayStatus = b.status === 'confirmed' ? 'Confirmed' :
+      const isInProgress = b.status === 'in_progress';
+      const displayStatus = isInProgress ? 'In Transit' :
+                            b.status === 'confirmed' ? 'Scheduled' :
                             b.status === 'pending' ? 'Pending Approval' :
                             b.status === 'completed' ? 'Completed' : 'Cancelled';
 
@@ -1172,7 +1257,6 @@ function renderBookingsList(tab) {
         }
       }
 
-      // Clean redundant parenthetical words from timeChip
       if (timeChip) {
         timeChip = timeChip.replace(/Outbound:\s*/i, '').replace(/Return:\s*/i, '').replace(/\(.*?\)/g, '').trim();
       }
@@ -1185,12 +1269,20 @@ function renderBookingsList(tab) {
       const directionLabel = b.direction === 'bothway' ? '⇄ Round Trip' : '→ One Way';
 
       let actionsHtml = '';
-      if (b.status === 'confirmed') {
+      if (isInProgress) {
         actionsHtml = `
           <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
           <button class="btn-booking-primary" onclick="event.stopPropagation(); navigateTo('tracking')">
             <span class="live-pulse-dot"></span>
             <span>Live Track</span>
+          </button>
+        `;
+      } else if (b.status === 'confirmed') {
+        actionsHtml = `
+          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
+          <button class="btn-booking-ghost" onclick="event.stopPropagation(); openChatWith('${b.providerId || 'p1'}')">
+            <i data-lucide="message-square" style="width:13px;height:13px;"></i>
+            <span>Message Driver</span>
           </button>
         `;
       } else if (b.status === 'pending') {
@@ -1213,11 +1305,21 @@ function renderBookingsList(tab) {
         `;
       }
 
+      const statusChipClass = isInProgress ? 'in-progress' : b.status;
+      const cardClass = isInProgress ? 'booking-item-card in-progress' : 'booking-item-card';
+
       return `
-        <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
+        <div class="${cardClass}" onclick="openBookingDetails('${b.id}')">
+          ${isInProgress ? `
+            <div class="booking-live-status-banner">
+              <span class="live-pulse-dot"></span>
+              <span>Live Ride in Progress • Tariq Ahmed en route • ETA 07:42 AM</span>
+            </div>
+          ` : ''}
+
           <div class="booking-card-top-row">
             <div class="booking-header-badges">
-              <span class="status-chip ${b.status}">
+              <span class="status-chip ${statusChipClass}">
                 <span class="status-dot"></span>
                 ${displayStatus}
               </span>
@@ -1279,7 +1381,24 @@ function renderBookingsList(tab) {
           </div>
         </div>
       `;
-    }).join('');
+    };
+
+    if (tab === 'upcoming' && activeTrips.length > 0 && scheduledTrips.length > 0) {
+      wrap.innerHTML = `
+        <div class="booking-section-heading live">
+          <span class="live-pulse-dot"></span>
+          <span>Active Trip Right Now (${activeTrips.length})</span>
+        </div>
+        ${activeTrips.map(renderCard).join('')}
+        <div class="booking-section-heading" style="margin-top: 14px;">
+          <i data-lucide="calendar" style="width:14px;height:14px;color:#64748B;"></i>
+          <span>Scheduled Commutes (${scheduledTrips.length})</span>
+        </div>
+        ${scheduledTrips.map(renderCard).join('')}
+      `;
+    } else {
+      wrap.innerHTML = filtered.map(renderCard).join('');
+    }
   }
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -1560,48 +1679,283 @@ window.showToast = function (msg, type = 'success') {
     toast.className = 'h2s-toast-notification';
     document.body.appendChild(toast);
   }
-  const iconHtml = type === 'success' ? '✓' : 'ℹ';
-  toast.innerHTML = `<span style="color:#38BDF8;font-weight:800;">${iconHtml}</span> <span>${msg}</span>`;
+  const isError = type === 'error' || type === 'danger';
+  const iconHtml = isError ? '🚨' : type === 'success' ? '✓' : 'ℹ';
+  const iconColor = isError ? '#EF4444' : type === 'success' ? '#10B981' : '#38BDF8';
+  toast.innerHTML = `<span style="color:${iconColor};font-weight:800;">${iconHtml}</span> <span>${msg}</span>`;
+  if (isError) {
+    toast.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+    toast.style.boxShadow = '0 8px 30px rgba(239, 68, 68, 0.25)';
+  } else {
+    toast.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+    toast.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.35)';
+  }
   toast.classList.add('visible');
 
   if (window._toastTimeout) clearTimeout(window._toastTimeout);
   window._toastTimeout = setTimeout(() => {
     toast.classList.remove('visible');
-  }, 2400);
+  }, isError ? 3400 : 2500);
 };
 
-window.addEmergencyContact = function () {
-  const contacts = [
-    { name: 'Farah Ahmed', rel: 'Aunt', phone: '+1 (416) 555-0199' },
-    { name: 'Rashid Khan', rel: 'Co-parent', phone: '+1 (416) 555-0144' },
-    { name: 'Dr. Sarah Lin', rel: 'Pediatrician', phone: '+1 (416) 555-0177' }
-  ];
-  const item = contacts[Math.floor(Math.random() * contacts.length)];
-
+/* ==========================================================
+   Emergency Contacts Management System (Single Source of Truth)
+   ========================================================== */
+window.renderEmergencyContactsList = function () {
   const container = document.getElementById('emergencyContactsListWrap');
+  const sosContainer = document.getElementById('sosFamilyContactsContainer');
+  const contacts = window.appState.emergencyContacts || [];
+
   if (container) {
-    const row = document.createElement('div');
-    row.className = 'grouped-row-item';
-    row.innerHTML = `
-      <div class="grouped-row-left">
-        <div class="grouped-row-icon-wrap">
-          <i data-lucide="phone-call" style="width:18px;height:18px;color:var(--color-primary);"></i>
-        </div>
-        <div>
-          <div class="grouped-row-title">${item.name} (${item.rel})</div>
-          <div class="grouped-row-sub" style="display:flex;align-items:center;gap:4px;">
-            <span>${item.phone}</span>
-            <i data-lucide="shield-check" style="width:12px;height:12px;color:#16A34A;"></i>
+    if (contacts.length === 0) {
+      container.innerHTML = `
+        <div style="padding: 24px 16px; text-align: center; background: #FFFFFF; border-radius: var(--radius-md);">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: #F1F5F9; color: #64748B; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+            <i data-lucide="shield-alert" style="width: 22px; height: 22px;"></i>
           </div>
+          <div style="font-size: 13.5px; font-weight: 700; color: #0F172A;">No Emergency Contacts Added</div>
+          <p style="font-size: 12px; color: #64748B; margin: 4px 0 14px; line-height: 1.4;">Add at least one trusted guardian or family member for active trip notifications.</p>
+          <button class="btn-primary" style="height: 38px; font-size: 12.5px; padding: 0 16px; margin: 0 auto;" onclick="openAddEmergencyContactModal()">+ Add Contact</button>
         </div>
-      </div>
-      <a href="tel:${item.phone}" class="grouped-row-action" style="text-decoration:none;">Call</a>
-    `;
-    container.appendChild(row);
-    if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
-    window.showToast(`✓ Emergency contact ${item.name} added`);
+      `;
+    } else {
+      container.innerHTML = contacts.map(c => {
+        const initials = c.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'EC';
+        const cleanPhone = c.phone.replace(/[^0-9+]/g, '');
+        const primaryBadge = c.isPrimary ? `<span class="contact-role-chip primary"><i data-lucide="shield-check" style="width:11px;height:11px;"></i> Primary</span>` : '';
+        const authBadge = c.pickupAuth ? `<span class="contact-role-chip auth">Authorized Pickup</span>` : '';
+
+        return `
+          <div class="grouped-row-item emergency-contact-row" id="contactItem-${c.id}">
+            <div class="grouped-row-left" style="gap: 12px; min-width: 0;">
+              <div class="contact-avatar-circle">
+                ${initials}
+              </div>
+              <div style="min-width: 0; flex: 1;">
+                <div class="contact-row-name">
+                  <strong>${c.name}</strong>
+                  <span class="contact-row-rel">(${c.rel})</span>
+                </div>
+                <div class="contact-row-phone">${c.phone}</div>
+                <div class="contact-row-badges">
+                  ${primaryBadge}
+                  ${authBadge}
+                </div>
+              </div>
+            </div>
+            <div class="contact-row-actions">
+              <a href="tel:${cleanPhone}" class="btn-contact-action-call" title="Call ${c.name}">
+                <i data-lucide="phone"></i>
+                <span>Call</span>
+              </a>
+              <button type="button" class="btn-contact-action-icon" onclick="openAddEmergencyContactModal('${c.id}')" title="Edit Contact">
+                <i data-lucide="pencil"></i>
+              </button>
+              <button type="button" class="btn-contact-action-icon delete" onclick="deleteEmergencyContact('${c.id}')" title="Delete Contact">
+                <i data-lucide="trash-2"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // Synchronize Emergency SOS Hub modal family list
+  if (sosContainer) {
+    const familyContacts = contacts.filter(c => c.rel !== 'School Admin').slice(0, 4);
+    if (familyContacts.length === 0) {
+      sosContainer.innerHTML = `
+        <div style="grid-column: 1 / -1; font-size: 11.5px; color: #64748B; text-align: center; padding: 10px;">
+          No personal contacts registered. Please add contacts in Emergency Hub.
+        </div>
+      `;
+    } else {
+      sosContainer.innerHTML = familyContacts.map(c => {
+        const initials = c.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'EC';
+        const cleanPhone = c.phone.replace(/[^0-9+]/g, '');
+        const relLabel = c.isPrimary ? `${c.rel} • Primary` : c.rel;
+        return `
+          <a href="tel:${cleanPhone}" class="sos-contact-pill-card">
+            <div class="contact-pill-avatar">${initials}</div>
+            <div class="contact-pill-info">
+              <div class="contact-pill-name">${c.name}</div>
+              <div class="contact-pill-rel">${relLabel}</div>
+            </div>
+            <div class="contact-pill-action">
+              <i data-lucide="phone"></i>
+              <span>Call</span>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
   }
 };
+
+window.openAddEmergencyContactModal = function (contactId = null) {
+  const modal = document.getElementById('addEmergencyContactModal');
+  if (!modal) return;
+
+  const titleElem = document.getElementById('emergencyContactModalTitle');
+  const btnTextElem = document.getElementById('btnSaveEmergencyContactText');
+  const idInput = document.getElementById('editEmergencyContactId');
+  const nameInput = document.getElementById('contactInputName');
+  const relInput = document.getElementById('contactInputRel');
+  const phoneInput = document.getElementById('contactInputPhone');
+  const primaryInput = document.getElementById('contactInputIsPrimary');
+  const authInput = document.getElementById('contactInputPickupAuth');
+  const notesInput = document.getElementById('contactInputNotes');
+
+  if (contactId) {
+    // Edit existing contact
+    const contact = (window.appState.emergencyContacts || []).find(c => c.id === contactId);
+    if (contact) {
+      if (titleElem) titleElem.textContent = 'Edit Emergency Contact';
+      if (btnTextElem) btnTextElem.textContent = 'Update Contact';
+      if (idInput) idInput.value = contact.id;
+      if (nameInput) nameInput.value = contact.name || '';
+      if (relInput) relInput.value = contact.rel || '';
+      if (phoneInput) phoneInput.value = contact.phone || '';
+      if (primaryInput) primaryInput.checked = !!contact.isPrimary;
+      if (authInput) authInput.checked = !!contact.pickupAuth;
+      if (notesInput) notesInput.value = contact.notes || '';
+      window.highlightContactRelPill(contact.rel);
+    }
+  } else {
+    // Create new contact
+    if (titleElem) titleElem.textContent = 'Add Emergency Contact';
+    if (btnTextElem) btnTextElem.textContent = 'Save Emergency Contact';
+    if (idInput) idInput.value = '';
+    if (nameInput) nameInput.value = '';
+    if (relInput) relInput.value = 'Mother';
+    if (phoneInput) phoneInput.value = '+1 (416) ';
+    if (primaryInput) primaryInput.checked = false;
+    if (authInput) authInput.checked = true;
+    if (notesInput) notesInput.value = '';
+    window.highlightContactRelPill('Mother');
+  }
+
+  modal.style.display = 'flex';
+  if (nameInput) {
+    setTimeout(() => nameInput.focus(), 100);
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.closeEmergencyContactModal = function (event) {
+  if (event && event.target && 
+      event.target.id !== 'addEmergencyContactModal' && 
+      !event.target.classList.contains('emergency-sos-modal-overlay') && 
+      !event.target.closest('.btn-secondary-link') && 
+      !event.target.closest('.btn-close-modal')) {
+    return;
+  }
+  const modal = document.getElementById('addEmergencyContactModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.setContactRel = function (rel) {
+  const input = document.getElementById('contactInputRel');
+  if (input) input.value = rel;
+  window.highlightContactRelPill(rel);
+};
+
+window.highlightContactRelPill = function (rel) {
+  document.querySelectorAll('.emergency-rel-pills .rel-pill').forEach(btn => {
+    if (btn.textContent.trim().toLowerCase() === (rel || '').trim().toLowerCase()) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+};
+
+window.saveEmergencyContactForm = function (event) {
+  if (event) event.preventDefault();
+
+  const idInput = document.getElementById('editEmergencyContactId');
+  const nameInput = document.getElementById('contactInputName');
+  const relInput = document.getElementById('contactInputRel');
+  const phoneInput = document.getElementById('contactInputPhone');
+  const primaryInput = document.getElementById('contactInputIsPrimary');
+  const authInput = document.getElementById('contactInputPickupAuth');
+  const notesInput = document.getElementById('contactInputNotes');
+
+  const contactId = idInput?.value?.trim();
+  const name = nameInput?.value?.trim();
+  const rel = relInput?.value?.trim() || 'Guardian';
+  const phone = phoneInput?.value?.trim();
+  const isPrimary = !!primaryInput?.checked;
+  const pickupAuth = !!authInput?.checked;
+  const notes = notesInput?.value?.trim() || '';
+
+  if (!name || !phone) {
+    if (window.showToast) window.showToast('Please enter full legal name and phone number', 'error');
+    return;
+  }
+
+  if (!window.appState.emergencyContacts) {
+    window.appState.emergencyContacts = [];
+  }
+
+  // If set to primary, unset previous primary
+  if (isPrimary) {
+    window.appState.emergencyContacts.forEach(c => c.isPrimary = false);
+  }
+
+  if (contactId) {
+    // Update existing contact
+    const contact = window.appState.emergencyContacts.find(c => c.id === contactId);
+    if (contact) {
+      contact.name = name;
+      contact.rel = rel;
+      contact.phone = phone;
+      contact.isPrimary = isPrimary;
+      contact.pickupAuth = pickupAuth;
+      contact.notes = notes;
+    }
+    if (window.showToast) window.showToast(`✓ Updated ${name}`);
+  } else {
+    // Add new contact
+    const newContact = {
+      id: 'ec_' + Date.now(),
+      name,
+      rel,
+      phone,
+      isPrimary,
+      pickupAuth,
+      notes
+    };
+    window.appState.emergencyContacts.push(newContact);
+    if (window.showToast) window.showToast(`✓ Added ${name} to emergency contacts`);
+  }
+
+  const modal = document.getElementById('addEmergencyContactModal');
+  if (modal) modal.style.display = 'none';
+
+  window.renderEmergencyContactsList();
+};
+
+window.deleteEmergencyContact = function (contactId) {
+  const contact = (window.appState.emergencyContacts || []).find(c => c.id === contactId);
+  const name = contact ? contact.name : 'this contact';
+
+  if (confirm(`Remove ${name} from your emergency contacts?`)) {
+    window.appState.emergencyContacts = (window.appState.emergencyContacts || []).filter(c => c.id !== contactId);
+    window.renderEmergencyContactsList();
+    if (window.showToast) window.showToast(`Removed ${name}`, 'info');
+  }
+};
+
+// Backwards compatibility alias
+window.addEmergencyContact = window.openAddEmergencyContactModal;
 
 window.selectedAddressType = 'home';
 
@@ -2246,5 +2600,167 @@ window.saveChildProfileForm = function (event) {
 // Initial render
 window.renderMyChildrenList();
 
+/* ==========================================================
+   Emergency SOS Safety Center Protocol Flow
+   ========================================================== */
+window.openEmergencySOSModal = function () {
+  const modal = document.getElementById('emergencySOSModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    // Reset any previous broadcast states to initial clean state
+    const schoolBtn = document.getElementById('btnSosSchoolBroadcast');
+    if (schoolBtn) {
+      schoolBtn.classList.remove('dispatched');
+      schoolBtn.innerHTML = `
+        <div class="sos-card-icon school">
+          <i data-lucide="school"></i>
+        </div>
+        <div class="sos-card-content">
+          <div class="sos-card-title">Broadcast Alert to Greenfield Security</div>
+          <div class="sos-card-desc">Direct dispatch to Principal desk &amp; campus guard unit</div>
+        </div>
+        <i data-lucide="chevron-right" class="sos-card-chevron"></i>
+      `;
+    }
+    const driverBtn = document.getElementById('btnSosDriverPing');
+    if (driverBtn) {
+      driverBtn.classList.remove('dispatched');
+      driverBtn.innerHTML = `
+        <div class="sos-card-icon driver">
+          <i data-lucide="bell-ring"></i>
+        </div>
+        <div class="sos-card-content">
+          <div class="sos-card-title">Priority Cab Ping: Tariq Ahmed</div>
+          <div class="sos-card-desc">Sounds high-priority chime on escort's dashboard tablet</div>
+        </div>
+        <i data-lucide="chevron-right" class="sos-card-chevron"></i>
+      `;
+    }
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+};
 
+window.closeEmergencySOSModal = function (event) {
+  if (event && event.target && 
+      event.target.id !== 'emergencySOSModal' && 
+      !event.target.classList.contains('emergency-sos-modal-overlay') && 
+      !event.target.closest('.btn-sos-cancel') && 
+      !event.target.closest('.btn-close-modal')) {
+    return;
+  }
+  const modal = document.getElementById('emergencySOSModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+};
 
+window.handleSosCall = function (event, type) {
+  if (type === '911') {
+    if (window.showToast) {
+      window.showToast('🚨 Connecting to Emergency 911 Dispatcher...', 'error');
+    }
+  } else if (type === 'dispatch') {
+    if (window.showToast) {
+      window.showToast('🛡️ Connecting to 24/7 Safety Dispatch Desk (1-800-555-5437)...', 'info');
+    }
+  }
+};
+
+window.broadcastSchoolSecurityAlert = function () {
+  const btn = document.getElementById('btnSosSchoolBroadcast');
+  if (btn) {
+    btn.classList.add('dispatched');
+    btn.innerHTML = `
+      <div class="sos-card-icon success">
+        <i data-lucide="check-circle-2"></i>
+      </div>
+      <div class="sos-card-content">
+        <div class="sos-card-title" style="color:#15803D;">✓ Alert Broadcasted to Greenfield Security</div>
+        <div class="sos-card-desc" style="color:#166534;">Security Desk &amp; Principal notified • Incident #SOS-8921 logged</div>
+      </div>
+    `;
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+  if (window.showToast) {
+    window.showToast('🚨 High-Priority SOS Broadcasted to Greenfield School Security!', 'error');
+  }
+};
+
+window.requestDriverCallback = function () {
+  const btn = document.getElementById('btnSosDriverPing');
+  if (btn) {
+    btn.classList.add('dispatched');
+    btn.innerHTML = `
+      <div class="sos-card-icon success">
+        <i data-lucide="check-circle-2"></i>
+      </div>
+      <div class="sos-card-content">
+        <div class="sos-card-title" style="color:#15803D;">✓ Escort Cab Pinged Successfully</div>
+        <div class="sos-card-desc" style="color:#166534;">Tariq Ahmed notified to initiate emergency safety callback</div>
+      </div>
+    `;
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+  if (window.showToast) {
+    window.showToast('🔔 High-priority alert sounded on driver dashboard tablet', 'info');
+  }
+};
+
+window.shareEmergencyLiveTelemetry = function () {
+  const shareText = '🚨 URGENT LIVE SAFETY TELEMETRY - Home2School\n' +
+    'Children: Arman & Emma Khan (On Board)\n' +
+    'Vehicle: Toyota Sienna (SCH-4091) - Tariq Ahmed\n' +
+    'Current GPS: Bloor St W & Bay St, Toronto (Speed: 32 km/h)\n' +
+    'Destination: Greenfield International School (ETA: 6 min)\n' +
+    'Encrypted Live Route: https://home2school.app/live/H2S-84920?sos=true';
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(shareText).then(() => {
+      if (window.showToast) {
+        window.showToast('✓ Live GPS Telemetry copied to clipboard! Ready to send via SMS/WhatsApp.', 'success');
+      }
+    }).catch(() => {
+      if (window.showToast) {
+        window.showToast('✓ Live Telemetry ready to share', 'success');
+      }
+    });
+  } else {
+    if (window.showToast) {
+      window.showToast('✓ Live Telemetry ready to share', 'success');
+    }
+  }
+};
+
+/* ==========================================================
+   Bottom Navigation Live Ride Pulse Indicator
+   ========================================================== */
+window.updateNavLiveBadges = function () {
+  const hasActive = (window.appState?.homeScenario === 'C') || 
+    (window.appState?.bookings || []).some(b => b.status === 'in_progress');
+
+  const navButtons = document.querySelectorAll('.bottom-tab-bar button[onclick*="tracking"]');
+  navButtons.forEach(btn => {
+    let badge = btn.querySelector('.nav-live-badge');
+    if (hasActive) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'nav-live-badge';
+        btn.appendChild(badge);
+      }
+    } else if (badge) {
+      badge.remove();
+    }
+  });
+};
+
+// Initialize navigation live indicator & emergency contacts
+setTimeout(() => {
+  if (window.updateNavLiveBadges) window.updateNavLiveBadges();
+  if (window.renderEmergencyContactsList) window.renderEmergencyContactsList();
+}, 200);
