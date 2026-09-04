@@ -1259,7 +1259,14 @@ function renderBookingsList(tab) {
             <div class="booking-driver-left">
               <img src="${provider.photo}" alt="${provider.name}" class="booking-driver-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
               <div class="booking-driver-info">
-                <div class="booking-driver-name">${provider.name}</div>
+                <div class="booking-driver-name">
+                  <span>${provider.name}</span>
+                  <span class="fb-verified-badge" title="Verified Provider" style="vertical-align: middle; margin-left: 2px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="#1877F2">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
+                    </svg>
+                  </span>
+                </div>
                 <div class="booking-driver-meta">${vehicleName} · <span class="rating-star">★ ${provider.rating}</span></div>
               </div>
             </div>

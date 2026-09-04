@@ -2567,17 +2567,18 @@ svg.lucide {
   padding-top: 10px;
 }
 
-/* 11. Status Chips - Standard Micro-Pills with Indicator Dot */
+/* 11. Status Chips - Standard Micro-Pills with Indicator Dot (Soft & Borderless) */
 .status-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-radius: var(--radius-pill);
   font-size: 11.5px;
   font-weight: 700;
   text-transform: capitalize;
   letter-spacing: -0.1px;
+  border: none;
 }
 
 .status-chip .status-dot {
@@ -2589,33 +2590,33 @@ svg.lucide {
 }
 
 .status-chip.pending {
-  background-color: #FFFBEB;
+  background-color: #FEF3C7;
   color: #B45309;
-  border: 1px solid #FDE68A;
+  border: none;
 }
 
 .status-chip.confirmed {
   background-color: #EFF6FF;
   color: #1D4ED8;
-  border: 1px solid #BFDBFE;
+  border: none;
 }
 
 .status-chip.active {
   background-color: #FFF7ED;
   color: #C2410C;
-  border: 1px solid #FED7AA;
+  border: none;
 }
 
 .status-chip.completed {
   background-color: #F0FDF4;
   color: #15803D;
-  border: 1px solid #BBF7D0;
+  border: none;
 }
 
 .status-chip.cancelled {
   background-color: #FEF2F2;
   color: #B91C1C;
-  border: 1px solid #FECACA;
+  border: none;
 }
 
 /* 12. Live Tracking Full Screen */
@@ -3130,20 +3131,20 @@ svg.lucide {
 
 .booking-item-card {
   background-color: #FFFFFF;
-  border: 1.5px solid #E2E8F0;
+  border: 1px solid #F1F5F9;
   border-radius: 16px;
-  padding: 16px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+  gap: 13px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 14px -2px rgba(15, 23, 42, 0.04);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   box-sizing: border-box;
 }
 
 .booking-item-card:hover {
-  border-color: #CBD5E1;
+  border-color: #E2E8F0;
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
   transform: translateY(-1px);
 }
@@ -3162,10 +3163,10 @@ svg.lucide {
 }
 
 .booking-type-pill {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 11.5px;
+  font-weight: 600;
   padding: 3px 8px;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
   display: inline-flex;
   align-items: center;
   gap: 3px;
@@ -3173,15 +3174,15 @@ svg.lucide {
 }
 
 .booking-type-pill.recurring {
-  background-color: #EFF6FF;
-  color: #1D4ED8;
-  border: 1px solid #DBEAFE;
+  background-color: #F8FAFC;
+  color: #475569;
+  border: 1px solid #E2E8F0;
 }
 
 .booking-type-pill.onetime {
-  background-color: #FEF3C7;
+  background-color: #FFFBEB;
   color: #92400E;
-  border: 1px solid #FDE68A;
+  border: 1px solid #FEF3C7;
 }
 
 .booking-card-price {
@@ -3191,7 +3192,7 @@ svg.lucide {
 }
 
 .booking-card-price .price-val {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--color-title);
   letter-spacing: -0.2px;
@@ -3206,7 +3207,7 @@ svg.lucide {
 .booking-card-body {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .booking-card-child-name {
@@ -3246,18 +3247,18 @@ svg.lucide {
   white-space: nowrap;
 }
 
-/* Unified Single-Row Schedule Strip (Replaces fragmented pills) */
+/* Clean Unboxed Schedule Row (No gray background or capsule border) */
 .booking-schedule-strip {
   display: flex;
   align-items: center;
-  background-color: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  border-radius: 10px;
-  padding: 7px 12px;
-  gap: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #334155;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  gap: 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #64748B;
   box-sizing: border-box;
 }
 
@@ -3268,34 +3269,37 @@ svg.lucide {
   min-width: 0;
 }
 
-.sched-segment i {
-  width: 13px;
-  height: 13px;
-  color: #64748B;
+.sched-segment i,
+.sched-segment svg {
+  width: 13.5px;
+  height: 13.5px;
+  color: #94A3B8;
   flex-shrink: 0;
 }
 
 .sched-sep {
   width: 1px;
   height: 12px;
-  background-color: #CBD5E1;
+  background-color: #E2E8F0;
   flex-shrink: 0;
 }
 
-/* Driver Identity Strip - Trust & Clear Persona */
+/* Clean Unboxed Driver Strip (Natural card row with faint hairline divider) */
 .booking-driver-strip {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #F8FAFC;
-  border: 1px solid #F1F5F9;
-  border-radius: 10px; /* 16px outer card - 6px = 10px concentric */
-  padding: 8px 10px;
-  transition: background-color 0.15s ease;
+  background-color: transparent;
+  border: none;
+  border-top: 1px solid #F1F5F9;
+  border-radius: 0;
+  padding: 12px 0 0;
+  margin-top: 2px;
+  transition: none;
 }
 
 .booking-driver-strip:hover {
-  background-color: #F1F5F9;
+  background-color: transparent;
 }
 
 .booking-driver-left {
@@ -3306,12 +3310,12 @@ svg.lucide {
 }
 
 .booking-driver-avatar {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid #FFFFFF;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #F1F5F9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
 }
 
@@ -3322,7 +3326,7 @@ svg.lucide {
 }
 
 .booking-driver-name {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--color-title);
   white-space: nowrap;
@@ -3331,7 +3335,7 @@ svg.lucide {
 }
 
 .booking-driver-meta {
-  font-size: 11px;
+  font-size: 11.5px;
   color: #64748B;
   display: flex;
   align-items: center;
@@ -3339,6 +3343,7 @@ svg.lucide {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-top: 1px;
 }
 
 .booking-driver-meta .rating-star {
@@ -3347,10 +3352,10 @@ svg.lucide {
 }
 
 .btn-driver-chat-mini {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: #FFFFFF;
+  background: #F8FAFC;
   border: 1px solid #E2E8F0;
   color: var(--color-primary);
   display: flex;
@@ -3362,9 +3367,9 @@ svg.lucide {
 }
 
 .btn-driver-chat-mini:hover {
-  background: var(--color-primary);
-  color: #FFFFFF;
-  border-color: var(--color-primary);
+  background: #F1F5F9;
+  color: var(--color-secondary);
+  border-color: #CBD5E1;
   transform: scale(1.05);
 }
 
@@ -3373,65 +3378,66 @@ svg.lucide {
   height: 14px;
 }
 
-/* Clear Action Button Grid with Concentric 10px Radius */
+/* Modern Streamlined Action Buttons (No bulky rectangular boxes) */
 .booking-actions-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   padding-top: 4px;
-  border-top: 1px solid #F1F5F9;
+  border-top: none;
 }
 
 .btn-booking-secondary {
-  height: 38px;
-  background-color: #FFFFFF;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 10px; /* 16px - 6px = 10px concentric */
-  color: #334155;
+  height: 36px;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  color: #64748B;
   font-family: var(--font-family);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
+  padding: 0 4px;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
 }
 
 .btn-booking-secondary:hover {
-  background-color: #F8FAFC;
-  border-color: #CBD5E1;
+  background-color: transparent;
   color: var(--color-primary);
 }
 
 .btn-booking-secondary:active {
-  background-color: #F1F5F9;
   transform: scale(0.98);
 }
 
 .btn-booking-primary {
-  height: 38px;
+  height: 36px;
   background: var(--color-primary);
   border: none;
-  border-radius: 10px; /* 16px - 6px = 10px concentric */
+  border-radius: var(--radius-pill);
   color: #FFFFFF;
   font-family: var(--font-family);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  box-shadow: 0 2px 6px rgba(27, 43, 104, 0.16);
+  padding: 0 18px;
+  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.18);
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
 }
 
 .btn-booking-primary:hover {
-  background: #263C8C;
+  background: var(--color-primary-hover);
   box-shadow: 0 4px 12px rgba(27, 43, 104, 0.25);
   transform: translateY(-1px);
 }
@@ -3450,14 +3456,14 @@ svg.lucide {
 }
 
 .btn-booking-primary.ghost {
-  background: #F0F3FA;
+  background: #EFF6FF;
   color: var(--color-primary);
-  border: 1px solid #E2E8F0;
+  border: none;
   box-shadow: none;
 }
 
 .btn-booking-primary.ghost:hover {
-  background: #E2E8F0;
+  background: #DBEAFE;
   color: var(--color-primary-hover);
 }
 
