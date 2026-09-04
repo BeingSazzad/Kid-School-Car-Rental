@@ -594,7 +594,7 @@
         <div class="home-header-row">
           <div class="user-profile-group" onclick="navigateTo('profile')" style="cursor:pointer;">
             <div class="user-avatar-wrap">
-              <img src="/assets/avatar_john.png" alt="Sadia Avatar" class="user-avatar-img" />
+              <img src="/assets/avatar_sadia.jpg" alt="Sadia Avatar" class="user-avatar-img" />
             </div>
             <div class="user-welcome-texts">
               <h2 class="user-greeting">Hello, Sadia</h2>
@@ -807,7 +807,7 @@
               <!-- Driver Contact Bar -->
               <div class="active-driver-contact-row">
                 <div class="driver-mini-info">
-                  <img src="/assets/avatar_john.png" alt="Tariq Ahmed" class="driver-mini-avatar" />
+                  <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-mini-avatar" />
                   <div>
                     <div class="driver-mini-name">Tariq Ahmed • Toyota Sienna</div>
                     <div class="driver-mini-sub">
@@ -1099,42 +1099,60 @@
         <!-- Child Selection Card 1 -->
         <div class="child-select-card selected" id="childCard-arman" onclick="toggleChildSelection('arman')">
           <div class="child-card-left">
-            <img src="/assets/avatar_john.png" alt="Arman" class="child-select-avatar" />
+            <div class="child-monogram-avatar navy">AK</div>
             <div>
-              <div class="child-info-title">Arman Khan</div>
-              <div class="child-info-sub">Grade 4 • Greenfield International School</div>
+              <div class="child-card-title-row">
+                <span class="child-info-title">Arman Khan</span>
+                <span class="child-card-status-badge">Selected</span>
+              </div>
+              <div class="child-meta-row">
+                <span class="child-grade-pill">Grade 4</span>
+                <span class="child-school-text">Greenfield International</span>
+              </div>
             </div>
           </div>
           <div class="checkbox-custom-badge">
-            <i data-lucide="check" style="width:16px;height:16px;"></i>
+            <i data-lucide="check" style="width:15px;height:15px;"></i>
           </div>
         </div>
 
         <!-- Child Selection Card 2 -->
         <div class="child-select-card selected" id="childCard-emma" onclick="toggleChildSelection('emma')">
           <div class="child-card-left">
-            <img src="/assets/avatar_john.png" alt="Emma" class="child-select-avatar" style="border-color: #38BDF8;" />
+            <div class="child-monogram-avatar blue">EK</div>
             <div>
-              <div class="child-info-title">Emma Khan</div>
-              <div class="child-info-sub">Grade 2 • Greenfield International School</div>
+              <div class="child-card-title-row">
+                <span class="child-info-title">Emma Khan</span>
+                <span class="child-card-status-badge">Selected</span>
+              </div>
+              <div class="child-meta-row">
+                <span class="child-grade-pill">Grade 2</span>
+                <span class="child-school-text">Greenfield International</span>
+              </div>
             </div>
           </div>
           <div class="checkbox-custom-badge">
-            <i data-lucide="check" style="width:16px;height:16px;"></i>
+            <i data-lucide="check" style="width:15px;height:15px;"></i>
           </div>
         </div>
 
         <!-- Child Selection Card 3 -->
         <div class="child-select-card" id="childCard-zara" onclick="toggleChildSelection('zara')">
           <div class="child-card-left">
-            <img src="/assets/avatar_john.png" alt="Zara" class="child-select-avatar" style="border-color: #F472B6;" />
+            <div class="child-monogram-avatar orange">ZK</div>
             <div>
-              <div class="child-info-title">Zara Khan</div>
-              <div class="child-info-sub">Kindergarten • Sunshine Pre-school</div>
+              <div class="child-card-title-row">
+                <span class="child-info-title">Zara Khan</span>
+                <span class="child-card-status-badge">Selected</span>
+              </div>
+              <div class="child-meta-row">
+                <span class="child-grade-pill">Pre-K</span>
+                <span class="child-school-text">Sunshine Pre-school</span>
+              </div>
             </div>
           </div>
           <div class="checkbox-custom-badge">
-            <i data-lucide="check" style="width:16px;height:16px;"></i>
+            <i data-lucide="check" style="width:15px;height:15px;"></i>
           </div>
         </div>
 
@@ -1181,70 +1199,12 @@
         <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 2/4</span>
       </div>
 
-      <div class="screen-scroll-body">
-        <!-- Section 1: Trip Frequency (Recurring vs One-time) with Clear Visual Cards -->
-        <div>
-          <label class="form-label" style="margin-bottom: 8px; display: block;">Booking Frequency</label>
-          <div class="frequency-cards-grid">
-            <button type="button" class="freq-option-card active" id="btnFreqRecurring" onclick="setBookingFrequency('recurring')">
-              <div class="freq-icon-wrap">
-                <i data-lucide="repeat"></i>
-              </div>
-              <div class="freq-text-block">
-                <div class="freq-title">Recurring</div>
-                <div class="freq-sub">Weekly school commute (Mon–Fri)</div>
-              </div>
-              <div class="freq-check-icon">
-                <i data-lucide="check-circle-2"></i>
-              </div>
-            </button>
-
-            <button type="button" class="freq-option-card" id="btnFreqOneTime" onclick="setBookingFrequency('onetime')">
-              <div class="freq-icon-wrap">
-                <i data-lucide="calendar"></i>
-              </div>
-              <div class="freq-text-block">
-                <div class="freq-title">One-Time Ride</div>
-                <div class="freq-sub">Single day or emergency trip</div>
-              </div>
-              <div class="freq-check-icon">
-                <i data-lucide="check-circle-2"></i>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <!-- Recurring School Days (Visible when Recurring) -->
-        <div class="weekday-selector-wrap" id="weekdaySelectorBox">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size: 13px; font-weight: 700; color: var(--color-title);">School Commute Days:</span>
-            <span style="font-size: 12px; font-weight: 700; color: var(--color-secondary);">Mon – Fri</span>
-          </div>
-          <div class="weekday-pills-row">
-            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">M</button>
-            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">T</button>
-            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">W</button>
-            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">T</button>
-            <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">F</button>
-            <button type="button" class="day-pill-btn" onclick="this.classList.toggle('active')">S</button>
-            <button type="button" class="day-pill-btn" onclick="this.classList.toggle('active')">S</button>
-          </div>
-        </div>
-
-        <!-- Section 2: Trip Direction -->
-        <div>
-          <label class="form-label" style="margin-bottom: 8px; display: block;">Trip Direction</label>
-          <div class="segmented-control">
-            <button type="button" class="segment-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">⇄ Both-way (Round Trip)</button>
-            <button type="button" class="segment-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">→ One-way (Morning Only)</button>
-          </div>
-        </div>
-
-        <!-- Section 3: Proper Route Locations & Save Location -->
+      <div class="screen-scroll-body" style="display: flex; flex-direction: column; gap: 14px;">
+        <!-- Card 1: Route & Commute Direction (Where & How) -->
         <div class="trip-setup-card">
-          <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-bottom: 10px; display:flex; align-items:center; gap:6px;">
+          <div style="font-size: 13.5px; font-weight: 700; color: var(--color-primary); margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
             <i data-lucide="map-pin" style="width:16px;height:16px;color:var(--color-primary);"></i>
-            <span>Route Locations</span>
+            <span>Route &amp; Commute Direction</span>
           </div>
 
           <!-- Pickup Location Field -->
@@ -1277,6 +1237,15 @@
             </div>
           </div>
 
+          <!-- Trip Direction -->
+          <div class="form-group" style="margin-top: 4px; margin-bottom: 10px;">
+            <label class="form-label-sm">Trip Direction</label>
+            <div class="segmented-control">
+              <button type="button" class="segment-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">⇄ Both-way (Round Trip)</button>
+              <button type="button" class="segment-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">→ One-way (Morning Only)</button>
+            </div>
+          </div>
+
           <!-- Save Location Checkbox Option -->
           <div class="save-location-toggle-row">
             <label class="save-location-label" for="chkSaveLocations">
@@ -1286,23 +1255,63 @@
           </div>
         </div>
 
-        <!-- Section 4: Real Date & Time Selection -->
+        <!-- Card 2: Schedule & Timing (When & How Often) -->
         <div class="trip-setup-card">
-          <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-bottom: 10px; display:flex; align-items:center; gap:6px;">
-            <i data-lucide="clock" style="width:16px;height:16px;color:var(--color-primary);"></i>
-            <span>Date &amp; Schedule Times</span>
+          <div style="font-size: 13.5px; font-weight: 700; color: var(--color-primary); margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
+            <i data-lucide="calendar" style="width:16px;height:16px;color:var(--color-primary);"></i>
+            <span>Schedule &amp; Timing</span>
           </div>
 
-          <!-- Single Trip Date Picker (Visible when One-Time Ride is chosen) -->
-          <div class="form-group" id="oneTimeDatePickerBox" style="display: none; margin-bottom: 12px;">
-            <label class="form-label-sm">Ride Date</label>
-            <div class="input-with-icon">
-              <i data-lucide="calendar" style="width:18px;height:18px;color:#64748B;"></i>
-              <input type="date" class="form-input" id="setupTripDate" value="2026-05-25" onchange="window.appState.bookingDraft.tripDate = this.value" />
+          <!-- Booking Frequency Option Cards -->
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label-sm">Booking Frequency</label>
+            <div class="frequency-cards-grid">
+              <button type="button" class="freq-option-card active" id="btnFreqRecurring" onclick="setBookingFrequency('recurring')">
+                <div class="freq-icon-wrap">
+                  <i data-lucide="repeat"></i>
+                </div>
+                <div class="freq-text-block">
+                  <div class="freq-title">Recurring</div>
+                  <div class="freq-sub">Weekly school commute (Mon–Fri)</div>
+                </div>
+                <div class="freq-check-icon">
+                  <i data-lucide="check-circle-2"></i>
+                </div>
+              </button>
+
+              <button type="button" class="freq-option-card" id="btnFreqOneTime" onclick="setBookingFrequency('onetime')">
+                <div class="freq-icon-wrap">
+                  <i data-lucide="calendar"></i>
+                </div>
+                <div class="freq-text-block">
+                  <div class="freq-title">One-Time Ride</div>
+                  <div class="freq-sub">Single day or emergency trip</div>
+                </div>
+                <div class="freq-check-icon">
+                  <i data-lucide="check-circle-2"></i>
+                </div>
+              </button>
             </div>
           </div>
 
-          <!-- Recurring Start Date (Visible when Recurring is chosen) -->
+          <!-- Commute Days (Visible when Recurring) -->
+          <div class="weekday-selector-wrap" id="weekdaySelectorBox" style="margin-bottom: 12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+              <span class="form-label-sm" style="margin-bottom:0;">School Commute Days:</span>
+              <span style="font-size: 11.5px; font-weight: 700; color: var(--color-secondary);">Mon – Fri</span>
+            </div>
+            <div class="weekday-pills-row">
+              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">M</button>
+              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">T</button>
+              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">W</button>
+              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">T</button>
+              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">F</button>
+              <button type="button" class="day-pill-btn" onclick="this.classList.toggle('active')">S</button>
+              <button type="button" class="day-pill-btn" onclick="this.classList.toggle('active')">S</button>
+            </div>
+          </div>
+
+          <!-- Start Date / Single Date Field -->
           <div class="form-group" id="recurringStartDateBox" style="margin-bottom: 12px;">
             <label class="form-label-sm">Schedule Starts From</label>
             <div class="input-with-icon">
@@ -1311,7 +1320,15 @@
             </div>
           </div>
 
-          <!-- Time Pickers Grid -->
+          <div class="form-group" id="oneTimeDatePickerBox" style="display: none; margin-bottom: 12px;">
+            <label class="form-label-sm">Ride Date</label>
+            <div class="input-with-icon">
+              <i data-lucide="calendar" style="width:18px;height:18px;color:#64748B;"></i>
+              <input type="date" class="form-input" id="setupTripDate" value="2026-05-25" onchange="window.appState.bookingDraft.tripDate = this.value" />
+            </div>
+          </div>
+
+          <!-- Commute Times Grid -->
           <div class="times-grid">
             <!-- Outbound Morning Pickup Time -->
             <div class="time-picker-box">
@@ -1333,7 +1350,7 @@
           </div>
         </div>
 
-        <div style="margin-top: 14px; margin-bottom: 20px;">
+        <div style="margin-top: 4px; margin-bottom: 24px;">
           <button type="button" class="btn-primary" onclick="proceedFromTripSetup()">Search Verified Providers</button>
         </div>
       </div>
@@ -1390,7 +1407,7 @@
         <div class="provider-result-card"
           onclick="selectProviderAndReview('Tariq Ahmed', 'Toyota Sienna', '4.9', '$120')">
           <div class="provider-top-row">
-            <img src="/assets/avatar_john.png" alt="Tariq Ahmed" class="provider-card-avatar" />
+            <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="provider-card-avatar" />
             <div class="provider-name-block">
               <div class="provider-name-verified">
                 <span>Tariq Ahmed</span>
@@ -1421,7 +1438,7 @@
         <div class="provider-result-card"
           onclick="selectProviderAndReview('Farhana Yasmin', 'Honda Odyssey', '5.0', '$135')">
           <div class="provider-top-row">
-            <img src="/assets/avatar_john.png" alt="Farhana Yasmin" class="provider-card-avatar"
+            <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="provider-card-avatar"
               style="border-color: #38BDF8;" />
             <div class="provider-name-block">
               <div class="provider-name-verified">
@@ -1453,7 +1470,7 @@
         <div class="provider-result-card"
           onclick="selectProviderAndReview('Kabir Hossain', 'Nissan Rogue', '4.8', '$110')">
           <div class="provider-top-row">
-            <img src="/assets/avatar_john.png" alt="Kabir Hossain" class="provider-card-avatar" />
+            <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="provider-card-avatar" />
             <div class="provider-name-block">
               <div class="provider-name-verified">
                 <span>Kabir Hossain</span>
@@ -1484,7 +1501,7 @@
         <div class="provider-result-card"
           onclick="selectProviderAndReview('Sarah Jenkins (WalkShare)', 'Walking School Bus', '4.9', '$75')">
           <div class="provider-top-row">
-            <img src="/assets/avatar_john.png" alt="Sarah Jenkins" class="provider-card-avatar"
+            <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar"
               style="border-color: #10B981;" />
             <div class="provider-name-block">
               <div class="provider-name-verified">
@@ -1546,7 +1563,7 @@
       <div class="screen-scroll-body">
         <!-- Hero -->
         <div class="provider-details-hero">
-          <img src="/assets/avatar_john.png" alt="Tariq Ahmed" class="provider-large-avatar" id="detailsProviderImg" />
+          <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="provider-large-avatar" id="detailsProviderImg" />
           <h3 style="font-size: 20px; font-weight: 800; color: var(--color-title);" id="detailsProviderName">Tariq Ahmed
           </h3>
           <p style="font-size: 13px; color: var(--color-body);" id="detailsProviderVehicle">2023 Toyota Sienna (Clean
@@ -1914,7 +1931,7 @@
           <div class="details-section-label">Assigned Driver</div>
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <img src="/assets/avatar_john.png" alt="Driver"
+              <img src="/assets/avatar_tariq.jpg" alt="Driver"
                 style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;" />
               <div>
                 <div style="font-size: 15px; font-weight: 800; color: var(--color-title);" id="detailProviderName">Tariq
@@ -2116,7 +2133,7 @@
           <!-- Driver Mini Profile & Quick Contact -->
           <div class="active-driver-contact-row">
             <div class="driver-mini-info">
-              <img src="/assets/avatar_john.png" alt="Tariq Ahmed" class="driver-mini-avatar" />
+              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-mini-avatar" />
               <div>
                 <div class="driver-mini-name">Tariq Ahmed</div>
                 <div class="driver-mini-sub">Toyota Sienna • SCH-4091</div>
@@ -2167,7 +2184,7 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <div style="display: flex; align-items: center; gap: 10px;">
-          <img src="/assets/avatar_john.png" alt="Tariq"
+          <img src="/assets/avatar_tariq.jpg" alt="Tariq"
             style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;" />
           <div>
             <div style="font-size: 15px; font-weight: 800; color: var(--color-title);">Tariq Ahmed</div>
@@ -2226,36 +2243,13 @@
         </div>
 
         <!-- Chat Input Bar -->
-        <form onsubmit="handleSendChatMessage(event)" class="chat-input-bar">
-          <input type="text" class="chat-input-field" id="chatInputField" placeholder="Type a message to Tariq..." />
-          <button type="submit" class="chat-send-btn" aria-label="Send">
+        <form onsubmit="handleSendChatMessage(event)" class="chat-input-bar" id="chatInputForm">
+          <input type="text" class="chat-input-field" id="chatInputField" placeholder="Type a message to Tariq..." autocomplete="off" />
+          <button type="submit" class="chat-send-btn" aria-label="Send Message">
             <i data-lucide="send" style="width:18px;height:18px;"></i>
           </button>
         </form>
       </div>
-
-      <nav class="bottom-tab-bar">
-        <button class="tab-item" onclick="navigateTo('home')">
-          <i data-lucide="home"></i>
-          <span>Home</span>
-        </button>
-        <button class="tab-item" onclick="navigateTo('bookings')">
-          <i data-lucide="calendar"></i>
-          <span>Bookings</span>
-        </button>
-        <button class="tab-item" onclick="navigateTo('tracking')">
-          <i data-lucide="navigation"></i>
-          <span>Tracking</span>
-        </button>
-        <button class="tab-item active" onclick="navigateTo('messages')">
-          <i data-lucide="message-square"></i>
-          <span>Messages</span>
-        </button>
-        <button class="tab-item" onclick="navigateTo('profile')">
-          <i data-lucide="user"></i>
-          <span>Profile</span>
-        </button>
-      </nav>
 
       <div class="home-indicator"></div>
     </section>
@@ -2409,9 +2403,9 @@
       <div class="screen-scroll-body">
         <!-- Parent Profile Header -->
         <div class="profile-user-card" onclick="navigateTo('profilePersonalInfo')" style="cursor: pointer;">
-          <div style="position: relative;">
-            <img src="/assets/avatar_john.png" alt="Sadia Khan" class="profile-avatar-lg" />
-            <span style="position: absolute; bottom: 0; right: 0; background: var(--color-primary); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #fff;">
+          <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0;">
+            <img src="/assets/avatar_sadia.jpg" alt="Sadia Khan" class="profile-avatar-lg" />
+            <span style="position: absolute; bottom: 0; right: 0; background: var(--color-primary); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
               <i data-lucide="edit-2" style="width:11px;height:11px;"></i>
             </span>
           </div>
@@ -2576,7 +2570,7 @@
 
       <div class="screen-scroll-body"
         style="align-items: center; justify-content: center; text-align: center; gap: 16px;">
-        <img src="/assets/avatar_john.png" alt="Tariq Ahmed" class="provider-large-avatar" style="margin-top: 30px;" />
+        <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="provider-large-avatar" style="margin-top: 30px;" />
 
         <div>
           <h2 style="font-size: 22px; font-weight: 800; color: var(--color-title);">Rate Tariq Ahmed</h2>
@@ -2641,7 +2635,19 @@
       </div>
 
       <div class="screen-scroll-body" style="padding-top: 8px;">
-        <div class="notifications-feed-list">
+        <!-- Notification Filter Tabs (All / Unread) -->
+        <div class="notif-filter-tabs-row">
+          <button type="button" class="notif-filter-tab-btn active" id="notifTabAll" onclick="setNotifFilter('all')">
+            <span>All</span>
+            <span class="notif-filter-count" id="notifBadgeAll">4</span>
+          </button>
+          <button type="button" class="notif-filter-tab-btn" id="notifTabUnread" onclick="setNotifFilter('unread')">
+            <span>Unread</span>
+            <span class="notif-filter-count unread" id="notifBadgeUnread">2</span>
+          </button>
+        </div>
+
+        <div class="notifications-feed-list" id="notifFeedList">
           <div class="notification-card unread" onclick="navigateTo('tracking')">
             <span class="notif-indicator-dot"></span>
             <div class="notif-content-block">
@@ -2715,7 +2721,7 @@
         <div style="display: flex; flex-direction: column; align-items: center; margin: 8px 0 14px;">
           <div style="position: relative;">
             <div id="avatarPreviewContainer" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12);">
-              <img src="/assets/avatar_john.png" alt="Sadia Khan" style="width:100%;height:100%;object-fit:cover;" />
+              <img src="/assets/avatar_sadia.jpg" alt="Sadia Khan" style="width:100%;height:100%;object-fit:cover;" />
             </div>
             <button onclick="triggerPhotoUpload()" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-primary); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
               <i data-lucide="camera" style="width:13px;height:13px;"></i>
@@ -3299,6 +3305,61 @@
           <div class="about-stat-col">
             <div class="about-stat-val">4.9 ★</div>
             <div class="about-stat-lbl">Parent Trust</div>
+          </div>
+        </div>
+
+        <!-- App Overview (What is Home2School) -->
+        <div class="details-section-box" style="text-align: left;">
+          <div class="details-section-label" style="display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="info" style="width: 15px; height: 15px; color: var(--color-primary);"></i>
+            <span>What is Home2School?</span>
+          </div>
+          <p style="font-size: 13px; color: #334155; line-height: 1.6; margin-bottom: 10px;">
+            <strong>Home2School</strong> is a specialized, safety-certified child transportation and school commute platform designed specifically for busy families. It gives parents a reliable, stress-free alternative to crowded buses and hectic morning drop-offs.
+          </p>
+          <p style="font-size: 13px; color: #475569; line-height: 1.6;">
+            Whether you need daily round-trip commutes, morning-only drop-offs, or a neighborhood walking school escort, Home2School matches your family with background-checked community drivers who treat your children like family.
+          </p>
+        </div>
+
+        <!-- How It Works Card -->
+        <div class="details-section-box" style="text-align: left;">
+          <div class="details-section-label" style="display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="route" style="width: 15px; height: 15px; color: var(--color-primary);"></i>
+            <span>How It Works for Parents</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 6px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <span style="width: 22px; height: 22px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</span>
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #0F172A;">Register Child Profiles</div>
+                <div style="font-size: 12px; color: #64748B;">Add school names, dismissal schedules, booster seat requirements, and teacher hand-off notes.</div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <span style="width: 22px; height: 22px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</span>
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #0F172A;">Set Commute Schedule</div>
+                <div style="font-size: 12px; color: #64748B;">Choose recurring weekly days (Mon–Fri) or one-time rides, morning pickup times, and return dismissal times.</div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <span style="width: 22px; height: 22px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</span>
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #0F172A;">Match with Verified Drivers</div>
+                <div style="font-size: 12px; color: #64748B;">Review licensed neighborhood drivers with background checks, ratings, vehicle capacity, and sibling discounts.</div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <span style="width: 22px; height: 22px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</span>
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #0F172A;">Live GPS &amp; Safe Gate Hand-Off</div>
+                <div style="font-size: 12px; color: #64748B;">Track the vehicle in real-time, get instant departure/arrival alerts, and communicate directly with your driver.</div>
+              </div>
+            </div>
           </div>
         </div>
 

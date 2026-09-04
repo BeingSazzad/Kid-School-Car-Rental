@@ -52,7 +52,8 @@ window.appState = {
     name: 'Sadia Khan',
     phone: '+1 (416) 555-0192',
     email: 'sadia.khan@example.com',
-    role: 'Mother'
+    role: 'Mother',
+    photo: '/assets/avatar_sadia.jpg'
   },
   children: [
     { id: 'arman', name: 'Arman Khan', grade: 'Grade 4 (9 yrs)', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Wears booster seat' },
@@ -60,10 +61,10 @@ window.appState = {
     { id: 'zara', name: 'Zara Khan', grade: 'Kindergarten (5 yrs)', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate' }
   ],
   providers: [
-    { id: 'tariq', name: 'Tariq Ahmed', vehicle: 'Toyota Sienna (2023)', plate: 'SCH-4091', rating: 4.9, reviewsCount: 128, seats: 4, baseWeekly: 120, photo: '/assets/avatar_john.png', phone: '+1 (416) 555-0182' },
-    { id: 'farhana', name: 'Farhana Yasmin', vehicle: 'Honda Odyssey (2024)', plate: 'KID-2810', rating: 5.0, reviewsCount: 94, seats: 5, baseWeekly: 135, photo: '/assets/avatar_john.png', phone: '+1 (416) 555-0183' },
-    { id: 'kabir', name: 'Kabir Hossain', vehicle: 'Nissan Rogue (2022)', plate: 'SCH-9102', rating: 4.8, reviewsCount: 62, seats: 2, baseWeekly: 110, photo: '/assets/avatar_john.png', phone: '+1 (416) 555-0184' },
-    { id: 'sarah', name: 'Sarah Jenkins (WalkShare)', vehicle: 'Walking School Bus Escort', plate: 'VERIFIED-WALK', rating: 4.9, reviewsCount: 45, seats: 3, baseWeekly: 75, photo: '/assets/avatar_john.png', phone: '+1 (416) 555-0185' }
+    { id: 'tariq', name: 'Tariq Ahmed', vehicle: 'Toyota Sienna (2023)', plate: 'SCH-4091', rating: 4.9, reviewsCount: 128, seats: 4, baseWeekly: 120, photo: '/assets/avatar_tariq.jpg', phone: '+1 (416) 555-0182' },
+    { id: 'farhana', name: 'Farhana Yasmin', vehicle: 'Honda Odyssey (2024)', plate: 'KID-2810', rating: 5.0, reviewsCount: 94, seats: 5, baseWeekly: 135, photo: '/assets/avatar_farhana.jpg', phone: '+1 (416) 555-0183' },
+    { id: 'kabir', name: 'Kabir Hossain', vehicle: 'Nissan Rogue (2022)', plate: 'SCH-9102', rating: 4.8, reviewsCount: 62, seats: 2, baseWeekly: 110, photo: '/assets/avatar_kabir.jpg', phone: '+1 (416) 555-0184' },
+    { id: 'sarah', name: 'Sarah Jenkins (WalkShare)', vehicle: 'Walking School Bus Escort', plate: 'VERIFIED-WALK', rating: 4.9, reviewsCount: 45, seats: 3, baseWeekly: 75, photo: '/assets/avatar_sarah.jpg', phone: '+1 (416) 555-0185' }
   ],
   selectedChildIds: ['arman', 'emma'],
   bookingDraft: {
@@ -329,7 +330,7 @@ window.toggleChildSelection = function (childId) {
 
   if (idx > -1) {
     if (list.length === 1) {
-      alert('Please select at least one child for the trip.');
+      if (window.showToast) window.showToast('Please keep at least one child selected for the commute', 'info');
       return;
     }
     list.splice(idx, 1);
@@ -355,16 +356,16 @@ window.setTripDirection = function (dir) {
   window.appState.bookingDraft.direction = dir;
   const btnOne = document.getElementById('btnDirOneWay');
   const btnBoth = document.getElementById('btnDirBothWay');
-  const returnCard = document.getElementById('returnLegCard');
+  const returnTimeBox = document.getElementById('returnTimePickerBox');
 
   if (dir === 'oneway') {
     btnOne?.classList.add('active');
     btnBoth?.classList.remove('active');
-    if (returnCard) returnCard.style.display = 'none';
+    if (returnTimeBox) returnTimeBox.style.display = 'none';
   } else {
     btnOne?.classList.remove('active');
     btnBoth?.classList.add('active');
-    if (returnCard) returnCard.style.display = 'flex';
+    if (returnTimeBox) returnTimeBox.style.display = 'block';
   }
 };
 
@@ -373,16 +374,101 @@ window.setBookingFrequency = function (freq) {
   const btnOneTime = document.getElementById('btnFreqOneTime');
   const btnRec = document.getElementById('btnFreqRecurring');
   const weekdaysBox = document.getElementById('weekdaySelectorBox');
+  const oneTimeBox = document.getElementById('oneTimeDatePickerBox');
+  const recDateBox = document.getElementById('recurringStartDateBox');
 
   if (freq === 'onetime') {
     btnOneTime?.classList.add('active');
     btnRec?.classList.remove('active');
     if (weekdaysBox) weekdaysBox.style.display = 'none';
+    if (oneTimeBox) oneTimeBox.style.display = 'block';
+    if (recDateBox) recDateBox.style.display = 'none';
   } else {
     btnOneTime?.classList.remove('active');
     btnRec?.classList.add('active');
     if (weekdaysBox) weekdaysBox.style.display = 'flex';
+    if (oneTimeBox) oneTimeBox.style.display = 'none';
+    if (recDateBox) recDateBox.style.display = 'block';
   }
+};
+
+window.selectQuickLocation = function (type, address, btnEl) {
+  if (type === 'pickup') {
+    const input = document.getElementById('setupPickupLocation');
+    if (input) input.value = address;
+    window.appState.bookingDraft.pickupLocation = address;
+    if (btnEl) {
+      const parent = btnEl.parentElement;
+      if (parent) {
+        parent.querySelectorAll('.quick-loc-chip').forEach(c => c.classList.remove('active'));
+      }
+      btnEl.classList.add('active');
+    }
+  } else if (type === 'school') {
+    const input = document.getElementById('setupSchoolLocation');
+    if (input) input.value = address;
+    window.appState.bookingDraft.schoolLocation = address;
+    if (btnEl) {
+      const parent = btnEl.parentElement;
+      if (parent) {
+        parent.querySelectorAll('.quick-loc-chip').forEach(c => c.classList.remove('active'));
+      }
+      btnEl.classList.add('active');
+    }
+  }
+};
+
+window.updateTripTime = function (type, timeVal) {
+  const formatTime = (t) => {
+    if (!t) return t;
+    const parts = t.split(':');
+    if (parts.length < 2) return t;
+    let h = parseInt(parts[0], 10);
+    const m = parts[1];
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return `${h < 10 ? '0' + h : h}:${m} ${ampm}`;
+  };
+
+  if (type === 'morning' || type === 'outbound') {
+    window.appState.bookingDraft.outboundTime = formatTime(timeVal);
+  } else if (type === 'return') {
+    window.appState.bookingDraft.returnTime = formatTime(timeVal);
+  }
+};
+
+window.proceedFromTripSetup = function () {
+  const pickupEl = document.getElementById('setupPickupLocation');
+  const schoolEl = document.getElementById('setupSchoolLocation');
+  const morningTimeEl = document.getElementById('setupMorningTime');
+  const returnTimeEl = document.getElementById('setupReturnTime');
+
+  if (pickupEl && pickupEl.value.trim()) {
+    window.appState.bookingDraft.pickupLocation = pickupEl.value.trim();
+  }
+  if (schoolEl && schoolEl.value.trim()) {
+    window.appState.bookingDraft.schoolLocation = schoolEl.value.trim();
+  }
+
+  const formatTime = (t) => {
+    if (!t) return t;
+    const parts = t.split(':');
+    if (parts.length < 2) return t;
+    let h = parseInt(parts[0], 10);
+    const m = parts[1];
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return `${h < 10 ? '0' + h : h}:${m} ${ampm}`;
+  };
+
+  if (morningTimeEl && morningTimeEl.value) {
+    window.appState.bookingDraft.outboundTime = formatTime(morningTimeEl.value);
+  }
+  if (returnTimeEl && returnTimeEl.value) {
+    window.appState.bookingDraft.returnTime = formatTime(returnTimeEl.value);
+  }
+
+  window.navigateTo('bookingSearchProviders');
 };
 
 /* ==========================================================
@@ -448,10 +534,26 @@ function renderBookingSummary() {
 
   if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
   if (dirEl) dirEl.textContent = draft.direction === 'bothway' ? '⇄ Both-way (Round Trip)' : '→ One-way';
-  if (outboundEl) outboundEl.textContent = `${draft.pickupLocation.split(' ')[0]} → School (${draft.outboundTime})`;
+  const cleanLoc = (loc) => {
+    if (!loc) return 'Home';
+    if (loc.includes('Home')) return 'Home';
+    if (loc.includes('Willowbrook')) return "Grandma's";
+    return loc.split(',')[0].trim();
+  };
+  const cleanSchool = (sch) => {
+    if (!sch) return 'School';
+    if (sch.includes('Greenfield')) return 'Greenfield';
+    if (sch.includes('Sunshine')) return 'Sunshine';
+    return sch.split(',')[0].trim();
+  };
+
+  const pickupShort = cleanLoc(draft.pickupLocation);
+  const schoolShort = cleanSchool(draft.schoolLocation);
+
+  if (outboundEl) outboundEl.textContent = `${pickupShort} → ${schoolShort} (${draft.outboundTime})`;
   if (returnEl) {
     if (draft.direction === 'bothway') {
-      returnEl.textContent = `School → ${draft.pickupLocation.split(' ')[0]} (${draft.returnTime})`;
+      returnEl.textContent = `${schoolShort} → ${pickupShort} (${draft.returnTime})`;
       returnEl.parentElement.style.display = 'flex';
     } else {
       returnEl.parentElement.style.display = 'none';
@@ -943,11 +1045,31 @@ window.handlePhotoUpload = function (event) {
   }
 };
 
+window.showToast = function (msg, type = 'success') {
+  let toast = document.getElementById('h2sToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'h2sToast';
+    toast.className = 'h2s-toast-notification';
+    document.body.appendChild(toast);
+  }
+  const iconHtml = type === 'success' ? '✓' : 'ℹ';
+  toast.innerHTML = `<span style="color:#38BDF8;font-weight:800;">${iconHtml}</span> <span>${msg}</span>`;
+  toast.classList.add('visible');
+
+  if (window._toastTimeout) clearTimeout(window._toastTimeout);
+  window._toastTimeout = setTimeout(() => {
+    toast.classList.remove('visible');
+  }, 2400);
+};
+
 window.addEmergencyContact = function () {
-  const name = prompt('Enter Contact Full Name:');
-  if (!name) return;
-  const rel = prompt('Relationship (e.g. Aunt, Neighbor, Co-parent):') || 'Guardian';
-  const phone = prompt('Mobile Phone Number:') || '+1 (416) 555-0000';
+  const contacts = [
+    { name: 'Farah Ahmed', rel: 'Aunt', phone: '+1 (416) 555-0199' },
+    { name: 'Rashid Khan', rel: 'Co-parent', phone: '+1 (416) 555-0144' },
+    { name: 'Dr. Sarah Lin', rel: 'Pediatrician', phone: '+1 (416) 555-0177' }
+  ];
+  const item = contacts[Math.floor(Math.random() * contacts.length)];
 
   const container = document.getElementById('emergencyContactsListWrap');
   if (container) {
@@ -959,23 +1081,25 @@ window.addEmergencyContact = function () {
           <i data-lucide="phone-call" style="width:18px;height:18px;color:var(--color-primary);"></i>
         </div>
         <div>
-          <div class="grouped-row-title">${name} (${rel})</div>
-          <div class="grouped-row-sub">${phone} • Verified</div>
+          <div class="grouped-row-title">${item.name} (${item.rel})</div>
+          <div class="grouped-row-sub">${item.phone} • Verified</div>
         </div>
       </div>
-      <a href="tel:${phone}" class="grouped-row-action" style="text-decoration:none;">Call</a>
+      <a href="tel:${item.phone}" class="grouped-row-action" style="text-decoration:none;">Call</a>
     `;
     container.appendChild(row);
     if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
-    alert(`✓ Emergency contact ${name} added successfully.`);
+    window.showToast(`✓ Emergency contact ${item.name} added`);
   }
 };
 
 window.addNewAddress = function () {
-  const label = prompt('Location Label (e.g. Tutor, Soccer Field):');
-  if (!label) return;
-  const address = prompt('Full Street Address:');
-  if (!address) return;
+  const presets = [
+    { label: 'Music & Arts Academy', address: '120 Richmond St West, Toronto, ON' },
+    { label: 'North York Soccer Club', address: '5000 Yonge St, Toronto, ON' },
+    { label: 'Community Library', address: '88 Bloor St East, Toronto, ON' }
+  ];
+  const item = presets[Math.floor(Math.random() * presets.length)];
 
   const container = document.getElementById('savedLocationsListWrap');
   if (container) {
@@ -987,22 +1111,20 @@ window.addNewAddress = function () {
           <i data-lucide="map-pin" style="width:18px;height:18px;color:var(--color-primary);"></i>
         </div>
         <div>
-          <div class="grouped-row-title">${label}</div>
-          <div class="grouped-row-sub">${address}</div>
+          <div class="grouped-row-title">${item.label}</div>
+          <div class="grouped-row-sub">${item.address}</div>
         </div>
       </div>
-      <button class="grouped-row-action" onclick="alert('Location details loaded')">Edit</button>
+      <button class="grouped-row-action" onclick="window.showToast('Location selected')">Edit</button>
     `;
     container.appendChild(row);
     if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
-    alert(`✓ Location "${label}" saved successfully.`);
+    window.showToast(`✓ Saved location "${item.label}" added`);
   }
 };
 
 window.addNewPaymentMethod = function () {
-  const cardNum = prompt('Enter Card Number (Demo):', '•••• •••• •••• 5592');
-  if (!cardNum) return;
-  alert('✓ New payment method added and verified with secure 3D-Secure bank protocol.');
+  window.showToast('✓ Visa •••• 5592 verified & added to wallet');
 };
 
 window.savePersonalInfo = function () {
@@ -1022,28 +1144,52 @@ window.savePersonalInfo = function () {
   window.navigateTo('profile');
 };
 
-window.markNotificationsAsRead = function () {
-  document.querySelectorAll('.notification-card.unread').forEach(el => {
-    el.classList.remove('unread');
-  });
-  const dot = document.querySelector('.unread-badge-dot');
-  if (dot) dot.style.display = 'none';
-  alert('All notifications marked as read.');
+window.setNotifFilter = function (filter) {
+  const btnAll = document.getElementById('notifTabAll');
+  const btnUnread = document.getElementById('notifTabUnread');
+  const cards = document.querySelectorAll('#notifFeedList .notification-card');
+
+  if (filter === 'unread') {
+    btnAll?.classList.remove('active');
+    btnUnread?.classList.add('active');
+    cards.forEach(card => {
+      if (card.classList.contains('unread')) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  } else {
+    btnAll?.classList.add('active');
+    btnUnread?.classList.remove('active');
+    cards.forEach(card => {
+      card.style.display = 'flex';
+    });
+  }
 };
 
-window.filterNotifications = function (category, btn) {
-  const parent = btn?.closest('.filters-scroll-bar');
-  parent?.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
-  btn?.classList.add('active');
+window.filterNotifications = window.setNotifFilter;
 
-  const cards = document.querySelectorAll('.notification-card');
-  cards.forEach(card => {
-    if (category === 'all' || card.dataset.category === category) {
-      card.style.display = 'flex';
-    } else {
-      card.style.display = 'none';
-    }
+window.markNotificationsAsRead = function () {
+  const cards = document.querySelectorAll('#notifFeedList .notification-card.unread');
+  cards.forEach(el => {
+    el.classList.remove('unread');
   });
+
+  const unreadBadge = document.getElementById('notifBadgeUnread');
+  if (unreadBadge) unreadBadge.textContent = '0';
+
+  const dot = document.querySelector('.unread-badge-dot');
+  if (dot) dot.style.display = 'none';
+
+  const btnUnread = document.getElementById('notifTabUnread');
+  if (btnUnread && btnUnread.classList.contains('active')) {
+    window.setNotifFilter('unread');
+  }
+
+  if (window.showToast) {
+    window.showToast('All notifications marked as read');
+  }
 };
 
 window.toggleFaq = function (headerEl) {

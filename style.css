@@ -2000,33 +2000,88 @@ svg.lucide {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* 6. Multi-Select Child Cards */
+/* 6. Multi-Select Child Cards with High-End Visual Hierarchy */
 .child-select-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  background-color: var(--color-fade);
-  border: 1.5px solid var(--color-stroke);
+  background-color: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
   border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .child-select-card:hover {
-  border-color: #CBD5E1;
+  border-color: #94A3B8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .child-select-card.selected {
-  background-color: #F8FAFC;
-  border-color: var(--color-primary);
-  box-shadow: 0 2px 10px rgba(27, 43, 104, 0.08);
+  background-color: #F0FDF4;
+  border: 2px solid #16A34A;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.12);
 }
 
 .child-card-left {
   display: flex;
   align-items: center;
   gap: 14px;
+}
+
+.child-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.child-info-title {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--color-title);
+}
+
+.child-card-status-badge {
+  display: none;
+  font-size: 11px;
+  font-weight: 700;
+  color: #16A34A;
+  background: #DCFCE7;
+  padding: 1px 8px;
+  border-radius: 99px;
+}
+
+.child-select-card.selected .child-card-status-badge {
+  display: inline-block;
+}
+
+.child-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.child-grade-pill {
+  font-size: 11px;
+  font-weight: 700;
+  background: #F1F5F9;
+  color: #475569;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.child-select-card.selected .child-grade-pill {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.child-school-text {
+  font-size: 12.5px;
+  color: var(--color-body);
 }
 
 .child-select-avatar {
@@ -2038,34 +2093,24 @@ svg.lucide {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.child-info-title {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--color-title);
-  margin-bottom: 2px;
-}
-
-.child-info-sub {
-  font-size: 12.5px;
-  color: var(--color-body);
-}
-
 .checkbox-custom-badge {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
   border: 2px solid #CBD5E1;
   background-color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
 }
 
 .child-select-card.selected .checkbox-custom-badge {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: #16A34A;
+  border-color: #16A34A;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
 }
 
 /* Passenger Count Pill */
@@ -2641,16 +2686,24 @@ svg.lucide {
 }
 
 /* 13. Messages & Chat Screen */
-.chat-container {
+#screen-messages {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+#screen-messages .chat-container {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background-color: #F8FAFC;
   overflow: hidden;
 }
 
-.chat-messages-area {
+#screen-messages .chat-messages-area {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 16px var(--screen-padding-h);
   display: flex;
@@ -2741,36 +2794,50 @@ svg.lucide {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px var(--screen-padding-h) 20px;
+  padding: 10px var(--screen-padding-h) 16px;
   background-color: #FFFFFF;
   border-top: 1px solid var(--color-stroke);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
 }
 
 .chat-input-field {
   flex: 1;
   height: 44px;
   background-color: var(--color-fade);
-  border: 1px solid var(--color-stroke);
+  border: 1.5px solid var(--color-stroke);
   border-radius: var(--radius-pill);
   padding: 0 16px;
   font-family: var(--font-family);
   font-size: 14px;
   color: var(--color-title);
   outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.chat-input-field:focus {
+  border-color: var(--color-primary);
+  background-color: #FFFFFF;
 }
 
 .chat-send-btn {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: var(--color-secondary);
+  background-color: var(--color-primary);
   color: #FFFFFF;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s ease;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.chat-send-btn:hover {
+  background-color: #172554;
+  transform: scale(1.05);
 }
 
 .chat-send-btn:active {
@@ -3722,6 +3789,68 @@ svg.lucide {
 /* ==========================================================
    Notifications Feed (Modern Minimal Standard)
    ========================================================== */
+.notif-filter-tabs-row {
+  display: flex;
+  background-color: var(--color-fade);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.notif-filter-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-body);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.notif-filter-tab-btn.active {
+  background-color: #FFFFFF;
+  color: var(--color-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.notif-filter-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 800;
+  background: #E2E8F0;
+  color: #475569;
+}
+
+.notif-filter-tab-btn.active .notif-filter-count {
+  background: var(--color-fade);
+  color: var(--color-primary);
+}
+
+.notif-filter-count.unread {
+  background: #EFF6FF;
+  color: #2563EB;
+}
+
+.notif-filter-tab-btn.active .notif-filter-count.unread {
+  background: #2563EB;
+  color: #FFFFFF;
+}
+
 .notifications-feed-list {
   display: flex;
   flex-direction: column;
@@ -4309,6 +4438,37 @@ svg.lucide {
 .form-textarea::placeholder {
   color: var(--color-body);
   font-weight: 400;
+}
+
+/* ==========================================================
+   Modern Elegant Toast Notification
+   ========================================================== */
+.h2s-toast-notification {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #FFFFFF;
+  padding: 10px 18px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.22);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.h2s-toast-notification.visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
 }
 
 
