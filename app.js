@@ -652,6 +652,8 @@ window.navigateTo = function (screenName) {
     renderDriverSetup();
   } else if (screenName === 'driverProfile') {
     renderDriverProfile();
+  } else if (screenName === 'tracking') {
+    if (window.renderTrackingScreen) window.renderTrackingScreen();
   }
 
   // Update Bottom Tab Bar highlights
@@ -1833,8 +1835,166 @@ function renderBookingsList(tab) {
 }
 
 /* ==========================================================
-   Live Tracking: Progressive Lifecycle Stepper
+   Live Tracking: Realistic Leaflet Map Engine & Lifecycle
    ========================================================== */
+window.renderTrackingScreen = function () {
+  setTimeout(() => {
+    window.initTrackingMap();
+  }, 80);
+};
+
+window.initTrackingMap = function () {
+  const mapContainer = document.getElementById('liveLeafletMap');
+  if (!mapContainer) return;
+
+  if (window.L && typeof window.L.map === 'function') {
+    if (window.trackingMapInstance) {
+      try {
+        window.trackingMapInstance.invalidateSize();
+        return;
+      } catch (e) {
+        console.warn('Map refresh:', e);
+      }
+    }
+
+    try {
+      const map = L.map('liveLeafletMap', {
+        zoomControl: false,
+        attributionControl: false
+      }).setView([43.6635, -79.3885], 14);
+
+      // CartoDB Voyager Realistic Clean City Map Tiles
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        subdomains: 'abcd'
+      }).addTo(map);
+
+      // Realistic Commute Route from 12 Elm Street to Greenfield School
+      const routeCoords = [
+        [43.6575, -79.3838], // 12 Elm Street (Home)
+        [43.6576, -79.3858], // Elm St turning onto Bay St
+        [43.6605, -79.3865], // Bay St northbound
+        [43.6635, -79.3882], // Bay St past College St
+        [43.6665, -79.3912], // Queen's Park Crescent East
+        [43.6690, -79.3940], // Avenue Rd / Bloor St
+        [43.6705, -79.3955]  // Greenfield International School
+      ];
+
+      // Route Polyline with Soft Outer Glow & Core Accent Line
+      L.polyline(routeCoords, {
+        color: '#38BDF8',
+        weight: 9,
+        opacity: 0.45,
+        lineCap: 'round',
+        lineJoin: 'round'
+      }).addTo(map);
+
+      L.polyline(routeCoords, {
+        color: '#0284C7',
+        weight: 5,
+        opacity: 0.95,
+        lineCap: 'round',
+        lineJoin: 'round'
+      }).addTo(map);
+
+      L.polyline(routeCoords, {
+        color: '#FFFFFF',
+        weight: 2,
+        opacity: 0.85,
+        lineCap: 'round',
+        lineJoin: 'round',
+        dashArray: '6, 8'
+      }).addTo(map);
+
+      // Home Marker (12 Elm St)
+      const homeIcon = L.divIcon({
+        className: 'leaflet-custom-marker',
+        html: `
+          <div class="map-pin-badge home">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          </div>
+          <span class="map-pin-label">12 Elm St (Pickup)</span>
+        `,
+        iconSize: [36, 42],
+        iconAnchor: [18, 20]
+      });
+      L.marker(routeCoords[0], { icon: homeIcon }).addTo(map);
+
+      // School Marker (Greenfield International)
+      const schoolIcon = L.divIcon({
+        className: 'leaflet-custom-marker',
+        html: `
+          <div class="map-pin-badge school">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+          </div>
+          <span class="map-pin-label">Greenfield School</span>
+        `,
+        iconSize: [36, 42],
+        iconAnchor: [18, 20]
+      });
+      L.marker(routeCoords[routeCoords.length - 1], { icon: schoolIcon }).addTo(map);
+
+      // Animated Vehicle Marker
+      const carIcon = L.divIcon({
+        className: 'leaflet-custom-marker',
+        html: `
+          <div class="map-car-pulsar"></div>
+          <div class="map-car-body">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFFFFF">
+              <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
+            </svg>
+          </div>
+          <div class="map-car-tag">Tariq • 32 km/h</div>
+        `,
+        iconSize: [44, 52],
+        iconAnchor: [22, 22]
+      });
+      window.trackingCarMarker = L.marker([43.6635, -79.3882], { icon: carIcon }).addTo(map);
+
+      window.trackingMapInstance = map;
+
+      // When Leaflet tiles load, fade out the fallback vector map
+      map.whenReady(() => {
+        setTimeout(() => {
+          const fallback = document.getElementById('realisticVectorFallback');
+          if (fallback) fallback.style.opacity = '0';
+          map.invalidateSize();
+        }, 300);
+      });
+
+      // Smooth Car Simulation forward animation
+      let step = 3;
+      if (window.trackingSimInterval) clearInterval(window.trackingSimInterval);
+      window.trackingSimInterval = setInterval(() => {
+        if (!window.trackingCarMarker || !window.trackingMapInstance) return;
+        step = (step + 1) % routeCoords.length;
+        window.trackingCarMarker.setLatLng(routeCoords[step]);
+      }, 4000);
+
+    } catch (err) {
+      console.warn('Leaflet init error, keeping realistic vector fallback:', err);
+    }
+  }
+};
+
+window.recenterTrackingMap = function () {
+  if (window.trackingMapInstance && window.trackingCarMarker) {
+    window.trackingMapInstance.setView(window.trackingCarMarker.getLatLng(), 15, { animate: true });
+  }
+};
+
+window.zoomInTrackingMap = function () {
+  if (window.trackingMapInstance) {
+    window.trackingMapInstance.zoomIn();
+  }
+};
+
+window.zoomOutTrackingMap = function () {
+  if (window.trackingMapInstance) {
+    window.trackingMapInstance.zoomOut();
+  }
+};
+
 const trackingStages = [
   { chip: 'Live • Driver On Way', text: 'Tariq is driving towards your home', eta: '07:28 AM', pct: '18%' },
   { chip: 'Live • Arrived At Pickup', text: 'Tariq has arrived at Home (12 Elm Street)', eta: '07:30 AM', pct: '45%' },
@@ -1852,7 +2012,7 @@ window.advanceTrackingStage = function () {
   const stageText = document.getElementById('trackingStageText');
   const etaText = document.getElementById('trackingEtaText');
   const progressBar = document.getElementById('stepperProgressBar');
-  const carMarker = document.getElementById('liveMapCarMarker');
+  const carGroup = document.getElementById('liveVectorCarGroup');
 
   if (chipText) {
     chipText.textContent = stage.chip;
@@ -1864,17 +2024,16 @@ window.advanceTrackingStage = function () {
   if (etaText) etaText.textContent = stage.eta;
   if (progressBar) progressBar.style.width = stage.pct;
 
-  if (carMarker) {
-    const offsets = [
-      { top: '65%', left: '25%' },
-      { top: '60%', left: '32%' },
-      { top: '48%', left: '46%' },
-      { top: '35%', left: '60%' },
-      { top: '28%', left: '72%' }
+  if (carGroup) {
+    const vectorPositions = [
+      { x: 100, y: 520 },
+      { x: 200, y: 520 },
+      { x: 200, y: 310 },
+      { x: 255, y: 160 },
+      { x: 270, y: 80 }
     ];
-    const pos = offsets[window.appState.trackingStageIndex];
-    carMarker.style.top = pos.top;
-    carMarker.style.left = pos.left;
+    const vp = vectorPositions[window.appState.trackingStageIndex] || vectorPositions[2];
+    carGroup.setAttribute('transform', `translate(${vp.x}, ${vp.y})`);
   }
 
   const s1 = document.getElementById('step1Node');
