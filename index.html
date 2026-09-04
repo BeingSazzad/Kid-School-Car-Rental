@@ -2532,9 +2532,9 @@
           <div class="profile-menu-item" onclick="navigateTo('profilePayments')">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
-                <i data-lucide="credit-card"></i>
+                <i data-lucide="receipt"></i>
               </div>
-              <span class="menu-title-text">Payment Methods &amp; Wallet</span>
+              <span class="menu-title-text">Billing &amp; Transactions</span>
             </div>
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
@@ -3061,74 +3061,60 @@
         <button class="back-btn" onclick="navigateTo('profile')">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Payment Methods &amp; Wallet</h2>
+        <h2 class="top-bar-title">Billing &amp; Transactions</h2>
         <span style="width: 26px;"></span>
       </div>
 
       <div class="screen-scroll-body">
-        <div style="background: linear-gradient(135deg, var(--color-brand-navy) 0%, #2A3F8E 100%); border-radius: var(--radius-lg); padding: 18px; color: #fff;">
-          <div style="font-size: 12px; color: rgba(255,255,255,0.8); font-weight: 600;">In-App Parent Credit</div>
-          <div style="font-size: 32px; font-weight: 800; margin: 4px 0 10px;">$45.00</div>
-          <div style="font-size: 11.5px; color: rgba(255,255,255,0.85);">Auto-applies $10 off each multi-child recurring invoice</div>
-        </div>
-
-        <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-top: 14px; margin-bottom: 8px;">Saved Cards &amp; Payment Options</div>
-        <div class="grouped-list-card" id="savedPaymentMethodsList">
-          <div class="grouped-row-item">
-            <div class="grouped-row-left">
-              <div class="grouped-row-icon-wrap">
-                <i data-lucide="credit-card" style="width:18px;height:18px;color:var(--color-primary);"></i>
-              </div>
-              <div>
-                <div class="grouped-row-title">Visa ending in 4242</div>
-                <div class="grouped-row-sub">Expires 08/28 • Default Auto-Pay</div>
-              </div>
-            </div>
-            <span class="status-chip confirmed" style="font-size: 11px; padding: 3px 9px;">Default</span>
+        <!-- Stripe Secured Trust Banner -->
+        <div class="stripe-trust-banner">
+          <div class="stripe-badge-icon">
+            <span>S</span>
           </div>
-
-          <div class="grouped-row-item">
-            <div class="grouped-row-left">
-              <div class="grouped-row-icon-wrap">
-                <i data-lucide="credit-card" style="width:18px;height:18px;color:#64748B;"></i>
-              </div>
-              <div>
-                <div class="grouped-row-title">Mastercard ending in 8831</div>
-                <div class="grouped-row-sub">Expires 11/27 • Backup Card</div>
-              </div>
+          <div class="stripe-trust-content">
+            <div class="stripe-trust-title">
+              <span>Payments Powered by Stripe</span>
+              <i data-lucide="shield-check" style="width:14px;height:14px;color:#16A34A;"></i>
             </div>
-            <button class="grouped-row-action" style="color:var(--color-body);">Secondary</button>
-          </div>
-
-          <div class="grouped-row-item">
-            <div class="grouped-row-left">
-              <div class="grouped-row-icon-wrap">
-                <i data-lucide="smartphone" style="width:18px;height:18px;color:#10B981;"></i>
-              </div>
-              <div>
-                <div class="grouped-row-title">Apple Pay</div>
-                <div class="grouped-row-sub">Touch ID / Face ID Enabled</div>
-              </div>
+            <div class="stripe-trust-sub">
+              All school commute charges and single rides are handled securely via Stripe. Invoices &amp; receipts are auto-generated.
             </div>
-            <span class="status-chip active" style="font-size: 11px; padding: 3px 9px;">Connected</span>
+            <button type="button" class="stripe-portal-link" onclick="openStripePortal()">
+              <span>Manage Payment Methods in Stripe Customer Portal</span>
+              <i data-lucide="external-link" style="width:11px;height:11px;"></i>
+            </button>
           </div>
         </div>
 
-        <div class="add-dashed-action-btn" onclick="addNewPaymentMethod()">
-          <i data-lucide="plus" style="width:18px;height:18px;"></i>
-          <span>Add Payment Method</span>
+        <!-- In-App Parent Credit Card -->
+        <div style="background: linear-gradient(135deg, var(--color-brand-navy) 0%, #2A3F8E 100%); border-radius: var(--radius-lg); padding: 16px 18px; color: #fff; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <div style="font-size: 11px; color: rgba(255,255,255,0.8); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Parent Wallet Credit</div>
+              <div style="font-size: 28px; font-weight: 800; margin: 2px 0 6px;">$45.00</div>
+            </div>
+            <span style="background: rgba(255,255,255,0.18); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px;">Active Balance</span>
+          </div>
+          <div style="font-size: 11.5px; color: rgba(255,255,255,0.85);">Auto-applied to upcoming weekly school invoices ($10 off per week)</div>
         </div>
 
-        <div class="details-section-box" style="margin-top: 10px;">
-          <div class="details-section-label">Recent Billing Receipts</div>
-          <div style="font-size: 12.5px; color: var(--color-body); display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed var(--color-stroke);">
-            <span>May 20, 2026 • Weekly Commute (2 Kids)</span>
-            <strong style="color:var(--color-title);">$120.00</strong>
-          </div>
-          <div style="font-size: 12.5px; color: var(--color-body); display: flex; justify-content: space-between; padding: 6px 0;">
-            <span>May 13, 2026 • Weekly Commute (2 Kids)</span>
-            <strong style="color:var(--color-title);">$120.00</strong>
-          </div>
+        <!-- Transaction History Header & Filters -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px; margin-bottom: 8px;">
+          <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Transaction History</div>
+          <span style="font-size: 11.5px; font-weight: 600; color: #64748B;" id="txCountLabel">6 Transactions</span>
+        </div>
+
+        <!-- Filter Segmented Control -->
+        <div class="segmented-control" style="margin-bottom: 12px;">
+          <button class="segment-btn active" id="filterTxAll" onclick="filterTransactions('all')">All</button>
+          <button class="segment-btn" id="filterTxCommutes" onclick="filterTransactions('recurring')">Commutes</button>
+          <button class="segment-btn" id="filterTxOneTime" onclick="filterTransactions('onetime')">One-Time</button>
+          <button class="segment-btn" id="filterTxRefunds" onclick="filterTransactions('refund')">Refunds</button>
+        </div>
+
+        <!-- Dynamic Transactions List -->
+        <div class="transactions-list-wrap" id="transactionsListWrap" style="display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px;">
+          <!-- Injected dynamically by renderTransactions() -->
         </div>
       </div>
 
@@ -3627,6 +3613,67 @@
 
       <div class="home-indicator"></div>
     </section>
+
+    <!-- Stripe Receipt & Invoice Modal -->
+    <div class="receipt-modal-overlay" id="receiptModal" onclick="closeTransactionReceipt(event)">
+      <div class="receipt-modal-card" onclick="event.stopPropagation()">
+        <div class="receipt-modal-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div class="stripe-badge-sm">S</div>
+            <div>
+              <div style="font-size:13.5px; font-weight:800; color:#0F172A;" id="recModalReceiptNo">Receipt #H2S-REC-8492</div>
+              <div style="font-size:11px; color:#64748B;">Processed securely via Stripe</div>
+            </div>
+          </div>
+          <button type="button" class="btn-close-modal" onclick="closeTransactionReceipt()" aria-label="Close">
+            <i data-lucide="x" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+
+        <div class="receipt-modal-body">
+          <div class="receipt-amount-banner">
+            <div style="font-size:11px; color:#64748B; font-weight:600; text-transform:uppercase; letter-spacing:0.4px;">Total Paid via Stripe</div>
+            <div style="font-size:28px; font-weight:800; color:#0F172A; margin:2px 0;" id="recModalAmount">$120.00</div>
+            <span class="tx-status-pill paid" id="recModalStatusBadge">✓ Payment Successful</span>
+          </div>
+
+          <div class="receipt-details-list">
+            <div class="receipt-detail-row">
+              <span>Date &amp; Time</span>
+              <strong id="recModalDate">May 20, 2026 • 09:15 AM</strong>
+            </div>
+            <div class="receipt-detail-row">
+              <span>Commute Service</span>
+              <strong id="recModalService">Weekly Commute (Mon–Fri)</strong>
+            </div>
+            <div class="receipt-detail-row">
+              <span>Children &amp; Route</span>
+              <strong id="recModalRiders">Arman &amp; Emma • Round Trip</strong>
+            </div>
+            <div class="receipt-detail-row">
+              <span>Assigned Driver</span>
+              <strong id="recModalProvider">Tariq Ahmed (Toyota Sienna)</strong>
+            </div>
+            <div class="receipt-detail-row">
+              <span>Payment Method</span>
+              <strong id="recModalMethod">Stripe • Visa •••• 4242</strong>
+            </div>
+            <div class="receipt-detail-row">
+              <span>Stripe Transaction ID</span>
+              <span style="font-family:monospace; font-size:11px; color:#64748B;" id="recModalStripeTx">ch_3N8zYk2eZvKYlo2C</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="receipt-modal-footer">
+          <button type="button" class="btn-primary" style="height:42px; font-size:13.5px;" onclick="downloadReceiptPdf()">
+            <i data-lucide="download" style="width:15px;height:15px;margin-right:4px;"></i>
+            <span>Download PDF Receipt</span>
+          </button>
+          <button type="button" class="btn-secondary-link" onclick="closeTransactionReceipt()">Close</button>
+        </div>
+      </div>
+    </div>
 
   </main>
 

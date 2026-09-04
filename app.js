@@ -254,6 +254,92 @@ window.appState = {
       createdAt: 'May 02, 2026'
     }
   ],
+  transactions: [
+    {
+      id: 'tx_1',
+      receiptNo: 'H2S-REC-8492',
+      date: 'May 20, 2026 • 09:15 AM',
+      title: 'Weekly Commute (Round Trip)',
+      subtitle: 'Arman & Emma • Greenfield International',
+      provider: 'Tariq Ahmed (Toyota Sienna)',
+      amount: 120.00,
+      paymentMethod: 'Stripe • Visa •••• 4242',
+      status: 'paid',
+      statusText: 'Paid via Stripe',
+      type: 'recurring',
+      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8492'
+    },
+    {
+      id: 'tx_2',
+      receiptNo: 'H2S-REC-8410',
+      date: 'May 22, 2026 • 02:40 PM',
+      title: 'Weekly Commute (One Way)',
+      subtitle: 'Arman • Morning Commute',
+      provider: 'Farhana Yasmin (Honda Odyssey)',
+      amount: 65.00,
+      paymentMethod: 'Stripe • Apple Pay',
+      status: 'paid',
+      statusText: 'Paid via Stripe',
+      type: 'recurring',
+      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8410'
+    },
+    {
+      id: 'tx_3',
+      receiptNo: 'H2S-REC-8395',
+      date: 'May 23, 2026 • 11:30 AM',
+      title: 'Single Day Pass (Round Trip)',
+      subtitle: 'Emma & Zara • Sunshine Pre-school',
+      provider: 'Kabir Hossain (Nissan Rogue)',
+      amount: 55.00,
+      paymentMethod: 'Stripe • Mastercard •••• 8821',
+      status: 'paid',
+      statusText: 'Paid via Stripe',
+      type: 'onetime',
+      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8395'
+    },
+    {
+      id: 'tx_4',
+      receiptNo: 'H2S-REC-8302',
+      date: 'May 14, 2026 • 08:00 AM',
+      title: 'Weekly Commute (Round Trip)',
+      subtitle: 'Arman & Emma • Greenfield International',
+      provider: 'Tariq Ahmed (Toyota Sienna)',
+      amount: 120.00,
+      paymentMethod: 'Stripe • Visa •••• 4242',
+      status: 'paid',
+      statusText: 'Paid via Stripe',
+      type: 'recurring',
+      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8302'
+    },
+    {
+      id: 'tx_5',
+      receiptNo: 'H2S-REC-8245',
+      date: 'May 12, 2026 • 04:15 PM',
+      title: 'Sports Day Ride (Round Trip)',
+      subtitle: 'Arman • Greenfield International',
+      provider: 'Farhana Yasmin (Honda Odyssey)',
+      amount: 50.00,
+      paymentMethod: 'Stripe • Apple Pay',
+      status: 'paid',
+      statusText: 'Paid via Stripe',
+      type: 'onetime',
+      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8245'
+    },
+    {
+      id: 'tx_6',
+      receiptNo: 'H2S-REF-7104',
+      date: 'May 10, 2026 • 01:20 PM',
+      title: 'Weather Cancellation Refund',
+      subtitle: 'Zara • Morning WalkShare Credited',
+      provider: 'Sarah Jenkins (Escort)',
+      amount: 35.00,
+      paymentMethod: 'Refunded to Parent Wallet',
+      status: 'refunded',
+      statusText: 'Refunded to Balance',
+      type: 'refund',
+      stripeTxId: 're_3N8zYk2eZvKYlo2C7104'
+    }
+  ],
   activeBookingId: 'H2S-84920',
   homeScenario: 'B', // 'A' | 'B' | 'C'
   trackingStageIndex: 2
@@ -294,6 +380,8 @@ window.navigateTo = function (screenName) {
     renderBookingConfirmation();
   } else if (screenName === 'myChildren') {
     renderMyChildrenList();
+  } else if (screenName === 'profilePayments') {
+    renderTransactions('all');
   }
 
   // Update Bottom Tab Bar highlights
@@ -1532,8 +1620,180 @@ window.addNewAddress = function () {
   }
 };
 
+/* ==========================================================
+   STRIPE BILLING & TRANSACTION HISTORY
+   ========================================================== */
+window.currentTxFilter = 'all';
+
+window.filterTransactions = function (type) {
+  window.currentTxFilter = type;
+
+  // Update segmented control buttons
+  const btnMap = {
+    all: 'filterTxAll',
+    recurring: 'filterTxCommutes',
+    onetime: 'filterTxOneTime',
+    refund: 'filterTxRefunds'
+  };
+
+  Object.entries(btnMap).forEach(([key, btnId]) => {
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      if (key === type) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    }
+  });
+
+  window.renderTransactions(type);
+};
+
+window.renderTransactions = function (filter = 'all') {
+  const container = document.getElementById('transactionsListWrap');
+  if (!container) return;
+
+  const allTx = window.appState?.transactions || [];
+  let filtered = allTx;
+  if (filter === 'recurring') {
+    filtered = allTx.filter(t => t.type === 'recurring');
+  } else if (filter === 'onetime') {
+    filtered = allTx.filter(t => t.type === 'onetime');
+  } else if (filter === 'refund') {
+    filtered = allTx.filter(t => t.type === 'refund');
+  }
+
+  // Update transaction count label
+  const countLabel = document.getElementById('txCountLabel');
+  if (countLabel) {
+    countLabel.textContent = `${filtered.length} Transaction${filtered.length === 1 ? '' : 's'}`;
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="background:#F8FAFC; border:1px dashed #E2E8F0; border-radius:14px; padding:28px 16px; text-align:center;">
+        <div style="font-size:13px; font-weight:700; color:#64748B;">No transactions found</div>
+        <div style="font-size:11.5px; color:#94A3B8; margin-top:3px;">There are no transactions recorded under this filter.</div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(tx => {
+    const isRefund = tx.status === 'refunded';
+    const amountDisplay = isRefund ? `+$${tx.amount.toFixed(2)}` : `$${tx.amount.toFixed(2)}`;
+    const statusPillClass = isRefund ? 'refunded' : 'paid';
+    const statusPillText = isRefund ? '↩ Refunded' : '✓ Paid';
+    const methodIcon = isRefund ? 'wallet' : 'credit-card';
+
+    return `
+      <div class="transaction-card" onclick="openTransactionReceipt('${tx.id}')">
+        <div class="tx-header-row">
+          <div class="tx-date">
+            <i data-lucide="calendar" style="width:12px;height:12px;color:#64748B;"></i>
+            <span>${tx.date}</span>
+          </div>
+          <span class="tx-status-pill ${statusPillClass}">${statusPillText}</span>
+        </div>
+
+        <div class="tx-main-row">
+          <div>
+            <div class="tx-title">${tx.title}</div>
+            <div class="tx-sub">${tx.subtitle}</div>
+          </div>
+          <div class="tx-amount ${isRefund ? 'refund' : ''}">${amountDisplay}</div>
+        </div>
+
+        <div class="tx-footer-row">
+          <div class="tx-method">
+            <i data-lucide="${methodIcon}" style="width:13px;height:13px;color:#64748B;"></i>
+            <span>${tx.paymentMethod}</span>
+          </div>
+          <button type="button" class="tx-receipt-btn" onclick="event.stopPropagation(); openTransactionReceipt('${tx.id}')">
+            <span>Receipt</span>
+            <i data-lucide="arrow-up-right" style="width:11px;height:11px;"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.openTransactionReceipt = function (txId) {
+  const tx = (window.appState?.transactions || []).find(t => t.id === txId) || window.appState?.transactions?.[0];
+  if (!tx) return;
+
+  const isRefund = tx.status === 'refunded';
+
+  const noEl = document.getElementById('recModalReceiptNo');
+  const amtEl = document.getElementById('recModalAmount');
+  const badgeEl = document.getElementById('recModalStatusBadge');
+  const dateEl = document.getElementById('recModalDate');
+  const srvEl = document.getElementById('recModalService');
+  const ridEl = document.getElementById('recModalRiders');
+  const provEl = document.getElementById('recModalProvider');
+  const methEl = document.getElementById('recModalMethod');
+  const txEl = document.getElementById('recModalStripeTx');
+
+  if (noEl) noEl.textContent = `Receipt #${tx.receiptNo}`;
+  if (amtEl) amtEl.textContent = `${isRefund ? '+' : ''}$${tx.amount.toFixed(2)}`;
+  if (badgeEl) {
+    badgeEl.className = `tx-status-pill ${isRefund ? 'refunded' : 'paid'}`;
+    badgeEl.textContent = isRefund ? '↩ Refund Credited to Parent Wallet' : '✓ Payment Successful via Stripe';
+  }
+  if (dateEl) dateEl.textContent = tx.date;
+  if (srvEl) srvEl.textContent = tx.title;
+  if (ridEl) ridEl.textContent = tx.subtitle;
+  if (provEl) provEl.textContent = tx.provider;
+  if (methEl) methEl.textContent = tx.paymentMethod;
+  if (txEl) txEl.textContent = tx.stripeTxId;
+
+  const modal = document.getElementById('receiptModal');
+  if (modal) {
+    modal.style.display = 'flex';
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.closeTransactionReceipt = function (event) {
+  if (event && event.target && event.target.closest('.receipt-modal-card') && event.target.id !== 'receiptModal') {
+    return;
+  }
+  const modal = document.getElementById('receiptModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+};
+
+window.openStripePortal = function () {
+  if (window.showToast) {
+    window.showToast('Connecting to Stripe Customer Portal (Sandbox)...', 'info');
+  }
+  setTimeout(() => {
+    alert('Stripe Customer Portal Demo:\nIn production, this redirects directly to your secure hosted Stripe Customer Portal (billing.stripe.com) where parents can manage saved cards, Apple Pay, Google Pay, and download official VAT tax invoices without storing card details in the app.');
+  }, 350);
+};
+
+window.downloadReceiptPdf = function () {
+  const receiptNo = document.getElementById('recModalReceiptNo')?.textContent || 'H2S-REC';
+  if (window.showToast) {
+    window.showToast(`✓ Downloading official PDF receipt (${receiptNo})...`);
+  }
+  setTimeout(() => {
+    window.closeTransactionReceipt();
+  }, 800);
+};
+
 window.addNewPaymentMethod = function () {
-  window.showToast('✓ Visa •••• 5592 verified & added to wallet');
+  window.openStripePortal();
 };
 
 window.savePersonalInfo = function () {

@@ -5141,4 +5141,306 @@ svg.lucide {
   opacity: 1;
 }
 
+/* =========================================================
+   TRANSACTION HISTORY & STRIPE BILLING (Top 1% Clean Design)
+   ========================================================= */
+.stripe-trust-banner {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.stripe-badge-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: #635BFF;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 900;
+  font-size: 17px;
+  letter-spacing: -0.5px;
+}
+
+.stripe-trust-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.stripe-trust-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0F172A;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stripe-trust-sub {
+  font-size: 11.5px;
+  color: #64748B;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.stripe-portal-link {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #635BFF;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: opacity 0.15s ease;
+}
+
+.stripe-portal-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Transaction Item Card */
+.transaction-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.transaction-card:hover {
+  border-color: #CBD5E1;
+  background: #FAFBFD;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+}
+
+.tx-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tx-date {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tx-status-pill {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tx-status-pill.paid {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.tx-status-pill.refunded {
+  background: #EFF6FF;
+  color: #2563EB;
+  border: 1px solid #BFDBFE;
+}
+
+.tx-main-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tx-title {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.tx-sub {
+  font-size: 11.5px;
+  color: #64748B;
+  margin-top: 2px;
+}
+
+.tx-amount {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #0F172A;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-amount.refund {
+  color: #059669;
+}
+
+.tx-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid #F1F5F9;
+  margin-top: 2px;
+}
+
+.tx-method {
+  font-size: 11px;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tx-receipt-btn {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 3.5px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.15s ease;
+}
+
+.tx-receipt-btn:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+}
+
+/* Modal for Stripe Receipt Details */
+.receipt-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.receipt-modal-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 390px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.receipt-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.stripe-badge-sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #635BFF;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 13px;
+}
+
+.btn-close-modal {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-close-modal:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.receipt-modal-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.receipt-amount-banner {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+
+.receipt-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.receipt-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.receipt-detail-row strong {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+.receipt-modal-footer {
+  padding: 12px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 
