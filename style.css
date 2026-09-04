@@ -3822,8 +3822,115 @@ color: var(--color-title);
 }
 
 /* ==========================================================
-   Modern Minimal Info Rows & Cards
+/* ==========================================================
+   Professional Standard: Grouped List Cards (Apple/Uber/Airbnb HIG)
    ========================================================== */
+.grouped-list-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-stroke);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.grouped-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--color-stroke);
+  transition: background-color 0.15s ease;
+}
+
+.grouped-row-item:last-child {
+  border-bottom: none;
+}
+
+.grouped-row-item:hover {
+  background-color: #F8FAFC;
+}
+
+.grouped-row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.grouped-row-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-fade);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.grouped-row-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-title);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.grouped-row-sub {
+  font-size: 11.5px;
+  color: var(--color-body);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.grouped-row-action {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background-color: var(--color-fade);
+  border: 1px solid var(--color-stroke);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.grouped-row-action:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #FFFFFF;
+}
+
+.add-dashed-action-btn {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  border: 1.5px dashed rgba(27, 43, 104, 0.25);
+  background-color: #F8FAFC;
+  color: var(--color-primary);
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-top: 14px;
+}
+
+.add-dashed-action-btn:hover {
+  background-color: var(--color-fade);
+  border-color: var(--color-primary);
+}
+
 .info-rows-group {
   display: flex;
   flex-direction: column;

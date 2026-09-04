@@ -950,20 +950,22 @@ window.addEmergencyContact = function () {
 
   const container = document.getElementById('emergencyContactsListWrap');
   if (container) {
-    const card = document.createElement('div');
-    card.className = 'info-row-item';
-    card.innerHTML = `
-      <div class="info-row-left">
-        <i data-lucide="shield-alert" style="width:20px;height:20px;color:var(--color-secondary);"></i>
+    const row = document.createElement('div');
+    row.className = 'grouped-row-item';
+    row.innerHTML = `
+      <div class="grouped-row-left">
+        <div class="grouped-row-icon-wrap">
+          <i data-lucide="phone-call" style="width:18px;height:18px;color:var(--color-primary);"></i>
+        </div>
         <div>
-          <div class="info-row-label">${name} (${rel})</div>
-          <div class="info-row-sub">${phone} • Verified</div>
+          <div class="grouped-row-title">${name} (${rel})</div>
+          <div class="grouped-row-sub">${phone} • Verified</div>
         </div>
       </div>
-      <a href="tel:${phone}" class="info-row-action">Call</a>
+      <a href="tel:${phone}" class="grouped-row-action" style="text-decoration:none;">Call</a>
     `;
-    container.appendChild(card);
-    if (window.lucide) window.lucide.createIcons();
+    container.appendChild(row);
+    if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
     alert(`✓ Emergency contact ${name} added successfully.`);
   }
 };
@@ -976,20 +978,22 @@ window.addNewAddress = function () {
 
   const container = document.getElementById('savedLocationsListWrap');
   if (container) {
-    const card = document.createElement('div');
-    card.className = 'info-row-item';
-    card.innerHTML = `
-      <div class="info-row-left">
-        <i data-lucide="map-pin" style="width:20px;height:20px;color:var(--color-primary);"></i>
+    const row = document.createElement('div');
+    row.className = 'grouped-row-item';
+    row.innerHTML = `
+      <div class="grouped-row-left">
+        <div class="grouped-row-icon-wrap">
+          <i data-lucide="map-pin" style="width:18px;height:18px;color:var(--color-primary);"></i>
+        </div>
         <div>
-          <div class="info-row-label">${label}</div>
-          <div class="info-row-sub">${address}</div>
+          <div class="grouped-row-title">${label}</div>
+          <div class="grouped-row-sub">${address}</div>
         </div>
       </div>
-      <span class="info-row-action" onclick="alert('Address set as active for next booking')">Select</span>
+      <button class="grouped-row-action" onclick="alert('Location details loaded')">Edit</button>
     `;
-    container.appendChild(card);
-    if (window.lucide) window.lucide.createIcons();
+    container.appendChild(row);
+    if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
     alert(`✓ Location "${label}" saved successfully.`);
   }
 };

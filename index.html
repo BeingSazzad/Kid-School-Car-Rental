@@ -2825,45 +2825,52 @@
           </div>
         </div>
 
-        <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-top: 6px;">Verified Emergency Contacts</div>
-        <div class="info-rows-group" id="emergencyContactsListWrap">
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="phone-call" style="width:20px;height:20px;color:var(--color-primary);"></i>
+        <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-top: 14px; margin-bottom: 8px;">Verified Emergency Contacts</div>
+        <div class="grouped-list-card" id="emergencyContactsListWrap">
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="phone-call" style="width:18px;height:18px;color:var(--color-primary);"></i>
+              </div>
               <div>
-                <div class="info-row-label">Farhan Khan (Father)</div>
-                <div class="info-row-sub">+1 (416) 555-0199 • Primary Contact</div>
+                <div class="grouped-row-title">Farhan Khan (Father)</div>
+                <div class="grouped-row-sub">+1 (416) 555-0199 • Primary Contact</div>
               </div>
             </div>
-            <a href="tel:4165550199" class="info-row-action">Call</a>
+            <a href="tel:4165550199" class="grouped-row-action" style="text-decoration:none;">Call</a>
           </div>
 
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="phone-call" style="width:20px;height:20px;color:var(--color-primary);"></i>
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="phone-call" style="width:18px;height:18px;color:var(--color-primary);"></i>
+              </div>
               <div>
-                <div class="info-row-label">Rehana Begum (Grandmother)</div>
-                <div class="info-row-sub">+1 (416) 555-0144 • Secondary Contact</div>
+                <div class="grouped-row-title">Rehana Begum (Grandmother)</div>
+                <div class="grouped-row-sub">+1 (416) 555-0144 • Secondary Contact</div>
               </div>
             </div>
-            <a href="tel:4165550144" class="info-row-action">Call</a>
+            <a href="tel:4165550144" class="grouped-row-action" style="text-decoration:none;">Call</a>
           </div>
 
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="school" style="width:20px;height:20px;color:var(--color-secondary);"></i>
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="school" style="width:18px;height:18px;color:var(--color-secondary);"></i>
+              </div>
               <div>
-                <div class="info-row-label">Greenfield School Main Office</div>
-                <div class="info-row-sub">+1 (416) 555-0800 • Student Dispatch</div>
+                <div class="grouped-row-title">Greenfield School Main Office</div>
+                <div class="grouped-row-sub">+1 (416) 555-0800 • Student Dispatch</div>
               </div>
             </div>
-            <a href="tel:4165550800" class="info-row-action">Call</a>
+            <a href="tel:4165550800" class="grouped-row-action" style="text-decoration:none;">Call</a>
           </div>
         </div>
 
-        <button class="btn-primary" style="background:var(--color-fade);color:var(--color-primary);border:1.5px dashed var(--color-primary);margin-top:4px;" onclick="addEmergencyContact()">
-          + Add Emergency Contact
-        </button>
+        <div class="add-dashed-action-btn" onclick="addEmergencyContact()">
+          <i data-lucide="plus" style="width:18px;height:18px;"></i>
+          <span>Add Emergency Contact</span>
+        </div>
 
         <div class="details-section-box" style="margin-top: 10px;">
           <div class="details-section-label">Emergency Protocol Checklist</div>
@@ -2898,55 +2905,64 @@
       </div>
 
       <div class="screen-scroll-body">
-        <div class="info-rows-group" id="savedLocationsListWrap">
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="home" style="width:20px;height:20px;color:var(--color-primary);"></i>
+        <div class="grouped-list-card" id="savedLocationsListWrap">
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="home" style="width:18px;height:18px;color:var(--color-primary);"></i>
+              </div>
               <div>
-                <div class="info-row-label">Home (Primary Pickup)</div>
-                <div class="info-row-sub">12 Elm Street, Toronto, ON</div>
+                <div class="grouped-row-title">Home (Primary Pickup)</div>
+                <div class="grouped-row-sub">12 Elm Street, Toronto, ON</div>
               </div>
             </div>
-            <span class="status-chip confirmed" style="font-size: 11px;">Default</span>
+            <span class="status-chip confirmed" style="font-size: 11px; padding: 3px 9px;">Default</span>
           </div>
 
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="school" style="width:20px;height:20px;color:var(--color-secondary);"></i>
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="school" style="width:18px;height:18px;color:var(--color-secondary);"></i>
+              </div>
               <div>
-                <div class="info-row-label">Greenfield International School</div>
-                <div class="info-row-sub">Gate 2 Drop-off Loop, Toronto, ON</div>
+                <div class="grouped-row-title">Greenfield International School</div>
+                <div class="grouped-row-sub">Gate 2 Drop-off Loop, Toronto, ON</div>
               </div>
             </div>
-            <span class="info-row-action" onclick="alert('Location details loaded')">Edit</span>
+            <button class="grouped-row-action" onclick="alert('Location details loaded')">Edit</button>
           </div>
 
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="school" style="width:20px;height:20px;color:var(--color-secondary);"></i>
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="school" style="width:18px;height:18px;color:var(--color-secondary);"></i>
+              </div>
               <div>
-                <div class="info-row-label">Sunshine Pre-school</div>
-                <div class="info-row-sub">45 Bloom Avenue, Toronto, ON</div>
+                <div class="grouped-row-title">Sunshine Pre-school</div>
+                <div class="grouped-row-sub">45 Bloom Avenue, Toronto, ON</div>
               </div>
             </div>
-            <span class="info-row-action" onclick="alert('Location details loaded')">Edit</span>
+            <button class="grouped-row-action" onclick="alert('Location details loaded')">Edit</button>
           </div>
 
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="map-pin" style="width:20px;height:20px;color:var(--color-primary);"></i>
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="map-pin" style="width:18px;height:18px;color:var(--color-primary);"></i>
+              </div>
               <div>
-                <div class="info-row-label">Grandmother's House</div>
-                <div class="info-row-sub">84 Willowbrook Crescent, Toronto, ON</div>
+                <div class="grouped-row-title">Grandmother's House</div>
+                <div class="grouped-row-sub">84 Willowbrook Crescent, Toronto, ON</div>
               </div>
             </div>
-            <span class="info-row-action" onclick="alert('Location details loaded')">Edit</span>
+            <button class="grouped-row-action" onclick="alert('Location details loaded')">Edit</button>
           </div>
         </div>
 
-        <button class="btn-primary" style="background:var(--color-fade);color:var(--color-primary);border:1.5px dashed var(--color-primary);margin-top:6px;" onclick="addNewAddress()">
-          + Add New Address
-        </button>
+        <div class="add-dashed-action-btn" onclick="addNewAddress()">
+          <i data-lucide="plus" style="width:18px;height:18px;"></i>
+          <span>Add New Address</span>
+        </div>
       </div>
 
       <div class="home-indicator"></div>
@@ -2978,45 +2994,52 @@
           <div style="font-size: 11.5px; color: rgba(255,255,255,0.85);">Auto-applies $10 off each multi-child recurring invoice</div>
         </div>
 
-        <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-top: 10px;">Saved Cards &amp; Payment Options</div>
-        <div class="info-rows-group" id="savedPaymentMethodsList">
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="credit-card" style="width:20px;height:20px;color:var(--color-primary);"></i>
+        <div style="font-size: 13px; font-weight: 800; color: var(--color-title); margin-top: 14px; margin-bottom: 8px;">Saved Cards &amp; Payment Options</div>
+        <div class="grouped-list-card" id="savedPaymentMethodsList">
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="credit-card" style="width:18px;height:18px;color:var(--color-primary);"></i>
+              </div>
               <div>
-                <div class="info-row-label">Visa ending in 4242</div>
-                <div class="info-row-sub">Expires 08/28 • Default Auto-Pay</div>
+                <div class="grouped-row-title">Visa ending in 4242</div>
+                <div class="grouped-row-sub">Expires 08/28 • Default Auto-Pay</div>
               </div>
             </div>
-            <span class="status-chip confirmed" style="font-size: 11px;">Default</span>
+            <span class="status-chip confirmed" style="font-size: 11px; padding: 3px 9px;">Default</span>
           </div>
 
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="credit-card" style="width:20px;height:20px;color:#64748B;"></i>
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="credit-card" style="width:18px;height:18px;color:#64748B;"></i>
+              </div>
               <div>
-                <div class="info-row-label">Mastercard ending in 8831</div>
-                <div class="info-row-sub">Expires 11/27 • Backup Card</div>
+                <div class="grouped-row-title">Mastercard ending in 8831</div>
+                <div class="grouped-row-sub">Expires 11/27 • Backup Card</div>
               </div>
             </div>
-            <span class="info-row-action" style="color:var(--color-body);font-size:12px;">Secondary</span>
+            <button class="grouped-row-action" style="color:var(--color-body);">Secondary</button>
           </div>
 
-          <div class="info-row-item">
-            <div class="info-row-left">
-              <i data-lucide="smartphone" style="width:20px;height:20px;color:#10B981;"></i>
+          <div class="grouped-row-item">
+            <div class="grouped-row-left">
+              <div class="grouped-row-icon-wrap">
+                <i data-lucide="smartphone" style="width:18px;height:18px;color:#10B981;"></i>
+              </div>
               <div>
-                <div class="info-row-label">Apple Pay</div>
-                <div class="info-row-sub">Touch ID / Face ID Enabled</div>
+                <div class="grouped-row-title">Apple Pay</div>
+                <div class="grouped-row-sub">Touch ID / Face ID Enabled</div>
               </div>
             </div>
-            <span class="status-chip active" style="font-size: 11px;">Connected</span>
+            <span class="status-chip active" style="font-size: 11px; padding: 3px 9px;">Connected</span>
           </div>
         </div>
 
-        <button class="btn-primary" style="background:var(--color-fade);color:var(--color-primary);border:1.5px dashed var(--color-primary);margin-top:4px;" onclick="addNewPaymentMethod()">
-          + Add Payment Method
-        </button>
+        <div class="add-dashed-action-btn" onclick="addNewPaymentMethod()">
+          <i data-lucide="plus" style="width:18px;height:18px;"></i>
+          <span>Add Payment Method</span>
+        </div>
 
         <div class="details-section-box" style="margin-top: 10px;">
           <div class="details-section-label">Recent Billing Receipts</div>
