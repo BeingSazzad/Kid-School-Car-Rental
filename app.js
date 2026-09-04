@@ -56,9 +56,9 @@ window.appState = {
     photo: '/assets/avatar_sadia.jpg'
   },
   children: [
-    { id: 'arman', name: 'Arman Khan', age: '9 yrs', grade: '9 yrs', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Wears booster seat' },
-    { id: 'emma', name: 'Emma Khan', age: '7 yrs', grade: '7 yrs', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Sits next to brother' },
-    { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: '5 yrs', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate' }
+    { id: 'arman', name: 'Arman Khan', age: '9 yrs', grade: 'Grade 4', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Wears booster seat', photo: '/assets/avatar_arman.jpg' },
+    { id: 'emma', name: 'Emma Khan', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Sits next to brother', photo: '/assets/avatar_emma.jpg' },
+    { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
   ],
   providers: [
     { id: 'tariq', name: 'Tariq Ahmed', vehicle: 'Toyota Sienna (2023)', plate: 'SCH-4091', rating: 4.9, reviewsCount: 128, seats: 4, baseWeekly: 120, photo: '/assets/avatar_tariq.jpg', phone: '+1 (416) 555-0182' },
@@ -2108,15 +2108,14 @@ window.renderMyChildrenList = function () {
   }
 
   container.innerHTML = children.map(c => {
-    const initials = c.name ? c.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'KD';
-    const colorClass = c.id === 'arman' ? 'navy' : c.id === 'emma' ? 'blue' : 'orange';
+    const photoSrc = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
     return `
       <div class="child-manage-card" onclick="openEditChildModal('${c.id}')">
         <div class="child-manage-left">
-          <div class="child-monogram-avatar ${colorClass}">${initials}</div>
+          <img src="${photoSrc}" alt="${c.name}" class="child-photo-avatar" onerror="this.src='/assets/avatar_arman.jpg';" />
           <div>
             <div class="child-manage-name">${c.name}</div>
-            <div class="child-manage-sub">${c.grade} • ${c.school}</div>
+            <div class="child-manage-sub">${c.grade || c.age} • ${c.school}</div>
           </div>
         </div>
         <button class="btn-icon-contact" onclick="event.stopPropagation(); openEditChildModal('${c.id}');" aria-label="Edit ${c.name}">
@@ -2139,8 +2138,8 @@ window.openAddChildModal = function () {
 
   const monogramEl = document.getElementById('childFormMonogram');
   if (monogramEl) {
-    monogramEl.textContent = '+';
-    monogramEl.style.background = 'linear-gradient(135deg, var(--color-secondary) 0%, #EA580C 100%)';
+    monogramEl.innerHTML = `<i data-lucide="camera" style="width:28px;height:28px;color:#FFFFFF;"></i>`;
+    monogramEl.style.background = 'linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%)';
   }
 
   const badgeEl = document.getElementById('childFormHeroBadge');
@@ -2171,14 +2170,11 @@ window.openEditChildModal = function (childId) {
   const titleEl = document.getElementById('childFormTopTitle');
   if (titleEl) titleEl.textContent = 'Edit Child Profile';
 
-  const initials = child.name ? child.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'KD';
+  const photoSrc = child.photo || (child.id === 'arman' ? '/assets/avatar_arman.jpg' : child.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
   const monogramEl = document.getElementById('childFormMonogram');
   if (monogramEl) {
-    monogramEl.textContent = initials;
-    const bg = child.id === 'arman' ? 'linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%)' :
-               child.id === 'emma' ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' :
-               'linear-gradient(135deg, var(--color-secondary) 0%, #EA580C 100%)';
-    monogramEl.style.background = bg;
+    monogramEl.innerHTML = `<img src="${photoSrc}" alt="${child.name}" style="width:100%;height:100%;object-fit:cover;" />`;
+    monogramEl.style.background = 'transparent';
   }
 
   const badgeEl = document.getElementById('childFormHeroBadge');

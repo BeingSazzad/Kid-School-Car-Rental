@@ -1662,10 +1662,12 @@ svg.lucide {
   flex-shrink: 0;
 }
 
-.child-avatar-cluster .avatar-circle {
+.child-avatar-cluster .avatar-circle,
+.child-avatar-cluster .avatar-img-circle {
   width: 36px;
   height: 36px;
   border-radius: 50%;
+  object-fit: cover;
   background: linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%);
   color: #FFFFFF;
   display: flex;
@@ -1677,7 +1679,8 @@ svg.lucide {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
 }
 
-.child-avatar-cluster .avatar-circle.overlap {
+.child-avatar-cluster .avatar-circle.overlap,
+.child-avatar-cluster .avatar-img-circle.overlap {
   margin-left: -12px;
   background: linear-gradient(135deg, var(--color-secondary) 0%, #EA580C 100%);
 }
@@ -3745,6 +3748,16 @@ svg.lucide {
   display: flex;
   align-items: center;
   gap: 14px;
+}
+
+.child-photo-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
 
 .child-monogram-avatar {
