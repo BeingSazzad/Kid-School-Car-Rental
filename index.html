@@ -3578,25 +3578,19 @@
       </div>
 
       <div class="screen-scroll-body">
-        <!-- Compact Single Trip Selector (No Duplicate Boxes) -->
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; margin-bottom: 16px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-            <span style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">Select Trip</span>
-            <span id="tripReportBookingBadge" style="font-size: 11.5px; font-weight: 800; color: var(--color-primary); background: #EFF6FF; padding: 2px 8px; border-radius: 99px;">#H2S-84920</span>
+        <!-- Attached Trip Reference (Clean Read-Only Context) -->
+        <input type="hidden" id="reportTripSelect" value="H2S-84920" />
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: #EFF6FF; color: var(--color-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i data-lucide="car" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div style="overflow: hidden;">
+              <div style="font-size: 13.5px; font-weight: 700; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="tripReportTitle">Tariq Ahmed • Arman &amp; Emma</div>
+              <div style="font-size: 11.5px; color: #64748B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="tripReportRoute">Home (12 Elm Street) → Greenfield School</div>
+            </div>
           </div>
-          <div class="input-box-wrapper" style="height: 42px; background: #FFFFFF; margin-bottom: 6px;">
-            <i data-lucide="car" class="input-box-icon" style="width: 15px; height: 15px;"></i>
-            <select class="form-input" id="reportTripSelect" onchange="onReportTripSelectChange(this)" style="cursor: pointer; font-size: 13px; font-weight: 600;">
-              <option value="H2S-84920">#H2S-84920 • Tariq Ahmed (Arman &amp; Emma)</option>
-              <option value="H2S-91042">#H2S-91042 • Farhana Yasmin (Arman)</option>
-              <option value="H2S-82194">#H2S-82194 • Kabir Hossain (Emma &amp; Zara)</option>
-            </select>
-          </div>
-          <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748B;">
-            <i data-lucide="map-pin" style="width: 12px; height: 12px; color: #94A3B8; flex-shrink: 0;"></i>
-            <span id="tripReportRoute" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Home (12 Elm Street) → Greenfield International School</span>
-          </div>
-          <span id="tripReportTitle" style="display: none;">Tariq Ahmed • Arman &amp; Emma Khan</span>
+          <span id="tripReportBookingBadge" style="font-size: 11px; font-weight: 800; color: var(--color-primary); background: #EFF6FF; border: 1px solid #DBEAFE; padding: 3px 8px; border-radius: 99px; white-space: nowrap;">#H2S-84920</span>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 16px;">
