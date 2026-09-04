@@ -2662,57 +2662,129 @@ svg.lucide {
   z-index: 20;
 }
 
+/* =========================================================
+   TOP 1% LUXURY PRODUCT DESIGN: LIVE TRACKING DRAWER
+   ========================================================= */
 .tracking-drawer-sheet {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   background-color: #FFFFFF;
-  border-top-left-radius: var(--radius-xl);
-  border-top-right-radius: var(--radius-xl);
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
-  padding: 16px 20px 30px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.08);
+  padding: 12px 20px 28px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 13px;
   z-index: 30;
 }
 
 .sheet-drag-handle {
-  width: 36px;
+  width: 38px;
   height: 4px;
-  border-radius: 10px;
-  background-color: #CBD5E1;
+  border-radius: 99px;
+  background-color: #E2E8F0;
   align-self: center;
+  margin-bottom: 2px;
 }
 
-/* Trip Progress Stepper */
+/* Reassuring, Calm Live Status Chip */
+.tracking-live-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 3.5px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #334155;
+  letter-spacing: 0.1px;
+}
+
+.tracking-live-pulse-dot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background-color: #16A34A;
+  box-shadow: 0 0 0 2.5px rgba(22, 163, 74, 0.2);
+  animation: liveDotPulse 2s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+@keyframes liveDotPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.25); }
+  50% { transform: scale(1.1); box-shadow: 0 0 0 4.5px rgba(22, 163, 74, 0.08); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.25); }
+}
+
+/* Stage Headline & Calm Slate ETA */
+.tracking-stage-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0F172A;
+  margin-top: 5px;
+  line-height: 1.25;
+  letter-spacing: -0.3px;
+}
+
+.tracking-eta-box {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.tracking-eta-val {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0F172A;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+}
+
+.tracking-eta-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+/* Unified Stepper Continuum (Zero Color Conflict) */
 .trip-stepper-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
-  margin: 6px 0;
+  margin: 4px 0 2px;
+  padding: 0 4px;
 }
 
 .stepper-track-bg {
   position: absolute;
-  top: 14px;
-  left: 10px;
-  right: 10px;
-  height: 3px;
+  top: 13px;
+  left: 14px;
+  right: 14px;
+  height: 2.5px;
   background-color: #E2E8F0;
+  border-radius: 99px;
   z-index: 1;
 }
 
 .stepper-track-progress {
   position: absolute;
-  top: 14px;
-  left: 10px;
-  height: 3px;
-  background-color: var(--color-secondary);
+  top: 13px;
+  left: 14px;
+  height: 2.5px;
+  background-color: var(--color-primary);
+  border-radius: 99px;
   z-index: 2;
-  transition: width 0.3s ease;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .step-node {
@@ -2721,48 +2793,182 @@ svg.lucide {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .step-circle-dot {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background-color: #FFFFFF;
-  border: 2px solid #CBD5E1;
-  color: #64748B;
+  border: 1.5px solid #CBD5E1;
+  color: #94A3B8;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 11px;
   font-weight: 800;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
+/* Completed: Solid Navy with crisp white checkmark */
 .step-node.completed .step-circle-dot {
-  background-color: var(--color-success);
-  border-color: var(--color-success);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
   color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(27, 43, 104, 0.25);
 }
 
+/* Active: Solid Navy with subtle calm halo ring */
 .step-node.active .step-circle-dot {
-  background-color: var(--color-secondary);
-  border-color: var(--color-secondary);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
   color: #FFFFFF;
-  box-shadow: 0 0 0 4px rgba(242, 96, 12, 0.2);
+  box-shadow: 0 0 0 3.5px rgba(27, 43, 104, 0.16);
 }
 
 .step-node-label {
   font-size: 10.5px;
-  font-weight: 700;
-  color: #64748B;
+  font-weight: 600;
+  color: #94A3B8;
   text-align: center;
-  max-width: 65px;
+  white-space: nowrap;
+  letter-spacing: -0.1px;
+  transition: color 0.2s ease;
+}
+
+.step-node.completed .step-node-label {
+  color: #475569;
 }
 
 .step-node.active .step-node-label {
-  color: var(--color-title);
+  color: #0F172A;
   font-weight: 800;
+}
+
+/* Interactive Demo Simulation Bar */
+.tracking-sim-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 7px 11px;
+  box-sizing: border-box;
+}
+
+.tracking-sim-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.tracking-sim-btn {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  padding: 4.5px 9px;
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  color: #1E293B;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.tracking-sim-btn:hover {
+  background: #F1F5F9;
+  border-color: #94A3B8;
+  color: #0F172A;
+}
+
+/* Active Driver Strip */
+.active-driver-contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 8px 10px;
+  margin-top: 1px;
+  box-sizing: border-box;
+}
+
+.driver-mini-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.driver-mini-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.driver-mini-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.2;
+}
+
+.driver-mini-sub {
+  font-size: 11px;
+  color: #64748B;
+  font-weight: 500;
+  margin-top: 1px;
+}
+
+.active-contact-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-contact-action {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px; /* Concentric with 12px container - 8px padding */
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.btn-contact-action:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  color: var(--color-primary);
+}
+
+.btn-contact-action.sos {
+  background: #FEF2F2;
+  border-color: #FEE2E2;
+  color: #DC2626;
+}
+
+.btn-contact-action.sos:hover {
+  background: #FEE2E2;
+  border-color: #FECACA;
 }
 
 /* 13. Messages & Chat Screen */

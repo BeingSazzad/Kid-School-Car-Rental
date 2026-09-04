@@ -1217,11 +1217,11 @@ function renderBookingsList(tab) {
    Live Tracking: Progressive Lifecycle Stepper
    ========================================================== */
 const trackingStages = [
-  { chip: 'On The Way', text: 'Tariq is driving towards your home', eta: '07:28 AM', pct: '25%' },
-  { chip: 'At Pickup', text: 'Tariq has arrived at Home (12 Elm Street)', eta: '07:30 AM', pct: '50%' },
-  { chip: 'In Progress', text: 'En route to Greenfield International', eta: '07:42 AM', pct: '70%' },
-  { chip: 'Approaching', text: 'Approaching Greenfield School drop-off zone', eta: '07:44 AM', pct: '88%' },
-  { chip: 'Completed', text: 'Children safely handed to school attendant', eta: '07:46 AM', pct: '100%' }
+  { chip: 'Live • Driver On Way', text: 'Tariq is driving towards your home', eta: '07:28 AM', pct: '18%' },
+  { chip: 'Live • Arrived At Pickup', text: 'Tariq has arrived at Home (12 Elm Street)', eta: '07:30 AM', pct: '45%' },
+  { chip: 'Live • En Route', text: 'En route to Greenfield International', eta: '07:42 AM', pct: '72%' },
+  { chip: 'Live • Approaching School', text: 'Approaching Greenfield School drop-off zone', eta: '07:44 AM', pct: '90%' },
+  { chip: 'Safe Drop-off Completed', text: 'Children safely handed to school attendant', eta: '07:46 AM', pct: '100%' }
 ];
 
 window.advanceTrackingStage = function () {
@@ -1229,12 +1229,18 @@ window.advanceTrackingStage = function () {
   const stage = trackingStages[window.appState.trackingStageIndex];
 
   const chip = document.getElementById('trackingStatusChip');
+  const chipText = document.getElementById('trackingChipText');
   const stageText = document.getElementById('trackingStageText');
   const etaText = document.getElementById('trackingEtaText');
   const progressBar = document.getElementById('stepperProgressBar');
   const carMarker = document.getElementById('liveMapCarMarker');
 
-  if (chip) chip.textContent = stage.chip;
+  if (chipText) {
+    chipText.textContent = stage.chip;
+  } else if (chip) {
+    chip.textContent = stage.chip;
+  }
+
   if (stageText) stageText.textContent = stage.text;
   if (etaText) etaText.textContent = stage.eta;
   if (progressBar) progressBar.style.width = stage.pct;
@@ -1257,14 +1263,50 @@ window.advanceTrackingStage = function () {
   const s3 = document.getElementById('step3Node');
   const s4 = document.getElementById('step4Node');
 
-  [s1, s2, s3, s4].forEach(n => n?.classList.remove('completed', 'active'));
+  const nodes = [
+    { el: s1, num: 1 },
+    { el: s2, num: 2 },
+    { el: s3, num: 3 },
+    { el: s4, num: 4 }
+  ];
 
   const idx = window.appState.trackingStageIndex;
-  if (idx >= 0) s1?.classList.add(idx > 0 ? 'completed' : 'active');
-  if (idx >= 1) s2?.classList.add(idx > 1 ? 'completed' : 'active');
-  if (idx >= 2) s3?.classList.add(idx > 2 ? 'completed' : 'active');
+
+  nodes.forEach(({ el, num }, i) => {
+    if (!el) return;
+    el.classList.remove('completed', 'active');
+    const dot = el.querySelector('.step-circle-dot');
+
+    let isCompleted = false;
+    let isActive = false;
+    if (idx === 0) {
+      if (i === 0) isActive = true;
+    } else if (idx === 1) {
+      if (i === 0) isCompleted = true;
+      if (i === 1) isActive = true;
+    } else if (idx === 2 || idx === 3) {
+      if (i < 2) isCompleted = true;
+      if (i === 2) isActive = true;
+    } else if (idx >= 4) {
+      isCompleted = true;
+    }
+
+    if (isCompleted) {
+      el.classList.add('completed');
+      if (dot) dot.innerHTML = '<i data-lucide="check" style="width:13px;height:13px;"></i>';
+    } else if (isActive) {
+      el.classList.add('active');
+      if (dot) dot.textContent = num;
+    } else {
+      if (dot) dot.textContent = num;
+    }
+  });
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+
   if (idx >= 4) {
-    s4?.classList.add('completed');
     setTimeout(() => {
       if (confirm('🎉 Drop-off completed safely! Would you like to rate Tariq Ahmed now?')) {
         window.navigateTo('rating');

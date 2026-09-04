@@ -2103,21 +2103,22 @@
           <span class="live-pill-tag"><span class="live-dot-pulse"></span> LIVE</span>
         </div>
 
-        <!-- Bottom Drawer Sheet -->
+        <!-- Bottom Drawer Sheet (Top 1% Luxury Product Design) -->
         <div class="tracking-drawer-sheet">
           <div class="sheet-drag-handle"></div>
 
           <!-- Stage & ETA Header -->
-          <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
             <div>
-              <span class="status-chip active" id="trackingStatusChip">Trip In Progress</span>
-              <h3 style="font-size: 17px; font-weight: 800; color: var(--color-title); margin-top: 4px;"
-                id="trackingStageText">En route to Greenfield International</h3>
+              <div class="tracking-live-chip" id="trackingStatusChip">
+                <span class="tracking-live-pulse-dot"></span>
+                <span id="trackingChipText">Live • En Route</span>
+              </div>
+              <h3 class="tracking-stage-title" id="trackingStageText">En route to Greenfield International</h3>
             </div>
-            <div style="text-align: right;">
-              <div style="font-size: 18px; font-weight: 800; color: var(--color-secondary);" id="trackingEtaText">07:42
-                AM</div>
-              <div style="font-size: 11.5px; color: var(--color-body);">Estimated Arrival</div>
+            <div class="tracking-eta-box">
+              <div class="tracking-eta-val" id="trackingEtaText">07:42 AM</div>
+              <div class="tracking-eta-lbl">Est. Arrival</div>
             </div>
           </div>
 
@@ -2127,11 +2128,11 @@
             <div class="stepper-track-progress" id="stepperProgressBar" style="width: 65%;"></div>
 
             <div class="step-node completed" id="step1Node">
-              <div class="step-circle-dot"><i data-lucide="check" style="width:12px;height:12px;"></i></div>
+              <div class="step-circle-dot"><i data-lucide="check" style="width:13px;height:13px;"></i></div>
               <span class="step-node-label">On way</span>
             </div>
             <div class="step-node completed" id="step2Node">
-              <div class="step-circle-dot"><i data-lucide="check" style="width:12px;height:12px;"></i></div>
+              <div class="step-circle-dot"><i data-lucide="check" style="width:13px;height:13px;"></i></div>
               <span class="step-node-label">Pickup</span>
             </div>
             <div class="step-node active" id="step3Node">
@@ -2144,12 +2145,16 @@
             </div>
           </div>
 
-          <!-- Interactive Stage Simulator Button -->
-          <div
-            style="display: flex; align-items: center; justify-content: space-between; background: var(--color-fade); padding: 8px 12px; border-radius: var(--radius-md);">
-            <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Simulation Demo:</span>
-            <button class="top-bar-action" style="padding: 4px 8px; font-size: 12px;"
-              onclick="advanceTrackingStage()">Advance to Next Stage ⏩</button>
+          <!-- Interactive Demo Simulation Bar -->
+          <div class="tracking-sim-bar">
+            <div class="tracking-sim-left">
+              <i data-lucide="play" style="width: 12px; height: 12px; color: #64748B;"></i>
+              <span>Interactive Simulation:</span>
+            </div>
+            <button type="button" class="tracking-sim-btn" onclick="advanceTrackingStage()">
+              <span>Next Stage</span>
+              <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
+            </button>
           </div>
 
           <!-- Driver Mini Profile & Quick Contact -->
@@ -2163,16 +2168,16 @@
             </div>
 
             <div class="active-contact-buttons">
-              <button class="btn-icon-contact" onclick="alert('Calling Tariq: +1 (416) 555-0182')"
-                aria-label="Call Driver">
-                <i data-lucide="phone"></i>
+              <button type="button" class="btn-contact-action" onclick="alert('Calling Tariq: +1 (416) 555-0182')"
+                aria-label="Call Driver" title="Call Driver">
+                <i data-lucide="phone" style="width:15px;height:15px;"></i>
               </button>
-              <button class="btn-icon-contact" onclick="navigateTo('messages')" aria-label="Message Driver">
-                <i data-lucide="message-square"></i>
+              <button type="button" class="btn-contact-action" onclick="navigateTo('messages')" aria-label="Message Driver" title="Message Driver">
+                <i data-lucide="message-square" style="width:15px;height:15px;"></i>
               </button>
-              <button class="btn-icon-contact" onclick="alert('Emergency Alert Sent to School & Safety Center')"
-                aria-label="Emergency" style="color: var(--color-danger);">
-                <i data-lucide="shield-alert"></i>
+              <button type="button" class="btn-contact-action sos" onclick="alert('Emergency Alert Sent to School & Safety Center')"
+                aria-label="Emergency Alert" title="SOS Emergency">
+                <i data-lucide="shield-alert" style="width:15px;height:15px;"></i>
               </button>
             </div>
           </div>
