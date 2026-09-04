@@ -1200,6 +1200,28 @@
       </div>
 
       <div class="screen-scroll-body" style="display: flex; flex-direction: column; gap: 14px;">
+        <!-- Quick Scenario Presets for Testing & Demonstration -->
+        <div class="demo-preset-container">
+          <div class="demo-preset-header">
+            <i data-lucide="sparkles" style="width:14px;height:14px;color:var(--color-secondary);"></i>
+            <span>Quick Demo Scenarios (1-Tap Setup)</span>
+          </div>
+          <div class="demo-preset-grid">
+            <button type="button" class="demo-preset-btn active" id="presetBtn_2way_recurring" onclick="loadTripPreset('2way_recurring')">
+              <span>⇄ 2-Way Recurring</span>
+            </button>
+            <button type="button" class="demo-preset-btn" id="presetBtn_1way_recurring" onclick="loadTripPreset('1way_recurring')">
+              <span>→ 1-Way Recurring</span>
+            </button>
+            <button type="button" class="demo-preset-btn" id="presetBtn_2way_onetime" onclick="loadTripPreset('2way_onetime')">
+              <span>⇄ 2-Way One-Time</span>
+            </button>
+            <button type="button" class="demo-preset-btn" id="presetBtn_1way_onetime" onclick="loadTripPreset('1way_onetime')">
+              <span>→ 1-Way One-Time</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Card 1: Route & Commute Direction (Where & How) -->
         <div class="trip-setup-card">
           <div style="font-size: 13.5px; font-weight: 700; color: var(--color-primary); margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
@@ -1668,7 +1690,7 @@
             <span class="summary-item-val" id="summaryOutboundText">Home → Greenfield (07:30 AM)</span>
           </div>
 
-          <div class="summary-item-row">
+          <div class="summary-item-row" id="summaryReturnRow">
             <span class="summary-item-label">Return Leg</span>
             <span class="summary-item-val" id="summaryReturnText">Greenfield → Home (01:00 PM)</span>
           </div>
@@ -1689,7 +1711,7 @@
           <div class="summary-section-title">Pricing Summary</div>
 
           <div class="price-row-item">
-            <span>Weekly Base Rate</span>
+            <span id="summaryBasePriceLabel">Weekly Base Rate</span>
             <span style="font-weight: 700; color: var(--color-title);" id="summaryBasePriceText">$140.00</span>
           </div>
 
@@ -1704,7 +1726,7 @@
           </div>
 
           <div class="price-row-item total">
-            <span>Total Weekly Amount</span>
+            <span id="summaryTotalPriceLabel">Total Weekly Amount</span>
             <span style="color: var(--color-primary); font-size: 18px;" id="summaryTotalPriceText">$120.00 / week</span>
           </div>
         </div>
@@ -1885,7 +1907,7 @@
             <span class="status-chip confirmed" id="detailStatusBadge">Confirmed</span>
           </div>
           <div class="booking-detail-title" id="detailHeaderTitle">Arman &amp; Emma Khan</div>
-          <div style="font-size: 13px; color: rgba(255, 255, 255, 0.85); display: flex; align-items: center; gap: 6px;">
+          <div style="font-size: 13px; color: rgba(255, 255, 255, 0.85); display: flex; align-items: center; gap: 6px;" id="detailHeaderSubtitle">
             <i data-lucide="repeat" style="width: 14px; height: 14px;"></i>
             <span>Recurring School Transportation (Mon – Fri)</span>
           </div>
@@ -2283,10 +2305,9 @@
       <div class="screen-scroll-body">
         <!-- Filter Tabs -->
         <div class="segmented-control">
-          <button class="segment-btn active" id="tabUpcoming" onclick="switchBookingTab('upcoming')">Upcoming
-            (2)</button>
-          <button class="segment-btn" id="tabPast" onclick="switchBookingTab('past')">Past (6)</button>
-          <button class="segment-btn" id="tabCancelled" onclick="switchBookingTab('cancelled')">Cancelled</button>
+          <button class="segment-btn active" id="tabUpcoming" onclick="switchBookingTab('upcoming')">Upcoming (4)</button>
+          <button class="segment-btn" id="tabPast" onclick="switchBookingTab('past')">Past (4)</button>
+          <button class="segment-btn" id="tabCancelled" onclick="switchBookingTab('cancelled')">Cancelled (2)</button>
         </div>
 
         <div class="bookings-list-container" id="bookingsListWrap">

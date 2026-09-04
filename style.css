@@ -2255,6 +2255,69 @@ svg.lucide {
   box-shadow: 0 3px 8px rgba(242, 96, 12, 0.3);
 }
 
+/* Quick Demo Presets Bar - Standard Concentric Radius (R_inner = R_outer - padding) */
+.demo-preset-container {
+  background: #F1F5F9;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+.demo-preset-header {
+  font-size: 11px;
+  font-weight: 800;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.demo-preset-pills {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.demo-preset-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.demo-pill-btn {
+  white-space: nowrap;
+  padding: 6px 11px;
+  border-radius: 8px; /* 12px container - 4px = 8px concentric */
+  border: 1.5px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #334155;
+  font-family: var(--font-family);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.demo-pill-btn:hover {
+  background: #F8FAFC;
+  color: var(--color-primary);
+  border-color: #94A3B8;
+}
+
+.demo-pill-btn.active {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 6px rgba(27, 43, 104, 0.2);
+}
+
 /* 8. Provider Result Cards & Filters */
 .filters-scroll-bar {
   display: flex;
@@ -2949,6 +3012,12 @@ svg.lucide {
   background: #FEF3C7;
   color: #92400E;
   border-color: #FDE68A;
+}
+
+.booking-type-badge.recurring {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border-color: #BFDBFE;
 }
 
 .booking-card-route {

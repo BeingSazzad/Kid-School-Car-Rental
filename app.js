@@ -79,9 +79,10 @@ window.appState = {
     paymentMethod: 'Visa •••• 4242'
   },
   bookings: [
+    // 1. Two-Way + Recurring (Confirmed)
     {
       id: 'H2S-84920',
-      status: 'confirmed', // 'confirmed' | 'in_progress' | 'completed' | 'cancelled'
+      status: 'confirmed',
       childIds: ['arman', 'emma'],
       direction: 'bothway',
       frequency: 'recurring',
@@ -95,13 +96,48 @@ window.appState = {
       paymentMethod: 'Visa •••• 4242',
       createdAt: 'May 20, 2026'
     },
+    // 2. One-Way + Recurring (Confirmed)
+    {
+      id: 'H2S-91042',
+      status: 'confirmed',
+      childIds: ['arman'],
+      direction: 'oneway',
+      frequency: 'recurring',
+      scheduleText: 'Mon–Fri • Outbound: 07:45 AM (Morning Commute)',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Greenfield International School',
+      outboundTime: '07:45 AM',
+      returnTime: '',
+      providerId: 'farhana',
+      amount: 65,
+      paymentMethod: 'Apple Pay',
+      createdAt: 'May 22, 2026'
+    },
+    // 3. Two-Way + One-Time (Confirmed)
+    {
+      id: 'H2S-82194',
+      status: 'confirmed',
+      childIds: ['emma', 'zara'],
+      direction: 'bothway',
+      frequency: 'onetime',
+      scheduleText: 'Friday, May 29 • 08:30 AM & 02:30 PM (Day Pass)',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Sunshine Pre-school',
+      outboundTime: '08:30 AM',
+      returnTime: '02:30 PM',
+      providerId: 'kabir',
+      amount: 55,
+      paymentMethod: 'Mastercard •••• 8821',
+      createdAt: 'May 23, 2026'
+    },
+    // 4. One-Way + One-Time (Pending)
     {
       id: 'H2S-73190',
       status: 'pending',
       childIds: ['zara'],
       direction: 'oneway',
       frequency: 'onetime',
-      scheduleText: 'Thursday, May 23 • 08:15 AM',
+      scheduleText: 'Thursday, May 23 • 08:15 AM (Morning Escort)',
       pickupLocation: 'Home (12 Elm Street)',
       schoolLocation: 'Sunshine Pre-school',
       outboundTime: '08:15 AM',
@@ -111,13 +147,16 @@ window.appState = {
       paymentMethod: 'Visa •••• 4242',
       createdAt: 'May 21, 2026'
     },
+
+    // PAST BOOKINGS (Completed)
+    // 5. Two-Way + Recurring (Completed)
     {
       id: 'H2S-61029',
       status: 'completed',
       childIds: ['arman', 'emma'],
       direction: 'bothway',
       frequency: 'recurring',
-      scheduleText: 'Mon–Fri (Previous Week)',
+      scheduleText: 'Mon–Fri (May 15–19) • 07:30 AM & 01:00 PM',
       pickupLocation: 'Home (12 Elm Street)',
       schoolLocation: 'Greenfield International School',
       outboundTime: '07:30 AM',
@@ -127,13 +166,67 @@ window.appState = {
       paymentMethod: 'Visa •••• 4242',
       createdAt: 'May 14, 2026'
     },
+    // 6. One-Way + One-Time (Completed)
+    {
+      id: 'H2S-60411',
+      status: 'completed',
+      childIds: ['zara'],
+      direction: 'oneway',
+      frequency: 'onetime',
+      scheduleText: 'May 18, 2026 • 08:15 AM (Morning WalkShare)',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Sunshine Pre-school',
+      outboundTime: '08:15 AM',
+      returnTime: '',
+      providerId: 'sarah',
+      amount: 35,
+      paymentMethod: 'Visa •••• 4242',
+      createdAt: 'May 18, 2026'
+    },
+    // 7. Two-Way + One-Time (Completed)
+    {
+      id: 'H2S-59120',
+      status: 'completed',
+      childIds: ['arman'],
+      direction: 'bothway',
+      frequency: 'onetime',
+      scheduleText: 'May 12, 2026 • 08:00 AM & 03:00 PM (Sports Day)',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Greenfield International School',
+      outboundTime: '08:00 AM',
+      returnTime: '03:00 PM',
+      providerId: 'farhana',
+      amount: 50,
+      paymentMethod: 'Apple Pay',
+      createdAt: 'May 12, 2026'
+    },
+    // 8. One-Way + Recurring (Completed)
+    {
+      id: 'H2S-58019',
+      status: 'completed',
+      childIds: ['emma'],
+      direction: 'oneway',
+      frequency: 'recurring',
+      scheduleText: 'Mon–Fri (April 2026 Commute) • 07:45 AM',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Greenfield International School',
+      outboundTime: '07:45 AM',
+      returnTime: '',
+      providerId: 'kabir',
+      amount: 65,
+      paymentMethod: 'Visa •••• 4242',
+      createdAt: 'April 28, 2026'
+    },
+
+    // CANCELLED BOOKINGS
+    // 9. One-Way + One-Time (Cancelled)
     {
       id: 'H2S-54012',
       status: 'cancelled',
       childIds: ['zara'],
       direction: 'oneway',
       frequency: 'onetime',
-      scheduleText: 'May 10, 2026',
+      scheduleText: 'May 10, 2026 • 08:15 AM',
       pickupLocation: 'Home (12 Elm Street)',
       schoolLocation: 'Sunshine Pre-school',
       outboundTime: '08:15 AM',
@@ -142,6 +235,23 @@ window.appState = {
       amount: 35,
       paymentMethod: 'Visa •••• 4242',
       createdAt: 'May 08, 2026'
+    },
+    // 10. Two-Way + Recurring (Cancelled)
+    {
+      id: 'H2S-52109',
+      status: 'cancelled',
+      childIds: ['arman', 'emma'],
+      direction: 'bothway',
+      frequency: 'recurring',
+      scheduleText: 'Mon–Fri (Cancelled Summer Session)',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Greenfield International School',
+      outboundTime: '07:30 AM',
+      returnTime: '01:00 PM',
+      providerId: 'tariq',
+      amount: 120,
+      paymentMethod: 'Visa •••• 4242',
+      createdAt: 'May 02, 2026'
     }
   ],
   activeBookingId: 'H2S-84920',
@@ -392,6 +502,74 @@ window.setBookingFrequency = function (freq) {
   }
 };
 
+window.loadTripPreset = function (type) {
+  const btn2R = document.getElementById('presetBtn_2way_recurring');
+  const btn1R = document.getElementById('presetBtn_1way_recurring');
+  const btn2O = document.getElementById('presetBtn_2way_onetime');
+  const btn1O = document.getElementById('presetBtn_1way_onetime');
+  [btn2R, btn1R, btn2O, btn1O].forEach(b => b?.classList.remove('active'));
+
+  const activeBtn = document.getElementById(`presetBtn_${type}`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  const outInput = document.getElementById('setupOutboundTime') || document.getElementById('setupMorningTime');
+  const retInput = document.getElementById('setupReturnTime');
+  const pickupInput = document.getElementById('setupPickupLocation');
+  const schoolInput = document.getElementById('setupSchoolLocation');
+  const dateInput = document.getElementById('setupTripDate');
+  const startDateInput = document.getElementById('setupStartDate');
+
+  if (type === '2way_recurring') {
+    window.setTripDirection('bothway');
+    window.setBookingFrequency('recurring');
+    window.updateTripTime('outbound', '07:30');
+    window.updateTripTime('return', '13:00');
+    if (outInput) outInput.value = '07:30';
+    if (retInput) retInput.value = '13:00';
+    if (pickupInput) pickupInput.value = 'Home (12 Elm Street)';
+    if (schoolInput) schoolInput.value = 'Greenfield International School';
+    if (startDateInput) startDateInput.value = '2026-05-25';
+    window.appState.bookingDraft.pickupLocation = 'Home (12 Elm Street)';
+    window.appState.bookingDraft.schoolLocation = 'Greenfield International School';
+  } else if (type === '1way_recurring') {
+    window.setTripDirection('oneway');
+    window.setBookingFrequency('recurring');
+    window.updateTripTime('outbound', '07:45');
+    if (outInput) outInput.value = '07:45';
+    if (pickupInput) pickupInput.value = 'Home (12 Elm Street)';
+    if (schoolInput) schoolInput.value = 'Greenfield International School';
+    if (startDateInput) startDateInput.value = '2026-05-25';
+    window.appState.bookingDraft.pickupLocation = 'Home (12 Elm Street)';
+    window.appState.bookingDraft.schoolLocation = 'Greenfield International School';
+  } else if (type === '2way_onetime') {
+    window.setTripDirection('bothway');
+    window.setBookingFrequency('onetime');
+    window.updateTripTime('outbound', '08:30');
+    window.updateTripTime('return', '14:30');
+    if (outInput) outInput.value = '08:30';
+    if (retInput) retInput.value = '14:30';
+    if (pickupInput) pickupInput.value = 'Home (12 Elm Street)';
+    if (schoolInput) schoolInput.value = 'Sunshine Pre-school';
+    if (dateInput) dateInput.value = '2026-05-29';
+    window.appState.bookingDraft.pickupLocation = 'Home (12 Elm Street)';
+    window.appState.bookingDraft.schoolLocation = 'Sunshine Pre-school';
+    window.appState.bookingDraft.tripDate = 'Friday, May 29, 2026';
+  } else if (type === '1way_onetime') {
+    window.setTripDirection('oneway');
+    window.setBookingFrequency('onetime');
+    window.updateTripTime('outbound', '08:15');
+    if (outInput) outInput.value = '08:15';
+    if (pickupInput) pickupInput.value = 'Home (12 Elm Street)';
+    if (schoolInput) schoolInput.value = 'Sunshine Pre-school';
+    if (dateInput) dateInput.value = '2026-05-23';
+    window.appState.bookingDraft.pickupLocation = 'Home (12 Elm Street)';
+    window.appState.bookingDraft.schoolLocation = 'Sunshine Pre-school';
+    window.appState.bookingDraft.tripDate = 'Thursday, May 23, 2026';
+  }
+
+  if (window.lucide) window.lucide.createIcons();
+};
+
 window.selectQuickLocation = function (type, address, btnEl) {
   if (type === 'pickup') {
     const input = document.getElementById('setupPickupLocation');
@@ -440,7 +618,7 @@ window.updateTripTime = function (type, timeVal) {
 window.proceedFromTripSetup = function () {
   const pickupEl = document.getElementById('setupPickupLocation');
   const schoolEl = document.getElementById('setupSchoolLocation');
-  const morningTimeEl = document.getElementById('setupMorningTime');
+  const morningTimeEl = document.getElementById('setupOutboundTime') || document.getElementById('setupMorningTime');
   const returnTimeEl = document.getElementById('setupReturnTime');
 
   if (pickupEl && pickupEl.value.trim()) {
@@ -493,14 +671,30 @@ window.selectProviderAndReview = function (name) {
 function calculateDraftPrice() {
   const draft = window.appState.bookingDraft;
   const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
-  const count = window.appState.selectedChildIds.length;
+  const count = window.appState.selectedChildIds.length || 1;
 
-  let baseRate = provider.baseWeekly;
-  if (draft.direction === 'oneway') {
-    baseRate = Math.round(baseRate * 0.6);
+  let baseRate = provider.baseWeekly || 120;
+
+  if (draft.frequency === 'onetime') {
+    // One-time single trip flat rate: $35 for 1-way, $55 for 2-way round trip
+    baseRate = draft.direction === 'bothway' ? 55 : 35;
+    const insurance = 5;
+    const discount = count > 1 ? Math.round(baseRate * 0.2 * (count - 1)) : 0;
+    const total = (baseRate * count) - discount + insurance;
+    return {
+      baseRate: baseRate * count,
+      discount,
+      insurance,
+      total,
+      period: 'total'
+    };
   }
 
-  // 2nd and subsequent children get 20% discount
+  // Recurring weekly commute rate
+  if (draft.direction === 'oneway') {
+    baseRate = Math.round(baseRate * 0.55); // 55% for morning drop-off only
+  }
+
   let discount = 0;
   if (count > 1) {
     discount = Math.round(baseRate * 0.2 * (count - 1));
@@ -513,7 +707,8 @@ function calculateDraftPrice() {
     baseRate: baseRate * count,
     discount,
     insurance,
-    total
+    total,
+    period: 'week'
   };
 }
 
@@ -533,7 +728,10 @@ function renderBookingSummary() {
   const providerEl = document.getElementById('summaryProviderText');
 
   if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
-  if (dirEl) dirEl.textContent = draft.direction === 'bothway' ? '⇄ Both-way (Round Trip)' : '→ One-way';
+  if (dirEl) {
+    dirEl.textContent = draft.direction === 'bothway' ? '⇄ Two-Way (Round Trip)' : '→ One-Way (Morning Drop-off)';
+  }
+
   const cleanLoc = (loc) => {
     if (!loc) return 'Home';
     if (loc.includes('Home')) return 'Home';
@@ -542,35 +740,51 @@ function renderBookingSummary() {
   };
   const cleanSchool = (sch) => {
     if (!sch) return 'School';
-    if (sch.includes('Greenfield')) return 'Greenfield';
-    if (sch.includes('Sunshine')) return 'Sunshine';
+    if (sch.includes('Greenfield')) return 'Greenfield School';
+    if (sch.includes('Sunshine')) return 'Sunshine Pre-school';
     return sch.split(',')[0].trim();
   };
 
   const pickupShort = cleanLoc(draft.pickupLocation);
   const schoolShort = cleanSchool(draft.schoolLocation);
 
-  if (outboundEl) outboundEl.textContent = `${pickupShort} → ${schoolShort} (${draft.outboundTime})`;
+  if (outboundEl) outboundEl.textContent = `${pickupShort} → ${schoolShort} (${draft.outboundTime || '07:30 AM'})`;
   if (returnEl) {
     if (draft.direction === 'bothway') {
-      returnEl.textContent = `${schoolShort} → ${pickupShort} (${draft.returnTime})`;
+      returnEl.textContent = `${schoolShort} → ${pickupShort} (${draft.returnTime || '01:00 PM'})`;
       returnEl.parentElement.style.display = 'flex';
     } else {
       returnEl.parentElement.style.display = 'none';
     }
   }
-  if (freqEl) freqEl.textContent = draft.frequency === 'recurring' ? 'Recurring (Mon – Fri)' : 'One-time Trip';
-  if (providerEl) providerEl.textContent = `${provider.name} (${provider.vehicle.split(' ')[0]} ${provider.vehicle.split(' ')[1] || ''})`;
 
-  // Price calculations
+  if (freqEl) {
+    freqEl.textContent = draft.frequency === 'recurring' 
+      ? 'Recurring (Mon – Fri Commute)' 
+      : `One-Time Ride (${draft.tripDate || 'Single Day Pass'})`;
+  }
+  if (providerEl) providerEl.textContent = `${provider.name} (${provider.vehicle.split('(')[0].trim()})`;
+
+  // Price calculations & dynamic labels
   const price = calculateDraftPrice();
   const baseEl = document.getElementById('summaryBasePriceText');
   const discEl = document.getElementById('summaryDiscountPriceText');
   const totalEl = document.getElementById('summaryTotalPriceText');
+  const baseLbl = document.getElementById('summaryBasePriceLabel');
+  const totalLbl = document.getElementById('summaryTotalPriceLabel');
 
   if (baseEl) baseEl.textContent = `$${price.baseRate}.00`;
   if (discEl) discEl.textContent = price.discount > 0 ? `-$${price.discount}.00` : '$0.00';
-  if (totalEl) totalEl.textContent = `$${price.total}.00 / week`;
+
+  if (draft.frequency === 'onetime') {
+    if (baseLbl) baseLbl.textContent = 'Single Ride Base Fare';
+    if (totalLbl) totalLbl.textContent = 'Total One-Time Amount';
+    if (totalEl) totalEl.textContent = `$${price.total}.00 Flat Rate`;
+  } else {
+    if (baseLbl) baseLbl.textContent = 'Weekly Base Rate';
+    if (totalLbl) totalLbl.textContent = 'Total Weekly Amount';
+    if (totalEl) totalEl.textContent = `$${price.total}.00 / week`;
+  }
 }
 
 /* ==========================================================
@@ -587,13 +801,17 @@ window.submitBookingRequest = function () {
     childIds: [...window.appState.selectedChildIds],
     direction: draft.direction,
     frequency: draft.frequency,
-    scheduleText: draft.direction === 'bothway'
-      ? `Mon–Fri • Outbound: ${draft.outboundTime} | Return: ${draft.returnTime}`
-      : `Outbound: ${draft.outboundTime}`,
+    scheduleText: draft.frequency === 'recurring'
+      ? (draft.direction === 'bothway' 
+          ? `Mon–Fri • Outbound: ${draft.outboundTime} | Return: ${draft.returnTime}` 
+          : `Mon–Fri • Outbound: ${draft.outboundTime} (Morning Commute)`)
+      : (draft.direction === 'bothway'
+          ? `${draft.tripDate || 'Single Day'} • ${draft.outboundTime} & ${draft.returnTime}`
+          : `${draft.tripDate || 'Single Day'} • ${draft.outboundTime}`),
     pickupLocation: draft.pickupLocation,
     schoolLocation: draft.schoolLocation,
     outboundTime: draft.outboundTime,
-    returnTime: draft.returnTime,
+    returnTime: draft.direction === 'bothway' ? draft.returnTime : '',
     providerId: provider.id,
     amount: price.total,
     paymentMethod: draft.paymentMethod,
@@ -641,7 +859,11 @@ function renderBookingConfirmation() {
   if (refEl) refEl.textContent = active.id;
   if (providerEl) providerEl.textContent = `${provider.name} (${provider.vehicle})`;
   if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
-  if (totalEl) totalEl.textContent = `$${active.amount}.00 / week`;
+  if (totalEl) {
+    totalEl.textContent = active.frequency === 'recurring' 
+      ? `$${active.amount}.00 / week (Recurring)` 
+      : `$${active.amount}.00 Flat Rate (One-Time)`;
+  }
 }
 
 /* ==========================================================
@@ -663,12 +885,28 @@ function renderBookingDetails(bookingId) {
   const refEl = document.getElementById('detailRefId');
   const statusEl = document.getElementById('detailStatusBadge');
   const titleEl = document.getElementById('detailHeaderTitle');
+  const subEl = document.getElementById('detailHeaderSubtitle');
 
   if (refEl) refEl.textContent = booking.id.startsWith('#') ? booking.id : `#${booking.id}`;
   if (titleEl) titleEl.textContent = children.map(c => c.name).join(' & ');
   if (statusEl) {
     statusEl.className = `status-chip ${booking.status}`;
     statusEl.textContent = booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase() : '';
+  }
+
+  // Direction & frequency subtitle in top card
+  if (subEl) {
+    let subText = '';
+    if (booking.direction === 'bothway' && booking.frequency === 'recurring') {
+      subText = '⇄ Two-Way (Round Trip) • Recurring Mon–Fri Commute';
+    } else if (booking.direction === 'oneway' && booking.frequency === 'recurring') {
+      subText = '→ One-Way (Morning Drop-off) • Recurring Mon–Fri Commute';
+    } else if (booking.direction === 'bothway' && booking.frequency === 'onetime') {
+      subText = `⇄ Two-Way (Round Trip) • Single Day Pass (${booking.scheduleText})`;
+    } else {
+      subText = `→ One-Way (Single Ride) • One-Time Trip (${booking.scheduleText})`;
+    }
+    subEl.textContent = subText;
   }
 
   // Children passengers
@@ -703,7 +941,7 @@ function renderBookingDetails(bookingId) {
   const retTime = document.getElementById('detailReturnTime');
   const retBox = document.getElementById('detailReturnLegBox');
 
-  if (outTime) outTime.textContent = booking.outboundTime;
+  if (outTime) outTime.textContent = booking.outboundTime || '07:30 AM';
   if (retTime) retTime.textContent = booking.returnTime || 'N/A';
   if (retBox) {
     retBox.style.display = booking.direction === 'bothway' ? 'flex' : 'none';
@@ -721,8 +959,12 @@ function renderBookingDetails(bookingId) {
   // Payment
   const pAmount = document.getElementById('detailTotalAmount');
   const pMethod = document.getElementById('detailPayMethod');
-  if (pAmount) pAmount.textContent = `$${booking.amount}.00 / wk`;
-  if (pMethod) pMethod.textContent = booking.paymentMethod;
+  if (pAmount) {
+    pAmount.textContent = booking.frequency === 'recurring' 
+      ? `$${booking.amount}.00 / wk (Recurring Commute)` 
+      : `$${booking.amount}.00 Flat Rate (One-Time Trip)`;
+  }
+  if (pMethod) pMethod.textContent = booking.paymentMethod || 'Visa •••• 4242';
 
   // Contextual Actions based on status
   const actionsWrap = document.getElementById('detailContextualActions');
@@ -779,6 +1021,14 @@ function renderBookingsList(tab) {
   const btnC = document.getElementById('tabCancelled');
   const wrap = document.getElementById('bookingsListWrap');
 
+  // Dynamically update tab badges count
+  const countU = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending').length;
+  const countP = window.appState.bookings.filter(b => b.status === 'completed').length;
+  const countC = window.appState.bookings.filter(b => b.status === 'cancelled').length;
+  if (btnU) btnU.textContent = `Upcoming (${countU})`;
+  if (btnP) btnP.textContent = `Past (${countP})`;
+  if (btnC) btnC.textContent = `Cancelled (${countC})`;
+
   [btnU, btnP, btnC].forEach(b => b?.classList.remove('active'));
 
   let filtered = [];
@@ -828,7 +1078,7 @@ function renderBookingsList(tab) {
         timeChip = b.outboundTime;
       }
 
-      if (b.scheduleText && (b.scheduleText.includes('Thursday') || b.scheduleText.includes('May'))) {
+      if (b.scheduleText && (b.scheduleText.includes('Thursday') || b.scheduleText.includes('Friday') || b.scheduleText.includes('May') || b.scheduleText.includes('April'))) {
         const parts = b.scheduleText.split('•');
         dayChip = parts[0].trim();
         if (parts[1]) timeChip = parts[1].trim();
@@ -841,7 +1091,26 @@ function renderBookingsList(tab) {
       const vehicleName = provider.vehicle ? provider.vehicle.split('(')[0].trim() : 'Sedan';
       const pickupName = b.pickupLocation ? b.pickupLocation.split('(')[0].trim() : 'Home';
       const arrowIcon = b.direction === 'bothway' ? '⇄' : '→';
-      const priceUnit = b.frequency === 'recurring' ? '/wk' : '';
+      const priceUnit = b.frequency === 'recurring' ? '/wk' : 'trip';
+
+      // Direction & Frequency Type Badge
+      let typeBadgeText = '';
+      let badgeClass = 'recurring';
+      if (b.direction === 'bothway' && b.frequency === 'recurring') {
+        typeBadgeText = '2-Way • Recurring';
+        badgeClass = 'recurring';
+      } else if (b.direction === 'oneway' && b.frequency === 'recurring') {
+        typeBadgeText = '1-Way • Recurring';
+        badgeClass = 'recurring';
+      } else if (b.direction === 'bothway' && b.frequency === 'onetime') {
+        typeBadgeText = '2-Way • Day Pass';
+        badgeClass = 'onetime';
+      } else {
+        typeBadgeText = '1-Way • Single Trip';
+        badgeClass = 'onetime';
+      }
+
+      const directionChip = b.direction === 'bothway' ? 'Round Trip' : 'Morning Drop-off';
 
       let actionsHtml = '';
       if (b.status === 'confirmed') {
@@ -881,15 +1150,15 @@ function renderBookingsList(tab) {
             </span>
             <div class="booking-card-price">
               <span class="price-val">$${b.amount}</span>
-              ${priceUnit ? `<span class="price-cycle">${priceUnit}</span>` : ''}
+              <span class="price-cycle">${priceUnit}</span>
             </div>
           </div>
 
           <div class="booking-card-main">
             <div class="booking-card-title-row">
               <div class="booking-card-child-name">${childText}</div>
-              <span class="booking-type-badge ${b.frequency === 'recurring' ? '' : 'onetime'}">
-                ${b.frequency === 'recurring' ? 'Recurring' : 'Single Trip'}
+              <span class="booking-type-badge ${badgeClass}">
+                ${typeBadgeText}
               </span>
             </div>
 
@@ -911,6 +1180,10 @@ function renderBookingsList(tab) {
                   <span>${timeChip}</span>
                 </span>
               ` : ''}
+              <span class="booking-meta-chip">
+                <i data-lucide="${b.direction === 'bothway' ? 'arrow-right-left' : 'arrow-right'}"></i>
+                <span>${directionChip}</span>
+              </span>
             </div>
           </div>
 
