@@ -5783,12 +5783,16 @@ svg.lucide {
 }
 
 .transit-node-time {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--color-title);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
   white-space: nowrap;
-  letter-spacing: -0.2px;
-  padding-top: 1px;
+  letter-spacing: -0.1px;
 }
 
 /* Integrated Driver Safety Row */
