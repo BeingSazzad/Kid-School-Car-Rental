@@ -642,6 +642,8 @@ window.navigateTo = function (screenName) {
   // Dynamic View Renderers
   if (screenName === 'home') {
     renderHome();
+  } else if (screenName === 'bookingTripSetup') {
+    if (window.renderBookingSavedLocations) window.renderBookingSavedLocations();
   } else if (screenName === 'bookingSummary') {
     renderBookingSummary();
   } else if (screenName === 'bookings') {
@@ -904,20 +906,35 @@ window.setTripDirection = function (dir) {
   }
 };
 
+window.handleRecurringToggleChange = function (isRecurring) {
+  const repeatDaysSection = document.getElementById('repeatDaysSection');
+  const subTxt = document.getElementById('repeatSubtitleText');
+
+  if (isRecurring) {
+    window.appState.bookingDraft.frequency = 'recurring';
+    if (repeatDaysSection) repeatDaysSection.style.display = 'block';
+    if (subTxt) subTxt.textContent = 'Repeats every week on selected days';
+  } else {
+    window.appState.bookingDraft.frequency = 'onetime';
+    if (repeatDaysSection) repeatDaysSection.style.display = 'none';
+    if (subTxt) subTxt.textContent = 'One-time ride on selected date';
+  }
+};
+
 window.setBookingFrequency = function (freq) {
   window.appState.bookingDraft.frequency = freq;
-  const btnOneTime = document.getElementById('btnFreqOneTime');
-  const btnRec = document.getElementById('btnFreqRecurring');
-  const repeatDaysSection = document.getElementById('repeatDaysSection') || document.getElementById('cleanDaysGrid') || document.getElementById('weekdaySelectorBox');
+  const toggle = document.getElementById('toggleRecurringRide');
+  const repeatDaysSection = document.getElementById('repeatDaysSection');
+  const subTxt = document.getElementById('repeatSubtitleText');
 
   if (freq === 'onetime') {
-    btnOneTime?.classList.add('active');
-    btnRec?.classList.remove('active');
+    if (toggle) toggle.checked = false;
     if (repeatDaysSection) repeatDaysSection.style.display = 'none';
+    if (subTxt) subTxt.textContent = 'One-time ride on selected date';
   } else {
-    btnOneTime?.classList.remove('active');
-    btnRec?.classList.add('active');
+    if (toggle) toggle.checked = true;
     if (repeatDaysSection) repeatDaysSection.style.display = 'block';
+    if (subTxt) subTxt.textContent = 'Repeats every week on selected days';
   }
 };
 
@@ -971,6 +988,153 @@ window.handleScheduleDateChange = function (type, dateVal) {
     const retInput = document.getElementById('setupReturnDate');
     if (retInput) retInput.dataset.userChanged = 'true';
   }
+};
+
+window.renderBookingSavedLocations = function () {
+  const container = document.getElementById('bookingSavedLocsList');
+  if (!container) return;
+
+  const locs = window.appState.savedLocations || [];
+  if (locs.length === 0) {
+    container.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 12px; color: #94A3B8; font-weight: 600;">No saved locations yet</span>
+        <button type="button" class="clean-quick-chip add-new" onclick="openAddLocationModal()">
+          <i data-lucide="plus"></i>
+          <span>Add New</span>
+        </button>
+      </div>
+    `;
+  } else {
+    const currentPickup = (window.appState.bookingDraft.pickupLocation || '').toLowerCase();
+    const currentSchool = (window.appState.bookingDraft.schoolLocation || '').toLowerCase();
+
+    const chips = locs.map(loc => {
+      let iconName = 'map-pin';
+      if (loc.type === 'home') iconName = 'home';
+      else if (loc.type === 'school') iconName = 'graduation-cap';
+      else if (loc.type === 'family') iconName = 'heart';
+
+      const isLocActive = currentPickup.includes(loc.name.toLowerCase()) || currentSchool.includes(loc.name.toLowerCase());
+      const activeClass = isLocActive ? 'active' : '';
+
+      let label = loc.name;
+      if (label.includes('Greenfield')) label = 'Greenfield';
+      else if (label.includes('Sunshine')) label = 'Sunshine';
+      else if (label.includes('Grandmother') || label.includes('Grandma')) label = "Grandma's";
+
+      return `
+        <button type="button" class="clean-quick-chip ${activeClass}" onclick="applySavedBookingLocation('${loc.id}', this)" title="${loc.name} (${loc.street})">
+          <i data-lucide="${iconName}"></i>
+          <span>${label}</span>
+        </button>
+      `;
+    });
+
+    chips.push(`
+      <button type="button" class="clean-quick-chip add-new" onclick="openAddLocationModal()" title="Add a new saved location">
+        <i data-lucide="plus"></i>
+        <span>Add New</span>
+      </button>
+    `);
+
+    container.innerHTML = chips.join('');
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.applySavedBookingLocation = function (locId, btnEl) {
+  const loc = (window.appState.savedLocations || []).find(l => l.id === locId);
+  if (!loc) return;
+
+  const pEl = document.getElementById('setupPickupLocation');
+  const sEl = document.getElementById('setupSchoolLocation');
+  const dispP = document.getElementById('displayPickupAddr');
+  const dispS = document.getElementById('displaySchoolAddr');
+
+  if (loc.type === 'school') {
+    if (sEl) sEl.value = loc.name;
+    if (dispS) dispS.textContent = loc.name;
+    window.appState.bookingDraft.schoolLocation = loc.name;
+    if (typeof showToast === 'function') showToast(`Selected ${loc.name} as school drop-off`);
+  } else {
+    const fullPickup = `${loc.name} (${loc.street})`;
+    if (pEl) pEl.value = fullPickup;
+    if (dispP) dispP.textContent = loc.street || loc.name;
+    window.appState.bookingDraft.pickupLocation = fullPickup;
+    if (typeof showToast === 'function') showToast(`Selected ${loc.name} as pickup point`);
+  }
+
+  const outLabel = document.getElementById('outboundScheduleLabel');
+  const retLabel = document.getElementById('returnScheduleLabel');
+  const pName = dispP ? dispP.textContent.split(',')[0].trim() : 'Home';
+  const sName = dispS ? dispS.textContent.split(',')[0].trim() : 'School';
+  if (outLabel) outLabel.textContent = `Outbound (${pName} → ${sName})`;
+  if (retLabel) retLabel.textContent = `Return (${sName} → ${pName})`;
+
+  if (btnEl && btnEl.parentElement) {
+    btnEl.parentElement.querySelectorAll('.clean-quick-chip').forEach(c => c.classList.remove('active'));
+    btnEl.classList.add('active');
+  }
+};
+
+window.openAddLocationModal = function () {
+  const modal = document.getElementById('modal-addBookingLocation');
+  if (modal) {
+    modal.style.display = 'flex';
+    const input = document.getElementById('newLocName');
+    if (input) {
+      input.value = '';
+      setTimeout(() => input.focus(), 80);
+    }
+    const stInput = document.getElementById('newLocStreet');
+    if (stInput) stInput.value = '';
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.closeAddLocationModal = function () {
+  const modal = document.getElementById('modal-addBookingLocation');
+  if (modal) modal.style.display = 'none';
+};
+
+window.handleSaveNewBookingLocation = function (e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const nameInput = document.getElementById('newLocName');
+  const streetInput = document.getElementById('newLocStreet');
+  const catInput = document.querySelector('input[name="newLocCategory"]:checked');
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const street = streetInput ? streetInput.value.trim() : '';
+  const type = catInput ? catInput.value : 'home';
+
+  if (!name || !street) {
+    if (typeof showToast === 'function') showToast('Please enter both location name and address', 'warning');
+    return;
+  }
+
+  const newId = `loc-${Date.now()}`;
+  const newLocation = {
+    id: newId,
+    name,
+    street,
+    type,
+    isDefault: false
+  };
+
+  if (!window.appState.savedLocations) window.appState.savedLocations = [];
+  window.appState.savedLocations.push(newLocation);
+
+  window.closeAddLocationModal();
+  window.renderBookingSavedLocations();
+  window.applySavedBookingLocation(newId);
+
+  if (typeof showToast === 'function') showToast(`Added "${name}" to saved locations!`);
 };
 
 window.applyPresetLocation = function (type, address, fullVal, btnEl) {
@@ -1149,6 +1313,11 @@ window.proceedFromTripSetup = function () {
     }
   } else {
     window.appState.bookingDraft.returnTime = '';
+  }
+
+  const toggleEl = document.getElementById('toggleRecurringRide');
+  if (toggleEl) {
+    window.appState.bookingDraft.frequency = toggleEl.checked ? 'recurring' : 'onetime';
   }
 
   if (window.appState.bookingDraft.frequency === 'recurring') {
@@ -4961,6 +5130,17 @@ function renderDriverProfile() {
     window.lucide.createIcons();
   }
 }
+
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.renderBookingSavedLocations) window.renderBookingSavedLocations();
+    });
+  } else {
+    if (window.renderBookingSavedLocations) window.renderBookingSavedLocations();
+  }
+}
+
 
 
 
