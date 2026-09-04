@@ -1001,18 +1001,17 @@ function renderBookingDetails(bookingId) {
   const passWrap = document.getElementById('detailPassengersWrap');
   if (passWrap) {
     passWrap.innerHTML = children.map((c, idx) => {
-      const initials = c.name.split(' ').map(n => n[0]).join('');
-      const colorClass = c.id === 'arman' ? 'navy' : c.id === 'emma' ? 'blue' : 'orange';
+      const photoSrc = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
       return `
-        <div style="display:flex; align-items:center; justify-content:space-between; padding: 10px 0; ${idx < children.length - 1 ? 'border-bottom: 1px solid var(--color-stroke);' : ''}">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding: 8px 0; ${idx < children.length - 1 ? 'border-bottom: 1px solid #F1F5F9;' : ''}">
           <div style="display:flex; align-items:center; gap:12px;">
-            <div class="child-monogram-avatar ${colorClass}" style="width:38px; height:38px; font-size:13px;">${initials}</div>
+            <img src="${photoSrc}" alt="${c.name}" class="child-photo-avatar" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:1px solid #E2E8F0;" onerror="this.src='/assets/avatar_arman.jpg';" />
             <div>
-              <div style="font-size:14px;font-weight:800;color:var(--color-title);">${c.name}</div>
-              <div style="font-size:12px;color:var(--color-body); margin-top: 2px;">${c.grade} • ${c.school}</div>
+              <div style="font-size:14px;font-weight:800;color:var(--color-title); line-height:1.2;">${c.name}</div>
+              <div style="font-size:12px;color:var(--color-body); margin-top: 2px;">${c.age || c.grade} • ${c.school}</div>
             </div>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#15803D; background:#F0FDF4; padding:3px 9px; border-radius:99px; border:1px solid #DCFCE7; white-space:nowrap;">Confirmed</span>
+          <span style="font-size:11px; font-weight:700; color:#15803D; background:#F0FDF4; padding:3px 8px; border-radius:99px; border:1px solid #DCFCE7; white-space:nowrap;">Confirmed</span>
         </div>
       `;
     }).join('');

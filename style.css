@@ -58,7 +58,12 @@
   /* Shadows */
   --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.04);
   --shadow-button: 0 4px 14px rgba(27, 43, 104, 0.16);
-  --shadow-orange: 0 6px 16px rgba(242, 96, 12, 0.35);
+  /* 8pt / 4pt Product Design Spacing Grid */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
 
   --font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
@@ -695,7 +700,7 @@ svg.lucide {
 
 .otp-inputs-grid {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   justify-content: center;
   margin-bottom: 32px;
 }
@@ -740,7 +745,7 @@ svg.lucide {
   padding-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -748,7 +753,7 @@ svg.lucide {
 .profile-fields-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   margin-top: 28px;
   text-align: left;
   flex: 1;
@@ -1220,7 +1225,7 @@ svg.lucide {
 .route-timeline {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   flex: 1;
 }
 
@@ -1481,7 +1486,7 @@ svg.lucide {
   padding: 16px var(--screen-padding-h) 96px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
 }
 
 .top-bar-sticky {
@@ -2021,7 +2026,7 @@ svg.lucide {
 .child-card-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .child-card-title-row {
@@ -2515,7 +2520,7 @@ svg.lucide {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .summary-section-title {
@@ -3129,17 +3134,17 @@ svg.lucide {
 .bookings-list-container {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .booking-item-card {
   background-color: #FFFFFF;
   border: 1px solid #F1F5F9;
   border-radius: 16px;
-  padding: 18px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 12px;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 14px -2px rgba(15, 23, 42, 0.04);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
@@ -3747,7 +3752,7 @@ svg.lucide {
 .child-manage-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .child-photo-avatar {
@@ -3837,7 +3842,7 @@ svg.lucide {
 .booking-detail-header-card {
   background: linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%);
   border-radius: var(--radius-lg);
-  padding: 18px;
+  padding: 16px;
   color: #FFFFFF;
   display: flex;
   flex-direction: column;
@@ -3858,12 +3863,15 @@ svg.lucide {
 }
 
 .details-section-box {
-  background-color: var(--color-fade);
-  border-radius: var(--radius-md);
-  padding: 14px;
+  background-color: #FFFFFF;
+  border: 1px solid #F1F5F9;
+  border-radius: 16px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+  margin-bottom: 0;
 }
 
 .details-section-label {
@@ -3871,14 +3879,15 @@ svg.lucide {
   font-weight: 700;
   color: var(--color-title);
   letter-spacing: normal;
+  margin-bottom: 0;
 }
 
 .details-route-leg {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #F1F5F9;
 }
 
 .details-route-leg:last-child {
@@ -3934,9 +3943,9 @@ svg.lucide {
 .booking-lifecycle-timeline {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   position: relative;
-  padding-left: 24px;
+  padding-left: 20px;
 }
 
 .booking-lifecycle-timeline::before {
@@ -3958,7 +3967,7 @@ svg.lucide {
 
 .timeline-step-dot {
   position: absolute;
-  left: -24px;
+  left: -20px;
   top: 3px;
   width: 16px;
   height: 16px;
@@ -3991,8 +4000,8 @@ svg.lucide {
 .action-buttons-group-vertical {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 .btn-secondary-surface {
@@ -4042,9 +4051,9 @@ svg.lucide {
 .booking-lifecycle-timeline {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   position: relative;
-  padding-left: 24px;
+  padding-left: 20px;
 }
 
 .booking-lifecycle-timeline::before {
@@ -4066,7 +4075,7 @@ svg.lucide {
 
 .timeline-step-dot {
   position: absolute;
-  left: -24px;
+  left: -20px;
   top: 3px;
   width: 16px;
   height: 16px;
@@ -4099,8 +4108,8 @@ svg.lucide {
 .action-buttons-group-vertical {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 .btn-secondary-surface {
@@ -4544,7 +4553,7 @@ svg.lucide {
 .notification-card {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 12px;
   padding: 16px 4px;
   background-color: transparent;
   border: none;
@@ -4794,22 +4803,22 @@ svg.lucide {
 /* Standard Minimal Card Containers */
 .details-section-box {
   background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #F1F5F9;
   border-radius: 16px;
-  padding: 16px 18px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  margin-bottom: 12px;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+  margin-bottom: 0;
 }
 
 .details-section-label {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: normal;
-  color: var(--color-primary);
-  margin-bottom: 3px;
+  color: var(--color-title);
+  margin-bottom: 0;
 }
 
 /* Dedicated Pill Action Button (Guaranteed Zero Overlap) */
@@ -5466,10 +5475,10 @@ svg.lucide {
 }
 
 .receipt-modal-body {
-  padding: 16px 18px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .receipt-amount-banner {
