@@ -1093,86 +1093,60 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Select Children</h2>
-        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 1/4</span>
+        <span style="width: 28px;"></span>
       </div>
 
-      <div class="screen-scroll-body">
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-          <div>
-            <h3 style="font-size: 18px; font-weight: 800; color: var(--color-title);">Who is traveling?</h3>
-            <p style="font-size: 13px; color: var(--color-body); margin-top: 2px;">Select one or multiple children for
-              this trip.</p>
-          </div>
-          <span class="passenger-count-badge" id="passengerBadge" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="users" style="width:13px;height:13px;"></i><span id="passengerBadgeText">2 Selected</span></span>
+      <div class="screen-scroll-body" style="display: flex; flex-direction: column;">
+        <div class="booking-flow-subtitle" style="text-align: center; margin-bottom: 20px;">
+          Choose who's travelling
         </div>
 
         <!-- Child Selection Card 1 -->
-        <div class="child-select-card selected" id="childCard-arman" onclick="toggleChildSelection('arman')">
-          <div class="child-card-left">
-            <img src="/assets/avatar_arman.jpg" alt="Arman Khan" class="child-photo-avatar" />
+        <div class="clean-child-card selected" id="childCard-arman" onclick="toggleChildSelection('arman')">
+          <div class="clean-child-left">
+            <img src="/assets/avatar_arman.jpg" alt="Arman Khan" class="clean-child-avatar" />
             <div>
-              <div class="child-card-title-row">
-                <span class="child-info-title">Arman Khan</span>
-              </div>
-              <div class="child-meta-row">
-                <span class="child-grade-pill">Grade 4</span>
-                <span class="child-school-text">Greenfield International</span>
-              </div>
+              <div class="clean-child-name">Arman Khan</div>
+              <div class="clean-child-sub">Grade 3 · Greenfield School</div>
             </div>
           </div>
-          <div class="checkbox-custom-badge">
-            <i data-lucide="check" style="width:15px;height:15px;"></i>
+          <div class="clean-checkbox">
+            <i data-lucide="check" style="width:14px;height:14px;"></i>
           </div>
         </div>
 
         <!-- Child Selection Card 2 -->
-        <div class="child-select-card selected" id="childCard-emma" onclick="toggleChildSelection('emma')">
-          <div class="child-card-left">
-            <img src="/assets/avatar_emma.jpg" alt="Emma Khan" class="child-photo-avatar" />
+        <div class="clean-child-card selected" id="childCard-emma" onclick="toggleChildSelection('emma')">
+          <div class="clean-child-left">
+            <img src="/assets/avatar_emma.jpg" alt="Emma Khan" class="clean-child-avatar" />
             <div>
-              <div class="child-card-title-row">
-                <span class="child-info-title">Emma Khan</span>
-              </div>
-              <div class="child-meta-row">
-                <span class="child-grade-pill">Grade 2</span>
-                <span class="child-school-text">Greenfield International</span>
-              </div>
+              <div class="clean-child-name">Emma Khan</div>
+              <div class="clean-child-sub">Grade 1 · Greenfield School</div>
             </div>
           </div>
-          <div class="checkbox-custom-badge">
-            <i data-lucide="check" style="width:15px;height:15px;"></i>
+          <div class="clean-checkbox">
+            <i data-lucide="check" style="width:14px;height:14px;"></i>
           </div>
         </div>
 
         <!-- Child Selection Card 3 -->
-        <div class="child-select-card" id="childCard-zara" onclick="toggleChildSelection('zara')">
-          <div class="child-card-left">
-            <img src="/assets/avatar_zara.jpg" alt="Zara Khan" class="child-photo-avatar" />
+        <div class="clean-child-card" id="childCard-zara" onclick="toggleChildSelection('zara')">
+          <div class="clean-child-left">
+            <img src="/assets/avatar_zara.jpg" alt="Zara Khan" class="clean-child-avatar" />
             <div>
-              <div class="child-card-title-row">
-                <span class="child-info-title">Zara Khan</span>
-              </div>
-              <div class="child-meta-row">
-                <span class="child-grade-pill">Pre-K</span>
-                <span class="child-school-text">Sunshine Pre-school</span>
-              </div>
+              <div class="clean-child-name">Zara Khan</div>
+              <div class="clean-child-sub">Pre-K · Sunshine School</div>
             </div>
           </div>
-          <div class="checkbox-custom-badge">
-            <i data-lucide="check" style="width:15px;height:15px;"></i>
+          <div class="clean-checkbox">
+            <i data-lucide="check" style="width:14px;height:14px;"></i>
           </div>
         </div>
 
-        <!-- Multi-Child Route Note -->
-        <div class="safety-reassurance-card" style="background: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px;">
-          <i data-lucide="users" style="width: 18px; height: 18px; color: var(--color-primary); flex-shrink: 0;"></i>
-          <div style="font-size: 12.5px; color: var(--color-primary); line-height: 1.4;">
-            <strong>Shared School Route:</strong> Arman &amp; Emma attend Greenfield School. They will ride together in a single booking.
-          </div>
-        </div>
-
-        <div style="margin-top: 10px;">
-          <button class="btn-primary" onclick="navigateTo('bookingTripSetup')">Continue to Trip Setup</button>
+        <!-- Sticky Bottom CTA -->
+        <div class="booking-flow-sticky-footer" style="margin-top: auto;">
+          <div class="booking-selected-count-label" id="passengerBadgeText">2 children selected</div>
+          <button class="btn-primary" style="height: 48px; border-radius: 99px;" onclick="navigateTo('bookingTripSetup')">Continue</button>
         </div>
       </div>
 
@@ -1201,163 +1175,114 @@
         <button class="back-btn" onclick="navigateTo('bookingSelectChildren')">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Trip Setup</h2>
-        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 2/4</span>
+        <h2 class="top-bar-title">Trip Details</h2>
+        <span style="width: 28px;"></span>
       </div>
 
-      <div class="screen-scroll-body">
-        <!-- Card 1: Route & Commute Direction (Where & How) -->
-        <div class="trip-setup-card">
-          <div style="font-size: 13.5px; font-weight: 700; color: var(--color-primary); margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
-            <i data-lucide="map-pin" style="width:16px;height:16px;color:var(--color-primary);"></i>
-            <span>Route &amp; Commute Direction</span>
-          </div>
-
-          <!-- Pickup Location Field -->
-          <div class="form-group" style="margin-bottom: 12px;">
-            <label class="form-label-sm">Pickup Address</label>
-            <div class="input-with-icon">
-              <span class="loc-dot-icon green"></span>
-              <input type="text" class="form-input" id="setupPickupLocation" placeholder="Enter pickup address" value="" onchange="window.appState.bookingDraft.pickupLocation = this.value" />
-            </div>
-            <!-- Quick Saved Location Selector Pills -->
-            <div class="quick-location-chips">
-              <span class="quick-loc-label">Saved:</span>
-              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('pickup', 'Home (12 Elm Street)', this)"><i data-lucide="home" style="width:12px;height:12px;margin-right:4px;"></i>Home</button>
-              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('pickup', '84 Willowbrook Crescent', this)"><i data-lucide="map-pin" style="width:12px;height:12px;margin-right:4px;"></i>Grandma's</button>
-            </div>
-          </div>
-
-          <!-- Drop-off / School Field -->
-          <div class="form-group" style="margin-bottom: 12px;">
-            <label class="form-label-sm">School / Drop-off</label>
-            <div class="input-with-icon">
-              <span class="loc-dot-icon orange"></span>
-              <input type="text" class="form-input" id="setupSchoolLocation" placeholder="Enter school name or drop-off" value="" onchange="window.appState.bookingDraft.schoolLocation = this.value" />
-            </div>
-            <!-- Quick School Selector Pills -->
-            <div class="quick-location-chips">
-              <span class="quick-loc-label">Schools:</span>
-              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('school', 'Greenfield International School', this)"><i data-lucide="graduation-cap" style="width:12px;height:12px;margin-right:4px;"></i>Greenfield</button>
-              <button type="button" class="quick-loc-chip" onclick="selectQuickLocation('school', 'Sunshine Pre-school', this)"><i data-lucide="graduation-cap" style="width:12px;height:12px;margin-right:4px;"></i>Sunshine</button>
-            </div>
-          </div>
-
-          <!-- Trip Direction -->
-          <div class="form-group" style="margin-top: 4px; margin-bottom: 10px;">
-            <label class="form-label-sm">Trip Direction</label>
-            <div class="segmented-control">
-              <button type="button" class="segment-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">⇄ Round Trip</button>
-              <button type="button" class="segment-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">→ One Way</button>
-            </div>
-          </div>
-
-          <!-- Save Location Checkbox Option -->
-          <div class="save-location-toggle-row">
-            <label class="save-location-label" for="chkSaveLocations">
-              <input type="checkbox" id="chkSaveLocations" checked />
-              <span>Save new addresses to my Saved Locations</span>
-            </label>
+      <div class="screen-scroll-body" style="padding-bottom: 30px;">
+        <!-- 1. Trip Type -->
+        <div class="clean-flow-section">
+          <div class="clean-flow-label">Trip Type</div>
+          <div class="clean-pill-toggle">
+            <button type="button" class="clean-pill-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">One Way</button>
+            <button type="button" class="clean-pill-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">Both Way</button>
           </div>
         </div>
 
-        <!-- Card 2: Schedule & Timing (When & How Often) -->
-        <div class="trip-setup-card">
-          <div style="font-size: 13.5px; font-weight: 700; color: var(--color-primary); margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
-            <i data-lucide="calendar" style="width:16px;height:16px;color:var(--color-primary);"></i>
-            <span>Schedule &amp; Timing</span>
-          </div>
-
-          <!-- Booking Frequency Option Cards -->
-          <div class="form-group" style="margin-bottom: 12px;">
-            <label class="form-label-sm">Booking Frequency</label>
-            <div class="frequency-cards-grid">
-              <button type="button" class="freq-option-card active" id="btnFreqRecurring" onclick="setBookingFrequency('recurring')">
-                <div class="freq-icon-wrap">
-                  <i data-lucide="repeat"></i>
-                </div>
-                <div class="freq-text-block">
-                  <div class="freq-title">Recurring</div>
-                  <div class="freq-sub">Weekly school commute (Mon–Fri)</div>
-                </div>
-                <div class="freq-check-icon">
-                  <i data-lucide="check-circle-2"></i>
-                </div>
-              </button>
-
-              <button type="button" class="freq-option-card" id="btnFreqOneTime" onclick="setBookingFrequency('onetime')">
-                <div class="freq-icon-wrap">
-                  <i data-lucide="calendar"></i>
-                </div>
-                <div class="freq-text-block">
-                  <div class="freq-title">One-Time Ride</div>
-                  <div class="freq-sub">Single day or emergency trip</div>
-                </div>
-                <div class="freq-check-icon">
-                  <i data-lucide="check-circle-2"></i>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          <!-- Commute Days (Visible when Recurring) -->
-          <div class="weekday-selector-wrap" id="weekdaySelectorBox" style="margin-bottom: 12px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-              <span class="form-label-sm" style="margin-bottom:0;">School Commute Days:</span>
-              <span style="font-size: 11.5px; font-weight: 700; color: var(--color-secondary);">Mon – Fri</span>
-            </div>
-            <div class="weekday-pills-row">
-              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">M</button>
-              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">T</button>
-              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">W</button>
-              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">T</button>
-              <button type="button" class="day-pill-btn active" onclick="this.classList.toggle('active')">F</button>
-              <button type="button" class="day-pill-btn" onclick="this.classList.toggle('active')">S</button>
-              <button type="button" class="day-pill-btn" onclick="this.classList.toggle('active')">S</button>
-            </div>
-          </div>
-
-          <!-- Start Date / Single Date Field -->
-          <div class="form-group" id="recurringStartDateBox" style="margin-bottom: 12px;">
-            <label class="form-label-sm">Schedule Starts From</label>
-            <div class="input-with-icon">
-              <i data-lucide="calendar" style="width:18px;height:18px;color:#64748B;"></i>
-              <input type="date" class="form-input" id="setupStartDate" value="" onchange="window.appState.bookingDraft.startDate = this.value" />
-            </div>
-          </div>
-
-          <div class="form-group" id="oneTimeDatePickerBox" style="display: none; margin-bottom: 12px;">
-            <label class="form-label-sm">Ride Date</label>
-            <div class="input-with-icon">
-              <i data-lucide="calendar" style="width:18px;height:18px;color:#64748B;"></i>
-              <input type="date" class="form-input" id="setupTripDate" value="" onchange="window.appState.bookingDraft.tripDate = this.value" />
-            </div>
-          </div>
-
-          <!-- Commute Times Grid -->
-          <div class="times-grid">
-            <!-- Pickup Time -->
-            <div class="time-picker-box">
-              <label class="form-label-sm">Pickup Time</label>
-              <div class="input-with-icon">
-                <i data-lucide="clock" style="width:16px;height:16px;color:var(--color-primary);"></i>
-                <input type="time" class="form-input" id="setupOutboundTime" value="" onchange="updateTripTime('outbound', this.value)" />
+        <!-- 2. Pickup & Drop-off Unified Card -->
+        <div class="clean-flow-section">
+          <div class="clean-flow-label">Pickup &amp; Drop-off</div>
+          <div class="clean-route-card">
+            <!-- Pickup Point -->
+            <div class="clean-route-point">
+              <div class="clean-route-icon-box">
+                <i data-lucide="home" style="width: 18px; height: 18px; color: #0284C7;"></i>
+              </div>
+              <div class="clean-route-info">
+                <div class="clean-route-type">Home</div>
+                <div class="clean-route-addr" id="displayPickupAddr">12 Elm Street, Toronto</div>
+                <input type="hidden" id="setupPickupLocation" value="Home (12 Elm Street)" />
               </div>
             </div>
 
-            <!-- Return Time (Hidden when One-way) -->
-            <div class="time-picker-box" id="returnTimePickerBox">
-              <label class="form-label-sm">Return Time</label>
-              <div class="input-with-icon">
-                <i data-lucide="clock" style="width:16px;height:16px;color:var(--color-primary);"></i>
-                <input type="time" class="form-input" id="setupReturnTime" value="" onchange="updateTripTime('return', this.value)" />
+            <!-- Divider with Circular Swap Button -->
+            <div class="clean-route-divider">
+              <button type="button" class="clean-route-swap-btn" onclick="swapPickupDropoff()" title="Swap Pickup &amp; School">
+                <i data-lucide="arrow-up-down" style="width: 15px; height: 15px;"></i>
+              </button>
+            </div>
+
+            <!-- School Point -->
+            <div class="clean-route-point">
+              <div class="clean-route-icon-box">
+                <i data-lucide="graduation-cap" style="width: 18px; height: 18px; color: #EA580C;"></i>
+              </div>
+              <div class="clean-route-info">
+                <div class="clean-route-type">School</div>
+                <div class="clean-route-addr" id="displaySchoolAddr">Greenfield International School</div>
+                <input type="hidden" id="setupSchoolLocation" value="Greenfield International School" />
               </div>
             </div>
           </div>
         </div>
 
-        <div style="margin-top: 4px; margin-bottom: 24px;">
-          <button type="button" class="btn-primary" onclick="proceedFromTripSetup()">Search Verified Providers</button>
+        <!-- 3. Schedule -->
+        <div class="clean-flow-section">
+          <div class="clean-flow-label">Schedule</div>
+          
+          <!-- Outbound -->
+          <div class="clean-schedule-sub-label">Outbound (Home → School)</div>
+          <div class="clean-schedule-row">
+            <div class="clean-schedule-pill-input">
+              <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748B;"></i>
+              <input type="text" id="setupOutboundDateText" value="Mon, Sep 8" readonly />
+              <input type="date" id="setupStartDate" value="2026-09-08" style="position: absolute; opacity: 0; width: 0; height: 0;" onchange="document.getElementById('setupOutboundDateText').value = this.value" />
+            </div>
+            <div class="clean-schedule-pill-input">
+              <i data-lucide="clock" style="width: 16px; height: 16px; color: #64748B;"></i>
+              <input type="time" id="setupOutboundTime" value="07:30" />
+            </div>
+          </div>
+
+          <!-- Return -->
+          <div id="returnScheduleBlock">
+            <div class="clean-schedule-sub-label">Return (School → Home)</div>
+            <div class="clean-schedule-row">
+              <div class="clean-schedule-pill-input">
+                <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748B;"></i>
+                <input type="text" id="setupReturnDateText" value="Mon, Sep 8" readonly />
+              </div>
+              <div class="clean-schedule-pill-input">
+                <i data-lucide="clock" style="width: 16px; height: 16px; color: #64748B;"></i>
+                <input type="time" id="setupReturnTime" value="13:00" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Repeat -->
+        <div class="clean-flow-section">
+          <div class="clean-flow-label">Repeat</div>
+          <div class="clean-pill-toggle">
+            <button type="button" class="clean-pill-btn" id="btnFreqOneTime" onclick="setBookingFrequency('onetime')">One-time</button>
+            <button type="button" class="clean-pill-btn active" id="btnFreqRecurring" onclick="setBookingFrequency('recurring')">Recurring</button>
+          </div>
+
+          <!-- Day selector circles -->
+          <div class="clean-days-grid" id="cleanDaysGrid">
+            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">M</button>
+            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">T</button>
+            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">W</button>
+            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">T</button>
+            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">F</button>
+            <button type="button" class="clean-day-btn" onclick="this.classList.toggle('active')">S</button>
+            <button type="button" class="clean-day-btn" onclick="this.classList.toggle('active')">S</button>
+          </div>
+        </div>
+
+        <!-- Sticky Bottom CTA -->
+        <div class="booking-flow-sticky-footer" style="margin-top: 14px;">
+          <button type="button" class="btn-primary" style="height: 48px; border-radius: 99px;" onclick="proceedFromTripSetup()">Continue</button>
         </div>
       </div>
 
@@ -1387,156 +1312,146 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Available Providers</h2>
-        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 3/4</span>
+        <span style="width: 28px;"></span>
       </div>
 
-      <div class="screen-scroll-body">
-        <!-- Route Overview Summary Chip -->
-        <div
-          style="background-color: var(--color-fade); border: 1px solid var(--color-stroke); padding: 10px 14px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between;">
-          <div style="font-size: 13px; font-weight: 700; color: var(--color-title);">Home ⇄ Greenfield School</div>
-          <span
-            style="font-size: 12px; color: #1D4ED8; font-weight: 800; background: #EFF6FF; padding: 2px 8px; border-radius: 99px;">2
-            Seats Needed</span>
-        </div>
+      <div class="screen-scroll-body" style="padding-bottom: 24px;">
+        <div class="clean-providers-subtitle">3 providers near you</div>
 
-        <!-- Quick Filter Chips Scrollbar -->
-        <div class="filters-scroll-bar">
-          <button class="filter-chip-btn active">All (4)</button>
-          <button class="filter-chip-btn">Drivers Only</button>
-          <button class="filter-chip-btn">WalkShare</button>
-          <button class="filter-chip-btn">4.8+ Rated</button>
-          <button class="filter-chip-btn" style="display:inline-flex;align-items:center;gap:4px;">
-            <i data-lucide="shield-check" style="width:13px;height:13px;color:#0284C7;"></i>
-            <span>Verified</span>
-          </button>
-        </div>
+        <!-- Provider Card 1: Tariq Ahmed -->
+        <div class="clean-provider-card" onclick="selectProviderAndReview('Tariq Ahmed', 'Toyota Sienna', '4.9', '$120')">
+          <div class="clean-pcard-header">
+            <div class="clean-pcard-driver">
+              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="clean-pcard-avatar" />
+              <div>
+                <div class="clean-pcard-name">Tariq Ahmed</div>
+                <div class="clean-pcard-rating-row">
+                  <span class="clean-pcard-rating">★ 4.9 (128)</span>
+                  <span class="clean-verified-pill">
+                    <i data-lucide="check" style="width: 10px; height: 10px;"></i>
+                    <span>Verified</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="clean-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');" title="Favorite">
+              <i data-lucide="heart" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
 
-        <!-- Provider Card 1: Tariq Ahmed (Recommended) -->
-        <div class="provider-result-card"
-          onclick="selectProviderAndReview('Tariq Ahmed', 'Toyota Sienna', '4.9', '$120')">
-          <div class="provider-top-row">
-            <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="provider-card-avatar" />
-            <div class="provider-name-block">
-              <div class="provider-name-verified">
-                <span>Tariq Ahmed</span>
-                <span class="verified-badge-icon" title="Background Verified">
-                  <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
-                </span>
-              </div>
-              <div class="provider-meta-row">
-                <span class="rating-badge">★ 4.9 (128 reviews)</span>
-                <span>• 0.8 km away</span>
-              </div>
+          <div class="clean-pcard-car-row">
+            <img src="/assets/vehicle_sienna.jpg" alt="Toyota Sienna" class="clean-pcard-car-img" onerror="this.src='/assets/vehicle_sienna.jpg';" />
+            <div>
+              <div class="clean-pcard-car-specs">Toyota Sienna</div>
+              <div class="clean-pcard-car-seats">4 seats</div>
             </div>
           </div>
 
-          <div class="provider-card-bottom">
-            <div class="vehicle-info-pill">
-              <i data-lucide="car" style="width:15px;height:15px;"></i>
-              <span>Toyota Sienna • 4 seats open</span>
+          <div class="clean-pcard-footer">
+            <div class="clean-pcard-dist">
+              <i data-lucide="map-pin" style="width: 13px; height: 13px; color: #64748B;"></i>
+              <span>1.2 km away</span>
             </div>
-            <div>
-              <span class="price-estimate-text">$120</span>
-              <span class="price-unit-sub">/wk</span>
+            <div class="clean-pcard-price">
+              <strong>$120</strong>
+              <small>/week</small>
             </div>
           </div>
         </div>
 
         <!-- Provider Card 2: Farhana Yasmin -->
-        <div class="provider-result-card"
-          onclick="selectProviderAndReview('Farhana Yasmin', 'Honda Odyssey', '5.0', '$135')">
-          <div class="provider-top-row">
-            <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="provider-card-avatar"
-              style="border-color: #38BDF8;" />
-            <div class="provider-name-block">
-              <div class="provider-name-verified">
-                <span>Farhana Yasmin</span>
-                <span class="verified-badge-icon">
-                  <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
-                </span>
+        <div class="clean-provider-card" onclick="selectProviderAndReview('Farhana Yasmin', 'Honda Odyssey', '4.8', '$110')">
+          <div class="clean-pcard-header">
+            <div class="clean-pcard-driver">
+              <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="clean-pcard-avatar" />
+              <div>
+                <div class="clean-pcard-name">Farhana Yasmin</div>
+                <div class="clean-pcard-rating-row">
+                  <span class="clean-pcard-rating">★ 4.8 (96)</span>
+                  <span class="clean-verified-pill">
+                    <i data-lucide="check" style="width: 10px; height: 10px;"></i>
+                    <span>Verified</span>
+                  </span>
+                </div>
               </div>
-              <div class="provider-meta-row">
-                <span class="rating-badge">★ 5.0 (94 reviews)</span>
-                <span>• 1.2 km away</span>
-              </div>
+            </div>
+            <button type="button" class="clean-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');" title="Favorite">
+              <i data-lucide="heart" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+
+          <div class="clean-pcard-car-row">
+            <img src="/assets/vehicle_odyssey.jpg" alt="Honda Odyssey" class="clean-pcard-car-img" onerror="this.src='/assets/vehicle_odyssey.jpg';" />
+            <div>
+              <div class="clean-pcard-car-specs">Honda Odyssey</div>
+              <div class="clean-pcard-car-seats">5 seats</div>
             </div>
           </div>
 
-          <div class="provider-card-bottom">
-            <div class="vehicle-info-pill">
-              <i data-lucide="car" style="width:15px;height:15px;"></i>
-              <span>Honda Odyssey • 5 seats open</span>
+          <div class="clean-pcard-footer">
+            <div class="clean-pcard-dist">
+              <i data-lucide="map-pin" style="width: 13px; height: 13px; color: #64748B;"></i>
+              <span>2.1 km away</span>
             </div>
-            <div>
-              <span class="price-estimate-text">$135</span>
-              <span class="price-unit-sub">/wk</span>
+            <div class="clean-pcard-price">
+              <strong>$110</strong>
+              <small>/week</small>
             </div>
           </div>
         </div>
 
         <!-- Provider Card 3: Kabir Hossain -->
-        <div class="provider-result-card"
-          onclick="selectProviderAndReview('Kabir Hossain', 'Nissan Rogue', '4.8', '$110')">
-          <div class="provider-top-row">
-            <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="provider-card-avatar" />
-            <div class="provider-name-block">
-              <div class="provider-name-verified">
-                <span>Kabir Hossain</span>
-                <span class="verified-badge-icon">
-                  <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
-                </span>
+        <div class="clean-provider-card" onclick="selectProviderAndReview('Kabir Hossain', 'Toyota Highlander', '4.7', '$105')">
+          <div class="clean-pcard-header">
+            <div class="clean-pcard-driver">
+              <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="clean-pcard-avatar" />
+              <div>
+                <div class="clean-pcard-name">Kabir Hossain</div>
+                <div class="clean-pcard-rating-row">
+                  <span class="clean-pcard-rating">★ 4.7 (74)</span>
+                  <span class="clean-verified-pill">
+                    <i data-lucide="check" style="width: 10px; height: 10px;"></i>
+                    <span>Verified</span>
+                  </span>
+                </div>
               </div>
-              <div class="provider-meta-row">
-                <span class="rating-badge">★ 4.8 (62 reviews)</span>
-                <span>• 1.5 km away</span>
-              </div>
+            </div>
+            <button type="button" class="clean-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');" title="Favorite">
+              <i data-lucide="heart" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+
+          <div class="clean-pcard-car-row">
+            <img src="/assets/vehicle_highlander.jpg" alt="Toyota Highlander" class="clean-pcard-car-img" onerror="this.src='/assets/vehicle_highlander.jpg';" />
+            <div>
+              <div class="clean-pcard-car-specs">Toyota Highlander</div>
+              <div class="clean-pcard-car-seats">4 seats</div>
             </div>
           </div>
 
-          <div class="provider-card-bottom">
-            <div class="vehicle-info-pill">
-              <i data-lucide="car" style="width:15px;height:15px;"></i>
-              <span>Nissan Rogue • 2 seats open</span>
+          <div class="clean-pcard-footer">
+            <div class="clean-pcard-dist">
+              <i data-lucide="map-pin" style="width: 13px; height: 13px; color: #64748B;"></i>
+              <span>3.4 km away</span>
             </div>
-            <div>
-              <span class="price-estimate-text">$110</span>
-              <span class="price-unit-sub">/wk</span>
+            <div class="clean-pcard-price">
+              <strong>$105</strong>
+              <small>/week</small>
             </div>
           </div>
         </div>
 
-        <!-- Provider Card 4: WalkShare -->
-        <div class="provider-result-card"
-          onclick="selectProviderAndReview('Sarah Jenkins (WalkShare)', 'Walking School Bus', '4.9', '$75')">
-          <div class="provider-top-row">
-            <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar" />
-            <div class="provider-name-block">
-              <div class="provider-name-verified">
-                <span>Sarah Jenkins (WalkShare)</span>
-                <span class="verified-badge-icon">
-                  <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
-                </span>
-              </div>
-              <div class="provider-meta-row">
-                <span class="rating-badge">★ 4.9 (45 reviews)</span>
-                <span>• 0.4 km away</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="provider-card-bottom">
-            <div class="vehicle-info-pill">
-              <i data-lucide="footprints" style="width:15px;height:15px;"></i>
-              <span>Walking Escort • 3 spots open</span>
-            </div>
-            <div>
-              <span class="price-estimate-text">$75</span>
-              <span class="price-unit-sub">/wk</span>
-            </div>
-          </div>
+        <!-- Filter / Sort Bottom Control -->
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <button type="button" class="btn-secondary" style="flex: 1; height: 42px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700;" onclick="alert('Filtered by top ratings')">
+            <i data-lucide="arrow-up-down" style="width: 14px; height: 14px;"></i>
+            <span>Sort</span>
+          </button>
+          <button type="button" class="btn-secondary" style="flex: 1; height: 42px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700;" onclick="alert('Filters applied: 4+ seats, Verified')">
+            <i data-lucide="sliders" style="width: 14px; height: 14px;"></i>
+            <span>Filter</span>
+          </button>
         </div>
-
       </div>
 
       <div class="home-indicator"></div>
@@ -1564,75 +1479,90 @@
         <button class="back-btn" id="providerDetailsBackBtn" onclick="handleProviderDetailsBack()" aria-label="Go back">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title" id="providerDetailsTitle">Driver Profile</h2>
-        <span style="width: 26px;"></span>
+        <h2 class="top-bar-title" id="providerDetailsTitle" style="opacity: 0;">Driver Profile</h2>
+        <button type="button" class="clean-fav-btn" onclick="this.classList.toggle('active')" title="Favorite" style="padding: 4px;">
+          <i data-lucide="heart" style="width: 20px; height: 20px;"></i>
+        </button>
       </div>
 
-      <div class="screen-scroll-body">
-        <!-- Hero -->
-        <div class="provider-details-hero">
-          <img src="/assets/avatar_tariq.jpg" alt="Driver" class="provider-large-avatar" id="detailsProviderImg" />
-          <h3 style="font-size: 20px; font-weight: 800; color: var(--color-title);" id="detailsProviderName">Tariq Ahmed</h3>
-          <p style="font-size: 13px; color: var(--color-body);" id="detailsProviderVehicle">2023 Toyota Sienna (Clean &amp; Certified)</p>
+      <div class="screen-scroll-body" style="padding-bottom: 28px;">
+        <!-- Hero Box Centered -->
+        <div class="clean-driver-hero-box">
+          <img src="/assets/avatar_tariq.jpg" alt="Driver" class="clean-driver-big-avatar" id="detailsProviderImg" />
+          <div class="clean-driver-big-name" id="detailsProviderName">Tariq Ahmed</div>
+          <div class="clean-driver-meta-line">
+            <span style="font-size: 13.5px; font-weight: 700; color: #D97706;" id="detailsProviderRatingVal">★ 4.9 (128 reviews)</span>
+            <span class="clean-verified-pill">
+              <i data-lucide="check" style="width: 10px; height: 10px;"></i>
+              <span>Verified</span>
+            </span>
+          </div>
+        </div>
 
-          <div class="provider-stats-grid">
-            <div class="stat-metric-card">
-              <div class="stat-metric-val" id="detailsProviderRatingVal">4.9 ★</div>
-              <div class="stat-metric-lbl" id="detailsProviderReviewsLbl">128 Reviews</div>
+        <!-- 3 Stat Pillars -->
+        <div class="clean-stat-pillars-grid">
+          <div class="clean-stat-pillar">
+            <strong id="detailsProviderExpPillar">5+</strong>
+            <span>Years</span>
+          </div>
+          <div class="clean-stat-pillar" style="border-left: 1px solid #E2E8F0; border-right: 1px solid #E2E8F0;">
+            <strong id="detailsProviderTripsPillar">500+</strong>
+            <span>Trips</span>
+          </div>
+          <div class="clean-stat-pillar">
+            <strong id="detailsProviderOnTimePillar">100%</strong>
+            <span>On-time</span>
+          </div>
+        </div>
+
+        <!-- Vehicle Showcase Box -->
+        <div class="clean-veh-showcase-box">
+          <div class="clean-veh-main-row">
+            <img src="/assets/vehicle_sienna.jpg" alt="Toyota Sienna" class="clean-veh-large-img" id="detailsProviderVehImg" onerror="this.src='/assets/vehicle_sienna.jpg';" />
+            <div>
+              <div class="clean-veh-title" id="detailsProviderVehTitle">Toyota Sienna</div>
+              <div class="clean-veh-sub" id="detailsProviderVehSpecs">4 seats · 2022 white</div>
             </div>
-            <div class="stat-metric-card">
-              <div class="stat-metric-val" id="detailsProviderExperienceVal">3+ Yrs</div>
-              <div class="stat-metric-lbl">Experience</div>
+          </div>
+          <div class="clean-veh-thumbs-grid">
+            <img src="/assets/vehicle_sienna.jpg" alt="Exterior" class="clean-veh-thumb-img" />
+            <img src="/assets/vehicle_odyssey.jpg" alt="Interior" class="clean-veh-thumb-img" />
+            <img src="/assets/vehicle_highlander.jpg" alt="Seating" class="clean-veh-thumb-img" />
+          </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="clean-flow-section" style="margin-bottom: 16px;">
+          <div class="clean-flow-label">About</div>
+          <p style="font-size: 13px; color: #475569; line-height: 1.45;" id="detailsProviderBio">
+            Experienced school transport provider with a strong focus on child safety. Verified background check and CPR certified.
+          </p>
+        </div>
+
+        <!-- Parent Reviews -->
+        <div class="clean-flow-section" style="margin-bottom: 20px;">
+          <div class="clean-reviews-header-row">
+            <div class="clean-flow-label" style="margin-bottom: 0;">Parent Reviews</div>
+            <a href="javascript:void(0)" style="font-size: 12px; font-weight: 700; color: #2563EB; text-decoration: none;" onclick="alert('Viewing all 128 verified parent reviews')">See All</a>
+          </div>
+
+          <div class="clean-review-card">
+            <div class="clean-review-top">
+              <div class="clean-reviewer-left">
+                <img src="/assets/avatar_sarah.jpg" alt="Sarah M." class="clean-reviewer-avatar" />
+                <span class="clean-reviewer-name">Sarah M.</span>
+              </div>
+              <span style="font-size: 12px; font-weight: 700; color: #D97706;">★ 5.0</span>
             </div>
-            <div class="stat-metric-card">
-              <div class="stat-metric-val" id="detailsProviderOnTimeVal">100%</div>
-              <div class="stat-metric-lbl">On-Time Rate</div>
+            <div class="clean-review-text" id="detailsProviderReviewText">
+              Very reliable and kind. My kids feel comfortable with him and he is always punctual.
             </div>
           </div>
         </div>
 
-        <!-- Trust Badges -->
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <div class="safety-check-row">
-            <div class="safety-check-left">
-              <div class="safety-check-icon-badge">
-                <i data-lucide="shield-check"></i>
-              </div>
-              <span>Vulnerable Sector Police Record Checked</span>
-            </div>
-            <span class="safety-verified-chip">Verified</span>
-          </div>
-          <div class="safety-check-row">
-            <div class="safety-check-left">
-              <div class="safety-check-icon-badge">
-                <i data-lucide="award"></i>
-              </div>
-              <span>Child First-Aid &amp; CPR Certified</span>
-            </div>
-            <span class="safety-verified-chip">Verified</span>
-          </div>
-          <div class="safety-check-row">
-            <div class="safety-check-left">
-              <div class="safety-check-icon-badge">
-                <i data-lucide="file-check-2"></i>
-              </div>
-              <span>Commercial Rideshare Insurance Verified</span>
-            </div>
-            <span class="safety-verified-chip">Verified</span>
-          </div>
-        </div>
-
-        <!-- Parent Review Quote -->
-        <div
-          style="background-color: var(--color-fade); border-radius: var(--radius-lg); padding: 14px; border: 1px solid var(--color-stroke);">
-          <div style="font-size: 12px; font-weight: 800; color: #D97706; margin-bottom: 4px;">★★★★★ Top Parent Review</div>
-          <p style="font-size: 13px; color: var(--color-title); font-style: italic; line-height: 1.4;" id="detailsProviderQuote">"Tariq has safely driven our kids to Greenfield School for over 8 months. Very gentle, always punctual, and sends notifications right away."</p>
-          <span
-            style="font-size: 11.5px; color: var(--color-body); font-weight: 700; margin-top: 6px; display: block;" id="detailsProviderReviewer">— Nadia Rahman (Parent of 2)</span>
-        </div>
-
-        <div id="detailsProviderActionsWrap" style="margin-top: 6px;">
-          <button class="btn-primary" onclick="navigateTo('bookingSummary')">Continue to Booking</button>
+        <!-- Sticky Bottom CTA -->
+        <div class="booking-flow-sticky-footer" id="detailsProviderActionsWrap">
+          <button class="btn-primary" id="btnBookWithProvider" style="height: 48px; border-radius: 99px;" onclick="navigateTo('bookingSummary')">Book with Tariq</button>
         </div>
       </div>
 
@@ -2449,89 +2379,13 @@
         <!-- Filter Tabs -->
         <div class="segmented-control">
           <button class="segment-btn active" id="tabUpcoming" onclick="switchBookingTab('upcoming')">Upcoming (4)</button>
-          <button class="segment-btn" id="tabPast" onclick="switchBookingTab('past')">Past (4)</button>
+          <button class="segment-btn" id="tabHistory" onclick="switchBookingTab('history')">History (4)</button>
           <button class="segment-btn" id="tabCancelled" onclick="switchBookingTab('cancelled')">Cancelled (2)</button>
         </div>
 
-          <!-- Booking Card 1: Active In-Transit Commute -->
-          <div class="booking-item-card is-live" onclick="openBookingDetails('H2S-84920')">
-            <div class="bcard-header">
-              <span class="status-chip in-progress">
-                <span class="status-dot"></span>
-                In Transit · ETA 07:42 AM
-              </span>
-              <div class="bcard-price">
-                <strong>$120</strong>
-                <small>/wk</small>
-              </div>
-            </div>
-
-            <div class="bcard-route-block">
-              <div class="bcard-child-title">Arman &amp; Emma</div>
-              <div class="bcard-school-target">Greenfield International School</div>
-              <div class="bcard-meta-line">
-                <span>Mon – Fri</span>
-                <span class="meta-dot">·</span>
-                <span>07:30 AM &amp; 01:00 PM</span>
-              </div>
-            </div>
-
-            <div class="bcard-footer">
-              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('tariq', 'bookings')" title="View Tariq's Profile">
-                <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
-                <div class="bcard-driver-text">
-                  <div class="bcard-driver-name">Tariq Ahmed</div>
-                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ 4.9</span></div>
-                </div>
-              </div>
-              <div class="bcard-action-wrap">
-                <button class="btn-live-track-compact" onclick="event.stopPropagation(); navigateTo('tracking')">
-                  <span class="live-pulse-dot" style="margin:0;"></span>
-                  <span>Live Track</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Booking Card 2: Single Trip Booking -->
-          <div class="booking-item-card" onclick="openBookingDetails('H2S-73190')">
-            <div class="bcard-header">
-              <span class="status-chip pending">
-                <span class="status-dot"></span>
-                Pending
-              </span>
-              <div class="bcard-price">
-                <strong>$35</strong>
-                <small>trip</small>
-              </div>
-            </div>
-
-            <div class="bcard-route-block">
-              <div class="bcard-child-title">Zara Khan</div>
-              <div class="bcard-school-target">Sunshine Pre-school</div>
-              <div class="bcard-meta-line">
-                <span>Thursday, May 23</span>
-                <span class="meta-dot">·</span>
-                <span>08:15 AM</span>
-              </div>
-            </div>
-
-            <div class="bcard-footer">
-              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('sarah', 'bookings')" title="View Sarah's Profile">
-                <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="bcard-driver-img" onerror="this.src='/assets/avatar_sarah.jpg';" />
-                <div class="bcard-driver-text">
-                  <div class="bcard-driver-name">Sarah Jenkins</div>
-                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ 4.9</span></div>
-                </div>
-              </div>
-              <div class="bcard-action-wrap">
-                <button class="btn-chat-compact" onclick="event.stopPropagation(); navigateTo('messages')">
-                  <i data-lucide="message-square" style="width:12px;height:12px;"></i>
-                  <span>Message</span>
-                </button>
-              </div>
-            </div>
-          </div>
+        <!-- Dynamic Bookings Container (Upcoming, History, Cancelled) -->
+        <div id="bookingsListWrap" class="bookings-list-wrap">
+          <!-- Populated dynamically by renderBookingsList() in app.js -->
         </div>
       </div>
 
@@ -2588,8 +2442,8 @@
       </div>
 
       <div class="screen-scroll-body">
-        <!-- Parent Profile Header -->
-        <div class="profile-user-card" onclick="navigateTo('profilePersonalInfo')" style="cursor: pointer;">
+        <!-- Parent Profile Header (With Radiant Gradient) -->
+        <div class="profile-user-card" onclick="navigateTo('profilePersonalInfo')">
           <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0;">
             <img src="/assets/avatar_sadia.jpg" alt="Sadia Khan" class="profile-avatar-lg" />
             <span style="position: absolute; bottom: 0; right: 0; background: var(--color-primary); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
@@ -2599,18 +2453,18 @@
           <div style="flex: 1;">
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <div style="display: flex; align-items: center; gap: 6px;">
-                <h3 style="font-size: 18px; font-weight: 800; color: var(--color-title);">Sadia Khan</h3>
+                <h3 style="font-size: 18px; font-weight: 800; color: #0F172A;">Sadia Khan</h3>
                 <span class="fb-verified-badge" title="Verified Account">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="#1877F2">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
                   </svg>
                 </span>
               </div>
-              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--color-body);"></i>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #64748B;"></i>
             </div>
-            <p style="font-size: 13px; color: var(--color-body); margin-top: 2px;">+1 (416) 555-0192</p>
+            <p style="font-size: 13px; color: #475569; margin-top: 2px;">+1 (416) 555-0192</p>
             <div style="display: flex; gap: 6px; margin-top: 6px; align-items: center;">
-              <span class="status-chip active" style="font-size: 11px;">3 Children</span>
+              <span class="profile-child-count-pill"><i data-lucide="users" style="width: 11px; height: 11px;"></i> 3 Children</span>
             </div>
           </div>
         </div>

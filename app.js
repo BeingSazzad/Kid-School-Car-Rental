@@ -257,7 +257,7 @@ window.appState = {
       createdAt: 'May 21, 2026'
     },
 
-    // PAST BOOKINGS (Completed)
+    // PAST / COMPLETED BOOKINGS (History)
     // 5. Two-Way + Recurring (Completed)
     {
       id: 'H2S-61029',
@@ -273,6 +273,10 @@ window.appState = {
       providerId: 'tariq',
       amount: 120,
       paymentMethod: 'Visa •••• 4242',
+      completedAt: 'May 19, 2026 • 01:02 PM',
+      dropoffNote: 'Safely handed to Ms. Clara at Greenfield Entrance Gate A',
+      userRating: '5.0',
+      userReview: 'Punctual and very gentle with both kids.',
       createdAt: 'May 14, 2026'
     },
     // 6. One-Way + One-Time (Completed)
@@ -282,7 +286,7 @@ window.appState = {
       childIds: ['zara'],
       direction: 'oneway',
       frequency: 'onetime',
-      scheduleText: 'May 18, 2026 • 08:15 AM (Morning WalkShare)',
+      scheduleText: 'May 18, 2026 • 08:15 AM (Morning Escort)',
       pickupLocation: 'Home (12 Elm Street)',
       schoolLocation: 'Sunshine Pre-school',
       outboundTime: '08:15 AM',
@@ -290,6 +294,10 @@ window.appState = {
       providerId: 'sarah',
       amount: 35,
       paymentMethod: 'Visa •••• 4242',
+      completedAt: 'May 18, 2026 • 08:24 AM',
+      dropoffNote: 'Signed in at Sunshine Pre-school front reception desk',
+      userRating: '5.0',
+      userReview: 'Zara loved the nursery rhymes and car seat was clean!',
       createdAt: 'May 18, 2026'
     },
     // 7. Two-Way + One-Time (Completed)
@@ -307,6 +315,9 @@ window.appState = {
       providerId: 'farhana',
       amount: 50,
       paymentMethod: 'Apple Pay',
+      completedAt: 'May 12, 2026 • 03:08 PM',
+      dropoffNote: 'Returned to Home (12 Elm St) after sports tournament',
+      userRating: '4.9',
       createdAt: 'May 12, 2026'
     },
     // 8. One-Way + Recurring (Completed)
@@ -324,6 +335,9 @@ window.appState = {
       providerId: 'kabir',
       amount: 65,
       paymentMethod: 'Visa •••• 4242',
+      completedAt: 'April 30, 2026 • 08:00 AM',
+      dropoffNote: 'Completed all 20 monthly morning rides on-time',
+      userRating: '5.0',
       createdAt: 'April 28, 2026'
     },
 
@@ -343,6 +357,9 @@ window.appState = {
       providerId: 'sarah',
       amount: 35,
       paymentMethod: 'Visa •••• 4242',
+      cancelledAt: 'May 08, 2026 • 06:40 PM',
+      cancelReason: 'Child illness (Fever & pediatrician appointment)',
+      refundStatus: 'Full $35.00 refunded to Visa •••• 4242 ($0 fee)',
       createdAt: 'May 08, 2026'
     },
     // 10. Two-Way + Recurring (Cancelled)
@@ -360,6 +377,9 @@ window.appState = {
       providerId: 'tariq',
       amount: 120,
       paymentMethod: 'Visa •••• 4242',
+      cancelledAt: 'May 01, 2026 • 09:15 PM',
+      cancelReason: 'School Emergency Weather Advisory — Greenfield Campus Closed',
+      refundStatus: 'Full $120.00 credited to Parent H2S Wallet',
       createdAt: 'May 02, 2026'
     }
   ],
@@ -1099,35 +1119,29 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   }
   if (nameEl) nameEl.textContent = provider.name;
   if (vehEl) vehEl.textContent = `${provider.vehicle} (${provider.plate}) • Clean & Certified`;
-  if (ratingEl) ratingEl.textContent = `${provider.rating} ★`;
-  if (reviewsEl) reviewsEl.textContent = `${provider.reviewsCount} Reviews`;
-  if (expEl) expEl.textContent = provider.experience || '4+ Yrs';
-  if (onTimeEl) onTimeEl.textContent = provider.onTimeRate || '99.8%';
-  if (quoteEl) quoteEl.textContent = provider.quote || '"Outstanding safety, always arrives exactly on time."';
-  if (reviewerEl) reviewerEl.textContent = provider.reviewer || '— Verified Parent';
+  if (ratingEl) ratingEl.textContent = `★ ${provider.rating} (${provider.reviewsCount || 128} reviews)`;
+  if (reviewsEl) reviewsEl.textContent = `${provider.reviewsCount || 128} Reviews`;
+  if (expEl) expEl.textContent = provider.experience || '5+ Yrs';
+  if (onTimeEl) onTimeEl.textContent = provider.onTimeRate || '100%';
 
-  // Contextual actions
-  if (actionsWrap) {
-    if (window.currentDriverProfileReturnScreen === 'bookingSearchProviders') {
-      actionsWrap.innerHTML = `
-        <button class="btn-primary" onclick="window.appState.bookingDraft.providerId='${provider.id}'; navigateTo('bookingSummary')">
-          Select &amp; Continue to Booking ($${provider.baseWeekly}/wk)
-        </button>
-      `;
-    } else {
-      actionsWrap.innerHTML = `
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <button class="btn-primary" onclick="openChatWith('${provider.id}')" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <i data-lucide="message-square" style="width: 17px; height: 17px;"></i>
-            <span>Message ${provider.name.split(' ')[0]}</span>
-          </button>
-          <button class="btn-secondary-surface" onclick="alert('Calling driver ${provider.name}: ${provider.phone || '+1 (416) 555-0182'}')" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <i data-lucide="phone" style="width: 16px; height: 16px;"></i>
-            <span>Call Driver (${provider.phone || '+1 (416) 555-0182'})</span>
-          </button>
-        </div>
-      `;
-    }
+  const vehTitleEl = document.getElementById('detailsProviderVehTitle');
+  const vehSpecsEl = document.getElementById('detailsProviderVehSpecs');
+  const vehImgEl = document.getElementById('detailsProviderVehImg');
+  const bookBtnEl = document.getElementById('btnBookWithProvider');
+
+  if (vehTitleEl) vehTitleEl.textContent = provider.vehicle || 'Toyota Sienna';
+  if (vehSpecsEl) vehSpecsEl.textContent = `4 seats · 2022 white · Plate: ${provider.plate || 'H2S-782'}`;
+  if (vehImgEl) {
+    if (provider.id === 'farhana') vehImgEl.src = '/assets/vehicle_odyssey.jpg';
+    else if (provider.id === 'kabir') vehImgEl.src = '/assets/vehicle_highlander.jpg';
+    else vehImgEl.src = '/assets/vehicle_sienna.jpg';
+  }
+  if (bookBtnEl) {
+    bookBtnEl.textContent = `Book with ${provider.name.split(' ')[0]}`;
+    bookBtnEl.onclick = function () {
+      window.appState.bookingDraft.providerId = provider.id;
+      navigateTo('bookingSummary');
+    };
   }
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -1612,38 +1626,88 @@ window.cancelBooking = function (bookingId) {
 };
 
 /* ==========================================================
-   Bookings Screen: Filter Tabs & Concise Cards
+   Bookings Screen: Filter Tabs & State-Specific Realistic Cards
    ========================================================== */
 window.switchBookingTab = function (tab) {
   renderBookingsList(tab);
 };
 
+window.swapPickupDropoff = function () {
+  const pEl = document.getElementById('setupPickupLocation');
+  const sEl = document.getElementById('setupSchoolLocation');
+  const dispP = document.getElementById('displayPickupAddr');
+  const dispS = document.getElementById('displaySchoolAddr');
+  if (pEl && sEl && dispP && dispS) {
+    const tempVal = pEl.value;
+    const tempDisp = dispP.textContent;
+    pEl.value = sEl.value;
+    dispP.textContent = dispS.textContent;
+    sEl.value = tempVal;
+    dispS.textContent = tempDisp;
+    if (typeof showToast === 'function') showToast('Swapped pickup and school locations');
+  }
+};
+
+window.rebookRide = function (bookingId) {
+  const b = window.appState.bookings.find(x => x.id === bookingId);
+  if (b) {
+    window.appState.bookingDraft = {
+      ...window.appState.bookingDraft,
+      childIds: b.childIds || ['arman'],
+      pickupLocation: b.pickupLocation,
+      schoolLocation: b.schoolLocation,
+      direction: b.direction,
+      frequency: b.frequency
+    };
+    if (typeof showToast === 'function') showToast(`Loaded booking for ${b.schoolLocation}`);
+    navigateTo('bookingSelectChildren');
+  }
+};
+
+window.openBookingReceipt = function (bookingId) {
+  openBookingDetails(bookingId);
+};
+
+window.withdrawBookingRequest = function (bookingId) {
+  if (confirm('Withdraw this pending ride request? No cancellation fees apply.')) {
+    const b = window.appState.bookings.find(x => x.id === bookingId);
+    if (b) {
+      b.status = 'cancelled';
+      b.cancelReason = 'Withdrawn by Parent prior to driver assignment';
+      b.refundStatus = 'Full authorization released ($0 charged)';
+      if (typeof showToast === 'function') showToast('Booking request withdrawn.');
+      renderBookingsList('upcoming');
+    }
+  }
+};
+
 function renderBookingsList(tab) {
+  const normTab = (tab === 'past' || tab === 'history') ? 'history' : tab;
   const btnU = document.getElementById('tabUpcoming');
-  const btnP = document.getElementById('tabPast');
+  const btnH = document.getElementById('tabHistory') || document.getElementById('tabPast');
   const btnC = document.getElementById('tabCancelled');
   const wrap = document.getElementById('bookingsListWrap');
 
   // Dynamically update tab badges count
   const countU = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending' || b.status === 'in_progress').length;
-  const countP = window.appState.bookings.filter(b => b.status === 'completed').length;
+  const countH = window.appState.bookings.filter(b => b.status === 'completed').length;
   const countC = window.appState.bookings.filter(b => b.status === 'cancelled').length;
   if (btnU) btnU.textContent = `Upcoming (${countU})`;
-  if (btnP) btnP.textContent = `Past (${countP})`;
+  if (btnH) btnH.textContent = `History (${countH})`;
   if (btnC) btnC.textContent = `Cancelled (${countC})`;
 
-  [btnU, btnP, btnC].forEach(b => b?.classList.remove('active'));
+  [btnU, btnH, btnC].forEach(b => b?.classList.remove('active'));
 
   let filtered = [];
-  if (tab === 'upcoming') {
+  if (normTab === 'upcoming') {
     btnU?.classList.add('active');
     filtered = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending' || b.status === 'in_progress');
     // Sort so in_progress is strictly first
     filtered.sort((a, b) => (b.status === 'in_progress' ? 1 : 0) - (a.status === 'in_progress' ? 1 : 0));
-  } else if (tab === 'past') {
-    btnP?.classList.add('active');
+  } else if (normTab === 'history') {
+    btnH?.classList.add('active');
     filtered = window.appState.bookings.filter(b => b.status === 'completed');
-  } else if (tab === 'cancelled') {
+  } else if (normTab === 'cancelled') {
     btnC?.classList.add('active');
     filtered = window.appState.bookings.filter(b => b.status === 'cancelled');
   }
@@ -1656,7 +1720,7 @@ function renderBookingsList(tab) {
         <div class="bookings-empty-icon-box">
           <i data-lucide="calendar-x" style="width:24px;height:24px;"></i>
         </div>
-        <div class="bookings-empty-title">No ${tab} bookings</div>
+        <div class="bookings-empty-title">No ${normTab} bookings</div>
         <p class="bookings-empty-sub">When you arrange rides or school commutes, they will appear here with live tracking updates.</p>
         <button class="btn-primary" style="margin-top: 14px; max-width: 200px; height: 42px;" onclick="navigateTo('bookingSelectChildren')">+ Book a Ride</button>
       </div>
@@ -1667,7 +1731,7 @@ function renderBookingsList(tab) {
 
     const renderCard = (b) => {
       const provider = window.appState.providers.find(p => p.id === b.providerId) || window.appState.providers[0];
-      const children = b.childIds.map(id => {
+      const children = (b.childIds || []).map(id => {
         const c = window.appState.children.find(ch => ch.id === id);
         return c ? c.name : id;
       });
@@ -1680,48 +1744,7 @@ function renderBookingsList(tab) {
         childText = children[0] || 'Child Rider';
       }
 
-      const isInProgress = b.status === 'in_progress';
-
-      // Single, unified status badge with zero clutter
-      let statusBadge = '';
-      if (isInProgress) {
-        statusBadge = `
-          <span class="status-chip in-progress" style="font-weight:700;">
-            <span class="status-dot"></span>
-            In Transit · ETA 07:42 AM
-          </span>
-        `;
-      } else if (b.status === 'confirmed') {
-        statusBadge = `
-          <span class="status-chip confirmed" style="font-weight:700;">
-            <span class="status-dot"></span>
-            Scheduled
-          </span>
-        `;
-      } else if (b.status === 'pending') {
-        statusBadge = `
-          <span class="status-chip pending" style="font-weight:700;">
-            <span class="status-dot"></span>
-            Pending
-          </span>
-        `;
-      } else if (b.status === 'completed') {
-        statusBadge = `
-          <span class="status-chip completed" style="font-weight:700;">
-            <span class="status-dot"></span>
-            Completed
-          </span>
-        `;
-      } else {
-        statusBadge = `
-          <span class="status-chip cancelled" style="font-weight:700;">
-            <span class="status-dot"></span>
-            Cancelled
-          </span>
-        `;
-      }
-
-      // Parse clean schedule
+      // Parse schedule
       let dayChip = 'Mon – Fri';
       let timeChip = '';
       if (b.direction === 'bothway' && b.outboundTime && b.returnTime) {
@@ -1744,46 +1767,229 @@ function renderBookingsList(tab) {
         timeChip = timeChip.replace(/Outbound:\s*/i, '').replace(/Return:\s*/i, '').replace(/\(.*?\)/g, '').replace(/\|/g, '&').trim();
       }
 
-      const priceUnit = b.frequency === 'recurring' ? '/wk' : 'trip';
-      const cardClass = isInProgress ? 'booking-item-card is-live' : 'booking-item-card';
+      // 1. In Transit Active Ride Card
+      if (b.status === 'in_progress') {
+        return `
+          <div class="booking-item-card is-live" onclick="openBookingDetails('${b.id}')">
+            <div class="bcard-header">
+              <span class="status-chip in-progress" style="font-weight:700;">
+                <span class="status-dot"></span>
+                In Transit · ETA 07:42 AM
+              </span>
+              <div class="bcard-price">
+                <strong>$${b.amount}</strong>
+                <small>/wk</small>
+              </div>
+            </div>
 
-      // Clean primary action
-      let actionBtn = '';
-      if (isInProgress) {
-        actionBtn = `
-          <button class="btn-live-track-compact" onclick="event.stopPropagation(); navigateTo('tracking')" title="Track Live GPS Ride">
-            <span class="live-pulse-dot" style="margin:0;"></span>
-            <span>Live Track</span>
-          </button>
-        `;
-      } else if (b.status === 'confirmed' || b.status === 'pending') {
-        actionBtn = `
-          <button class="btn-chat-compact" onclick="event.stopPropagation(); openChatWith('${provider.id}')" title="Message Driver">
-            <i data-lucide="message-square" style="width:12px;height:12px;"></i>
-            <span>Message</span>
-          </button>
-        `;
-      } else if (b.status === 'completed') {
-        actionBtn = `
-          <button class="btn-chat-compact" onclick="event.stopPropagation(); navigateTo('rating')" title="Rate Driver">
-            <i data-lucide="star" style="width:12px;height:12px;color:#F59E0B;fill:#F59E0B;"></i>
-            <span>Rate</span>
-          </button>
+            <div class="bcard-route-block">
+              <div class="bcard-child-title">${childText}</div>
+              <div class="bcard-school-target">${b.schoolLocation}</div>
+              <div class="bcard-meta-line">
+                <span>${dayChip}</span>
+                ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
+              </div>
+              <div style="font-size:11.5px; color:#059669; font-weight:600; display:flex; align-items:center; gap:5px; margin-top:2px;">
+                <i data-lucide="navigation" style="width:12px;height:12px;"></i>
+                <span>1.8 km away · Toyota Highlander (H2S-782)</span>
+              </div>
+            </div>
+
+            <div class="bcard-footer">
+              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')" title="View ${provider.name}'s Profile">
+                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
+                <div class="bcard-driver-text">
+                  <div class="bcard-driver-name">${provider.name}</div>
+                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
+                </div>
+              </div>
+              <div class="bcard-action-wrap" style="display:flex; gap:6px;">
+                <button class="btn-chat-compact" onclick="event.stopPropagation(); openChatWith('${provider.id}')" title="Message Driver">
+                  <i data-lucide="message-square" style="width:12px;height:12px;"></i>
+                </button>
+                <button class="btn-live-track-compact" onclick="event.stopPropagation(); navigateTo('tracking')" title="Track Live GPS Ride">
+                  <span class="live-pulse-dot" style="margin:0;"></span>
+                  <span>Live Track</span>
+                </button>
+              </div>
+            </div>
+          </div>
         `;
       }
 
+      // 2. Pending Ride Card (Awaiting Provider)
+      if (b.status === 'pending') {
+        return `
+          <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
+            <div class="bcard-header">
+              <span class="status-chip pending" style="font-weight:700;">
+                <span class="status-dot"></span>
+                Matching Driver · Pending
+              </span>
+              <div class="bcard-price">
+                <strong>$${b.amount}</strong>
+                <small>trip</small>
+              </div>
+            </div>
+
+            <div class="bcard-route-block">
+              <div class="bcard-child-title">${childText}</div>
+              <div class="bcard-school-target">${b.schoolLocation}</div>
+              <div class="bcard-meta-line">
+                <span>${dayChip}</span>
+                ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
+              </div>
+              <div style="font-size:11.5px; color:#D97706; font-weight:600; display:flex; align-items:center; gap:5px; margin-top:3px;">
+                <i data-lucide="clock" style="width:12px;height:12px;"></i>
+                <span>Requested 12 mins ago · Reviewing by ${provider.name}</span>
+              </div>
+            </div>
+
+            <div class="bcard-footer">
+              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')">
+                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_sarah.jpg';" />
+                <div class="bcard-driver-text">
+                  <div class="bcard-driver-name">${provider.name}</div>
+                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
+                </div>
+              </div>
+              <div class="bcard-action-wrap">
+                <button class="btn-support-compact" style="color:#EF4444;" onclick="event.stopPropagation(); withdrawBookingRequest('${b.id}')" title="Withdraw Request">
+                  <i data-lucide="x-circle" style="width:12px;height:12px;"></i>
+                  <span>Withdraw</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. Past Completed Card (History)
+      if (b.status === 'completed') {
+        const dateLabel = b.completedAt ? b.completedAt.split('•')[0].trim() : 'May 19';
+        return `
+          <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
+            <div class="bcard-header">
+              <span class="status-chip completed" style="background:#ECFDF5; color:#047857; border:1px solid #A7F3D0; font-weight:700;">
+                <i data-lucide="check-circle" style="width:12px;height:12px;color:#059669;"></i>
+                Completed · ${dateLabel}
+              </span>
+              <div class="bcard-price">
+                <strong style="color:#0F172A;">$${b.amount}</strong>
+                <small style="color:#64748B;">Paid</small>
+              </div>
+            </div>
+
+            <div class="bcard-route-block">
+              <div class="bcard-child-title">${childText}</div>
+              <div class="bcard-school-target">${b.schoolLocation}</div>
+              <div class="bcard-meta-line">
+                <span>${dayChip}</span>
+                ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
+              </div>
+              <div class="bcard-delivery-log" style="margin-top: 4px;">
+                <i data-lucide="shield-check" style="width:13px;height:13px;color:#059669;flex-shrink:0;"></i>
+                <span>${b.dropoffNote || 'Delivered safely to school entrance'}</span>
+              </div>
+            </div>
+
+            <div class="bcard-footer">
+              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')" title="View ${provider.name}'s Profile">
+                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
+                <div class="bcard-driver-text">
+                  <div class="bcard-driver-name">${provider.name}</div>
+                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${b.userRating || provider.rating} (You rated)</span></div>
+                </div>
+              </div>
+
+              <div class="bcard-action-wrap" style="display:flex; gap:6px;">
+                <button class="btn-receipt-compact" onclick="event.stopPropagation(); openBookingReceipt('${b.id}')" title="View Official Receipt">
+                  <i data-lucide="receipt" style="width:12px;height:12px;"></i>
+                  <span>Receipt</span>
+                </button>
+                <button class="btn-rebook-compact" onclick="event.stopPropagation(); rebookRide('${b.id}')" title="Rebook this route">
+                  <i data-lucide="rotate-cw" style="width:12px;height:12px;"></i>
+                  <span>Book Again</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // 4. Cancelled Card
+      if (b.status === 'cancelled') {
+        const cancelDate = b.cancelledAt ? b.cancelledAt.split('•')[0].trim() : 'May 08';
+        return `
+          <div class="booking-item-card" style="border-color:#FCA5A5; background:#FFFBFB;" onclick="openBookingDetails('${b.id}')">
+            <div class="bcard-header">
+              <span class="status-chip cancelled" style="font-weight:700;">
+                <i data-lucide="x-circle" style="width:12px;height:12px;color:#DC2626;"></i>
+                Cancelled · ${cancelDate}
+              </span>
+              <div class="bcard-price">
+                <span style="text-decoration:line-through; color:#94A3B8; font-size:12px;">$${b.amount}</span>
+                <strong style="color:#059669; font-size:14px; margin-left:4px;">$0 Paid</strong>
+              </div>
+            </div>
+
+            <div class="bcard-route-block">
+              <div class="bcard-child-title">${childText}</div>
+              <div class="bcard-school-target">${b.schoolLocation}</div>
+              <div class="bcard-meta-line">
+                <span>${dayChip}</span>
+                ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
+              </div>
+
+              <div class="bcard-cancel-reason" style="margin-top: 4px;">
+                <i data-lucide="alert-circle" style="width:13px;height:13px;color:#DC2626;flex-shrink:0;"></i>
+                <span>Reason: ${b.cancelReason || 'Schedule adjusted by parent'}</span>
+              </div>
+
+              <div class="bcard-refund-pill" style="margin-top: 2px;">
+                <i data-lucide="check" style="width:12px;height:12px;color:#059669;flex-shrink:0;"></i>
+                <span>${b.refundStatus || 'Full refund processed ($0 fee applied)'}</span>
+              </div>
+            </div>
+
+            <div class="bcard-footer">
+              <div class="bcard-driver" style="cursor:default;">
+                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" style="filter:grayscale(0.5);" onerror="this.src='/assets/avatar_sarah.jpg';" />
+                <div class="bcard-driver-text">
+                  <div class="bcard-driver-name" style="color:#64748B;">${provider.name}</div>
+                  <div class="bcard-driver-veh" style="color:#94A3B8;">Released &amp; Notified</div>
+                </div>
+              </div>
+
+              <div class="bcard-action-wrap" style="display:flex; gap:6px;">
+                <button class="btn-support-compact" onclick="event.stopPropagation(); navigateTo('contactSupport')" title="Get Trip Support">
+                  <i data-lucide="help-circle" style="width:12px;height:12px;"></i>
+                  <span>Help</span>
+                </button>
+                <button class="btn-rebook-compact" onclick="event.stopPropagation(); rebookRide('${b.id}')" title="Rebook this ride">
+                  <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i>
+                  <span>Rebook</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // 5. Regular Confirmed Scheduled Ride Card
       return `
-        <div class="${cardClass}" onclick="openBookingDetails('${b.id}')">
-          <!-- Top Row: Status on Left, Price on Right (Zero Badge Congestion) -->
+        <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
           <div class="bcard-header">
-            ${statusBadge}
+            <span class="status-chip confirmed" style="font-weight:700;">
+              <span class="status-dot"></span>
+              Scheduled Commute
+            </span>
             <div class="bcard-price">
               <strong>$${b.amount}</strong>
-              <small>${priceUnit}</small>
+              <small>${b.frequency === 'recurring' ? '/wk' : 'trip'}</small>
             </div>
           </div>
 
-          <!-- Middle Row: Student & School + Clean Typography Schedule -->
           <div class="bcard-route-block">
             <div class="bcard-child-title">${childText}</div>
             <div class="bcard-school-target">${b.schoolLocation}</div>
@@ -1793,10 +1999,9 @@ function renderBookingsList(tab) {
             </div>
           </div>
 
-          <!-- Bottom Row: Driver Profile + Single Action Button -->
           <div class="bcard-footer">
             <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')" title="View ${provider.name}'s Profile">
-              <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
+              <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_farhana.jpg';" />
               <div class="bcard-driver-text">
                 <div class="bcard-driver-name">${provider.name}</div>
                 <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
@@ -1804,14 +2009,17 @@ function renderBookingsList(tab) {
             </div>
 
             <div class="bcard-action-wrap">
-              ${actionBtn}
+              <button class="btn-chat-compact" onclick="event.stopPropagation(); openChatWith('${provider.id}')" title="Message Driver">
+                <i data-lucide="message-square" style="width:12px;height:12px;"></i>
+                <span>Message</span>
+              </button>
             </div>
           </div>
         </div>
       `;
     };
 
-    if (tab === 'upcoming' && activeTrips.length > 0 && scheduledTrips.length > 0) {
+    if (normTab === 'upcoming' && activeTrips.length > 0 && scheduledTrips.length > 0) {
       wrap.innerHTML = `
         <div class="booking-section-heading live">
           <span class="live-pulse-dot"></span>
