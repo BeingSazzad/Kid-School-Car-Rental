@@ -813,7 +813,9 @@
                     <div class="driver-mini-sub">
                       <i data-lucide="star" style="width:11px;height:11px;fill:#F59E0B;color:#F59E0B;"></i>
                       <span>4.9</span>
-                      <span>• Background Verified</span>
+                      <span class="verified-badge-icon" title="Verified Provider" style="margin-left:2px;">
+                        <i data-lucide="shield-check" style="width:13px;height:13px;color:#0284C7;"></i>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1405,7 +1407,10 @@
           <button class="filter-chip-btn">Drivers Only</button>
           <button class="filter-chip-btn">WalkShare</button>
           <button class="filter-chip-btn">4.8+ Rated</button>
-          <button class="filter-chip-btn">Background Verified</button>
+          <button class="filter-chip-btn" style="display:inline-flex;align-items:center;gap:4px;">
+            <i data-lucide="shield-check" style="width:13px;height:13px;color:#0284C7;"></i>
+            <span>Verified</span>
+          </button>
         </div>
 
         <!-- Provider Card 1: Tariq Ahmed (Recommended) -->
@@ -2478,8 +2483,11 @@
               <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--color-body);"></i>
             </div>
             <p style="font-size: 13px; color: var(--color-body);">+1 (416) 555-0192</p>
-            <div style="display: flex; gap: 6px; margin-top: 6px;">
-              <span class="status-chip confirmed" style="font-size: 11px;">Verified Mother</span>
+            <div style="display: flex; gap: 6px; margin-top: 6px; align-items: center;">
+              <span class="status-chip confirmed" style="font-size: 11px; display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;">
+                <i data-lucide="shield-check" style="width:12px;height:12px;color:#16A34A;"></i>
+                <span>Verified</span>
+              </span>
               <span class="status-chip active" style="font-size: 11px;">3 Children</span>
             </div>
           </div>
@@ -2792,7 +2800,10 @@
               <i data-lucide="camera" style="width:13px;height:13px;"></i>
             </button>
           </div>
-          <div style="font-size: 11.5px; font-weight: 700; color: var(--color-primary); background: var(--color-fade); padding: 3px 12px; border-radius: var(--radius-pill); margin-top: 8px;">Verified Parent • 3 Children</div>
+          <div style="font-size: 11.5px; font-weight: 700; color: var(--color-primary); background: var(--color-fade); padding: 3px 12px; border-radius: var(--radius-pill); margin-top: 8px; display: inline-flex; align-items: center; gap: 5px;">
+            <i data-lucide="shield-check" style="width:13px;height:13px;color:#0284C7;"></i>
+            <span>Verified Parent • 3 Children</span>
+          </div>
         </div>
 
         <!-- Section 1: Guardian Identity -->
@@ -2833,7 +2844,9 @@
           <div class="form-group">
             <label class="form-label">
               <span>Primary Mobile Number</span>
-              <span style="color:#16A34A;font-size:10.5px;">✓ Verified</span>
+              <span class="verified-badge-icon" title="Verified" style="color:#16A34A;display:inline-flex;align-items:center;">
+                <i data-lucide="shield-check" style="width:13px;height:13px;"></i>
+              </span>
             </label>
             <div class="input-box-wrapper">
               <i data-lucide="phone" class="input-box-icon"></i>

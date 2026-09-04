@@ -1583,7 +1583,10 @@ window.addEmergencyContact = function () {
         </div>
         <div>
           <div class="grouped-row-title">${item.name} (${item.rel})</div>
-          <div class="grouped-row-sub">${item.phone} • Verified</div>
+          <div class="grouped-row-sub" style="display:flex;align-items:center;gap:4px;">
+            <span>${item.phone}</span>
+            <i data-lucide="shield-check" style="width:12px;height:12px;color:#16A34A;"></i>
+          </div>
         </div>
       </div>
       <a href="tel:${item.phone}" class="grouped-row-action" style="text-decoration:none;">Call</a>
