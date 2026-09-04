@@ -3142,78 +3142,108 @@ svg.lucide {
   transform: scale(0.95);
 }
 
-/* 14. Bookings Screen Styles - Clutter-Free, Concentric Hierarchy */
+/* 14. Bookings Screen Styles - Clutter-Free, Generous Breathing Room */
 .bookings-list-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  padding-bottom: 24px;
+}
+
+.booking-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748B;
+  margin-top: 18px;
+  margin-bottom: 4px;
+  padding: 0 2px;
+}
+
+.booking-section-heading.live {
+  color: #059669;
 }
 
 /* ==========================================================
-   Compact, Clutter-Free, Smooth Booking Card Architecture
+   Smooth, Breathable Booking Card Architecture (10yr UX Standard)
    ========================================================== */
 .booking-item-card {
   background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 16px;
-  padding: 13px 15px;
+  border: 1px solid #E9EEF5;
+  border-radius: 18px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 12px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   cursor: pointer;
 }
 
 .booking-item-card:hover {
   border-color: #CBD5E1;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
   transform: translateY(-2px);
 }
 
 .booking-item-card.is-live {
-  border-color: #86EFAC;
-  background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 34px);
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.08);
+  border: 1.5px solid #86EFAC;
+  background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 56px);
+  box-shadow: 0 6px 20px -2px rgba(16, 185, 129, 0.12);
 }
 
-/* Card Header: Badges & Price */
+/* Card Header: Single Status Pill + Price (Clean & Breathable) */
 .bcard-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
 }
 
-.bcard-status-group {
-  display: flex;
+.status-chip {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  flex-wrap: wrap;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3.5px 10px;
+  border-radius: 99px;
+  letter-spacing: 0.1px;
 }
 
-.bcard-pill {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2.5px 7px;
-  border-radius: 99px;
+.status-chip.in-progress {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #BBF7D0;
+}
+
+.status-chip.confirmed {
   background: #F1F5F9;
+  color: #334155;
+  border: 1px solid #E2E8F0;
+}
+
+.status-chip.pending {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+
+.status-chip.completed {
+  background: #F8FAFC;
   color: #475569;
   border: 1px solid #E2E8F0;
 }
 
-.live-eta-pill {
-  font-size: 11px;
-  font-weight: 800;
-  color: #15803D;
-  background: #DCFCE7;
-  border: 1px solid #BBF7D0;
-  padding: 2.5px 8px;
-  border-radius: 99px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.status-chip.cancelled {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
 }
 
 .bcard-price {
@@ -3223,19 +3253,19 @@ svg.lucide {
 }
 
 .bcard-price strong {
-  font-size: 16px;
-  font-weight: 900;
-  color: var(--color-title);
-  letter-spacing: -0.2px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.3px;
 }
 
 .bcard-price small {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   color: #64748B;
 }
 
-/* Card Core: Students & School Destination + Timing in one clean block */
+/* Card Core: Students & School Destination + Timing (Clean Hierarchy) */
 .bcard-route-block {
   display: flex;
   flex-direction: column;
@@ -3243,24 +3273,18 @@ svg.lucide {
 }
 
 .bcard-child-title {
-  font-size: 14.5px;
+  font-size: 15.5px;
   font-weight: 800;
   color: #0F172A;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  letter-spacing: -0.2px;
   line-height: 1.25;
 }
 
-.bcard-school-dot {
-  color: #94A3B8;
-  font-weight: 400;
-}
-
 .bcard-school-target {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--color-primary);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #475569;
+  line-height: 1.35;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3270,41 +3294,42 @@ svg.lucide {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 12.5px;
   color: #64748B;
-  font-weight: 600;
+  font-weight: 500;
+  margin-top: 2px;
 }
 
 .meta-dot {
   color: #CBD5E1;
+  font-weight: 700;
 }
 
-/* Card Footer: Driver Mini-Profile on Left, Single Primary Action on Right */
+/* Card Footer: Driver Mini-Profile on Left, Single Action Button on Right */
 .bcard-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  padding-top: 9px;
+  gap: 12px;
+  padding-top: 12px;
   border-top: 1px solid #F1F5F9;
-  margin-top: 1px;
 }
 
 .bcard-driver {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   cursor: pointer;
   flex: 1;
   min-width: 0;
 }
 
 .bcard-driver-img {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid #E2E8F0;
+  border: 1.5px solid #F1F5F9;
   flex-shrink: 0;
 }
 
@@ -3315,42 +3340,38 @@ svg.lucide {
 }
 
 .bcard-driver-name {
-  font-size: 12.5px;
-  font-weight: 800;
-  color: var(--color-title);
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .bcard-driver-veh {
-  font-size: 11px;
+  font-size: 11.5px;
   color: #64748B;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.2;
+  margin-top: 2px;
 }
 
 .bcard-action-wrap {
   display: flex;
   align-items: center;
-  gap: 8px;
   flex-shrink: 0;
 }
 
 .btn-live-track-compact {
   height: 32px;
-  padding: 0 12px;
+  padding: 0 13px;
   border-radius: 99px;
   background: #0F172A;
   color: #FFFFFF;
   border: none;
   font-family: var(--font-family);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -3366,14 +3387,14 @@ svg.lucide {
 
 .btn-chat-compact {
   height: 30px;
-  padding: 0 10px;
+  padding: 0 12px;
   border-radius: 99px;
   background: #F8FAFC;
-  color: var(--color-title);
+  color: #334155;
   border: 1px solid #E2E8F0;
   font-family: var(--font-family);
-  font-size: 11.5px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -3385,13 +3406,6 @@ svg.lucide {
   background: #EFF6FF;
   border-color: #BFDBFE;
   color: var(--color-primary);
-}
-
-.bcard-chevron {
-  display: flex;
-  align-items: center;
-  color: #94A3B8;
-  margin-left: 2px;
 }
 .booking-driver-strip {
   display: flex;

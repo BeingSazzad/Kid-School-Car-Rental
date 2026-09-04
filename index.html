@@ -2309,140 +2309,83 @@
           <button class="segment-btn" id="tabCancelled" onclick="switchBookingTab('cancelled')">Cancelled (2)</button>
         </div>
 
-        <div class="bookings-list-container" id="bookingsListWrap">
-          <!-- Booking Card 1: Active Recurring Schedule -->
-          <div class="booking-item-card" onclick="openBookingDetails('H2S-84920')">
-            <div class="booking-card-top-row">
-              <div class="booking-header-badges">
-                <span class="status-chip confirmed">
-                  <span class="status-dot"></span>
-                  Confirmed
-                </span>
-                <span class="booking-type-pill recurring">
-                  ⇄ Round Trip
-                </span>
-              </div>
-              <div class="booking-card-price">
-                <span class="price-val">$120</span>
-                <span class="price-cycle">/wk</span>
+          <!-- Booking Card 1: Active In-Transit Commute -->
+          <div class="booking-item-card is-live" onclick="openBookingDetails('H2S-84920')">
+            <div class="bcard-header">
+              <span class="status-chip in-progress">
+                <span class="status-dot"></span>
+                In Transit · ETA 07:42 AM
+              </span>
+              <div class="bcard-price">
+                <strong>$120</strong>
+                <small>/wk</small>
               </div>
             </div>
 
-            <div class="booking-card-body">
-              <div class="booking-card-child-name">Arman &amp; Emma Khan</div>
-              <div class="booking-card-route">
-                <span class="route-pickup">Home</span>
-                <span class="route-arrow-icon">⇄</span>
-                <span class="route-school-name">Greenfield International School</span>
-              </div>
-            </div>
-
-            <div class="booking-schedule-strip">
-              <div class="sched-segment">
-                <i data-lucide="calendar"></i>
+            <div class="bcard-route-block">
+              <div class="bcard-child-title">Arman &amp; Emma</div>
+              <div class="bcard-school-target">Greenfield International School</div>
+              <div class="bcard-meta-line">
                 <span>Mon – Fri</span>
-              </div>
-              <span class="sched-sep"></span>
-              <div class="sched-segment">
-                <i data-lucide="clock"></i>
+                <span class="meta-dot">·</span>
                 <span>07:30 AM &amp; 01:00 PM</span>
               </div>
             </div>
 
-            <div class="booking-driver-strip">
-              <div class="booking-driver-left" onclick="event.stopPropagation(); openDriverProfile('tariq', 'bookings')" style="cursor: pointer;" title="View Driver Profile">
-                <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="booking-driver-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
-                <div class="booking-driver-info">
-                  <div class="booking-driver-name">
-                    <span>Tariq Ahmed</span>
-                    <span class="fb-verified-badge" title="Verified Provider" style="vertical-align: middle; margin-left: 2px;">
-                      <svg viewBox="0 0 24 24" width="13" height="13" fill="#1877F2">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
-                      </svg>
-                    </span>
-                  </div>
-                  <div class="booking-driver-meta">Toyota Sienna · <span class="rating-star">★ 4.9</span></div>
+            <div class="bcard-footer">
+              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('tariq', 'bookings')" title="View Tariq's Profile">
+                <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
+                <div class="bcard-driver-text">
+                  <div class="bcard-driver-name">Tariq Ahmed</div>
+                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ 4.9</span></div>
                 </div>
               </div>
-              <button class="btn-driver-chat-mini" onclick="event.stopPropagation(); navigateTo('messages')" title="Message Provider">
-                <i data-lucide="message-square"></i>
-              </button>
-            </div>
-
-            <div class="booking-actions-grid">
-              <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('H2S-84920')">View Details →</button>
-              <button class="btn-booking-primary" onclick="event.stopPropagation(); navigateTo('tracking')">
-                <span class="live-pulse-dot"></span>
-                <span>Live Track</span>
-              </button>
+              <div class="bcard-action-wrap">
+                <button class="btn-live-track-compact" onclick="event.stopPropagation(); navigateTo('tracking')">
+                  <span class="live-pulse-dot" style="margin:0;"></span>
+                  <span>Live Track</span>
+                </button>
+              </div>
             </div>
           </div>
 
           <!-- Booking Card 2: Single Trip Booking -->
           <div class="booking-item-card" onclick="openBookingDetails('H2S-73190')">
-            <div class="booking-card-top-row">
-              <div class="booking-header-badges">
-                <span class="status-chip pending">
-                  <span class="status-dot"></span>
-                  Pending Approval
-                </span>
-                <span class="booking-type-pill onetime">
-                  → One Way
-                </span>
-              </div>
-              <div class="booking-card-price">
-                <span class="price-val">$35</span>
-                <span class="price-cycle">trip</span>
+            <div class="bcard-header">
+              <span class="status-chip pending">
+                <span class="status-dot"></span>
+                Pending
+              </span>
+              <div class="bcard-price">
+                <strong>$35</strong>
+                <small>trip</small>
               </div>
             </div>
 
-            <div class="booking-card-body">
-              <div class="booking-card-child-name">Zara Khan</div>
-              <div class="booking-card-route">
-                <span class="route-pickup">Home</span>
-                <span class="route-arrow-icon">→</span>
-                <span class="route-school-name">Sunshine Pre-school</span>
-              </div>
-            </div>
-
-            <div class="booking-schedule-strip">
-              <div class="sched-segment">
-                <i data-lucide="calendar"></i>
+            <div class="bcard-route-block">
+              <div class="bcard-child-title">Zara Khan</div>
+              <div class="bcard-school-target">Sunshine Pre-school</div>
+              <div class="bcard-meta-line">
                 <span>Thursday, May 23</span>
-              </div>
-              <span class="sched-sep"></span>
-              <div class="sched-segment">
-                <i data-lucide="clock"></i>
+                <span class="meta-dot">·</span>
                 <span>08:15 AM</span>
               </div>
             </div>
 
-            <div class="booking-driver-strip">
-              <div class="booking-driver-left">
-                <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="booking-driver-avatar" onerror="this.src='/assets/avatar_sarah.jpg';" />
-                <div class="booking-driver-info">
-                  <div class="booking-driver-name">
-                    <span>Sarah Jenkins</span>
-                    <span class="fb-verified-badge" title="Verified Provider" style="vertical-align: middle; margin-left: 2px;">
-                      <svg viewBox="0 0 24 24" width="13" height="13" fill="#1877F2">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
-                      </svg>
-                    </span>
-                  </div>
-                  <div class="booking-driver-meta">WalkShare Escort · <span class="rating-star">★ 4.9</span></div>
+            <div class="bcard-footer">
+              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('sarah', 'bookings')" title="View Sarah's Profile">
+                <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="bcard-driver-img" onerror="this.src='/assets/avatar_sarah.jpg';" />
+                <div class="bcard-driver-text">
+                  <div class="bcard-driver-name">Sarah Jenkins</div>
+                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ 4.9</span></div>
                 </div>
               </div>
-              <button class="btn-driver-chat-mini" onclick="event.stopPropagation(); navigateTo('messages')" title="Message Escort">
-                <i data-lucide="message-square"></i>
-              </button>
-            </div>
-
-            <div class="booking-actions-grid">
-              <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('H2S-73190')">View Details →</button>
-              <button class="btn-booking-primary ghost" onclick="event.stopPropagation(); navigateTo('messages')">
-                <i data-lucide="message-square" style="width:13px;height:13px;"></i>
-                <span>Chat Escort</span>
-              </button>
+              <div class="bcard-action-wrap">
+                <button class="btn-chat-compact" onclick="event.stopPropagation(); navigateTo('messages')">
+                  <i data-lucide="message-square" style="width:12px;height:12px;"></i>
+                  <span>Message</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

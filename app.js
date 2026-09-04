@@ -1541,18 +1541,60 @@ function renderBookingsList(tab) {
         return c ? c.name : id;
       });
 
-      const childText = children.length > 1 ? children.join(' & ') : (children[0] || 'Child Rider');
+      // Friendly child display (e.g. "Arman & Emma" or "Arman Khan")
+      let childText = '';
+      if (children.length > 1) {
+        childText = children.map(c => c.split(' ')[0]).join(' & ');
+      } else {
+        childText = children[0] || 'Child Rider';
+      }
+
       const isInProgress = b.status === 'in_progress';
-      const displayStatus = isInProgress ? 'In Transit' :
-                            b.status === 'confirmed' ? 'Scheduled' :
-                            b.status === 'pending' ? 'Pending' :
-                            b.status === 'completed' ? 'Completed' : 'Cancelled';
+
+      // Single, unified status badge with zero clutter
+      let statusBadge = '';
+      if (isInProgress) {
+        statusBadge = `
+          <span class="status-chip in-progress" style="font-weight:700;">
+            <span class="status-dot"></span>
+            In Transit · ETA 07:42 AM
+          </span>
+        `;
+      } else if (b.status === 'confirmed') {
+        statusBadge = `
+          <span class="status-chip confirmed" style="font-weight:700;">
+            <span class="status-dot"></span>
+            Scheduled
+          </span>
+        `;
+      } else if (b.status === 'pending') {
+        statusBadge = `
+          <span class="status-chip pending" style="font-weight:700;">
+            <span class="status-dot"></span>
+            Pending
+          </span>
+        `;
+      } else if (b.status === 'completed') {
+        statusBadge = `
+          <span class="status-chip completed" style="font-weight:700;">
+            <span class="status-dot"></span>
+            Completed
+          </span>
+        `;
+      } else {
+        statusBadge = `
+          <span class="status-chip cancelled" style="font-weight:700;">
+            <span class="status-dot"></span>
+            Cancelled
+          </span>
+        `;
+      }
 
       // Parse clean schedule
       let dayChip = 'Mon – Fri';
       let timeChip = '';
       if (b.direction === 'bothway' && b.outboundTime && b.returnTime) {
-        timeChip = `${b.outboundTime} · ${b.returnTime}`;
+        timeChip = `${b.outboundTime} & ${b.returnTime}`;
       } else if (b.outboundTime) {
         timeChip = b.outboundTime;
       }
@@ -1568,16 +1610,13 @@ function renderBookingsList(tab) {
       }
 
       if (timeChip) {
-        timeChip = timeChip.replace(/Outbound:\s*/i, '').replace(/Return:\s*/i, '').replace(/\(.*?\)/g, '').trim();
+        timeChip = timeChip.replace(/Outbound:\s*/i, '').replace(/Return:\s*/i, '').replace(/\(.*?\)/g, '').replace(/\|/g, '&').trim();
       }
 
-      const vehicleName = provider.vehicle ? provider.vehicle.split('(')[0].trim() : 'Sedan';
-      const directionLabel = b.direction === 'bothway' ? '⇄ Round Trip' : '→ One Way';
       const priceUnit = b.frequency === 'recurring' ? '/wk' : 'trip';
-      const statusChipClass = isInProgress ? 'in-progress' : b.status;
       const cardClass = isInProgress ? 'booking-item-card is-live' : 'booking-item-card';
 
-      // Clean single action button (Zero duplication)
+      // Clean primary action
       let actionBtn = '';
       if (isInProgress) {
         actionBtn = `
@@ -1604,63 +1643,37 @@ function renderBookingsList(tab) {
 
       return `
         <div class="${cardClass}" onclick="openBookingDetails('${b.id}')">
-          <!-- Top Row: Status + Direction + Price -->
+          <!-- Top Row: Status on Left, Price on Right (Zero Badge Congestion) -->
           <div class="bcard-header">
-            <div class="bcard-status-group">
-              <span class="status-chip ${statusChipClass}">
-                <span class="status-dot"></span>
-                ${displayStatus}
-              </span>
-              <span class="bcard-pill">${directionLabel}</span>
-              ${isInProgress ? `
-                <span class="live-eta-pill">
-                  <span class="live-pulse-dot" style="margin:0;width:6px;height:6px;"></span>
-                  <span>ETA 07:42 AM</span>
-                </span>
-              ` : ''}
-            </div>
+            ${statusBadge}
             <div class="bcard-price">
               <strong>$${b.amount}</strong>
               <small>${priceUnit}</small>
             </div>
           </div>
 
-          <!-- Middle Row: Student & School + Schedule Timing -->
+          <!-- Middle Row: Student & School + Clean Typography Schedule -->
           <div class="bcard-route-block">
-            <div class="bcard-child-title">
-              <span>${childText}</span>
-              <span class="bcard-school-dot">•</span>
-              <span class="bcard-school-target">${b.schoolLocation}</span>
-            </div>
+            <div class="bcard-child-title">${childText}</div>
+            <div class="bcard-school-target">${b.schoolLocation}</div>
             <div class="bcard-meta-line">
-              <i data-lucide="calendar" style="width:12px;height:12px;color:#94A3B8;"></i>
               <span>${dayChip}</span>
-              <span class="meta-dot">·</span>
-              <i data-lucide="clock" style="width:12px;height:12px;color:#94A3B8;"></i>
-              <span>${timeChip}</span>
+              ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
             </div>
           </div>
 
-          <!-- Bottom Row: Driver Mini Info + Single Action + Chevron -->
+          <!-- Bottom Row: Driver Profile + Single Action Button -->
           <div class="bcard-footer">
             <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')" title="View ${provider.name}'s Profile">
               <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
               <div class="bcard-driver-text">
-                <div class="bcard-driver-name">
-                  <span>${provider.name}</span>
-                  <svg viewBox="0 0 24 24" width="11" height="11" fill="#1877F2" style="flex-shrink:0;">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
-                  </svg>
-                </div>
-                <div class="bcard-driver-veh">${vehicleName} · <span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
+                <div class="bcard-driver-name">${provider.name}</div>
+                <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
               </div>
             </div>
 
             <div class="bcard-action-wrap">
               ${actionBtn}
-              <div class="bcard-chevron">
-                <i data-lucide="chevron-right" style="width:14px;height:14px;"></i>
-              </div>
             </div>
           </div>
         </div>
