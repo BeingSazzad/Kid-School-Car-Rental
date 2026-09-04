@@ -4693,24 +4693,23 @@ svg.lucide {
   color: var(--color-secondary);
 }
 
-/* Repeat Toggle Card & iOS Switch (Senior UX Standard) */
+/* Repeat Toggle Row & iOS Switch - Clean Unboxed Design Hierarchy */
 .clean-repeat-toggle-card {
-  background: #FFFFFF;
-  border: 1.5px solid #E2E8F0;
-  border-radius: var(--radius-md);
-  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 4px 2px 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   cursor: pointer;
-  transition: all 0.18s ease;
   user-select: none;
 }
 
 .clean-repeat-toggle-card:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .clean-repeat-toggle-left {
@@ -4731,14 +4730,14 @@ svg.lucide {
 }
 
 .clean-repeat-title {
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 800;
   color: #0F172A;
   line-height: 1.25;
 }
 
 .clean-repeat-subtitle {
-  font-size: 10.5px;
+  font-size: 11px;
   color: #64748B;
   font-weight: 500;
   margin-top: 1px;
