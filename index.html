@@ -3600,27 +3600,20 @@
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 16px;">
-          <!-- Compact Category Selection -->
-          <div>
-            <label class="form-label" style="margin-bottom: 8px;">Issue Category</label>
-            <input type="hidden" id="reportCategorySelect" value="Safety / Driving" />
-            <div class="report-chips-compact">
-              <button type="button" class="report-chip-compact active" onclick="selectReportCategory('Safety / Driving', this)">
-                <i data-lucide="shield-alert"></i>
-                <span>Driving Safety</span>
-              </button>
-              <button type="button" class="report-chip-compact" onclick="selectReportCategory('Driver Delay', this)">
-                <i data-lucide="clock"></i>
-                <span>Driver Delay</span>
-              </button>
-              <button type="button" class="report-chip-compact" onclick="selectReportCategory('Lost Item', this)">
-                <i data-lucide="briefcase"></i>
-                <span>Lost Item</span>
-              </button>
-              <button type="button" class="report-chip-compact" onclick="selectReportCategory('Billing Issue', this)">
-                <i data-lucide="credit-card"></i>
-                <span>Fare / Route</span>
-              </button>
+          <!-- Category Selection Dropdown -->
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="reportCategorySelect" style="margin-bottom: 6px;">Issue Category</label>
+            <div class="input-box-wrapper" style="height: 46px; background: #FFFFFF; position: relative;">
+              <i data-lucide="help-circle" class="input-box-icon" style="width: 16px; height: 16px; color: #64748B;"></i>
+              <select class="form-input" id="reportCategorySelect" style="cursor: pointer; font-size: 13.5px; font-weight: 600; color: #0F172A; width: 100%; border: none; background: transparent; padding-right: 28px;">
+                <option value="Safety / Driving" selected>Driving Safety / Concern</option>
+                <option value="Driver Delay">Driver Delay / Punctuality</option>
+                <option value="Lost Item">Lost Item in Vehicle</option>
+                <option value="Billing Issue">Fare / Payment / Route</option>
+                <option value="Vehicle Condition">Vehicle Condition &amp; Cleanliness</option>
+                <option value="Other">Other Feedback</option>
+              </select>
+              <i data-lucide="chevron-down" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #94A3B8; pointer-events: none;"></i>
             </div>
           </div>
 
