@@ -41,7 +41,8 @@ const screens = [
   'legal',
   'about',
   'privacy',
-  'report'
+  'report',
+  'contactSupport'
 ];
 
 /* ==========================================================
@@ -60,11 +61,77 @@ window.appState = {
     { id: 'emma', name: 'Emma Khan', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Sits next to brother', photo: '/assets/avatar_emma.jpg' },
     { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
   ],
+  savedLocations: [
+    { id: 'loc-1', name: 'Home (Primary Pickup)', street: '12 Elm Street, Toronto, ON', type: 'home', isDefault: true },
+    { id: 'loc-2', name: 'Greenfield International School', street: 'Gate 2 Drop-off Loop, Toronto, ON', type: 'school', isDefault: false },
+    { id: 'loc-3', name: 'Sunshine Pre-school', street: '45 Bloom Avenue, Toronto, ON', type: 'school', isDefault: false },
+    { id: 'loc-4', name: "Grandmother's House", street: '84 Willowbrook Crescent, Toronto, ON', type: 'family', isDefault: false }
+  ],
   providers: [
-    { id: 'tariq', name: 'Tariq Ahmed', vehicle: 'Toyota Sienna (2023)', plate: 'SCH-4091', rating: 4.9, reviewsCount: 128, seats: 4, baseWeekly: 120, photo: '/assets/avatar_tariq.jpg', phone: '+1 (416) 555-0182' },
-    { id: 'farhana', name: 'Farhana Yasmin', vehicle: 'Honda Odyssey (2024)', plate: 'KID-2810', rating: 5.0, reviewsCount: 94, seats: 5, baseWeekly: 135, photo: '/assets/avatar_farhana.jpg', phone: '+1 (416) 555-0183' },
-    { id: 'kabir', name: 'Kabir Hossain', vehicle: 'Nissan Rogue (2022)', plate: 'SCH-9102', rating: 4.8, reviewsCount: 62, seats: 2, baseWeekly: 110, photo: '/assets/avatar_kabir.jpg', phone: '+1 (416) 555-0184' },
-    { id: 'sarah', name: 'Sarah Jenkins (WalkShare)', vehicle: 'Walking School Bus Escort', plate: 'VERIFIED-WALK', rating: 4.9, reviewsCount: 45, seats: 3, baseWeekly: 75, photo: '/assets/avatar_sarah.jpg', phone: '+1 (416) 555-0185' }
+    {
+      id: 'tariq',
+      name: 'Tariq Ahmed',
+      vehicle: 'Toyota Sienna (2023)',
+      plate: 'SCH-4091',
+      rating: 4.9,
+      reviewsCount: 128,
+      seats: 4,
+      baseWeekly: 120,
+      photo: '/assets/avatar_tariq.jpg',
+      phone: '+1 (416) 555-0182',
+      experience: '4+ Yrs',
+      onTimeRate: '99.8%',
+      quote: '"Tariq has safely driven our kids to Greenfield School for over 8 months. Very gentle, always punctual, and sends notifications right away."',
+      reviewer: '— Nadia Rahman (Parent of 2)'
+    },
+    {
+      id: 'farhana',
+      name: 'Farhana Yasmin',
+      vehicle: 'Honda Odyssey (2024)',
+      plate: 'KID-2810',
+      rating: 5.0,
+      reviewsCount: 94,
+      seats: 5,
+      baseWeekly: 135,
+      photo: '/assets/avatar_farhana.jpg',
+      phone: '+1 (416) 555-0183',
+      experience: '6+ Yrs',
+      onTimeRate: '100%',
+      quote: '"Farhana is amazing with younger kids! Emma always looks forward to her morning commute and arrives at school with a big smile."',
+      reviewer: '— David Miller (Parent of 1)'
+    },
+    {
+      id: 'kabir',
+      name: 'Kabir Hossain',
+      vehicle: 'Nissan Rogue (2022)',
+      plate: 'SCH-9102',
+      rating: 4.8,
+      reviewsCount: 62,
+      seats: 2,
+      baseWeekly: 110,
+      photo: '/assets/avatar_kabir.jpg',
+      phone: '+1 (416) 555-0184',
+      experience: '3+ Yrs',
+      onTimeRate: '99.2%',
+      quote: '"Kabir is extremely reliable, always takes the safest routes and never speeds. Highly recommended for daily school carpool."',
+      reviewer: '— Sumaiya Akter (Parent of 2)'
+    },
+    {
+      id: 'sarah',
+      name: 'Sarah Jenkins (WalkShare)',
+      vehicle: 'Walking School Bus Escort',
+      plate: 'VERIFIED-WALK',
+      rating: 4.9,
+      reviewsCount: 45,
+      seats: 3,
+      baseWeekly: 75,
+      photo: '/assets/avatar_sarah.jpg',
+      phone: '+1 (416) 555-0185',
+      experience: '5+ Yrs',
+      onTimeRate: '99.5%',
+      quote: '"Sarah\'s walking school bus is the healthiest and most enjoyable commute for our son. He walks safely with neighborhood kids every morning."',
+      reviewer: '— Marcus Vance (Parent of 1)'
+    }
   ],
   emergencyContacts: [
     {
@@ -74,7 +141,8 @@ window.appState = {
       phone: '+1 (416) 555-0199',
       isPrimary: true,
       pickupAuth: true,
-      notes: 'Available all day'
+      notes: 'Available all day',
+      photo: '/assets/avatar_farhan.jpg'
     },
     {
       id: 'ec-2',
@@ -83,7 +151,8 @@ window.appState = {
       phone: '+1 (416) 555-0144',
       isPrimary: false,
       pickupAuth: true,
-      notes: 'Lives near school'
+      notes: 'Lives near school',
+      photo: '/assets/avatar_rehana.jpg'
     },
     {
       id: 'ec-3',
@@ -92,7 +161,8 @@ window.appState = {
       phone: '+1 (416) 555-0800',
       isPrimary: false,
       pickupAuth: false,
-      notes: 'Campus dispatch desk'
+      notes: 'Campus dispatch desk',
+      photo: '/assets/avatar_school.jpg'
     }
   ],
   selectedChildIds: ['arman', 'emma'],
@@ -414,6 +484,10 @@ window.navigateTo = function (screenName) {
     renderTransactions('all');
   } else if (screenName === 'profileEmergency') {
     renderEmergencyContactsList();
+  } else if (screenName === 'contactSupport') {
+    renderSupportScreen();
+  } else if (screenName === 'profileLocations') {
+    renderSavedLocations();
   }
 
   // Update Bottom Tab Bar highlights
@@ -451,7 +525,8 @@ function updateBottomTabHighlights(screenName) {
     profilePayments: 4,
     faq: 4,
     legal: 4,
-    about: 4
+    about: 4,
+    contactSupport: 4
   };
 
   const activeIndex = tabMap[screenName];
@@ -774,19 +849,97 @@ window.proceedFromTripSetup = function () {
 };
 
 /* ==========================================================
-   Booking Wizard: Step 3 Provider Selection
+   Booking Wizard & Driver Profile Viewer
    ========================================================== */
+window.currentDriverProfileReturnScreen = 'home';
+window.currentDriverProfileId = 'tariq';
+
+window.openDriverProfile = function (providerIdOrName, returnScreen) {
+  if (returnScreen) {
+    window.currentDriverProfileReturnScreen = returnScreen;
+  } else if (!window.currentDriverProfileReturnScreen) {
+    window.currentDriverProfileReturnScreen = window.currentScreen || 'home';
+  }
+
+  let provider = null;
+  if (providerIdOrName) {
+    const term = String(providerIdOrName).toLowerCase().trim();
+    provider = window.appState.providers.find(p => p.id === term || p.name.toLowerCase().includes(term));
+  }
+  if (!provider) {
+    provider = window.appState.providers[0];
+  }
+
+  window.currentDriverProfileId = provider.id;
+
+  // Update elements in screen-bookingProviderDetails
+  const imgEl = document.getElementById('detailsProviderImg');
+  const nameEl = document.getElementById('detailsProviderName');
+  const vehEl = document.getElementById('detailsProviderVehicle');
+  const ratingEl = document.getElementById('detailsProviderRatingVal');
+  const reviewsEl = document.getElementById('detailsProviderReviewsLbl');
+  const expEl = document.getElementById('detailsProviderExperienceVal');
+  const onTimeEl = document.getElementById('detailsProviderOnTimeVal');
+  const quoteEl = document.getElementById('detailsProviderQuote');
+  const reviewerEl = document.getElementById('detailsProviderReviewer');
+  const actionsWrap = document.getElementById('detailsProviderActionsWrap');
+  const titleEl = document.getElementById('providerDetailsTitle');
+
+  if (titleEl) titleEl.textContent = `${provider.name.split(' ')[0]}'s Profile`;
+  if (imgEl) {
+    imgEl.src = provider.photo || '/assets/avatar_tariq.jpg';
+    imgEl.alt = provider.name;
+    imgEl.onerror = function () { this.src = '/assets/avatar_tariq.jpg'; };
+  }
+  if (nameEl) nameEl.textContent = provider.name;
+  if (vehEl) vehEl.textContent = `${provider.vehicle} (${provider.plate}) • Clean & Certified`;
+  if (ratingEl) ratingEl.textContent = `${provider.rating} ★`;
+  if (reviewsEl) reviewsEl.textContent = `${provider.reviewsCount} Reviews`;
+  if (expEl) expEl.textContent = provider.experience || '4+ Yrs';
+  if (onTimeEl) onTimeEl.textContent = provider.onTimeRate || '99.8%';
+  if (quoteEl) quoteEl.textContent = provider.quote || '"Outstanding safety, always arrives exactly on time."';
+  if (reviewerEl) reviewerEl.textContent = provider.reviewer || '— Verified Parent';
+
+  // Contextual actions
+  if (actionsWrap) {
+    if (window.currentDriverProfileReturnScreen === 'bookingSearchProviders') {
+      actionsWrap.innerHTML = `
+        <button class="btn-primary" onclick="window.appState.bookingDraft.providerId='${provider.id}'; navigateTo('bookingSummary')">
+          Select &amp; Continue to Booking ($${provider.baseWeekly}/wk)
+        </button>
+      `;
+    } else {
+      actionsWrap.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn-primary" onclick="openChatWith('${provider.id}')" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i data-lucide="message-square" style="width: 17px; height: 17px;"></i>
+            <span>Message ${provider.name.split(' ')[0]}</span>
+          </button>
+          <button class="btn-secondary-surface" onclick="alert('Calling driver ${provider.name}: ${provider.phone || '+1 (416) 555-0182'}')" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i data-lucide="phone" style="width: 16px; height: 16px;"></i>
+            <span>Call Driver (${provider.phone || '+1 (416) 555-0182'})</span>
+          </button>
+        </div>
+      `;
+    }
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+
+  window.navigateTo('bookingProviderDetails');
+};
+
+window.handleProviderDetailsBack = function () {
+  const target = window.currentDriverProfileReturnScreen || 'home';
+  window.navigateTo(target);
+};
+
 window.selectProviderAndReview = function (name) {
   const provider = window.appState.providers.find(p => p.name.includes(name) || p.id === name) || window.appState.providers[0];
   window.appState.bookingDraft.providerId = provider.id;
-
-  const nameEl = document.getElementById('detailsProviderName');
-  const vehicleEl = document.getElementById('detailsProviderVehicle');
-
-  if (nameEl) nameEl.textContent = provider.name;
-  if (vehicleEl) vehicleEl.textContent = `${provider.vehicle} (Clean & Certified)`;
-
-  window.navigateTo('bookingProviderDetails');
+  window.openDriverProfile(provider.id, 'bookingSearchProviders');
 };
 
 /* ==========================================================
@@ -1003,6 +1156,7 @@ function renderBookingDetails(bookingId) {
   if (!booking) return;
 
   const provider = window.appState.providers.find(p => p.id === booking.providerId) || window.appState.providers[0];
+  window.currentBookingProviderId = provider.id;
   const children = booking.childIds.map(id => window.appState.children.find(ch => ch.id === id)).filter(Boolean);
 
   // Reference & status
@@ -1012,7 +1166,20 @@ function renderBookingDetails(bookingId) {
   const subEl = document.getElementById('detailHeaderSubtitle');
 
   if (refEl) refEl.textContent = booking.id.startsWith('#') ? booking.id : `#${booking.id}`;
-  if (titleEl) titleEl.textContent = children.map(c => c.name).join(' & ');
+  if (titleEl) titleEl.textContent = booking.schoolLocation || 'School Commute';
+
+  // Child Boarding Safety PIN (Unique real-world student security concept)
+  const pin = booking.id.replace(/\D/g, '').slice(-4) || '8492';
+  const pinEl = document.getElementById('detailSafetyPin');
+  const modalPinEl = document.getElementById('modalSafetyPinText');
+  const modalSubEl = document.getElementById('modalSafetyPinSub');
+  const modalVehEl = document.getElementById('modalSafetyVehicleSub');
+
+  if (pinEl) pinEl.textContent = pin;
+  if (modalPinEl) modalPinEl.textContent = pin;
+  if (modalSubEl) modalSubEl.textContent = `Assigned: ${children.map(c => c.name).join(' & ')}`;
+  if (modalVehEl) modalVehEl.textContent = `Vehicle: ${provider.vehicle} (${provider.plate})`;
+
   if (statusEl) {
     if (booking.status === 'in_progress') {
       statusEl.className = 'status-chip in-progress';
@@ -1048,13 +1215,14 @@ function renderBookingDetails(bookingId) {
     passWrap.innerHTML = children.map((c, idx) => {
       const photoSrc = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
       const badgeText = isLive ? 'On Board' : 'Confirmed';
+      const gradeAge = [c.grade, c.age].filter(Boolean).join(' • ') || 'Student';
       return `
         <div style="display:flex; align-items:center; justify-content:space-between; padding: 8px 0; ${idx < children.length - 1 ? 'border-bottom: 1px solid #F1F5F9;' : ''}">
           <div style="display:flex; align-items:center; gap:12px;">
             <img src="${photoSrc}" alt="${c.name}" class="child-photo-avatar" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:1px solid #E2E8F0;" onerror="this.src='/assets/avatar_arman.jpg';" />
             <div>
               <div style="font-size:14px;font-weight:800;color:var(--color-title); line-height:1.2;">${c.name}</div>
-              <div style="font-size:12px;color:var(--color-body); margin-top: 2px;">${c.age || c.grade} • ${c.school}</div>
+              <div style="font-size:12px;color:var(--color-body); margin-top: 2px;">${gradeAge}</div>
             </div>
           </div>
           <span style="font-size:11px; font-weight:700; color:#15803D; background:#F0FDF4; padding:3px 8px; border-radius:99px; border:1px solid #DCFCE7; white-space:nowrap;">${badgeText}</span>
@@ -1079,10 +1247,12 @@ function renderBookingDetails(bookingId) {
   const pName = document.getElementById('detailProviderName');
   const pVeh = document.getElementById('detailProviderVehicle');
   const pRating = document.getElementById('detailProviderRating');
+  const pPhoto = document.getElementById('detailDriverPhoto');
 
   if (pName) pName.textContent = provider.name;
   if (pVeh) pVeh.textContent = `${provider.vehicle} • ${provider.plate}`;
   if (pRating) pRating.textContent = `★ ${provider.rating} (${provider.reviewsCount} reviews)`;
+  if (pPhoto && provider.photo) pPhoto.src = provider.photo;
 
   // Payment
   const pAmount = document.getElementById('detailTotalAmount');
@@ -1094,59 +1264,199 @@ function renderBookingDetails(bookingId) {
   }
   if (pMethod) pMethod.textContent = booking.paymentMethod || 'Visa •••• 4242';
 
-  // Contextual Actions based on status
+  // Dynamic Lifecycle Timeline based on status
+  const timelineWrap = document.getElementById('detailTimelineWrap');
+  if (timelineWrap) {
+    if (booking.status === 'in_progress') {
+      timelineWrap.innerHTML = `
+        <div class="timeline-step-item completed">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">Schedule Confirmed</div>
+          <div class="timeline-step-time">${booking.createdAt || 'May 20, 2026'} • Recurring</div>
+        </div>
+        <div class="timeline-step-item completed">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">Morning Pickup Completed</div>
+          <div class="timeline-step-time">07:33 AM • Children safely buckled in</div>
+        </div>
+        <div class="timeline-step-item current">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">En Route to School</div>
+          <div class="timeline-step-time">Live • Estimated arrival 07:42 AM</div>
+        </div>
+      `;
+    } else if (booking.status === 'confirmed') {
+      timelineWrap.innerHTML = `
+        <div class="timeline-step-item completed">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">Booking Request Confirmed</div>
+          <div class="timeline-step-time">${booking.createdAt || 'May 20, 2026'} • 09:28 AM</div>
+        </div>
+        <div class="timeline-step-item completed">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">Assigned Provider: ${provider.name}</div>
+          <div class="timeline-step-time">${provider.vehicle} (${provider.plate})</div>
+        </div>
+        <div class="timeline-step-item current">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">Next Scheduled Pickup</div>
+          <div class="timeline-step-time">Tomorrow at ${booking.outboundTime || '07:30 AM'}</div>
+        </div>
+      `;
+    } else if (booking.status === 'completed') {
+      timelineWrap.innerHTML = `
+        <div class="timeline-step-item completed">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">Morning Pickup</div>
+          <div class="timeline-step-time">07:33 AM • On Time</div>
+        </div>
+        <div class="timeline-step-item completed">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">School Drop-off Confirmed</div>
+          <div class="timeline-step-time">07:44 AM • Handed to school reception</div>
+        </div>
+        <div class="timeline-step-item completed">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">Trip Completed</div>
+          <div class="timeline-step-time">Official receipt issued</div>
+        </div>
+      `;
+    } else if (booking.status === 'cancelled') {
+      timelineWrap.innerHTML = `
+        <div class="timeline-step-item completed">
+          <span class="timeline-step-dot"></span>
+          <div class="timeline-step-name">Booking Created</div>
+          <div class="timeline-step-time">${booking.createdAt || 'May 20, 2026'}</div>
+        </div>
+        <div class="timeline-step-item current" style="--color-secondary: #DC2626;">
+          <span class="timeline-step-dot" style="background-color: #DC2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);"></span>
+          <div class="timeline-step-name" style="color: #DC2626;">Booking Cancelled</div>
+          <div class="timeline-step-time">Cancelled by Parent</div>
+        </div>
+      `;
+    }
+  }
+
+  // Contextual Actions based on status (Top-Tier Hierarchy, Zero Duplication)
   const actionsWrap = document.getElementById('detailContextualActions');
   if (actionsWrap) {
     if (booking.status === 'in_progress') {
       actionsWrap.innerHTML = `
-        <div style="background-color: #DCFCE7; border: 1px solid #BBF7D0; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 2px;">
-          <span class="live-pulse-dot"></span>
-          <div style="font-size: 12px; color: #14532D; line-height: 1.35;">
-            <strong>Live Trip in Progress:</strong> Driver Tariq Ahmed is currently en route with your children. ETA Greenfield School: <strong>07:42 AM</strong>.
+        <div class="booking-status-tip-card live">
+          <div class="status-tip-icon" style="background: #DCFCE7;">
+            <span class="live-pulse-dot" style="margin: 0;"></span>
+          </div>
+          <div class="status-tip-text">
+            <div class="status-tip-title" style="color: #14532D;">Live Ride in Progress</div>
+            <div class="status-tip-sub" style="color: #166534;">Driver ${provider.name} is en route • Est. school arrival <strong>07:42 AM</strong></div>
           </div>
         </div>
-        <button class="btn-primary" onclick="navigateTo('tracking')">
-          <span class="live-pulse-dot"></span>
-          <span>Track Live GPS Ride</span>
+
+        <button class="btn-primary" onclick="navigateTo('tracking')" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; font-size: 15px; font-weight: 800;">
+          <span class="live-pulse-dot" style="background: #FFFFFF; box-shadow: 0 0 0 3px rgba(255,255,255,0.3);"></span>
+          <span>Open Live GPS Tracking</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
         </button>
-        <button class="btn-secondary-surface" onclick="openChatWith('${booking.providerId}')">Message Driver</button>
-        <button class="btn-danger-surface" onclick="cancelBooking('${booking.id}')">Cancel Active Trip</button>
+
+        <div class="booking-utility-actions-grid">
+          <button type="button" class="btn-utility-card danger" onclick="openTripReport('${booking.id}')">
+            <i data-lucide="alert-triangle" style="width: 15px; height: 15px;"></i>
+            <span>Report Delay / Issue</span>
+          </button>
+          <button type="button" class="btn-utility-card danger" onclick="openEmergencySOSModal()">
+            <i data-lucide="shield-alert" style="width: 15px; height: 15px;"></i>
+            <span>SOS Emergency</span>
+          </button>
+        </div>
+
+        <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')">
+          <i data-lucide="slash" style="width: 13px; height: 13px;"></i>
+          <span>Cancel this active ride</span>
+        </button>
       `;
     } else if (booking.status === 'confirmed') {
       actionsWrap.innerHTML = `
-        <div style="background-color: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 2px;">
-          <i data-lucide="calendar" style="width: 18px; height: 18px; color: #1D4ED8; flex-shrink: 0;"></i>
-          <div style="font-size: 12px; color: #1E40AF; line-height: 1.35;">
-            <strong>Upcoming Scheduled Commute:</strong> Real-time GPS tracking activates automatically 15 minutes before scheduled pickup.
+        <div class="booking-status-tip-card upcoming">
+          <div class="status-tip-icon" style="background: #E0F2FE;">
+            <i data-lucide="navigation" style="width: 16px; height: 16px; color: #0284C7;"></i>
+          </div>
+          <div class="status-tip-text">
+            <div class="status-tip-title" style="color: #0369A1;">GPS Tracking Ready</div>
+            <div class="status-tip-sub" style="color: #0C4A6E;">Live tracking activates automatically 15 minutes before scheduled pickup tomorrow.</div>
           </div>
         </div>
-        <button class="btn-primary" onclick="openChatWith('${booking.providerId}')">
-          <i data-lucide="message-square" style="width:16px;height:16px;"></i>
-          <span>Message Driver</span>
+
+        <div class="booking-utility-actions-grid">
+          <button type="button" class="btn-utility-card" onclick="alert('To modify your pickup schedule or stop, please message driver ${provider.name} or contact support.')">
+            <i data-lucide="calendar" style="width: 15px; height: 15px; color: var(--color-primary);"></i>
+            <span>Modify Schedule</span>
+          </button>
+          <button type="button" class="btn-utility-card" onclick="openTripReport('${booking.id}')">
+            <i data-lucide="help-circle" style="width: 15px; height: 15px; color: #64748B;"></i>
+            <span>Trip Help &amp; Support</span>
+          </button>
+        </div>
+
+        <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')">
+          <i data-lucide="slash" style="width: 13px; height: 13px;"></i>
+          <span>Cancel this scheduled booking</span>
         </button>
-        <button class="btn-secondary-surface" onclick="alert('To modify your pickup timing or address, please message your driver or contact Home2School support.')">Modify Schedule</button>
-        <button class="btn-danger-surface" onclick="cancelBooking('${booking.id}')">Cancel This Booking</button>
       `;
     } else if (booking.status === 'pending') {
       actionsWrap.innerHTML = `
-        <button class="btn-primary" onclick="openChatWith('${booking.providerId}')">
-          <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
-          <span>Chat Escort</span>
+        <div class="booking-status-tip-card">
+          <div class="status-tip-icon" style="background: #FEF3C7;">
+            <i data-lucide="clock" style="width: 16px; height: 16px; color: #D97706;"></i>
+          </div>
+          <div class="status-tip-text">
+            <div class="status-tip-title" style="color: #92400E;">Awaiting Escort Confirmation</div>
+            <div class="status-tip-sub">The provider is reviewing your request. You will receive a notification once confirmed.</div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')" style="margin-top: 6px;">
+          <i data-lucide="x-circle" style="width: 14px; height: 14px;"></i>
+          <span>Withdraw Booking Request</span>
         </button>
-        <button class="btn-danger-surface" onclick="cancelBooking('${booking.id}')">Withdraw Request</button>
       `;
     } else if (booking.status === 'completed') {
       actionsWrap.innerHTML = `
-        <button class="btn-primary" onclick="navigateTo('rating')">Rate Tariq Ahmed ⭐</button>
-        <button class="btn-secondary-surface" onclick="alert('Receipt emailed to ${window.appState.user.email}')">Download Official Receipt</button>
-        <button class="btn-secondary-surface" onclick="navigateTo('bookingSelectChildren')">Book Again on This Route</button>
+        <button class="btn-primary" onclick="navigateTo('rating')" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i data-lucide="star" style="width: 16px; height: 16px; fill: #F59E0B; color: #F59E0B;"></i>
+          <span>Rate ${provider.name.split(' ')[0]} ⭐</span>
+        </button>
+
+        <div class="booking-utility-actions-grid">
+          <button type="button" class="btn-utility-card" onclick="alert('Official receipt emailed to ${window.appState.user.email}')">
+            <i data-lucide="file-text" style="width: 15px; height: 15px; color: #0284C7;"></i>
+            <span>Official Receipt</span>
+          </button>
+          <button type="button" class="btn-utility-card" onclick="openTripReport('${booking.id}')">
+            <i data-lucide="help-circle" style="width: 15px; height: 15px; color: #64748B;"></i>
+            <span>Report Issue</span>
+          </button>
+        </div>
+
+        <button type="button" class="btn-ghost-cancel" onclick="navigateTo('bookingSelectChildren')" style="color: var(--color-primary);">
+          <i data-lucide="repeat" style="width: 13px; height: 13px;"></i>
+          <span>Book again on this route</span>
+        </button>
       `;
     } else if (booking.status === 'cancelled') {
       actionsWrap.innerHTML = `
-        <div style="font-size:12.5px;color:#DC2626;background:#FEE2E2;padding:10px;border-radius:var(--radius-md);text-align:center;font-weight:700;">
-          This booking was cancelled.
+        <div class="booking-status-tip-card" style="background: #FEF2F2; border-color: #FECACA;">
+          <div class="status-tip-icon" style="background: #FEE2E2;">
+            <i data-lucide="x-circle" style="width: 16px; height: 16px; color: #DC2626;"></i>
+          </div>
+          <div class="status-tip-text">
+            <div class="status-tip-title" style="color: #991B1B;">Booking Cancelled</div>
+            <div class="status-tip-sub" style="color: #B91C1C;">This school ride was cancelled. No charges were billed.</div>
+          </div>
         </div>
-        <button class="btn-primary" onclick="navigateTo('bookingSelectChildren')">Re-book This Route</button>
+
+        <button class="btn-primary" onclick="navigateTo('bookingSelectChildren')" style="margin-top: 6px;">
+          Re-book This School Route
+        </button>
       `;
     }
   }
@@ -1233,14 +1543,14 @@ function renderBookingsList(tab) {
       const isInProgress = b.status === 'in_progress';
       const displayStatus = isInProgress ? 'In Transit' :
                             b.status === 'confirmed' ? 'Scheduled' :
-                            b.status === 'pending' ? 'Pending Approval' :
+                            b.status === 'pending' ? 'Pending' :
                             b.status === 'completed' ? 'Completed' : 'Cancelled';
 
       // Parse clean schedule
       let dayChip = 'Mon – Fri';
       let timeChip = '';
       if (b.direction === 'bothway' && b.outboundTime && b.returnTime) {
-        timeChip = `${b.outboundTime} & ${b.returnTime}`;
+        timeChip = `${b.outboundTime} · ${b.returnTime}`;
       } else if (b.outboundTime) {
         timeChip = b.outboundTime;
       }
@@ -1252,8 +1562,6 @@ function renderBookingsList(tab) {
           if (parts[1]) timeChip = parts[1].trim();
         } else if (b.scheduleText.includes('Mon–Fri') || b.scheduleText.includes('Mon-Fri')) {
           dayChip = 'Mon – Fri';
-        } else {
-          dayChip = b.scheduleText.trim();
         }
       }
 
@@ -1262,122 +1570,96 @@ function renderBookingsList(tab) {
       }
 
       const vehicleName = provider.vehicle ? provider.vehicle.split('(')[0].trim() : 'Sedan';
-      const pickupName = b.pickupLocation ? b.pickupLocation.split('(')[0].trim() : 'Home';
-      const arrowIcon = b.direction === 'bothway' ? '⇄' : '→';
-      const priceUnit = b.frequency === 'recurring' ? '/wk' : 'trip';
-      const badgeClass = b.frequency === 'recurring' ? 'recurring' : 'onetime';
       const directionLabel = b.direction === 'bothway' ? '⇄ Round Trip' : '→ One Way';
+      const priceUnit = b.frequency === 'recurring' ? '/wk' : 'trip';
+      const statusChipClass = isInProgress ? 'in-progress' : b.status;
+      const cardClass = isInProgress ? 'booking-item-card is-live' : 'booking-item-card';
 
-      let actionsHtml = '';
+      // Clean single action button (Zero duplication)
+      let actionBtn = '';
       if (isInProgress) {
-        actionsHtml = `
-          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
-          <button class="btn-booking-primary" onclick="event.stopPropagation(); navigateTo('tracking')">
-            <span class="live-pulse-dot"></span>
+        actionBtn = `
+          <button class="btn-live-track-compact" onclick="event.stopPropagation(); navigateTo('tracking')" title="Track Live GPS Ride">
+            <span class="live-pulse-dot" style="margin:0;"></span>
             <span>Live Track</span>
           </button>
         `;
-      } else if (b.status === 'confirmed') {
-        actionsHtml = `
-          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
-          <button class="btn-booking-ghost" onclick="event.stopPropagation(); openChatWith('${b.providerId || 'p1'}')">
-            <i data-lucide="message-square" style="width:13px;height:13px;"></i>
-            <span>Message Driver</span>
-          </button>
-        `;
-      } else if (b.status === 'pending') {
-        actionsHtml = `
-          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
-          <button class="btn-booking-primary ghost" onclick="event.stopPropagation(); openChatWith('${b.providerId || 'p1'}')">
-            <i data-lucide="message-square" style="width:13px;height:13px;"></i>
-            <span>Chat Escort</span>
+      } else if (b.status === 'confirmed' || b.status === 'pending') {
+        actionBtn = `
+          <button class="btn-chat-compact" onclick="event.stopPropagation(); openChatWith('${provider.id}')" title="Message Driver">
+            <i data-lucide="message-square" style="width:12px;height:12px;"></i>
+            <span>Message</span>
           </button>
         `;
       } else if (b.status === 'completed') {
-        actionsHtml = `
-          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Receipt</button>
-          <button class="btn-booking-primary" onclick="event.stopPropagation(); navigateTo('bookingSelectChildren')">Book Again</button>
-        `;
-      } else {
-        actionsHtml = `
-          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">Details</button>
-          <button class="btn-booking-primary alert" onclick="event.stopPropagation(); navigateTo('bookingSelectChildren')">Re-book Route</button>
+        actionBtn = `
+          <button class="btn-chat-compact" onclick="event.stopPropagation(); navigateTo('rating')" title="Rate Driver">
+            <i data-lucide="star" style="width:12px;height:12px;color:#F59E0B;fill:#F59E0B;"></i>
+            <span>Rate</span>
+          </button>
         `;
       }
 
-      const statusChipClass = isInProgress ? 'in-progress' : b.status;
-      const cardClass = isInProgress ? 'booking-item-card in-progress' : 'booking-item-card';
-
       return `
         <div class="${cardClass}" onclick="openBookingDetails('${b.id}')">
-          ${isInProgress ? `
-            <div class="booking-live-status-banner">
-              <span class="live-pulse-dot"></span>
-              <span>Live Ride in Progress • Tariq Ahmed en route • ETA 07:42 AM</span>
-            </div>
-          ` : ''}
-
-          <div class="booking-card-top-row">
-            <div class="booking-header-badges">
+          <!-- Top Row: Status + Direction + Price -->
+          <div class="bcard-header">
+            <div class="bcard-status-group">
               <span class="status-chip ${statusChipClass}">
                 <span class="status-dot"></span>
                 ${displayStatus}
               </span>
-              <span class="booking-type-pill ${badgeClass}">
-                ${directionLabel}
-              </span>
+              <span class="bcard-pill">${directionLabel}</span>
+              ${isInProgress ? `
+                <span class="live-eta-pill">
+                  <span class="live-pulse-dot" style="margin:0;width:6px;height:6px;"></span>
+                  <span>ETA 07:42 AM</span>
+                </span>
+              ` : ''}
             </div>
-            <div class="booking-card-price">
-              <span class="price-val">$${b.amount}</span>
-              <span class="price-cycle">${priceUnit}</span>
-            </div>
-          </div>
-
-          <div class="booking-card-body">
-            <div class="booking-card-child-name">${childText}</div>
-            <div class="booking-card-route">
-              <span class="route-pickup">${pickupName}</span>
-              <span class="route-arrow-icon">${arrowIcon}</span>
-              <span class="route-school-name">${b.schoolLocation}</span>
+            <div class="bcard-price">
+              <strong>$${b.amount}</strong>
+              <small>${priceUnit}</small>
             </div>
           </div>
 
-          <div class="booking-schedule-strip">
-            <div class="sched-segment">
-              <i data-lucide="calendar"></i>
+          <!-- Middle Row: Student & School + Schedule Timing -->
+          <div class="bcard-route-block">
+            <div class="bcard-child-title">
+              <span>${childText}</span>
+              <span class="bcard-school-dot">•</span>
+              <span class="bcard-school-target">${b.schoolLocation}</span>
+            </div>
+            <div class="bcard-meta-line">
+              <i data-lucide="calendar" style="width:12px;height:12px;color:#94A3B8;"></i>
               <span>${dayChip}</span>
+              <span class="meta-dot">·</span>
+              <i data-lucide="clock" style="width:12px;height:12px;color:#94A3B8;"></i>
+              <span>${timeChip}</span>
             </div>
-            ${timeChip ? `
-              <span class="sched-sep"></span>
-              <div class="sched-segment">
-                <i data-lucide="clock"></i>
-                <span>${timeChip}</span>
-              </div>
-            ` : ''}
           </div>
 
-          <div class="booking-driver-strip">
-            <div class="booking-driver-left">
-              <img src="${provider.photo}" alt="${provider.name}" class="booking-driver-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
-              <div class="booking-driver-info">
-                <div class="booking-driver-name">
+          <!-- Bottom Row: Driver Mini Info + Single Action + Chevron -->
+          <div class="bcard-footer">
+            <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')" title="View ${provider.name}'s Profile">
+              <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
+              <div class="bcard-driver-text">
+                <div class="bcard-driver-name">
                   <span>${provider.name}</span>
-                  <span class="fb-verified-badge" title="Verified Provider" style="vertical-align: middle; margin-left: 2px;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="#1877F2">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
-                    </svg>
-                  </span>
+                  <svg viewBox="0 0 24 24" width="11" height="11" fill="#1877F2" style="flex-shrink:0;">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
+                  </svg>
                 </div>
-                <div class="booking-driver-meta">${vehicleName} · <span class="rating-star">★ ${provider.rating}</span></div>
+                <div class="bcard-driver-veh">${vehicleName} · <span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
               </div>
             </div>
-            <button class="btn-driver-chat-mini" onclick="event.stopPropagation(); openChatWith('${provider.id}')" title="Message Provider">
-              <i data-lucide="message-square"></i>
-            </button>
-          </div>
 
-          <div class="booking-actions-grid">
-            ${actionsHtml}
+            <div class="bcard-action-wrap">
+              ${actionBtn}
+              <div class="bcard-chevron">
+                <i data-lucide="chevron-right" style="width:14px;height:14px;"></i>
+              </div>
+            </div>
           </div>
         </div>
       `;
@@ -1703,8 +1985,13 @@ window.showToast = function (msg, type = 'success') {
    ========================================================== */
 window.renderEmergencyContactsList = function () {
   const container = document.getElementById('emergencyContactsListWrap');
+  const countBadge = document.getElementById('contactCountBadge');
   const sosContainer = document.getElementById('sosFamilyContactsContainer');
   const contacts = window.appState.emergencyContacts || [];
+
+  if (countBadge) {
+    countBadge.textContent = `${contacts.length}`;
+  }
 
   if (container) {
     if (contacts.length === 0) {
@@ -1714,7 +2001,7 @@ window.renderEmergencyContactsList = function () {
             <i data-lucide="shield-alert" style="width: 22px; height: 22px;"></i>
           </div>
           <div style="font-size: 13.5px; font-weight: 700; color: #0F172A;">No Emergency Contacts Added</div>
-          <p style="font-size: 12px; color: #64748B; margin: 4px 0 14px; line-height: 1.4;">Add at least one trusted guardian or family member for active trip notifications.</p>
+          <p style="font-size: 12px; color: #64748B; margin: 4px 0 14px; line-height: 1.4;">Add at least one trusted guardian or family member.</p>
           <button class="btn-primary" style="height: 38px; font-size: 12.5px; padding: 0 16px; margin: 0 auto;" onclick="openAddEmergencyContactModal()">+ Add Contact</button>
         </div>
       `;
@@ -1722,38 +2009,42 @@ window.renderEmergencyContactsList = function () {
       container.innerHTML = contacts.map(c => {
         const initials = c.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'EC';
         const cleanPhone = c.phone.replace(/[^0-9+]/g, '');
-        const primaryBadge = c.isPrimary ? `<span class="contact-role-chip primary"><i data-lucide="shield-check" style="width:11px;height:11px;"></i> Primary</span>` : '';
-        const authBadge = c.pickupAuth ? `<span class="contact-role-chip auth">Authorized Pickup</span>` : '';
+        const primaryBadge = c.isPrimary ? `<span class="contact-primary-tag">Primary</span>` : '';
+        const avatarHtml = c.photo
+          ? `<img src="${c.photo}" alt="${c.name}" class="contact-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" /><span class="contact-avatar-circle" style="display:none">${initials}</span>`
+          : `<div class="contact-avatar-circle">${initials}</div>`;
 
         return `
-          <div class="grouped-row-item emergency-contact-row" id="contactItem-${c.id}">
-            <div class="grouped-row-left" style="gap: 12px; min-width: 0;">
-              <div class="contact-avatar-circle">
-                ${initials}
+          <div class="emergency-contact-row" id="contactItem-${c.id}">
+            <div class="contact-avatar-wrap">
+              ${avatarHtml}
+            </div>
+            <div class="contact-meta-block">
+              <div class="contact-row-name-wrap">
+                <span class="contact-row-name">${c.name}</span>
+                ${primaryBadge}
               </div>
-              <div style="min-width: 0; flex: 1;">
-                <div class="contact-row-name">
-                  <strong>${c.name}</strong>
-                  <span class="contact-row-rel">(${c.rel})</span>
-                </div>
-                <div class="contact-row-phone">${c.phone}</div>
-                <div class="contact-row-badges">
-                  ${primaryBadge}
-                  ${authBadge}
-                </div>
-              </div>
+              <div class="contact-row-sub">${c.rel} • ${c.phone}</div>
             </div>
             <div class="contact-row-actions">
-              <a href="tel:${cleanPhone}" class="btn-contact-action-call" title="Call ${c.name}">
-                <i data-lucide="phone"></i>
-                <span>Call</span>
+              <a href="tel:${cleanPhone}" class="btn-contact-action-call" aria-label="Call ${c.name}" title="Call ${c.name}">
+                <i data-lucide="phone-call" style="width:14px;height:14px;"></i>
               </a>
-              <button type="button" class="btn-contact-action-icon" onclick="openAddEmergencyContactModal('${c.id}')" title="Edit Contact">
-                <i data-lucide="pencil"></i>
-              </button>
-              <button type="button" class="btn-contact-action-icon delete" onclick="deleteEmergencyContact('${c.id}')" title="Delete Contact">
-                <i data-lucide="trash-2"></i>
-              </button>
+              <div class="contact-menu-wrapper">
+                <button type="button" class="btn-contact-action-icon btn-contact-more" onclick="event.stopPropagation(); window.toggleContactMenu('${c.id}')" aria-label="Options for ${c.name}" title="More options">
+                  <i data-lucide="more-vertical" style="width:15px;height:15px;"></i>
+                </button>
+                <div class="contact-dropdown-menu" id="contactMenu-${c.id}" style="display: none;">
+                  <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.openAddEmergencyContactModal('${c.id}'); window.closeContactActionMenus();">
+                    <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+                    <span>Edit</span>
+                  </button>
+                  <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.deleteEmergencyContact('${c.id}'); window.closeContactActionMenus();">
+                    <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -1774,7 +2065,7 @@ window.renderEmergencyContactsList = function () {
       sosContainer.innerHTML = familyContacts.map(c => {
         const initials = c.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'EC';
         const cleanPhone = c.phone.replace(/[^0-9+]/g, '');
-        const relLabel = c.isPrimary ? `${c.rel} • Primary` : c.rel;
+        const relLabel = c.rel;
         return `
           <a href="tel:${cleanPhone}" class="sos-contact-pill-card">
             <div class="contact-pill-avatar">${initials}</div>
@@ -1797,6 +2088,42 @@ window.renderEmergencyContactsList = function () {
   }
 };
 
+window.toggleContactMenu = function (contactId, forceOpen = false) {
+  const targetMenu = document.getElementById(`contactMenu-${contactId}`);
+  const allMenus = document.querySelectorAll('.contact-dropdown-menu');
+
+  if (!window.figmaHoldMode) {
+    allMenus.forEach(m => {
+      if (m !== targetMenu) m.style.display = 'none';
+    });
+  }
+
+  if (targetMenu) {
+    const isVisible = targetMenu.style.display === 'flex';
+    targetMenu.style.display = forceOpen ? 'flex' : (isVisible ? 'none' : 'flex');
+    if (targetMenu.style.display === 'flex' && window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.closeContactActionMenus = function (force = false) {
+  if (window.figmaHoldMode && !force) return;
+  document.querySelectorAll('.contact-dropdown-menu').forEach(m => {
+    m.style.display = 'none';
+  });
+};
+
+if (!window.contactMenuListenerAttached) {
+  document.addEventListener('click', (e) => {
+    if (window.figmaHoldMode) return; // Keep held open in Figma mode!
+    if (!e.target.closest('.contact-menu-wrapper')) {
+      window.closeContactActionMenus();
+    }
+  });
+  window.contactMenuListenerAttached = true;
+}
+
 window.openAddEmergencyContactModal = function (contactId = null) {
   const modal = document.getElementById('addEmergencyContactModal');
   if (!modal) return;
@@ -1815,29 +2142,30 @@ window.openAddEmergencyContactModal = function (contactId = null) {
     // Edit existing contact
     const contact = (window.appState.emergencyContacts || []).find(c => c.id === contactId);
     if (contact) {
-      if (titleElem) titleElem.textContent = 'Edit Emergency Contact';
-      if (btnTextElem) btnTextElem.textContent = 'Update Contact';
+      if (titleElem) titleElem.textContent = 'Edit Contact';
+      if (btnTextElem) btnTextElem.textContent = 'Save Changes';
       if (idInput) idInput.value = contact.id;
       if (nameInput) nameInput.value = contact.name || '';
-      if (relInput) relInput.value = contact.rel || '';
+      if (relInput) {
+        relInput.value = contact.rel || 'Father';
+        if (!relInput.value) relInput.value = 'Other';
+      }
       if (phoneInput) phoneInput.value = contact.phone || '';
       if (primaryInput) primaryInput.checked = !!contact.isPrimary;
       if (authInput) authInput.checked = !!contact.pickupAuth;
       if (notesInput) notesInput.value = contact.notes || '';
-      window.highlightContactRelPill(contact.rel);
     }
   } else {
     // Create new contact
-    if (titleElem) titleElem.textContent = 'Add Emergency Contact';
-    if (btnTextElem) btnTextElem.textContent = 'Save Emergency Contact';
+    if (titleElem) titleElem.textContent = 'Add Contact';
+    if (btnTextElem) btnTextElem.textContent = 'Save Contact';
     if (idInput) idInput.value = '';
     if (nameInput) nameInput.value = '';
-    if (relInput) relInput.value = 'Mother';
+    if (relInput) relInput.value = 'Father';
     if (phoneInput) phoneInput.value = '+1 (416) ';
     if (primaryInput) primaryInput.checked = false;
     if (authInput) authInput.checked = true;
     if (notesInput) notesInput.value = '';
-    window.highlightContactRelPill('Mother');
   }
 
   modal.style.display = 'flex';
@@ -1864,18 +2192,9 @@ window.closeEmergencyContactModal = function (event) {
 window.setContactRel = function (rel) {
   const input = document.getElementById('contactInputRel');
   if (input) input.value = rel;
-  window.highlightContactRelPill(rel);
 };
 
-window.highlightContactRelPill = function (rel) {
-  document.querySelectorAll('.emergency-rel-pills .rel-pill').forEach(btn => {
-    if (btn.textContent.trim().toLowerCase() === (rel || '').trim().toLowerCase()) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
-};
+window.highlightContactRelPill = function () {};
 
 window.saveEmergencyContactForm = function (event) {
   if (event) event.preventDefault();
@@ -1971,13 +2290,178 @@ window.simulatedMapLocations = [
 window.openAddAddressModal = function () {
   const modal = document.getElementById('addAddressModal');
   if (modal) {
+    // Reset to Add mode
+    const title = modal.querySelector('[data-modal-title]');
+    if (title) title.textContent = 'Set Location on Map';
+    const submitBtn = modal.querySelector('[data-modal-submit]');
+    if (submitBtn) submitBtn.textContent = 'Save Location';
+    const labelInput = document.getElementById('newAddressLabel');
+    if (labelInput) { labelInput.value = ''; labelInput.readOnly = false; }
+    modal.dataset.editingLabel = '';
     modal.style.display = 'flex';
-    // Default pin position
     window.recenterPickerLocation();
     setTimeout(() => {
       document.getElementById('newAddressLabel')?.focus();
     }, 100);
   }
+};
+
+window.renderSavedLocations = function () {
+  const container = document.getElementById('savedLocationsListWrap');
+  if (!container) return;
+
+  const locs = window.appState.savedLocations || [];
+  container.innerHTML = locs.map(loc => {
+    const lower = (loc.name || '').toLowerCase();
+    const iconName = (loc.type === 'home' || lower.includes('home')) ? 'home' : 'map-pin';
+    const iconColor = 'var(--color-primary)';
+
+    const safeName = (loc.name || '').replace(/'/g, "\\'");
+    const safeStreet = (loc.street || '').replace(/'/g, "\\'");
+
+    return `
+      <div class="grouped-row-item" id="savedLocRow-${loc.id}" style="position: relative;">
+        <div class="grouped-row-left" style="min-width: 0; flex: 1;">
+          <div class="grouped-row-icon-wrap" style="flex-shrink: 0;">
+            <i data-lucide="${iconName}" style="width:18px;height:18px;color:${iconColor};"></i>
+          </div>
+          <div style="min-width: 0; flex: 1; margin-right: 8px;">
+            <div class="grouped-row-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${loc.name}</div>
+            <div class="grouped-row-sub" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${loc.street}</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; flex-shrink: 0;">
+          ${loc.isDefault ? '<span class="status-chip confirmed" style="font-size: 11px; padding: 3px 9px; font-weight: 700;">Default</span>' : ''}
+          <div class="location-menu-wrapper" style="position: relative; display: inline-flex;" onclick="event.stopPropagation();">
+            <button type="button" class="btn-contact-action-icon" onclick="event.stopPropagation(); window.toggleLocationMenu('${loc.id}')" aria-label="Options for ${loc.name}" title="Options">
+              <i data-lucide="more-vertical" style="width:15px;height:15px;"></i>
+            </button>
+            <div class="contact-dropdown-menu" id="locMenu-${loc.id}" style="display: none; right: 0; top: calc(100% + 4px);">
+              ${!loc.isDefault ? `
+                <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.setDefaultSavedLocation('${loc.id}'); window.closeLocationActionMenus(true);">
+                  <i data-lucide="check-circle-2" style="width:13px;height:13px;color:#10B981;"></i>
+                  <span>Set as Default</span>
+                </button>
+              ` : ''}
+              <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.openEditAddressModal('${safeName}', '${safeStreet}', ${!!loc.isDefault}, '${loc.id}'); window.closeLocationActionMenus(true);">
+                <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+                <span>Edit Location</span>
+              </button>
+              <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.deleteSavedLocation('${loc.id}'); window.closeLocationActionMenus(true);">
+                <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.toggleLocationMenu = function (locId, forceOpen = false) {
+  const targetMenu = document.getElementById(`locMenu-${locId}`);
+  const allMenus = document.querySelectorAll('[id^="locMenu-"]');
+
+  if (!window.figmaHoldMode) {
+    allMenus.forEach(m => {
+      if (m !== targetMenu) m.style.display = 'none';
+    });
+  }
+
+  if (targetMenu) {
+    const isVisible = targetMenu.style.display === 'flex';
+    targetMenu.style.display = forceOpen ? 'flex' : (isVisible ? 'none' : 'flex');
+    if (targetMenu.style.display === 'flex' && window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.closeLocationActionMenus = function (force = false) {
+  if (window.figmaHoldMode && !force) return;
+  document.querySelectorAll('[id^="locMenu-"]').forEach(m => {
+    m.style.display = 'none';
+  });
+};
+
+if (!window.locMenuListenerAttached) {
+  document.addEventListener('click', (e) => {
+    if (window.figmaHoldMode) return;
+    if (!e.target.closest('.location-menu-wrapper')) {
+      window.closeLocationActionMenus();
+    }
+  });
+  window.locMenuListenerAttached = true;
+}
+
+window.deleteSavedLocation = function (locId) {
+  if (!window.appState.savedLocations) return;
+  const target = window.appState.savedLocations.find(l => l.id === locId);
+  if (!target) return;
+
+  if (target.isDefault) {
+    if (window.showToast) {
+      window.showToast('Cannot delete default pickup location. Please set another default first.', 'warning');
+    }
+    return;
+  }
+
+  window.appState.savedLocations = window.appState.savedLocations.filter(l => l.id !== locId);
+  window.renderSavedLocations();
+  if (window.showToast) {
+    window.showToast(`✓ Removed "${target.name}" from saved locations`, 'info');
+  }
+};
+
+window.setDefaultSavedLocation = function (locId) {
+  if (!window.appState.savedLocations) return;
+  let chosen = null;
+  window.appState.savedLocations.forEach(loc => {
+    if (loc.id === locId) {
+      loc.isDefault = true;
+      chosen = loc;
+    } else {
+      loc.isDefault = false;
+    }
+  });
+
+  // Update default pickup in bookingDraft
+  if (chosen && window.appState.bookingDraft) {
+    window.appState.bookingDraft.pickupLocation = chosen.name;
+    const input = document.getElementById('setupPickupLocation');
+    if (input) input.value = chosen.name;
+  }
+
+  window.renderSavedLocations();
+  if (window.showToast) {
+    window.showToast(`✓ "${chosen?.name || 'Location'}" is now your default pickup location!`, 'success');
+  }
+};
+
+window.openEditAddressModal = function (label = '', street = '', isDefault = false, locId = null) {
+  const modal = document.getElementById('addAddressModal');
+  if (!modal) return;
+
+  const labelInput = document.getElementById('newAddressLabel');
+  const streetInput = document.getElementById('newAddressStreet');
+  const addrTag = document.getElementById('mapPinDetectedAddress');
+  const defaultCheck = document.getElementById('newAddressIsDefault');
+
+  if (labelInput) { labelInput.value = label || ''; }
+  if (streetInput) { streetInput.value = street || '12 Elm Street, Toronto, ON'; }
+  if (addrTag) { addrTag.innerText = (street || '12 Elm Street').split(',')[0]; }
+  if (defaultCheck) { defaultCheck.checked = !!isDefault; }
+
+  modal.dataset.editingId = locId || '';
+  modal.dataset.editingLabel = label || '';
+
+  modal.style.display = 'flex';
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 };
 
 window.closeAddAddressModal = function (event) {
@@ -1990,14 +2474,12 @@ window.closeAddAddressModal = function (event) {
   }
 };
 
-window.selectAddressType = function (type) {
-  window.selectedAddressType = type;
-  ['addrTypeHome', 'addrTypeSchool', 'addrTypeOther'].forEach(id => {
-    document.getElementById(id)?.classList.remove('active');
-  });
-  if (type === 'home') document.getElementById('addrTypeHome')?.classList.add('active');
-  if (type === 'school') document.getElementById('addrTypeSchool')?.classList.add('active');
-  if (type === 'other') document.getElementById('addrTypeOther')?.classList.add('active');
+window.fillLocationCustomName = function (name) {
+  const input = document.getElementById('newAddressLabel');
+  if (input) {
+    input.value = name;
+    input.focus();
+  }
 };
 
 window.handleMapPickerTap = function (event) {
@@ -2077,37 +2559,52 @@ window.handleSaveNewAddress = function (e) {
   e.preventDefault();
   const label = document.getElementById('newAddressLabel')?.value?.trim();
   const street = document.getElementById('newAddressStreet')?.value?.trim() || "Toronto, ON";
+  const isDefault = !!document.getElementById('newAddressIsDefault')?.checked;
   if (!label) return;
 
-  const iconName = window.selectedAddressType === 'school' ? 'school' : window.selectedAddressType === 'home' ? 'home' : 'map-pin';
-  const container = document.getElementById('savedLocationsListWrap');
-  if (container) {
-    const row = document.createElement('div');
-    row.className = 'grouped-row-item';
-    row.innerHTML = `
-      <div class="grouped-row-left">
-        <div class="grouped-row-icon-wrap">
-          <i data-lucide="${iconName}" style="width:18px;height:18px;color:var(--color-primary);"></i>
-        </div>
-        <div>
-          <div class="grouped-row-title">${label}</div>
-          <div class="grouped-row-sub">${street}</div>
-        </div>
-      </div>
-      <button class="grouped-row-action" onclick="window.showToast('Location selected')">Edit</button>
-    `;
-    container.appendChild(row);
-    if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+  const modal = document.getElementById('addAddressModal');
+  const editingId = modal?.dataset?.editingId;
+
+  if (!window.appState.savedLocations) {
+    window.appState.savedLocations = [];
   }
 
-  // Clear inputs and close
-  document.getElementById('newAddressLabel').value = '';
+  if (isDefault) {
+    window.appState.savedLocations.forEach(loc => { loc.isDefault = false; });
+  }
+
+  if (editingId) {
+    const existing = window.appState.savedLocations.find(l => l.id === editingId);
+    if (existing) {
+      existing.name = label;
+      existing.street = street;
+      existing.isDefault = isDefault;
+    }
+  } else {
+    let locType = 'custom';
+    const lower = label.toLowerCase();
+    if (lower.includes('home')) locType = 'home';
+    else if (lower.includes('school')) locType = 'school';
+    else if (lower.includes('grandma') || lower.includes('nana')) locType = 'family';
+
+    window.appState.savedLocations.push({
+      id: 'loc-' + Date.now(),
+      name: label,
+      street: street,
+      type: locType,
+      isDefault: isDefault
+    });
+  }
+
+  window.renderSavedLocations();
   window.closeAddAddressModal();
-  if (window.showToast) window.showToast(`✓ Added "${label}" to saved locations`);
+  if (window.showToast) {
+    window.showToast(isDefault ? `✓ Saved "${label}" as default location!` : `✓ Saved "${label}"`, 'success');
+  }
 };
 
 window.addNewAddress = function () {
-  window.openAddAddressModal();
+  window.openEditAddressModal('', '12 Elm Street, Toronto, ON', false, null);
 };
 
 /* ==========================================================
@@ -2414,7 +2911,7 @@ window.selectReportCategory = function (category, btnEl) {
   if (btnEl) {
     const parent = btnEl.parentElement;
     if (parent) {
-      parent.querySelectorAll('.report-cat-btn').forEach(b => b.classList.remove('active'));
+      parent.querySelectorAll('.report-cat-btn, .report-chip-compact').forEach(b => b.classList.remove('active'));
       btnEl.classList.add('active');
     }
   }
@@ -2426,16 +2923,190 @@ window.submitIssueReport = function () {
   const desc = document.getElementById('reportDescriptionInput')?.value?.trim();
 
   if (!desc) {
-    alert('Please describe what happened so our dispatch team can investigate.');
+    if (window.showToast) {
+      window.showToast('Please describe what happened', 'error');
+    } else {
+      alert('Please describe what happened.');
+    }
     return;
   }
 
-  const ticketId = 'H2S-' + Math.floor(1000 + Math.random() * 9000);
-  alert(`✓ Incident report submitted successfully.\n\nTicket Reference: ${ticketId}\nOur Safety Operations & Dispatch team will investigate and follow up via phone/SMS within 15 minutes.`);
+  const ticketId = 'H2S-INC-' + Math.floor(1000 + Math.random() * 9000);
+  if (window.showToast) {
+    window.showToast(`Report ${ticketId} submitted. Dispatch is reviewing.`, 'success');
+  } else {
+    alert(`Report ${ticketId} submitted.`);
+  }
 
   if (document.getElementById('reportDescriptionInput')) {
     document.getElementById('reportDescriptionInput').value = '';
   }
+
+  window.handleTripReportBack();
+};
+
+/* ==========================================================
+   Dedicated Trip Incident & Delay Report (#screen-report)
+   ========================================================== */
+window.tripReportPreviousScreen = 'profile';
+
+window.openTripReport = function (bookingId) {
+  window.tripReportPreviousScreen = currentScreen || 'bookingDetails';
+  const booking = (window.appState.bookings || []).find(b => b.id === bookingId) || window.appState.bookings[0];
+  const provider = (window.appState.providers || []).find(p => p.id === booking?.providerId) || window.appState.providers[0];
+  const children = (booking?.childIds || []).map(id => (window.appState.children || []).find(c => c.id === id)?.name).filter(Boolean);
+
+  const badgeEl = document.getElementById('tripReportBookingBadge');
+  const titleEl = document.getElementById('tripReportTitle');
+  const routeEl = document.getElementById('tripReportRoute');
+  const selectEl = document.getElementById('reportTripSelect');
+
+  if (badgeEl && booking) badgeEl.textContent = booking.id.startsWith('#') ? booking.id : `#${booking.id}`;
+  if (titleEl && booking) titleEl.textContent = `${provider?.name || 'Driver'} • ${children.join(' & ') || 'Child Commute'}`;
+  if (routeEl && booking) routeEl.textContent = `${booking.pickupLocation} → ${booking.schoolLocation}`;
+
+  if (selectEl && booking) {
+    selectEl.value = booking.id;
+  }
+
+  window.navigateTo('report');
+};
+
+window.handleTripReportBack = function () {
+  const prev = window.tripReportPreviousScreen || 'profile';
+  window.navigateTo(prev);
+};
+
+window.onReportTripSelectChange = function (selectEl) {
+  const bookingId = selectEl.value;
+  const booking = (window.appState.bookings || []).find(b => b.id === bookingId);
+  if (!booking) return;
+
+  const provider = (window.appState.providers || []).find(p => p.id === booking.providerId) || window.appState.providers[0];
+  const children = (booking.childIds || []).map(id => (window.appState.children || []).find(c => c.id === id)?.name).filter(Boolean);
+
+  const badgeEl = document.getElementById('tripReportBookingBadge');
+  const titleEl = document.getElementById('tripReportTitle');
+  const routeEl = document.getElementById('tripReportRoute');
+
+  if (badgeEl) badgeEl.textContent = `#${booking.id}`;
+  if (titleEl) titleEl.textContent = `${provider?.name || 'Driver'} • ${children.join(' & ') || 'Child Commute'}`;
+  if (routeEl) routeEl.textContent = `${booking.pickupLocation} → ${booking.schoolLocation}`;
+};
+
+/* ==========================================================
+   Dedicated Contact Support Desk & Inquiry Dispatch (#screen-contactSupport)
+   ========================================================== */
+window.supportTopicsMap = {
+  billing: [
+    'Refund Status Inquiry',
+    'Official Receipt / Tax Invoice',
+    'Update Payment Card',
+    'Weekly Commute Pricing Question'
+  ],
+  routes: [
+    'Change Morning Pickup Time',
+    'Driver Feedback or Commendation',
+    'Request New School Route Extension',
+    'Lost Item Left in Car'
+  ],
+  children: [
+    'Update Authorized Pickup Guardian',
+    'Booster Seat / Special Needs Note',
+    'School Campus Transfer',
+    'Temporary Vacation / Stop Commute'
+  ],
+  feedback: [
+    'App Feature Suggestion',
+    'Report a Bug or UI Glitch',
+    'Compliment Escort or Dispatcher'
+  ],
+  general: [
+    'Child Safety & Screening Standards',
+    'Account & Phone Verification',
+    'Other Family Inquiries'
+  ]
+};
+
+window.activeSupportCategory = 'billing';
+window.activeSupportSubTopic = 'Refund Status Inquiry';
+
+window.renderSupportScreen = function () {
+  window.renderSupportSubTopics(window.activeSupportCategory || 'billing');
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.selectSupportCategory = function (category, btnEl) {
+  window.activeSupportCategory = category;
+  if (btnEl) {
+    const parent = btnEl.parentElement;
+    if (parent) {
+      parent.querySelectorAll('.support-cat-pill').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+  }
+  window.renderSupportSubTopics(category);
+};
+
+window.renderSupportSubTopics = function (category) {
+  const container = document.getElementById('supportSubTopicsWrap');
+  if (!container) return;
+
+  const topics = window.supportTopicsMap[category] || window.supportTopicsMap.general;
+  window.activeSupportSubTopic = topics[0];
+
+  container.innerHTML = topics.map((topic, idx) => `
+    <button type="button" class="support-subtopic-pill ${idx === 0 ? 'active' : ''}" onclick="selectSupportSubTopic('${topic.replace(/'/g, "\\'")}', this)">
+      ${topic}
+    </button>
+  `).join('');
+};
+
+window.selectSupportSubTopic = function (topic, btnEl) {
+  window.activeSupportSubTopic = topic;
+  if (btnEl) {
+    const parent = btnEl.parentElement;
+    if (parent) {
+      parent.querySelectorAll('.support-subtopic-pill').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+  }
+};
+
+window.updateSupportCharCount = function (textarea) {
+  const counter = document.getElementById('supportCharCounter');
+  if (counter && textarea) {
+    counter.textContent = `${textarea.value.length} / 500`;
+  }
+};
+
+window.submitSupportTicket = function () {
+  const messageInput = document.getElementById('supportMessageInput');
+  const message = messageInput?.value?.trim();
+  const topic = document.getElementById('supportTopicSelect')?.value || 'General Inquiry';
+
+  if (!message) {
+    if (window.showToast) {
+      window.showToast('Please type your message before sending', 'error');
+    } else {
+      alert('Please type your message before sending.');
+    }
+    return;
+  }
+
+  const ticketId = 'H2S-TKT-' + Math.floor(10000 + Math.random() * 90000);
+
+  if (window.showToast) {
+    window.showToast(`Support ticket ${ticketId} created. We'll reply shortly.`, 'success');
+  } else {
+    alert(`Message sent (${ticketId}). We will reply shortly.`);
+  }
+
+  if (messageInput) messageInput.value = '';
+  const counter = document.getElementById('supportCharCounter');
+  if (counter) counter.textContent = '0 / 500';
 
   window.navigateTo('profile');
 };
@@ -2463,17 +3134,29 @@ window.renderMyChildrenList = function () {
   container.innerHTML = children.map(c => {
     const photoSrc = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
     return `
-      <div class="child-manage-card" onclick="openEditChildModal('${c.id}')">
-        <div class="child-manage-left">
+      <div class="grouped-row-item child-manage-row" onclick="openEditChildModal('${c.id}')" role="button" tabindex="0" style="cursor:pointer; position: relative;">
+        <div class="grouped-row-left" style="gap: 12px; min-width: 0; flex: 1;">
           <img src="${photoSrc}" alt="${c.name}" class="child-photo-avatar" onerror="this.src='/assets/avatar_arman.jpg';" />
-          <div>
-            <div class="child-manage-name">${c.name}</div>
-            <div class="child-manage-sub">${c.grade || c.age} • ${c.school}</div>
+          <div style="min-width: 0; flex: 1;">
+            <div class="child-manage-name" style="font-size: 14px; font-weight: 700; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${c.name}</div>
+            <div class="child-manage-sub" style="font-size: 12px; color: #64748B; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${c.grade || c.age} • ${c.school}</div>
           </div>
         </div>
-        <button class="btn-icon-contact" onclick="event.stopPropagation(); openEditChildModal('${c.id}');" aria-label="Edit ${c.name}">
-          <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;"></i>
-        </button>
+        <div class="child-menu-wrapper" onclick="event.stopPropagation();">
+          <button type="button" class="btn-contact-action-icon btn-child-more" onclick="event.stopPropagation(); window.toggleChildMenu('${c.id}')" aria-label="Options for ${c.name}" title="Options">
+            <i data-lucide="more-vertical" style="width:15px;height:15px;"></i>
+          </button>
+          <div class="child-dropdown-menu" id="childMenu-${c.id}" style="display: none;">
+            <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.openEditChildModal('${c.id}'); window.closeChildActionMenus();">
+              <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+              <span>Edit Profile</span>
+            </button>
+            <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.deleteChildProfile('${c.id}'); window.closeChildActionMenus();">
+              <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+              <span>Delete Profile</span>
+            </button>
+          </div>
+        </div>
       </div>
     `;
   }).join('');
@@ -2483,11 +3166,65 @@ window.renderMyChildrenList = function () {
   }
 };
 
+window.toggleChildMenu = function (childId, forceOpen = false) {
+  const targetMenu = document.getElementById(`childMenu-${childId}`);
+  const allMenus = document.querySelectorAll('.child-dropdown-menu');
+
+  if (!window.figmaHoldMode) {
+    allMenus.forEach(m => {
+      if (m !== targetMenu) m.style.display = 'none';
+    });
+  }
+
+  if (targetMenu) {
+    const isVisible = targetMenu.style.display === 'flex';
+    targetMenu.style.display = forceOpen ? 'flex' : (isVisible ? 'none' : 'flex');
+    if (targetMenu.style.display === 'flex' && window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.closeChildActionMenus = function (force = false) {
+  if (window.figmaHoldMode && !force) return;
+  document.querySelectorAll('.child-dropdown-menu').forEach(m => {
+    m.style.display = 'none';
+  });
+};
+
+if (!window.childMenuListenerAttached) {
+  document.addEventListener('click', (e) => {
+    if (window.figmaHoldMode) return; // Keep held open in Figma mode!
+    if (!e.target.closest('.child-menu-wrapper')) {
+      window.closeChildActionMenus?.();
+    }
+  });
+  window.childMenuListenerAttached = true;
+}
+
+window.deleteChildProfile = function (childId) {
+  const child = (window.appState?.children || []).find(c => c.id === childId);
+  const name = child ? child.name : 'this child profile';
+
+  if (confirm(`Remove ${name}'s profile from your account?`)) {
+    window.appState.children = (window.appState.children || []).filter(c => c.id !== childId);
+
+    if (window.appState.selectedChildIds) {
+      window.appState.selectedChildIds = window.appState.selectedChildIds.filter(id => id !== childId);
+    }
+
+    window.closeChildActionMenus();
+    window.renderMyChildrenList();
+    if (window.navigateTo) window.navigateTo('myChildren');
+    if (window.showToast) window.showToast(`Removed ${name}'s profile`, 'info');
+  }
+};
+
 window.openAddChildModal = function () {
   window.editingChildId = null;
 
   const titleEl = document.getElementById('childFormTopTitle');
-  if (titleEl) titleEl.textContent = 'Add New Child';
+  if (titleEl) titleEl.textContent = 'Add Child';
 
   const monogramEl = document.getElementById('childFormMonogram');
   if (monogramEl) {
@@ -2495,22 +3232,18 @@ window.openAddChildModal = function () {
     monogramEl.style.background = 'linear-gradient(135deg, var(--color-primary) 0%, #263C8C 100%)';
   }
 
-  const badgeEl = document.getElementById('childFormHeroBadge');
-  if (badgeEl) badgeEl.textContent = 'New Student Registration';
 
   const nameInput = document.getElementById('editChildName');
   const ageInput = document.getElementById('editChildAge');
   const schoolInput = document.getElementById('editChildSchool');
-  const pickupInput = document.getElementById('editChildPickup');
-  const notesInput = document.getElementById('editChildNotes');
   const submitBtn = document.getElementById('childFormSubmitBtn');
+  const deleteBtn = document.getElementById('childFormDeleteBtn');
 
   if (nameInput) nameInput.value = '';
   if (ageInput) ageInput.value = '';
   if (schoolInput) schoolInput.value = '';
-  if (pickupInput) pickupInput.value = 'Home (12 Elm Street, Toronto)';
-  if (notesInput) notesInput.value = '';
-  if (submitBtn) submitBtn.textContent = 'Add Child Profile';
+  if (submitBtn) submitBtn.textContent = 'Save Changes';
+  if (deleteBtn) deleteBtn.style.display = 'none';
 
   window.navigateTo('addChild');
 };
@@ -2521,7 +3254,7 @@ window.openEditChildModal = function (childId) {
   if (!child) return;
 
   const titleEl = document.getElementById('childFormTopTitle');
-  if (titleEl) titleEl.textContent = 'Edit Child Profile';
+  if (titleEl) titleEl.textContent = 'Edit Child';
 
   const photoSrc = child.photo || (child.id === 'arman' ? '/assets/avatar_arman.jpg' : child.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
   const monogramEl = document.getElementById('childFormMonogram');
@@ -2530,22 +3263,18 @@ window.openEditChildModal = function (childId) {
     monogramEl.style.background = 'transparent';
   }
 
-  const badgeEl = document.getElementById('childFormHeroBadge');
-  if (badgeEl) badgeEl.textContent = `${child.age || child.grade} • Active Student`;
 
   const nameInput = document.getElementById('editChildName');
   const ageInput = document.getElementById('editChildAge');
   const schoolInput = document.getElementById('editChildSchool');
-  const pickupInput = document.getElementById('editChildPickup');
-  const notesInput = document.getElementById('editChildNotes');
   const submitBtn = document.getElementById('childFormSubmitBtn');
+  const deleteBtn = document.getElementById('childFormDeleteBtn');
 
   if (nameInput) nameInput.value = child.name || '';
   if (ageInput) ageInput.value = child.age || child.grade || '8 Years';
   if (schoolInput) schoolInput.value = child.school || '';
-  if (pickupInput) pickupInput.value = child.pickup || 'Home (12 Elm Street, Toronto)';
-  if (notesInput) notesInput.value = child.notes || '';
   if (submitBtn) submitBtn.textContent = 'Save Changes';
+  if (deleteBtn) deleteBtn.style.display = 'flex';
 
   window.navigateTo('addChild');
 };
@@ -2556,14 +3285,10 @@ window.saveChildProfileForm = function (event) {
   const nameInput = document.getElementById('editChildName');
   const ageInput = document.getElementById('editChildAge');
   const schoolInput = document.getElementById('editChildSchool');
-  const pickupInput = document.getElementById('editChildPickup');
-  const notesInput = document.getElementById('editChildNotes');
 
   const name = nameInput?.value?.trim();
   const age = ageInput?.value?.trim() || '7 Years';
   const school = schoolInput?.value?.trim() || 'Greenfield International School';
-  const pickup = pickupInput?.value?.trim() || 'Home (12 Elm Street)';
-  const notes = notesInput?.value?.trim() || '';
 
   if (!name) {
     alert('Please enter your child’s name.');
@@ -2577,8 +3302,8 @@ window.saveChildProfileForm = function (event) {
       child.age = age;
       child.grade = age;
       child.school = school;
-      child.pickup = pickup;
-      child.notes = notes;
+      child.pickup = child.pickup || 'Home Address';
+      child.notes = child.notes || '';
     }
   } else {
     const newId = 'child_' + Date.now();
@@ -2588,8 +3313,8 @@ window.saveChildProfileForm = function (event) {
       age: age,
       grade: age,
       school: school,
-      pickup: pickup,
-      notes: notes
+      pickup: 'Home Address',
+      notes: ''
     });
   }
 
@@ -2601,41 +3326,12 @@ window.saveChildProfileForm = function (event) {
 window.renderMyChildrenList();
 
 /* ==========================================================
-   Emergency SOS Safety Center Protocol Flow
+   Emergency SOS Protocol Flow
    ========================================================== */
 window.openEmergencySOSModal = function () {
   const modal = document.getElementById('emergencySOSModal');
   if (modal) {
     modal.style.display = 'flex';
-    // Reset any previous broadcast states to initial clean state
-    const schoolBtn = document.getElementById('btnSosSchoolBroadcast');
-    if (schoolBtn) {
-      schoolBtn.classList.remove('dispatched');
-      schoolBtn.innerHTML = `
-        <div class="sos-card-icon school">
-          <i data-lucide="school"></i>
-        </div>
-        <div class="sos-card-content">
-          <div class="sos-card-title">Broadcast Alert to Greenfield Security</div>
-          <div class="sos-card-desc">Direct dispatch to Principal desk &amp; campus guard unit</div>
-        </div>
-        <i data-lucide="chevron-right" class="sos-card-chevron"></i>
-      `;
-    }
-    const driverBtn = document.getElementById('btnSosDriverPing');
-    if (driverBtn) {
-      driverBtn.classList.remove('dispatched');
-      driverBtn.innerHTML = `
-        <div class="sos-card-icon driver">
-          <i data-lucide="bell-ring"></i>
-        </div>
-        <div class="sos-card-content">
-          <div class="sos-card-title">Priority Cab Ping: Tariq Ahmed</div>
-          <div class="sos-card-desc">Sounds high-priority chime on escort's dashboard tablet</div>
-        </div>
-        <i data-lucide="chevron-right" class="sos-card-chevron"></i>
-      `;
-    }
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
     }
@@ -2651,6 +3347,33 @@ window.closeEmergencySOSModal = function (event) {
     return;
   }
   const modal = document.getElementById('emergencySOSModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+};
+
+/* ==========================================================
+   Child Boarding Safety PIN Pass Modal (Unique Concept)
+   ========================================================== */
+window.openSafetyPinModal = function () {
+  const modal = document.getElementById('safetyPinModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.closeSafetyPinModal = function (event) {
+  if (event && event.target && 
+      event.target.id !== 'safetyPinModal' && 
+      !event.target.classList.contains('emergency-sos-modal-overlay') && 
+      !event.target.closest('.btn-primary') && 
+      !event.target.closest('.btn-close-modal')) {
+    return;
+  }
+  const modal = document.getElementById('safetyPinModal');
   if (modal) {
     modal.style.display = 'none';
   }
@@ -2763,4 +3486,365 @@ window.updateNavLiveBadges = function () {
 setTimeout(() => {
   if (window.updateNavLiveBadges) window.updateNavLiveBadges();
   if (window.renderEmergencyContactsList) window.renderEmergencyContactsList();
+  if (window.renderSavedLocations) window.renderSavedLocations();
 }, 200);
+
+/* ==========================================================
+   COUNTRY PICKER — Profile Phone Field
+   ========================================================== */
+window._countryPickerData = [
+  { flag: '🇧🇩', name: 'Bangladesh',      code: '+880' },
+  { flag: '🇨🇦', name: 'Canada',          code: '+1'   },
+  { flag: '🇺🇸', name: 'United States',   code: '+1'   },
+  { flag: '🇬🇧', name: 'United Kingdom',  code: '+44'  },
+  { flag: '🇦🇺', name: 'Australia',       code: '+61'  },
+  { flag: '🇮🇳', name: 'India',           code: '+91'  },
+  { flag: '🇵🇰', name: 'Pakistan',        code: '+92'  },
+  { flag: '🇲🇾', name: 'Malaysia',        code: '+60'  },
+  { flag: '🇸🇬', name: 'Singapore',       code: '+65'  },
+  { flag: '🇦🇪', name: 'UAE',             code: '+971' },
+  { flag: '🇸🇦', name: 'Saudi Arabia',    code: '+966' },
+  { flag: '🇩🇪', name: 'Germany',         code: '+49'  },
+  { flag: '🇫🇷', name: 'France',          code: '+33'  },
+  { flag: '🇯🇵', name: 'Japan',           code: '+81'  },
+];
+
+window.openCountryPicker = function () {
+  // Remove any existing picker
+  const old = document.getElementById('countryPickerModal');
+  if (old) old.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'countryPickerModal';
+  overlay.style.cssText = `
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(15,23,42,0.45);
+    display: flex; align-items: flex-end; justify-content: center;
+    animation: fadeInOverlay 0.18s ease;
+  `;
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+
+  const sheet = document.createElement('div');
+  sheet.style.cssText = `
+    width: 430px; max-width: 100%;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    padding: 0 0 24px;
+    max-height: 70vh;
+    display: flex; flex-direction: column;
+    animation: slideUpSheet 0.22s ease;
+    overflow: hidden;
+  `;
+
+  sheet.innerHTML = `
+    <div style="padding: 16px 16px 10px; display:flex; align-items:center; justify-content:space-between; border-bottom: 1px solid #F1F5F9;">
+      <div style="font-size:15px; font-weight:800; color:#0F172A;">Select Country</div>
+      <button onclick="document.getElementById('countryPickerModal').remove()" style="background:none;border:none;cursor:pointer;padding:4px;color:#64748B;">
+        <i data-lucide="x" style="width:18px;height:18px;"></i>
+      </button>
+    </div>
+    <div style="overflow-y: auto; flex:1;">
+      ${window._countryPickerData.map((c, i) => `
+        <div onclick="window.selectCountry('${c.flag}','${c.code}','${c.name}')"
+          style="display:flex; align-items:center; gap:12px; padding:11px 16px; cursor:pointer; border-bottom:1px solid #F8FAFC; transition:background 0.12s;"
+          onmouseover="this.style.background='#F0F9FF'" onmouseout="this.style.background='transparent'">
+          <span style="font-size:22px;">${c.flag}</span>
+          <div style="flex:1;">
+            <div style="font-size:13.5px; font-weight:600; color:#0F172A;">${c.name}</div>
+          </div>
+          <span style="font-size:13px; font-weight:700; color:#64748B; font-variant-numeric:tabular-nums;">${c.code}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  overlay.appendChild(sheet);
+  document.body.appendChild(overlay);
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.selectCountry = function (flag, code, name) {
+  const flagEl = document.getElementById('profileCountryFlag');
+  const codeEl = document.getElementById('profileCountryCode');
+  if (flagEl) flagEl.textContent = flag;
+  if (codeEl) codeEl.textContent = code;
+  const modal = document.getElementById('countryPickerModal');
+  if (modal) modal.remove();
+};
+
+/* ==========================================================
+   PROFILE ADDRESS MAP PICKER
+   ========================================================== */
+window._profileMapOpen = false;
+
+window.toggleProfileMapPicker = function () {
+  const picker = document.getElementById('profileMapPicker');
+  if (!picker) return;
+  window._profileMapOpen = !window._profileMapOpen;
+  picker.style.display = window._profileMapOpen ? 'block' : 'none';
+  if (window._profileMapOpen) {
+    // Sync current address value to map label
+    const addr = document.getElementById('parentProfileAddress')?.value || '';
+    const tag = document.getElementById('profilePinTag');
+    const addrLabel = document.getElementById('profileMapSelectedAddr');
+    if (tag) tag.textContent = addr.split(',')[0];
+    if (addrLabel) addrLabel.textContent = addr;
+    setTimeout(() => {
+      if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+    }, 50);
+    // Scroll into view
+    setTimeout(() => picker.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+  }
+};
+
+window.handleProfileMapTap = function (event) {
+  const container = document.getElementById('profileMapContainer');
+  const pin = document.getElementById('profileMapPin');
+  const tag = document.getElementById('profilePinTag');
+  const addrLabel = document.getElementById('profileMapSelectedAddr');
+  if (!container || !pin) return;
+
+  const rect = container.getBoundingClientRect();
+  const x = Math.max(8, Math.min(rect.width - 8, event.clientX - rect.left));
+  const y = Math.max(30, Math.min(rect.height - 8, event.clientY - rect.top));
+
+  pin.style.left = `${(x / rect.width) * 100}%`;
+  pin.style.top  = `${(y / rect.height) * 100}%`;
+
+  // Pick a simulated address
+  const locs = window.simulatedMapLocations || [{ street: '12 Elm Street, Toronto, ON', name: 'Home' }];
+  const loc = locs[Math.floor(Math.random() * locs.length)];
+  const street = loc.street || '12 Elm Street, Toronto, ON';
+
+  if (tag) tag.textContent = street.split(',')[0];
+  if (addrLabel) addrLabel.textContent = street;
+
+  if (window.showToast) window.showToast(`Pinned: ${street.split(',')[0]}`);
+};
+
+window.profileMapRecenter = function () {
+  const pin = document.getElementById('profileMapPin');
+  const tag = document.getElementById('profilePinTag');
+  const addrLabel = document.getElementById('profileMapSelectedAddr');
+  if (pin) { pin.style.left = '50%'; pin.style.top = '52%'; }
+  const addr = document.getElementById('parentProfileAddress')?.value || '12 Elm Street, Toronto, ON';
+  if (tag) tag.textContent = addr.split(',')[0];
+  if (addrLabel) addrLabel.textContent = addr;
+};
+
+window.handleProfileMapSearch = function (query) {
+  if (!query || query.length < 2) return;
+  const locs = window.simulatedMapLocations || [];
+  const match = locs.find(l => l.street.toLowerCase().includes(query.toLowerCase()) || (l.name && l.name.toLowerCase().includes(query.toLowerCase())));
+  if (match) {
+    const tag = document.getElementById('profilePinTag');
+    const addrLabel = document.getElementById('profileMapSelectedAddr');
+    if (tag) tag.textContent = match.street.split(',')[0];
+    if (addrLabel) addrLabel.textContent = match.street;
+    if (window.showToast) window.showToast(`Found: ${match.street.split(',')[0]}`);
+  }
+};
+
+window.confirmProfileAddress = function () {
+  const addrLabel = document.getElementById('profileMapSelectedAddr');
+  const input = document.getElementById('parentProfileAddress');
+  if (addrLabel && input) {
+    input.value = addrLabel.textContent;
+  }
+  // Close map
+  window._profileMapOpen = false;
+  const picker = document.getElementById('profileMapPicker');
+  if (picker) picker.style.display = 'none';
+  if (window.showToast) window.showToast('Address updated ✓', 'success');
+};
+
+window.profileUseCurrentLocation = function () {
+  const btn = document.getElementById('profileUseLocationBtn');
+  if (btn) { btn.textContent = 'Locating…'; btn.disabled = true; }
+
+  if (!navigator.geolocation) {
+    if (window.showToast) window.showToast('Geolocation not supported on this device', 'error');
+    if (btn) { btn.innerHTML = '<i data-lucide="locate" style="width:11px;height:11px;"></i> Use Current'; btn.disabled = false; if (window.lucide) window.lucide.createIcons(); }
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      // Real app: reverse-geocode pos.coords.latitude, pos.coords.longitude
+      // Simulated: pick a realistic Toronto address
+      const locs = window.simulatedMapLocations || [];
+      const loc = locs[Math.floor(Math.random() * locs.length)] || { street: '12 Elm Street, Toronto, ON' };
+      const street = loc.street;
+
+      const input = document.getElementById('parentProfileAddress');
+      const tag = document.getElementById('profilePinTag');
+      const addrLabel = document.getElementById('profileMapSelectedAddr');
+      if (input) input.value = street;
+      if (tag) tag.textContent = street.split(',')[0];
+      if (addrLabel) addrLabel.textContent = street;
+
+      if (window.showToast) window.showToast(`Location found: ${street.split(',')[0]}`, 'success');
+      if (btn) { btn.innerHTML = '<i data-lucide="locate" style="width:11px;height:11px;"></i> Use Current'; btn.disabled = false; if (window.lucide) window.lucide.createIcons(); }
+    },
+    (err) => {
+      // Fallback — show map so user can pick manually
+      if (window.showToast) window.showToast('Could not get location. Pin it on the map.', 'error');
+      window.toggleProfileMapPicker();
+      if (btn) { btn.innerHTML = '<i data-lucide="locate" style="width:11px;height:11px;"></i> Use Current'; btn.disabled = false; if (window.lucide) window.lucide.createIcons(); }
+    },
+    { timeout: 8000, enableHighAccuracy: true }
+  );
+};
+
+/* ==========================================================================
+   FIGMA SCREEN CAPTURE & HOLD UI ENGINE
+   Allows designers to keep dropdowns, popovers, and option menus open
+   without them vanishing on blur/click, making Figma capture seamless.
+   ========================================================================== */
+window.figmaHoldMode = true; // Default ON so menus never disappear when capturing for Figma!
+
+window.toggleFigmaHoldMode = function (explicitState = null) {
+  if (explicitState !== null) {
+    window.figmaHoldMode = explicitState;
+  } else {
+    window.figmaHoldMode = !window.figmaHoldMode;
+  }
+
+  const statusText = document.getElementById('figmaHoldStatusText');
+  const toggleBtn = document.getElementById('btnToggleFigmaHold');
+  const pulseDot = document.getElementById('figmaPulseDot');
+
+  if (statusText) {
+    statusText.textContent = window.figmaHoldMode ? 'ON' : 'OFF';
+    statusText.style.color = window.figmaHoldMode ? '#34D399' : '#94A3B8';
+  }
+  if (toggleBtn) {
+    toggleBtn.textContent = window.figmaHoldMode ? 'HOLD ON' : 'HOLD OFF';
+    toggleBtn.className = window.figmaHoldMode ? 'btn-figma-toggle' : 'btn-figma-toggle off';
+  }
+  if (pulseDot) {
+    pulseDot.className = window.figmaHoldMode ? 'figma-pulse-dot active' : 'figma-pulse-dot';
+  }
+
+  if (window.showToast) {
+    window.showToast(
+      window.figmaHoldMode
+        ? '📸 Figma Hold ON: Menus stay open until you click again!'
+        : 'Figma Hold OFF: Standard auto-dismiss restored.',
+      'info'
+    );
+  }
+};
+
+window.holdOpenCurrentDropdown = function () {
+  // 1. If on My Children screen, hold open child option menu
+  const childMenus = document.querySelectorAll('.child-dropdown-menu');
+  if (childMenus && childMenus.length > 0) {
+    // Open the first child's menu or visible ones
+    const firstMenu = childMenus[0];
+    const idParts = firstMenu.id.replace('childMenu-', '');
+    if (idParts && window.toggleChildMenu) {
+      window.toggleChildMenu(idParts, true);
+    } else {
+      firstMenu.style.display = 'flex';
+    }
+  }
+
+  // 2. If on Emergency Contacts screen, hold open contact menu
+  const contactMenus = document.querySelectorAll('.contact-dropdown-menu');
+  if (contactMenus && contactMenus.length > 0) {
+    const firstContactMenu = contactMenus[0];
+    const cidParts = firstContactMenu.id.replace('contactMenu-', '');
+    if (cidParts && window.toggleContactMenu) {
+      window.toggleContactMenu(cidParts, true);
+    } else {
+      firstContactMenu.style.display = 'flex';
+    }
+  }
+
+  // 3. Trigger Lucide to render icons if needed
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+
+  if (window.showToast) {
+    window.showToast('📌 Menu held open for Figma capture!', 'success');
+  }
+};
+
+window.closeAllHeldMenus = function () {
+  window.closeChildActionMenus?.(true);
+  window.closeContactActionMenus?.(true);
+  document.querySelectorAll('.figma-select-popover').forEach(el => el.remove());
+  if (window.showToast) {
+    window.showToast('All menus dismissed.', 'info');
+  }
+};
+
+window.hideFigmaPanelTemporarily = function (seconds = 12) {
+  const panel = document.getElementById('figmaCapturePanel');
+  if (!panel) return;
+  panel.classList.add('temporarily-hidden');
+  setTimeout(() => {
+    panel.classList.remove('temporarily-hidden');
+  }, seconds * 1000);
+};
+
+// Keyboard Shortcut: Ctrl + Shift + H toggles Figma Hold Mode
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && (e.key === 'H' || e.key === 'h')) {
+    e.preventDefault();
+    window.toggleFigmaHoldMode();
+  }
+});
+
+// Custom Figma-friendly DOM popover for native <select> elements on demand
+window.initFigmaSelectEnhancers = function () {
+  document.querySelectorAll('select.form-input, select.form-select').forEach(selectElem => {
+    if (selectElem.dataset.figmaEnhanced) return;
+    selectElem.dataset.figmaEnhanced = 'true';
+
+    selectElem.addEventListener('mousedown', (e) => {
+      if (!window.figmaHoldMode) return;
+      // In Figma Hold mode, prevent native uncapturable OS popup and show full HTML DOM popover
+      e.preventDefault();
+      
+      const existingPopover = selectElem.parentNode.querySelector('.figma-select-popover');
+      if (existingPopover) {
+        existingPopover.remove();
+        return;
+      }
+
+      // Close other popovers
+      document.querySelectorAll('.figma-select-popover').forEach(p => p.remove());
+
+      const popover = document.createElement('div');
+      popover.className = 'figma-select-popover';
+
+      Array.from(selectElem.options).forEach(opt => {
+        const item = document.createElement('div');
+        item.className = 'figma-select-option-item' + (opt.selected ? ' selected' : '');
+        item.textContent = opt.textContent;
+        item.onclick = (evt) => {
+          evt.stopPropagation();
+          selectElem.value = opt.value;
+          selectElem.dispatchEvent(new Event('change', { bubbles: true }));
+          popover.remove();
+        };
+        popover.appendChild(item);
+      });
+
+      selectElem.parentNode.style.position = 'relative';
+      selectElem.parentNode.appendChild(popover);
+    });
+  });
+};
+
+// Initialize select enhancer
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.initFigmaSelectEnhancers);
+} else {
+  window.initFigmaSelectEnhancers();
+}
+
+
