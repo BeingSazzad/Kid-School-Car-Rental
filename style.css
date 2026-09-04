@@ -6917,19 +6917,24 @@ textarea.form-textarea:not(.textarea-box-wrapper textarea):focus {
 .contact-pill-action {
   display: flex;
   align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  font-weight: 700;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   color: #15803D;
   background: #DCFCE7;
-  padding: 4px 7px;
-  border-radius: 6px;
   flex-shrink: 0;
+  transition: all 0.15s ease;
 }
 
-.contact-pill-action i {
-  width: 11px;
-  height: 11px;
+.contact-pill-action:hover {
+  background: #BBF7D0;
+}
+
+.contact-pill-action i,
+.contact-pill-action [data-lucide] {
+  width: 15px;
+  height: 15px;
 }
 
 /* Footer Cancel / Dismiss */

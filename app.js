@@ -2217,9 +2217,8 @@ window.renderEmergencyContactsList = function () {
               <div class="contact-pill-name">${c.name}</div>
               <div class="contact-pill-rel">${relLabel}</div>
             </div>
-            <div class="contact-pill-action">
+            <div class="contact-pill-action" aria-label="Call">
               <i data-lucide="phone"></i>
-              <span>Call</span>
             </div>
           </a>
         `;
