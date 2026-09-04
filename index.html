@@ -244,9 +244,14 @@
       </div>
 
       <div class="auth-content">
-        <div>
+        <div class="welcome-header-block">
           <h1 class="welcome-heading">
-            Welcome to <span class="brand-text">Home2School</span> <i data-lucide="heart" style="width:18px;height:18px;color:#F97316;fill:#F97316;display:inline-block;vertical-align:middle;"></i>
+            Welcome to <span class="brand-text">Home2School</span>
+            <span class="brand-heart-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#F2600C">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </span>
           </h1>
           <p class="welcome-subtext">Safe and trusted school car rides for children.</p>
         </div>
@@ -256,18 +261,22 @@
 
           <form onsubmit="event.preventDefault(); navigateTo('authOtp');">
             <div class="phone-input-row">
-              <div class="country-pill">
+              <div class="country-pill country-picker" title="Country: Canada (+1)">
                 <span class="flag-icon">🇨🇦</span>
                 <span class="country-code">+1</span>
+                <i data-lucide="chevron-down" style="width:13px;height:13px;color:#64748B;margin-left:1px;"></i>
               </div>
-              <input type="tel" class="phone-input-field" placeholder="(416) 000-0000" value="(416) 555-0192"
-                required />
+              <input type="tel" class="phone-input-field phone-text-field" placeholder="(416) 000-0000" value="(416) 555-0192"
+                required autocomplete="tel" />
             </div>
 
-            <button type="submit" class="btn-primary" style="margin-top: 14px;">Continue</button>
+            <button type="submit" class="btn-primary btn-auth-continue">
+              <span>Continue</span>
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </button>
 
             <div class="auth-disclaimer">
-              <i data-lucide="lock" style="width:14px;height:14px;color:#64748B;"></i>
+              <i data-lucide="lock" style="width:13px;height:13px;color:#94A3B8;"></i>
               <span>We'll send a one-time code to verify your number.</span>
             </div>
           </form>
@@ -284,12 +293,20 @@
           </div>
         </div>
 
-        <!-- Driver Portal Entry CTA -->
-        <div style="margin-top: 14px; text-align: center; padding: 13px 14px; background: #F0FDF4; border: 1.5px solid #BBF7D0; border-radius: 14px; display: flex; flex-direction: column; gap: 8px; align-items: center;">
-          <p style="font-size: 12px; color: #166534; font-weight: 700; margin: 0;">Are you a school car driver or escort?</p>
-          <button type="button" class="btn-secondary" style="height: 36px; font-size: 12.5px; font-weight: 800; color: #047857; border: 1.5px solid #86EFAC; background: #FFFFFF; width: 100%; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;" onclick="window.switchRole('driver')">
-            <i data-lucide="car" style="width: 14px; height: 14px;"></i>
-            <span>Drive with Home2School →</span>
+        <!-- Modern Driver Portal Entry CTA -->
+        <div class="driver-partner-card" onclick="window.switchRole('driver')">
+          <div class="driver-partner-left">
+            <div class="driver-partner-icon">
+              <i data-lucide="car" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div class="driver-partner-info">
+              <h5>School car driver or escort?</h5>
+              <p>Earn flexibly &amp; safely on school routes</p>
+            </div>
+          </div>
+          <button type="button" class="driver-partner-pill-btn">
+            <span>Drive</span>
+            <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
           </button>
         </div>
       </div>
