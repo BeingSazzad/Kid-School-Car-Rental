@@ -797,10 +797,13 @@ function renderBookingsList(tab) {
 
   if (filtered.length === 0) {
     wrap.innerHTML = `
-      <div style="text-align:center; padding: 40px 20px; color:var(--color-body);">
-        <i data-lucide="calendar-x" style="width:36px;height:36px;margin-bottom:8px;color:#94A3B8;"></i>
-        <div style="font-size:15px;font-weight:700;color:var(--color-title);">No ${tab} bookings</div>
-        <p style="font-size:13px;margin-top:4px;">When you arrange rides, they will appear here.</p>
+      <div class="bookings-empty-state">
+        <div class="bookings-empty-icon-box">
+          <i data-lucide="calendar-x" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="bookings-empty-title">No ${tab} bookings</div>
+        <p class="bookings-empty-sub">When you arrange rides or school commutes, they will appear here with live tracking updates.</p>
+        <button class="btn-primary" style="margin-top: 14px; max-width: 200px; height: 42px;" onclick="navigateTo('bookingSelectChildren')">+ Book a Ride</button>
       </div>
     `;
   } else {
@@ -811,30 +814,121 @@ function renderBookingsList(tab) {
         return c ? c.name : id;
       });
 
-      const displayStatus = b.status ? b.status.charAt(0).toUpperCase() + b.status.slice(1).toLowerCase() : '';
+      const childText = children.length > 1 ? children.join(' & ') : (children[0] || 'Child Rider');
+      const displayStatus = b.status === 'confirmed' ? 'Confirmed' :
+                            b.status === 'pending' ? 'Pending Approval' :
+                            b.status === 'completed' ? 'Completed' : 'Cancelled';
+
+      // Parse clean schedule chips
+      let dayChip = 'Mon – Fri';
+      let timeChip = '';
+      if (b.direction === 'bothway' && b.outboundTime && b.returnTime) {
+        timeChip = `${b.outboundTime} · ${b.returnTime}`;
+      } else if (b.outboundTime) {
+        timeChip = b.outboundTime;
+      }
+
+      if (b.scheduleText && (b.scheduleText.includes('Thursday') || b.scheduleText.includes('May'))) {
+        const parts = b.scheduleText.split('•');
+        dayChip = parts[0].trim();
+        if (parts[1]) timeChip = parts[1].trim();
+      } else if (b.scheduleText && (b.scheduleText.includes('Mon–Fri') || b.scheduleText.includes('Mon-Fri'))) {
+        dayChip = 'Mon – Fri';
+      } else if (b.scheduleText) {
+        dayChip = b.scheduleText;
+      }
+
+      const vehicleName = provider.vehicle ? provider.vehicle.split('(')[0].trim() : 'Sedan';
+      const pickupName = b.pickupLocation ? b.pickupLocation.split('(')[0].trim() : 'Home';
+      const arrowIcon = b.direction === 'bothway' ? '⇄' : '→';
+      const priceUnit = b.frequency === 'recurring' ? '/wk' : '';
+
+      let actionsHtml = '';
+      if (b.status === 'confirmed') {
+        actionsHtml = `
+          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
+          <button class="btn-booking-primary" onclick="event.stopPropagation(); navigateTo('tracking')">
+            <span class="live-pulse-dot"></span>
+            <span>Live Track</span>
+          </button>
+        `;
+      } else if (b.status === 'pending') {
+        actionsHtml = `
+          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
+          <button class="btn-booking-primary ghost" onclick="event.stopPropagation(); navigateTo('messages')">
+            <i data-lucide="message-square" style="width:13px;height:13px;"></i>
+            <span>Chat Escort</span>
+          </button>
+        `;
+      } else if (b.status === 'completed') {
+        actionsHtml = `
+          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Receipt</button>
+          <button class="btn-booking-primary" onclick="event.stopPropagation(); navigateTo('bookingSelectChildren')">Book Again</button>
+        `;
+      } else {
+        actionsHtml = `
+          <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">Details</button>
+          <button class="btn-booking-primary alert" onclick="event.stopPropagation(); navigateTo('bookingSelectChildren')">Re-book Route</button>
+        `;
+      }
+
       return `
-        <div class="booking-item-card" onclick="openBookingDetails('${b.id}')" style="cursor:pointer;">
+        <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
           <div class="booking-card-top-row">
-            <span class="status-chip ${b.status}">${displayStatus}</span>
-            <span style="font-size: 14px; font-weight: 800; color: var(--color-primary);">$${b.amount}/wk</span>
-          </div>
-
-          <div>
-            <div style="font-size: 16px; font-weight: 800; color: var(--color-title);">${children.join(' & ')}</div>
-            <div style="font-size: 13px; color: var(--color-body); margin-top: 2px;">${b.pickupLocation.split(' ')[0]} ⇄ ${b.schoolLocation}</div>
-            <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #1E293B; font-weight: 700; margin-top: 6px;">
-              <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--color-primary); flex-shrink: 0;"></i>
-              <span>${b.scheduleText}</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748B; margin-top: 3px;">
-              <i data-lucide="user" style="width: 14px; height: 14px; color: #94A3B8; flex-shrink: 0;"></i>
-              <span>${provider.name} (${provider.vehicle.split(' ')[0]})</span>
+            <span class="status-chip ${b.status}">
+              <span class="status-dot"></span>
+              ${displayStatus}
+            </span>
+            <div class="booking-card-price">
+              <span class="price-val">$${b.amount}</span>
+              ${priceUnit ? `<span class="price-cycle">${priceUnit}</span>` : ''}
             </div>
           </div>
 
-          <div class="booking-actions-row">
-            <button class="btn-booking-sub" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
-            ${b.status === 'confirmed' ? `<button class="btn-booking-sub" onclick="event.stopPropagation(); navigateTo('tracking')">Live Track</button>` : ''}
+          <div class="booking-card-main">
+            <div class="booking-card-title-row">
+              <div class="booking-card-child-name">${childText}</div>
+              <span class="booking-type-badge ${b.frequency === 'recurring' ? '' : 'onetime'}">
+                ${b.frequency === 'recurring' ? 'Recurring' : 'Single Trip'}
+              </span>
+            </div>
+
+            <div class="booking-card-route">
+              <i data-lucide="map-pin" class="route-pin-icon"></i>
+              <span class="route-point">${pickupName}</span>
+              <span class="route-arrow">${arrowIcon}</span>
+              <span class="route-school">${b.schoolLocation}</span>
+            </div>
+
+            <div class="booking-meta-chips">
+              <span class="booking-meta-chip">
+                <i data-lucide="calendar"></i>
+                <span>${dayChip}</span>
+              </span>
+              ${timeChip ? `
+                <span class="booking-meta-chip">
+                  <i data-lucide="clock"></i>
+                  <span>${timeChip}</span>
+                </span>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="booking-driver-strip">
+            <div class="booking-driver-left">
+              <img src="${provider.photo}" alt="${provider.name}" class="booking-driver-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
+              <div class="booking-driver-info">
+                <div class="booking-driver-name">${provider.name}</div>
+                <div class="booking-driver-meta">${vehicleName} • <span class="rating-star">★ ${provider.rating}</span></div>
+              </div>
+            </div>
+            <button class="btn-driver-chat-mini" onclick="event.stopPropagation(); navigateTo('messages')" title="Message Provider">
+              <i data-lucide="message-square"></i>
+            </button>
+          </div>
+
+          <div class="booking-actions-grid">
+            ${actionsHtml}
           </div>
         </div>
       `;
