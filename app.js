@@ -70,9 +70,7 @@ window.appState = {
   ],
   savedLocations: [
     { id: 'loc-1', name: 'Home', street: '12 Elm Street, Toronto, ON', type: 'home', isDefault: true },
-    { id: 'loc-2', name: 'Greenfield International School', street: 'Gate 2 Drop-off Loop, Toronto, ON', type: 'school', isDefault: false },
-    { id: 'loc-3', name: 'Sunshine Pre-school', street: '45 Bloom Avenue, Toronto, ON', type: 'school', isDefault: false },
-    { id: 'loc-4', name: "Grandmother's House", street: '84 Willowbrook Crescent, Toronto, ON', type: 'family', isDefault: false }
+    { id: 'loc-2', name: 'Greenfield International School', street: 'Gate 2 Drop-off Loop, Toronto, ON', type: 'school', isDefault: false }
   ],
   providers: [
     {
