@@ -1195,11 +1195,11 @@
           <div class="clean-route-card">
             <!-- Pickup Point -->
             <div class="clean-route-point">
-              <div class="clean-route-icon-box">
-                <i data-lucide="home" style="width: 18px; height: 18px; color: #0284C7;"></i>
+              <div class="clean-route-icon-box" style="background: rgba(27, 43, 104, 0.06); border-color: rgba(27, 43, 104, 0.12);">
+                <i data-lucide="home" style="width: 18px; height: 18px; color: var(--color-primary);"></i>
               </div>
               <div class="clean-route-info">
-                <div class="clean-route-type">Home</div>
+                <div class="clean-route-type">HOME</div>
                 <div class="clean-route-addr" id="displayPickupAddr">12 Elm Street, Toronto</div>
                 <input type="hidden" id="setupPickupLocation" value="Home (12 Elm Street)" />
               </div>
@@ -1207,22 +1207,30 @@
 
             <!-- Divider with Circular Swap Button -->
             <div class="clean-route-divider">
-              <button type="button" class="clean-route-swap-btn" onclick="swapPickupDropoff()" title="Swap Pickup &amp; School">
+              <button type="button" class="clean-route-swap-btn" onclick="swapPickupDropoff()" title="Swap Pickup &amp; Drop-off">
                 <i data-lucide="arrow-up-down" style="width: 15px; height: 15px;"></i>
               </button>
             </div>
 
             <!-- School Point -->
             <div class="clean-route-point">
-              <div class="clean-route-icon-box">
-                <i data-lucide="graduation-cap" style="width: 18px; height: 18px; color: #EA580C;"></i>
+              <div class="clean-route-icon-box" style="background: rgba(242, 96, 12, 0.08); border-color: rgba(242, 96, 12, 0.16);">
+                <i data-lucide="graduation-cap" style="width: 18px; height: 18px; color: var(--color-secondary);"></i>
               </div>
               <div class="clean-route-info">
-                <div class="clean-route-type">School</div>
+                <div class="clean-route-type">SCHOOL</div>
                 <div class="clean-route-addr" id="displaySchoolAddr">Greenfield International School</div>
                 <input type="hidden" id="setupSchoolLocation" value="Greenfield International School" />
               </div>
             </div>
+          </div>
+
+          <!-- Quick Preset Chips for Easy Switching -->
+          <div class="clean-quick-locs-row">
+            <button type="button" class="clean-quick-chip active" onclick="applyPresetLocation('pickup', '12 Elm Street, Toronto', 'Home (12 Elm Street)', this)">📍 Home</button>
+            <button type="button" class="clean-quick-chip" onclick="applyPresetLocation('pickup', '84 Willowbrook Crescent', 'Grandma (84 Willowbrook)', this)">👵 Grandma's</button>
+            <button type="button" class="clean-quick-chip active" onclick="applyPresetLocation('school', 'Greenfield International School', 'Greenfield International School', this)">🏫 Greenfield</button>
+            <button type="button" class="clean-quick-chip" onclick="applyPresetLocation('school', 'Sunshine Pre-school', 'Sunshine Pre-school', this)">🎒 Sunshine</button>
           </div>
         </div>
 
@@ -1231,30 +1239,31 @@
           <div class="clean-flow-label">Schedule</div>
           
           <!-- Outbound -->
-          <div class="clean-schedule-sub-label">Outbound (Home → School)</div>
+          <div class="clean-schedule-sub-label" id="outboundScheduleLabel">Outbound (Home → School)</div>
           <div class="clean-schedule-row">
-            <div class="clean-schedule-pill-input">
+            <div class="clean-schedule-pill-input" onclick="openDatePicker('setupStartDate')">
               <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748B;"></i>
-              <input type="text" id="setupOutboundDateText" value="Mon, Sep 8" readonly />
-              <input type="date" id="setupStartDate" value="2026-09-08" style="position: absolute; opacity: 0; width: 0; height: 0;" onchange="document.getElementById('setupOutboundDateText').value = this.value" />
+              <input type="text" id="setupOutboundDateText" value="Mon, Sep 8" readonly style="cursor: pointer;" />
+              <input type="date" id="setupStartDate" value="2026-09-08" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="handleScheduleDateChange('outbound', this.value)" />
             </div>
             <div class="clean-schedule-pill-input">
               <i data-lucide="clock" style="width: 16px; height: 16px; color: #64748B;"></i>
-              <input type="time" id="setupOutboundTime" value="07:30" />
+              <input type="time" id="setupOutboundTime" value="07:30" onchange="updateTripTime('outbound', this.value)" />
             </div>
           </div>
 
           <!-- Return -->
           <div id="returnScheduleBlock">
-            <div class="clean-schedule-sub-label">Return (School → Home)</div>
+            <div class="clean-schedule-sub-label" id="returnScheduleLabel">Return (School → Home)</div>
             <div class="clean-schedule-row">
-              <div class="clean-schedule-pill-input">
+              <div class="clean-schedule-pill-input" onclick="openDatePicker('setupReturnDate')">
                 <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748B;"></i>
-                <input type="text" id="setupReturnDateText" value="Mon, Sep 8" readonly />
+                <input type="text" id="setupReturnDateText" value="Mon, Sep 8" readonly style="cursor: pointer;" />
+                <input type="date" id="setupReturnDate" value="2026-09-08" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="handleScheduleDateChange('return', this.value)" />
               </div>
               <div class="clean-schedule-pill-input">
                 <i data-lucide="clock" style="width: 16px; height: 16px; color: #64748B;"></i>
-                <input type="time" id="setupReturnTime" value="13:00" />
+                <input type="time" id="setupReturnTime" value="13:00" onchange="updateTripTime('return', this.value)" />
               </div>
             </div>
           </div>
@@ -1268,15 +1277,17 @@
             <button type="button" class="clean-pill-btn active" id="btnFreqRecurring" onclick="setBookingFrequency('recurring')">Recurring</button>
           </div>
 
-          <!-- Day selector circles -->
-          <div class="clean-days-grid" id="cleanDaysGrid">
-            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">M</button>
-            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">T</button>
-            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">W</button>
-            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">T</button>
-            <button type="button" class="clean-day-btn active" onclick="this.classList.toggle('active')">F</button>
-            <button type="button" class="clean-day-btn" onclick="this.classList.toggle('active')">S</button>
-            <button type="button" class="clean-day-btn" onclick="this.classList.toggle('active')">S</button>
+          <!-- Day selector circles container -->
+          <div id="repeatDaysSection" style="margin-top: 10px; display: block;">
+            <div class="clean-days-grid" id="cleanDaysGrid">
+              <button type="button" class="clean-day-btn active" data-day="M" onclick="toggleRepeatDay(this)">M</button>
+              <button type="button" class="clean-day-btn active" data-day="T" onclick="toggleRepeatDay(this)">T</button>
+              <button type="button" class="clean-day-btn active" data-day="W" onclick="toggleRepeatDay(this)">W</button>
+              <button type="button" class="clean-day-btn active" data-day="T" onclick="toggleRepeatDay(this)">T</button>
+              <button type="button" class="clean-day-btn active" data-day="F" onclick="toggleRepeatDay(this)">F</button>
+              <button type="button" class="clean-day-btn" data-day="S" onclick="toggleRepeatDay(this)">S</button>
+              <button type="button" class="clean-day-btn" data-day="S" onclick="toggleRepeatDay(this)">S</button>
+            </div>
           </div>
         </div>
 
@@ -1543,7 +1554,7 @@
         <div class="clean-flow-section" style="margin-bottom: 20px;">
           <div class="clean-reviews-header-row">
             <div class="clean-flow-label" style="margin-bottom: 0;">Parent Reviews</div>
-            <a href="javascript:void(0)" style="font-size: 12px; font-weight: 700; color: #2563EB; text-decoration: none;" onclick="alert('Viewing all 128 verified parent reviews')">See All</a>
+            <a href="javascript:void(0)" style="font-size: 12px; font-weight: 700; color: var(--color-primary); text-decoration: none;" onclick="alert('Viewing all 128 verified parent reviews')">See All</a>
           </div>
 
           <div class="clean-review-card">

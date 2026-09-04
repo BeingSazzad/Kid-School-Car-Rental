@@ -891,16 +891,16 @@ window.setTripDirection = function (dir) {
   window.appState.bookingDraft.direction = dir;
   const btnOne = document.getElementById('btnDirOneWay');
   const btnBoth = document.getElementById('btnDirBothWay');
-  const returnTimeBox = document.getElementById('returnTimePickerBox');
+  const returnBlock = document.getElementById('returnScheduleBlock') || document.getElementById('returnTimePickerBox');
 
   if (dir === 'oneway') {
     btnOne?.classList.add('active');
     btnBoth?.classList.remove('active');
-    if (returnTimeBox) returnTimeBox.style.display = 'none';
+    if (returnBlock) returnBlock.style.display = 'none';
   } else {
     btnOne?.classList.remove('active');
     btnBoth?.classList.add('active');
-    if (returnTimeBox) returnTimeBox.style.display = 'block';
+    if (returnBlock) returnBlock.style.display = 'block';
   }
 };
 
@@ -908,22 +908,98 @@ window.setBookingFrequency = function (freq) {
   window.appState.bookingDraft.frequency = freq;
   const btnOneTime = document.getElementById('btnFreqOneTime');
   const btnRec = document.getElementById('btnFreqRecurring');
-  const weekdaysBox = document.getElementById('weekdaySelectorBox');
-  const oneTimeBox = document.getElementById('oneTimeDatePickerBox');
-  const recDateBox = document.getElementById('recurringStartDateBox');
+  const repeatDaysSection = document.getElementById('repeatDaysSection') || document.getElementById('cleanDaysGrid') || document.getElementById('weekdaySelectorBox');
 
   if (freq === 'onetime') {
     btnOneTime?.classList.add('active');
     btnRec?.classList.remove('active');
-    if (weekdaysBox) weekdaysBox.style.display = 'none';
-    if (oneTimeBox) oneTimeBox.style.display = 'block';
-    if (recDateBox) recDateBox.style.display = 'none';
+    if (repeatDaysSection) repeatDaysSection.style.display = 'none';
   } else {
     btnOneTime?.classList.remove('active');
     btnRec?.classList.add('active');
-    if (weekdaysBox) weekdaysBox.style.display = 'flex';
-    if (oneTimeBox) oneTimeBox.style.display = 'none';
-    if (recDateBox) recDateBox.style.display = 'block';
+    if (repeatDaysSection) repeatDaysSection.style.display = 'block';
+  }
+};
+
+window.toggleRepeatDay = function (btn) {
+  if (!btn) return;
+  btn.classList.toggle('active');
+  const activeDays = Array.from(document.querySelectorAll('#cleanDaysGrid .clean-day-btn.active'))
+    .map(b => b.getAttribute('data-day') || b.textContent.trim());
+  window.appState.bookingDraft.selectedDays = activeDays;
+};
+
+window.openDatePicker = function (inputId) {
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  if (typeof el.showPicker === 'function') {
+    try {
+      el.showPicker();
+      return;
+    } catch (e) {
+      // Fallback below
+    }
+  }
+  el.focus();
+  el.click();
+};
+
+window.handleScheduleDateChange = function (type, dateVal) {
+  if (!dateVal) return;
+  const parts = dateVal.split('-');
+  let displayStr = dateVal;
+  if (parts.length === 3) {
+    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    displayStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+
+  if (type === 'outbound') {
+    const txt = document.getElementById('setupOutboundDateText');
+    if (txt) txt.value = displayStr;
+    window.appState.bookingDraft.tripDate = displayStr;
+    window.appState.bookingDraft.startDate = dateVal;
+    // Keep return date in sync if still default
+    const retTxt = document.getElementById('setupReturnDateText');
+    const retInput = document.getElementById('setupReturnDate');
+    if (retTxt && retInput && !retInput.dataset.userChanged) {
+      retTxt.value = displayStr;
+      retInput.value = dateVal;
+    }
+  } else if (type === 'return') {
+    const txt = document.getElementById('setupReturnDateText');
+    if (txt) txt.value = displayStr;
+    const retInput = document.getElementById('setupReturnDate');
+    if (retInput) retInput.dataset.userChanged = 'true';
+  }
+};
+
+window.applyPresetLocation = function (type, address, fullVal, btnEl) {
+  if (type === 'pickup') {
+    const pEl = document.getElementById('setupPickupLocation');
+    const dispP = document.getElementById('displayPickupAddr');
+    if (pEl) pEl.value = fullVal;
+    if (dispP) dispP.textContent = address;
+    window.appState.bookingDraft.pickupLocation = fullVal;
+  } else if (type === 'school') {
+    const sEl = document.getElementById('setupSchoolLocation');
+    const dispS = document.getElementById('displaySchoolAddr');
+    if (sEl) sEl.value = fullVal;
+    if (dispS) dispS.textContent = address;
+    window.appState.bookingDraft.schoolLocation = fullVal;
+  }
+
+  const dispP = document.getElementById('displayPickupAddr');
+  const dispS = document.getElementById('displaySchoolAddr');
+  const outLabel = document.getElementById('outboundScheduleLabel');
+  const retLabel = document.getElementById('returnScheduleLabel');
+  const pName = dispP ? dispP.textContent.split(',')[0].trim() : 'Home';
+  const sName = dispS ? dispS.textContent.split(',')[0].trim() : 'School';
+  if (outLabel) outLabel.textContent = `Outbound (${pName} → ${sName})`;
+  if (retLabel) retLabel.textContent = `Return (${sName} → ${pName})`;
+
+  if (btnEl && btnEl.parentElement) {
+    btnEl.parentElement.querySelectorAll('.clean-quick-chip').forEach(c => c.classList.remove('active'));
+    btnEl.classList.add('active');
   }
 };
 
@@ -1067,8 +1143,20 @@ window.proceedFromTripSetup = function () {
   if (morningTimeEl && morningTimeEl.value) {
     window.appState.bookingDraft.outboundTime = formatTime(morningTimeEl.value);
   }
-  if (returnTimeEl && returnTimeEl.value) {
-    window.appState.bookingDraft.returnTime = formatTime(returnTimeEl.value);
+  if (window.appState.bookingDraft.direction === 'bothway') {
+    if (returnTimeEl && returnTimeEl.value) {
+      window.appState.bookingDraft.returnTime = formatTime(returnTimeEl.value);
+    }
+  } else {
+    window.appState.bookingDraft.returnTime = '';
+  }
+
+  if (window.appState.bookingDraft.frequency === 'recurring') {
+    const activeDays = Array.from(document.querySelectorAll('#cleanDaysGrid .clean-day-btn.active'))
+      .map(b => b.getAttribute('data-day') || b.textContent.trim());
+    window.appState.bookingDraft.selectedDays = activeDays;
+  } else {
+    window.appState.bookingDraft.selectedDays = [];
   }
 
   window.navigateTo('bookingSearchProviders');
@@ -1644,7 +1732,18 @@ window.swapPickupDropoff = function () {
     dispP.textContent = dispS.textContent;
     sEl.value = tempVal;
     dispS.textContent = tempDisp;
-    if (typeof showToast === 'function') showToast('Swapped pickup and school locations');
+
+    window.appState.bookingDraft.pickupLocation = pEl.value;
+    window.appState.bookingDraft.schoolLocation = sEl.value;
+
+    const outLabel = document.getElementById('outboundScheduleLabel');
+    const retLabel = document.getElementById('returnScheduleLabel');
+    const pName = dispP.textContent.split(',')[0].trim();
+    const sName = dispS.textContent.split(',')[0].trim();
+    if (outLabel) outLabel.textContent = `Outbound (${pName} → ${sName})`;
+    if (retLabel) retLabel.textContent = `Return (${sName} → ${pName})`;
+
+    if (typeof showToast === 'function') showToast('Swapped pickup and drop-off locations');
   }
 };
 
@@ -4682,7 +4781,7 @@ function renderDriverSchedule(tab = 'today') {
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <div style="display:flex;align-items:baseline;gap:6px;">
             <span style="font-size:18px;font-weight:900;color:#0F172A;">${item.time}</span>
-            <span style="font-size:11.5px;font-weight:700;color:#2563EB;">${item.leg}</span>
+            <span style="font-size:11.5px;font-weight:700;color:var(--color-primary);">${item.leg}</span>
           </div>
           <span class="status-chip" style="font-size:11px;padding:2px 8px;">${item.seats} Seats</span>
         </div>
