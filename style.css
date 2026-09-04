@@ -4101,32 +4101,33 @@ svg.lucide {
 
 /* 2. Screen 2: Trip Details */
 .clean-flow-section {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .clean-flow-label {
-  font-size: 13.5px;
+  font-size: 11.5px;
   font-weight: 800;
-  color: #0F172A;
-  margin-bottom: 8px;
-  letter-spacing: -0.1px;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
 }
 
 .clean-pill-toggle {
   display: flex;
   background: #F1F5F9;
   border-radius: 99px;
-  padding: 4px;
-  gap: 4px;
+  padding: 3px;
+  gap: 3px;
 }
 
 .clean-pill-btn {
   flex: 1;
-  height: 40px;
+  height: 34px;
   border: none;
   background: transparent;
   color: #475569;
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 700;
   border-radius: 99px;
   cursor: pointer;
@@ -4143,21 +4144,21 @@ svg.lucide {
 .clean-route-card {
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  border-radius: 18px;
-  padding: 6px 16px;
+  border-radius: 16px;
+  padding: 4px 12px;
   position: relative;
 }
 
 .clean-route-point {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 0;
+  gap: 10px;
+  padding: 8px 2px;
 }
 
 .clean-route-icon-box {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 10px;
   background: #F8FAFC;
   border: 1px solid #E2E8F0;
@@ -4168,27 +4169,114 @@ svg.lucide {
   flex-shrink: 0;
 }
 
+.clean-route-icon-box.navy {
+  background: rgba(27, 43, 104, 0.07);
+  border: 1px solid rgba(27, 43, 104, 0.14);
+}
+
+.clean-route-icon-box.orange {
+  background: rgba(242, 96, 12, 0.09);
+  border: 1px solid rgba(242, 96, 12, 0.2);
+}
+
 .clean-route-info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .clean-route-type {
-  font-size: 11.5px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 800;
   color: #64748B;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
+  margin-bottom: 1px;
+}
+
+.clean-route-type.orange {
+  color: var(--color-secondary);
+}
+
+.clean-route-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-family);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0F172A;
+  width: 100%;
+  padding: 2px 0 1px;
+  border-bottom: 1.5px solid transparent;
+  transition: all 0.18s ease;
+}
+
+.clean-route-input:focus {
+  border-bottom-color: var(--color-primary);
+}
+
+.clean-route-input.orange:focus {
+  border-bottom-color: var(--color-secondary);
+}
+
+.clean-route-input::placeholder {
+  color: #94A3B8;
+  font-weight: 500;
 }
 
 .clean-route-addr {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #0F172A;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: 1px;
+}
+
+.clean-loc-map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 99px;
+  border: 1.5px solid #E2E8F0;
+  background: #F8FAFC;
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  flex-shrink: 0;
+  margin-left: 6px;
+}
+
+.clean-loc-map-btn svg,
+.clean-loc-map-btn i {
+  width: 12px;
+  height: 12px;
+}
+
+.clean-loc-map-btn.navy:hover {
+  background: rgba(27, 43, 104, 0.08);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.clean-loc-map-btn.orange {
+  border-color: rgba(242, 96, 12, 0.25);
+  color: var(--color-secondary);
+  background: rgba(242, 96, 12, 0.04);
+}
+
+.clean-loc-map-btn.orange:hover {
+  background: rgba(242, 96, 12, 0.12);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
 .clean-route-divider {
@@ -4199,11 +4287,11 @@ svg.lucide {
 
 .clean-route-swap-btn {
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
@@ -4218,39 +4306,59 @@ svg.lucide {
 }
 
 .clean-route-swap-btn:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
   transform: translateY(-50%) rotate(180deg);
+  box-shadow: 0 4px 12px rgba(242, 96, 12, 0.2);
 }
 
 /* Schedule Dual Inputs */
+.clean-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.clean-dot.navy {
+  background: var(--color-primary);
+}
+.clean-dot.orange {
+  background: var(--color-secondary);
+}
+
 .clean-schedule-sub-label {
-  font-size: 12.5px;
+  font-size: 11px;
   font-weight: 700;
-  color: #334155;
-  margin-bottom: 6px;
+  color: #475569;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .clean-schedule-row {
   display: flex;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .clean-schedule-pill-input {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  border-radius: 14px;
-  padding: 10px 14px;
-  font-size: 13.5px;
+  border-radius: 12px;
+  padding: 7px 11px;
+  height: 38px;
+  font-size: 13px;
   font-weight: 600;
   color: #0F172A;
   cursor: pointer;
   transition: border-color 0.15s ease;
+  position: relative;
 }
 
 .clean-schedule-pill-input:hover,
@@ -4263,18 +4371,32 @@ svg.lucide {
   background: transparent;
   outline: none;
   font-family: var(--font-family);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
   color: #0F172A;
   width: 100%;
 }
 
+/* Remove duplicate native clock icon in Webkit time inputs */
+.clean-schedule-pill-input input[type="time"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+
 .clean-quick-locs-row {
   display: flex;
-  gap: 7px;
-  margin-top: 4px;
+  gap: 6px;
+  margin-top: 2px;
   overflow-x: auto;
-  padding: 4px 1px;
+  padding: 2px 0;
   scrollbar-width: none;
 }
 .clean-quick-locs-row::-webkit-scrollbar {
@@ -4283,11 +4405,11 @@ svg.lucide {
 .clean-quick-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 12px;
-  height: 32px;
+  gap: 5px;
+  padding: 0 10px;
+  height: 28px;
   border-radius: 99px;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
@@ -4299,8 +4421,8 @@ svg.lucide {
 }
 .clean-quick-chip svg,
 .clean-quick-chip i {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   color: var(--color-primary);
   flex-shrink: 0;
 }
@@ -4314,6 +4436,25 @@ svg.lucide {
   border-color: var(--color-primary);
   color: var(--color-primary);
 }
+
+.clean-quick-chip.chip-school {
+  border-color: rgba(242, 96, 12, 0.25);
+}
+.clean-quick-chip.chip-school svg,
+.clean-quick-chip.chip-school i {
+  color: var(--color-secondary);
+}
+.clean-quick-chip.chip-school:hover,
+.clean-quick-chip.chip-school.active {
+  background: rgba(242, 96, 12, 0.1);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+}
+.clean-quick-chip.chip-school.active svg,
+.clean-quick-chip.chip-school.active i {
+  color: var(--color-secondary);
+}
+
 .clean-quick-chip.add-new {
   border-style: dashed;
   border-color: #CBD5E1;
@@ -4325,7 +4466,7 @@ svg.lucide {
   background: rgba(27, 43, 104, 0.06);
 }
 
-/* Modal for Adding Saved Location */
+/* Modal for Adding Saved Location & Map Picker */
 .clean-modal-overlay {
   position: fixed;
   inset: 0;
@@ -4335,29 +4476,136 @@ svg.lucide {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 16px;
 }
 
 .clean-modal-card {
   background: #FFFFFF;
-  border-radius: 22px;
+  border-radius: 20px;
   width: 100%;
   max-width: 360px;
-  padding: 20px;
+  padding: 18px;
   box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.22);
   border: 1px solid #E2E8F0;
+}
+
+.map-picker-canvas {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  border-radius: 14px;
+  border: 1.5px solid #E2E8F0;
+  overflow: hidden;
+  background: #E8ECEF;
+  margin: 10px 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.map-picker-pin-anchor {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  animation: floatPin 2.2s infinite ease-in-out;
+}
+
+@keyframes floatPin {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.map-pin-bubble {
+  padding: 5px 11px;
+  border-radius: 99px;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+}
+
+.map-pin-bubble.navy {
+  background: var(--color-primary);
+}
+
+.map-pin-bubble.orange {
+  background: var(--color-secondary);
+}
+
+.map-pin-triangle {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  margin-top: -1px;
+}
+
+.map-pin-triangle.navy {
+  border-top: 6px solid var(--color-primary);
+}
+
+.map-pin-triangle.orange {
+  border-top: 6px solid var(--color-secondary);
+}
+
+.map-pin-shadow {
+  width: 20px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.25);
+  filter: blur(1.5px);
+  margin-top: 2px;
+}
+
+.map-gates-row {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  margin-bottom: 10px;
+  scrollbar-width: none;
+}
+.map-gates-row::-webkit-scrollbar {
+  display: none;
+}
+
+.map-gate-pill {
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.map-gate-pill:hover,
+.map-gate-pill.active {
+  background: rgba(242, 96, 12, 0.1);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
 /* Repeat Toggle Card & iOS Switch (Senior UX Standard) */
 .clean-repeat-toggle-card {
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  border-radius: 18px;
-  padding: 12px 16px;
+  border-radius: 14px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
   transition: all 0.18s ease;
   user-select: none;
@@ -4371,13 +4619,13 @@ svg.lucide {
 .clean-repeat-toggle-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .clean-repeat-icon-wrap {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   background: rgba(27, 43, 104, 0.06);
   border: 1px solid rgba(27, 43, 104, 0.12);
   display: flex;
@@ -4387,25 +4635,25 @@ svg.lucide {
 }
 
 .clean-repeat-title {
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 800;
   color: #0F172A;
   line-height: 1.25;
 }
 
 .clean-repeat-subtitle {
-  font-size: 11.5px;
+  font-size: 10.5px;
   color: #64748B;
   font-weight: 500;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 /* iOS-Style Toggle Switch */
 .clean-switch {
   position: relative;
   display: inline-block;
-  width: 44px;
-  height: 26px;
+  width: 40px;
+  height: 24px;
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -4428,8 +4676,8 @@ svg.lucide {
 .clean-switch-slider:before {
   position: absolute;
   content: "";
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
   left: 3px;
   bottom: 3px;
   background-color: #FFFFFF;
@@ -4443,25 +4691,25 @@ svg.lucide {
 }
 
 .clean-switch input:checked + .clean-switch-slider:before {
-  transform: translateX(18px);
+  transform: translateX(16px);
 }
 
 /* Repeat Day Circles */
 .clean-days-grid {
   display: flex;
   justify-content: space-between;
-  gap: 6px;
-  margin-top: 10px;
+  gap: 5px;
+  margin-top: 0;
 }
 
 .clean-day-btn {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: 1.5px solid #E2E8F0;
   background: #FFFFFF;
   color: #475569;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -4470,11 +4718,17 @@ svg.lucide {
   transition: all 0.15s ease;
 }
 
+.clean-day-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(27, 43, 104, 0.04);
+}
+
 .clean-day-btn.active {
   background: var(--color-primary);
   border-color: var(--color-primary);
   color: #FFFFFF;
-  box-shadow: 0 2px 6px rgba(27, 43, 104, 0.28);
+  box-shadow: 0 2px 6px rgba(27, 43, 104, 0.24);
 }
 
 /* 3. Screen 3: Available Providers Modern Cards */

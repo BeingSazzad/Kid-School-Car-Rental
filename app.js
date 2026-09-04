@@ -998,7 +998,7 @@ window.renderBookingSavedLocations = function () {
   if (locs.length === 0) {
     container.innerHTML = `
       <div style="display: flex; align-items: center; gap: 8px;">
-        <span style="font-size: 12px; color: #94A3B8; font-weight: 600;">No saved locations yet</span>
+        <span style="font-size: 11px; color: #94A3B8; font-weight: 600;">No saved locations yet</span>
         <button type="button" class="clean-quick-chip add-new" onclick="openAddLocationModal()">
           <i data-lucide="plus"></i>
           <span>Add New</span>
@@ -1015,6 +1015,8 @@ window.renderBookingSavedLocations = function () {
       else if (loc.type === 'school') iconName = 'graduation-cap';
       else if (loc.type === 'family') iconName = 'heart';
 
+      const isSchool = loc.type === 'school';
+      const schoolClass = isSchool ? 'chip-school' : '';
       const isLocActive = currentPickup.includes(loc.name.toLowerCase()) || currentSchool.includes(loc.name.toLowerCase());
       const activeClass = isLocActive ? 'active' : '';
 
@@ -1024,7 +1026,7 @@ window.renderBookingSavedLocations = function () {
       else if (label.includes('Grandmother') || label.includes('Grandma')) label = "Grandma's";
 
       return `
-        <button type="button" class="clean-quick-chip ${activeClass}" onclick="applySavedBookingLocation('${loc.id}', this)" title="${loc.name} (${loc.street})">
+        <button type="button" class="clean-quick-chip ${schoolClass} ${activeClass}" onclick="applySavedBookingLocation('${loc.id}', this)" title="${loc.name} (${loc.street})">
           <i data-lucide="${iconName}"></i>
           <span>${label}</span>
         </button>
@@ -1052,17 +1054,21 @@ window.applySavedBookingLocation = function (locId, btnEl) {
 
   const pEl = document.getElementById('setupPickupLocation');
   const sEl = document.getElementById('setupSchoolLocation');
+  const inputP = document.getElementById('setupPickupLocationInput');
+  const inputS = document.getElementById('setupSchoolLocationInput');
   const dispP = document.getElementById('displayPickupAddr');
   const dispS = document.getElementById('displaySchoolAddr');
 
   if (loc.type === 'school') {
     if (sEl) sEl.value = loc.name;
+    if (inputS) inputS.value = loc.name;
     if (dispS) dispS.textContent = loc.name;
     window.appState.bookingDraft.schoolLocation = loc.name;
     if (typeof showToast === 'function') showToast(`Selected ${loc.name} as school drop-off`);
   } else {
     const fullPickup = `${loc.name} (${loc.street})`;
     if (pEl) pEl.value = fullPickup;
+    if (inputP) inputP.value = loc.street || loc.name;
     if (dispP) dispP.textContent = loc.street || loc.name;
     window.appState.bookingDraft.pickupLocation = fullPickup;
     if (typeof showToast === 'function') showToast(`Selected ${loc.name} as pickup point`);
@@ -1070,15 +1076,197 @@ window.applySavedBookingLocation = function (locId, btnEl) {
 
   const outLabel = document.getElementById('outboundScheduleLabel');
   const retLabel = document.getElementById('returnScheduleLabel');
-  const pName = dispP ? dispP.textContent.split(',')[0].trim() : 'Home';
-  const sName = dispS ? dispS.textContent.split(',')[0].trim() : 'School';
-  if (outLabel) outLabel.textContent = `Outbound (${pName} → ${sName})`;
-  if (retLabel) retLabel.textContent = `Return (${sName} → ${pName})`;
+  const pName = (inputP && inputP.value ? inputP.value.split(',')[0].trim() : (dispP ? dispP.textContent.split(',')[0].trim() : 'Home'));
+  const sName = (inputS && inputS.value ? inputS.value.split(',')[0].trim() : (dispS ? dispS.textContent.split(',')[0].trim() : 'School'));
+  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound (${pName} → ${sName})</span>`;
+  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return (${sName} → ${pName})</span>`;
 
   if (btnEl && btnEl.parentElement) {
     btnEl.parentElement.querySelectorAll('.clean-quick-chip').forEach(c => c.classList.remove('active'));
     btnEl.classList.add('active');
   }
+};
+
+/* ==========================================================
+   Map Picker & Location Live Input Sync (Senior UX Standard)
+   ========================================================== */
+window.syncLocationInput = function (type, val) {
+  const value = (val || '').trim();
+  if (type === 'pickup') {
+    const hiddenP = document.getElementById('setupPickupLocation');
+    if (hiddenP) hiddenP.value = value;
+    window.appState.bookingDraft.pickupLocation = value;
+  } else if (type === 'school') {
+    const hiddenS = document.getElementById('setupSchoolLocation');
+    if (hiddenS) hiddenS.value = value;
+    window.appState.bookingDraft.schoolLocation = value;
+  }
+
+  const inputP = document.getElementById('setupPickupLocationInput');
+  const inputS = document.getElementById('setupSchoolLocationInput');
+  const pName = (inputP && inputP.value ? inputP.value.split(',')[0].trim() : 'Home');
+  const sName = (inputS && inputS.value ? inputS.value.split(',')[0].trim() : 'School');
+  const outLabel = document.getElementById('outboundScheduleLabel');
+  const retLabel = document.getElementById('returnScheduleLabel');
+  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound (${pName} → ${sName})</span>`;
+  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return (${sName} → ${pName})</span>`;
+};
+
+window._currentMapPickerTarget = 'pickup';
+
+window.openMapPickerModal = function (targetType) {
+  window._currentMapPickerTarget = targetType;
+  const modal = document.getElementById('modal-mapPicker');
+  if (!modal) return;
+
+  const titleEl = document.getElementById('mapPickerTitle');
+  const headerIcon = document.getElementById('mapPickerHeaderIcon');
+  const pinBubble = document.getElementById('mapPinBubble');
+  const pinTriangle = document.getElementById('mapPinTriangle');
+  const pinLabel = document.getElementById('mapPinLabel');
+  const pillsTitle = document.getElementById('mapPickerPillsTitle');
+  const gatesRow = document.getElementById('mapPickerGatesRow');
+  const addrInput = document.getElementById('mapPickerAddressInput');
+
+  const isSchool = targetType === 'school';
+
+  if (titleEl) titleEl.textContent = isSchool ? 'Select School Gate & Drop-off Pin' : 'Pinpoint Pickup Location';
+  if (pillsTitle) pillsTitle.textContent = isSchool ? 'School Gate Presets' : 'Pickup Presets';
+
+  if (isSchool) {
+    if (headerIcon) {
+      headerIcon.setAttribute('data-lucide', 'graduation-cap');
+      headerIcon.style.color = 'var(--color-secondary)';
+    }
+    if (pinBubble) {
+      pinBubble.className = 'map-pin-bubble orange';
+      if (pinLabel) pinLabel.textContent = 'School Gate';
+    }
+    if (pinTriangle) pinTriangle.className = 'map-pin-triangle orange';
+
+    const inputSchool = document.getElementById('setupSchoolLocationInput');
+    const currentSchoolVal = (inputSchool && inputSchool.value) ? inputSchool.value : 'Greenfield International School';
+    if (addrInput) addrInput.value = currentSchoolVal;
+
+    const schoolGates = [
+      { label: 'Gate 1 (Main Entrance)', addr: 'Greenfield International School, Gate 1 Main Entrance' },
+      { label: 'Gate 2 (Bus Loop)', addr: 'Greenfield International School, Gate 2 Bus Loop' },
+      { label: 'West Wing (Kindergarten)', addr: 'Greenfield International School, West Wing Kindergarten Drop' },
+      { label: 'Athletics Complex', addr: 'Greenfield International School, Athletics Complex Door B' }
+    ];
+
+    if (gatesRow) {
+      gatesRow.innerHTML = schoolGates.map((g, idx) => `
+        <button type="button" class="map-gate-pill ${idx === 0 ? 'active' : ''}" onclick="selectMapGate('${g.label.replace(/'/g, "\\'")}', '${g.addr.replace(/'/g, "\\'")}', this)">
+          ${g.label}
+        </button>
+      `).join('');
+    }
+  } else {
+    if (headerIcon) {
+      headerIcon.setAttribute('data-lucide', 'home');
+      headerIcon.style.color = 'var(--color-primary)';
+    }
+    if (pinBubble) {
+      pinBubble.className = 'map-pin-bubble navy';
+      if (pinLabel) pinLabel.textContent = 'Pickup Pin';
+    }
+    if (pinTriangle) pinTriangle.className = 'map-pin-triangle navy';
+
+    const inputPickup = document.getElementById('setupPickupLocationInput');
+    const currentPickupVal = (inputPickup && inputPickup.value) ? inputPickup.value : '12 Elm Street, Toronto';
+    if (addrInput) addrInput.value = currentPickupVal;
+
+    const pickupPresets = [
+      { label: 'Front Porch', addr: `${currentPickupVal} (Front Porch)` },
+      { label: 'Curbside / Driveway', addr: `${currentPickupVal} (Driveway)` },
+      { label: 'Corner of Street', addr: `${currentPickupVal} (Street Corner)` },
+      { label: 'Side Entrance', addr: `${currentPickupVal} (Side Gate)` }
+    ];
+
+    if (gatesRow) {
+      gatesRow.innerHTML = pickupPresets.map((g, idx) => `
+        <button type="button" class="map-gate-pill ${idx === 0 ? 'active' : ''}" onclick="selectMapGate('${g.label.replace(/'/g, "\\'")}', '${g.addr.replace(/'/g, "\\'")}', this)">
+          ${g.label}
+        </button>
+      `).join('');
+    }
+  }
+
+  modal.style.display = 'flex';
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.closeMapPickerModal = function () {
+  const modal = document.getElementById('modal-mapPicker');
+  if (modal) modal.style.display = 'none';
+};
+
+window.selectMapGate = function (label, addr, btnEl) {
+  const addrInput = document.getElementById('mapPickerAddressInput');
+  if (addrInput) addrInput.value = addr;
+  if (btnEl && btnEl.parentElement) {
+    btnEl.parentElement.querySelectorAll('.map-gate-pill').forEach(p => p.classList.remove('active'));
+    btnEl.classList.add('active');
+  }
+  const pinLabel = document.getElementById('mapPinLabel');
+  if (pinLabel) pinLabel.textContent = label.split('(')[0].trim();
+};
+
+window.handleMapCanvasClick = function (e) {
+  const canvas = document.getElementById('mapPickerCanvas');
+  const pinAnchor = document.getElementById('mapPickerPinAnchor');
+  if (!canvas || !pinAnchor) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.max(20, Math.min(rect.width - 20, e.clientX - rect.left));
+  const y = Math.max(25, Math.min(rect.height - 25, e.clientY - rect.top));
+
+  pinAnchor.style.position = 'absolute';
+  pinAnchor.style.left = `${x}px`;
+  pinAnchor.style.top = `${y}px`;
+  pinAnchor.style.transform = 'translate(-50%, -100%)';
+
+  const isSchool = window._currentMapPickerTarget === 'school';
+  const addrInput = document.getElementById('mapPickerAddressInput');
+  if (addrInput) {
+    if (isSchool) {
+      addrInput.value = `Greenfield School Gate Pin (GPS: 43.${Math.round(6500 + y * 2)}, -79.${Math.round(3800 + x * 2)})`;
+    } else {
+      addrInput.value = `Home Adjusted Pin (GPS: 43.${Math.round(6500 + y * 2)}, -79.${Math.round(3800 + x * 2)})`;
+    }
+  }
+};
+
+window.confirmMapLocation = function () {
+  const addrInput = document.getElementById('mapPickerAddressInput');
+  const selectedAddr = addrInput ? addrInput.value.trim() : '';
+  if (!selectedAddr) {
+    if (typeof showToast === 'function') showToast('Please enter or select a valid location');
+    return;
+  }
+
+  const targetType = window._currentMapPickerTarget || 'pickup';
+  if (targetType === 'school') {
+    const inputS = document.getElementById('setupSchoolLocationInput');
+    const hiddenS = document.getElementById('setupSchoolLocation');
+    if (inputS) inputS.value = selectedAddr;
+    if (hiddenS) hiddenS.value = selectedAddr;
+    window.appState.bookingDraft.schoolLocation = selectedAddr;
+    if (typeof showToast === 'function') showToast('School drop-off pin updated!');
+  } else {
+    const inputP = document.getElementById('setupPickupLocationInput');
+    const hiddenP = document.getElementById('setupPickupLocation');
+    if (inputP) inputP.value = selectedAddr;
+    if (hiddenP) hiddenP.value = selectedAddr;
+    window.appState.bookingDraft.pickupLocation = selectedAddr;
+    if (typeof showToast === 'function') showToast('Pickup location pin updated!');
+  }
+
+  window.syncLocationInput(targetType, selectedAddr);
+  window.closeMapPickerModal();
 };
 
 window.openAddLocationModal = function () {
@@ -1281,8 +1469,16 @@ window.updateTripTime = function (type, timeVal) {
 };
 
 window.proceedFromTripSetup = function () {
+  const inputPickupEl = document.getElementById('setupPickupLocationInput');
+  const inputSchoolEl = document.getElementById('setupSchoolLocationInput');
   const pickupEl = document.getElementById('setupPickupLocation');
   const schoolEl = document.getElementById('setupSchoolLocation');
+
+  const pVal = (inputPickupEl && inputPickupEl.value.trim()) || (pickupEl && pickupEl.value.trim());
+  const sVal = (inputSchoolEl && inputSchoolEl.value.trim()) || (schoolEl && schoolEl.value.trim());
+
+  if (pVal) window.appState.bookingDraft.pickupLocation = pVal;
+  if (sVal) window.appState.bookingDraft.schoolLocation = sVal;
   const morningTimeEl = document.getElementById('setupOutboundTime') || document.getElementById('setupMorningTime');
   const returnTimeEl = document.getElementById('setupReturnTime');
 
@@ -1892,28 +2088,38 @@ window.switchBookingTab = function (tab) {
 window.swapPickupDropoff = function () {
   const pEl = document.getElementById('setupPickupLocation');
   const sEl = document.getElementById('setupSchoolLocation');
+  const inputP = document.getElementById('setupPickupLocationInput');
+  const inputS = document.getElementById('setupSchoolLocationInput');
   const dispP = document.getElementById('displayPickupAddr');
   const dispS = document.getElementById('displaySchoolAddr');
-  if (pEl && sEl && dispP && dispS) {
-    const tempVal = pEl.value;
-    const tempDisp = dispP.textContent;
-    pEl.value = sEl.value;
-    dispP.textContent = dispS.textContent;
-    sEl.value = tempVal;
-    dispS.textContent = tempDisp;
 
-    window.appState.bookingDraft.pickupLocation = pEl.value;
-    window.appState.bookingDraft.schoolLocation = sEl.value;
+  const valP = (inputP && inputP.value) || (pEl ? pEl.value : (dispP ? dispP.textContent : ''));
+  const valS = (inputS && inputS.value) || (sEl ? sEl.value : (dispS ? dispS.textContent : ''));
 
-    const outLabel = document.getElementById('outboundScheduleLabel');
-    const retLabel = document.getElementById('returnScheduleLabel');
-    const pName = dispP.textContent.split(',')[0].trim();
-    const sName = dispS.textContent.split(',')[0].trim();
-    if (outLabel) outLabel.textContent = `Outbound (${pName} → ${sName})`;
-    if (retLabel) retLabel.textContent = `Return (${sName} → ${pName})`;
-
-    if (typeof showToast === 'function') showToast('Swapped pickup and drop-off locations');
+  if (inputP && inputS) {
+    inputP.value = valS;
+    inputS.value = valP;
   }
+  if (pEl && sEl) {
+    pEl.value = valS;
+    sEl.value = valP;
+  }
+  if (dispP && dispS) {
+    dispP.textContent = valS;
+    dispS.textContent = valP;
+  }
+
+  window.appState.bookingDraft.pickupLocation = valS;
+  window.appState.bookingDraft.schoolLocation = valP;
+
+  const outLabel = document.getElementById('outboundScheduleLabel');
+  const retLabel = document.getElementById('returnScheduleLabel');
+  const pName = valS.split(',')[0].trim() || 'Home';
+  const sName = valP.split(',')[0].trim() || 'School';
+  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound (${pName} → ${sName})</span>`;
+  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return (${sName} → ${pName})</span>`;
+
+  if (typeof showToast === 'function') showToast('Swapped pickup and drop-off locations');
 };
 
 window.rebookRide = function (bookingId) {
