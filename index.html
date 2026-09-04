@@ -3521,16 +3521,11 @@
       <div class="screen-scroll-body">
         <!-- Safety Hotline Alert Pill -->
         <div class="emergency-quick-alert">
-          <i data-lucide="phone-call" style="width:14px;height:14px;color:#DC2626;flex-shrink:0;"></i>
-          <span>Immediate danger? Call <strong>911</strong> or 24/7 Hotline <strong>1-800-KID-RIDE</strong></span>
+          <i data-lucide="phone-call" class="emergency-icon"></i>
+          <span>Immediate danger? Call <strong>911</strong> or 24/7 Hotline <a href="tel:18005437433" class="emergency-hotline-link">1-800-KID-RIDE</a></span>
         </div>
 
-        <div class="profile-form-section-card">
-          <div class="profile-section-title">
-            <i data-lucide="alert-circle"></i>
-            <span>Incident Details</span>
-          </div>
-
+        <div class="report-form-container">
           <!-- Category Pills -->
           <div class="form-group">
             <label class="form-label">Issue Category</label>
@@ -3577,13 +3572,13 @@
           </div>
         </div>
 
-        <div style="margin-top: 4px; margin-bottom: 20px;">
+        <div class="report-submit-block">
           <button class="btn-primary" onclick="submitIssueReport()" style="width: 100%; box-shadow: var(--shadow-button);">
             <span>Submit Incident Report</span>
-            <i data-lucide="send" style="width:14px;height:14px;display:inline-block;vertical-align:-1px;"></i>
+            <i data-lucide="send" style="width:15px;height:15px;display:inline-block;vertical-align:-1px;"></i>
           </button>
-          <p style="text-align: center; font-size: 11.5px; color: var(--color-body); margin-top: 8px;">
-            <i data-lucide="clock" style="width:12px;height:12px;display:inline-block;vertical-align:-1px;color:var(--color-primary);"></i>
+          <p class="report-subtext-note">
+            <i data-lucide="clock" class="report-subtext-icon"></i>
             A safety supervisor investigates and responds in under 15 minutes.
           </p>
         </div>

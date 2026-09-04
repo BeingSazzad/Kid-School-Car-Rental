@@ -4446,41 +4446,7 @@ svg.lucide {
   display: block;
 }
 
-/* Report an Issue Visual Components */
-.report-category-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 14px;
-}
 
-.report-cat-btn {
-  padding: 12px;
-  background-color: #FFFFFF;
-  border: 1.5px solid var(--color-stroke);
-  border-radius: 12px;
-  text-align: left;
-  cursor: pointer;
-  font-family: var(--font-family);
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--color-title);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  transition: all 0.15s ease;
-}
-
-.report-cat-btn:hover {
-  border-color: #CBD5E1;
-}
-
-.report-cat-btn.active {
-  border-color: var(--color-danger);
-  background-color: #FEF2F2;
-  color: #991B1B;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
-}
 
 
 /* ==========================================================
@@ -5045,78 +5011,143 @@ svg.lucide {
   gap: 6px;
 }
 
-/* Report an Issue: Clean & Clutter-Free */
+/* ==========================================================
+   Report an Issue: High-Hierarchy Clean Layout
+   Matches Home2School Design System: Navy & Orange
+   ========================================================== */
 .emergency-quick-alert {
   background-color: #FEF2F2;
-  border: 1px solid #FECACA;
+  border: 1px solid #FEE2E2;
   border-radius: var(--radius-pill);
   padding: 8px 14px;
-  font-size: 11.5px;
+  font-size: 12px;
+  font-weight: 500;
   color: #991B1B;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   text-align: center;
+  margin-bottom: 20px;
+}
+
+.emergency-quick-alert strong {
+  font-weight: 700;
+  color: #7F1D1D;
+}
+
+.emergency-icon {
+  width: 14px;
+  height: 14px;
+  color: #DC2626;
+  flex-shrink: 0;
+}
+
+.emergency-hotline-link {
+  color: #B91C1C;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.emergency-hotline-link:hover {
+  text-decoration: underline;
+}
+
+.report-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .report-chips-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 10px;
 }
 
 .report-cat-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 9px 12px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--color-stroke);
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-stroke);
   background-color: #FFFFFF;
   font-family: var(--font-family);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--color-title);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .report-cat-btn i {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   color: var(--color-body);
-  transition: color 0.15s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .report-cat-btn:hover {
-  border-color: var(--color-primary);
+  border-color: #CBD5E1;
   background-color: var(--color-fade);
+  color: var(--color-primary);
+}
+
+.report-cat-btn:hover i {
+  color: var(--color-primary);
 }
 
 .report-cat-btn.active {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
   color: #FFFFFF;
-  box-shadow: 0 2px 6px rgba(27, 43, 104, 0.2);
+  box-shadow: 0 3px 10px rgba(27, 43, 104, 0.22);
 }
 
 .report-cat-btn.active i {
   color: #FFFFFF;
 }
 
+.report-submit-block {
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+
+.report-subtext-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-body);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.report-subtext-icon {
+  width: 13px;
+  height: 13px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
 .textarea-box-wrapper {
   background-color: #FFFFFF;
-  border: 1px solid var(--color-stroke);
+  border: 1.5px solid var(--color-stroke);
   border-radius: var(--radius-md);
-  padding: 10px 12px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  padding: 12px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .textarea-box-wrapper:focus-within {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(27, 43, 104, 0.08);
+  box-shadow: 0 0 0 3px rgba(27, 43, 104, 0.12);
 }
 
 .form-textarea {
@@ -5128,12 +5159,12 @@ svg.lucide {
   font-size: 13.5px;
   color: var(--color-title);
   resize: none;
-  line-height: 1.5;
+  line-height: 1.55;
   display: block;
 }
 
 .form-textarea::placeholder {
-  color: var(--color-body);
+  color: #94A3B8;
   font-weight: 400;
 }
 
