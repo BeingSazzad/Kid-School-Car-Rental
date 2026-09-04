@@ -710,12 +710,12 @@
               <h4 class="card-title-navy">My Bookings</h4>
             </div>
 
-            <!-- Action 4: Safety & Help -->
-            <div class="action-card light horizontal" onclick="navigateTo('faq')">
-              <div class="action-icon-circle orange-tint">
+            <!-- Action 4: Child Safety Center -->
+            <div class="action-card light horizontal" onclick="openChildSafetyCenter()">
+              <div class="action-icon-circle green-tint">
                 <i data-lucide="shield-check"></i>
               </div>
-              <h4 class="card-title-navy">Safety &amp; Help</h4>
+              <h4 class="card-title-navy">Safety Center</h4>
             </div>
           </div>
         </div>
@@ -1495,16 +1495,32 @@
       </div>
 
       <div class="screen-scroll-body" style="padding-bottom: 24px;">
-        <!-- Quick Filter Chips Scrollbar -->
-        <div class="filters-scroll-bar">
-          <button class="filter-chip-btn" id="chipFilterAll" onclick="filterBookingProviders('all', this)">All (5)</button>
-          <button class="filter-chip-btn active" id="chipFilterDrivers" onclick="filterBookingProviders('drivers', this)">Drivers Only (3)</button>
-          <button class="filter-chip-btn" id="chipFilterWalkShare" onclick="filterBookingProviders('walkshare', this)">WalkShare (2)</button>
-          <button class="filter-chip-btn" id="chipFilterTopRated" onclick="filterBookingProviders('toprated', this)">4.8+ Rated</button>
-          <button class="filter-chip-btn" id="chipFilterVerified" style="display:inline-flex;align-items:center;gap:4px;" onclick="filterBookingProviders('verified', this)">
-            <i data-lucide="shield-check" style="width:13px;height:13px;color:#0284C7;"></i>
-            <span>Verified</span>
-          </button>
+        <!-- Service Type Selector on Providers Screen (Exact Mockup Match: All | Driver | WalkShare) -->
+        <div class="booking-type-pills-bar">
+          <button type="button" class="booking-type-pill active" id="searchPillAll" onclick="filterBookingProviders('all', this)">All</button>
+          <button type="button" class="booking-type-pill" id="searchPillDrivers" onclick="filterBookingProviders('drivers', this)">Driver</button>
+          <button type="button" class="booking-type-pill" id="searchPillWalkShare" onclick="filterBookingProviders('walkshare', this)">WalkShare</button>
+        </div>
+
+        <!-- All Providers Summary Pill (Visible when All is active) -->
+        <div id="allInfoBanner" class="clean-all-summary-pill">
+          <i data-lucide="info" style="width: 13px; height: 13px; color: #0284C7;"></i>
+          <span>5 verified school transit options (3 Drivers · 2 WalkShare Chaperones)</span>
+        </div>
+
+        <!-- Driver Info Card (Visible when Driver active) -->
+        <div id="driverInfoBanner" class="clean-driver-info-card" style="display: none;">
+          <div class="clean-driver-banner-top">
+            <div class="clean-driver-banner-badge">
+              <i data-lucide="car" style="width: 14px; height: 14px; color: #1B2B68;"></i>
+              <span>Vetted School Drivers</span>
+            </div>
+            <span class="clean-driver-safety-tag">100% Inspected</span>
+          </div>
+          <div class="clean-driver-banner-title">School Carpool &amp; Van Commute</div>
+          <p class="clean-driver-banner-desc">
+            100% background-checked drivers with multi-point vehicle safety audits, booster seats, child safety locks, and live geofenced route tracking.
+          </p>
         </div>
 
         <!-- WalkShare Chaperone Info Card (Visible when WalkShare active) -->
@@ -1524,16 +1540,25 @@
 
         <!-- Providers List -->
         <div id="providersResultList" style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
-          <!-- Provider Card 1: Tariq Ahmed (Recommended) -->
+          <!-- Provider Card 1: Tariq Ahmed (Driver) -->
           <div class="provider-result-card" data-category="drivers" data-rating="4.9" data-verified="true"
-            onclick="selectProviderAndReview('Tariq Ahmed', 'Toyota Sienna', '4.9', '$120')">
+            onclick="selectProviderAndReview('tariq')">
             <div class="provider-top-row">
-              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="provider-card-avatar" />
+              <div style="position: relative;">
+                <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="provider-card-avatar" />
+                <span class="driver-mini-avatar-badge" title="Verified School Driver">
+                  <i data-lucide="car" style="width: 10px; height: 10px; color: #FFFFFF;"></i>
+                </span>
+              </div>
               <div class="provider-name-block">
                 <div class="provider-name-verified">
                   <span>Tariq Ahmed</span>
                   <span class="verified-badge-icon" title="Background Verified">
                     <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                  </span>
+                  <span class="driver-tag">
+                    <i data-lucide="car" style="width:11px;height:11px;"></i>
+                    <span>Driver</span>
                   </span>
                 </div>
                 <div class="provider-meta-row">
@@ -1543,29 +1568,43 @@
               </div>
             </div>
 
+            <div class="provider-safety-chips-row">
+              <span class="provider-safety-chip"><i data-lucide="check"></i> Booster Seats</span>
+              <span class="provider-safety-chip"><i data-lucide="check"></i> Child Door Locks</span>
+              <span class="provider-safety-chip"><i data-lucide="check"></i> Inspected Van</span>
+            </div>
+
             <div class="provider-card-bottom">
               <div class="vehicle-info-pill">
                 <i data-lucide="car" style="width:15px;height:15px;color:var(--color-primary);"></i>
                 <span>Toyota Sienna • 4 seats open</span>
               </div>
-              <div>
+              <div style="text-align: right;">
                 <span class="price-estimate-text">$120</span>
                 <span class="price-unit-sub">/wk</span>
               </div>
             </div>
           </div>
 
-          <!-- Provider Card 2: Farhana Yasmin -->
+          <!-- Provider Card 2: Farhana Yasmin (Driver) -->
           <div class="provider-result-card" data-category="drivers" data-rating="5.0" data-verified="true"
-            onclick="selectProviderAndReview('Farhana Yasmin', 'Honda Odyssey', '5.0', '$135')">
+            onclick="selectProviderAndReview('farhana')">
             <div class="provider-top-row">
-              <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="provider-card-avatar"
-                style="border-color: #38BDF8;" />
+              <div style="position: relative;">
+                <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="provider-card-avatar" style="border-color: #38BDF8;" />
+                <span class="driver-mini-avatar-badge" title="Verified School Driver">
+                  <i data-lucide="car" style="width: 10px; height: 10px; color: #FFFFFF;"></i>
+                </span>
+              </div>
               <div class="provider-name-block">
                 <div class="provider-name-verified">
                   <span>Farhana Yasmin</span>
-                  <span class="verified-badge-icon">
+                  <span class="verified-badge-icon" title="Background Verified">
                     <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                  </span>
+                  <span class="driver-tag">
+                    <i data-lucide="car" style="width:11px;height:11px;"></i>
+                    <span>Driver</span>
                   </span>
                 </div>
                 <div class="provider-meta-row">
@@ -1575,28 +1614,43 @@
               </div>
             </div>
 
+            <div class="provider-safety-chips-row">
+              <span class="provider-safety-chip"><i data-lucide="check"></i> Booster Seats</span>
+              <span class="provider-safety-chip"><i data-lucide="check"></i> Child Locks</span>
+              <span class="provider-safety-chip"><i data-lucide="check"></i> Speed Monitored</span>
+            </div>
+
             <div class="provider-card-bottom">
               <div class="vehicle-info-pill">
                 <i data-lucide="car" style="width:15px;height:15px;color:var(--color-primary);"></i>
                 <span>Honda Odyssey • 5 seats open</span>
               </div>
-              <div>
+              <div style="text-align: right;">
                 <span class="price-estimate-text">$135</span>
                 <span class="price-unit-sub">/wk</span>
               </div>
             </div>
           </div>
 
-          <!-- Provider Card 3: Kabir Hossain -->
+          <!-- Provider Card 3: Kabir Hossain (Driver) -->
           <div class="provider-result-card" data-category="drivers" data-rating="4.8" data-verified="true"
-            onclick="selectProviderAndReview('Kabir Hossain', 'Toyota Highlander', '4.8', '$110')">
+            onclick="selectProviderAndReview('kabir')">
             <div class="provider-top-row">
-              <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="provider-card-avatar" />
+              <div style="position: relative;">
+                <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="provider-card-avatar" />
+                <span class="driver-mini-avatar-badge" title="Verified School Driver">
+                  <i data-lucide="car" style="width: 10px; height: 10px; color: #FFFFFF;"></i>
+                </span>
+              </div>
               <div class="provider-name-block">
                 <div class="provider-name-verified">
                   <span>Kabir Hossain</span>
-                  <span class="verified-badge-icon">
+                  <span class="verified-badge-icon" title="Background Verified">
                     <i data-lucide="shield-check" style="width:16px;height:16px;color:#0284C7;"></i>
+                  </span>
+                  <span class="driver-tag">
+                    <i data-lucide="car" style="width:11px;height:11px;"></i>
+                    <span>Driver</span>
                   </span>
                 </div>
                 <div class="provider-meta-row">
@@ -1606,12 +1660,18 @@
               </div>
             </div>
 
+            <div class="provider-safety-chips-row">
+              <span class="provider-safety-chip"><i data-lucide="check"></i> Booster Seats</span>
+              <span class="provider-safety-chip"><i data-lucide="check"></i> Child Locks</span>
+              <span class="provider-safety-chip"><i data-lucide="check"></i> Defensive Driving</span>
+            </div>
+
             <div class="provider-card-bottom">
               <div class="vehicle-info-pill">
                 <i data-lucide="car" style="width:15px;height:15px;color:var(--color-primary);"></i>
                 <span>Toyota Highlander • 4 seats open</span>
               </div>
-              <div>
+              <div style="text-align: right;">
                 <span class="price-estimate-text">$110</span>
                 <span class="price-unit-sub">/wk</span>
               </div>
@@ -1620,7 +1680,7 @@
 
           <!-- Provider Card 4: WalkShare - Sarah Jenkins -->
           <div class="provider-result-card walkshare-card" data-category="walkshare" data-rating="4.9" data-verified="true"
-            onclick="selectProviderAndReview('Sarah Jenkins', 'Walking School Bus', '4.9', '$75')">
+            onclick="selectProviderAndReview('sarah')">
             <div class="provider-top-row">
               <div style="position: relative;">
                 <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar" style="border-color: #10B981;" />
@@ -1646,12 +1706,18 @@
               </div>
             </div>
 
+            <div class="provider-safety-chips-row">
+              <span class="provider-safety-chip walkshare"><i data-lucide="check"></i> High-Vis Vests</span>
+              <span class="provider-safety-chip walkshare"><i data-lucide="check"></i> Crossing Guard</span>
+              <span class="provider-safety-chip walkshare"><i data-lucide="check"></i> Pediatric CPR</span>
+            </div>
+
             <div class="provider-card-bottom">
               <div class="vehicle-info-pill walkshare">
                 <i data-lucide="footprints" style="width:15px;height:15px;color:#047857;"></i>
                 <span>Walking School Bus • 3 spots open (Max 5)</span>
               </div>
-              <div>
+              <div style="text-align: right;">
                 <span class="price-estimate-text">$75</span>
                 <span class="price-unit-sub">/wk</span>
               </div>
@@ -1660,7 +1726,7 @@
 
           <!-- Provider Card 5: WalkShare - Elena Rostova -->
           <div class="provider-result-card walkshare-card" data-category="walkshare" data-rating="4.9" data-verified="true"
-            onclick="selectProviderAndReview('Elena Rostova', 'Greenfield Walking Escort', '4.9', '$70')">
+            onclick="selectProviderAndReview('elena')">
             <div class="provider-top-row">
               <div style="position: relative;">
                 <img src="/assets/avatar_rehana.jpg" alt="Elena Rostova" class="provider-card-avatar" style="border-color: #10B981;" />
@@ -1686,18 +1752,23 @@
               </div>
             </div>
 
+            <div class="provider-safety-chips-row">
+              <span class="provider-safety-chip walkshare"><i data-lucide="check"></i> High-Vis Vests</span>
+              <span class="provider-safety-chip walkshare"><i data-lucide="check"></i> Safe Sidewalks Only</span>
+              <span class="provider-safety-chip walkshare"><i data-lucide="check"></i> First-Aid Certified</span>
+            </div>
+
             <div class="provider-card-bottom">
               <div class="vehicle-info-pill walkshare">
                 <i data-lucide="footprints" style="width:15px;height:15px;color:#047857;"></i>
                 <span>Greenfield Walk Escort • 2 spots open (Max 5)</span>
               </div>
-              <div>
+              <div style="text-align: right;">
                 <span class="price-estimate-text">$70</span>
                 <span class="price-unit-sub">/wk</span>
               </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
 
@@ -1774,7 +1845,7 @@
                 <div class="clean-veh-sub" id="detailsProviderVehSpecs">4 seats · White · Plate: SCH-4091</div>
               </div>
             </div>
-            <span style="font-size: 11px; font-weight: 700; color: #16A34A; background: #F0FDF4; border: 1px solid #DCFCE7; padding: 3px 8px; border-radius: var(--radius-pill); display: inline-flex; align-items: center; gap: 4px;">
+            <span id="detailsProviderVehBadge" style="font-size: 11px; font-weight: 700; color: #16A34A; background: #F0FDF4; border: 1px solid #DCFCE7; padding: 3px 8px; border-radius: var(--radius-pill); display: inline-flex; align-items: center; gap: 4px;">
               <i data-lucide="shield-check" style="width: 12px; height: 12px;"></i>
               <span>Inspected</span>
             </span>
@@ -1788,7 +1859,7 @@
               <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(27, 43, 104, 0.08); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
                 <i data-lucide="shield-check" style="width: 15px; height: 15px;"></i>
               </div>
-              <span style="font-size: 12.5px; font-weight: 700; color: var(--color-title);">Police Background Record Checked</span>
+              <span id="detailsTrustBadge1" style="font-size: 12.5px; font-weight: 700; color: var(--color-title);">Police Background Record Checked</span>
             </div>
             <span style="font-size: 11px; font-weight: 700; color: #0284C7; background: #EFF6FF; padding: 2px 7px; border-radius: var(--radius-pill);">Verified</span>
           </div>
@@ -1798,7 +1869,7 @@
               <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(242, 96, 12, 0.09); display: flex; align-items: center; justify-content: center; color: var(--color-secondary); flex-shrink: 0;">
                 <i data-lucide="award" style="width: 15px; height: 15px;"></i>
               </div>
-              <span style="font-size: 12.5px; font-weight: 700; color: var(--color-title);">Child First-Aid &amp; CPR Certified</span>
+              <span id="detailsTrustBadge2" style="font-size: 12.5px; font-weight: 700; color: var(--color-title);">Child First-Aid &amp; CPR Certified</span>
             </div>
             <span style="font-size: 11px; font-weight: 700; color: #0284C7; background: #EFF6FF; padding: 2px 7px; border-radius: var(--radius-pill);">Verified</span>
           </div>
@@ -1919,8 +1990,8 @@
           </div>
 
           <div class="price-row-item">
-            <span>Safety &amp; Real-time GPS Insurance</span>
-            <span style="font-weight: 700; color: var(--color-title);">$8.00</span>
+            <span id="summaryInsuranceLabel">Safety &amp; Real-time GPS Insurance</span>
+            <span style="font-weight: 700; color: var(--color-title);" id="summaryInsurancePriceText">$8.00</span>
           </div>
 
           <div class="price-row-item total">
@@ -4141,6 +4212,121 @@
             <span>Download PDF Receipt</span>
           </button>
           <button type="button" class="btn-secondary-link" onclick="closeTransactionReceipt()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= CHILD SAFETY CENTER MODAL (DESIGN SYSTEM MATCH) ================= -->
+    <div class="csc-modal-overlay" id="modal-childSafetyCenter" style="display: none;" onclick="if(event.target === this) closeChildSafetyCenter()">
+      <div class="csc-modal-sheet" onclick="event.stopPropagation()">
+        <!-- Top Drag Indicator -->
+        <div class="csc-sheet-handle"></div>
+
+        <!-- Header: Shield + Title + Close Button -->
+        <div class="csc-header">
+          <div class="csc-header-title-group">
+            <div class="csc-shield-badge">
+              <i data-lucide="shield-check" style="width: 20px; height: 20px; color: #047857;"></i>
+            </div>
+            <h3 class="csc-title">Child Safety Center</h3>
+          </div>
+          <button type="button" class="csc-close-btn" onclick="closeChildSafetyCenter()" title="Close">
+            <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+          </button>
+        </div>
+
+        <!-- Scrollable Body -->
+        <div class="csc-body">
+          <!-- Card 1: Emergency Escalation & SOS -->
+          <div class="csc-sos-card">
+            <div class="csc-sos-header">
+              <i data-lucide="alert-triangle" style="width: 18px; height: 18px; color: #DC2626;"></i>
+              <span>Emergency Escalation &amp; SOS</span>
+            </div>
+            <p class="csc-sos-desc">
+              If your child needs immediate assistance or a route concern arises, trigger instant SOS dispatch to our 24/7 child transit monitor.
+            </p>
+            <button type="button" class="csc-sos-trigger-btn" onclick="triggerChildSafetySOS()">
+              Trigger SOS Emergency Alert
+            </button>
+          </div>
+
+          <!-- Card 2: HOME2SCHOOL 4-STEP SAFETY STANDARD -->
+          <div class="csc-standard-card">
+            <div class="csc-standard-title">HOME2SCHOOL 4-STEP SAFETY STANDARD</div>
+            
+            <div class="csc-standard-list">
+              <!-- Item 1: 100% Criminal & Police Record Checked -->
+              <div class="csc-standard-item">
+                <div class="csc-item-icon">
+                  <i data-lucide="file-check" style="width: 18px; height: 18px; color: #047857;"></i>
+                </div>
+                <div class="csc-item-content">
+                  <div class="csc-item-heading">100% Criminal &amp; Police Record Checked</div>
+                  <div class="csc-item-sub">Every Driver and WalkShare provider undergoes verified background clearance.</div>
+                </div>
+              </div>
+
+              <!-- Item 2: Pediatric First Aid & Safety Certified -->
+              <div class="csc-standard-item">
+                <div class="csc-item-icon">
+                  <i data-lucide="heart-pulse" style="width: 18px; height: 18px; color: #047857;"></i>
+                </div>
+                <div class="csc-item-content">
+                  <div class="csc-item-heading">Pediatric First Aid &amp; Safety Certified</div>
+                  <div class="csc-item-sub">Trained to handle emergencies, safe road crossing, and child behavioral protocols.</div>
+                </div>
+              </div>
+
+              <!-- Item 3: Vehicle Multi-Point Safety Inspection -->
+              <div class="csc-standard-item">
+                <div class="csc-item-icon">
+                  <i data-lucide="shield-check" style="width: 18px; height: 18px; color: #047857;"></i>
+                </div>
+                <div class="csc-item-content">
+                  <div class="csc-item-heading">Vehicle Multi-Point Safety Inspection</div>
+                  <div class="csc-item-sub">Seatbelts, child locks, speed governors, and AC conditions audited monthly.</div>
+                </div>
+              </div>
+
+              <!-- Item 4: Live Geofenced GPS & Telemetry Tracking -->
+              <div class="csc-standard-item">
+                <div class="csc-item-icon">
+                  <i data-lucide="map-pin" style="width: 18px; height: 18px; color: #047857;"></i>
+                </div>
+                <div class="csc-item-content">
+                  <div class="csc-item-heading">Live Geofenced GPS &amp; Telemetry Tracking</div>
+                  <div class="csc-item-sub">Real-time route tracking, automated arrival check-ins, and speed limit alerts.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Instant Emergency Contacts -->
+          <div class="csc-contacts-section">
+            <div class="csc-contacts-title">Instant Emergency Contacts</div>
+            <div class="csc-contacts-grid">
+              <a href="tel:999" class="csc-contact-btn">
+                <div class="csc-contact-icon red">
+                  <i data-lucide="phone-call" style="width: 16px; height: 16px;"></i>
+                </div>
+                <div class="csc-contact-info">
+                  <span class="csc-contact-name">National SOS</span>
+                  <span class="csc-contact-num">(999)</span>
+                </div>
+              </a>
+
+              <a href="tel:+14165550182" class="csc-contact-btn">
+                <div class="csc-contact-icon green">
+                  <i data-lucide="phone-call" style="width: 16px; height: 16px;"></i>
+                </div>
+                <div class="csc-contact-info">
+                  <span class="csc-contact-name">School Transit</span>
+                  <span class="csc-contact-num">Line</span>
+                </div>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

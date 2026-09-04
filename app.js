@@ -108,11 +108,11 @@ window.appState = {
     {
       id: 'kabir',
       name: 'Kabir Hossain',
-      vehicle: 'Nissan Rogue (2022)',
+      vehicle: 'Toyota Highlander (2022)',
       plate: 'SCH-9102',
       rating: 4.8,
       reviewsCount: 62,
-      seats: 2,
+      seats: 4,
       baseWeekly: 110,
       photo: '/assets/avatar_kabir.jpg',
       phone: '+1 (416) 555-0184',
@@ -1572,21 +1572,22 @@ window.proceedFromTripSetup = function () {
 };
 
 window.filterBookingProviders = function (filterType, btnEl) {
-  if (btnEl && btnEl.parentElement) {
-    btnEl.parentElement.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
-    btnEl.classList.add('active');
-  } else {
-    // Sync filter chip buttons programmatically
-    const chips = document.querySelectorAll('.filters-scroll-bar .filter-chip-btn');
-    chips.forEach(b => {
-      const onclickAttr = b.getAttribute('onclick') || '';
-      if (onclickAttr.includes(`'${filterType}'`)) {
-        b.classList.add('active');
-      } else {
-        b.classList.remove('active');
-      }
-    });
-  }
+  // Sync the clean 3 pills on bookingSearchProviders
+  const pillAll = document.getElementById('searchPillAll');
+  const pillDriver = document.getElementById('searchPillDrivers');
+  const pillWalk = document.getElementById('searchPillWalkShare');
+
+  if (pillAll) pillAll.classList.toggle('active', filterType === 'all');
+  if (pillDriver) pillDriver.classList.toggle('active', filterType === 'drivers');
+  if (pillWalk) pillWalk.classList.toggle('active', filterType === 'walkshare');
+
+  // Also sync Trip Setup buttons if user returns
+  const btnAll = document.getElementById('btnServiceAll');
+  const btnDriver = document.getElementById('btnServiceDriver');
+  const btnWalk = document.getElementById('btnServiceWalk');
+  if (btnAll) btnAll.classList.toggle('active', filterType === 'all');
+  if (btnDriver) btnDriver.classList.toggle('active', filterType === 'drivers');
+  if (btnWalk) btnWalk.classList.toggle('active', filterType === 'walkshare');
 
   // Sync back to bookingDraft if core service type
   if (['all', 'drivers', 'walkshare'].includes(filterType)) {
@@ -1595,33 +1596,58 @@ window.filterBookingProviders = function (filterType, btnEl) {
     }
   }
 
-  // Toggle WalkShare helper info banner for parents
-  const banner = document.getElementById('walkshareInfoBanner');
-  if (banner) {
-    banner.style.display = filterType === 'walkshare' ? 'flex' : 'none';
-  }
+  // Toggle helper info banners for parents
+  const walkBanner = document.getElementById('walkshareInfoBanner');
+  const driverBanner = document.getElementById('driverInfoBanner');
+  const allBanner = document.getElementById('allInfoBanner');
+
+  if (walkBanner) walkBanner.style.display = filterType === 'walkshare' ? 'block' : 'none';
+  if (driverBanner) driverBanner.style.display = filterType === 'drivers' ? 'block' : 'none';
+  if (allBanner) allBanner.style.display = filterType === 'all' ? 'inline-flex' : 'none';
 
   const cards = document.querySelectorAll('#providersResultList .provider-result-card');
   cards.forEach(card => {
     const cat = card.getAttribute('data-category');
-    const rating = parseFloat(card.getAttribute('data-rating') || '0');
-    const verified = card.getAttribute('data-verified') === 'true';
-
     let show = true;
     if (filterType === 'drivers') {
       show = cat === 'drivers';
     } else if (filterType === 'walkshare') {
       show = cat === 'walkshare';
-    } else if (filterType === 'toprated') {
-      show = rating >= 4.9;
-    } else if (filterType === 'verified') {
-      show = verified;
     }
     card.style.display = show ? 'flex' : 'none';
   });
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
+  }
+};
+
+/* ==========================================================
+   Child Safety Center Modal Controller (Design System Match)
+   ========================================================== */
+window.openChildSafetyCenter = function () {
+  const modal = document.getElementById('modal-childSafetyCenter');
+  if (modal) {
+    modal.style.display = 'flex';
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.closeChildSafetyCenter = function () {
+  const modal = document.getElementById('modal-childSafetyCenter');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+};
+
+window.triggerChildSafetySOS = function () {
+  window.closeChildSafetyCenter();
+  if (typeof window.openEmergencySOSModal === 'function') {
+    window.openEmergencySOSModal();
+  } else {
+    alert('SOS Emergency Alert Dispatched to 24/7 Child Transit Monitoring Center & Emergency Contacts.');
   }
 };
 
@@ -1656,19 +1682,20 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   const nameEl = document.getElementById('detailsProviderName');
   const ratingEl = document.getElementById('detailsProviderRatingVal');
   const reviewsEl = document.getElementById('detailsProviderReviewsLbl');
-  const quoteEl = document.getElementById('detailsProviderQuote');
-  const reviewerEl = document.getElementById('detailsProviderReviewer');
   const titleEl = document.getElementById('providerDetailsTitle');
   const bioEl = document.getElementById('detailsProviderBio');
 
-  if (titleEl) titleEl.textContent = isWalk ? `${provider.name.split(' ')[0]}'s Profile` : `${provider.name.split(' ')[0]}'s Profile`;
+  const cleanFirstName = provider.name.replace(/\s*\(WalkShare\)/i, '').split(' ')[0];
+  const cleanFullName = provider.name.replace(/\s*\(WalkShare\)/i, '');
+
+  if (titleEl) titleEl.textContent = isWalk ? 'Chaperone Profile' : 'Driver Profile';
   if (imgEl) {
     imgEl.src = provider.photo || '/assets/avatar_tariq.jpg';
-    imgEl.alt = provider.name;
+    imgEl.alt = cleanFullName;
     imgEl.style.borderColor = isWalk ? '#10B981' : '#E2E8F0';
     imgEl.onerror = function () { this.src = '/assets/avatar_tariq.jpg'; };
   }
-  if (nameEl) nameEl.textContent = provider.name;
+  if (nameEl) nameEl.textContent = cleanFullName;
   if (ratingEl) ratingEl.textContent = `★ ${provider.rating} (${provider.reviewsCount || 128} reviews)`;
   if (reviewsEl) reviewsEl.textContent = `${provider.reviewsCount || 128} Reviews`;
 
@@ -1680,7 +1707,7 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (expPillar) expPillar.textContent = provider.experience || '5+ Yrs';
   if (tripsPillar) {
     tripsPillar.textContent = isWalk ? '320+' : '500+';
-    if (tripsPillar.nextElementSibling) tripsPillar.nextElementSibling.textContent = isWalk ? 'Walks' : 'Trips';
+    if (tripsPillar.nextElementSibling) tripsPillar.nextElementSibling.textContent = isWalk ? 'Safe Walks' : 'Trips';
   }
   if (onTimePillar) {
     onTimePillar.textContent = provider.onTimeRate || '100%';
@@ -1690,6 +1717,7 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   // Showcase Box adaptation: Vehicle vs Walk Route
   const vehTitleEl = document.getElementById('detailsProviderVehTitle');
   const vehSpecsEl = document.getElementById('detailsProviderVehSpecs');
+  const vehBadgeEl = document.getElementById('detailsProviderVehBadge');
   const vehBox = document.querySelector('.clean-veh-showcase-box');
 
   if (vehTitleEl) {
@@ -1700,7 +1728,12 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (vehSpecsEl) {
     vehSpecsEl.textContent = isWalk
       ? `0.4 km · Safe Sidewalk Route · Crossing Guard Monitored · Max 5 Kids`
-      : `4 seats · 2023 Clean · Plate: ${provider.plate || 'H2S-782'}`;
+      : `${provider.seats || 4} seats · 2023 Clean · Plate: ${provider.plate || 'H2S-782'}`;
+  }
+  if (vehBadgeEl) {
+    vehBadgeEl.innerHTML = isWalk 
+      ? '<i data-lucide="shield-check" style="width: 12px; height: 12px;"></i><span>Safe Route</span>'
+      : '<i data-lucide="shield-check" style="width: 12px; height: 12px;"></i><span>Inspected</span>';
   }
 
   if (vehBox) {
@@ -1718,19 +1751,42 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
     }
   }
 
+  // Trust Badges adaptation
+  const trustBadge1 = document.getElementById('detailsTrustBadge1');
+  const trustBadge2 = document.getElementById('detailsTrustBadge2');
+  if (trustBadge1) {
+    trustBadge1.textContent = '100% Police Background Record Checked';
+  }
+  if (trustBadge2) {
+    trustBadge2.textContent = isWalk
+      ? 'Pediatric First-Aid & Crossing Guard Certified'
+      : 'Child First-Aid & Vehicle Safety Inspected';
+  }
+
   if (bioEl) {
     if (isWalk) {
-      bioEl.textContent = 'Certified neighborhood walking school bus leader. We walk safely as a supervised group along sidewalks, observing crossing guard signals. Children stay healthy, active, and arrive safely every morning.';
+      bioEl.textContent = 'Certified neighborhood walking school bus chaperone. We walk safely as a supervised group along sidewalks, observing crossing guard signals. Children stay healthy, active, and arrive safely every morning.';
     } else {
-      bioEl.textContent = 'Experienced school transport provider with a strong focus on child safety. Verified background check and CPR certified.';
+      bioEl.textContent = 'Experienced school transport provider with a strong focus on child safety. Verified background check, booster seat equipped, and CPR certified.';
     }
+  }
+
+  // Reviews adaptation
+  const reviewTextEl = document.getElementById('detailsProviderReviewText');
+  const reviewerEl = document.querySelector('#screen-bookingProviderDetails .clean-reviewer-name');
+  if (reviewTextEl && provider.quote) {
+    reviewTextEl.textContent = provider.quote.replace(/^"|"$/g, '');
+  }
+  if (reviewerEl && provider.reviewer) {
+    reviewerEl.textContent = provider.reviewer.replace(/^—\s*/, '').split('(')[0].trim();
   }
 
   const bookBtnEl = document.getElementById('btnBookWithProvider');
   if (bookBtnEl) {
+    const rateText = isWalk ? '$75/wk' : `$${provider.baseWeekly || 120}/wk`;
     bookBtnEl.textContent = isWalk 
-      ? `Book WalkShare with ${provider.name.split(' ')[0]}`
-      : `Book with ${provider.name.split(' ')[0]}`;
+      ? `Book WalkShare with ${cleanFirstName} (${rateText})` 
+      : `Book with ${cleanFirstName} (${rateText})`;
     bookBtnEl.onclick = function () {
       window.appState.bookingDraft.providerId = provider.id;
       navigateTo('bookingSummary');
@@ -1856,10 +1912,11 @@ function renderBookingSummary() {
       ? 'Recurring (Mon – Fri Commute)' 
       : `One-Time Ride (${draft.tripDate || 'Single Day Pass'})`;
   }
+  const cleanFullName = provider.name.replace(/\s*\(WalkShare\)/i, '');
   if (providerEl) {
     providerEl.textContent = isWalk 
-      ? `${provider.name} (WalkShare Escort)` 
-      : `${provider.name} (${provider.vehicle.split('(')[0].trim()})`;
+      ? `${cleanFullName} (WalkShare Escort)` 
+      : `${cleanFullName} (${provider.vehicle.split('(')[0].trim()})`;
   }
 
   // Price calculations & dynamic labels
@@ -1869,16 +1926,26 @@ function renderBookingSummary() {
   const totalEl = document.getElementById('summaryTotalPriceText');
   const baseLbl = document.getElementById('summaryBasePriceLabel');
   const totalLbl = document.getElementById('summaryTotalPriceLabel');
+  const insLbl = document.getElementById('summaryInsuranceLabel');
+  const insVal = document.getElementById('summaryInsurancePriceText');
 
   if (baseEl) baseEl.textContent = `$${price.baseRate}.00`;
   if (discEl) discEl.textContent = price.discount > 0 ? `-$${price.discount}.00` : '$0.00';
+  if (insLbl) {
+    insLbl.textContent = isWalk 
+      ? 'Pedestrian Safety & Telemetry Insurance' 
+      : 'Safety & Real-time GPS Insurance';
+  }
+  if (insVal) {
+    insVal.textContent = `$${price.insurance}.00`;
+  }
 
   if (draft.frequency === 'onetime') {
-    if (baseLbl) baseLbl.textContent = 'Single Ride Base Fare';
+    if (baseLbl) baseLbl.textContent = isWalk ? 'Single Walk Base Fare' : 'Single Ride Base Fare';
     if (totalLbl) totalLbl.textContent = 'Total One-Time Amount';
     if (totalEl) totalEl.textContent = `$${price.total}.00 Flat Rate`;
   } else {
-    if (baseLbl) baseLbl.textContent = 'Weekly Base Rate';
+    if (baseLbl) baseLbl.textContent = isWalk ? 'Weekly Chaperone Rate' : 'Weekly Base Rate';
     if (totalLbl) totalLbl.textContent = 'Total Weekly Amount';
     if (totalEl) totalEl.textContent = `$${price.total}.00 / week`;
   }
@@ -1890,6 +1957,7 @@ function renderBookingSummary() {
 window.submitBookingRequest = function () {
   const draft = window.appState.bookingDraft;
   const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
+  const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
   const price = calculateDraftPrice();
 
   const newBooking = {
@@ -1920,8 +1988,11 @@ window.submitBookingRequest = function () {
 
   // Update Request Sent Screen text
   const reqDesc = document.getElementById('requestSentDesc');
+  const cleanName = provider.name.replace(/\s*\(WalkShare\)/i, '');
   if (reqDesc) {
-    reqDesc.textContent = `${provider.name} has received your school ride request for reference ${newBooking.id}.`;
+    reqDesc.textContent = isWalk 
+      ? `${cleanName} has received your WalkShare chaperone escort request for reference ${newBooking.id}.`
+      : `${cleanName} has received your school ride request for reference ${newBooking.id}.`;
   }
 
   window.navigateTo('bookingRequestSent');
