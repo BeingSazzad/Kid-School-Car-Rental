@@ -1468,85 +1468,12 @@ function renderBookingDetails(bookingId) {
   }
   if (pMethod) pMethod.textContent = booking.paymentMethod || 'Visa •••• 4242';
 
-  // Dynamic Lifecycle Timeline based on status
-  const timelineWrap = document.getElementById('detailTimelineWrap');
-  if (timelineWrap) {
-    if (booking.status === 'in_progress') {
-      timelineWrap.innerHTML = `
-        <div class="timeline-step-item completed">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">Schedule Confirmed</div>
-          <div class="timeline-step-time">${booking.createdAt || 'May 20, 2026'} • Recurring</div>
-        </div>
-        <div class="timeline-step-item completed">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">Morning Pickup Completed</div>
-          <div class="timeline-step-time">07:33 AM • Children safely buckled in</div>
-        </div>
-        <div class="timeline-step-item current">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">En Route to School</div>
-          <div class="timeline-step-time">Live • Estimated arrival 07:42 AM</div>
-        </div>
-      `;
-    } else if (booking.status === 'confirmed') {
-      timelineWrap.innerHTML = `
-        <div class="timeline-step-item completed">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">Booking Request Confirmed</div>
-          <div class="timeline-step-time">${booking.createdAt || 'May 20, 2026'} • 09:28 AM</div>
-        </div>
-        <div class="timeline-step-item completed">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">Assigned Provider: ${provider.name}</div>
-          <div class="timeline-step-time">${provider.vehicle} (${provider.plate})</div>
-        </div>
-        <div class="timeline-step-item current">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">Next Scheduled Pickup</div>
-          <div class="timeline-step-time">Tomorrow at ${booking.outboundTime || '07:30 AM'}</div>
-        </div>
-      `;
-    } else if (booking.status === 'completed') {
-      timelineWrap.innerHTML = `
-        <div class="timeline-step-item completed">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">Morning Pickup</div>
-          <div class="timeline-step-time">07:33 AM • On Time</div>
-        </div>
-        <div class="timeline-step-item completed">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">School Drop-off Confirmed</div>
-          <div class="timeline-step-time">07:44 AM • Handed to school reception</div>
-        </div>
-        <div class="timeline-step-item completed">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">Trip Completed</div>
-          <div class="timeline-step-time">Official receipt issued</div>
-        </div>
-      `;
-    } else if (booking.status === 'cancelled') {
-      timelineWrap.innerHTML = `
-        <div class="timeline-step-item completed">
-          <span class="timeline-step-dot"></span>
-          <div class="timeline-step-name">Booking Created</div>
-          <div class="timeline-step-time">${booking.createdAt || 'May 20, 2026'}</div>
-        </div>
-        <div class="timeline-step-item current" style="--color-secondary: #DC2626;">
-          <span class="timeline-step-dot" style="background-color: #DC2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);"></span>
-          <div class="timeline-step-name" style="color: #DC2626;">Booking Cancelled</div>
-          <div class="timeline-step-time">Cancelled by Parent</div>
-        </div>
-      `;
-    }
-  }
-
-  // Contextual Actions based on status (Top-Tier Hierarchy, Zero Duplication)
+  // Dynamic Contextual Actions based on status (Clean, uncluttered, top-tier UX)
   const actionsWrap = document.getElementById('detailContextualActions');
   if (actionsWrap) {
     if (booking.status === 'in_progress') {
       actionsWrap.innerHTML = `
-        <div class="booking-status-tip-card live">
+        <div class="booking-status-tip-card live" style="margin-bottom: 4px;">
           <div class="status-tip-icon" style="background: #DCFCE7;">
             <span class="live-pulse-dot" style="margin: 0;"></span>
           </div>
@@ -1556,59 +1483,59 @@ function renderBookingDetails(bookingId) {
           </div>
         </div>
 
-        <button class="btn-primary" onclick="navigateTo('tracking')" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; font-size: 15px; font-weight: 800;">
+        <button class="btn-primary" onclick="navigateTo('tracking')" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 50px; font-size: 15.5px; font-weight: 800; border-radius: 14px;">
           <span class="live-pulse-dot" style="background: #FFFFFF; box-shadow: 0 0 0 3px rgba(255,255,255,0.3);"></span>
           <span>Open Live GPS Tracking</span>
           <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
         </button>
 
-        <div class="booking-utility-actions-grid">
-          <button type="button" class="btn-utility-card danger" onclick="openTripReport('${booking.id}')">
-            <i data-lucide="alert-triangle" style="width: 15px; height: 15px;"></i>
-            <span>Report Delay / Issue</span>
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 0;">
+          <button type="button" onclick="openTripReport('${booking.id}')" style="background: none; border: none; font-size: 12.5px; font-weight: 600; color: #64748B; display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 4px 0;">
+            <i data-lucide="help-circle" style="width: 14px; height: 14px;"></i>
+            <span>Report Issue</span>
           </button>
-          <button type="button" class="btn-utility-card danger" onclick="openEmergencySOSModal()">
-            <i data-lucide="shield-alert" style="width: 15px; height: 15px;"></i>
+          <button type="button" onclick="openEmergencySOSModal()" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: #DC2626; display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 4px 0;">
+            <i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i>
             <span>SOS Emergency</span>
           </button>
         </div>
 
-        <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')">
-          <i data-lucide="slash" style="width: 13px; height: 13px;"></i>
-          <span>Cancel this active ride</span>
-        </button>
+        <div style="text-align: center; margin-top: 2px;">
+          <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')" style="font-size: 12px; color: #94A3B8; padding: 4px 8px;">
+            <span>Cancel this active ride</span>
+          </button>
+        </div>
       `;
     } else if (booking.status === 'confirmed') {
       actionsWrap.innerHTML = `
-        <div class="booking-status-tip-card upcoming">
+        <div class="booking-status-tip-card upcoming" style="margin-bottom: 4px;">
           <div class="status-tip-icon" style="background: #E0F2FE;">
-            <i data-lucide="navigation" style="width: 16px; height: 16px; color: #0284C7;"></i>
+            <i data-lucide="calendar" style="width: 16px; height: 16px; color: #0284C7;"></i>
           </div>
           <div class="status-tip-text">
-            <div class="status-tip-title" style="color: #0369A1;">GPS Tracking Ready</div>
-            <div class="status-tip-sub" style="color: #0C4A6E;">Live tracking activates automatically 15 minutes before scheduled pickup tomorrow.</div>
+            <div class="status-tip-title" style="color: #0369A1;">Scheduled Commute</div>
+            <div class="status-tip-sub" style="color: #0C4A6E;">Tomorrow at ${booking.outboundTime || '07:30 AM'}. Live GPS activates 15 mins prior.</div>
           </div>
         </div>
 
-        <div class="booking-utility-actions-grid">
-          <button type="button" class="btn-utility-card" onclick="alert('To modify your pickup schedule or stop, please message driver ${provider.name} or contact support.')">
-            <i data-lucide="calendar" style="width: 15px; height: 15px; color: var(--color-primary);"></i>
-            <span>Modify Schedule</span>
+        <button class="btn-primary" onclick="openChatWith(window.currentBookingProviderId || 'tariq')" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; font-size: 15px; font-weight: 700; border-radius: 14px;">
+          <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
+          <span>Message Driver</span>
+        </button>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 0;">
+          <button type="button" onclick="openTripReport('${booking.id}')" style="background: none; border: none; font-size: 12.5px; font-weight: 600; color: #64748B; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <i data-lucide="help-circle" style="width: 14px; height: 14px;"></i>
+            <span>Trip Support</span>
           </button>
-          <button type="button" class="btn-utility-card" onclick="openTripReport('${booking.id}')">
-            <i data-lucide="help-circle" style="width: 15px; height: 15px; color: #64748B;"></i>
-            <span>Trip Help &amp; Support</span>
+          <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')" style="font-size: 12px; color: #EF4444; padding: 0;">
+            <span>Cancel booking</span>
           </button>
         </div>
-
-        <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')">
-          <i data-lucide="slash" style="width: 13px; height: 13px;"></i>
-          <span>Cancel this scheduled booking</span>
-        </button>
       `;
     } else if (booking.status === 'pending') {
       actionsWrap.innerHTML = `
-        <div class="booking-status-tip-card">
+        <div class="booking-status-tip-card" style="margin-bottom: 6px;">
           <div class="status-tip-icon" style="background: #FEF3C7;">
             <i data-lucide="clock" style="width: 16px; height: 16px; color: #D97706;"></i>
           </div>
@@ -1618,7 +1545,7 @@ function renderBookingDetails(bookingId) {
           </div>
         </div>
 
-        <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')" style="margin-top: 6px;">
+        <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')" style="margin-top: 4px; font-size: 12.5px; color: #EF4444;">
           <i data-lucide="x-circle" style="width: 14px; height: 14px;"></i>
           <span>Withdraw Booking Request</span>
         </button>
