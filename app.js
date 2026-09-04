@@ -1004,20 +1004,15 @@ function renderBookingDetails(bookingId) {
       const initials = c.name.split(' ').map(n => n[0]).join('');
       const colorClass = c.id === 'arman' ? 'navy' : c.id === 'emma' ? 'blue' : 'orange';
       return `
-        <div style="display:flex; align-items:flex-start; justify-content:space-between; padding: 10px 0; ${idx < children.length - 1 ? 'border-bottom: 1px solid var(--color-stroke);' : ''}">
-          <div style="display:flex; align-items:flex-start; gap:12px;">
-            <div class="child-monogram-avatar ${colorClass}" style="width:38px; height:38px; font-size:13px; margin-top: 2px;">${initials}</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding: 10px 0; ${idx < children.length - 1 ? 'border-bottom: 1px solid var(--color-stroke);' : ''}">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="child-monogram-avatar ${colorClass}" style="width:38px; height:38px; font-size:13px;">${initials}</div>
             <div>
               <div style="font-size:14px;font-weight:800;color:var(--color-title);">${c.name}</div>
               <div style="font-size:12px;color:var(--color-body); margin-top: 2px;">${c.grade} • ${c.school}</div>
-              ${c.notes ? `
-                <div style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; color:var(--color-primary); background:var(--color-fade); padding:3px 9px; border-radius:6px; margin-top:6px; border:1px solid rgba(27,43,104,0.08); white-space:nowrap;">
-                  <i data-lucide="shield" style="width:12px;height:12px;color:var(--color-secondary);"></i>
-                  <span>${c.notes}</span>
-                </div>` : ''}
             </div>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#15803D; background:#F0FDF4; padding:3px 9px; border-radius:99px; border:1px solid #DCFCE7; white-space:nowrap; margin-top: 2px;">Confirmed</span>
+          <span style="font-size:11px; font-weight:700; color:#15803D; background:#F0FDF4; padding:3px 9px; border-radius:99px; border:1px solid #DCFCE7; white-space:nowrap;">Confirmed</span>
         </div>
       `;
     }).join('');
@@ -1049,8 +1044,8 @@ function renderBookingDetails(bookingId) {
   const pMethod = document.getElementById('detailPayMethod');
   if (pAmount) {
     pAmount.textContent = booking.frequency === 'recurring' 
-      ? `$${booking.amount}.00 / wk (Recurring Commute)` 
-      : `$${booking.amount}.00 Flat Rate (One-Time Trip)`;
+      ? `$${booking.amount}.00 / wk` 
+      : `$${booking.amount}.00`;
   }
   if (pMethod) pMethod.textContent = booking.paymentMethod || 'Visa •••• 4242';
 
@@ -1060,7 +1055,7 @@ function renderBookingDetails(bookingId) {
     if (booking.status === 'confirmed' || booking.status === 'pending') {
       actionsWrap.innerHTML = `
         <button class="btn-primary" onclick="navigateTo('tracking')">Track Live Ride</button>
-        <button class="btn-secondary-surface" onclick="navigateTo('messages')">Message Driver</button>
+        <button class="btn-secondary-surface" onclick="openChatWith('${booking.providerId}')">Message Driver</button>
         <button class="btn-danger-surface" onclick="cancelBooking('${booking.id}')">Cancel This Booking</button>
       `;
     } else if (booking.status === 'completed') {
@@ -1157,48 +1152,38 @@ function renderBookingsList(tab) {
                             b.status === 'pending' ? 'Pending Approval' :
                             b.status === 'completed' ? 'Completed' : 'Cancelled';
 
-      // Parse clean schedule chips
+      // Parse clean schedule
       let dayChip = 'Mon – Fri';
       let timeChip = '';
       if (b.direction === 'bothway' && b.outboundTime && b.returnTime) {
-        timeChip = `${b.outboundTime} · ${b.returnTime}`;
+        timeChip = `${b.outboundTime} & ${b.returnTime}`;
       } else if (b.outboundTime) {
         timeChip = b.outboundTime;
       }
 
-      if (b.scheduleText && (b.scheduleText.includes('Thursday') || b.scheduleText.includes('Friday') || b.scheduleText.includes('May') || b.scheduleText.includes('April'))) {
-        const parts = b.scheduleText.split('•');
-        dayChip = parts[0].trim();
-        if (parts[1]) timeChip = parts[1].trim();
-      } else if (b.scheduleText && (b.scheduleText.includes('Mon–Fri') || b.scheduleText.includes('Mon-Fri'))) {
-        dayChip = 'Mon – Fri';
-      } else if (b.scheduleText) {
-        dayChip = b.scheduleText;
+      if (b.scheduleText) {
+        if (b.scheduleText.includes('•')) {
+          const parts = b.scheduleText.split('•');
+          dayChip = parts[0].trim();
+          if (parts[1]) timeChip = parts[1].trim();
+        } else if (b.scheduleText.includes('Mon–Fri') || b.scheduleText.includes('Mon-Fri')) {
+          dayChip = 'Mon – Fri';
+        } else {
+          dayChip = b.scheduleText.trim();
+        }
+      }
+
+      // Clean redundant parenthetical words from timeChip
+      if (timeChip) {
+        timeChip = timeChip.replace(/Outbound:\s*/i, '').replace(/Return:\s*/i, '').replace(/\(.*?\)/g, '').trim();
       }
 
       const vehicleName = provider.vehicle ? provider.vehicle.split('(')[0].trim() : 'Sedan';
       const pickupName = b.pickupLocation ? b.pickupLocation.split('(')[0].trim() : 'Home';
       const arrowIcon = b.direction === 'bothway' ? '⇄' : '→';
       const priceUnit = b.frequency === 'recurring' ? '/wk' : 'trip';
-
-      // Direction & Frequency Type Badge
-      let typeBadgeText = '';
-      let badgeClass = 'recurring';
-      if (b.direction === 'bothway' && b.frequency === 'recurring') {
-        typeBadgeText = 'Round Trip • Recurring';
-        badgeClass = 'recurring';
-      } else if (b.direction === 'oneway' && b.frequency === 'recurring') {
-        typeBadgeText = 'One Way • Recurring';
-        badgeClass = 'recurring';
-      } else if (b.direction === 'bothway' && b.frequency === 'onetime') {
-        typeBadgeText = 'Round Trip • Day Pass';
-        badgeClass = 'onetime';
-      } else {
-        typeBadgeText = 'One Way • Single Trip';
-        badgeClass = 'onetime';
-      }
-
-      const directionChip = b.direction === 'bothway' ? 'Round Trip' : 'One Way';
+      const badgeClass = b.frequency === 'recurring' ? 'recurring' : 'onetime';
+      const directionLabel = b.direction === 'bothway' ? '⇄ Round Trip' : '→ One Way';
 
       let actionsHtml = '';
       if (b.status === 'confirmed') {
@@ -1212,7 +1197,7 @@ function renderBookingsList(tab) {
       } else if (b.status === 'pending') {
         actionsHtml = `
           <button class="btn-booking-secondary" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">View Details →</button>
-          <button class="btn-booking-primary ghost" onclick="event.stopPropagation(); navigateTo('messages')">
+          <button class="btn-booking-primary ghost" onclick="event.stopPropagation(); openChatWith('${b.providerId || 'p1'}')">
             <i data-lucide="message-square" style="width:13px;height:13px;"></i>
             <span>Chat Escort</span>
           </button>
@@ -1232,47 +1217,42 @@ function renderBookingsList(tab) {
       return `
         <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
           <div class="booking-card-top-row">
-            <span class="status-chip ${b.status}">
-              <span class="status-dot"></span>
-              ${displayStatus}
-            </span>
+            <div class="booking-header-badges">
+              <span class="status-chip ${b.status}">
+                <span class="status-dot"></span>
+                ${displayStatus}
+              </span>
+              <span class="booking-type-pill ${badgeClass}">
+                ${directionLabel}
+              </span>
+            </div>
             <div class="booking-card-price">
               <span class="price-val">$${b.amount}</span>
               <span class="price-cycle">${priceUnit}</span>
             </div>
           </div>
 
-          <div class="booking-card-main">
-            <div class="booking-card-title-row">
-              <div class="booking-card-child-name">${childText}</div>
-              <span class="booking-type-badge ${badgeClass}">
-                ${typeBadgeText}
-              </span>
-            </div>
-
+          <div class="booking-card-body">
+            <div class="booking-card-child-name">${childText}</div>
             <div class="booking-card-route">
-              <i data-lucide="map-pin" class="route-pin-icon"></i>
-              <span class="route-point">${pickupName}</span>
-              <span class="route-arrow">${arrowIcon}</span>
-              <span class="route-school">${b.schoolLocation}</span>
+              <span class="route-pickup">${pickupName}</span>
+              <span class="route-arrow-icon">${arrowIcon}</span>
+              <span class="route-school-name">${b.schoolLocation}</span>
             </div>
+          </div>
 
-            <div class="booking-meta-chips">
-              <span class="booking-meta-chip">
-                <i data-lucide="calendar"></i>
-                <span>${dayChip}</span>
-              </span>
-              ${timeChip ? `
-                <span class="booking-meta-chip">
-                  <i data-lucide="clock"></i>
-                  <span>${timeChip}</span>
-                </span>
-              ` : ''}
-              <span class="booking-meta-chip">
-                <i data-lucide="${b.direction === 'bothway' ? 'arrow-right-left' : 'arrow-right'}"></i>
-                <span>${directionChip}</span>
-              </span>
+          <div class="booking-schedule-strip">
+            <div class="sched-segment">
+              <i data-lucide="calendar"></i>
+              <span>${dayChip}</span>
             </div>
+            ${timeChip ? `
+              <span class="sched-sep"></span>
+              <div class="sched-segment">
+                <i data-lucide="clock"></i>
+                <span>${timeChip}</span>
+              </div>
+            ` : ''}
           </div>
 
           <div class="booking-driver-strip">
@@ -1280,10 +1260,10 @@ function renderBookingsList(tab) {
               <img src="${provider.photo}" alt="${provider.name}" class="booking-driver-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
               <div class="booking-driver-info">
                 <div class="booking-driver-name">${provider.name}</div>
-                <div class="booking-driver-meta">${vehicleName} • <span class="rating-star">★ ${provider.rating}</span></div>
+                <div class="booking-driver-meta">${vehicleName} · <span class="rating-star">★ ${provider.rating}</span></div>
               </div>
             </div>
-            <button class="btn-driver-chat-mini" onclick="event.stopPropagation(); navigateTo('messages')" title="Message Provider">
+            <button class="btn-driver-chat-mini" onclick="event.stopPropagation(); openChatWith('${provider.id}')" title="Message Provider">
               <i data-lucide="message-square"></i>
             </button>
           </div>
@@ -1406,6 +1386,30 @@ window.advanceTrackingStage = function () {
 /* ==========================================================
    Messaging / Parent-Provider Chat
    ========================================================== */
+window.activeChatProviderId = 'tariq';
+
+window.openChatWith = function (providerId) {
+  window.activeChatProviderId = providerId || 'tariq';
+  const provider = window.appState.providers.find(p => p.id === window.activeChatProviderId) || window.appState.providers[0];
+
+  const avatar = document.getElementById('chatDriverAvatar');
+  const nameEl = document.getElementById('chatDriverName');
+  const subEl = document.getElementById('chatDriverSub');
+  const inputEl = document.getElementById('chatInputField');
+
+  if (avatar) avatar.src = provider.photo || '/assets/avatar_tariq.jpg';
+  if (nameEl) nameEl.textContent = provider.name;
+  if (subEl) subEl.textContent = `${provider.vehicle || 'School Escort'} • ${provider.rating} ★`;
+  if (inputEl) inputEl.placeholder = `Type a message to ${provider.name.split(' ')[0]}...`;
+
+  window.navigateTo('messages');
+};
+
+window.callCurrentDriver = function () {
+  const provider = window.appState.providers.find(p => p.id === window.activeChatProviderId) || window.appState.providers[0];
+  alert(`Calling ${provider.name}: ${provider.phone || '+1 (416) 555-0182'}`);
+};
+
 window.sendQuickReply = function (text) {
   appendChatMessage(text, 'parent');
   simulateDriverReply();
@@ -1590,14 +1594,43 @@ window.addEmergencyContact = function () {
   }
 };
 
-window.addNewAddress = function () {
-  const presets = [
-    { label: 'Music & Arts Academy', address: '120 Richmond St West, Toronto, ON' },
-    { label: 'North York Soccer Club', address: '5000 Yonge St, Toronto, ON' },
-    { label: 'Community Library', address: '88 Bloor St East, Toronto, ON' }
-  ];
-  const item = presets[Math.floor(Math.random() * presets.length)];
+window.selectedAddressType = 'home';
 
+window.openAddAddressModal = function () {
+  const modal = document.getElementById('addAddressModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.getElementById('newAddressLabel')?.focus();
+  }
+};
+
+window.closeAddAddressModal = function (event) {
+  if (event && event.target && event.target.closest('.receipt-modal-card') && event.target.id !== 'addAddressModal') {
+    return;
+  }
+  const modal = document.getElementById('addAddressModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+};
+
+window.selectAddressType = function (type) {
+  window.selectedAddressType = type;
+  ['addrTypeHome', 'addrTypeSchool', 'addrTypeOther'].forEach(id => {
+    document.getElementById(id)?.classList.remove('active');
+  });
+  if (type === 'home') document.getElementById('addrTypeHome')?.classList.add('active');
+  if (type === 'school') document.getElementById('addrTypeSchool')?.classList.add('active');
+  if (type === 'other') document.getElementById('addrTypeOther')?.classList.add('active');
+};
+
+window.handleSaveNewAddress = function (e) {
+  e.preventDefault();
+  const label = document.getElementById('newAddressLabel')?.value?.trim();
+  const street = document.getElementById('newAddressStreet')?.value?.trim();
+  if (!label || !street) return;
+
+  const iconName = window.selectedAddressType === 'school' ? 'school' : window.selectedAddressType === 'home' ? 'home' : 'map-pin';
   const container = document.getElementById('savedLocationsListWrap');
   if (container) {
     const row = document.createElement('div');
@@ -1605,19 +1638,28 @@ window.addNewAddress = function () {
     row.innerHTML = `
       <div class="grouped-row-left">
         <div class="grouped-row-icon-wrap">
-          <i data-lucide="map-pin" style="width:18px;height:18px;color:var(--color-primary);"></i>
+          <i data-lucide="${iconName}" style="width:18px;height:18px;color:var(--color-primary);"></i>
         </div>
         <div>
-          <div class="grouped-row-title">${item.label}</div>
-          <div class="grouped-row-sub">${item.address}</div>
+          <div class="grouped-row-title">${label}</div>
+          <div class="grouped-row-sub">${street}</div>
         </div>
       </div>
       <button class="grouped-row-action" onclick="window.showToast('Location selected')">Edit</button>
     `;
     container.appendChild(row);
     if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
-    window.showToast(`✓ Saved location "${item.label}" added`);
   }
+
+  // Clear inputs and close
+  document.getElementById('newAddressLabel').value = '';
+  document.getElementById('newAddressStreet').value = '';
+  window.closeAddAddressModal();
+  if (window.showToast) window.showToast(`✓ Added "${label}" to saved locations`);
+};
+
+window.addNewAddress = function () {
+  window.openAddAddressModal();
 };
 
 /* ==========================================================

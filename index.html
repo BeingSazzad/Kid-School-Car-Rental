@@ -610,7 +610,7 @@
         </div>
 
         <!-- Hero Promo Card: Safe Ride / Brighter Future -->
-        <div class="home-hero-card">
+        <div class="home-hero-card" onclick="navigateTo('bookingSelectChildren')" style="cursor: pointer;" title="Book a safe school ride">
           <img src="/assets/home_hero_card.png" alt="Safe Ride - Brighter Future" class="hero-card-full-img" />
         </div>
 
@@ -633,7 +633,7 @@
                 <i data-lucide="users"></i>
               </div>
               <h4 class="card-title-navy">My Children</h4>
-              <p class="card-desc-muted">Manage 2 profiles</p>
+              <p class="card-desc-muted">Manage profiles</p>
             </div>
 
             <!-- Action 3: My Bookings -->
@@ -645,7 +645,7 @@
             </div>
 
             <!-- Action 4: Safety & Help -->
-            <div class="action-card light horizontal" onclick="navigateTo('profile')">
+            <div class="action-card light horizontal" onclick="navigateTo('faq')">
               <div class="action-icon-circle orange-tint">
                 <i data-lucide="shield-check"></i>
               </div>
@@ -2128,18 +2128,6 @@
             </div>
           </div>
 
-          <!-- Interactive Demo Simulation Bar -->
-          <div class="tracking-sim-bar">
-            <div class="tracking-sim-left">
-              <i data-lucide="play" style="width: 12px; height: 12px; color: #64748B;"></i>
-              <span>Interactive Simulation:</span>
-            </div>
-            <button type="button" class="tracking-sim-btn" onclick="advanceTrackingStage()">
-              <span>Next Stage</span>
-              <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
-            </button>
-          </div>
-
           <!-- Driver Mini Profile & Quick Contact -->
           <div class="active-driver-contact-row">
             <div class="driver-mini-info">
@@ -2194,14 +2182,14 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <div style="display: flex; align-items: center; gap: 10px;">
-          <img src="/assets/avatar_tariq.jpg" alt="Tariq"
+          <img src="/assets/avatar_tariq.jpg" alt="Driver" id="chatDriverAvatar"
             style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;" />
           <div>
-            <div style="font-size: 15px; font-weight: 800; color: var(--color-title);">Tariq Ahmed</div>
-            <div style="font-size: 11.5px; color: #16A34A; font-weight: 600;">Active Trip • Toyota Sienna</div>
+            <div style="font-size: 15px; font-weight: 800; color: var(--color-title);" id="chatDriverName">Tariq Ahmed</div>
+            <div style="font-size: 11.5px; color: #16A34A; font-weight: 600;" id="chatDriverSub">Active Trip • Toyota Sienna</div>
           </div>
         </div>
-        <button class="btn-icon-contact" onclick="alert('Calling Tariq: +1 (416) 555-0182')">
+        <button class="btn-icon-contact" id="chatDriverCallBtn" onclick="callCurrentDriver()">
           <i data-lucide="phone"></i>
         </button>
       </div>
@@ -2302,38 +2290,39 @@
           <!-- Booking Card 1: Active Recurring Schedule -->
           <div class="booking-item-card" onclick="openBookingDetails('H2S-84920')">
             <div class="booking-card-top-row">
-              <span class="status-chip confirmed">
-                <span class="status-dot"></span>
-                Confirmed
-              </span>
+              <div class="booking-header-badges">
+                <span class="status-chip confirmed">
+                  <span class="status-dot"></span>
+                  Confirmed
+                </span>
+                <span class="booking-type-pill recurring">
+                  ⇄ Round Trip
+                </span>
+              </div>
               <div class="booking-card-price">
                 <span class="price-val">$120</span>
                 <span class="price-cycle">/wk</span>
               </div>
             </div>
 
-            <div class="booking-card-main">
-              <div class="booking-card-title-row">
-                <div class="booking-card-child-name">Arman &amp; Emma Khan</div>
-                <span class="booking-type-badge">Recurring</span>
-              </div>
-
+            <div class="booking-card-body">
+              <div class="booking-card-child-name">Arman &amp; Emma Khan</div>
               <div class="booking-card-route">
-                <i data-lucide="map-pin" class="route-pin-icon"></i>
-                <span class="route-point">Home</span>
-                <span class="route-arrow">⇄</span>
-                <span class="route-school">Greenfield International School</span>
+                <span class="route-pickup">Home</span>
+                <span class="route-arrow-icon">⇄</span>
+                <span class="route-school-name">Greenfield International School</span>
               </div>
+            </div>
 
-              <div class="booking-meta-chips">
-                <span class="booking-meta-chip">
-                  <i data-lucide="calendar"></i>
-                  <span>Mon – Fri</span>
-                </span>
-                <span class="booking-meta-chip">
-                  <i data-lucide="clock"></i>
-                  <span>07:30 AM · 01:00 PM</span>
-                </span>
+            <div class="booking-schedule-strip">
+              <div class="sched-segment">
+                <i data-lucide="calendar"></i>
+                <span>Mon – Fri</span>
+              </div>
+              <span class="sched-sep"></span>
+              <div class="sched-segment">
+                <i data-lucide="clock"></i>
+                <span>07:30 AM &amp; 01:00 PM</span>
               </div>
             </div>
 
@@ -2342,7 +2331,7 @@
                 <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="booking-driver-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
                 <div class="booking-driver-info">
                   <div class="booking-driver-name">Tariq Ahmed</div>
-                  <div class="booking-driver-meta">Toyota Sienna • <span class="rating-star">★ 4.9</span></div>
+                  <div class="booking-driver-meta">Toyota Sienna · <span class="rating-star">★ 4.9</span></div>
                 </div>
               </div>
               <button class="btn-driver-chat-mini" onclick="event.stopPropagation(); navigateTo('messages')" title="Message Provider">
@@ -2362,37 +2351,39 @@
           <!-- Booking Card 2: Single Trip Booking -->
           <div class="booking-item-card" onclick="openBookingDetails('H2S-73190')">
             <div class="booking-card-top-row">
-              <span class="status-chip pending">
-                <span class="status-dot"></span>
-                Pending Approval
-              </span>
+              <div class="booking-header-badges">
+                <span class="status-chip pending">
+                  <span class="status-dot"></span>
+                  Pending Approval
+                </span>
+                <span class="booking-type-pill onetime">
+                  → One Way
+                </span>
+              </div>
               <div class="booking-card-price">
                 <span class="price-val">$35</span>
+                <span class="price-cycle">trip</span>
               </div>
             </div>
 
-            <div class="booking-card-main">
-              <div class="booking-card-title-row">
-                <div class="booking-card-child-name">Zara Khan</div>
-                <span class="booking-type-badge onetime">Single Trip</span>
-              </div>
-
+            <div class="booking-card-body">
+              <div class="booking-card-child-name">Zara Khan</div>
               <div class="booking-card-route">
-                <i data-lucide="map-pin" class="route-pin-icon"></i>
-                <span class="route-point">Home</span>
-                <span class="route-arrow">→</span>
-                <span class="route-school">Sunshine Pre-school</span>
+                <span class="route-pickup">Home</span>
+                <span class="route-arrow-icon">→</span>
+                <span class="route-school-name">Sunshine Pre-school</span>
               </div>
+            </div>
 
-              <div class="booking-meta-chips">
-                <span class="booking-meta-chip">
-                  <i data-lucide="calendar"></i>
-                  <span>Thursday, May 23</span>
-                </span>
-                <span class="booking-meta-chip">
-                  <i data-lucide="clock"></i>
-                  <span>08:15 AM</span>
-                </span>
+            <div class="booking-schedule-strip">
+              <div class="sched-segment">
+                <i data-lucide="calendar"></i>
+                <span>Thursday, May 23</span>
+              </div>
+              <span class="sched-sep"></span>
+              <div class="sched-segment">
+                <i data-lucide="clock"></i>
+                <span>08:15 AM</span>
               </div>
             </div>
 
@@ -2401,7 +2392,7 @@
                 <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="booking-driver-avatar" onerror="this.src='/assets/avatar_sarah.jpg';" />
                 <div class="booking-driver-info">
                   <div class="booking-driver-name">Sarah Jenkins</div>
-                  <div class="booking-driver-meta">WalkShare Escort • <span class="rating-star">★ 4.9</span></div>
+                  <div class="booking-driver-meta">WalkShare Escort · <span class="rating-star">★ 4.9</span></div>
                 </div>
               </div>
               <button class="btn-driver-chat-mini" onclick="event.stopPropagation(); navigateTo('messages')" title="Message Escort">
@@ -2674,8 +2665,10 @@
         </div>
 
         <!-- Written review text -->
-        <textarea class="form-input" style="height: 70px; border-radius: var(--radius-md); padding: 10px; resize: none;"
-          placeholder="Leave an optional comment for other parents..."></textarea>
+        <div style="width: 100%; text-align: left;">
+          <textarea class="rating-comment-box" id="ratingCommentText"
+            placeholder="Leave an optional comment for other parents..."></textarea>
+        </div>
 
         <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
           <button class="btn-primary"
@@ -3066,26 +3059,6 @@
       </div>
 
       <div class="screen-scroll-body">
-        <!-- Stripe Secured Trust Banner -->
-        <div class="stripe-trust-banner">
-          <div class="stripe-badge-icon">
-            <span>S</span>
-          </div>
-          <div class="stripe-trust-content">
-            <div class="stripe-trust-title">
-              <span>Payments Powered by Stripe</span>
-              <i data-lucide="shield-check" style="width:14px;height:14px;color:#16A34A;"></i>
-            </div>
-            <div class="stripe-trust-sub">
-              All school commute charges and single rides are handled securely via Stripe. Invoices &amp; receipts are auto-generated.
-            </div>
-            <button type="button" class="stripe-portal-link" onclick="openStripePortal()">
-              <span>Manage Payment Methods in Stripe Customer Portal</span>
-              <i data-lucide="external-link" style="width:11px;height:11px;"></i>
-            </button>
-          </div>
-        </div>
-
         <!-- In-App Parent Credit Card -->
         <div style="background: linear-gradient(135deg, var(--color-brand-navy) 0%, #2A3F8E 100%); border-radius: var(--radius-lg); padding: 16px 18px; color: #fff; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12);">
           <div style="display: flex; justify-content: space-between; align-items: flex-start;">
@@ -3098,18 +3071,10 @@
           <div style="font-size: 11.5px; color: rgba(255,255,255,0.85);">Auto-applied to upcoming weekly school invoices ($10 off per week)</div>
         </div>
 
-        <!-- Transaction History Header & Filters -->
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px; margin-bottom: 8px;">
-          <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Transaction History</div>
-          <span style="font-size: 11.5px; font-weight: 600; color: #64748B;" id="txCountLabel">6 Transactions</span>
-        </div>
-
-        <!-- Filter Segmented Control -->
-        <div class="segmented-control" style="margin-bottom: 12px;">
-          <button class="segment-btn active" id="filterTxAll" onclick="filterTransactions('all')">All</button>
-          <button class="segment-btn" id="filterTxCommutes" onclick="filterTransactions('recurring')">Commutes</button>
-          <button class="segment-btn" id="filterTxOneTime" onclick="filterTransactions('onetime')">One-Time</button>
-          <button class="segment-btn" id="filterTxRefunds" onclick="filterTransactions('refund')">Refunds</button>
+        <!-- Transaction History Minimal Header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 18px; margin-bottom: 10px;">
+          <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Recent Transactions</div>
+          <span style="font-size: 11.5px; font-weight: 600; color: #64748B;" id="txCountLabel">All Receipts</span>
         </div>
 
         <!-- Dynamic Transactions List -->
@@ -3613,6 +3578,52 @@
 
       <div class="home-indicator"></div>
     </section>
+
+    <!-- Add New Address Modal -->
+    <div class="receipt-modal-overlay" id="addAddressModal" onclick="closeAddAddressModal(event)">
+      <div class="receipt-modal-card" onclick="event.stopPropagation()">
+        <div class="receipt-modal-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:28px; height:28px; border-radius:6px; background:#EFF6FF; color:#1D4ED8; display:flex; align-items:center; justify-content:center;">
+              <i data-lucide="map-pin" style="width:15px;height:15px;"></i>
+            </div>
+            <div>
+              <div style="font-size:13.5px; font-weight:800; color:#0F172A;">Add New Address</div>
+              <div style="font-size:11px; color:#64748B;">Save pickup or drop-off location</div>
+            </div>
+          </div>
+          <button type="button" class="btn-close-modal" onclick="closeAddAddressModal()" aria-label="Close">
+            <i data-lucide="x" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+
+        <form onsubmit="handleSaveNewAddress(event)" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+          <div>
+            <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:5px;">Location Name</label>
+            <input type="text" id="newAddressLabel" class="form-input" style="border: 1.5px solid #CBD5E1; border-radius:10px; padding:9px 12px; height:auto; background:#F8FAFC;" placeholder="e.g. Grandma's House, Karate Club" required />
+          </div>
+
+          <div>
+            <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:5px;">Street Address</label>
+            <input type="text" id="newAddressStreet" class="form-input" style="border: 1.5px solid #CBD5E1; border-radius:10px; padding:9px 12px; height:auto; background:#F8FAFC;" placeholder="e.g. 140 Queens Quay West, Toronto, ON" required />
+          </div>
+
+          <div>
+            <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:5px;">Address Type</label>
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px;">
+              <button type="button" class="segment-btn active" id="addrTypeHome" onclick="selectAddressType('home')" style="font-size:11.5px; padding:6px 0; border:1px solid #CBD5E1;">Home</button>
+              <button type="button" class="segment-btn" id="addrTypeSchool" onclick="selectAddressType('school')" style="font-size:11.5px; padding:6px 0; border:1px solid #CBD5E1;">School</button>
+              <button type="button" class="segment-btn" id="addrTypeOther" onclick="selectAddressType('other')" style="font-size:11.5px; padding:6px 0; border:1px solid #CBD5E1;">Other</button>
+            </div>
+          </div>
+
+          <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 8px;">
+            <button type="submit" class="btn-primary" style="height:42px; font-size:13.5px;">Save Address</button>
+            <button type="button" class="btn-secondary-link" onclick="closeAddAddressModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <!-- Stripe Receipt & Invoice Modal -->
     <div class="receipt-modal-overlay" id="receiptModal" onclick="closeTransactionReceipt(event)">
