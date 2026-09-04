@@ -978,14 +978,12 @@
           <!-- Section 1: Student Identity -->
           <div class="profile-form-section-card">
             <div class="profile-section-title">
-              <i data-lucide="user"></i>
               <span>Student Identity</span>
             </div>
 
             <div class="form-group">
               <label class="form-label">Full Legal Name</label>
               <div class="input-box-wrapper">
-                <i data-lucide="user" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildName" value="Arman Khan" placeholder="e.g. Arman Khan" required />
               </div>
             </div>
@@ -993,7 +991,6 @@
             <div class="form-group">
               <label class="form-label">Child Age</label>
               <div class="input-box-wrapper">
-                <i data-lucide="calendar" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildAge" value="9 Years" placeholder="e.g. 9 Years" required />
               </div>
             </div>
@@ -1001,7 +998,6 @@
             <div class="form-group">
               <label class="form-label">School Name</label>
               <div class="input-box-wrapper">
-                <i data-lucide="school" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildSchool" value="Greenfield International School" placeholder="School name" required />
               </div>
             </div>
@@ -1010,14 +1006,12 @@
           <!-- Section 2: Commute & Safety Protocol -->
           <div class="profile-form-section-card">
             <div class="profile-section-title">
-              <i data-lucide="shield-check"></i>
               <span>Commute &amp; Safety Protocol</span>
             </div>
 
             <div class="form-group">
               <label class="form-label">Default Pickup Location</label>
               <div class="input-box-wrapper">
-                <i data-lucide="map-pin" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildPickup" value="Home (12 Elm Street, Toronto)" placeholder="Pickup address" required />
               </div>
             </div>
@@ -1025,7 +1019,6 @@
             <div class="form-group">
               <label class="form-label">Safety, Equipment &amp; Medical Notes</label>
               <div class="input-box-wrapper">
-                <i data-lucide="alert-circle" class="input-box-icon"></i>
                 <input type="text" class="form-input" id="editChildNotes" value="Wears booster seat (Provided by parent)" placeholder="e.g. Peanut allergy, booster seat" />
               </div>
             </div>
@@ -2803,23 +2796,25 @@
               <i data-lucide="camera" style="width:13px;height:13px;"></i>
             </button>
           </div>
-          <div style="font-size: 11.5px; font-weight: 700; color: var(--color-primary); background: var(--color-fade); padding: 3px 12px; border-radius: var(--radius-pill); margin-top: 8px; display: inline-flex; align-items: center; gap: 5px;">
-            <i data-lucide="shield-check" style="width:13px;height:13px;color:#0284C7;"></i>
-            <span>Verified Parent • 3 Children</span>
+          <div style="font-size: 15px; font-weight: 800; color: var(--color-title); margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;">
+            <span>Sadia Khan</span>
+            <span class="fb-verified-badge" title="Verified Account">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="#1877F2">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
+              </svg>
+            </span>
           </div>
         </div>
 
         <!-- Section 1: Guardian Identity -->
         <div class="profile-form-section-card">
           <div class="profile-section-title">
-            <i data-lucide="user-check" style="width:14px;height:14px;"></i>
             <span>Guardian Identity</span>
           </div>
 
           <div class="form-group">
             <label class="form-label">Full Legal Name</label>
             <div class="input-box-wrapper">
-              <i data-lucide="user" class="input-box-icon"></i>
               <input type="text" class="form-input" id="parentProfileName" value="Sadia Khan" placeholder="Your full legal name" />
             </div>
           </div>
@@ -2827,7 +2822,6 @@
           <div class="form-group">
             <label class="form-label">Relationship to Children</label>
             <div class="input-box-wrapper">
-              <i data-lucide="heart" class="input-box-icon"></i>
               <select class="form-input" id="parentProfileRelation" style="cursor: pointer;">
                 <option value="Mother" selected>Mother</option>
                 <option value="Father">Father</option>
@@ -2840,19 +2834,19 @@
         <!-- Section 2: Contact & Pickup Details -->
         <div class="profile-form-section-card">
           <div class="profile-section-title">
-            <i data-lucide="map-pin" style="width:14px;height:14px;"></i>
             <span>Contact &amp; Commute Coordinates</span>
           </div>
 
           <div class="form-group">
             <label class="form-label">
               <span>Primary Mobile Number</span>
-              <span class="verified-badge-icon" title="Verified" style="color:#16A34A;display:inline-flex;align-items:center;">
-                <i data-lucide="shield-check" style="width:13px;height:13px;"></i>
+              <span class="fb-verified-badge" title="Verified Mobile">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="#1877F2">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
+                </svg>
               </span>
             </label>
             <div class="input-box-wrapper">
-              <i data-lucide="phone" class="input-box-icon"></i>
               <input type="tel" class="form-input" id="parentProfilePhone" value="+1 (416) 555-0192" />
             </div>
           </div>
@@ -2860,7 +2854,6 @@
           <div class="form-group">
             <label class="form-label">Email Address</label>
             <div class="input-box-wrapper">
-              <i data-lucide="mail" class="input-box-icon"></i>
               <input type="email" class="form-input" id="parentProfileEmail" value="sadia.khan@example.com" />
             </div>
           </div>
@@ -2868,7 +2861,6 @@
           <div class="form-group">
             <label class="form-label">Primary Home Address (Pickup)</label>
             <div class="input-box-wrapper">
-              <i data-lucide="home" class="input-box-icon"></i>
               <input type="text" class="form-input" id="parentProfileAddress" value="12 Elm Street, Toronto, ON" />
             </div>
           </div>
@@ -3638,7 +3630,6 @@
               <span style="font-size:11px;font-weight:600;color:#64748B;">e.g. Home, Grandma's, Swimming</span>
             </label>
             <div class="input-box-wrapper" style="height:44px;">
-              <i data-lucide="tag" class="input-box-icon" style="width:16px;height:16px;"></i>
               <input type="text" id="newAddressLabel" class="form-input" placeholder="Give this place a simple name" required />
             </div>
           </div>
