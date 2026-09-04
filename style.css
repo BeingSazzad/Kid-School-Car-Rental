@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
 /* ==========================================================
    Home2School Global Design System & Styles
    Accurately matching Figma: Simul / Car Rental
@@ -62,15 +64,24 @@
 }
 
 /* Reset & Base */
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
 
+html,
+body,
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: var(--font-family) !important;
+}
+
 body {
-  font-family: var(--font-family);
   background-color: #F1F5F9;
   color: var(--color-title);
   min-height: 100vh;
@@ -1516,12 +1527,11 @@ svg.lucide {
 }
 
 .state-switcher-label {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--color-body);
   padding-left: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: normal;
 }
 
 .state-pills-group {
@@ -2399,11 +2409,10 @@ svg.lucide {
 }
 
 .summary-section-title {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--color-body);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-title);
+  letter-spacing: normal;
 }
 
 .summary-item-row {
@@ -3086,11 +3095,10 @@ svg.lucide {
 }
 
 .details-section-label {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--color-body);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-title);
+  letter-spacing: normal;
 }
 
 .details-route-leg {
@@ -3257,24 +3265,6 @@ svg.lucide {
 
 .btn-danger-surface:hover {
   background-color: #FEE2E2;
-}
-
-
-color: var(--color-title);
-}
-
-.details-leg-sub {
-  font-size: 12px;
-  color: var(--color-body);
-  margin-top: 2px;
-}
-
-.details-leg-time {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--color-title);
-  text-align: right;
-  flex-shrink: 0;
 }
 
 .booking-lifecycle-timeline {
@@ -3819,7 +3809,6 @@ color: var(--color-title);
   color: var(--color-body);
   line-height: 1.5;
 }
-}
 
 /* ==========================================================
 /* ==========================================================
@@ -4007,12 +3996,11 @@ color: var(--color-title);
 }
 
 .details-section-label {
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: normal;
   color: var(--color-primary);
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 
 /* Dedicated Pill Action Button (Guaranteed Zero Overlap) */
@@ -4154,11 +4142,10 @@ color: var(--color-title);
 }
 
 .form-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #64748B;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: normal;
+  color: #334155;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4222,10 +4209,9 @@ color: var(--color-title);
 }
 
 .profile-section-title {
-  font-size: 11.5px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: normal;
   color: var(--color-primary);
   margin-bottom: 12px;
   display: flex;

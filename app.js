@@ -562,11 +562,11 @@ function renderBookingDetails(bookingId) {
   const statusEl = document.getElementById('detailStatusBadge');
   const titleEl = document.getElementById('detailHeaderTitle');
 
-  if (refEl) refEl.textContent = `REF: ${booking.id}`;
+  if (refEl) refEl.textContent = booking.id.startsWith('#') ? booking.id : `#${booking.id}`;
   if (titleEl) titleEl.textContent = children.map(c => c.name).join(' & ');
   if (statusEl) {
     statusEl.className = `status-chip ${booking.status}`;
-    statusEl.textContent = booking.status.toUpperCase();
+    statusEl.textContent = booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase() : '';
   }
 
   // Children passengers
@@ -709,10 +709,11 @@ function renderBookingsList(tab) {
         return c ? c.name : id;
       });
 
+      const displayStatus = b.status ? b.status.charAt(0).toUpperCase() + b.status.slice(1).toLowerCase() : '';
       return `
         <div class="booking-item-card" onclick="openBookingDetails('${b.id}')" style="cursor:pointer;">
           <div class="booking-card-top-row">
-            <span class="status-chip ${b.status}">${b.status.toUpperCase()}</span>
+            <span class="status-chip ${b.status}">${displayStatus}</span>
             <span style="font-size: 14px; font-weight: 800; color: var(--color-primary);">$${b.amount}/wk</span>
           </div>
 

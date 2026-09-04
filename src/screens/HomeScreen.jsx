@@ -381,7 +381,7 @@ export default function HomeScreen({ onNavigateAction }) {
                 minWidth: '56px',
                 flexShrink: 0
               }}>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-body)', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--color-body)' }}>
                   May
                 </span>
                 <span style={{ fontSize: '22px', fontWeight: 800, color: 'var(--color-title)', lineHeight: '1.15' }}>
