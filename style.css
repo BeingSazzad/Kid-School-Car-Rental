@@ -4101,7 +4101,7 @@ svg.lucide {
 
 /* 2. Screen 2: Trip Details */
 .clean-flow-section {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .clean-flow-label {
@@ -4110,7 +4110,7 @@ svg.lucide {
   color: #64748B;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .clean-pill-toggle {
@@ -4145,20 +4145,20 @@ svg.lucide {
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
   border-radius: 16px;
-  padding: 4px 12px;
+  padding: 6px 14px;
   position: relative;
 }
 
 .clean-route-point {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 2px;
+  gap: 12px;
+  padding: 13px 2px;
 }
 
 .clean-route-icon-box {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4193,7 +4193,7 @@ svg.lucide {
   color: #64748B;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
 }
 
 .clean-route-type.orange {
@@ -4242,7 +4242,7 @@ svg.lucide {
   align-items: center;
   gap: 4px;
   height: 26px;
-  padding: 0 8px;
+  padding: 0 9px;
   border-radius: 99px;
   border: 1.5px solid #E2E8F0;
   background: #F8FAFC;
@@ -4284,18 +4284,19 @@ svg.lucide {
   height: 1px;
   background: #F1F5F9;
   position: relative;
+  margin: 6px 0;
 }
 
 .clean-route-swap-btn {
   position: absolute;
-  right: 10px;
+  right: 22px;
   top: 50%;
   transform: translateY(-50%);
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #FFFFFF;
-  border: 1.5px solid #E2E8F0;
+  border: 1.5px solid #CBD5E1;
   color: #475569;
   display: flex;
   align-items: center;
@@ -4304,6 +4305,12 @@ svg.lucide {
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
   transition: all 0.2s ease;
   z-index: 2;
+}
+
+.clean-route-swap-btn svg,
+.clean-route-swap-btn i {
+  width: 12px;
+  height: 12px;
 }
 
 .clean-route-swap-btn:hover {
