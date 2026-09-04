@@ -42,7 +42,14 @@ const screens = [
   'about',
   'privacy',
   'report',
-  'contactSupport'
+  'contactSupport',
+  // Driver Role Screens (10-Year Product Architecture)
+  'driverHome',
+  'driverRequests',
+  'driverSchedule',
+  'driverActiveTrip',
+  'driverSetup',
+  'driverProfile'
 ];
 
 /* ==========================================================
@@ -444,7 +451,150 @@ window.appState = {
   ],
   activeBookingId: 'H2S-84920',
   homeScenario: 'C', // Default to Scenario C (Active Trip In Progress)
-  trackingStageIndex: 2
+  trackingStageIndex: 2,
+
+  // ==========================================================
+  // Dual-Role System: Driver State (10yr Product Architecture)
+  // ==========================================================
+  activeRole: localStorage.getItem('h2s_active_role') || 'parent',
+  driver: {
+    id: 'tariq',
+    name: 'Tariq Ahmed',
+    phone: '+1 (416) 555-0182',
+    email: 'tariq.ahmed@torontoschoolrides.ca',
+    photo: '/assets/avatar_tariq.jpg',
+    rating: 4.9,
+    reviewsCount: 128,
+    isOnline: true,
+    verificationStatus: 'verified',
+    homeScenario: 'B', // 'A': No Trips, 'B': Upcoming Trip, 'C': Trip Starts Soon
+    activeTripStage: 0, // 0: Confirmed, 1: On Way, 2: Arrived, 3: Boarded, 4: En Route, 5: Dropped Off, 6: Complete
+    attendance: {
+      arman: true,
+      emma: true
+    },
+    vehicle: {
+      type: 'Minivan',
+      make: 'Toyota',
+      model: 'Sienna',
+      year: '2023',
+      color: 'Celestial Silver',
+      plate: 'SCH-4091',
+      capacity: 4,
+      photo: '/assets/avatar_tariq.jpg'
+    },
+    documents: [
+      { id: 'license', title: "Ontario Class G Driver's License", status: 'approved', expiry: 'Dec 14, 2028' },
+      { id: 'insurance', title: "Commercial Passenger Vehicle Insurance", status: 'approved', expiry: 'Nov 30, 2026' },
+      { id: 'registration', title: "Ontario Vehicle Registration & Safety", status: 'approved', expiry: 'Oct 22, 2027' },
+      { id: 'background', title: "Vulnerable Sector & Criminal Record Check", status: 'approved', expiry: 'Jan 15, 2027' }
+    ],
+    availability: {
+      weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+      morningSlot: '06:30 AM – 09:30 AM',
+      afternoonSlot: '01:00 PM – 04:30 PM'
+    },
+    subscription: {
+      plan: 'Pro Driver Pass',
+      price: '$29 / mo',
+      renewal: 'Sep 30, 2026',
+      status: 'active'
+    },
+    requests: [
+      {
+        id: 'dreq-1',
+        parentName: 'Sarah Khan',
+        parentPhone: '+1 (416) 555-0192',
+        children: ['Arman Khan (9 yrs)', 'Emma Khan (7 yrs)'],
+        childNamesShort: 'Arman + Emma',
+        seatsNeeded: 2,
+        routeFrom: 'Home (12 Elm Street)',
+        routeTo: 'Greenfield International School',
+        timing: 'Mon – Fri · Outbound: 07:30 AM | Return: 01:00 PM',
+        frequency: 'Round Trip · Recurring',
+        distance: '4.8 km (approx 14 min)',
+        price: '$120 /wk',
+        notes: 'Booster seat required for Arman. Front loop drop-off at Greenfield.',
+        status: 'new'
+      },
+      {
+        id: 'dreq-2',
+        parentName: 'Sadia Khan',
+        parentPhone: '+1 (416) 555-0192',
+        children: ['Zara Khan (5 yrs)'],
+        childNamesShort: 'Zara',
+        seatsNeeded: 1,
+        routeFrom: 'Home (12 Elm Street)',
+        routeTo: 'Sunshine Pre-school',
+        timing: 'Thursday, May 23 · 08:15 AM',
+        frequency: 'One Way · Single Trip',
+        distance: '2.4 km (approx 8 min)',
+        price: '$35 trip',
+        notes: 'Hand to classroom teacher Ms. Jenkins at main entrance gate.',
+        status: 'new'
+      }
+    ],
+    schedule: [
+      {
+        id: 'dsched-1',
+        time: '07:30 AM',
+        childNames: 'Arman + Emma Khan',
+        route: 'Home (12 Elm Street) → Greenfield School',
+        leg: 'Outbound Commute',
+        seats: 2,
+        status: 'upcoming',
+        isActionableNow: true
+      },
+      {
+        id: 'dsched-2',
+        time: '01:00 PM',
+        childNames: 'Arman + Emma Khan',
+        route: 'Greenfield School → Home (12 Elm Street)',
+        leg: 'Return Commute',
+        seats: 2,
+        status: 'upcoming',
+        isActionableNow: false
+      },
+      {
+        id: 'dsched-3',
+        time: '03:15 PM',
+        childNames: 'Zara Khan',
+        route: 'Sunshine Pre-school → Home (12 Elm Street)',
+        leg: 'Return Ride',
+        seats: 1,
+        status: 'upcoming',
+        isActionableNow: false
+      }
+    ]
+  }
+};
+
+/* ==========================================================
+   Dual-Role Switcher (Parent Mode ⇄ Driver Mode)
+   ========================================================== */
+window.switchRole = function (role) {
+  window.appState.activeRole = role;
+  localStorage.setItem('h2s_active_role', role);
+
+  const btnP = document.getElementById('btnRoleParent');
+  const btnD = document.getElementById('btnRoleDriver');
+  if (btnP && btnD) {
+    if (role === 'driver') {
+      btnP.classList.remove('active');
+      btnD.classList.add('active');
+      btnD.classList.add('driver-active');
+    } else {
+      btnD.classList.remove('active');
+      btnD.classList.remove('driver-active');
+      btnP.classList.add('active');
+    }
+  }
+
+  if (role === 'driver') {
+    window.navigateTo('driverHome');
+  } else {
+    window.navigateTo('home');
+  }
 };
 
 /* ==========================================================
@@ -490,6 +640,18 @@ window.navigateTo = function (screenName) {
     renderSupportScreen();
   } else if (screenName === 'profileLocations') {
     renderSavedLocations();
+  } else if (screenName === 'driverHome') {
+    renderDriverHome();
+  } else if (screenName === 'driverRequests') {
+    renderDriverRequests('new');
+  } else if (screenName === 'driverSchedule') {
+    renderDriverSchedule('today');
+  } else if (screenName === 'driverActiveTrip') {
+    renderDriverActiveTrip();
+  } else if (screenName === 'driverSetup') {
+    renderDriverSetup();
+  } else if (screenName === 'driverProfile') {
+    renderDriverProfile();
   }
 
   // Update Bottom Tab Bar highlights
@@ -510,7 +672,7 @@ window.navigateTo = function (screenName) {
 
 // Bottom Tab active highlight sync
 function updateBottomTabHighlights(screenName) {
-  const tabMap = {
+  const parentTabMap = {
     home: 0,
     notifications: 0,
     bookings: 1,
@@ -531,16 +693,34 @@ function updateBottomTabHighlights(screenName) {
     contactSupport: 4
   };
 
-  const activeIndex = tabMap[screenName];
-  if (activeIndex !== undefined) {
-    document.querySelectorAll('.bottom-tab-bar').forEach(bar => {
+  const driverTabMap = {
+    driverHome: 0,
+    driverRequests: 1,
+    driverSchedule: 2,
+    driverActiveTrip: 2,
+    messages: 3,
+    driverProfile: 4,
+    driverSetup: 4
+  };
+
+  const parentIdx = parentTabMap[screenName];
+  if (parentIdx !== undefined) {
+    document.querySelectorAll('.bottom-tab-bar:not(.driver-nav-bar)').forEach(bar => {
       const tabs = bar.querySelectorAll('.tab-item');
       tabs.forEach((tab, idx) => {
-        if (idx === activeIndex) {
-          tab.classList.add('active');
-        } else {
-          tab.classList.remove('active');
-        }
+        if (idx === parentIdx) tab.classList.add('active');
+        else tab.classList.remove('active');
+      });
+    });
+  }
+
+  const driverIdx = driverTabMap[screenName];
+  if (driverIdx !== undefined) {
+    document.querySelectorAll('.driver-nav-bar').forEach(bar => {
+      const tabs = bar.querySelectorAll('.tab-item');
+      tabs.forEach((tab, idx) => {
+        if (idx === driverIdx) tab.classList.add('active');
+        else tab.classList.remove('active');
       });
     });
   }
@@ -557,8 +737,30 @@ window.addEventListener('hashchange', () => {
 // Initialization
 window.addEventListener('DOMContentLoaded', () => {
   renderHome();
+
+  const savedRole = localStorage.getItem('h2s_active_role') || 'parent';
+  window.appState.activeRole = savedRole;
+  const btnP = document.getElementById('btnRoleParent');
+  const btnD = document.getElementById('btnRoleDriver');
+  if (btnP && btnD) {
+    if (savedRole === 'driver') {
+      btnP.classList.remove('active');
+      btnD.classList.add('active');
+      btnD.classList.add('driver-active');
+    } else {
+      btnD.classList.remove('active');
+      btnD.classList.remove('driver-active');
+      btnP.classList.add('active');
+    }
+  }
+
   const hash = window.location.hash ? window.location.hash.replace('#', '') : '';
-  const initial = (hash && screens.includes(hash)) ? hash : 'home';
+  let initial = 'home';
+  if (hash && screens.includes(hash)) {
+    initial = hash;
+  } else if (savedRole === 'driver') {
+    initial = 'driverHome';
+  }
   window.navigateTo(initial);
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -3861,5 +4063,512 @@ if (document.readyState === 'loading') {
 } else {
   window.initFigmaSelectEnhancers();
 }
+
+/* ==========================================================
+   25. DRIVER PORTAL LOGIC & CONTROLLER
+   10-Year Lead Product Design Standard
+   ========================================================== */
+
+// 1. Scenario Toggle (State A / B / C)
+window.setDriverScenario = function (scenario) {
+  window.appState.driver.homeScenario = scenario;
+  
+  // Highlight chips
+  ['A', 'B', 'C'].forEach(sc => {
+    const chip = document.getElementById(`dchipScenario${sc}`);
+    if (chip) {
+      if (sc === scenario) chip.classList.add('active');
+      else chip.classList.remove('active');
+    }
+  });
+
+  renderDriverHome();
+};
+
+window.toggleDriverOnlineStatus = function () {
+  const d = window.appState.driver;
+  d.isOnline = !d.isOnline;
+  const btn = document.getElementById('driverStatusToggleBtn');
+  if (btn) {
+    if (d.isOnline) {
+      btn.className = 'driver-status-toggle-pill';
+      btn.innerHTML = `<span class="live-pulse-dot" style="margin:0;"></span><span id="driverStatusToggleText">Available</span>`;
+    } else {
+      btn.className = 'driver-status-toggle-pill offline';
+      btn.innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:#94A3B8;"></span><span id="driverStatusToggleText">Offline</span>`;
+    }
+  }
+};
+
+// 2. Driver Home Renderer
+function renderDriverHome() {
+  const d = window.appState.driver;
+  const heroWrap = document.getElementById('driverHeroContainer');
+  if (!heroWrap) return;
+
+  const scenario = d.homeScenario || 'B';
+
+  if (scenario === 'A') {
+    // State A: No Upcoming Trip (Idle)
+    heroWrap.innerHTML = `
+      <div class="driver-hero-card state-idle">
+        <div style="width:48px;height:48px;border-radius:50%;background:#F1F5F9;display:flex;align-items:center;justify-content:center;color:#64748B;margin-bottom:2px;">
+          <i data-lucide="check-circle-2" style="width:26px;height:26px;color:#059669;"></i>
+        </div>
+        <h3 style="font-size:17px;font-weight:800;color:#0F172A;margin:0;">You're all set, Tariq</h3>
+        <p style="font-size:13px;color:#64748B;margin:0;max-width:280px;line-height:1.4;">No upcoming trips right now. Your next scheduled commute begins tomorrow at 07:30 AM.</p>
+        <button type="button" class="btn-primary" style="margin-top:6px;height:40px;font-size:13px;font-weight:700;padding:0 20px;" onclick="navigateTo('driverSetup')">
+          <i data-lucide="clock" style="width:14px;height:14px;margin-right:4px;"></i>
+          <span>Update Availability</span>
+        </button>
+      </div>
+    `;
+  } else if (scenario === 'C') {
+    // State C: Trip Starts Soon (Action-Oriented, 15m away)
+    heroWrap.innerHTML = `
+      <div class="driver-hero-card state-urgent">
+        <div class="dhero-badge-row">
+          <span class="dhero-chip emerald">
+            <span class="live-pulse-dot" style="margin:0;background:#FFFFFF;"></span>
+            <span>Trip Starts Soon · 15m</span>
+          </span>
+          <span class="dhero-time">07:30 AM</span>
+        </div>
+
+        <div>
+          <div class="dhero-children">Arman &amp; Emma Khan</div>
+          <div style="font-size:13px;opacity:0.9;margin-top:2px;">Parent: Sarah Khan · 2 Children (Minivan)</div>
+        </div>
+
+        <div class="dhero-route-box" style="background:rgba(0,0,0,0.2);">
+          <div class="dhero-route-row">
+            <i data-lucide="map-pin" style="width:14px;height:14px;color:#FDBA74;flex-shrink:0;"></i>
+            <span>Pickup: <strong>12 Elm Street, Toronto</strong></span>
+          </div>
+          <div class="dhero-route-row">
+            <i data-lucide="graduation-cap" style="width:14px;height:14px;color:#86EFAC;flex-shrink:0;"></i>
+            <span>Destination: <strong>Greenfield International School</strong></span>
+          </div>
+        </div>
+
+        <div class="dhero-actions-row">
+          <button type="button" class="btn-dhero-primary" onclick="navigateTo('driverActiveTrip')">
+            <i data-lucide="navigation" style="width:16px;height:16px;"></i>
+            <span>I'm On the Way →</span>
+          </button>
+          <button type="button" class="btn-dhero-secondary" onclick="openChatWith('sarah')">
+            <i data-lucide="message-square" style="width:16px;height:16px;"></i>
+            <span>Message</span>
+          </button>
+        </div>
+      </div>
+    `;
+  } else {
+    // State B (Default): Upcoming Trip
+    heroWrap.innerHTML = `
+      <div class="driver-hero-card state-upcoming">
+        <div class="dhero-badge-row">
+          <span class="dhero-chip orange">Next Scheduled Trip</span>
+          <span style="font-size:12.5px;font-weight:700;opacity:0.85;">Starts in 35 min</span>
+        </div>
+
+        <div style="display:flex;align-items:baseline;justify-content:space-between;">
+          <div class="dhero-time">07:30 AM</div>
+          <span style="font-size:13px;font-weight:700;color:#93C5FD;">Outbound Leg</span>
+        </div>
+
+        <div>
+          <div class="dhero-children">Arman &amp; Emma Khan</div>
+          <div style="font-size:12.5px;opacity:0.85;margin-top:2px;">Both-Way · Mon–Fri Recurring Commute</div>
+        </div>
+
+        <div class="dhero-route-box">
+          <div class="dhero-route-row">
+            <span style="color:#94A3B8;">Pickup:</span>
+            <span>Home — 12 Elm Street</span>
+          </div>
+          <div class="dhero-route-row">
+            <span style="color:#94A3B8;">Drop-off:</span>
+            <span>Greenfield International School</span>
+          </div>
+          <div class="dhero-route-row">
+            <span style="color:#94A3B8;">Parent:</span>
+            <span>Sarah Khan (+1 416-555-0192)</span>
+          </div>
+        </div>
+
+        <div class="dhero-actions-row">
+          <button type="button" class="btn-dhero-primary" onclick="navigateTo('driverActiveTrip')">
+            <span>View Trip Details →</span>
+          </button>
+          <button type="button" class="btn-dhero-secondary" onclick="openChatWith('sarah')">
+            <i data-lucide="message-square" style="width:15px;height:15px;"></i>
+            <span>Message</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // Update badge count
+  const newCount = d.requests.filter(r => r.status === 'new').length;
+  const badge = document.getElementById('driverNewReqBadge');
+  if (badge) badge.textContent = `${newCount} New Request${newCount === 1 ? '' : 's'}`;
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+// 3. Driver Requests Manager
+window.switchDriverRequestsTab = function (tab) {
+  ['new', 'accepted', 'declined'].forEach(t => {
+    const btn = document.getElementById(`btnDReq${t.charAt(0).toUpperCase() + t.slice(1)}`);
+    if (btn) {
+      if (t === tab) btn.classList.add('active');
+      else btn.classList.remove('active');
+    }
+  });
+
+  renderDriverRequests(tab);
+};
+
+function renderDriverRequests(tab = 'new') {
+  const d = window.appState.driver;
+  const wrap = document.getElementById('driverRequestsListWrap');
+  if (!wrap) return;
+
+  const filtered = d.requests.filter(r => r.status === tab);
+
+  if (filtered.length === 0) {
+    wrap.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:18px;">
+        <i data-lucide="inbox" style="width:36px;height:36px;color:#94A3B8;margin-bottom:8px;"></i>
+        <h4 style="font-size:15px;font-weight:800;color:#0F172A;margin:0 0 4px 0;">No ${tab} requests</h4>
+        <p style="font-size:13px;color:#64748B;margin:0;">When parents in your route request school commutes, they will appear here.</p>
+      </div>
+    `;
+  } else {
+    wrap.innerHTML = filtered.map(req => {
+      const seatsOk = req.seatsNeeded <= d.vehicle.capacity;
+      const capacityPill = seatsOk
+        ? `<span class="capacity-badge ok"><i data-lucide="check" style="width:12px;height:12px;"></i> ${req.seatsNeeded} / ${d.vehicle.capacity} Seats Available</span>`
+        : `<span class="capacity-badge full"><i data-lucide="alert-triangle" style="width:12px;height:12px;"></i> Capacity Full (${req.seatsNeeded} Seats Needed)</span>`;
+
+      let actionButtons = '';
+      if (tab === 'new') {
+        actionButtons = `
+          <div class="dreq-actions">
+            <button type="button" class="btn-dreq-decline" onclick="declineDriverRequest('${req.id}')">Decline</button>
+            <button type="button" class="btn-dreq-accept" onclick="acceptDriverRequest('${req.id}')">
+              <span>Accept Booking (${req.price})</span>
+            </button>
+          </div>
+        `;
+      } else if (tab === 'accepted') {
+        actionButtons = `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #F1F5F9;">
+            <span class="status-chip completed" style="font-size:11.5px;font-weight:700;"><span class="status-dot"></span>Added to Schedule</span>
+            <button type="button" class="btn-text-link" onclick="navigateTo('driverSchedule')" style="font-size:12.5px;font-weight:700;color:var(--color-primary);">Open Schedule →</button>
+          </div>
+        `;
+      } else {
+        actionButtons = `
+          <div style="padding-top:8px;border-top:1px solid #F1F5F9;font-size:12px;color:#EF4444;font-weight:600;">
+            Decline confirmed · Parent was notified
+          </div>
+        `;
+      }
+
+      return `
+        <div class="driver-request-card">
+          <div class="dreq-header">
+            ${capacityPill}
+            <span style="font-size:15px;font-weight:900;color:#0F172A;">${req.price}</span>
+          </div>
+
+          <div>
+            <h4 style="font-size:15.5px;font-weight:800;color:#0F172A;margin:0 0 3px 0;">${req.children.join(' & ')}</h4>
+            <div style="font-size:12.5px;color:#475569;font-weight:600;">Parent: ${req.parentName} (${req.parentPhone})</div>
+          </div>
+
+          <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:12px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <i data-lucide="map-pin" style="width:13px;height:13px;color:var(--color-primary);"></i>
+              <span><strong>Pickup:</strong> ${req.routeFrom}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <i data-lucide="graduation-cap" style="width:13px;height:13px;color:#059669;"></i>
+              <span><strong>School:</strong> ${req.routeTo}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <i data-lucide="clock" style="width:13px;height:13px;color:#D97706;"></i>
+              <span><strong>Timing:</strong> ${req.timing}</span>
+            </div>
+            ${req.notes ? `
+              <div style="margin-top:2px;padding-top:6px;border-top:1px solid #E2E8F0;color:#64748B;">
+                <strong>Note:</strong> ${req.notes}
+              </div>
+            ` : ''}
+          </div>
+
+          ${actionButtons}
+        </div>
+      `;
+    }).join('');
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+window.acceptDriverRequest = function (reqId) {
+  const d = window.appState.driver;
+  const req = d.requests.find(r => r.id === reqId);
+  if (!req) return;
+
+  req.status = 'accepted';
+
+  // Synchronize Parent Booking State
+  const matchingParentBooking = window.appState.bookings.find(b => b.childIds.includes('arman') || b.childIds.includes('zara'));
+  if (matchingParentBooking) {
+    matchingParentBooking.status = 'confirmed';
+  }
+
+  // Add to Driver Schedule
+  d.schedule.unshift({
+    id: 'dsched-' + Date.now(),
+    time: req.timing.includes('07:30') ? '07:30 AM' : '08:15 AM',
+    childNames: req.childNamesShort,
+    route: `${req.routeFrom} → ${req.routeTo}`,
+    leg: 'Outbound Commute',
+    seats: req.seatsNeeded,
+    status: 'upcoming',
+    isActionableNow: true
+  });
+
+  renderDriverRequests('new');
+  showCustomToast('Booking Accepted! Trip added to your schedule.');
+};
+
+window.declineDriverRequest = function (reqId) {
+  const d = window.appState.driver;
+  const req = d.requests.find(r => r.id === reqId);
+  if (!req) return;
+
+  req.status = 'declined';
+  renderDriverRequests('new');
+  showCustomToast('Request declined. Parent has been notified.');
+};
+
+// 4. Driver Schedule Manager
+window.switchDriverScheduleTab = function (tab) {
+  const btnT = document.getElementById('btnDSchedToday');
+  const btnU = document.getElementById('btnDSchedUpcoming');
+  if (btnT && btnU) {
+    if (tab === 'today') {
+      btnT.classList.add('active');
+      btnU.classList.remove('active');
+    } else {
+      btnU.classList.add('active');
+      btnT.classList.remove('active');
+    }
+  }
+  renderDriverSchedule(tab);
+};
+
+function renderDriverSchedule(tab = 'today') {
+  const d = window.appState.driver;
+  const wrap = document.getElementById('driverScheduleListWrap');
+  if (!wrap) return;
+
+  wrap.innerHTML = d.schedule.map(item => {
+    return `
+      <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 2px 8px -2px rgba(15,23,42,0.04);">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:baseline;gap:6px;">
+            <span style="font-size:18px;font-weight:900;color:#0F172A;">${item.time}</span>
+            <span style="font-size:11.5px;font-weight:700;color:#2563EB;">${item.leg}</span>
+          </div>
+          <span class="status-chip" style="font-size:11px;padding:2px 8px;">${item.seats} Seats</span>
+        </div>
+
+        <div>
+          <h4 style="font-size:15px;font-weight:800;color:#0F172A;margin:0 0 2px 0;">${item.childNames}</h4>
+          <p style="font-size:12.5px;color:#64748B;margin:0;">${item.route}</p>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid #F1F5F9;margin-top:2px;">
+          ${item.isActionableNow ? `
+            <button type="button" class="btn-primary" style="height:36px;font-size:12.5px;font-weight:700;flex:1;" onclick="navigateTo('driverActiveTrip')">
+              <span>Execute Ride Cockpit →</span>
+            </button>
+          ` : `
+            <button type="button" class="btn-chat-compact" style="flex:1;height:34px;justify-content:center;" onclick="openChatWith('sarah')">
+              <i data-lucide="message-square" style="width:13px;height:13px;"></i>
+              <span>Contact Parent</span>
+            </button>
+          `}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+// 5. Driver Active Trip & Milestone Stepper
+const driverMilestones = [
+  {
+    step: 0,
+    chip: 'Milestone: Confirmed',
+    title: 'Home (12 Elm Street, Toronto)',
+    desc: 'Pick up Arman Khan & Emma Khan from front porch',
+    eta: 'ETA: 07:28 AM',
+    btnText: "I'm On the Way →",
+    parentSyncStage: 0
+  },
+  {
+    step: 1,
+    chip: 'Milestone: Driving to Pickup',
+    title: 'En route to 12 Elm Street',
+    desc: 'Approaching Elm Street neighbourhood',
+    eta: 'ETA: 07:30 AM (2 min away)',
+    btnText: 'Arrived at Pickup Location →',
+    parentSyncStage: 1
+  },
+  {
+    step: 2,
+    chip: 'Milestone: Arrived at Pickup',
+    title: 'At 12 Elm Street',
+    desc: 'Verify children boarding vehicle safely',
+    eta: 'Scheduled Departure: 07:32 AM',
+    btnText: 'Verify Children Boarded (Attendance) →',
+    parentSyncStage: 1
+  },
+  {
+    step: 3,
+    chip: 'Milestone: Children Boarded & En Route',
+    title: 'Greenfield International School (Gate 2 Loop)',
+    desc: 'Safe commute in progress with Arman & Emma',
+    eta: 'ETA: 07:44 AM (12 min)',
+    btnText: 'Arrived at Greenfield School →',
+    parentSyncStage: 2
+  },
+  {
+    step: 4,
+    chip: 'Milestone: Arrived at School',
+    title: 'School Drop-off Zone Gate 2',
+    desc: 'Hand children to school supervisor / staff attendant',
+    eta: 'Drop-off Window: 07:45 AM',
+    btnText: 'Confirm Safe Drop-off & Handoff →',
+    parentSyncStage: 3
+  },
+  {
+    step: 5,
+    chip: 'Milestone: Drop-off Completed',
+    title: 'All Children Safely Handed Over',
+    desc: 'Parent notified. Return leg scheduled for 01:00 PM.',
+    eta: 'Completed at 07:46 AM',
+    btnText: 'Rate Parent & Finish Ride ✓',
+    parentSyncStage: 4
+  }
+];
+
+function renderDriverActiveTrip() {
+  const d = window.appState.driver;
+  const curr = driverMilestones[d.activeTripStage || 0];
+
+  const chip = document.getElementById('driverMilestoneText');
+  const title = document.getElementById('driverActiveTargetTitle');
+  const desc = document.getElementById('driverActiveTargetDesc');
+  const eta = document.getElementById('driverActiveTripTimeLeft');
+  const btn = document.getElementById('btnDriverMilestoneText');
+
+  if (chip) chip.textContent = curr.chip;
+  if (title) title.textContent = curr.title;
+  if (desc) desc.textContent = curr.desc;
+  if (eta) eta.textContent = curr.eta;
+  if (btn) btn.textContent = curr.btnText;
+
+  // Sync to Parent Tracking State!
+  window.appState.trackingStageIndex = curr.parentSyncStage;
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+window.advanceDriverActiveTrip = function () {
+  const d = window.appState.driver;
+
+  // Step 2 is attendance verification modal
+  if (d.activeTripStage === 2) {
+    openDriverAttendanceModal();
+    return;
+  }
+
+  if (d.activeTripStage >= driverMilestones.length - 1) {
+    // Reset and return
+    d.activeTripStage = 0;
+    navigateTo('driverHome');
+    showCustomToast('Trip completed! $120 added to your weekly earnings.');
+    return;
+  }
+
+  d.activeTripStage++;
+  renderDriverActiveTrip();
+  showCustomToast(driverMilestones[d.activeTripStage].chip);
+};
+
+// 6. Multi-Child Attendance Modal Logic
+window.openDriverAttendanceModal = function () {
+  const modal = document.getElementById('driverAttendanceModal');
+  if (modal) modal.classList.add('active');
+};
+
+window.closeDriverAttendanceModal = function () {
+  const modal = document.getElementById('driverAttendanceModal');
+  if (modal) modal.classList.remove('active');
+};
+
+window.toggleChildAttendance = function (child) {
+  const d = window.appState.driver;
+  d.attendance[child] = !d.attendance[child];
+
+  const chk = document.getElementById(child === 'arman' ? 'chkAttendArman' : 'chkAttendEmma');
+  const card = document.getElementById(child === 'arman' ? 'attCardArman' : 'attCardEmma');
+
+  if (chk) chk.checked = d.attendance[child];
+  if (card) {
+    if (d.attendance[child]) card.classList.add('selected');
+    else card.classList.remove('selected');
+  }
+};
+
+window.confirmDriverAttendance = function () {
+  closeDriverAttendanceModal();
+  const d = window.appState.driver;
+  d.activeTripStage = 3; // Advance to En Route
+  renderDriverActiveTrip();
+  showCustomToast('Attendance confirmed! Live GPS ride in progress.');
+};
+
+// 7. Driver Setup & Profile Renderers
+function renderDriverSetup() {
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+function renderDriverProfile() {
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
 
 
