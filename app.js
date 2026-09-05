@@ -220,7 +220,7 @@ window.appState = {
       childIds: ['arman', 'emma'],
       direction: 'bothway',
       frequency: 'recurring',
-      scheduleText: 'Mon–Fri • Outbound: 07:30 AM | Return: 01:00 PM',
+      scheduleText: 'Mon–Fri • Morning: 07:30 AM | Afternoon: 01:00 PM',
       pickupLocation: 'Home (12 Elm Street)',
       schoolLocation: 'Greenfield International School',
       outboundTime: '07:30 AM',
@@ -242,7 +242,7 @@ window.appState = {
       childIds: ['arman'],
       direction: 'oneway',
       frequency: 'recurring',
-      scheduleText: 'Mon–Fri • Outbound: 07:45 AM (Morning Commute)',
+      scheduleText: 'Mon–Fri • Morning: 07:45 AM (To School)',
       pickupLocation: 'Home (12 Elm Street)',
       schoolLocation: 'Greenfield International School',
       outboundTime: '07:45 AM',
@@ -566,7 +566,7 @@ window.appState = {
         seatsNeeded: 2,
         routeFrom: 'Home (12 Elm Street)',
         routeTo: 'Greenfield International School',
-        timing: 'Mon – Fri · Outbound: 07:30 AM | Return: 01:00 PM',
+        timing: 'Mon – Fri · Morning: 07:30 AM | Afternoon: 01:00 PM',
         frequency: 'Round Trip · Recurring',
         distance: '4.8 km (approx 14 min)',
         price: '$120 /wk',
@@ -584,7 +584,7 @@ window.appState = {
         routeFrom: 'Home (12 Elm Street)',
         routeTo: 'Sunshine Pre-school',
         timing: 'Thursday, May 23 · 08:15 AM',
-        frequency: 'One Way · Single Trip',
+        frequency: 'One-Way · Single Trip',
         distance: '2.4 km (approx 8 min)',
         price: '$35 trip',
         notes: 'Hand to classroom teacher Ms. Jenkins at main entrance gate.',
@@ -597,7 +597,7 @@ window.appState = {
         time: '07:30 AM',
         childNames: 'Arman + Emma Khan',
         route: 'Home (12 Elm Street) → Greenfield School',
-        leg: 'Outbound Commute',
+        leg: 'Morning Ride (To School)',
         seats: 2,
         status: 'upcoming',
         isActionableNow: true
@@ -607,7 +607,7 @@ window.appState = {
         time: '01:00 PM',
         childNames: 'Arman + Emma Khan',
         route: 'Greenfield School → Home (12 Elm Street)',
-        leg: 'Return Commute',
+        leg: 'Afternoon Ride (Back Home)',
         seats: 2,
         status: 'upcoming',
         isActionableNow: false
@@ -657,8 +657,14 @@ window.switchRole = function (role) {
 /* ==========================================================
    Navigation Router
    ========================================================== */
-window.navigateTo = function (screenName) {
+window.screenHistory = window.screenHistory || [];
+
+window.navigateTo = function (screenName, isBack = false) {
   if (!screens.includes(screenName)) return;
+
+  if (!isBack && currentScreen && currentScreen !== screenName) {
+    window.screenHistory.push(currentScreen);
+  }
 
   currentScreen = screenName;
   if (window.location.hash !== `#${screenName}`) {
@@ -728,6 +734,15 @@ window.navigateTo = function (screenName) {
   // Render official Lucide icons
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
+  }
+};
+
+window.navigateBack = function (fallback = 'home') {
+  if (window.screenHistory && window.screenHistory.length > 0) {
+    const prev = window.screenHistory.pop();
+    window.navigateTo(prev, true);
+  } else {
+    window.navigateTo(fallback, true);
   }
 };
 
@@ -931,18 +946,62 @@ window.setTripDirection = function (dir) {
   const btnOne = document.getElementById('btnDirOneWay');
   const btnBoth = document.getElementById('btnDirBothWay');
   const returnBlock = document.getElementById('returnScheduleBlock') || document.getElementById('returnTimePickerBox');
+  const morningBlock = document.getElementById('morningScheduleBlock');
   const timesGrid = document.querySelector('.clean-sched-times-grid');
+  const badge = document.getElementById('tripTypeHelpBadge');
+  const shiftRow = document.getElementById('oneWayShiftRow');
 
   if (dir === 'oneway') {
     btnOne?.classList.add('active');
     btnBoth?.classList.remove('active');
-    if (returnBlock) returnBlock.style.display = 'none';
+    if (badge) {
+      badge.textContent = 'Single Ride';
+      badge.style.background = '#FEF3C7';
+      badge.style.color = '#92400E';
+    }
+    if (shiftRow) shiftRow.style.display = 'block';
+
+    const isAfternoon = window.appState.bookingDraft.oneWayShift === 'afternoon';
+    if (isAfternoon) {
+      if (morningBlock) morningBlock.style.display = 'none';
+      if (returnBlock) returnBlock.style.display = 'flex';
+    } else {
+      if (morningBlock) morningBlock.style.display = 'flex';
+      if (returnBlock) returnBlock.style.display = 'none';
+    }
     if (timesGrid) timesGrid.classList.add('is-oneway');
   } else {
     btnOne?.classList.remove('active');
     btnBoth?.classList.add('active');
+    if (badge) {
+      badge.textContent = 'Morning & Afternoon';
+      badge.style.background = '#DBEAFE';
+      badge.style.color = '#1E40AF';
+    }
+    if (shiftRow) shiftRow.style.display = 'none';
+    if (morningBlock) morningBlock.style.display = 'flex';
     if (returnBlock) returnBlock.style.display = 'flex';
     if (timesGrid) timesGrid.classList.remove('is-oneway');
+  }
+};
+
+window.setOneWayShift = function (shift) {
+  window.appState.bookingDraft.oneWayShift = shift;
+  const btnM = document.getElementById('btnShiftMorning');
+  const btnA = document.getElementById('btnShiftAfternoon');
+  const morningBlock = document.getElementById('morningScheduleBlock');
+  const returnBlock = document.getElementById('returnScheduleBlock');
+
+  if (shift === 'afternoon') {
+    btnM?.classList.remove('active');
+    btnA?.classList.add('active');
+    if (morningBlock) morningBlock.style.display = 'none';
+    if (returnBlock) returnBlock.style.display = 'flex';
+  } else {
+    btnM?.classList.add('active');
+    btnA?.classList.remove('active');
+    if (morningBlock) morningBlock.style.display = 'flex';
+    if (returnBlock) returnBlock.style.display = 'none';
   }
 };
 
@@ -1527,7 +1586,14 @@ window.proceedFromTripSetup = function () {
       window.appState.bookingDraft.returnTime = formatTime(returnTimeEl.value);
     }
   } else {
-    window.appState.bookingDraft.returnTime = '';
+    if (window.appState.bookingDraft.oneWayShift === 'afternoon') {
+      if (returnTimeEl && returnTimeEl.value) {
+        window.appState.bookingDraft.returnTime = formatTime(returnTimeEl.value);
+      }
+      window.appState.bookingDraft.outboundTime = '';
+    } else {
+      window.appState.bookingDraft.returnTime = '';
+    }
   }
 
   // Detect active Service Type
@@ -1861,7 +1927,7 @@ function renderBookingSummary() {
   }
   if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
   if (dirEl) {
-    dirEl.textContent = draft.direction === 'bothway' ? '⇄ Round Trip' : '→ One Way';
+    dirEl.textContent = draft.direction === 'bothway' ? '⇄ Round Trip (Both Ways)' : '→ One-Way (Single Ride)';
   }
 
   const cleanLoc = (loc) => {
@@ -1881,9 +1947,16 @@ function renderBookingSummary() {
   const schoolShort = cleanSchool(draft.schoolLocation);
 
   const walkSuffix = isWalk ? ' · Chaperoned Walk' : '';
-  if (outboundEl) outboundEl.textContent = `${pickupShort} → ${schoolShort} (${draft.outboundTime || '07:30 AM'}${walkSuffix})`;
+  if (outboundEl) {
+    if (draft.outboundTime) {
+      outboundEl.textContent = `${pickupShort} → ${schoolShort} (${draft.outboundTime}${walkSuffix})`;
+      outboundEl.parentElement.style.display = 'flex';
+    } else {
+      outboundEl.parentElement.style.display = 'none';
+    }
+  }
   if (returnEl) {
-    if (draft.direction === 'bothway') {
+    if (draft.direction === 'bothway' || draft.returnTime) {
       returnEl.textContent = `${schoolShort} → ${pickupShort} (${draft.returnTime || '01:00 PM'}${walkSuffix})`;
       returnEl.parentElement.style.display = 'flex';
     } else {
@@ -2135,12 +2208,18 @@ function renderBookingDetails(bookingId) {
   if (parentRefText) parentRefText.textContent = `Parent ID: #${parentId}`;
   if (parentIdEl) parentIdEl.textContent = parentId;
   if (parentNameEl) parentNameEl.textContent = parentName;
-  if (parentContactEl) parentContactEl.textContent = `${parentRole} • ${parentPhone}`;
+  if (parentContactEl) {
+    parentContactEl.innerHTML = `<i data-lucide="phone" style="width: 11px; height: 11px; display: inline-block; vertical-align: middle; margin-right: 3px; color: #64748B;"></i><span>${parentPhone}</span>`;
+  }
   if (parentAvatarEl) parentAvatarEl.src = parentPhoto;
 
   const primaryEmergency = window.appState.emergencyContacts?.find(ec => ec.pickupAuth) || window.appState.emergencyContacts?.[0];
   if (backupGuardianEl && primaryEmergency) {
     backupGuardianEl.innerHTML = `Backup Pickup: <strong>${primaryEmergency.name}</strong> (${primaryEmergency.rel} · ${primaryEmergency.phone})`;
+    const backupCallBtn = document.getElementById('detailBackupCallBtn');
+    if (backupCallBtn && primaryEmergency.phone) {
+      backupCallBtn.href = `tel:${primaryEmergency.phone.replace(/[^0-9+]/g, '')}`;
+    }
   }
 
   if (outTime) outTime.textContent = booking.outboundTime || '07:30 AM';

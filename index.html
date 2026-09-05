@@ -1181,12 +1181,32 @@
       </div>
 
       <div class="screen-scroll-body" style="padding-bottom: 20px;">
-        <!-- 1. Trip Type -->
+        <!-- 1. Trip Type (Clean, Easy English) -->
         <div class="clean-flow-section">
-          <div class="clean-flow-label">Trip Type</div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div class="clean-flow-label" style="margin-bottom: 0;">Trip Type</div>
+            <span id="tripTypeHelpBadge" style="font-size: 11px; font-weight: 700; color: #1E40AF; background: #DBEAFE; padding: 2px 8px; border-radius: 99px;">Morning &amp; Afternoon</span>
+          </div>
           <div class="clean-pill-toggle">
-            <button type="button" class="clean-pill-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">One Way</button>
-            <button type="button" class="clean-pill-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">Both Way</button>
+            <button type="button" class="clean-pill-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">
+              <span>One-Way</span>
+            </button>
+            <button type="button" class="clean-pill-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">
+              <span>Round Trip</span>
+            </button>
+          </div>
+
+          <!-- One-Way Shift Selector (Morning to School OR Afternoon Back Home) -->
+          <div id="oneWayShiftRow" style="display: none; margin-top: 10px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 10px;">
+            <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">Select One-Way Ride:</div>
+            <div class="clean-pill-toggle" style="background: #FFFFFF; border: 1px solid #CBD5E1; padding: 2px;">
+              <button type="button" class="clean-pill-btn active" id="btnShiftMorning" onclick="setOneWayShift('morning')" style="font-size: 12px; height: 32px;">
+                <span>☀️ Morning (To School)</span>
+              </button>
+              <button type="button" class="clean-pill-btn" id="btnShiftAfternoon" onclick="setOneWayShift('afternoon')" style="font-size: 12px; height: 32px;">
+                <span>🏠 Afternoon (Back Home)</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1259,13 +1279,13 @@
 
             <div class="clean-sched-divider"></div>
 
-            <!-- Row 2: Clean Timings (Zero Long Address Clutter) -->
+            <!-- Row 2: Clean Timings (Easy, Simple English) -->
             <div class="clean-sched-times-grid">
-              <!-- Outbound Pickup Time -->
-              <div class="clean-time-col">
+              <!-- Morning Pickup Time -->
+              <div class="clean-time-col" id="morningScheduleBlock">
                 <div class="clean-time-header" id="outboundScheduleLabel">
                   <span class="clean-dot navy"></span>
-                  <span>Outbound</span>
+                  <span>Morning (To School)</span>
                 </div>
                 <div class="clean-time-input-wrap">
                   <i data-lucide="clock" class="clean-time-clock-icon"></i>
@@ -1273,11 +1293,11 @@
                 </div>
               </div>
 
-              <!-- Return Drop-off Time -->
+              <!-- Afternoon Drop-off Time -->
               <div class="clean-time-col" id="returnScheduleBlock">
                 <div class="clean-time-header" id="returnScheduleLabel">
                   <span class="clean-dot orange"></span>
-                  <span>Return</span>
+                  <span>Afternoon (Back Home)</span>
                 </div>
                 <div class="clean-time-input-wrap">
                   <i data-lucide="clock" class="clean-time-clock-icon"></i>
@@ -1928,13 +1948,13 @@
             <span class="summary-item-val" id="summaryDirectionText">⇄ Round Trip</span>
           </div>
 
-          <div class="summary-item-row">
-            <span class="summary-item-label">Outbound Leg</span>
+          <div class="summary-item-row" id="summaryOutboundRow">
+            <span class="summary-item-label">Morning Ride</span>
             <span class="summary-item-val" id="summaryOutboundText">Home → Greenfield (07:30 AM)</span>
           </div>
 
           <div class="summary-item-row" id="summaryReturnRow">
-            <span class="summary-item-label">Return Leg</span>
+            <span class="summary-item-label">Afternoon Ride</span>
             <span class="summary-item-val" id="summaryReturnText">Greenfield → Home (01:00 PM)</span>
           </div>
 
@@ -2029,7 +2049,7 @@
           <div style="font-size: 13.5px; font-weight: 800; color: var(--color-title); margin-bottom: 4px;">Trip
             Highlights:</div>
           <div style="font-size: 12.5px; color: var(--color-body);">• Home ⇄ Greenfield International</div>
-          <div style="font-size: 12.5px; color: var(--color-body);">• Outbound: 07:30 AM | Return: 01:00 PM</div>
+          <div style="font-size: 12.5px; color: var(--color-body);">• Morning: 07:30 AM | Afternoon: 01:00 PM</div>
           <div style="font-size: 12.5px; color: var(--color-body);">• Status updates sent via SMS &amp; notification
           </div>
         </div>
@@ -2187,45 +2207,48 @@
             </div>
           </div>
 
-          <!-- Folio 2: Parent & Legal Guardian (Booking Account) -->
+          <!-- Folio 2: Parent Profile (Clean, Simple, Click to View Profile) -->
           <div class="folio-section" id="detailParentFolioSection">
             <div class="folio-section-header">
               <div class="folio-section-title">
-                <i data-lucide="user-check" style="width: 13px; height: 13px; color: #4F46E5;"></i>
-                <span>Parent / Guardian Account</span>
+                <i data-lucide="user" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
+                <span>Parent Profile</span>
               </div>
-              <span class="parent-status-pill" id="detailParentPill">Primary Guardian</span>
+              <button type="button" class="folio-profile-link-btn" onclick="navigateTo('profile')" title="Open Parent Profile">
+                <span>View Profile</span>
+                <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
+              </button>
             </div>
 
-            <div class="folio-parent-card">
-              <div class="folio-parent-main" onclick="navigateTo('profilePersonalInfo')" style="cursor: pointer;" title="View Parent / Guardian Profile">
+            <div class="folio-parent-card-simple" onclick="navigateTo('profile')" title="Open Parent Profile">
+              <div class="folio-parent-main">
                 <img src="/assets/avatar_sadia.jpg" alt="Parent" id="detailParentAvatar" class="folio-parent-avatar" onerror="this.src='/assets/avatar_sadia.jpg';" />
                 <div class="folio-parent-info">
                   <div class="folio-parent-name-row">
                     <span class="folio-parent-name" id="detailParentName">Sadia Khan</span>
-                    <span class="parent-acc-id-badge" id="detailParentIdBadge">ID: <strong id="detailParentId">PRNT-9042</strong></span>
+                    <span class="folio-parent-you-pill">You</span>
                   </div>
-                  <div class="folio-parent-sub" id="detailParentContact">Mother (Primary Guardian) • +1 (416) 555-0192</div>
+                  <div class="folio-parent-sub" id="detailParentContact">
+                    <i data-lucide="phone" style="width: 11px; height: 11px; display: inline-block; vertical-align: middle; margin-right: 3px; color: #64748B;"></i>
+                    <span>+1 (416) 555-0192</span>
+                  </div>
                 </div>
               </div>
-
-              <div class="folio-parent-actions">
-                <button type="button" class="btn-icon-contact" onclick="alert('Calling Primary Guardian: ' + (window.appState.user.phone || '+1 (416) 555-0192'))" aria-label="Call Parent" title="Call Parent">
-                  <i data-lucide="phone"></i>
-                </button>
-                <button type="button" class="btn-icon-contact" onclick="window.navigateTo('messages')" aria-label="Message Parent" title="Message Parent">
-                  <i data-lucide="message-square"></i>
-                </button>
+              <div style="display: flex; align-items: center; gap: 4px; color: #94A3B8;">
+                <i data-lucide="chevron-right" style="width: 18px; height: 18px;"></i>
               </div>
             </div>
 
             <!-- Authorized Secondary Emergency Contact -->
             <div class="folio-backup-guardian-note">
-              <div style="display:flex; align-items:center; gap:6px;">
+              <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
                 <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: #D97706; flex-shrink: 0;"></i>
-                <span id="detailBackupGuardianText">Backup Pickup: <strong>Farhan Khan</strong> (Father · +1 416-555-0199)</span>
+                <span id="detailBackupGuardianText" style="font-size: 11.5px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Backup Pickup: <strong>Farhan Khan</strong> (Father · +1 416-555-0199)</span>
               </div>
-              <span class="pickup-auth-tag">Authorized</span>
+              <a href="tel:+14165550199" id="detailBackupCallBtn" class="backup-call-link" onclick="event.stopPropagation();" title="Call Backup Contact">
+                <i data-lucide="phone" style="width: 11px; height: 11px;"></i>
+                <span>Call</span>
+              </a>
             </div>
           </div>
 
@@ -2795,7 +2818,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('home')">
+        <button class="back-btn" onclick="window.navigateBack('home')">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Parent Profile</h2>
@@ -4688,7 +4711,7 @@
             <div style="display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid #F1F5F9;padding-bottom:10px;">
               <div style="min-width:65px;">
                 <span style="font-size:13px;font-weight:800;color:#0F172A;">07:30 AM</span>
-                <span style="display:block;font-size:10.5px;color:#059669;font-weight:700;">Outbound</span>
+                <span style="display:block;font-size:10.5px;color:#059669;font-weight:700;">Morning</span>
               </div>
               <div style="flex:1;">
                 <div style="font-size:13.5px;font-weight:800;color:#0F172A;">Arman + Emma Khan</div>

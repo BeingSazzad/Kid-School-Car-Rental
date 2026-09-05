@@ -6196,6 +6196,78 @@ svg.lucide {
   margin-top: 4px;
 }
 
+.folio-profile-link-btn {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-primary, #1B2B68);
+  background: transparent;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.folio-profile-link-btn:hover {
+  color: #2563EB;
+  transform: translateX(2px);
+}
+
+.folio-parent-card-simple {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.folio-parent-card-simple:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.folio-parent-you-pill {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #1D4ED8;
+  background: #DBEAFE;
+  border: 1px solid #BFDBFE;
+  padding: 1px 7px;
+  border-radius: 99px;
+  letter-spacing: 0.2px;
+}
+
+.backup-call-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #0369A1;
+  background: #E0F2FE;
+  border: 1px solid #BAE6FD;
+  padding: 3px 9px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.backup-call-link:hover {
+  background: #BAE6FD;
+  color: #075985;
+}
+
 .pickup-auth-tag {
   font-size: 10px;
   font-weight: 800;
