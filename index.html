@@ -1914,6 +1914,11 @@
           <div class="summary-section-title">Trip Information</div>
 
           <div class="summary-item-row">
+            <span class="summary-item-label">Parent Account</span>
+            <span class="summary-item-val" id="summaryParentText" style="color: var(--color-primary); font-weight: 800;">Sadia Khan (ID: #PRNT-9042)</span>
+          </div>
+
+          <div class="summary-item-row">
             <span class="summary-item-label">Children</span>
             <span class="summary-item-val" id="summaryChildrenText">Arman Khan &amp; Emma Khan (2)</span>
           </div>
@@ -2138,7 +2143,13 @@
         <!-- Top Luxury Commute Hero Card -->
         <div class="commute-hero-card">
           <div class="commute-hero-top">
-            <span class="booking-id-tag" id="detailRefId">#H2S-84920</span>
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span class="booking-id-tag" id="detailRefId">#H2S-84920</span>
+              <span class="parent-id-hero-tag" id="detailParentRefTag" title="Authorized Parent Account ID">
+                <i data-lucide="user-check" style="width: 12px; height: 12px; color: #6EE7B7;"></i>
+                <span id="detailParentRefText">Parent ID: #PRNT-9042</span>
+              </span>
+            </div>
             <span class="status-chip confirmed" id="detailStatusBadge">Confirmed</span>
           </div>
 
@@ -2173,6 +2184,48 @@
             </div>
             <div id="detailPassengersWrap" style="display: flex; flex-direction: column; gap: 0;">
               <!-- Dynamic child profiles injected here -->
+            </div>
+          </div>
+
+          <!-- Folio 2: Parent & Legal Guardian (Booking Account) -->
+          <div class="folio-section" id="detailParentFolioSection">
+            <div class="folio-section-header">
+              <div class="folio-section-title">
+                <i data-lucide="user-check" style="width: 13px; height: 13px; color: #4F46E5;"></i>
+                <span>Parent / Guardian Account</span>
+              </div>
+              <span class="parent-status-pill" id="detailParentPill">Primary Guardian</span>
+            </div>
+
+            <div class="folio-parent-card">
+              <div class="folio-parent-main" onclick="navigateTo('profilePersonalInfo')" style="cursor: pointer;" title="View Parent / Guardian Profile">
+                <img src="/assets/avatar_sadia.jpg" alt="Parent" id="detailParentAvatar" class="folio-parent-avatar" onerror="this.src='/assets/avatar_sadia.jpg';" />
+                <div class="folio-parent-info">
+                  <div class="folio-parent-name-row">
+                    <span class="folio-parent-name" id="detailParentName">Sadia Khan</span>
+                    <span class="parent-acc-id-badge" id="detailParentIdBadge">ID: <strong id="detailParentId">PRNT-9042</strong></span>
+                  </div>
+                  <div class="folio-parent-sub" id="detailParentContact">Mother (Primary Guardian) • +1 (416) 555-0192</div>
+                </div>
+              </div>
+
+              <div class="folio-parent-actions">
+                <button type="button" class="btn-icon-contact" onclick="alert('Calling Primary Guardian: ' + (window.appState.user.phone || '+1 (416) 555-0192'))" aria-label="Call Parent" title="Call Parent">
+                  <i data-lucide="phone"></i>
+                </button>
+                <button type="button" class="btn-icon-contact" onclick="window.navigateTo('messages')" aria-label="Message Parent" title="Message Parent">
+                  <i data-lucide="message-square"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Authorized Secondary Emergency Contact -->
+            <div class="folio-backup-guardian-note">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: #D97706; flex-shrink: 0;"></i>
+                <span id="detailBackupGuardianText">Backup Pickup: <strong>Farhan Khan</strong> (Father · +1 416-555-0199)</span>
+              </div>
+              <span class="pickup-auth-tag">Authorized</span>
             </div>
           </div>
 
@@ -2771,8 +2824,9 @@
               <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: rgba(255, 255, 255, 0.7);"></i>
             </div>
             <p style="font-size: 13px; color: rgba(255, 255, 255, 0.78); margin: 3px 0 0 0;">+1 (416) 555-0192</p>
-            <div style="display: flex; gap: 6px; margin-top: 8px; align-items: center;">
+            <div style="display: flex; gap: 6px; margin-top: 8px; align-items: center; flex-wrap: wrap;">
               <span class="profile-child-count-pill"><i data-lucide="users" style="width: 11px; height: 11px;"></i> 3 Children</span>
+              <span class="profile-child-count-pill" style="background: rgba(255, 255, 255, 0.22);"><i data-lucide="shield-check" style="width: 11px; height: 11px; color: #6EE7B7;"></i> ID: #PRNT-9042</span>
             </div>
           </div>
         </div>
@@ -3277,6 +3331,7 @@
               <div class="primary-guardian-name-wrap">
                 <span class="primary-guardian-name">Sadia Khan</span>
                 <span class="primary-guardian-tag">You</span>
+                <span class="parent-acc-id-badge" style="margin-left: 2px;">ID: #PRNT-9042</span>
               </div>
               <div class="primary-guardian-sub">+1 (416) 555-0192</div>
             </div>

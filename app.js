@@ -57,10 +57,13 @@ const screens = [
    ========================================================== */
 window.appState = {
   user: {
+    id: 'PRNT-9042',
     name: 'Sadia Khan',
     phone: '+1 (416) 555-0192',
     email: 'sadia.khan@example.com',
     role: 'Mother',
+    relationship: 'Mother (Primary Guardian)',
+    status: 'Verified Guardian',
     photo: '/assets/avatar_sadia.jpg'
   },
   children: [
@@ -209,6 +212,11 @@ window.appState = {
       id: 'H2S-84920',
       status: 'in_progress',
       activeNow: true,
+      parentId: 'PRNT-9042',
+      parentName: 'Sadia Khan',
+      parentPhone: '+1 (416) 555-0192',
+      parentRole: 'Mother (Primary Guardian)',
+      parentPhoto: '/assets/avatar_sadia.jpg',
       childIds: ['arman', 'emma'],
       direction: 'bothway',
       frequency: 'recurring',
@@ -226,6 +234,11 @@ window.appState = {
     {
       id: 'H2S-91042',
       status: 'confirmed',
+      parentId: 'PRNT-9042',
+      parentName: 'Sadia Khan',
+      parentPhone: '+1 (416) 555-0192',
+      parentRole: 'Mother (Primary Guardian)',
+      parentPhoto: '/assets/avatar_sadia.jpg',
       childIds: ['arman'],
       direction: 'oneway',
       frequency: 'recurring',
@@ -243,6 +256,11 @@ window.appState = {
     {
       id: 'H2S-82194',
       status: 'confirmed',
+      parentId: 'PRNT-9042',
+      parentName: 'Sadia Khan',
+      parentPhone: '+1 (416) 555-0192',
+      parentRole: 'Mother (Primary Guardian)',
+      parentPhoto: '/assets/avatar_sadia.jpg',
       childIds: ['emma', 'zara'],
       direction: 'bothway',
       frequency: 'onetime',
@@ -540,7 +558,8 @@ window.appState = {
     requests: [
       {
         id: 'dreq-1',
-        parentName: 'Sarah Khan',
+        parentId: 'PRNT-9042',
+        parentName: 'Sadia Khan',
         parentPhone: '+1 (416) 555-0192',
         children: ['Arman Khan (9 yrs)', 'Emma Khan (7 yrs)'],
         childNamesShort: 'Arman + Emma',
@@ -556,6 +575,7 @@ window.appState = {
       },
       {
         id: 'dreq-2',
+        parentId: 'PRNT-9042',
         parentName: 'Sadia Khan',
         parentPhone: '+1 (416) 555-0192',
         children: ['Zara Khan (5 yrs)'],
@@ -1828,12 +1848,17 @@ function renderBookingSummary() {
   });
 
   const childrenEl = document.getElementById('summaryChildrenText');
+  const parentEl = document.getElementById('summaryParentText');
   const dirEl = document.getElementById('summaryDirectionText');
   const outboundEl = document.getElementById('summaryOutboundText');
   const returnEl = document.getElementById('summaryReturnText');
   const freqEl = document.getElementById('summaryFreqText');
   const providerEl = document.getElementById('summaryProviderText');
 
+  if (parentEl) {
+    const u = window.appState.user;
+    parentEl.textContent = `${u.name || 'Sadia Khan'} (ID: #${u.id || 'PRNT-9042'})`;
+  }
   if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
   if (dirEl) {
     dirEl.textContent = draft.direction === 'bothway' ? '⇄ Round Trip' : '→ One Way';
@@ -1922,6 +1947,11 @@ window.submitBookingRequest = function () {
   const newBooking = {
     id: `H2S-${Math.floor(10000 + Math.random() * 90000)}`,
     status: 'pending',
+    parentId: window.appState.user.id || 'PRNT-9042',
+    parentName: window.appState.user.name || 'Sadia Khan',
+    parentPhone: window.appState.user.phone || '+1 (416) 555-0192',
+    parentRole: 'Mother (Primary Guardian)',
+    parentPhoto: window.appState.user.photo || '/assets/avatar_sadia.jpg',
     childIds: [...window.appState.selectedChildIds],
     direction: draft.direction,
     frequency: draft.frequency,
@@ -2086,6 +2116,32 @@ function renderBookingDetails(bookingId) {
   const outTime = document.getElementById('detailOutboundTime');
   const retTime = document.getElementById('detailReturnTime');
   const retBox = document.getElementById('detailReturnLegBox');
+
+  // Parent / Guardian Information sync
+  const parent = window.appState.user;
+  const parentId = booking.parentId || parent.id || 'PRNT-9042';
+  const parentName = booking.parentName || parent.name || 'Sadia Khan';
+  const parentPhone = booking.parentPhone || parent.phone || '+1 (416) 555-0192';
+  const parentRole = booking.parentRole || `${parent.role || 'Mother'} (Primary Guardian)`;
+  const parentPhoto = booking.parentPhoto || parent.photo || '/assets/avatar_sadia.jpg';
+
+  const parentRefText = document.getElementById('detailParentRefText');
+  const parentIdEl = document.getElementById('detailParentId');
+  const parentNameEl = document.getElementById('detailParentName');
+  const parentContactEl = document.getElementById('detailParentContact');
+  const parentAvatarEl = document.getElementById('detailParentAvatar');
+  const backupGuardianEl = document.getElementById('detailBackupGuardianText');
+
+  if (parentRefText) parentRefText.textContent = `Parent ID: #${parentId}`;
+  if (parentIdEl) parentIdEl.textContent = parentId;
+  if (parentNameEl) parentNameEl.textContent = parentName;
+  if (parentContactEl) parentContactEl.textContent = `${parentRole} • ${parentPhone}`;
+  if (parentAvatarEl) parentAvatarEl.src = parentPhoto;
+
+  const primaryEmergency = window.appState.emergencyContacts?.find(ec => ec.pickupAuth) || window.appState.emergencyContacts?.[0];
+  if (backupGuardianEl && primaryEmergency) {
+    backupGuardianEl.innerHTML = `Backup Pickup: <strong>${primaryEmergency.name}</strong> (${primaryEmergency.rel} · ${primaryEmergency.phone})`;
+  }
 
   if (outTime) outTime.textContent = booking.outboundTime || '07:30 AM';
   if (retTime) retTime.textContent = booking.returnTime || 'N/A';
@@ -5052,7 +5108,7 @@ function renderDriverHome() {
 
         <div>
           <div class="dhero-children">Arman &amp; Emma Khan</div>
-          <div style="font-size:13px;opacity:0.9;margin-top:2px;">Parent: Sarah Khan · 2 Children (Minivan)</div>
+          <div style="font-size:13px;opacity:0.9;margin-top:2px;">Parent: Sadia Khan (ID: #PRNT-9042) · 2 Children (Minivan)</div>
         </div>
 
         <div class="dhero-route-box" style="background:rgba(0,0,0,0.2);">
@@ -5108,7 +5164,7 @@ function renderDriverHome() {
           </div>
           <div class="dhero-route-row">
             <span style="color:#94A3B8;">Parent:</span>
-            <span>Sarah Khan (+1 416-555-0192)</span>
+            <span>Sadia Khan (ID: #PRNT-9042 · +1 416-555-0192)</span>
           </div>
         </div>
 
@@ -5204,7 +5260,7 @@ function renderDriverRequests(tab = 'new') {
 
           <div>
             <h4 style="font-size:15.5px;font-weight:800;color:#0F172A;margin:0 0 3px 0;">${req.children.join(' & ')}</h4>
-            <div style="font-size:12.5px;color:#475569;font-weight:600;">Parent: ${req.parentName} (${req.parentPhone})</div>
+            <div style="font-size:12.5px;color:#475569;font-weight:600;">Parent: ${req.parentName} (ID: #${req.parentId || 'PRNT-9042'}) · ${req.parentPhone}</div>
           </div>
 
           <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:12px;">
