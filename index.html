@@ -23,6 +23,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 
+<body>
   <!-- ================= FIGMA CAPTURE & HOLD TOOLBAR (OUTSIDE 430PX APP SHELL) ================= -->
   <aside id="figmaCapturePanel" class="figma-capture-floating-panel" aria-label="Figma Screen Capture Helper">
     <div class="figma-panel-header">
@@ -1340,7 +1341,10 @@
 
         <!-- Sticky Bottom CTA -->
         <div class="booking-flow-sticky-footer" style="margin-top: 10px;">
-          <button type="button" class="btn-primary" style="height: 48px; border-radius: var(--radius-md); font-size: 15px;" onclick="proceedFromTripSetup()">Continue</button>
+          <button type="button" class="btn-primary" style="height: 48px; border-radius: var(--radius-md); font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;" onclick="proceedFromTripSetup()">
+            <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+            <span>Search Available Providers</span>
+          </button>
         </div>
       </div>
 
@@ -1445,14 +1449,6 @@
             </div>
           </div>
 
-          <!-- Quick Gate & Location Presets -->
-          <div style="margin-bottom: 4px;">
-            <span style="font-size: 10.5px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.4px;" id="mapPickerPillsTitle">Pickup Presets</span>
-          </div>
-          <div class="map-gates-row" id="mapPickerGatesRow">
-            <!-- Populated dynamically based on pickup vs school -->
-          </div>
-
           <!-- Current Selected Address Input -->
           <div style="margin-bottom: 12px;">
             <label style="font-size: 10.5px; font-weight: 800; color: #64748B; text-transform: uppercase; margin-bottom: 3px; display: block;">Exact Location Address</label>
@@ -1500,42 +1496,6 @@
           <button type="button" class="booking-type-pill active" id="searchPillAll" onclick="filterBookingProviders('all', this)">All</button>
           <button type="button" class="booking-type-pill" id="searchPillDrivers" onclick="filterBookingProviders('drivers', this)">Driver</button>
           <button type="button" class="booking-type-pill" id="searchPillWalkShare" onclick="filterBookingProviders('walkshare', this)">WalkShare</button>
-        </div>
-
-        <!-- All Providers Summary Pill (Visible when All is active) -->
-        <div id="allInfoBanner" class="clean-all-summary-pill">
-          <i data-lucide="info" style="width: 13px; height: 13px; color: #0284C7;"></i>
-          <span>5 verified school transit options (3 Drivers · 2 WalkShare Chaperones)</span>
-        </div>
-
-        <!-- Driver Info Card (Visible when Driver active) -->
-        <div id="driverInfoBanner" class="clean-driver-info-card" style="display: none;">
-          <div class="clean-driver-banner-top">
-            <div class="clean-driver-banner-badge">
-              <i data-lucide="car" style="width: 14px; height: 14px; color: #1B2B68;"></i>
-              <span>Vetted School Drivers</span>
-            </div>
-            <span class="clean-driver-safety-tag">100% Inspected</span>
-          </div>
-          <div class="clean-driver-banner-title">School Carpool &amp; Van Commute</div>
-          <p class="clean-driver-banner-desc">
-            100% background-checked drivers with multi-point vehicle safety audits, booster seats, child safety locks, and live geofenced route tracking.
-          </p>
-        </div>
-
-        <!-- WalkShare Chaperone Info Card (Visible when WalkShare active) -->
-        <div id="walkshareInfoBanner" class="clean-walkshare-info-card" style="display: none;">
-          <div class="clean-walkshare-banner-top">
-            <div class="clean-walkshare-banner-badge">
-              <i data-lucide="footprints" style="width: 14px; height: 14px; color: #047857;"></i>
-              <span>WalkShare Community Chaperone</span>
-            </div>
-            <span class="clean-walkshare-safety-tag">GPS Monitored</span>
-          </div>
-          <div class="clean-walkshare-banner-title">Supervised Neighborhood Walking School Bus</div>
-          <p class="clean-walkshare-banner-desc">
-            Verified adult chaperones walk children safely to school in small groups along safe pedestrian sidewalks. Includes live step tracking, crossing guards, and high-visibility safety vests.
-          </p>
         </div>
 
         <!-- Providers List -->
@@ -1683,7 +1643,7 @@
             onclick="selectProviderAndReview('sarah')">
             <div class="provider-top-row">
               <div style="position: relative;">
-                <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar" style="border-color: #10B981;" />
+                <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar" />
                 <span class="walkshare-mini-avatar-badge" title="WalkShare Chaperone">
                   <i data-lucide="footprints" style="width: 10px; height: 10px; color: #FFFFFF;"></i>
                 </span>
@@ -1714,7 +1674,7 @@
 
             <div class="provider-card-bottom">
               <div class="vehicle-info-pill walkshare">
-                <i data-lucide="footprints" style="width:15px;height:15px;color:#047857;"></i>
+                <i data-lucide="footprints" style="width:15px;height:15px;color:var(--color-primary);"></i>
                 <span>Walking School Bus • 3 spots open (Max 5)</span>
               </div>
               <div style="text-align: right;">
@@ -1729,7 +1689,7 @@
             onclick="selectProviderAndReview('elena')">
             <div class="provider-top-row">
               <div style="position: relative;">
-                <img src="/assets/avatar_rehana.jpg" alt="Elena Rostova" class="provider-card-avatar" style="border-color: #10B981;" />
+                <img src="/assets/avatar_rehana.jpg" alt="Elena Rostova" class="provider-card-avatar" />
                 <span class="walkshare-mini-avatar-badge" title="WalkShare Chaperone">
                   <i data-lucide="footprints" style="width: 10px; height: 10px; color: #FFFFFF;"></i>
                 </span>
@@ -1760,7 +1720,7 @@
 
             <div class="provider-card-bottom">
               <div class="vehicle-info-pill walkshare">
-                <i data-lucide="footprints" style="width:15px;height:15px;color:#047857;"></i>
+                <i data-lucide="footprints" style="width:15px;height:15px;color:var(--color-primary);"></i>
                 <span>Greenfield Walk Escort • 2 spots open (Max 5)</span>
               </div>
               <div style="text-align: right;">
@@ -1797,116 +1757,125 @@
         <button class="back-btn" id="providerDetailsBackBtn" onclick="handleProviderDetailsBack()" aria-label="Go back">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title" id="providerDetailsTitle" style="opacity: 0;">Driver Profile</h2>
+        <h2 class="top-bar-title" id="providerDetailsTitle">Provider Profile</h2>
         <button type="button" class="clean-fav-btn" onclick="this.classList.toggle('active')" title="Favorite" style="padding: 4px;">
           <i data-lucide="heart" style="width: 20px; height: 20px;"></i>
         </button>
       </div>
 
       <div class="screen-scroll-body" style="padding-bottom: 28px;">
-        <!-- Hero Box Centered -->
-        <div class="clean-driver-hero-box">
-          <img src="/assets/avatar_tariq.jpg" alt="Driver" class="clean-driver-big-avatar" id="detailsProviderImg" />
-          <div class="clean-driver-big-name" id="detailsProviderName">Tariq Ahmed</div>
-          <div class="clean-driver-meta-line">
-            <span style="font-size: 13.5px; font-weight: 700; color: #D97706;" id="detailsProviderRatingVal">★ 4.9 (128 reviews)</span>
-            <span class="clean-verified-pill">
-              <i data-lucide="check" style="width: 10px; height: 10px;"></i>
-              <span>Verified</span>
+        <!-- 1. Hero Profile Header (Natural, Open) -->
+        <div class="profile-hero-section">
+          <div class="profile-avatar-wrap">
+            <img src="/assets/avatar_tariq.jpg" alt="Provider" class="profile-hero-avatar" id="detailsProviderImg" />
+            <span class="profile-verified-badge" id="detailsVerifiedBadge" title="Background Verified">
+              <i data-lucide="shield-check" style="width: 14px; height: 14px; color: #FFFFFF;"></i>
             </span>
           </div>
+          <h3 class="profile-hero-name">
+            <span id="detailsProviderName">Tariq Ahmed</span>
+            <i data-lucide="badge-check" style="width: 18px; height: 18px; color: #0284C7;"></i>
+          </h3>
+          
+          <div class="profile-hero-meta">
+            <span class="profile-rating-pill" id="detailsProviderRatingVal">★ 4.9 (128 reviews)</span>
+            <span class="profile-meta-dot">•</span>
+            <span class="profile-distance-text" id="detailsProviderDistance">0.8 km away</span>
+          </div>
+
+          <div class="profile-role-tag" id="detailsProviderRoleTag">
+            <i data-lucide="car" id="detailsProviderRoleIcon" style="width: 13px; height: 13px;"></i>
+            <span id="detailsProviderRoleText">Vetted School Carpool Driver</span>
+          </div>
         </div>
 
-        <!-- 3 Stat Pillars -->
-        <div class="clean-stat-pillars-grid">
-          <div class="clean-stat-pillar">
-            <strong id="detailsProviderExpPillar">5+</strong>
-            <span>Years</span>
+        <!-- 2. Integrated Metric Strip (NO card box, zero borders, airy natural flow) -->
+        <div class="profile-stats-strip">
+          <div class="profile-stat-col">
+            <strong id="detailsProviderExpPillar">4+ Yrs</strong>
+            <span>Experience</span>
           </div>
-          <div class="clean-stat-pillar" style="border-left: 1px solid #E2E8F0; border-right: 1px solid #E2E8F0;">
+          <div class="profile-stat-divider"></div>
+          <div class="profile-stat-col">
             <strong id="detailsProviderTripsPillar">500+</strong>
-            <span>Trips</span>
+            <span id="detailsProviderTripsLbl">Trips Completed</span>
           </div>
-          <div class="clean-stat-pillar">
-            <strong id="detailsProviderOnTimePillar">100%</strong>
-            <span>On-time</span>
+          <div class="profile-stat-divider"></div>
+          <div class="profile-stat-col">
+            <strong id="detailsProviderOnTimePillar">99.8%</strong>
+            <span id="detailsProviderOnTimeLbl">On-Time Rate</span>
           </div>
         </div>
 
-        <!-- Vehicle & Safety Verification Card -->
-        <div class="clean-veh-showcase-box" style="margin-bottom: 12px;">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: rgba(27, 43, 104, 0.08); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
-                <i data-lucide="car" style="width: 22px; height: 22px;"></i>
+        <!-- 3. Service & Vehicle Showcase (Suitable Card 1 - Tangible ride asset) -->
+        <div class="profile-service-card" id="detailsServiceCard">
+          <div class="profile-service-card-header">
+            <div class="profile-service-title-group">
+              <div class="profile-service-icon-box" id="detailsVehIconBox">
+                <i data-lucide="car" id="detailsVehMainIcon" style="width: 22px; height: 22px;"></i>
               </div>
               <div>
-                <div class="clean-veh-title" id="detailsProviderVehTitle">Toyota Sienna (2023)</div>
-                <div class="clean-veh-sub" id="detailsProviderVehSpecs">4 seats · White · Plate: SCH-4091</div>
+                <div class="profile-service-title" id="detailsProviderVehTitle">Toyota Sienna (2023)</div>
+                <div class="profile-service-subtitle" id="detailsProviderVehSubtitle">Clean &amp; Audited School Commute Vehicle</div>
               </div>
             </div>
-            <span id="detailsProviderVehBadge" style="font-size: 11px; font-weight: 700; color: #16A34A; background: #F0FDF4; border: 1px solid #DCFCE7; padding: 3px 8px; border-radius: var(--radius-pill); display: inline-flex; align-items: center; gap: 4px;">
-              <i data-lucide="shield-check" style="width: 12px; height: 12px;"></i>
-              <span>Inspected</span>
+            <span class="profile-service-status-badge" id="detailsProviderVehBadge">
+              <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+              <span id="detailsProviderBadgeText">Inspected</span>
             </span>
           </div>
-        </div>
 
-        <!-- Trust Badges -->
-        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: var(--radius-md);">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(27, 43, 104, 0.08); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
-                <i data-lucide="shield-check" style="width: 15px; height: 15px;"></i>
-              </div>
-              <span id="detailsTrustBadge1" style="font-size: 12.5px; font-weight: 700; color: var(--color-title);">Police Background Record Checked</span>
+          <!-- Key Vehicle / Walk Specs Grid -->
+          <div class="profile-specs-grid" id="detailsSpecsGrid">
+            <div class="profile-spec-item" id="specSeats">
+              <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+              <span id="specSeatsText">4 seats available</span>
             </div>
-            <span style="font-size: 11px; font-weight: 700; color: #0284C7; background: #EFF6FF; padding: 2px 7px; border-radius: var(--radius-pill);">Verified</span>
+            <div class="profile-spec-item" id="specPlate">
+              <i data-lucide="hash" style="width: 14px; height: 14px;"></i>
+              <span id="specPlateText">Plate: SCH-4091</span>
+            </div>
+            <div class="profile-spec-item" id="specBooster">
+              <i data-lucide="shield" style="width: 14px; height: 14px;"></i>
+              <span id="specBoosterText">Booster Seats Equipped</span>
+            </div>
+            <div class="profile-spec-item" id="specLocks">
+              <i data-lucide="lock" style="width: 14px; height: 14px;"></i>
+              <span id="specLocksText">Child Door Locks</span>
+            </div>
           </div>
 
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: var(--radius-md);">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(242, 96, 12, 0.09); display: flex; align-items: center; justify-content: center; color: var(--color-secondary); flex-shrink: 0;">
-                <i data-lucide="award" style="width: 15px; height: 15px;"></i>
-              </div>
-              <span id="detailsTrustBadge2" style="font-size: 12.5px; font-weight: 700; color: var(--color-title);">Child First-Aid &amp; CPR Certified</span>
-            </div>
-            <span style="font-size: 11px; font-weight: 700; color: #0284C7; background: #EFF6FF; padding: 2px 7px; border-radius: var(--radius-pill);">Verified</span>
-          </div>
-        </div>
-
-        <!-- About Section -->
-        <div class="clean-flow-section" style="margin-bottom: 16px;">
-          <div class="clean-flow-label">About</div>
-          <p style="font-size: 13px; color: #475569; line-height: 1.45;" id="detailsProviderBio">
-            Experienced school transport provider with a strong focus on child safety. Verified background check and CPR certified.
-          </p>
-        </div>
-
-        <!-- Parent Reviews -->
-        <div class="clean-flow-section" style="margin-bottom: 20px;">
-          <div class="clean-reviews-header-row">
-            <div class="clean-flow-label" style="margin-bottom: 0;">Parent Reviews</div>
-            <a href="javascript:void(0)" style="font-size: 12px; font-weight: 700; color: var(--color-primary); text-decoration: none;" onclick="alert('Viewing all 128 verified parent reviews')">See All</a>
-          </div>
-
-          <div class="clean-review-card">
-            <div class="clean-review-top">
-              <div class="clean-reviewer-left">
-                <img src="/assets/avatar_sarah.jpg" alt="Sarah M." class="clean-reviewer-avatar" />
-                <span class="clean-reviewer-name">Sarah M.</span>
-              </div>
-              <span style="font-size: 12px; font-weight: 700; color: #D97706;">★ 5.0</span>
-            </div>
-            <div class="clean-review-text" id="detailsProviderReviewText">
-              Very reliable and kind. My kids feel comfortable with him and he is always punctual.
-            </div>
+          <!-- Route Assignment Sub-indicator -->
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #E2E8F0; display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; color: #64748B;">
+            <span style="display: flex; align-items: center; gap: 5px;">
+              <i data-lucide="map-pin" style="width: 12px; height: 12px; color: var(--color-primary);"></i>
+              <span id="detailsRouteNote">Route: Maple Ridge ➔ Greenfield Elementary</span>
+            </span>
+            <span style="font-weight: 700; color: #16A34A;">Active Route</span>
           </div>
         </div>
 
-        <!-- Sticky Bottom CTA -->
+        <!-- 4. About Provider -->
+        <div class="profile-section-block">
+          <div class="profile-section-label" id="detailsAboutLabel">About Tariq</div>
+          <div class="profile-about-block">
+            <p class="profile-about-text" id="detailsProviderBio">
+              Experienced school transport provider with a strong focus on child safety. Verified background check, booster seat equipped, and CPR certified.
+            </p>
+          </div>
+        </div>
+
+        <!-- 7. Sticky Bottom CTA with Clear Price Preview -->
         <div class="booking-flow-sticky-footer" id="detailsProviderActionsWrap">
-          <button class="btn-primary" id="btnBookWithProvider" style="height: 48px; border-radius: var(--radius-md);" onclick="navigateTo('bookingSummary')">Book with Tariq</button>
+          <div class="profile-sticky-footer-inner">
+            <div class="profile-sticky-price-block">
+              <span class="profile-sticky-price-label">Standard Rate</span>
+              <div class="profile-sticky-price-val" id="detailsStickyPrice">$120 <small>/wk</small></div>
+            </div>
+            <button class="btn-primary" id="btnBookWithProvider" style="flex: 1; height: 48px; border-radius: var(--radius-md); font-size: 15px; font-weight: 700;" onclick="navigateTo('bookingSummary')">
+              Book with Tariq →
+            </button>
+          </div>
         </div>
       </div>
 

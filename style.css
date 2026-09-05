@@ -4329,10 +4329,10 @@ svg.lucide {
 }
 
 .clean-service-btn.active {
-  background: #047857;
-  border-color: #047857;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: #FFFFFF;
-  box-shadow: 0 3px 12px rgba(4, 120, 87, 0.28);
+  box-shadow: 0 3px 12px rgba(27, 43, 104, 0.28);
 }
 
 .clean-service-btn.active i,
@@ -4400,9 +4400,9 @@ svg.lucide {
 }
 
 .walkshare-tag {
-  background: #ECFDF5;
-  border: 1px solid #A7F3D0;
-  color: #047857;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  color: #1B2B68;
   font-size: 10.5px;
   font-weight: 700;
   padding: 2px 7px;
@@ -4416,7 +4416,7 @@ svg.lucide {
 
 .walkshare-tag i,
 .walkshare-tag svg {
-  color: #047857;
+  color: #1B2B68;
 }
 
 .walkshare-mini-avatar-badge {
@@ -4426,7 +4426,7 @@ svg.lucide {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #047857;
+  background: #1B2B68;
   border: 2px solid #FFFFFF;
   display: flex;
   align-items: center;
@@ -4434,15 +4434,19 @@ svg.lucide {
 }
 
 .vehicle-info-pill.walkshare {
-  background: #F0FDF4;
-  border: 1px solid #DCFCE7;
-  color: #047857;
+  background: transparent;
+  border: none;
+  color: #334155;
   font-weight: 600;
+  font-size: 12.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .vehicle-info-pill.walkshare i,
 .vehicle-info-pill.walkshare svg {
-  color: #047857 !important;
+  color: var(--color-primary) !important;
 }
 
 /* Schedule Card - Clean Unified Design System Component */
@@ -9912,9 +9916,10 @@ textarea.form-textarea:not(.textarea-box-wrapper textarea):focus {
 }
 
 .booking-type-pill.active {
-  background: #047857;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(4, 120, 87, 0.28);
+  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.25);
 }
 
 /* ==========================================================
@@ -10252,18 +10257,18 @@ textarea.form-textarea:not(.textarea-box-wrapper textarea):focus {
 .provider-safety-chip svg {
   width: 11px;
   height: 11px;
-  color: #16A34A;
+  color: #0284C7;
 }
 
 .provider-safety-chip.walkshare {
-  color: #065F46;
-  background: #F0FDF4;
-  border-color: #DCFCE7;
+  color: #475569;
+  background: #F8FAFC;
+  border-color: #E2E8F0;
 }
 
 .provider-safety-chip.walkshare i,
 .provider-safety-chip.walkshare svg {
-  color: #047857;
+  color: #0284C7;
 }
 
 /* Service Type Banners in Search Providers */
@@ -10332,9 +10337,523 @@ textarea.form-textarea:not(.textarea-box-wrapper textarea):focus {
   margin-bottom: 8px;
 }
 
+/* ==========================================================
+   Modern Provider & Chaperone Profile (Clean, Card-Clutter-Free)
+   ========================================================== */
+.profile-hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 0 10px;
+}
 
+.profile-avatar-wrap {
+  position: relative;
+  width: 82px;
+  height: 82px;
+  margin-bottom: 12px;
+}
 
+.profile-hero-avatar {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 4px 18px rgba(27, 43, 104, 0.15);
+}
 
+.profile-verified-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0284C7;
+  border: 2.5px solid #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+}
 
+.profile-hero-name {
+  font-size: 21px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
 
+.profile-hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #64748B;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.profile-rating-pill {
+  color: #D97706;
+  font-weight: 700;
+}
+
+.profile-role-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: #EEF2FF;
+  border: 1px solid #E0E7FF;
+  padding: 5px 14px;
+  border-radius: 99px;
+}
+
+.profile-role-tag.walkshare {
+  color: #047857;
+  background: #ECFDF5;
+  border-color: #A7F3D0;
+}
+
+/* 1. Open, Seamless Metric Strip (NO card box, zero borders, natural airy flow) */
+.profile-stats-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  margin: 4px 0 20px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.profile-stat-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 3px;
+  flex: 1;
+}
+
+.profile-stat-col strong {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: -0.3px;
+}
+
+.profile-stat-col span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.profile-stat-divider {
+  width: 1px;
+  height: 28px;
+  background: #E2E8F0;
+}
+
+/* 2. Service & Commute Vehicle Showcase (Suitable Card 1) */
+.profile-service-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 20px -2px rgba(27, 43, 104, 0.05);
+}
+
+.profile-service-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.profile-service-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-service-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #EEF2FF;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-service-icon-box.walkshare {
+  background: #ECFDF5;
+  color: #047857;
+}
+
+.profile-service-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.2;
+}
+
+.profile-service-subtitle {
+  font-size: 11.5px;
+  color: #64748B;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.profile-service-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #15803D;
+  background: #DCFCE7;
+  border: 1px solid #BBF7D0;
+  padding: 3px 9px;
+  border-radius: 99px;
+}
+
+.profile-specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.profile-spec-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #334155;
+  background: #F8FAFC;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #F1F5F9;
+}
+
+.profile-spec-item i,
+.profile-spec-item svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* 3. Safety & Verification Standards (Open Checklist - NO Card Box) */
+.profile-section-block {
+  margin-bottom: 22px;
+}
+
+.profile-section-label {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-safety-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  border: none;
+}
+
+.profile-safety-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.profile-safety-check-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #DCFCE7;
+  color: #16A34A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.profile-safety-item-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+  gap: 2px;
+}
+
+.profile-safety-item-text strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.profile-safety-item-text span {
+  font-size: 11.5px;
+  color: #64748B;
+}
+
+/* 4. About Provider (Editorial Block - NO Card Box) */
+.profile-about-block {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 14px;
+  margin-top: 6px;
+}
+
+.profile-about-text {
+  font-size: 13.5px;
+  color: #334155;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* 5. Parent Reviews & Ratings Showcase (Suitable Card 2) */
+.profile-reviews-hub-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 18px;
+  padding: 16px 18px;
+  box-shadow: 0 4px 20px -2px rgba(27, 43, 104, 0.05);
+  margin-bottom: 22px;
+}
+
+.profile-rating-summary-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #F1F5F9;
+  margin-bottom: 12px;
+}
+
+.profile-rating-score-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-rating-big-num {
+  font-size: 34px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1;
+}
+
+.profile-rating-score-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-rating-stars-gold {
+  color: #F59E0B;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.profile-rating-reviews-count {
+  font-size: 11.5px;
+  color: #64748B;
+  font-weight: 600;
+}
+
+.profile-rating-badge-recommend {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.profile-rating-recommend-pct {
+  font-size: 14px;
+  font-weight: 800;
+  color: #16A34A;
+}
+
+.profile-rating-recommend-lbl {
+  font-size: 10.5px;
+  color: #64748B;
+  font-weight: 600;
+}
+
+/* Rating Mini Breakdown Grid */
+.profile-rating-breakdown-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.profile-rating-bar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8FAFC;
+  border: 1px solid #F1F5F9;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.profile-rating-bar-val {
+  font-weight: 700;
+  color: #0F172A;
+}
+
+/* Parent Compliments Tags */
+.profile-compliment-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.profile-compliment-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  padding: 4px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* Featured Parent Testimonial inside the Hub */
+.profile-featured-review {
+  background: #F8FAFC;
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid #F1F5F9;
+}
+
+.profile-review-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.profile-reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.profile-reviewer-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.profile-reviewer-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.profile-reviewer-sub {
+  font-size: 11px;
+  color: #64748B;
+}
+
+.profile-review-date {
+  font-size: 10.5px;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.profile-review-quote {
+  font-size: 12.5px;
+  color: #334155;
+  line-height: 1.5;
+  margin: 0 0 6px;
+  font-style: italic;
+}
+
+.profile-review-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #0284C7;
+}
+
+/* 6. Sticky Footer with Price Preview */
+.profile-sticky-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 16px;
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
+}
+
+.profile-sticky-price-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-sticky-price-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.profile-sticky-price-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.1;
+}
+
+.profile-sticky-price-val small {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748B;
+}
 

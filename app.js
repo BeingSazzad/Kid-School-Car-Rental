@@ -1142,14 +1142,11 @@ window.openMapPickerModal = function (targetType) {
   const pinBubble = document.getElementById('mapPinBubble');
   const pinTriangle = document.getElementById('mapPinTriangle');
   const pinLabel = document.getElementById('mapPinLabel');
-  const pillsTitle = document.getElementById('mapPickerPillsTitle');
-  const gatesRow = document.getElementById('mapPickerGatesRow');
   const addrInput = document.getElementById('mapPickerAddressInput');
 
   const isSchool = targetType === 'school';
 
   if (titleEl) titleEl.textContent = isSchool ? 'Select School Gate & Drop-off Pin' : 'Pinpoint Pickup Location';
-  if (pillsTitle) pillsTitle.textContent = isSchool ? 'School Gate Presets' : 'Pickup Presets';
 
   if (isSchool) {
     if (headerIcon) {
@@ -1165,21 +1162,6 @@ window.openMapPickerModal = function (targetType) {
     const inputSchool = document.getElementById('setupSchoolLocationInput');
     const currentSchoolVal = (inputSchool && inputSchool.value) ? inputSchool.value : 'Greenfield International School';
     if (addrInput) addrInput.value = currentSchoolVal;
-
-    const schoolGates = [
-      { label: 'Gate 1 (Main Entrance)', addr: 'Greenfield International School, Gate 1 Main Entrance' },
-      { label: 'Gate 2 (Bus Loop)', addr: 'Greenfield International School, Gate 2 Bus Loop' },
-      { label: 'West Wing (Kindergarten)', addr: 'Greenfield International School, West Wing Kindergarten Drop' },
-      { label: 'Athletics Complex', addr: 'Greenfield International School, Athletics Complex Door B' }
-    ];
-
-    if (gatesRow) {
-      gatesRow.innerHTML = schoolGates.map((g, idx) => `
-        <button type="button" class="map-gate-pill ${idx === 0 ? 'active' : ''}" onclick="selectMapGate('${g.label.replace(/'/g, "\\'")}', '${g.addr.replace(/'/g, "\\'")}', this)">
-          ${g.label}
-        </button>
-      `).join('');
-    }
   } else {
     if (headerIcon) {
       headerIcon.setAttribute('data-lucide', 'home');
@@ -1194,21 +1176,6 @@ window.openMapPickerModal = function (targetType) {
     const inputPickup = document.getElementById('setupPickupLocationInput');
     const currentPickupVal = (inputPickup && inputPickup.value) ? inputPickup.value : '12 Elm Street, Toronto';
     if (addrInput) addrInput.value = currentPickupVal;
-
-    const pickupPresets = [
-      { label: 'Front Porch', addr: `${currentPickupVal} (Front Porch)` },
-      { label: 'Curbside / Driveway', addr: `${currentPickupVal} (Driveway)` },
-      { label: 'Corner of Street', addr: `${currentPickupVal} (Street Corner)` },
-      { label: 'Side Entrance', addr: `${currentPickupVal} (Side Gate)` }
-    ];
-
-    if (gatesRow) {
-      gatesRow.innerHTML = pickupPresets.map((g, idx) => `
-        <button type="button" class="map-gate-pill ${idx === 0 ? 'active' : ''}" onclick="selectMapGate('${g.label.replace(/'/g, "\\'")}', '${g.addr.replace(/'/g, "\\'")}', this)">
-          ${g.label}
-        </button>
-      `).join('');
-    }
   }
 
   modal.style.display = 'flex';
@@ -1596,15 +1563,7 @@ window.filterBookingProviders = function (filterType, btnEl) {
     }
   }
 
-  // Toggle helper info banners for parents
-  const walkBanner = document.getElementById('walkshareInfoBanner');
-  const driverBanner = document.getElementById('driverInfoBanner');
-  const allBanner = document.getElementById('allInfoBanner');
-
-  if (walkBanner) walkBanner.style.display = filterType === 'walkshare' ? 'block' : 'none';
-  if (driverBanner) driverBanner.style.display = filterType === 'drivers' ? 'block' : 'none';
-  if (allBanner) allBanner.style.display = filterType === 'all' ? 'inline-flex' : 'none';
-
+  // Filter provider cards directly
   const cards = document.querySelectorAll('#providersResultList .provider-result-card');
   cards.forEach(card => {
     const cat = card.getAttribute('data-category');
@@ -1676,117 +1635,117 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   window.currentDriverProfileId = provider.id;
 
   const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
-
-  // Update elements in screen-bookingProviderDetails
-  const imgEl = document.getElementById('detailsProviderImg');
-  const nameEl = document.getElementById('detailsProviderName');
-  const ratingEl = document.getElementById('detailsProviderRatingVal');
-  const reviewsEl = document.getElementById('detailsProviderReviewsLbl');
-  const titleEl = document.getElementById('providerDetailsTitle');
-  const bioEl = document.getElementById('detailsProviderBio');
-
   const cleanFirstName = provider.name.replace(/\s*\(WalkShare\)/i, '').split(' ')[0];
   const cleanFullName = provider.name.replace(/\s*\(WalkShare\)/i, '');
 
+  // 1. Top Bar Title
+  const titleEl = document.getElementById('providerDetailsTitle');
   if (titleEl) titleEl.textContent = isWalk ? 'Chaperone Profile' : 'Driver Profile';
+
+  // 2. Hero Section
+  const imgEl = document.getElementById('detailsProviderImg');
+  const nameEl = document.getElementById('detailsProviderName');
+  const ratingEl = document.getElementById('detailsProviderRatingVal');
+  const distEl = document.getElementById('detailsProviderDistance');
+  const roleTag = document.getElementById('detailsProviderRoleTag');
+
   if (imgEl) {
     imgEl.src = provider.photo || '/assets/avatar_tariq.jpg';
     imgEl.alt = cleanFullName;
-    imgEl.style.borderColor = isWalk ? '#10B981' : '#E2E8F0';
     imgEl.onerror = function () { this.src = '/assets/avatar_tariq.jpg'; };
   }
   if (nameEl) nameEl.textContent = cleanFullName;
   if (ratingEl) ratingEl.textContent = `★ ${provider.rating} (${provider.reviewsCount || 128} reviews)`;
-  if (reviewsEl) reviewsEl.textContent = `${provider.reviewsCount || 128} Reviews`;
+  if (distEl) distEl.textContent = isWalk ? '0.4 km route · ~8 min walk' : '0.8 km away';
 
-  // Stat Pillars adaptation
+  if (roleTag) {
+    if (isWalk) {
+      roleTag.className = 'profile-role-tag walkshare';
+      roleTag.innerHTML = '<i data-lucide="footprints" style="width: 13px; height: 13px;"></i><span>WalkShare Community Chaperone</span>';
+    } else {
+      roleTag.className = 'profile-role-tag';
+      roleTag.innerHTML = '<i data-lucide="car" style="width: 13px; height: 13px;"></i><span>Vetted School Carpool Driver</span>';
+    }
+  }
+
+  // 3. Stat Strip
   const expPillar = document.getElementById('detailsProviderExpPillar');
   const tripsPillar = document.getElementById('detailsProviderTripsPillar');
+  const tripsLbl = document.getElementById('detailsProviderTripsLbl');
   const onTimePillar = document.getElementById('detailsProviderOnTimePillar');
+  const onTimeLbl = document.getElementById('detailsProviderOnTimeLbl');
 
   if (expPillar) expPillar.textContent = provider.experience || '5+ Yrs';
-  if (tripsPillar) {
-    tripsPillar.textContent = isWalk ? '320+' : '500+';
-    if (tripsPillar.nextElementSibling) tripsPillar.nextElementSibling.textContent = isWalk ? 'Safe Walks' : 'Trips';
-  }
-  if (onTimePillar) {
-    onTimePillar.textContent = provider.onTimeRate || '100%';
-    if (onTimePillar.nextElementSibling) onTimePillar.nextElementSibling.textContent = isWalk ? 'Safe Record' : 'On-time';
-  }
+  if (tripsPillar) tripsPillar.textContent = isWalk ? '320+' : '500+';
+  if (tripsLbl) tripsLbl.textContent = isWalk ? 'Safe Walks' : 'Trips Completed';
+  if (onTimePillar) onTimePillar.textContent = provider.onTimeRate || '99.8%';
+  if (onTimeLbl) onTimeLbl.textContent = isWalk ? 'Safe Record' : 'On-Time Rate';
 
-  // Showcase Box adaptation: Vehicle vs Walk Route
-  const vehTitleEl = document.getElementById('detailsProviderVehTitle');
-  const vehSpecsEl = document.getElementById('detailsProviderVehSpecs');
-  const vehBadgeEl = document.getElementById('detailsProviderVehBadge');
-  const vehBox = document.querySelector('.clean-veh-showcase-box');
+  // 4. Service Card & Rich Specs
+  const iconBox = document.getElementById('detailsVehIconBox');
+  const vehTitle = document.getElementById('detailsProviderVehTitle');
+  const vehSubtitle = document.getElementById('detailsProviderVehSubtitle');
+  const vehBadgeText = document.getElementById('detailsProviderBadgeText');
+  const specSeats = document.getElementById('specSeatsText');
+  const specPlate = document.getElementById('specPlateText');
+  const specBooster = document.getElementById('specBoosterText');
+  const specLocks = document.getElementById('specLocksText');
 
-  if (vehTitleEl) {
-    vehTitleEl.textContent = isWalk 
-      ? `Walking School Bus (${provider.vehicle || 'Escorted Route'})`
-      : (provider.vehicle || 'Toyota Sienna');
-  }
-  if (vehSpecsEl) {
-    vehSpecsEl.textContent = isWalk
-      ? `0.4 km · Safe Sidewalk Route · Crossing Guard Monitored · Max 5 Kids`
-      : `${provider.seats || 4} seats · 2023 Clean · Plate: ${provider.plate || 'H2S-782'}`;
-  }
-  if (vehBadgeEl) {
-    vehBadgeEl.innerHTML = isWalk 
-      ? '<i data-lucide="shield-check" style="width: 12px; height: 12px;"></i><span>Safe Route</span>'
-      : '<i data-lucide="shield-check" style="width: 12px; height: 12px;"></i><span>Inspected</span>';
-  }
-
-  if (vehBox) {
-    const iconWrap = vehBox.querySelector('div > div > div:first-child');
-    if (iconWrap) {
-      if (isWalk) {
-        iconWrap.style.background = '#ECFDF5';
-        iconWrap.style.color = '#047857';
-        iconWrap.innerHTML = '<i data-lucide="footprints" style="width: 22px; height: 22px;"></i>';
-      } else {
-        iconWrap.style.background = 'rgba(27, 43, 104, 0.08)';
-        iconWrap.style.color = 'var(--color-primary)';
-        iconWrap.innerHTML = '<i data-lucide="car" style="width: 22px; height: 22px;"></i>';
-      }
+  if (isWalk) {
+    if (iconBox) {
+      iconBox.className = 'profile-service-icon-box walkshare';
+      iconBox.innerHTML = '<i data-lucide="footprints" style="width: 22px; height: 22px;"></i>';
     }
+    if (vehTitle) vehTitle.textContent = 'Walking School Bus Escort';
+    if (vehSubtitle) vehSubtitle.textContent = 'Supervised Neighborhood Pedestrian Walk';
+    if (vehBadgeText) vehBadgeText.textContent = 'Safe Route';
+    if (specSeats) specSeats.textContent = 'Max 5 Kids (3 spots open)';
+    if (specPlate) specPlate.textContent = 'Sidewalks Only';
+    if (specBooster) specBooster.textContent = 'High-Vis Vests Included';
+    if (specLocks) specLocks.textContent = 'Crossing Guard Supervised';
+  } else {
+    if (iconBox) {
+      iconBox.className = 'profile-service-icon-box';
+      iconBox.innerHTML = '<i data-lucide="car" style="width: 22px; height: 22px;"></i>';
+    }
+    if (vehTitle) vehTitle.textContent = provider.vehicle || 'Toyota Sienna (2023)';
+    if (vehSubtitle) vehSubtitle.textContent = 'Clean & Audited School Commute Vehicle';
+    if (vehBadgeText) vehBadgeText.textContent = 'Inspected';
+    if (specSeats) specSeats.textContent = `${provider.seats || 4} seats available`;
+    if (specPlate) specPlate.textContent = `Plate: ${provider.plate || 'SCH-4091'}`;
+    if (specBooster) specBooster.textContent = 'Booster Seats Equipped';
+    if (specLocks) specLocks.textContent = 'Child Door Locks';
   }
 
-  // Trust Badges adaptation
-  const trustBadge1 = document.getElementById('detailsTrustBadge1');
-  const trustBadge2 = document.getElementById('detailsTrustBadge2');
-  if (trustBadge1) {
-    trustBadge1.textContent = '100% Police Background Record Checked';
-  }
-  if (trustBadge2) {
-    trustBadge2.textContent = isWalk
-      ? 'Pediatric First-Aid & Crossing Guard Certified'
-      : 'Child First-Aid & Vehicle Safety Inspected';
-  }
-
+  // 5. About Provider
+  const aboutLbl = document.getElementById('detailsAboutLabel');
+  const bioEl = document.getElementById('detailsProviderBio');
+  if (aboutLbl) aboutLbl.textContent = `About ${cleanFirstName}`;
   if (bioEl) {
-    if (isWalk) {
-      bioEl.textContent = 'Certified neighborhood walking school bus chaperone. We walk safely as a supervised group along sidewalks, observing crossing guard signals. Children stay healthy, active, and arrive safely every morning.';
-    } else {
-      bioEl.textContent = 'Experienced school transport provider with a strong focus on child safety. Verified background check, booster seat equipped, and CPR certified.';
-    }
+    bioEl.textContent = isWalk 
+      ? 'Certified neighborhood walking school bus chaperone. We walk safely as a supervised group along sidewalks, observing crossing guard signals. Children stay healthy, active, and arrive safely every morning.'
+      : 'Experienced school transport provider with a strong focus on child safety. Verified background check, booster seat equipped, and CPR certified.';
   }
 
-  // Reviews adaptation
-  const reviewTextEl = document.getElementById('detailsProviderReviewText');
-  const reviewerEl = document.querySelector('#screen-bookingProviderDetails .clean-reviewer-name');
-  if (reviewTextEl && provider.quote) {
-    reviewTextEl.textContent = provider.quote.replace(/^"|"$/g, '');
+  const routeNote = document.getElementById('detailsRouteNote');
+  if (routeNote) {
+    routeNote.textContent = isWalk 
+      ? 'Walk Route: Elm St Corner ➔ Greenfield School Gates'
+      : 'Route: Maple Ridge ➔ Greenfield Elementary';
   }
-  if (reviewerEl && provider.reviewer) {
-    reviewerEl.textContent = provider.reviewer.replace(/^—\s*/, '').split('(')[0].trim();
+
+  // 9. Sticky Footer Price Preview & Booking Button
+  const rateVal = isWalk ? 75 : (provider.baseWeekly || 120);
+  const stickyPrice = document.getElementById('detailsStickyPrice');
+  if (stickyPrice) {
+    stickyPrice.innerHTML = `$${rateVal} <small>/wk</small>`;
   }
 
   const bookBtnEl = document.getElementById('btnBookWithProvider');
   if (bookBtnEl) {
-    const rateText = isWalk ? '$75/wk' : `$${provider.baseWeekly || 120}/wk`;
     bookBtnEl.textContent = isWalk 
-      ? `Book WalkShare with ${cleanFirstName} (${rateText})` 
-      : `Book with ${cleanFirstName} (${rateText})`;
+      ? `Book WalkShare with ${cleanFirstName} →` 
+      : `Book Ride with ${cleanFirstName} →`;
     bookBtnEl.onclick = function () {
       window.appState.bookingDraft.providerId = provider.id;
       navigateTo('bookingSummary');
@@ -2479,10 +2438,6 @@ function renderBookingsList(tab) {
                 <span>${dayChip}</span>
                 ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
               </div>
-              <div style="font-size:11.5px; color:#059669; font-weight:600; display:flex; align-items:center; gap:5px; margin-top:2px;">
-                <i data-lucide="navigation" style="width:12px;height:12px;"></i>
-                <span>1.8 km away · Toyota Highlander (H2S-782)</span>
-              </div>
             </div>
 
             <div class="bcard-footer">
@@ -2529,10 +2484,6 @@ function renderBookingsList(tab) {
                 <span>${dayChip}</span>
                 ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
               </div>
-              <div style="font-size:11.5px; color:#D97706; font-weight:600; display:flex; align-items:center; gap:5px; margin-top:3px;">
-                <i data-lucide="clock" style="width:12px;height:12px;"></i>
-                <span>Requested 12 mins ago · Reviewing by ${provider.name}</span>
-              </div>
             </div>
 
             <div class="bcard-footer">
@@ -2560,7 +2511,7 @@ function renderBookingsList(tab) {
         return `
           <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
             <div class="bcard-header">
-              <span class="status-chip completed" style="background:#ECFDF5; color:#047857; border:1px solid #A7F3D0; font-weight:700;">
+              <span class="status-chip completed" style="font-weight:700;">
                 <i data-lucide="check-circle" style="width:12px;height:12px;color:#059669;"></i>
                 Completed · ${dateLabel}
               </span>
@@ -2577,10 +2528,6 @@ function renderBookingsList(tab) {
                 <span>${dayChip}</span>
                 ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
               </div>
-              <div class="bcard-delivery-log" style="margin-top: 4px;">
-                <i data-lucide="shield-check" style="width:13px;height:13px;color:#059669;flex-shrink:0;"></i>
-                <span>${b.dropoffNote || 'Delivered safely to school entrance'}</span>
-              </div>
             </div>
 
             <div class="bcard-footer">
@@ -2588,7 +2535,7 @@ function renderBookingsList(tab) {
                 <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
                 <div class="bcard-driver-text">
                   <div class="bcard-driver-name">${provider.name}</div>
-                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${b.userRating || provider.rating} (You rated)</span></div>
+                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${b.userRating || provider.rating}</span></div>
                 </div>
               </div>
 
@@ -2611,15 +2558,14 @@ function renderBookingsList(tab) {
       if (b.status === 'cancelled') {
         const cancelDate = b.cancelledAt ? b.cancelledAt.split('•')[0].trim() : 'May 08';
         return `
-          <div class="booking-item-card" style="border-color:#FCA5A5; background:#FFFBFB;" onclick="openBookingDetails('${b.id}')">
+          <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
             <div class="bcard-header">
               <span class="status-chip cancelled" style="font-weight:700;">
                 <i data-lucide="x-circle" style="width:12px;height:12px;color:#DC2626;"></i>
                 Cancelled · ${cancelDate}
               </span>
               <div class="bcard-price">
-                <span style="text-decoration:line-through; color:#94A3B8; font-size:12px;">$${b.amount}</span>
-                <strong style="color:#059669; font-size:14px; margin-left:4px;">$0 Paid</strong>
+                <strong style="color:#64748B; font-size:14px;">$0 Paid</strong>
               </div>
             </div>
 
@@ -2630,34 +2576,20 @@ function renderBookingsList(tab) {
                 <span>${dayChip}</span>
                 ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
               </div>
-
-              <div class="bcard-cancel-reason" style="margin-top: 4px;">
-                <i data-lucide="alert-circle" style="width:13px;height:13px;color:#DC2626;flex-shrink:0;"></i>
-                <span>Reason: ${b.cancelReason || 'Schedule adjusted by parent'}</span>
-              </div>
-
-              <div class="bcard-refund-pill" style="margin-top: 2px;">
-                <i data-lucide="check" style="width:12px;height:12px;color:#059669;flex-shrink:0;"></i>
-                <span>${b.refundStatus || 'Full refund processed ($0 fee applied)'}</span>
-              </div>
             </div>
 
             <div class="bcard-footer">
-              <div class="bcard-driver" style="cursor:default;">
-                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" style="filter:grayscale(0.5);" onerror="this.src='/assets/avatar_sarah.jpg';" />
+              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')">
+                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_sarah.jpg';" />
                 <div class="bcard-driver-text">
-                  <div class="bcard-driver-name" style="color:#64748B;">${provider.name}</div>
-                  <div class="bcard-driver-veh" style="color:#94A3B8;">Released &amp; Notified</div>
+                  <div class="bcard-driver-name">${provider.name}</div>
+                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
                 </div>
               </div>
 
-              <div class="bcard-action-wrap" style="display:flex; gap:6px;">
-                <button class="btn-support-compact" onclick="event.stopPropagation(); navigateTo('contactSupport')" title="Get Trip Support">
-                  <i data-lucide="help-circle" style="width:12px;height:12px;"></i>
-                  <span>Help</span>
-                </button>
+              <div class="bcard-action-wrap">
                 <button class="btn-rebook-compact" onclick="event.stopPropagation(); rebookRide('${b.id}')" title="Rebook this ride">
-                  <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i>
+                  <i data-lucide="rotate-cw" style="width:12px;height:12px;"></i>
                   <span>Rebook</span>
                 </button>
               </div>
