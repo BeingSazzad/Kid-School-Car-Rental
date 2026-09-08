@@ -4830,19 +4830,13 @@
             </div>
             <div class="user-welcome-texts">
               <h2 class="user-greeting" id="driverHomeGreeting">Hello, Tariq</h2>
-              <p class="user-question" id="driverHomeMeta">Finish setup to accept school rides</p>
+              <p class="user-question" id="driverHomeMeta">Toyota Sienna · 4 seats</p>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <button type="button" class="driver-status-toggle-pill" id="driverStatusToggleBtn" onclick="toggleDriverOnlineStatus()">
-              <span class="live-pulse-dot" style="margin:0;"></span>
-              <span id="driverStatusToggleText">Available</span>
-            </button>
-            <button type="button" class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
-              <i data-lucide="bell"></i>
-              <span class="unread-badge-dot"></span>
-            </button>
-          </div>
+          <button type="button" class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
+            <i data-lucide="bell"></i>
+            <span class="unread-badge-dot"></span>
+          </button>
         </div>
 
         <div id="driverHeroContainer"></div>
@@ -4995,7 +4989,7 @@
             <h3 class="section-heading" style="margin-bottom:0;">Current stop</h3>
             <div>
               <h3 class="card-title-navy" id="driverActiveTargetTitle">Home (12 Elm Street, Toronto)</h3>
-              <p class="card-desc-muted" id="driverActiveTargetDesc">Arman Khan &amp; Emma Khan · Parent: Sadia Khan</p>
+              <p class="card-desc-muted" id="driverActiveTargetDesc">Passengers of Sadia Khan · morning pickup</p>
             </div>
             <span class="capacity-badge ok">Booster seat for Arman</span>
           </div>
@@ -5074,7 +5068,7 @@
         <span style="width:26px;"></span>
       </div>
 
-      <div class="screen-scroll-body" id="driverSetupFeed" style="padding:18px 20px 90px;display:flex;flex-direction:column;gap:16px;"></div>
+      <div class="screen-scroll-body" id="driverSetupFeed"></div>
 
       <div class="home-indicator"></div>
     </section>
@@ -5093,87 +5087,11 @@
 
       <div class="top-bar-sticky">
         <button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button>
-        <h2 class="top-bar-title">Profile</h2>
+        <h2 class="top-bar-title">Driver Profile</h2>
         <span style="width:26px;"></span>
       </div>
 
-      <div class="screen-scroll-body" id="driverProfileFeed" style="padding-bottom: 90px; display:flex; flex-direction:column; gap:16px;">
-        <!-- Driver Hero Card -->
-        <div class="profile-user-card">
-          <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0;">
-            <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="profile-avatar-lg" />
-            <span style="position: absolute; bottom: 0; right: 0; background: var(--color-secondary); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #09122C;">✓</span>
-          </div>
-          <div style="flex:1;">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <h3 style="font-size:18px;font-weight:800;color:#FFFFFF;margin:0;">Tariq Ahmed</h3>
-              <span class="capacity-badge ok" style="font-size:10.5px;">Verified Driver</span>
-            </div>
-            <p style="font-size:13px;color:#64748B;margin:2px 0 0 0;">+1 (416) 555-0182 · 4+ Yrs Driving</p>
-            <div style="display:flex;gap:6px;margin-top:6px;align-items:center;">
-              <span style="color:#D97706;font-weight:800;font-size:12.5px;">★ 4.9</span>
-              <span style="font-size:12px;color:#64748B;">(128 parent reviews)</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section: Active Vehicle Specs -->
-        <div class="profile-menu-section">
-          <h4 class="profile-section-title">Active Vehicle</h4>
-          <div class="profile-menu-card">
-            <div class="profile-menu-item" style="cursor:default;">
-              <div class="menu-icon-wrap"><i data-lucide="car"></i></div>
-              <div class="profile-menu-text">
-                <div class="menu-title">Toyota Sienna (2023) Minivan</div>
-                <div class="menu-subtitle">Plate: SCH-4091 · Celestial Silver · 4 Seats</div>
-              </div>
-              <span class="capacity-badge ok">Active Fleet</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section: Driver Compliance & Subscription -->
-        <div class="profile-menu-section">
-          <h4 class="profile-section-title">Credentials &amp; Plan</h4>
-          <div class="profile-menu-card">
-            <div class="profile-menu-item" onclick="navigateTo('driverSetup')">
-              <div class="menu-icon-wrap"><i data-lucide="file-check"></i></div>
-              <div class="profile-menu-text">
-                <div class="menu-title">Documents &amp; Background Check</div>
-                <div class="menu-subtitle">All 4 compliance documents approved</div>
-              </div>
-              <i data-lucide="chevron-right" class="profile-menu-chevron"></i>
-            </div>
-            <div class="profile-menu-item">
-              <div class="menu-icon-wrap"><i data-lucide="credit-card"></i></div>
-              <div class="profile-menu-text">
-                <div class="menu-title">Home2School Pro Driver Pass</div>
-                <div class="menu-subtitle">$29 / month · Renews Sep 30, 2026</div>
-              </div>
-              <span class="capacity-badge ok">Active</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section: Switch Role or Sign Out -->
-        <div class="profile-menu-section">
-          <div class="profile-menu-card">
-            <div class="profile-menu-item" onclick="window.switchRole('parent')">
-                <div class="menu-icon-wrap"><i data-lucide="users"></i></div>
-              <div class="profile-menu-text">
-                <div class="menu-title" style="color:var(--color-primary);">Switch to Parent Mode</div>
-                <div class="menu-subtitle">Manage child riders &amp; book school commutes</div>
-              </div>
-              <i data-lucide="arrow-right" class="profile-menu-chevron"></i>
-            </div>
-            <div class="profile-menu-item" onclick="navigateTo('authWelcome')">
-              <div class="profile-menu-icon" style="background:#FEE2E2;color:#EF4444;"><i data-lucide="log-out"></i></div>
-              <div class="profile-menu-text">
-                <div class="menu-title" style="color:#EF4444;">Sign Out</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="screen-scroll-body" id="driverProfileFeed">
       </div>
 
       <nav class="bottom-tab-bar driver-nav-bar">
