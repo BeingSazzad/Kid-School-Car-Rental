@@ -4801,7 +4801,7 @@
     </div>
 
     <!-- ================= 30. DRIVER HOME SCREEN ================= -->
-    <section class="screen-view" id="screen-driverHome" style="background-color: #F8FAFC;">
+    <section class="screen-view" id="screen-driverHome" style="background-color: #FFFFFF;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
@@ -4813,35 +4813,38 @@
         </div>
       </div>
 
-      <!-- Driver Top Header -->
-      <div class="driver-top-header">
-        <div class="driver-profile-snippet" onclick="navigateTo('driverProfile')" style="cursor: pointer;">
-          <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-header-avatar" id="driverHomeAvatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
-          <div class="driver-header-text">
-            <h3 id="driverHomeGreeting">Good morning</h3>
-            <p id="driverHomeMeta">Complete setup to accept school rides</p>
+      <div class="home-scroll-body">
+        <div class="state-switcher-container">
+          <span class="state-switcher-label">View State:</span>
+          <div class="state-pills-group">
+            <button type="button" class="state-pill-btn" id="dchipScenarioA" onclick="setDriverScenario('A')">A: No trips</button>
+            <button type="button" class="state-pill-btn active" id="dchipScenarioB" onclick="setDriverScenario('B')">B: Upcoming</button>
+            <button type="button" class="state-pill-btn" id="dchipScenarioC" onclick="setDriverScenario('C')">C: Starts soon</button>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <button type="button" class="btn-icon-contact" onclick="navigateTo('notifications')" aria-label="Notifications" title="Notifications">
-            <i data-lucide="bell" style="width:18px;height:18px;"></i>
-          </button>
-          <button type="button" class="driver-status-toggle-pill" id="driverStatusToggleBtn" onclick="toggleDriverOnlineStatus()">
-            <span class="live-pulse-dot" style="margin:0;"></span>
-            <span id="driverStatusToggleText">Available</span>
-          </button>
+
+        <div class="home-header-row">
+          <div class="user-profile-group" onclick="navigateTo('driverProfile')" style="cursor:pointer;">
+            <div class="user-avatar-wrap">
+              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="user-avatar-img" id="driverHomeAvatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
+            </div>
+            <div class="user-welcome-texts">
+              <h2 class="user-greeting" id="driverHomeGreeting">Hello, Tariq</h2>
+              <p class="user-question" id="driverHomeMeta">Finish setup to accept school rides</p>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button type="button" class="driver-status-toggle-pill" id="driverStatusToggleBtn" onclick="toggleDriverOnlineStatus()">
+              <span class="live-pulse-dot" style="margin:0;"></span>
+              <span id="driverStatusToggleText">Available</span>
+            </button>
+            <button type="button" class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
+              <i data-lucide="bell"></i>
+              <span class="unread-badge-dot"></span>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- Driver Scenario Switcher (10yr Product Designer Testing Toolbar) -->
-      <div class="driver-scenario-bar">
-        <span style="font-size:11px;font-weight:800;color:#64748B;text-transform:uppercase;margin-right:2px;">Scenario:</span>
-        <button type="button" class="driver-scenario-chip" id="dchipScenarioA" onclick="setDriverScenario('A')">State A: No Trips</button>
-        <button type="button" class="driver-scenario-chip active" id="dchipScenarioB" onclick="setDriverScenario('B')">State B: Upcoming (Default)</button>
-        <button type="button" class="driver-scenario-chip" id="dchipScenarioC" onclick="setDriverScenario('C')">State C: Starts Soon</button>
-      </div>
-
-      <div class="screen-scroll-body" style="padding-bottom: 90px; display: flex; flex-direction: column; gap: 16px;">
         <div id="driverHeroContainer"></div>
         <div id="driverHomeFeed"></div>
       </div>
@@ -4874,7 +4877,7 @@
 
 
     <!-- ================= 31. DRIVER REQUESTS SCREEN ================= -->
-    <section class="screen-view" id="screen-driverRequests" style="background-color: #F8FAFC;">
+    <section class="screen-view" id="screen-driverRequests" style="background-color: #FFFFFF;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
@@ -4888,7 +4891,7 @@
         <button type="button" class="back-btn" onclick="navigateTo('driverHome')">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Ride Requests</h2>
+        <h2 class="top-bar-title">Requests</h2>
         <span style="width:26px;"></span>
       </div>
 
@@ -4914,7 +4917,7 @@
 
 
     <!-- ================= 32. DRIVER SCHEDULE SCREEN ================= -->
-    <section class="screen-view" id="screen-driverSchedule" style="background-color: #F8FAFC;">
+    <section class="screen-view" id="screen-driverSchedule" style="background-color: #FFFFFF;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
@@ -4926,7 +4929,7 @@
 
       <div class="top-bar-sticky">
         <button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button>
-        <h2 class="top-bar-title">Driver Schedule</h2>
+        <h2 class="top-bar-title">Schedule</h2>
         <span style="width:26px;"></span>
       </div>
 
@@ -4952,7 +4955,7 @@
 
     <!-- ================= 33. DRIVER ACTIVE TRIP COCKPIT ================= -->
     <section class="screen-view" id="screen-driverActiveTrip" style="background-color: #FFFFFF;">
-      <div class="status-bar light" style="background:#0F172A;color:#FFFFFF;">
+      <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
           <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
@@ -4961,55 +4964,47 @@
         </div>
       </div>
 
-      <div class="top-bar-sticky" style="background:#0F172A;color:#FFFFFF;border-bottom:1px solid rgba(255,255,255,0.1);">
-        <button type="button" class="back-btn" onclick="navigateTo('driverHome')" style="color:#FFFFFF;"><i data-lucide="chevron-left"></i></button>
-        <h2 class="top-bar-title" style="color:#FFFFFF;">Active trip</h2>
-        <button type="button" class="btn-text-link" id="driverTripSosBtn" onclick="triggerEmergencyAlert()" style="color:#EF4444;font-weight:800;font-size:12px;">SOS</button>
+      <div class="top-bar-sticky">
+        <button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button>
+        <h2 class="top-bar-title">Active trip</h2>
+        <button type="button" class="btn-text-link" id="driverTripSosBtn" onclick="triggerEmergencyAlert()" style="color:var(--color-danger);font-weight:800;">SOS</button>
       </div>
 
       <div class="active-trip-cockpit">
-        <!-- Interactive Cockpit Map Visual -->
         <div class="cockpit-map-visual">
           <div class="cockpit-route-path"></div>
           <div class="cockpit-driver-pin">
             <i data-lucide="navigation" style="width:20px;height:20px;transform:rotate(45deg);"></i>
           </div>
-          <div style="position:absolute;bottom:12px;left:14px;background:rgba(15,23,42,0.85);backdrop-filter:blur(6px);color:#FFFFFF;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;">
-            <span class="live-pulse-dot" style="margin:0;background:#10B981;"></span>
-            <span>Live GPS Broadcasting to Parent</span>
-          </div>
+          <span class="live-pill-tag driver-live-chip">
+            <span class="live-dot-pulse"></span>
+            <span>Live to parent</span>
+          </span>
         </div>
 
-        <!-- Trip Execution Card & Stepper -->
-        <div style="padding:18px 20px;display:flex;flex-direction:column;gap:14px;flex:1;">
-          <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="screen-scroll-body" style="padding-bottom:24px;flex:1;">
+          <div class="section-header-row" style="margin-bottom:0;">
             <span class="status-chip in-progress" id="driverMilestoneBadge">
               <span class="status-dot"></span>
-              <span id="driverMilestoneText">Milestone: On the Way to Pickup</span>
+              <span id="driverMilestoneText">On the way to pickup</span>
             </span>
-            <span style="font-size:12px;font-weight:700;color:#64748B;" id="driverActiveTripTimeLeft">ETA: 07:28 AM</span>
+            <span class="user-question" id="driverActiveTripTimeLeft">07:28 AM</span>
           </div>
 
-          <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;">
-            <span style="font-size:11px;font-weight:800;text-transform:uppercase;color:#64748B;letter-spacing:0.5px;">Current Destination Target</span>
-            <h3 style="font-size:16px;font-weight:800;color:#0F172A;margin:0;" id="driverActiveTargetTitle">Home (12 Elm Street, Toronto)</h3>
-            <p style="font-size:12.5px;color:#64748B;margin:0;" id="driverActiveTargetDesc">Riders: Arman Khan (9 yrs) &amp; Emma Khan (7 yrs) · Parent: Sarah Khan</p>
-            <div style="display:flex;gap:6px;margin-top:2px;">
-              <span class="capacity-badge ok" style="font-size:11px;">Booster Seat Required for Arman</span>
+          <div class="trip-card">
+            <h3 class="section-heading" style="margin-bottom:0;">Current stop</h3>
+            <div>
+              <h3 class="card-title-navy" id="driverActiveTargetTitle">Home (12 Elm Street, Toronto)</h3>
+              <p class="card-desc-muted" id="driverActiveTargetDesc">Arman Khan &amp; Emma Khan · Parent: Sadia Khan</p>
             </div>
+            <span class="capacity-badge ok">Booster seat for Arman</span>
           </div>
 
-          <!-- Quick Parent Contact Row -->
-          <button type="button" class="btn-chat-compact" id="driverTripMessageBtn" style="height:40px;justify-content:center;" onclick="openChatWith('PRNT-9042')">
-            <i data-lucide="message-square" style="width:14px;height:14px;color:var(--color-primary);"></i>
-            <span>Message Parent</span>
-          </button>
-
-          <!-- Primary Milestone Stepper Button -->
-          <div style="margin-top:auto;padding-top:10px;">
-            <button type="button" class="btn-primary" id="btnDriverMilestoneAction" style="height:48px;font-size:14.5px;font-weight:800;width:100%;border-radius:14px;box-shadow:0 4px 14px rgba(37,99,235,0.3);" onclick="advanceDriverActiveTrip()">
-              <span id="btnDriverMilestoneText">Arrived at Pickup Location →</span>
+          <div class="drv-actions-col">
+            <button type="button" class="btn-primary" id="btnDriverMilestoneAction" onclick="advanceDriverActiveTrip()">
+              <span id="btnDriverMilestoneText">Arrived at pickup</span>
             </button>
+            <button type="button" class="btn-secondary-surface" id="driverTripMessageBtn" onclick="openChatWith('PRNT-9042')">Message parent</button>
           </div>
         </div>
       </div>
@@ -5037,7 +5032,7 @@
                 <div style="font-size:11.5px;color:#64748B;">Grade 4 · Booster Seat Attached</div>
               </div>
             </div>
-            <input type="checkbox" id="chkAttendArman" checked style="width:18px;height:18px;accent-color:#15803D;pointer-events:none;" />
+            <input type="checkbox" id="chkAttendArman" checked style="width:18px;height:18px;accent-color:var(--color-primary);pointer-events:none;" />
           </div>
 
           <!-- Child 2: Emma -->
@@ -5049,13 +5044,11 @@
                 <div style="font-size:11.5px;color:#64748B;">Grade 2 · Standard Seatbelt</div>
               </div>
             </div>
-            <input type="checkbox" id="chkAttendEmma" checked style="width:18px;height:18px;accent-color:#15803D;pointer-events:none;" />
+            <input type="checkbox" id="chkAttendEmma" checked style="width:18px;height:18px;accent-color:var(--color-primary);pointer-events:none;" />
           </div>
         </div>
 
-        <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:10px;font-size:11.5px;color:#1E40AF;line-height:1.4;">
-          💡 <strong>Multi-Child Edge Case:</strong> If one child is absent today, uncheck them. The trip will safely continue for the riding child without cancelling the booking.
-        </div>
+        <p class="drv-lede">If one child is not riding today, uncheck them. The trip continues for the others without cancelling the booking.</p>
 
         <button type="button" class="btn-primary" id="btnConfirmAttendance" onclick="confirmDriverAttendance()">
           <span>Confirm pickup</span>
@@ -5100,7 +5093,7 @@
 
       <div class="top-bar-sticky">
         <button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button>
-        <h2 class="top-bar-title">Driver profile</h2>
+        <h2 class="top-bar-title">Profile</h2>
         <span style="width:26px;"></span>
       </div>
 
@@ -5109,11 +5102,11 @@
         <div class="profile-user-card">
           <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0;">
             <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="profile-avatar-lg" />
-            <span style="position: absolute; bottom: 0; right: 0; background: #059669; color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #fff;">✓</span>
+            <span style="position: absolute; bottom: 0; right: 0; background: var(--color-secondary); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #09122C;">✓</span>
           </div>
           <div style="flex:1;">
             <div style="display:flex;align-items:center;gap:6px;">
-              <h3 style="font-size:18px;font-weight:800;color:#0F172A;margin:0;">Tariq Ahmed</h3>
+              <h3 style="font-size:18px;font-weight:800;color:#FFFFFF;margin:0;">Tariq Ahmed</h3>
               <span class="capacity-badge ok" style="font-size:10.5px;">Verified Driver</span>
             </div>
             <p style="font-size:13px;color:#64748B;margin:2px 0 0 0;">+1 (416) 555-0182 · 4+ Yrs Driving</p>
@@ -5129,7 +5122,7 @@
           <h4 class="profile-section-title">Active Vehicle</h4>
           <div class="profile-menu-card">
             <div class="profile-menu-item" style="cursor:default;">
-              <div class="profile-menu-icon" style="background:#EFF6FF;color:#2563EB;"><i data-lucide="car"></i></div>
+              <div class="menu-icon-wrap"><i data-lucide="car"></i></div>
               <div class="profile-menu-text">
                 <div class="menu-title">Toyota Sienna (2023) Minivan</div>
                 <div class="menu-subtitle">Plate: SCH-4091 · Celestial Silver · 4 Seats</div>
@@ -5144,7 +5137,7 @@
           <h4 class="profile-section-title">Credentials &amp; Plan</h4>
           <div class="profile-menu-card">
             <div class="profile-menu-item" onclick="navigateTo('driverSetup')">
-              <div class="profile-menu-icon" style="background:#F0FDF4;color:#059669;"><i data-lucide="file-check"></i></div>
+              <div class="menu-icon-wrap"><i data-lucide="file-check"></i></div>
               <div class="profile-menu-text">
                 <div class="menu-title">Documents &amp; Background Check</div>
                 <div class="menu-subtitle">All 4 compliance documents approved</div>
@@ -5152,7 +5145,7 @@
               <i data-lucide="chevron-right" class="profile-menu-chevron"></i>
             </div>
             <div class="profile-menu-item">
-              <div class="profile-menu-icon" style="background:#FEF3C7;color:#D97706;"><i data-lucide="credit-card"></i></div>
+              <div class="menu-icon-wrap"><i data-lucide="credit-card"></i></div>
               <div class="profile-menu-text">
                 <div class="menu-title">Home2School Pro Driver Pass</div>
                 <div class="menu-subtitle">$29 / month · Renews Sep 30, 2026</div>
@@ -5166,7 +5159,7 @@
         <div class="profile-menu-section">
           <div class="profile-menu-card">
             <div class="profile-menu-item" onclick="window.switchRole('parent')">
-              <div class="profile-menu-icon" style="background:#EFF6FF;color:#2563EB;"><i data-lucide="users"></i></div>
+                <div class="menu-icon-wrap"><i data-lucide="users"></i></div>
               <div class="profile-menu-text">
                 <div class="menu-title" style="color:var(--color-primary);">Switch to Parent Mode</div>
                 <div class="menu-subtitle">Manage child riders &amp; book school commutes</div>

@@ -306,7 +306,7 @@
   }
 
   function stepHint(n, total, copy) {
-    return `<div class="drv-step-kicker">Step ${n} of ${total}</div><h1 class="page-title" style="font-size:22px;">${copy}</h1>`;
+    return `<p class="drv-lede">Step ${n} of ${total} · ${copy}</p>`;
   }
 
   function renderOnboardProfile() {
@@ -565,7 +565,7 @@
         <div style="width:56px;height:56px;border-radius:50%;background:var(--color-fade);display:flex;align-items:center;justify-content:center;color:var(--color-primary);">
           <i data-lucide="shield" style="width:26px;height:26px;"></i>
         </div>
-        <h1 class="page-title" style="font-size:22px;">Verification pending</h1>
+        <h2 class="page-title">Verification pending</h2>
         <p class="drv-lede">Home2School reviews your documents before you can accept bookings. You will get an in-app notice when a decision is ready.</p>
       </div>
       ${d.documents.map((doc) => `
@@ -817,25 +817,28 @@
     if (feedEl) {
       feedEl.innerHTML = `
         ${view.incoming.length ? `
-          <div class="drv-home-block">
-            <div class="drv-section-label">New requests</div>
-            <div class="drv-card">
-              <div style="font-size:15px;font-weight:800;color:var(--color-title);">${esc(childShort(view.incoming[0]))} · ${esc(view.incoming[0].dropoffLocation)}</div>
-              <p class="drv-lede">${esc(view.incoming[0].pickupTime)} pickup · ${esc(view.incoming[0].returnTime)} return · ${esc(view.incoming[0].rateLabel)}</p>
-              <button type="button" class="btn-primary" onclick="navigateTo('driverRequests')">Review requests</button>
+          <div class="section-block">
+            <div class="section-header-row">
+              <h3 class="section-heading">New requests</h3>
+              <a href="#driverRequests" onclick="navigateTo('driverRequests');return false;" class="link-see-all">See All <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
             </div>
+            ${compactTrip(view.incoming[0], 'request')}
           </div>` : ''}
-        <div class="drv-home-block">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="drv-section-label">Today's schedule</div>
-            <button type="button" class="btn-text-link" onclick="navigateTo('driverSchedule')" style="font-weight:700;">View all</button>
+        <div class="section-block">
+          <div class="section-header-row">
+            <h3 class="section-heading">Today's schedule</h3>
+            <a href="#driverSchedule" onclick="navigateTo('driverSchedule');return false;" class="link-see-all">See All <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
           </div>
-          ${view.schedule.length ? `<div class="drv-card">${view.schedule.map((item, i) => scheduleRow(item, i < view.schedule.length - 1)).join('')}</div>` : `<div class="drv-card"><p class="drv-lede">No trips on the calendar yet.</p></div>`}
+          ${view.schedule.length
+            ? `<div class="upcoming-trips-list">${view.schedule.map((item) => scheduleRow(item)).join('')}</div>`
+            : `<div class="empty-trips-card"><div class="empty-trips-icon"><i data-lucide="calendar"></i></div><h4 class="empty-trips-title">Nothing today</h4><p class="empty-trips-desc">Accepted pickup and return legs will show here.</p></div>`}
         </div>
-        <div class="drv-card" onclick="navigateTo('driverOnboardAvailability')" style="cursor:pointer;">
-          <div class="drv-section-label">Availability</div>
-          <div style="font-size:14px;font-weight:800;color:var(--color-title);">Mon–Fri</div>
-          <p class="drv-lede">${esc(d.availability.morningSlot)} · ${esc(d.availability.afternoonSlot)}</p>
+        <div class="action-card light horizontal" onclick="navigateTo('driverOnboardAvailability')">
+          <div class="action-icon-circle orange-tint"><i data-lucide="clock"></i></div>
+          <div>
+            <h4 class="card-title-navy">Availability</h4>
+            <p class="card-desc-muted">Mon–Fri · ${esc(d.availability.morningSlot)} · ${esc(d.availability.afternoonSlot)}</p>
+          </div>
         </div>
       `;
     }
@@ -845,51 +848,96 @@
     icons();
   }
 
-  function renderHero(view, d) {
-    if (view.kind === 'idle') {
-      return `<div class="driver-hero-card state-idle">
-        <h3 style="font-size:17px;font-weight:800;margin:0;">You're clear, ${esc((d.name || '').split(' ')[0])}</h3>
-        <p class="drv-lede">No trips on deck. New parent requests will show here.</p>
-        <button type="button" class="btn-primary" onclick="navigateTo('driverOnboardAvailability')">Update availability</button>
+  function timeParts(label) {
+    const raw = String(label || '').trim();
+    const m = raw.match(/(\d{1,2}:\d{2})\s*(AM|PM)?/i);
+    return { clock: m ? m[1] : raw || '--', mer: m && m[2] ? m[2].toUpperCase() : '' };
+  }
+
+  function compactTrip(item, kind) {
+    if (kind === 'request') {
+      const t = timeParts(item.pickupTime);
+      return `<div class="trip-card-compact" onclick="openDriverRequest('${item.id}')">
+        <div class="trip-date-block">
+          <span class="td-month">${esc(t.mer || 'AM')}</span>
+          <span class="td-day">${esc(t.clock)}</span>
+          <span class="td-weekday">New</span>
+        </div>
+        <div class="trip-compact-content">
+          <div class="trip-compact-top">
+            <span class="trip-compact-time">${esc(item.pickupTime)} &amp; ${esc(item.returnTime)}</span>
+            <span class="both-way-badge">Request</span>
+          </div>
+          <div class="trip-compact-route">${esc(item.pickupLocation || '')} ⇄ ${esc(item.dropoffLocation || '')}</div>
+          <div class="trip-compact-sub">${esc(childShort(item))} · ${esc(item.parentName || 'Parent')}</div>
+        </div>
       </div>`;
     }
-    if (view.kind === 'requests') {
-      const req = view.incoming[0];
-      return `<div class="driver-hero-card state-upcoming">
-        <div class="dhero-badge-row"><span class="dhero-chip orange">New request</span></div>
-        <div class="dhero-children">${esc(childShort(req))}</div>
-        <div class="drv-lede" style="opacity:.9;">${esc(req.parentName)} · ${esc(req.pickupTime)} pickup · ${esc(req.returnTime)} return</div>
-        <button type="button" class="btn-dhero-primary" onclick="openDriverRequest('${req.id}')">View request</button>
-      </div>`;
-    }
-    const next = view.next;
-    const soon = view.kind === 'soon' || view.kind === 'active';
-    return `<div class="driver-hero-card ${soon ? 'state-urgent' : 'state-upcoming'}">
-      <div class="dhero-badge-row">
-        <span class="dhero-chip ${soon ? 'emerald' : 'orange'}">${view.kind === 'active' ? 'Active trip' : view.kind === 'soon' ? 'Starting soon' : 'Next trip'}</span>
-        <span class="dhero-time">${esc(next.time)}</span>
+    const t = timeParts(item.time);
+    const click = item.isActionableNow ? `onclick="startDriverTrip('${item.id}')"` : `onclick="navigateTo('driverSchedule')"`;
+    return `<div class="trip-card-compact" ${click}>
+      <div class="trip-date-block">
+        <span class="td-month">${esc(t.mer || (item.leg === 'afternoon' ? 'PM' : 'AM'))}</span>
+        <span class="td-day">${esc(t.clock)}</span>
+        <span class="td-weekday">${item.leg === 'afternoon' ? 'Ret' : 'AM'}</span>
       </div>
-      <div class="dhero-children">${esc(next.childNames)}</div>
-      <div class="drv-lede" style="opacity:.9;">${esc(next.legLabel)} · ${esc(next.route)}</div>
-      <div class="dhero-actions-row">
-        <button type="button" class="btn-dhero-primary" onclick="startDriverTrip('${next.id}', '${view.kind}')">${view.kind === 'active' ? 'Open trip' : view.kind === 'soon' ? "I'm On the Way" : 'View trip'}</button>
-        <button type="button" class="btn-dhero-secondary" onclick="openChatWith('${next.parentId || 'PRNT-9042'}')">Message</button>
+      <div class="trip-compact-content">
+        <div class="trip-compact-top">
+          <span class="trip-compact-time">${esc(item.time)}</span>
+          <span class="${item.leg === 'afternoon' ? 'one-way-badge' : 'both-way-badge'}">${esc(item.legLabel || (item.leg === 'afternoon' ? 'Return' : 'Morning'))}</span>
+        </div>
+        <div class="trip-compact-route">${esc(item.route || '')}</div>
+        <div class="trip-compact-sub">${esc(item.childNames || '')}</div>
       </div>
     </div>`;
   }
 
-  function scheduleRow(item, border) {
-    return `<div style="display:flex;gap:12px;align-items:flex-start;${border ? 'border-bottom:1px solid var(--color-stroke);padding-bottom:10px;margin-bottom:10px;' : ''}">
-      <div style="min-width:72px;">
-        <div style="font-size:13px;font-weight:800;color:var(--color-title);">${esc(item.time)}</div>
-        <div style="font-size:10.5px;font-weight:700;color:var(--color-primary);">${item.leg === 'morning' ? 'Morning' : 'Return'}</div>
+  function renderHero(view, d) {
+    if (view.kind === 'idle') {
+      return `<div class="section-block">
+        <h3 class="section-heading">Next trip</h3>
+        <div class="empty-trips-card">
+          <div class="empty-trips-icon"><i data-lucide="calendar-x"></i></div>
+          <h4 class="empty-trips-title">No trips on deck</h4>
+          <p class="empty-trips-desc">New parent requests will show here when families on your routes need a commute.</p>
+          <button type="button" class="btn-primary" onclick="navigateTo('driverOnboardAvailability')">Update availability</button>
+        </div>
+      </div>`;
+    }
+    if (view.kind === 'requests') {
+      const req = view.incoming[0];
+      return `<div class="section-block">
+        <h3 class="section-heading">Next trip</h3>
+        ${compactTrip(req, 'request')}
+        <button type="button" class="btn-primary" onclick="openDriverRequest('${req.id}')">View request</button>
+      </div>`;
+    }
+    const next = view.next;
+    const cta = view.kind === 'active' ? 'Open trip' : view.kind === 'soon' ? "I'm On the Way" : 'View trip';
+    return `<div class="section-block">
+      <h3 class="section-heading">Next trip</h3>
+      <div class="trip-card ${view.kind === 'soon' || view.kind === 'active' ? 'state-urgent' : ''}">
+        <div class="trip-card-top">
+          <div class="date-badge-box">
+            <span class="db-month">${esc(timeParts(next.time).mer || 'AM')}</span>
+            <span class="db-day">${esc(timeParts(next.time).clock)}</span>
+            <span class="db-weekday">${view.kind === 'active' ? 'Live' : 'Next'}</span>
+          </div>
+          <div>
+            <div class="dhero-children">${esc(next.childNames)}</div>
+            <p class="drv-lede">${esc(next.legLabel)} · ${esc(next.route)}</p>
+          </div>
+        </div>
+        <div class="drv-actions-col">
+          <button type="button" class="btn-primary" onclick="startDriverTrip('${next.id}', '${view.kind}')">${cta}</button>
+          <button type="button" class="btn-secondary-surface" onclick="openChatWith('${next.parentId || 'PRNT-9042'}')">Message parent</button>
+        </div>
       </div>
-      <div style="flex:1;">
-        <div style="font-size:13.5px;font-weight:800;">${esc(item.childNames)}</div>
-        <div class="drv-lede">${esc(item.route)}</div>
-      </div>
-      ${item.isActionableNow ? `<button type="button" class="btn-text-link" style="font-weight:800;" onclick="startDriverTrip('${item.id}')">Start</button>` : `<span class="status-chip" style="font-size:10.5px;">Scheduled</span>`}
     </div>`;
+  }
+
+  function scheduleRow(item) {
+    return compactTrip(item, 'schedule');
   }
 
   function renderRequests(tab) {
@@ -910,7 +958,7 @@
     if (btnDec) { btnDec.textContent = `Declined (${counts.declined})`; btnDec.classList.toggle('active', tab === 'declined'); }
     const list = d.requests.filter((r) => r.status === tab);
     if (!list.length) {
-      wrap.innerHTML = `<div class="drv-card" style="text-align:center;padding:32px 16px;"><h4 style="margin:0 0 6px;">No ${tab} requests</h4><p class="drv-lede">Parent commute requests for your area appear here.</p></div>`;
+      wrap.innerHTML = `<div class="empty-trips-card"><div class="empty-trips-icon"><i data-lucide="inbox"></i></div><h4 class="empty-trips-title">No ${tab} requests</h4><p class="empty-trips-desc">Parent commute requests for your area appear here.</p></div>`;
       icons();
       return;
     }
@@ -920,7 +968,7 @@
           <span class="capacity-badge ${req.seatsNeeded <= d.vehicle.capacity ? 'ok' : 'full'}">${req.seatsNeeded} seats</span>
           <span style="font-size:15px;font-weight:800;">${esc(req.rateLabel)}</span>
         </div>
-        <h4 style="font-size:15.5px;font-weight:800;margin:0;">${esc(childLine(req))}</h4>
+        <h4 class="card-title-navy" style="margin:0;">${esc(childLine(req))}</h4>
         <p class="drv-lede">${esc(req.pickupLocation)} → ${esc(req.dropoffLocation)}</p>
         <p class="drv-lede">${esc(req.dateLabel || '')} · Pickup ${esc(req.pickupTime)} · Return ${esc(req.returnTime)}</p>
         ${req.frequency === 'recurring' ? `<p class="drv-lede">Recurring ${esc((req.recurringDays || []).join('–') || 'Mon–Fri')}</p>` : ''}
@@ -1046,19 +1094,13 @@
     if (btnT) { btnT.textContent = `Today (${today.length})`; btnT.classList.toggle('active', tab === 'today'); }
     if (btnU) { btnU.textContent = `Upcoming (${Math.max(upcoming.length, all.length - today.length) || all.length})`; btnU.classList.toggle('active', tab === 'upcoming'); }
     if (!list.length) {
-      wrap.innerHTML = `<div class="drv-card" style="text-align:center;padding:32px 16px;"><h4 style="margin:0 0 6px;">Nothing scheduled</h4><p class="drv-lede">Accepted pickup and return legs appear here.</p></div>`;
+      wrap.innerHTML = `<div class="empty-trips-card"><div class="empty-trips-icon"><i data-lucide="calendar"></i></div><h4 class="empty-trips-title">Nothing scheduled</h4><p class="empty-trips-desc">Accepted pickup and return legs appear here.</p></div>`;
       icons();
       return;
     }
     wrap.innerHTML = list.map((item) => `
-      <div class="drv-card">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;">
-          <div style="font-size:18px;font-weight:800;">${esc(item.time)}</div>
-          <div class="drv-lede">${esc(item.legLabel)}</div>
-        </div>
-        <div style="font-size:15px;font-weight:800;">${esc(item.childNames)}</div>
-        <p class="drv-lede">${esc(item.route)}</p>
-        <p class="drv-lede">${item.seats} seats · ${esc(item.status)}</p>
+      <div class="drv-home-block">
+        ${compactTrip(item, 'schedule')}
         ${item.isActionableNow ? `<button type="button" class="btn-primary" onclick="startDriverTrip('${item.id}')">${item.status === 'active' ? 'Open trip' : "I'm On the Way"}</button>` : `<button type="button" class="btn-secondary-surface" onclick="openChatWith('${item.parentId}')">Message parent</button>`}
       </div>
     `).join('');
@@ -1115,12 +1157,20 @@
     const el = feed('driverTripPrepFeed');
     if (!el || !ctx) return;
     el.innerHTML = `
-      <div class="drv-card">
-        <div class="drv-section-label">${esc(ctx.legLabel || 'Next trip')}</div>
-        <div style="font-size:22px;font-weight:800;">${esc(ctx.time)}</div>
-        <div style="font-size:16px;font-weight:800;margin-top:8px;">${esc(ctx.childNames)}</div>
-        <p class="drv-lede">${esc(ctx.from)} → ${esc(ctx.to)}</p>
-        <p class="drv-lede">Parent: ${esc(ctx.parentName || 'Parent')}</p>
+      <div class="trip-card">
+        <div class="trip-card-top">
+          <div class="date-badge-box">
+            <span class="db-month">${esc(timeParts(ctx.time).mer || 'AM')}</span>
+            <span class="db-day">${esc(timeParts(ctx.time).clock)}</span>
+            <span class="db-weekday">Next</span>
+          </div>
+          <div>
+            <h3 class="card-title-navy">${esc(ctx.childNames)}</h3>
+            <p class="card-desc-muted">${esc(ctx.legLabel || 'Next trip')}</p>
+            <p class="drv-lede">${esc(ctx.from)} → ${esc(ctx.to)}</p>
+            <p class="drv-lede">Parent: ${esc(ctx.parentName || 'Parent')}</p>
+          </div>
+        </div>
       </div>
       <button type="button" class="btn-primary" onclick="beginDriverTrip()">I'm On the Way</button>
       <button type="button" class="btn-secondary-surface" onclick="openChatWith('${ctx.parentId || 'PRNT-9042'}')">Message parent</button>
@@ -1190,7 +1240,7 @@
             <img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" />
             <div><div style="font-weight:800;">${esc(c.name)}</div><div class="drv-lede">${esc(c.notes || c.grade || '')}</div></div>
           </div>
-          <span style="font-size:12px;font-weight:800;color:${on ? '#047857' : '#B91C1C'};">${on ? 'Riding' : 'Not riding'}</span>
+          <span class="capacity-badge ${on ? 'ok' : 'full'}">${on ? 'Riding' : 'Not riding'}</span>
         </div>`;
       }).join('');
     }
@@ -1225,7 +1275,7 @@
     el.innerHTML = `
       <div style="text-align:center;">
         <img src="${esc(PARENTS[ctx.parentId]?.photo || '/assets/avatar_sadia.jpg')}" alt="" class="provider-large-avatar" style="margin:12px auto;" />
-        <h2 style="font-size:22px;font-weight:800;">Rate ${esc(ctx.parentName || 'this parent')}</h2>
+        <h2 class="page-title">Rate ${esc(ctx.parentName || 'this parent')}</h2>
         <p class="drv-lede">Optional. Pickup and communication only — not a public directory.</p>
       </div>
       <div class="stars-row" id="driverRateStars">
@@ -1266,7 +1316,7 @@
     const ready = onboardingDone(d);
     el.innerHTML = `
       <div class="drv-card">
-        <div style="font-size:16px;font-weight:800;">${isApproved(d) ? 'Verified driver' : ready ? 'Submitted for review' : 'Finish setup'}</div>
+        <h3 class="section-heading" style="margin-bottom:0;">${isApproved(d) ? 'Verified driver' : ready ? 'Submitted for review' : 'Finish setup'}</h3>
         <p class="drv-lede">${isApproved(d) ? 'You can accept bookings during your trial.' : 'Complete each step. You cannot accept bookings until you are approved.'}</p>
       </div>
       ${steps.map(([key, title, sub, screen]) => `
@@ -1290,45 +1340,57 @@
     if (!el) return;
     const badge = isApproved(d) ? 'Verified' : onboardingDone(d) ? 'Pending' : 'Setup incomplete';
     el.innerHTML = `
-      <div class="profile-user-card" style="background:var(--color-primary);color:#fff;border-radius:16px;padding:16px;display:flex;gap:12px;align-items:center;">
+      <div class="profile-user-card">
         <img src="${esc(d.photo)}" alt="" class="profile-avatar-lg" />
-        <div>
-          <h3 style="margin:0;font-size:18px;font-weight:800;color:#fff;">${esc(d.name)}</h3>
-          <p class="drv-lede" style="color:rgba(255,255,255,.8);">${esc(d.phone)}</p>
-          <span class="capacity-badge ok">${badge}</span>
+        <div style="flex:1;min-width:0;">
+          <h3 style="margin:0;font-size:18px;font-weight:800;color:#FFFFFF;">${esc(d.name)}</h3>
+          <p style="font-size:13px;color:rgba(255,255,255,0.78);margin:3px 0 0 0;">${esc(d.phone)}</p>
+          <div style="margin-top:8px;"><span class="profile-child-count-pill">${esc(badge)}</span></div>
         </div>
       </div>
       <div class="profile-menu-section">
         <div class="profile-menu-item" onclick="navigateTo('driverOnboardVehicle')">
-          <div class="profile-menu-icon" style="background:var(--color-fade);color:var(--color-primary);"><i data-lucide="car"></i></div>
-          <div class="profile-menu-text"><div class="menu-title">${esc(d.vehicle.make)} ${esc(d.vehicle.model)}</div><div class="menu-subtitle">${esc(d.vehicle.plate)} · ${esc(d.vehicle.color)} · ${d.vehicle.capacity} seats</div></div>
+          <div class="menu-item-left">
+            <div class="menu-icon-wrap"><i data-lucide="car"></i></div>
+            <div>
+              <div class="menu-title-text">${esc(d.vehicle.make)} ${esc(d.vehicle.model)}</div>
+              <div class="menu-subtitle">${esc(d.vehicle.plate)} · ${esc(d.vehicle.color)} · ${d.vehicle.capacity} seats</div>
+            </div>
+          </div>
         </div>
         <div class="profile-menu-item" onclick="navigateTo('driverSetup')">
-          <div class="profile-menu-icon" style="background:var(--color-fade);color:var(--color-primary);"><i data-lucide="file-check"></i></div>
-          <div class="profile-menu-text"><div class="menu-title">Documents & availability</div><div class="menu-subtitle">${isApproved(d) ? 'Approved' : 'Checklist'}</div></div>
-          <i data-lucide="chevron-right" class="profile-menu-chevron"></i>
+          <div class="menu-item-left">
+            <div class="menu-icon-wrap"><i data-lucide="file-check"></i></div>
+            <div>
+              <div class="menu-title-text">Documents & availability</div>
+              <div class="menu-subtitle">${isApproved(d) ? 'Approved' : 'Checklist'}</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" style="width:16px;height:16px;color:#94A3B8;"></i>
         </div>
         <div class="profile-menu-item" onclick="navigateTo('driverSubscription')">
-          <div class="profile-menu-icon" style="background:var(--color-fade);color:var(--color-secondary);"><i data-lucide="credit-card"></i></div>
-          <div class="profile-menu-text"><div class="menu-title">Platform fee</div><div class="menu-subtitle">${d.subscription.status === 'trial' ? 'Trial' : d.subscription.status === 'active' ? '$' + (d.subscription.plan === 'annual' ? '279 / year' : '29 / month') : 'Not started'} · not your ride rate</div></div>
+          <div class="menu-item-left">
+            <div class="menu-icon-wrap"><i data-lucide="credit-card"></i></div>
+            <div>
+              <div class="menu-title-text">Platform fee</div>
+              <div class="menu-subtitle">${d.subscription.status === 'trial' ? 'Trial' : d.subscription.status === 'active' ? '$' + (d.subscription.plan === 'annual' ? '279 / year' : '29 / month') : 'Not started'} · not your ride rate</div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="profile-menu-section">
-        <div class="profile-menu-card">
-          <div class="profile-menu-item" onclick="window.switchRole('parent')">
-            <div class="profile-menu-icon" style="background:var(--color-fade);color:var(--color-primary);"><i data-lucide="users"></i></div>
-            <div class="profile-menu-text">
-              <div class="menu-title" style="color:var(--color-primary);">Switch to Parent</div>
-              <div class="menu-subtitle">Manage children and school commutes</div>
-            </div>
-            <i data-lucide="arrow-right" class="profile-menu-chevron"></i>
+        <div class="profile-menu-item" onclick="window.switchRole('parent')">
+          <div class="menu-item-left">
+            <div class="menu-icon-wrap"><i data-lucide="users"></i></div>
+            <span class="menu-title-text">Switch to Parent</span>
           </div>
-          <div class="profile-menu-item" onclick="navigateTo('authWelcome')">
-            <div class="profile-menu-icon" style="background:#FEE2E2;color:#EF4444;"><i data-lucide="log-out"></i></div>
-            <div class="profile-menu-text"><div class="menu-title" style="color:#EF4444;">Sign out</div></div>
-          </div>
+          <i data-lucide="chevron-right" style="width:16px;height:16px;color:#94A3B8;"></i>
         </div>
       </div>
+      <button type="button" onclick="navigateTo('authWelcome')" style="width:100%;padding:13px 16px;font-size:14px;font-weight:700;border-radius:12px;border:1.5px solid #FEE2E2;background:#FFF5F5;color:#DC2626;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;">
+        <i data-lucide="log-out" style="width:15px;height:15px;"></i>
+        Sign out
+      </button>
     `;
     icons();
   }
