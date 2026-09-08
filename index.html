@@ -298,7 +298,7 @@
         </div>
 
         <!-- Modern Driver Portal Entry CTA -->
-        <div class="driver-partner-card" onclick="window.switchRole('driver')">
+        <div class="driver-partner-card" onclick="window.enterDriverFromAuth()">
           <div class="driver-partner-left">
             <div class="driver-partner-icon">
               <i data-lucide="car" style="width: 18px; height: 18px;"></i>
@@ -525,7 +525,7 @@
           <p class="page-subtitle">Set up school transportation for your child</p>
         </div>
 
-        <form onsubmit="event.preventDefault(); navigateTo('authSuccess');" class="profile-fields-form">
+          <form onsubmit="event.preventDefault(); navigateTo('subscription');" class="profile-fields-form">
           <!-- Child Full Name -->
           <div class="form-group">
             <label class="form-label">Child's Full Name</label>
@@ -536,13 +536,23 @@
             </div>
           </div>
 
-          <!-- Child Age -->
+          <!-- Child Grade -->
           <div class="form-group">
-            <label class="form-label">Child Age</label>
-            <div class="input-with-icon">
-              <i data-lucide="calendar" style="width:18px;height:18px;color:#94A3B8;"></i>
-              <input type="text" class="form-input" id="authChildAge" placeholder="e.g. 9 Years"
-                value="9 Years" required />
+            <label class="form-label">Grade</label>
+            <div class="select-wrapper">
+              <select class="form-select" id="authChildGrade">
+                <option value="Pre-K">Pre-K</option>
+                <option value="Kindergarten">Kindergarten</option>
+                <option value="Grade 1">Grade 1</option>
+                <option value="Grade 2">Grade 2</option>
+                <option value="Grade 3">Grade 3</option>
+                <option value="Grade 4" selected>Grade 4</option>
+                <option value="Grade 5">Grade 5</option>
+                <option value="Grade 6">Grade 6</option>
+                <option value="Grade 7">Grade 7</option>
+                <option value="Grade 8">Grade 8</option>
+              </select>
+              <i data-lucide="chevron-down" class="select-chevron" style="width:18px;height:18px;color:currentColor;"></i>
             </div>
           </div>
 
@@ -556,20 +566,85 @@
             </div>
           </div>
 
-          <!-- Default Pickup -->
-          <div class="form-group">
-            <label class="form-label">Default Pickup Location</label>
-            <div class="input-with-icon">
-              <i data-lucide="map-pin" style="width:18px;height:18px;color:#94A3B8;"></i>
-              <input type="text" class="form-input" id="authChildPickup" placeholder="e.g. Home (12 Elm Street)"
-                value="Home (12 Elm Street)" required />
-            </div>
-          </div>
-
           <div class="bottom-action-wrap">
             <button type="submit" class="btn-primary">Save &amp; Complete Setup</button>
           </div>
         </form>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+
+    <!-- ================= 8C. PARENT SUBSCRIPTION / TRIAL ================= -->
+    <section class="screen-view" id="screen-subscription" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" />
+          </svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" onclick="window.navigateBack('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Subscription</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body sub-screen-body">
+        <p class="sub-screen-lede">Home2School platform access is separate from a provider’s posted ride rate.</p>
+
+        <div class="sub-status-card" id="subscriptionStatusCard" data-status="trial">
+          <div class="sub-status-icon" id="subscriptionStatusIcon" aria-hidden="true">
+            <i data-lucide="calendar"></i>
+          </div>
+          <div class="sub-status-copy">
+            <div class="sub-status-kicker" id="subscriptionStatusLabel">Free trial</div>
+            <div class="sub-status-title" id="subscriptionPlanTitle">14 days remaining</div>
+            <div class="sub-status-sub" id="subscriptionPlanSub">Renews Sep 22, 2026</div>
+          </div>
+        </div>
+
+        <div class="sub-plan-block">
+          <h3 class="sub-section-title">Choose your plan</h3>
+          <button type="button" class="sub-plan-card active" id="planMonthly" onclick="selectSubscriptionPlan('monthly')">
+            <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
+            <span class="sub-plan-copy">
+              <span class="sub-plan-name">Monthly</span>
+              <span class="sub-plan-price">$9.99 / month</span>
+            </span>
+            <span class="sub-plan-badge sub-plan-badge-selected">SELECTED</span>
+          </button>
+          <button type="button" class="sub-plan-card" id="planAnnual" onclick="selectSubscriptionPlan('annual')">
+            <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
+            <span class="sub-plan-copy">
+              <span class="sub-plan-name">Annual</span>
+              <span class="sub-plan-price">$79 / year</span>
+            </span>
+            <span class="sub-plan-badge sub-plan-badge-save">SAVE 34%</span>
+            <span class="sub-plan-badge sub-plan-badge-selected">SELECTED</span>
+          </button>
+        </div>
+
+        <div class="sub-actions">
+          <button type="button" class="btn-primary sub-btn-with-icon" id="btnContinueTrial" onclick="continueWithParentTrial()">
+            <span id="btnContinueTrialLabel">Continue with free trial</span>
+            <i data-lucide="arrow-right"></i>
+          </button>
+          <button type="button" class="sub-btn-outline" id="btnActivateSubscription" onclick="activateParentSubscription()">Activate monthly access</button>
+          <button type="button" class="sub-cancel-link" id="btnCancelSubscription" onclick="cancelParentSubscription()">Cancel automatic renewal</button>
+        </div>
+
+        <div class="sub-history-card">
+          <h3 class="sub-section-title">Billing History</h3>
+          <div id="subscriptionHistoryList"></div>
+        </div>
       </div>
 
       <div class="home-indicator"></div>
@@ -677,7 +752,7 @@
         </div>
 
         <!-- Hero Promo Card: Safe Ride / Brighter Future -->
-        <div class="home-hero-card" onclick="navigateTo('bookingSelectChildren')" style="cursor: pointer;" title="Book a safe school ride">
+        <div class="home-hero-card" onclick="navigateTo('bookingTripSetup')" style="cursor: pointer;" title="Book a safe school ride">
           <img src="/assets/home_hero_card.png" alt="Safe Ride - Brighter Future" class="hero-card-full-img" />
         </div>
 
@@ -686,7 +761,7 @@
           <h3 class="section-heading">Quick Actions</h3>
           <div class="quick-actions-grid">
             <!-- Action 1: New Booking (Featured Navy Card) -->
-            <div class="action-card navy" onclick="navigateTo('bookingSelectChildren')">
+            <div class="action-card navy" onclick="navigateTo('bookingTripSetup')">
               <div class="action-icon-circle white-glass">
                 <i data-lucide="calendar-plus"></i>
               </div>
@@ -730,7 +805,7 @@
             <h4 class="empty-trips-title">No Upcoming Rides Yet</h4>
             <p class="empty-trips-desc">Set up school transportation for your children with background-checked local
               providers.</p>
-            <button class="btn-primary" onclick="navigateTo('bookingSelectChildren')" style="margin-top: 4px;">Book Your
+            <button class="btn-primary" onclick="navigateTo('bookingTripSetup')" style="margin-top: 4px;">Book Your
               First Ride</button>
           </div>
 
@@ -836,7 +911,7 @@
             </div>
 
             <!-- Clean Modern Route Tracker (Zero Box/Grid Clutter) -->
-            <div class="active-route-tracker" onclick="navigateTo('tracking')" title="Tap to view live tracking" role="button" tabindex="0">
+            <div class="active-route-tracker" onclick="openLiveTracking('H2S-84920')" title="Tap to view live tracking" role="button" tabindex="0">
               <div class="route-track-bar">
                 <div class="route-track-fill" style="width: 65%;"></div>
                 <div class="route-track-car" style="left: 65%;">
@@ -881,10 +956,10 @@
               </div>
 
               <div class="active-contact-buttons">
-                <button class="btn-icon-contact" onclick="alert('Calling Tariq Ahmed: +1 (416) 555-0182')" aria-label="Call Driver" title="Call Tariq Ahmed">
-                  <i data-lucide="phone"></i>
+                <button class="btn-icon-contact" onclick="openChatWith('tariq')" aria-label="Message Driver" title="Message Tariq">
+                  <i data-lucide="message-square"></i>
                 </button>
-                <button class="btn-track-action" onclick="navigateTo('tracking')" aria-label="Track Live Trip">
+                <button class="btn-track-action" onclick="openLiveTracking('H2S-84920')" aria-label="Track">
                   <span>Track</span>
                   <i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
                 </button>
@@ -909,7 +984,7 @@
           <i data-lucide="navigation"></i>
           <span>Tracking</span>
         </button>
-        <button class="tab-item" onclick="navigateTo('messages')">
+        <button class="tab-item" onclick="navigateTo('inbox')">
           <i data-lucide="message-square"></i>
           <span>Messages</span>
         </button>
@@ -976,7 +1051,7 @@
           <i data-lucide="navigation"></i>
           <span>Tracking</span>
         </button>
-        <button class="tab-item" onclick="navigateTo('messages')">
+        <button class="tab-item" onclick="navigateTo('inbox')">
           <i data-lucide="message-square"></i>
           <span>Messages</span>
         </button>
@@ -1038,10 +1113,21 @@
           </div>
 
           <div class="form-group" style="margin: 0;">
-            <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #0F172A; margin-bottom: 6px; display: block;">Child Age / Grade</label>
-            <div class="input-box-wrapper">
-              <i data-lucide="calendar" class="input-box-icon"></i>
-              <input type="text" class="form-input" id="editChildAge" value="9 Years" placeholder="e.g. 9 Years" required />
+            <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #0F172A; margin-bottom: 6px; display: block;">Grade</label>
+            <div class="select-wrapper">
+              <select class="form-select" id="editChildGrade" required>
+                <option value="Pre-K">Pre-K</option>
+                <option value="Kindergarten">Kindergarten</option>
+                <option value="Grade 1">Grade 1</option>
+                <option value="Grade 2">Grade 2</option>
+                <option value="Grade 3">Grade 3</option>
+                <option value="Grade 4">Grade 4</option>
+                <option value="Grade 5">Grade 5</option>
+                <option value="Grade 6">Grade 6</option>
+                <option value="Grade 7">Grade 7</option>
+                <option value="Grade 8">Grade 8</option>
+              </select>
+              <i data-lucide="chevron-down" class="select-chevron" style="width:18px;height:18px;color:currentColor;"></i>
             </div>
           </div>
 
@@ -1172,199 +1258,215 @@
         </div>
       </div>
 
-      <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('bookingSelectChildren')">
+      <div class="top-bar-sticky book-ride-topbar">
+        <button class="back-btn" onclick="navigateTo('home')">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Trip Details</h2>
+        <div class="book-ride-heading">
+          <h2 class="top-bar-title">Book a Ride</h2>
+          <p class="book-ride-sub">Let's get your child's school ride set up.</p>
+        </div>
         <span style="width: 28px;"></span>
       </div>
 
-      <div class="screen-scroll-body" style="padding-bottom: 20px;">
-        <!-- 1. Trip Type (Clean, Easy English) -->
-        <div class="clean-flow-section">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <div class="clean-flow-label" style="margin-bottom: 0;">Trip Type</div>
-            <span id="tripTypeHelpBadge" style="font-size: 11px; font-weight: 700; color: #1E40AF; background: #DBEAFE; padding: 2px 8px; border-radius: 99px;">Morning &amp; Afternoon</span>
-          </div>
-          <div class="clean-pill-toggle">
-            <button type="button" class="clean-pill-btn" id="btnDirOneWay" onclick="setTripDirection('oneway')">
-              <span>One-Way</span>
-            </button>
-            <button type="button" class="clean-pill-btn active" id="btnDirBothWay" onclick="setTripDirection('bothway')">
-              <span>Round Trip</span>
-            </button>
-          </div>
-
-          <!-- One-Way Shift Selector (Morning to School OR Afternoon Back Home) -->
-          <div id="oneWayShiftRow" style="display: none; margin-top: 10px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 10px;">
-            <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">Select One-Way Ride:</div>
-            <div class="clean-pill-toggle" style="background: #FFFFFF; border: 1px solid #CBD5E1; padding: 2px;">
-              <button type="button" class="clean-pill-btn active" id="btnShiftMorning" onclick="setOneWayShift('morning')" style="font-size: 12px; height: 32px;">
-                <span>☀️ Morning (To School)</span>
-              </button>
-              <button type="button" class="clean-pill-btn" id="btnShiftAfternoon" onclick="setOneWayShift('afternoon')" style="font-size: 12px; height: 32px;">
-                <span>🏠 Afternoon (Back Home)</span>
-              </button>
+      <div class="screen-scroll-body">
+        <div class="book-ride-section">
+          <div class="book-ride-section-head">
+            <i data-lucide="users"></i>
+            <div class="book-ride-section-copy">
+              <div class="book-ride-section-title">Children</div>
+              <div class="book-ride-section-hint">Who's riding?</div>
             </div>
           </div>
-        </div>
-
-        <!-- 2. Pickup & Drop-off Unified Card -->
-        <div class="clean-flow-section">
-          <div class="clean-flow-label">Pickup &amp; Drop-off</div>
-          <div class="clean-route-card">
-            <!-- Pickup Point (Editable Input + Map Button) -->
-            <div class="clean-route-point">
-              <div class="clean-route-icon-box navy">
-                <i data-lucide="home" style="width: 17px; height: 17px; color: var(--color-primary);"></i>
-              </div>
-              <div class="clean-route-info">
-                <div class="clean-route-type">HOME</div>
-                <input type="text" id="setupPickupLocationInput" class="clean-route-input" value="12 Elm Street, Toronto" placeholder="Enter pickup address..." oninput="syncLocationInput('pickup', this.value)" />
-                <input type="hidden" id="setupPickupLocation" value="Home (12 Elm Street)" />
-              </div>
-              <button type="button" class="clean-loc-map-btn navy" onclick="openMapPickerModal('pickup')" title="Pinpoint / Adjust on map">
-                <i data-lucide="map-pin"></i>
-                <span>Map</span>
-              </button>
+          <button type="button" class="book-ride-children-card is-empty" id="bookingChildrenTrigger" onclick="toggleChildrenDropdown()">
+            <div class="child-avatar-cluster" id="bookingChildrenAvatars" hidden></div>
+            <div class="book-ride-children-meta">
+              <div class="mvp-child-dropdown-value is-placeholder" id="bookingChildrenSummary">Select children</div>
+              <div class="mvp-child-dropdown-sub" id="bookingChildrenSub" hidden></div>
             </div>
-
-            <!-- Clean Route Divider (Clean subtle separator) -->
-            <div class="clean-route-divider"></div>
-
-            <!-- School Point (Editable Input + Map Button) -->
-            <div class="clean-route-point">
-              <div class="clean-route-icon-box orange">
-                <i data-lucide="graduation-cap" style="width: 17px; height: 17px; color: var(--color-secondary);"></i>
-              </div>
-              <div class="clean-route-info">
-                <div class="clean-route-type orange">SCHOOL</div>
-                <input type="text" id="setupSchoolLocationInput" class="clean-route-input orange" value="Greenfield International School" placeholder="Enter school / drop-off name..." oninput="syncLocationInput('school', this.value)" />
-                <input type="hidden" id="setupSchoolLocation" value="Greenfield International School" />
-              </div>
-              <button type="button" class="clean-loc-map-btn orange" onclick="openMapPickerModal('school')" title="Select Gate / Adjust on map">
-                <i data-lucide="map-pin"></i>
-                <span>Map</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Saved Locations Section (Dynamic with Lucide Icons) -->
-          <div class="booking-saved-locs-section" style="margin-top: 10px;">
-            <div class="clean-quick-locs-row" id="bookingSavedLocsList">
-              <!-- Rendered dynamically by renderBookingSavedLocations() with Lucide icons -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. Schedule Section (Unified Clean Card, Zero Redundant Text) -->
-        <div class="clean-flow-section">
-          <div class="clean-flow-label">Schedule</div>
-          <div class="clean-schedule-card">
-            <!-- Row 1: Unified Start Date Selector -->
-            <div class="clean-schedule-date-row" onclick="openDatePicker('setupStartDate')">
-              <div class="clean-sched-icon-box">
-                <i data-lucide="calendar" style="width: 17px; height: 17px; color: var(--color-primary);"></i>
-              </div>
-              <div class="clean-sched-info">
-                <div class="clean-sched-label">START DATE</div>
-                <input type="text" id="setupOutboundDateText" class="clean-sched-val" value="Mon, Sep 8" readonly style="cursor: pointer;" />
-                <input type="date" id="setupStartDate" value="2026-09-08" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="handleScheduleDateChange('outbound', this.value)" />
-                <input type="hidden" id="setupReturnDate" value="2026-09-08" />
-                <input type="hidden" id="setupReturnDateText" value="Mon, Sep 8" />
-              </div>
-              <span class="clean-sched-action">Change</span>
-            </div>
-
-            <div class="clean-sched-divider"></div>
-
-            <!-- Row 2: Clean Timings (Easy, Simple English) -->
-            <div class="clean-sched-times-grid">
-              <!-- Morning Pickup Time -->
-              <div class="clean-time-col" id="morningScheduleBlock">
-                <div class="clean-time-header" id="outboundScheduleLabel">
-                  <span class="clean-dot navy"></span>
-                  <span>Morning (To School)</span>
-                </div>
-                <div class="clean-time-input-wrap">
-                  <i data-lucide="clock" class="clean-time-clock-icon"></i>
-                  <input type="time" id="setupOutboundTime" class="clean-time-input" value="07:30" onchange="updateTripTime('outbound', this.value)" />
-                </div>
-              </div>
-
-              <!-- Afternoon Drop-off Time -->
-              <div class="clean-time-col" id="returnScheduleBlock">
-                <div class="clean-time-header" id="returnScheduleLabel">
-                  <span class="clean-dot orange"></span>
-                  <span>Afternoon (Back Home)</span>
-                </div>
-                <div class="clean-time-input-wrap">
-                  <i data-lucide="clock" class="clean-time-clock-icon"></i>
-                  <input type="time" id="setupReturnTime" class="clean-time-input" value="13:00" onchange="updateTripTime('return', this.value)" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Service Type -->
-        <div class="clean-flow-section" style="margin-top: 14px;">
-          <div class="clean-service-header">
-            <span class="clean-service-title">Service Type</span>
-          </div>
-          <div class="clean-service-toggle">
-            <button type="button" class="clean-service-btn" id="btnServiceAll" onclick="setServiceType('all')">
-              <span>All</span>
-            </button>
-            <button type="button" class="clean-service-btn active" id="btnServiceDriver" onclick="setServiceType('drivers')">
-              <i data-lucide="car" style="width: 17px; height: 17px;"></i>
-              <span>Driver</span>
-            </button>
-            <button type="button" class="clean-service-btn" id="btnServiceWalk" onclick="setServiceType('walkshare')">
-              <i data-lucide="footprints" style="width: 17px; height: 17px;"></i>
-              <span>WalkShare</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 5. Repeat (Senior Product Design iOS Switch) -->
-        <div class="clean-flow-section">
-          <div class="clean-repeat-toggle-card" onclick="const t = document.getElementById('toggleRecurringRide'); t.checked = !t.checked; handleRecurringToggleChange(t.checked);">
-            <div class="clean-repeat-toggle-left">
-              <div class="clean-repeat-icon-wrap">
-                <i data-lucide="repeat" style="width: 16px; height: 16px; color: var(--color-primary);"></i>
-              </div>
-              <div>
-                <div class="clean-repeat-title">Recurring Commute</div>
-              </div>
-            </div>
-            <label class="clean-switch" onclick="event.stopPropagation();">
-              <input type="checkbox" id="toggleRecurringRide" checked onchange="handleRecurringToggleChange(this.checked)" />
-              <span class="clean-switch-slider"></span>
-            </label>
-          </div>
-
-          <!-- Day selector circles container (Shown when Recurring is ON) -->
-          <div id="repeatDaysSection" style="margin-top: 6px; display: block;">
-            <div class="clean-days-grid" id="cleanDaysGrid">
-              <button type="button" class="clean-day-btn active" data-day="M" onclick="toggleRepeatDay(this)">M</button>
-              <button type="button" class="clean-day-btn active" data-day="T" onclick="toggleRepeatDay(this)">T</button>
-              <button type="button" class="clean-day-btn active" data-day="W" onclick="toggleRepeatDay(this)">W</button>
-              <button type="button" class="clean-day-btn active" data-day="T" onclick="toggleRepeatDay(this)">T</button>
-              <button type="button" class="clean-day-btn active" data-day="F" onclick="toggleRepeatDay(this)">F</button>
-              <button type="button" class="clean-day-btn" data-day="S" onclick="toggleRepeatDay(this)">S</button>
-              <button type="button" class="clean-day-btn" data-day="S" onclick="toggleRepeatDay(this)">S</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sticky Bottom CTA -->
-        <div class="booking-flow-sticky-footer" style="margin-top: 10px;">
-          <button type="button" class="btn-primary" style="height: 48px; border-radius: var(--radius-md); font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;" onclick="proceedFromTripSetup()">
-            <i data-lucide="search" style="width: 18px; height: 18px;"></i>
-            <span>Search Available Providers</span>
+            <i data-lucide="chevron-right"></i>
           </button>
+          <p class="mvp-hint-text" id="bookingChildrenHint" style="display:none;">Different schools need a separate booking for MVP.</p>
+        </div>
+
+        <div class="book-ride-section">
+          <div class="book-ride-section-head">
+            <i data-lucide="map-pin"></i>
+            <div class="book-ride-section-copy">
+              <div class="book-ride-section-title">Pickup &amp; Drop-off</div>
+              <div class="book-ride-section-hint">Where should we go?</div>
+            </div>
+            <button type="button" class="book-ride-section-action" onclick="swapPickupDropoff()">
+              <i data-lucide="arrow-left-right"></i>
+              <span>Swap</span>
+            </button>
+          </div>
+          <div class="book-ride-route">
+            <div class="book-ride-route-point">
+              <div class="book-ride-route-icon navy">
+                <i data-lucide="home"></i>
+              </div>
+              <div class="clean-route-info">
+                <div class="book-ride-loc-label">Pickup location</div>
+                <input type="text" id="setupPickupLocationInput" class="clean-route-input" value="" placeholder="Add pickup" oninput="syncLocationInput('pickup', this.value); updateBookingSearchCta();" />
+                <input type="hidden" id="setupPickupLocation" value="" />
+              </div>
+              <button type="button" class="book-ride-clear" id="btnClearPickup" hidden onclick="clearBookingLocation('pickup')" title="Clear pickup">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+            <div class="book-ride-route-point">
+              <div class="book-ride-route-icon orange">
+                <i data-lucide="school"></i>
+              </div>
+              <div class="clean-route-info">
+                <div class="book-ride-loc-label dropoff">Drop-off location</div>
+                <input type="text" id="setupSchoolLocationInput" class="clean-route-input orange" value="" placeholder="Add drop-off" oninput="syncLocationInput('school', this.value); updateBookingSearchCta();" />
+                <input type="hidden" id="setupSchoolLocation" value="" />
+              </div>
+              <button type="button" class="book-ride-clear" id="btnClearDropoff" hidden onclick="clearBookingLocation('school')" title="Clear drop-off">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="book-ride-section">
+          <div class="book-ride-section-head">
+            <i data-lucide="calendar"></i>
+            <div class="book-ride-section-copy">
+              <div class="book-ride-section-title">Date &amp; Times</div>
+              <div class="book-ride-section-hint">When do you need the ride?</div>
+            </div>
+          </div>
+          <button type="button" class="book-ride-date-field" id="bookingDateTrigger" onclick="openBookingDateSheet()">
+            <i data-lucide="calendar"></i>
+            <div class="book-ride-field-copy">
+              <div class="book-ride-field-label">Date</div>
+              <span class="book-ride-field-value is-placeholder" id="setupOutboundDateText">Select</span>
+            </div>
+            <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
+          </button>
+          <input type="date" id="setupStartDate" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" onchange="handleScheduleDateChange('outbound', this.value); syncBookingDateDisplay(); updateBookingSearchCta();" />
+          <input type="hidden" id="setupReturnDate" value="" />
+          <input type="hidden" id="setupReturnDateText" value="" />
+          <div class="book-ride-times clean-sched-times-grid">
+            <button type="button" class="book-ride-time-field" id="morningScheduleBlock" onclick="openBookingTimeSheet('outbound')">
+              <i data-lucide="clock"></i>
+              <div class="book-ride-field-copy">
+                <div class="book-ride-field-label" id="outboundScheduleLabel">Pickup</div>
+                <span class="book-ride-field-value is-placeholder" id="setupOutboundTimeText">Select</span>
+              </div>
+              <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
+            </button>
+            <button type="button" class="book-ride-time-field" id="returnScheduleBlock" onclick="openBookingTimeSheet('return')">
+              <i data-lucide="clock"></i>
+              <div class="book-ride-field-copy">
+                <div class="book-ride-field-label" id="returnScheduleLabel">Return</div>
+                <span class="book-ride-field-value is-placeholder" id="setupReturnTimeText">Select</span>
+              </div>
+              <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
+            </button>
+          </div>
+          <input type="time" id="setupOutboundTime" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" onchange="updateTripTime('outbound', this.value); syncBookingTimeDisplays(); updateBookingSearchCta();" />
+          <input type="time" id="setupReturnTime" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" onchange="updateTripTime('return', this.value); syncBookingTimeDisplays(); updateBookingSearchCta();" />
+          <div class="book-ride-info">
+            <i data-lucide="info"></i>
+            <span>This ride will include both pickup and return.</span>
+          </div>
+        </div>
+
+        <div class="book-ride-section">
+          <div class="book-ride-section-head">
+            <i data-lucide="car"></i>
+            <div class="book-ride-section-copy">
+              <div class="book-ride-section-title">Service type</div>
+              <div class="book-ride-section-hint">How would you like them to travel?</div>
+            </div>
+          </div>
+          <div class="book-ride-service-grid clean-service-toggle">
+            <button type="button" class="clean-service-btn book-ride-service-card active" id="btnServiceDriver" onclick="setServiceType('drivers')">
+              <span class="book-ride-service-icon" aria-hidden="true"><i data-lucide="car"></i></span>
+              <span class="book-ride-service-copy">
+                <span class="book-ride-service-name">Driver</span>
+                <span class="book-ride-service-desc">By vehicle</span>
+              </span>
+              <i data-lucide="circle-check" class="book-ride-service-check"></i>
+            </button>
+            <button type="button" class="clean-service-btn book-ride-service-card" id="btnServiceWalk" onclick="setServiceType('walkshare')">
+              <span class="book-ride-service-icon" aria-hidden="true"><i data-lucide="person-standing"></i></span>
+              <span class="book-ride-service-copy">
+                <span class="book-ride-service-name">WalkShare</span>
+                <span class="book-ride-service-desc">On foot with a trusted adult</span>
+              </span>
+              <i data-lucide="circle-check" class="book-ride-service-check"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="book-ride-footer">
+        <button type="button" class="btn-primary book-ride-search-btn is-disabled" id="btnSearchProviders" disabled onclick="proceedFromTripSetup()">
+          <span class="book-ride-search-label">
+            <i data-lucide="search"></i>
+            <span>Search Available Providers</span>
+          </span>
+          <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="book-ride-sheet" id="bookingChildrenSheet" onclick="if(event.target===this) closeBookingSheet('bookingChildrenSheet')">
+        <div class="book-ride-sheet-card">
+          <div class="sheet-drag-handle" style="margin: 0 auto 8px;"></div>
+          <div class="book-ride-sheet-head">
+            <h3>Select Children</h3>
+            <button type="button" class="book-ride-sheet-close" onclick="closeBookingSheet('bookingChildrenSheet')" title="Close">
+              <i data-lucide="x"></i>
+            </button>
+          </div>
+          <div class="book-ride-sheet-list" id="bookingChildrenPanel"></div>
+          <p class="mvp-hint-text" id="bookingChildrenSheetHint" style="display:none;">Different schools need a separate booking for MVP.</p>
+          <button type="button" class="btn-primary" id="btnChildrenSheetDone" onclick="closeBookingSheet('bookingChildrenSheet')">Done</button>
+        </div>
+      </div>
+
+      <div class="book-ride-sheet" id="bookingDateSheet" onclick="if(event.target===this) closeBookingSheet('bookingDateSheet')">
+        <div class="book-ride-sheet-card">
+          <div class="sheet-drag-handle" style="margin: 0 auto 8px;"></div>
+          <div class="book-ride-sheet-head">
+            <h3>Select Date</h3>
+            <button type="button" class="book-ride-sheet-close" onclick="closeBookingSheet('bookingDateSheet')" title="Close">
+              <i data-lucide="x"></i>
+            </button>
+          </div>
+          <div class="book-ride-calendar-nav">
+            <button type="button" onclick="shiftBookingCalendar(-1)" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
+            <h4 id="bookingCalMonthLabel">September 2026</h4>
+            <button type="button" onclick="shiftBookingCalendar(1)" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
+          </div>
+          <div class="book-ride-cal-week">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div class="book-ride-cal-grid" id="bookingCalGrid"></div>
+          <button type="button" class="btn-primary" onclick="confirmBookingDateSheet()">Done</button>
+        </div>
+      </div>
+
+      <div class="book-ride-sheet" id="bookingTimeSheet" onclick="if(event.target===this) closeBookingSheet('bookingTimeSheet')">
+        <div class="book-ride-sheet-card">
+          <div class="sheet-drag-handle" style="margin: 0 auto 8px;"></div>
+          <div class="book-ride-sheet-head">
+            <h3 id="bookingTimeSheetTitle">Select Time</h3>
+            <button type="button" class="book-ride-sheet-close" onclick="closeBookingSheet('bookingTimeSheet')" title="Close">
+              <i data-lucide="x"></i>
+            </button>
+          </div>
+          <div class="book-ride-time-wheels">
+            <div class="book-ride-time-col" id="bookingTimeHourCol"></div>
+            <div class="book-ride-time-col" id="bookingTimeMinuteCol"></div>
+            <div class="book-ride-time-col" id="bookingTimePeriodCol"></div>
+          </div>
+          <button type="button" class="btn-primary" onclick="confirmBookingTimeSheet()">Done</button>
         </div>
       </div>
 
@@ -1507,19 +1609,30 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Available Providers</h2>
-        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 3/4</span>
+        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">List</span>
       </div>
 
       <div class="screen-scroll-body" style="padding-bottom: 24px;">
-        <!-- Service Type Selector on Providers Screen (Exact Mockup Match: All | Driver | WalkShare) -->
-        <div class="booking-type-pills-bar">
-          <button type="button" class="booking-type-pill active" id="searchPillAll" onclick="filterBookingProviders('all', this)">All</button>
-          <button type="button" class="booking-type-pill" id="searchPillDrivers" onclick="filterBookingProviders('drivers', this)">Driver</button>
-          <button type="button" class="booking-type-pill" id="searchPillWalkShare" onclick="filterBookingProviders('walkshare', this)">WalkShare</button>
+        <div class="mvp-search-toolbar">
+          <div class="clean-pill-toggle" style="flex: 1;">
+            <button type="button" class="clean-pill-btn active" id="searchViewList" onclick="setProviderSearchView('list')">List</button>
+            <button type="button" class="clean-pill-btn" id="searchViewMap" onclick="setProviderSearchView('map')">Map</button>
+          </div>
+        </div>
+        <div class="mvp-filter-row" id="providerFilterRow">
+          <button type="button" class="mvp-filter-chip active" data-filter="all" onclick="applyProviderCompactFilter('all', this)">All matches</button>
+          <button type="button" class="mvp-filter-chip" data-filter="distance" onclick="applyProviderCompactFilter('distance', this)">Nearest</button>
+          <button type="button" class="mvp-filter-chip" data-filter="rating" onclick="applyProviderCompactFilter('rating', this)">4.8+ rating</button>
+          <button type="button" class="mvp-filter-chip" data-filter="verified" onclick="applyProviderCompactFilter('verified', this)">Verified only</button>
+        </div>
+        <div class="mvp-search-map" id="providerSearchMap">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;padding:16px;text-align:center;">
+            <strong style="font-size:14px;color:#0F172A;">Map view</strong>
+            <span style="font-size:12.5px;color:#64748B;">Matched providers appear by pickup area. Default stays List for a simpler parent scan.</span>
+          </div>
         </div>
 
-        <!-- Providers List -->
-        <div id="providersResultList" style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div id="providersResultList" style="display: flex; flex-direction: column; gap: 12px; margin-top: 4px;">
           <!-- Provider Card 1: Tariq Ahmed (Driver) -->
           <div class="provider-result-card" data-category="drivers" data-rating="4.9" data-verified="true"
             onclick="selectProviderAndReview('tariq')">
@@ -1885,6 +1998,23 @@
           </div>
         </div>
 
+        <div class="profile-section-block">
+          <button type="button" class="mvp-child-dropdown" id="verifiedDocsToggle" onclick="toggleVerifiedDocuments()">
+            <div>
+              <div class="mvp-child-dropdown-value">Verified Documents</div>
+              <div class="mvp-child-dropdown-sub">Approved status only. Files are not shown to parents.</div>
+            </div>
+            <i data-lucide="chevron-down" style="width:18px;height:18px;color:#64748B;"></i>
+          </button>
+          <div id="verifiedDocsPanel" class="mvp-child-dropdown-panel" style="display:none; padding: 4px 12px;">
+            <div class="mvp-docs-item"><span class="mvp-docs-title">Driver's Licence</span><span class="mvp-docs-status">Verified</span></div>
+            <div class="mvp-docs-item"><span class="mvp-docs-title">Vehicle Insurance</span><span class="mvp-docs-status">Verified</span></div>
+            <div class="mvp-docs-item"><span class="mvp-docs-title">Vehicle Registration</span><span class="mvp-docs-status">Verified</span></div>
+            <div class="mvp-docs-item"><span class="mvp-docs-title">Criminal Background Check</span><span class="mvp-docs-status">Verified</span></div>
+            <div class="mvp-docs-item"><span class="mvp-docs-title">Vulnerable Sector Check</span><span class="mvp-docs-status">Verified</span></div>
+          </div>
+        </div>
+
         <!-- 7. Sticky Bottom CTA with Clear Price Preview -->
         <div class="booking-flow-sticky-footer" id="detailsProviderActionsWrap">
           <div class="profile-sticky-footer-inner">
@@ -1921,22 +2051,16 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('bookingProviderDetails')">
+        <button class="back-btn" onclick="navigateTo('bookingSearchProviders')">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Booking Summary</h2>
-        <span style="font-size: 12px; font-weight: 700; color: var(--color-body);">Step 4/4</span>
+        <h2 class="top-bar-title">Review Booking</h2>
+        <span style="width: 26px;"></span>
       </div>
 
       <div class="screen-scroll-body">
-        <!-- Summary Details -->
         <div class="summary-card">
           <div class="summary-section-title">Trip Information</div>
-
-          <div class="summary-item-row">
-            <span class="summary-item-label">Parent Account</span>
-            <span class="summary-item-val" id="summaryParentText" style="color: var(--color-primary); font-weight: 800;">Sadia Khan (ID: #PRNT-9042)</span>
-          </div>
 
           <div class="summary-item-row">
             <span class="summary-item-label">Children</span>
@@ -1944,61 +2068,59 @@
           </div>
 
           <div class="summary-item-row">
-            <span class="summary-item-label">Trip Direction</span>
-            <span class="summary-item-val" id="summaryDirectionText">⇄ Round Trip</span>
-          </div>
-
-          <div class="summary-item-row" id="summaryOutboundRow">
-            <span class="summary-item-label">Morning Ride</span>
-            <span class="summary-item-val" id="summaryOutboundText">Home → Greenfield (07:30 AM)</span>
-          </div>
-
-          <div class="summary-item-row" id="summaryReturnRow">
-            <span class="summary-item-label">Afternoon Ride</span>
-            <span class="summary-item-val" id="summaryReturnText">Greenfield → Home (01:00 PM)</span>
+            <span class="summary-item-label">Pickup</span>
+            <span class="summary-item-val" id="summaryPickupText">12 Elm Street, Toronto</span>
           </div>
 
           <div class="summary-item-row">
-            <span class="summary-item-label">Frequency</span>
-            <span class="summary-item-val" id="summaryFreqText">Recurring (Mon – Fri)</span>
+            <span class="summary-item-label">Drop-off</span>
+            <span class="summary-item-val" id="summaryDropoffText">Greenfield International School</span>
+          </div>
+
+          <div class="summary-item-row">
+            <span class="summary-item-label">Ride Date</span>
+            <span class="summary-item-val" id="summaryDateText">Mon, Sep 8</span>
+          </div>
+
+          <div class="summary-item-row" id="summaryOutboundRow">
+            <span class="summary-item-label">Pickup Time</span>
+            <span class="summary-item-val" id="summaryOutboundText">07:30 AM</span>
+          </div>
+
+          <div class="summary-item-row" id="summaryReturnRow">
+            <span class="summary-item-label">Return Pickup Time</span>
+            <span class="summary-item-val" id="summaryReturnText">01:00 PM</span>
+          </div>
+
+          <div class="summary-item-row" id="summaryRecurringRow">
+            <span class="summary-item-label">Recurring</span>
+            <span class="summary-item-val" id="summaryFreqText">Off</span>
           </div>
 
           <div class="summary-item-row">
             <span class="summary-item-label">Provider</span>
-            <span class="summary-item-val" id="summaryProviderText">Tariq Ahmed (Toyota Sienna)</span>
+            <span class="summary-item-val" id="summaryProviderText">Tariq Ahmed</span>
+          </div>
+
+          <div class="summary-item-row">
+            <span class="summary-item-label">Vehicle</span>
+            <span class="summary-item-val" id="summaryVehicleText">Toyota Sienna</span>
+          </div>
+
+          <div class="summary-item-row">
+            <span class="summary-item-label">Posted Rate</span>
+            <span class="summary-item-val" id="summaryPostedRateText">$120 /wk</span>
           </div>
         </div>
 
-        <!-- Clear Pricing Breakdown -->
-        <div class="price-calc-box">
-          <div class="summary-section-title">Pricing Summary</div>
-
-          <div class="price-row-item">
-            <span id="summaryBasePriceLabel">Weekly Base Rate</span>
-            <span style="font-weight: 700; color: var(--color-title);" id="summaryBasePriceText">$140.00</span>
-          </div>
-
-          <div class="price-row-item">
-            <span>Multi-Child Discount (2nd child 20% off)</span>
-            <span style="font-weight: 700; color: #16A34A;" id="summaryDiscountPriceText">-$28.00</span>
-          </div>
-
-          <div class="price-row-item">
-            <span id="summaryInsuranceLabel">Safety &amp; Real-time GPS Insurance</span>
-            <span style="font-weight: 700; color: var(--color-title);" id="summaryInsurancePriceText">$8.00</span>
-          </div>
-
-          <div class="price-row-item total">
-            <span id="summaryTotalPriceLabel">Total Weekly Amount</span>
-            <span style="color: var(--color-primary); font-size: 18px;" id="summaryTotalPriceText">$120.00 / week</span>
-          </div>
-        </div>
-
-        <!-- Guarantee Note -->
         <div
           style="font-size: 12px; color: var(--color-body); text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;">
           <i data-lucide="shield-check" style="width:16px;height:16px;color:var(--color-primary);"></i>
-          <span>You will not be charged until provider accepts your request.</span>
+          <span>This sends a request only. Home2School does not collect the provider’s service fee.</span>
+        </div>
+        <div id="summaryProviderPickupPreview" class="mvp-provider-see-note">
+          <i data-lucide="eye" style="width:14px;height:14px;"></i>
+          <span>Provider will see: Sadia Khan (primary) · Farhan Khan (backup pickup)</span>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
@@ -2049,7 +2171,7 @@
           <div style="font-size: 13.5px; font-weight: 800; color: var(--color-title); margin-bottom: 4px;">Trip
             Highlights:</div>
           <div style="font-size: 12.5px; color: var(--color-body);">• Home ⇄ Greenfield International</div>
-          <div style="font-size: 12.5px; color: var(--color-body);">• Morning: 07:30 AM | Afternoon: 01:00 PM</div>
+          <div style="font-size: 12.5px; color: var(--color-body);">• Pickup 07:30 AM | Return pickup 01:00 PM</div>
           <div style="font-size: 12.5px; color: var(--color-body);">• Status updates sent via SMS &amp; notification
           </div>
         </div>
@@ -2117,7 +2239,7 @@
             <span class="summary-item-val" id="confirmedChildrenText">Arman &amp; Emma Khan</span>
           </div>
           <div class="summary-item-row">
-            <span class="summary-item-label">Weekly Auto-Pay</span>
+            <span class="summary-item-label">Posted Rate</span>
             <span class="summary-item-val" id="confirmedTotalText">$120.00 / week</span>
           </div>
         </div>
@@ -2125,7 +2247,7 @@
         <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
           <button class="btn-primary" onclick="openBookingDetails(window.appState.activeBookingId)">View Booking
             Details</button>
-          <button class="btn-secondary-surface" onclick="navigateTo('tracking')">Live Track Ride</button>
+          <button class="btn-secondary-surface" id="btnConfirmedLiveTrack" onclick="openLiveTracking(window.appState.activeBookingId)" style="display:none;">Track</button>
           <button class="btn-secondary-link" onclick="navigateTo('home')">Return to Parent Home</button>
         </div>
       </div>
@@ -2207,48 +2329,39 @@
             </div>
           </div>
 
-          <!-- Folio 2: Parent Profile (Clean, Simple, Click to View Profile) -->
+          <!-- Folio 2: Pickup contacts (parent manages who can receive the child) -->
           <div class="folio-section" id="detailParentFolioSection">
             <div class="folio-section-header">
               <div class="folio-section-title">
-                <i data-lucide="user" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
-                <span>Parent Profile</span>
+                <i data-lucide="shield-check" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
+                <span>Pickup contacts</span>
               </div>
-              <button type="button" class="folio-profile-link-btn" onclick="navigateTo('profile')" title="Open Parent Profile">
-                <span>View Profile</span>
+              <button type="button" class="folio-profile-link-btn" onclick="navigateTo('profileEmergency')" title="Manage pickup contacts">
+                <span>Manage</span>
                 <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
               </button>
             </div>
-
-            <div class="folio-parent-card-simple" onclick="navigateTo('profile')" title="Open Parent Profile">
-              <div class="folio-parent-main">
-                <img src="/assets/avatar_sadia.jpg" alt="Parent" id="detailParentAvatar" class="folio-parent-avatar" onerror="this.src='/assets/avatar_sadia.jpg';" />
+            <p class="mvp-pickup-lede">Who can receive my child</p>
+            <div id="detailPickupContactsList">
+              <div class="mvp-pickup-row">
+                <img src="/assets/avatar_sadia.jpg" alt="" class="folio-parent-avatar" />
                 <div class="folio-parent-info">
                   <div class="folio-parent-name-row">
-                    <span class="folio-parent-name" id="detailParentName">Sadia Khan</span>
+                    <span class="folio-parent-name">Sadia Khan</span>
                     <span class="folio-parent-you-pill">You</span>
+                    <span class="mvp-pickup-role">Primary</span>
                   </div>
-                  <div class="folio-parent-sub" id="detailParentContact">
-                    <i data-lucide="phone" style="width: 11px; height: 11px; display: inline-block; vertical-align: middle; margin-right: 3px; color: #64748B;"></i>
-                    <span>+1 (416) 555-0192</span>
-                  </div>
+                  <div class="folio-parent-sub">Mother · authorized pickup</div>
                 </div>
+                <button type="button" class="mvp-pickup-edit" onclick="navigateTo('profileEmergency')">Edit</button>
               </div>
-              <div style="display: flex; align-items: center; gap: 4px; color: #94A3B8;">
-                <i data-lucide="chevron-right" style="width: 18px; height: 18px;"></i>
+              <div class="folio-backup-guardian-note">
+                <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+                  <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: #D97706; flex-shrink: 0;"></i>
+                  <span style="font-size: 11.5px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Backup pickup: <strong>Farhan Khan</strong> (Father)</span>
+                </div>
+                <button type="button" class="mvp-pickup-edit" onclick="navigateTo('profileEmergency')">Edit</button>
               </div>
-            </div>
-
-            <!-- Authorized Secondary Emergency Contact -->
-            <div class="folio-backup-guardian-note">
-              <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
-                <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: #D97706; flex-shrink: 0;"></i>
-                <span id="detailBackupGuardianText" style="font-size: 11.5px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Backup Pickup: <strong>Farhan Khan</strong> (Father · +1 416-555-0199)</span>
-              </div>
-              <a href="tel:+14165550199" id="detailBackupCallBtn" class="backup-call-link" onclick="event.stopPropagation();" title="Call Backup Contact">
-                <i data-lucide="phone" style="width: 11px; height: 11px;"></i>
-                <span>Call</span>
-              </a>
             </div>
           </div>
 
@@ -2330,7 +2443,7 @@
               </div>
 
               <div style="display: flex; gap: 8px;">
-                <button class="btn-icon-contact" onclick="alert('Calling driver: +1 (416) 555-0182')" aria-label="Call Driver" title="Call Driver">
+                <button class="btn-icon-contact mvp-hide-phone" onclick="navigateTo('inbox')" aria-label="Message Driver" title="Message" style="display:none;">
                   <i data-lucide="phone"></i>
                 </button>
                 <button class="btn-icon-contact" onclick="openChatWith(window.currentBookingProviderId || 'tariq')" aria-label="Message Driver" title="Message Driver">
@@ -2338,6 +2451,17 @@
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="mvp-handle-card" id="paymentHandleCard">
+          <div class="mvp-handle-status" id="paymentHandleStatusLabel">Payment handle</div>
+          <div style="font-size: 14px; font-weight: 800; color: var(--color-title); margin-bottom: 6px;">Direct payment outside Home2School</div>
+          <p style="font-size: 12.5px; color: var(--color-body); line-height: 1.45; margin: 0 0 10px;" id="paymentHandleCopy">Available after the booking is confirmed. Home2School does not process the provider’s service fee.</p>
+          <div id="paymentHandleValue" style="display:none; font-size: 14px; font-weight: 800; color: var(--color-primary); margin-bottom: 10px;"></div>
+          <div class="mvp-handle-actions">
+            <button type="button" class="btn-secondary-surface" id="btnPaymentHandlePrimary" onclick="advancePaymentHandle()">Request Handle</button>
+            <button type="button" class="btn-secondary-link" id="btnPaymentHandleSecondary" onclick="revokePaymentHandle()" style="display:none;">Revoke</button>
           </div>
         </div>
 
@@ -2360,7 +2484,7 @@
           <i data-lucide="navigation"></i>
           <span>Tracking</span>
         </button>
-        <button class="tab-item" onclick="navigateTo('messages')">
+        <button class="tab-item" onclick="navigateTo('inbox')">
           <i data-lucide="message-square"></i>
           <span>Messages</span>
         </button>
@@ -2392,6 +2516,14 @@
       </div>
 
       <div class="tracking-map-full">
+        <div id="trackingInactiveState" class="mvp-tracking-empty" style="display:none; position:absolute; inset:0; z-index:40; background:#FFFFFF;">
+          <div class="empty-trips-icon" style="margin: 0 auto 12px;">
+            <i data-lucide="navigation" style="width:28px;height:28px;"></i>
+          </div>
+          <h4 class="empty-trips-title">No active trip</h4>
+          <p class="empty-trips-desc">Live GPS starts only after a confirmed trip is in progress, and stops when the trip is completed.</p>
+          <button class="btn-primary" onclick="navigateTo('bookings')" style="margin-top:12px;">View bookings</button>
+        </div>
         <!-- Interactive Leaflet Realistic Map Container -->
         <div id="liveLeafletMap" class="leaflet-map-host"></div>
 
@@ -2522,7 +2654,7 @@
           </svg>
         </div>
 
-        <!-- Floating Map Quick Controls -->
+        <!-- Floating Map Quick Controls (below overlay, not inside the sheet) -->
         <div class="map-floating-quick-controls">
           <button type="button" class="btn-map-control" onclick="window.recenterTrackingMap()" title="Recenter on vehicle">
             <i data-lucide="crosshair" style="width: 17px; height: 17px; color: #0284C7;"></i>
@@ -2535,22 +2667,14 @@
           </button>
         </div>
 
-        <!-- Live Traffic Badge Overlay -->
-        <div style="position: absolute; top: 78px; left: 20px; z-index: 22; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); padding: 4px 10px; border-radius: 999px; border: 1px solid #E2E8F0; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-          <span class="live-pulse-dot" style="background:#10B981; margin:0; width:7px; height:7px;"></span>
-          <span style="font-size: 11px; font-weight: 700; color: #0F172A;">Traffic: Smooth · Bay St</span>
-        </div>
-
-        <!-- Top Floating Controls -->
-        <div class="tracking-floating-header">
-          <button class="back-btn" onclick="navigateTo('home')">
-            <i data-lucide="chevron-left"></i>
-          </button>
-          <div style="text-align: center;">
-            <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Arman &amp; Emma Khan</div>
-            <div style="font-size: 12px; color: #64748B; font-weight: 600;">En route to Greenfield School</div>
+        <!-- Top overlay: which ride, where, LIVE. No helper chrome. -->
+        <div class="tracking-floating-header" id="trackingLiveHeader">
+          <div class="tracking-overlay-row">
+            <div id="trackingRideSwitcher" class="mvp-ride-switcher" style="display:none;"></div>
+            <div class="tracking-overlay-kids" id="trackingHeaderChildren">Arman + Emma</div>
+            <span class="live-pill-tag"><span class="live-dot-pulse"></span> LIVE</span>
           </div>
-          <span class="live-pill-tag"><span class="live-dot-pulse"></span> LIVE</span>
+          <div class="tracking-overlay-status" id="trackingHeaderRoute">En route to Greenfield</div>
         </div>
 
         <!-- Bottom Drawer Sheet (Top 1% Luxury Product Design) -->
@@ -2579,41 +2703,41 @@
 
             <div class="step-node completed" id="step1Node">
               <div class="step-circle-dot"><i data-lucide="check" style="width:13px;height:13px;"></i></div>
-              <span class="step-node-label">On way</span>
+              <span class="step-node-label">Started</span>
             </div>
             <div class="step-node completed" id="step2Node">
               <div class="step-circle-dot"><i data-lucide="check" style="width:13px;height:13px;"></i></div>
-              <span class="step-node-label">Pickup</span>
+              <span class="step-node-label">Arrived</span>
             </div>
             <div class="step-node active" id="step3Node">
               <div class="step-circle-dot">3</div>
-              <span class="step-node-label">In Transit</span>
+              <span class="step-node-label">Picked up</span>
             </div>
             <div class="step-node" id="step4Node">
               <div class="step-circle-dot">4</div>
-              <span class="step-node-label">Drop-off</span>
+              <span class="step-node-label">Dropped off</span>
             </div>
           </div>
 
           <!-- Driver Mini Profile & Quick Contact -->
           <div class="active-driver-contact-row">
-            <div class="driver-mini-info" onclick="openDriverProfile('tariq', 'tracking')" style="cursor: pointer;" title="View Driver Profile">
-              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-mini-avatar" />
+            <div class="driver-mini-info" id="trackingDriverProfileBtn" onclick="openDriverProfile('tariq', 'tracking')" style="cursor: pointer;" title="View Driver Profile">
+              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-mini-avatar" id="trackingDriverPhoto" />
               <div>
                 <div class="driver-mini-name" style="display: flex; align-items: center; gap: 4px;">
-                  <span>Tariq Ahmed</span>
+                  <span id="trackingDriverName">Tariq Ahmed</span>
                   <i data-lucide="chevron-right" style="width: 13px; height: 13px; color: var(--color-body);"></i>
                 </div>
-                <div class="driver-mini-sub">Toyota Sienna • SCH-4091</div>
+                <div class="driver-mini-sub" id="trackingDriverVehicle">Toyota Sienna • SCH-4091</div>
               </div>
             </div>
 
             <div class="active-contact-buttons">
-              <button type="button" class="btn-contact-action" onclick="alert('Calling Tariq: +1 (416) 555-0182')"
-                aria-label="Call Driver" title="Call Driver">
+              <button type="button" class="btn-contact-action mvp-hide-phone" onclick="navigateTo('inbox')"
+                aria-label="Message Driver" title="Message Driver" style="display:none;">
                 <i data-lucide="phone" style="width:15px;height:15px;"></i>
               </button>
-              <button type="button" class="btn-contact-action" onclick="navigateTo('messages')" aria-label="Message Driver" title="Message Driver">
+              <button type="button" class="btn-contact-action" id="trackingChatBtn" onclick="openChatWith('tariq')" aria-label="Message Driver" title="Message Driver">
                 <i data-lucide="message-square" style="width:15px;height:15px;"></i>
               </button>
               <button type="button" class="btn-contact-action sos" onclick="openEmergencySOSModal()"
@@ -2625,7 +2749,7 @@
 
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid #F1F5F9;">
             <span style="font-size: 11.5px; color: #64748B;">Trip issue or driver delay?</span>
-            <button type="button" onclick="openTripReport('H2S-84920')" style="background: none; border: none; font-size: 11.5px; font-weight: 700; color: #DC2626; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0;">
+            <button type="button" id="trackingReportBtn" onclick="openTripReport('H2S-84920')" style="background: none; border: none; font-size: 11.5px; font-weight: 700; color: #DC2626; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0;">
               <i data-lucide="alert-triangle" style="width: 12px; height: 12px;"></i>
               <span>Report Trip Issue</span>
             </button>
@@ -2636,6 +2760,49 @@
       <div class="home-indicator"></div>
     </section>
 
+
+    <!-- ================= 21A. MESSAGE INBOX ================= -->
+    <section class="screen-view" id="screen-inbox" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24">
+            <path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" />
+          </svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button class="back-btn" id="inboxBackBtn" onclick="navigateTo('home')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Messages</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body">
+        <p style="font-size: 12.5px; color: var(--color-body); margin-bottom: 8px;">In-app messages only. Phone and email stay private.</p>
+        <div id="inboxThreadList"></div>
+      </div>
+
+      <nav class="bottom-tab-bar" id="inboxParentNav">
+        <button class="tab-item" onclick="navigateTo('home')"><i data-lucide="home"></i><span>Home</span></button>
+        <button class="tab-item" onclick="navigateTo('bookings')"><i data-lucide="calendar"></i><span>Bookings</span></button>
+        <button class="tab-item" onclick="navigateTo('tracking')"><i data-lucide="navigation"></i><span>Tracking</span></button>
+        <button class="tab-item active" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button class="tab-item" onclick="navigateTo('profile')"><i data-lucide="user"></i><span>Profile</span></button>
+      </nav>
+      <nav class="bottom-tab-bar driver-nav-bar" id="inboxDriverNav" style="display:none;">
+        <button type="button" class="tab-item" onclick="navigateTo('driverHome')"><i data-lucide="home"></i><span>Home</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('driverRequests')"><i data-lucide="inbox"></i><span>Requests</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('driverSchedule')"><i data-lucide="calendar"></i><span>Schedule</span></button>
+        <button type="button" class="tab-item active" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('driverProfile')"><i data-lucide="user"></i><span>Profile</span></button>
+      </nav>
+      <div class="home-indicator"></div>
+    </section>
 
     <!-- ================= 21. MESSAGES & PARENT-PROVIDER INBOX ================= -->
     <section class="screen-view" id="screen-messages" style="background-color: #FFFFFF;">
@@ -2656,10 +2823,10 @@
 
       <!-- Chat Header -->
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('home')">
+        <button class="back-btn" onclick="navigateTo('inbox')">
           <i data-lucide="chevron-left"></i>
         </button>
-        <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="openDriverProfile(window.activeChatProviderId || 'tariq', 'messages')" title="View Driver Profile">
+        <div id="chatHeaderProfileBtn" style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="openDriverProfile(window.activeChatProviderId || 'tariq', 'messages')" title="View profile">
           <img src="/assets/avatar_tariq.jpg" alt="Driver" id="chatDriverAvatar"
             style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;" />
           <div>
@@ -2670,7 +2837,7 @@
             <div style="font-size: 11.5px; color: #16A34A; font-weight: 600;" id="chatDriverSub">Active Trip • Toyota Sienna</div>
           </div>
         </div>
-        <button class="btn-icon-contact" id="chatDriverCallBtn" onclick="callCurrentDriver()">
+        <button class="btn-icon-contact mvp-hide-phone" id="chatDriverCallBtn" onclick="navigateTo('inbox')" style="display:none;">
           <i data-lucide="phone"></i>
         </button>
       </div>
@@ -2713,12 +2880,12 @@
           </div>
         </div>
 
-        <!-- Quick Reply Chips -->
-        <div class="quick-replies-scroll">
-          <button class="quick-reply-pill" onclick="sendQuickReply('We\'re ready!')">We're ready!</button>
-          <button class="quick-reply-pill" onclick="sendQuickReply('Thank you so much!')">Thank you so much!</button>
-          <button class="quick-reply-pill" onclick="sendQuickReply('Please call me.')">Please call me.</button>
-          <button class="quick-reply-pill" onclick="sendQuickReply('Running 2 mins late')">Running 2 mins late</button>
+            <div class="quick-replies-scroll" id="chatQuickReplies">
+          <button class="quick-reply-pill" onclick="sendQuickReply('I\'m on my way')">I'm on my way</button>
+          <button class="quick-reply-pill" onclick="sendQuickReply('I\'ve arrived')">I've arrived</button>
+          <button class="quick-reply-pill" onclick="sendQuickReply('Child has been picked up')">Child has been picked up</button>
+          <button class="quick-reply-pill" onclick="sendQuickReply('Child has been dropped off')">Child has been dropped off</button>
+          <button class="quick-reply-pill" onclick="sendQuickReply('Running a few minutes late')">Running a few minutes late</button>
         </div>
 
         <!-- Chat Input Bar -->
@@ -2756,14 +2923,14 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">My Bookings</h2>
-        <button class="top-bar-action" onclick="navigateTo('bookingSelectChildren')">+ New</button>
+        <button class="top-bar-action" onclick="navigateTo('bookingTripSetup')">+ New</button>
       </div>
 
       <div class="screen-scroll-body">
         <!-- Filter Tabs -->
         <div class="segmented-control">
           <button class="segment-btn active" id="tabUpcoming" onclick="switchBookingTab('upcoming')">Upcoming (4)</button>
-          <button class="segment-btn" id="tabHistory" onclick="switchBookingTab('history')">History (4)</button>
+          <button class="segment-btn" id="tabHistory" onclick="switchBookingTab('history')">Past (4)</button>
           <button class="segment-btn" id="tabCancelled" onclick="switchBookingTab('cancelled')">Cancelled (2)</button>
         </div>
 
@@ -2786,7 +2953,7 @@
           <i data-lucide="navigation"></i>
           <span>Tracking</span>
         </button>
-        <button class="tab-item" onclick="navigateTo('messages')">
+        <button class="tab-item" onclick="navigateTo('inbox')">
           <i data-lucide="message-square"></i>
           <span>Messages</span>
         </button>
@@ -2881,7 +3048,7 @@
               <div class="menu-icon-wrap" style="color: var(--color-danger);">
                 <i data-lucide="shield-alert"></i>
               </div>
-              <span class="menu-title-text">Emergency Contacts</span>
+              <span class="menu-title-text">Pickup contacts</span>
             </div>
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
@@ -2889,6 +3056,16 @@
 
         <!-- Section 2: Payments & Common App Information -->
         <div class="profile-menu-section">
+          <div class="profile-menu-item" onclick="navigateTo('subscription')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="sparkles"></i>
+              </div>
+              <span class="menu-title-text">Subscription</span>
+            </div>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+          </div>
+
           <div class="profile-menu-item" onclick="navigateTo('profilePayments')">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
@@ -2951,6 +3128,17 @@
         </div>
 
         <div style="margin-top: 8px;">
+          <div class="profile-menu-section" style="margin-bottom: 12px;">
+            <div class="profile-menu-item" onclick="window.switchRole('driver')">
+              <div class="menu-item-left">
+                <div class="menu-icon-wrap">
+                  <i data-lucide="car"></i>
+                </div>
+                <span class="menu-title-text">Switch to Driver</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
+          </div>
           <button id="logoutBtn"
             onclick="navigateTo('authWelcome')"
             style="
@@ -2990,7 +3178,7 @@
           <i data-lucide="navigation"></i>
           <span>Tracking</span>
         </button>
-        <button class="tab-item" onclick="navigateTo('messages')">
+        <button class="tab-item" onclick="navigateTo('inbox')">
           <i data-lucide="message-square"></i>
           <span>Messages</span>
         </button>
@@ -3094,45 +3282,56 @@
         <div class="notif-filter-tabs-row">
           <button type="button" class="notif-filter-tab-btn active" id="notifTabAll" onclick="setNotifFilter('all')">
             <span>All</span>
-            <span class="notif-filter-count" id="notifBadgeAll">4</span>
+            <span class="notif-filter-count" id="notifBadgeAll">6</span>
           </button>
           <button type="button" class="notif-filter-tab-btn" id="notifTabUnread" onclick="setNotifFilter('unread')">
             <span>Unread</span>
-            <span class="notif-filter-count unread" id="notifBadgeUnread">2</span>
+            <span class="notif-filter-count unread" id="notifBadgeUnread">3</span>
           </button>
         </div>
 
         <div class="notifications-feed-list" id="notifFeedList">
-          <div class="notification-card unread" onclick="navigateTo('tracking')">
+          <div class="notification-card unread" onclick="openLiveTracking('H2S-84920')">
             <span class="notif-indicator-dot"></span>
             <div class="notif-content-block">
               <div class="notif-title-row">
-                <span class="notif-title-text">Driver 5 Mins Away</span>
+                <span class="notif-title-text">Child picked up</span>
                 <span class="notif-time-text">Just now</span>
               </div>
-              <p class="notif-desc-text">Tariq Ahmed is approaching 12 Elm Street for morning school pickup.</p>
+              <p class="notif-desc-text">Arman and Emma are with Tariq Ahmed, heading to Greenfield International.</p>
             </div>
           </div>
 
-          <div class="notification-card unread" onclick="navigateTo('bookings')">
+          <div class="notification-card unread" onclick="navigateTo('inbox')">
             <span class="notif-indicator-dot"></span>
             <div class="notif-content-block">
               <div class="notif-title-row">
-                <span class="notif-title-text">Schedule Confirmed</span>
+                <span class="notif-title-text">New message</span>
+                <span class="notif-time-text">2 min ago</span>
+              </div>
+              <p class="notif-desc-text">Tariq Ahmed: Arman and Emma are buckled in.</p>
+            </div>
+          </div>
+
+          <div class="notification-card unread" onclick="openBookingDetails('H2S-84920')">
+            <span class="notif-indicator-dot"></span>
+            <div class="notif-content-block">
+              <div class="notif-title-row">
+                <span class="notif-title-text">Booking accepted</span>
                 <span class="notif-time-text">1 hr ago</span>
               </div>
-              <p class="notif-desc-text">Recurring school commute for Arman &amp; Emma confirmed for next week.</p>
+              <p class="notif-desc-text">Tariq Ahmed confirmed the recurring school commute for Arman &amp; Emma.</p>
             </div>
           </div>
 
-          <div class="notification-card" onclick="navigateTo('profileEmergency')">
+          <div class="notification-card" onclick="openBookingDetails('H2S-66211')">
             <span class="notif-indicator-dot"></span>
             <div class="notif-content-block">
               <div class="notif-title-row">
-                <span class="notif-title-text">Safety Protocol Active</span>
+                <span class="notif-title-text">Booking declined</span>
                 <span class="notif-time-text">Yesterday</span>
               </div>
-              <p class="notif-desc-text">All 3 emergency safety contacts verified and synced with school dispatch.</p>
+              <p class="notif-desc-text">Sarah Jenkins could not take the Sunshine Pre-school request. Book another provider.</p>
             </div>
           </div>
 
@@ -3140,10 +3339,21 @@
             <span class="notif-indicator-dot"></span>
             <div class="notif-content-block">
               <div class="notif-title-row">
-                <span class="notif-title-text">Rate Your Last Ride</span>
+                <span class="notif-title-text">Trip completed</span>
                 <span class="notif-time-text">May 21</span>
               </div>
-              <p class="notif-desc-text">Help maintain high safety standards by leaving feedback for Tariq Ahmed.</p>
+              <p class="notif-desc-text">Child dropped off at school. Rate Tariq Ahmed if you would like.</p>
+            </div>
+          </div>
+
+          <div class="notification-card" onclick="navigateTo('subscription')">
+            <span class="notif-indicator-dot"></span>
+            <div class="notif-content-block">
+              <div class="notif-title-row">
+                <span class="notif-title-text">Trial started</span>
+                <span class="notif-time-text">Sep 8</span>
+              </div>
+              <p class="notif-desc-text">14-day Home2School platform trial is active. This is not the provider ride rate.</p>
             </div>
           </div>
         </div>
@@ -3341,11 +3551,12 @@
         <button class="back-btn" onclick="navigateTo('profile')">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Emergency Contacts</h2>
+        <h2 class="top-bar-title">Pickup contacts</h2>
         <span style="width: 26px;"></span>
       </div>
 
       <div class="screen-scroll-body">
+        <p class="mvp-pickup-lede" style="margin-bottom: 12px;">Who can receive my child at pickup and drop-off.</p>
         <!-- Primary Account Holder (Parent) -->
         <div class="primary-guardian-card">
           <div class="primary-guardian-left">
@@ -3353,18 +3564,17 @@
             <div class="primary-guardian-meta">
               <div class="primary-guardian-name-wrap">
                 <span class="primary-guardian-name">Sadia Khan</span>
-                <span class="primary-guardian-tag">You</span>
-                <span class="parent-acc-id-badge" style="margin-left: 2px;">ID: #PRNT-9042</span>
+                <span class="folio-parent-you-pill">You</span>
               </div>
-              <div class="primary-guardian-sub">+1 (416) 555-0192</div>
+              <div class="primary-guardian-sub">Mother · primary pickup</div>
             </div>
           </div>
-          <span class="primary-guardian-badge">Primary Guardian</span>
+          <button type="button" class="mvp-pickup-edit" onclick="navigateTo('profilePersonalInfo')">Edit</button>
         </div>
 
         <!-- Section: Authorized Child Guardians & Backup Contacts -->
         <div class="emergency-contacts-header">
-          <h3 class="emergency-contacts-title">Authorized Contacts</h3>
+          <h3 class="emergency-contacts-title">Backup pickup</h3>
           <span class="emergency-contacts-count" id="contactCountBadge">3</span>
         </div>
 
@@ -4060,53 +4270,6 @@
           </button>
         </div>
 
-        <!-- Direct Contact Channels with Clean Hierarchy -->
-        <div style="margin-top: 4px;">
-          <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px;">Direct Support</div>
-          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px;">
-            <!-- Helpline -->
-            <a href="tel:18005555437" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #EFF6FF; color: var(--color-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <i data-lucide="phone-call" style="width: 15px; height: 15px;"></i>
-                </div>
-                <div>
-                  <div style="font-size: 13px; font-weight: 700; color: #0F172A; line-height: 1.2;">Call Helpline</div>
-                  <div style="font-size: 11px; color: #64748B; margin-top: 2px;">1-800-555-KIDS • Toll-free</div>
-                </div>
-              </div>
-              <span style="font-size: 11px; font-weight: 700; color: var(--color-primary); background: #EFF6FF; border: 1px solid #DBEAFE; padding: 3px 9px; border-radius: 99px;">Call</span>
-            </a>
-
-            <div style="height: 1px; background: #EDF2F7;"></div>
-
-            <!-- Email Support -->
-            <a href="mailto:support@home2school.com" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #F1F5F9; color: #475569; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <i data-lucide="mail" style="width: 15px; height: 15px;"></i>
-                </div>
-                <div>
-                  <div style="font-size: 13px; font-weight: 700; color: #0F172A; line-height: 1.2;">Email Support</div>
-                  <div style="font-size: 11px; color: #64748B; margin-top: 2px;">support@home2school.com</div>
-                </div>
-              </div>
-              <span style="font-size: 11px; font-weight: 700; color: #475569; background: #FFFFFF; border: 1px solid #E2E8F0; padding: 3px 9px; border-radius: 99px;">Email</span>
-            </a>
-
-            <div style="height: 1px; background: #EDF2F7;"></div>
-
-            <!-- Operating Hours -->
-            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #64748B; padding: 2px 2px;">
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="width: 6px; height: 6px; border-radius: 50%; background: #10B981; display: inline-block;"></span>
-                <span>Response Hours</span>
-              </div>
-              <span style="font-weight: 700; color: #0F172A;">24/7 Parent Dispatch</span>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <div class="home-indicator"></div>
@@ -4653,16 +4816,21 @@
       <!-- Driver Top Header -->
       <div class="driver-top-header">
         <div class="driver-profile-snippet" onclick="navigateTo('driverProfile')" style="cursor: pointer;">
-          <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-header-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
+          <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-header-avatar" id="driverHomeAvatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
           <div class="driver-header-text">
-            <h3>Good morning, Tariq</h3>
-            <p><span style="color:#D97706;font-weight:700;">★ 4.9</span> (128 reviews) · Minivan (4 seats)</p>
+            <h3 id="driverHomeGreeting">Good morning</h3>
+            <p id="driverHomeMeta">Complete setup to accept school rides</p>
           </div>
         </div>
-        <button type="button" class="driver-status-toggle-pill" id="driverStatusToggleBtn" onclick="toggleDriverOnlineStatus()">
-          <span class="live-pulse-dot" style="margin:0;"></span>
-          <span id="driverStatusToggleText">Available</span>
-        </button>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button type="button" class="btn-icon-contact" onclick="navigateTo('notifications')" aria-label="Notifications" title="Notifications">
+            <i data-lucide="bell" style="width:18px;height:18px;"></i>
+          </button>
+          <button type="button" class="driver-status-toggle-pill" id="driverStatusToggleBtn" onclick="toggleDriverOnlineStatus()">
+            <span class="live-pulse-dot" style="margin:0;"></span>
+            <span id="driverStatusToggleText">Available</span>
+          </button>
+        </div>
       </div>
 
       <!-- Driver Scenario Switcher (10yr Product Designer Testing Toolbar) -->
@@ -4674,93 +4842,8 @@
       </div>
 
       <div class="screen-scroll-body" style="padding-bottom: 90px; display: flex; flex-direction: column; gap: 16px;">
-        <!-- Dynamic Hero Container (State A / B / C) -->
         <div id="driverHeroContainer"></div>
-
-        <!-- Section: Incoming Booking Requests -->
-        <div class="driver-request-card" style="border-left: 4px solid var(--color-primary);">
-          <div class="dreq-header">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span class="status-chip" style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;font-size:11px;">
-                <span class="live-pulse-dot" style="margin:0;background:#2563EB;"></span>
-                <span id="driverNewReqBadge">2 New Requests</span>
-              </span>
-            </div>
-            <span style="font-size:13px;font-weight:800;color:#0F172A;">$155 total</span>
-          </div>
-
-          <div>
-            <h4 style="font-size:14.5px;font-weight:800;color:#0F172A;margin:0 0 3px 0;">Arman + Emma · Greenfield International</h4>
-            <p style="font-size:12.5px;color:#64748B;margin:0;">Home (12 Elm St) → School · Mon–Fri Recurring (2 seats)</p>
-          </div>
-
-          <button type="button" class="btn-primary" style="height:38px;font-size:13px;font-weight:700;margin-top:2px;" onclick="navigateTo('driverRequests')">
-            <span>Review Requests (2) →</span>
-          </button>
-        </div>
-
-        <!-- Section: Today's Schedule -->
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;">
-            <span style="font-size:12.5px;font-weight:800;text-transform:uppercase;color:#64748B;letter-spacing:0.5px;">Today's Commutes (3)</span>
-            <button type="button" class="btn-text-link" onclick="navigateTo('driverSchedule')" style="font-size:12px;font-weight:700;color:var(--color-primary);">View All</button>
-          </div>
-
-          <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px;">
-            <!-- Commute 1 -->
-            <div style="display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid #F1F5F9;padding-bottom:10px;">
-              <div style="min-width:65px;">
-                <span style="font-size:13px;font-weight:800;color:#0F172A;">07:30 AM</span>
-                <span style="display:block;font-size:10.5px;color:#059669;font-weight:700;">Morning</span>
-              </div>
-              <div style="flex:1;">
-                <div style="font-size:13.5px;font-weight:800;color:#0F172A;">Arman + Emma Khan</div>
-                <div style="font-size:12px;color:#64748B;">Home → Greenfield International School</div>
-              </div>
-              <button type="button" class="btn-live-track-compact" style="height:28px;font-size:11px;padding:0 10px;" onclick="navigateTo('driverActiveTrip')">Open Trip</button>
-            </div>
-
-            <!-- Commute 2 -->
-            <div style="display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid #F1F5F9;padding-bottom:10px;">
-              <div style="min-width:65px;">
-                <span style="font-size:13px;font-weight:800;color:#0F172A;">01:00 PM</span>
-                <span style="display:block;font-size:10.5px;color:#2563EB;font-weight:700;">Return Leg</span>
-              </div>
-              <div style="flex:1;">
-                <div style="font-size:13.5px;font-weight:800;color:#0F172A;">Arman + Emma Khan</div>
-                <div style="font-size:12px;color:#64748B;">Greenfield International → Home (12 Elm St)</div>
-              </div>
-              <span class="status-chip" style="font-size:10.5px;padding:2px 7px;">Scheduled</span>
-            </div>
-
-            <!-- Commute 3 -->
-            <div style="display:flex;align-items:flex-start;gap:12px;">
-              <div style="min-width:65px;">
-                <span style="font-size:13px;font-weight:800;color:#0F172A;">03:15 PM</span>
-                <span style="display:block;font-size:10.5px;color:#D97706;font-weight:700;">Day Pass</span>
-              </div>
-              <div style="flex:1;">
-                <div style="font-size:13.5px;font-weight:800;color:#0F172A;">Zara Khan</div>
-                <div style="font-size:12px;color:#64748B;">Sunshine Pre-school → Home</div>
-              </div>
-              <span class="status-chip" style="font-size:10.5px;padding:2px 7px;">Scheduled</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section: Driver Onboarding & Verification Quick-Check -->
-        <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="navigateTo('driverSetup')">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:36px;height:36px;border-radius:10px;background:#DCFCE7;display:flex;align-items:center;justify-content:center;color:#15803D;">
-              <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
-            </div>
-            <div>
-              <div style="font-size:13px;font-weight:800;color:#0F172A;">Driver Setup &amp; Documents</div>
-              <div style="font-size:11.5px;color:#059669;font-weight:700;">All 4 steps complete · Verified ✓</div>
-            </div>
-          </div>
-          <i data-lucide="chevron-right" style="width:16px;height:16px;color:#94A3B8;"></i>
-        </div>
+        <div id="driverHomeFeed"></div>
       </div>
 
       <!-- Driver Bottom Navigation Bar -->
@@ -4777,7 +4860,7 @@
           <i data-lucide="calendar"></i>
           <span>Schedule</span>
         </button>
-        <button type="button" class="tab-item" onclick="navigateTo('messages')">
+        <button type="button" class="tab-item" onclick="navigateTo('inbox')">
           <i data-lucide="message-square"></i>
           <span>Messages</span>
         </button>
@@ -4810,7 +4893,7 @@
       </div>
 
       <div class="segmented-control" style="margin-top:4px;">
-        <button type="button" class="segment-btn active" id="btnDReqNew" onclick="switchDriverRequestsTab('new')">New (2)</button>
+        <button type="button" class="segment-btn active" id="btnDReqNew" onclick="switchDriverRequestsTab('new')">New</button>
         <button type="button" class="segment-btn" id="btnDReqAccepted" onclick="switchDriverRequestsTab('accepted')">Accepted</button>
         <button type="button" class="segment-btn" id="btnDReqDeclined" onclick="switchDriverRequestsTab('declined')">Declined</button>
       </div>
@@ -4823,7 +4906,7 @@
         <button type="button" class="tab-item" onclick="navigateTo('driverHome')"><i data-lucide="home"></i><span>Home</span></button>
         <button type="button" class="tab-item active" onclick="navigateTo('driverRequests')"><i data-lucide="inbox"></i><span>Requests</span></button>
         <button type="button" class="tab-item" onclick="navigateTo('driverSchedule')"><i data-lucide="calendar"></i><span>Schedule</span></button>
-        <button type="button" class="tab-item" onclick="navigateTo('messages')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
         <button type="button" class="tab-item" onclick="navigateTo('driverProfile')"><i data-lucide="user"></i><span>Profile</span></button>
       </nav>
       <div class="home-indicator"></div>
@@ -4848,8 +4931,8 @@
       </div>
 
       <div class="segmented-control" style="margin-top:4px;">
-        <button type="button" class="segment-btn active" id="btnDSchedToday" onclick="switchDriverScheduleTab('today')">Today (3)</button>
-        <button type="button" class="segment-btn" id="btnDSchedUpcoming" onclick="switchDriverScheduleTab('upcoming')">Upcoming Week</button>
+        <button type="button" class="segment-btn active" id="btnDSchedToday" onclick="switchDriverScheduleTab('today')">Today</button>
+        <button type="button" class="segment-btn" id="btnDSchedUpcoming" onclick="switchDriverScheduleTab('upcoming')">Upcoming</button>
       </div>
 
       <div class="screen-scroll-body" style="padding-bottom: 90px;">
@@ -4860,7 +4943,7 @@
         <button type="button" class="tab-item" onclick="navigateTo('driverHome')"><i data-lucide="home"></i><span>Home</span></button>
         <button type="button" class="tab-item" onclick="navigateTo('driverRequests')"><i data-lucide="inbox"></i><span>Requests</span></button>
         <button type="button" class="tab-item active" onclick="navigateTo('driverSchedule')"><i data-lucide="calendar"></i><span>Schedule</span></button>
-        <button type="button" class="tab-item" onclick="navigateTo('messages')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
         <button type="button" class="tab-item" onclick="navigateTo('driverProfile')"><i data-lucide="user"></i><span>Profile</span></button>
       </nav>
       <div class="home-indicator"></div>
@@ -4880,8 +4963,8 @@
 
       <div class="top-bar-sticky" style="background:#0F172A;color:#FFFFFF;border-bottom:1px solid rgba(255,255,255,0.1);">
         <button type="button" class="back-btn" onclick="navigateTo('driverHome')" style="color:#FFFFFF;"><i data-lucide="chevron-left"></i></button>
-        <h2 class="top-bar-title" style="color:#FFFFFF;">Active Trip Cockpit</h2>
-        <button type="button" class="btn-text-link" onclick="triggerEmergencyAlert()" style="color:#EF4444;font-weight:800;font-size:12px;">SOS</button>
+        <h2 class="top-bar-title" style="color:#FFFFFF;">Active trip</h2>
+        <button type="button" class="btn-text-link" id="driverTripSosBtn" onclick="triggerEmergencyAlert()" style="color:#EF4444;font-weight:800;font-size:12px;">SOS</button>
       </div>
 
       <div class="active-trip-cockpit">
@@ -4917,16 +5000,10 @@
           </div>
 
           <!-- Quick Parent Contact Row -->
-          <div style="display:flex;align-items:center;gap:10px;">
-            <a href="tel:+14165550192" class="btn-chat-compact" style="flex:1;height:38px;justify-content:center;text-decoration:none;">
-              <i data-lucide="phone" style="width:14px;height:14px;color:#059669;"></i>
-              <span>Call Parent</span>
-            </a>
-            <button type="button" class="btn-chat-compact" style="flex:1;height:38px;justify-content:center;" onclick="openChatWith('sarah')">
-              <i data-lucide="message-square" style="width:14px;height:14px;color:var(--color-primary);"></i>
-              <span>Message Parent</span>
-            </button>
-          </div>
+          <button type="button" class="btn-chat-compact" id="driverTripMessageBtn" style="height:40px;justify-content:center;" onclick="openChatWith('PRNT-9042')">
+            <i data-lucide="message-square" style="width:14px;height:14px;color:var(--color-primary);"></i>
+            <span>Message Parent</span>
+          </button>
 
           <!-- Primary Milestone Stepper Button -->
           <div style="margin-top:auto;padding-top:10px;">
@@ -4948,9 +5025,9 @@
           <h3 style="font-size:17px;font-weight:800;color:#0F172A;margin:0;">Confirm Children Boarded</h3>
           <button type="button" class="btn-text-link" onclick="closeDriverAttendanceModal()" style="font-size:13px;color:#64748B;">✕</button>
         </div>
-        <p style="font-size:12.5px;color:#64748B;margin:0;">Select each child who boarded the vehicle safely at 12 Elm Street:</p>
+        <p style="font-size:12.5px;color:var(--color-body);margin:0;">Mark who boarded. A child marked not riding stays on the booking.</p>
 
-        <div style="display:flex;flex-direction:column;gap:10px;">
+        <div id="driverAttendanceList" style="display:flex;flex-direction:column;gap:10px;">
           <!-- Child 1: Arman -->
           <div class="attendance-child-card selected" id="attCardArman" onclick="toggleChildAttendance('arman')">
             <div style="display:flex;align-items:center;gap:10px;">
@@ -4980,8 +5057,8 @@
           💡 <strong>Multi-Child Edge Case:</strong> If one child is absent today, uncheck them. The trip will safely continue for the riding child without cancelling the booking.
         </div>
 
-        <button type="button" class="btn-primary" style="height:44px;font-size:13.5px;font-weight:800;" onclick="confirmDriverAttendance()">
-          <span>Confirm Boarding &amp; Start Ride to School →</span>
+        <button type="button" class="btn-primary" id="btnConfirmAttendance" onclick="confirmDriverAttendance()">
+          <span>Confirm pickup</span>
         </button>
       </div>
     </div>
@@ -4999,79 +5076,12 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button>
-        <h2 class="top-bar-title">Driver Onboarding &amp; Setup</h2>
+        <button type="button" class="back-btn" onclick="window.navigateBack('driverHome')"><i data-lucide="chevron-left"></i></button>
+        <h2 class="top-bar-title">Driver setup</h2>
         <span style="width:26px;"></span>
       </div>
 
-      <div class="screen-scroll-body" style="padding:18px 20px 90px;display:flex;flex-direction:column;gap:16px;">
-        <!-- Verified Status Banner -->
-        <div style="background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:16px;padding:16px;display:flex;align-items:center;gap:12px;">
-          <div style="width:42px;height:42px;border-radius:50%;background:#DCFCE7;display:flex;align-items:center;justify-content:center;color:#15803D;flex-shrink:0;">
-            <i data-lucide="check-check" style="width:24px;height:24px;"></i>
-          </div>
-          <div>
-            <h4 style="font-size:15px;font-weight:800;color:#0F172A;margin:0 0 2px 0;">You're Verified ✓</h4>
-            <p style="font-size:12px;color:#15803D;font-weight:600;margin:0;">All 4 compliance modules are verified by Home2School Admin.</p>
-          </div>
-        </div>
-
-        <div style="font-size:12px;font-weight:800;text-transform:uppercase;color:#64748B;letter-spacing:0.5px;">Onboarding Checklist (4/4 Complete)</div>
-
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <!-- Step 1: Personal -->
-          <div class="driver-setup-step completed">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span class="step-num-circle">✓</span>
-              <div>
-                <div style="font-size:13.5px;font-weight:800;color:#0F172A;">1. Personal Profile</div>
-                <div style="font-size:11.5px;color:#059669;">Tariq Ahmed · +1 (416) 555-0182</div>
-              </div>
-            </div>
-            <span class="capacity-badge ok">Verified</span>
-          </div>
-
-          <!-- Step 2: Vehicle -->
-          <div class="driver-setup-step completed">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span class="step-num-circle">✓</span>
-              <div>
-                <div style="font-size:13.5px;font-weight:800;color:#0F172A;">2. Vehicle Details</div>
-                <div style="font-size:11.5px;color:#059669;">Toyota Sienna (2023) · 4 Seats · Plate SCH-4091</div>
-              </div>
-            </div>
-            <span class="capacity-badge ok">Active</span>
-          </div>
-
-          <!-- Step 3: Documents -->
-          <div class="driver-setup-step completed">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span class="step-num-circle">✓</span>
-              <div>
-                <div style="font-size:13.5px;font-weight:800;color:#0F172A;">3. Verification Documents</div>
-                <div style="font-size:11.5px;color:#059669;">License, Insurance, Registration, Background Check (4/4)</div>
-              </div>
-            </div>
-            <span class="capacity-badge ok">Approved</span>
-          </div>
-
-          <!-- Step 4: Availability -->
-          <div class="driver-setup-step completed">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span class="step-num-circle">✓</span>
-              <div>
-                <div style="font-size:13.5px;font-weight:800;color:#0F172A;">4. Availability Schedule</div>
-                <div style="font-size:11.5px;color:#059669;">Mon–Fri (06:30–09:30 AM &amp; 01:00–04:30 PM)</div>
-              </div>
-            </div>
-            <span class="capacity-badge ok">Active</span>
-          </div>
-        </div>
-
-        <button type="button" class="btn-primary" style="height:44px;font-size:13.5px;font-weight:800;margin-top:8px;" onclick="navigateTo('driverHome')">
-          <span>Return to Driver Dashboard →</span>
-        </button>
-      </div>
+      <div class="screen-scroll-body" id="driverSetupFeed" style="padding:18px 20px 90px;display:flex;flex-direction:column;gap:16px;"></div>
 
       <div class="home-indicator"></div>
     </section>
@@ -5090,11 +5100,11 @@
 
       <div class="top-bar-sticky">
         <button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button>
-        <h2 class="top-bar-title">Driver Profile &amp; Fleet</h2>
+        <h2 class="top-bar-title">Driver profile</h2>
         <span style="width:26px;"></span>
       </div>
 
-      <div class="screen-scroll-body" style="padding-bottom: 90px; display:flex; flex-direction:column; gap:16px;">
+      <div class="screen-scroll-body" id="driverProfileFeed" style="padding-bottom: 90px; display:flex; flex-direction:column; gap:16px;">
         <!-- Driver Hero Card -->
         <div class="profile-user-card">
           <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0;">
@@ -5177,7 +5187,7 @@
         <button type="button" class="tab-item" onclick="navigateTo('driverHome')"><i data-lucide="home"></i><span>Home</span></button>
         <button type="button" class="tab-item" onclick="navigateTo('driverRequests')"><i data-lucide="inbox"></i><span>Requests</span></button>
         <button type="button" class="tab-item" onclick="navigateTo('driverSchedule')"><i data-lucide="calendar"></i><span>Schedule</span></button>
-        <button type="button" class="tab-item" onclick="navigateTo('messages')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
         <button type="button" class="tab-item active" onclick="navigateTo('driverProfile')"><i data-lucide="user"></i><span>Profile</span></button>
       </nav>
       <div class="home-indicator"></div>
@@ -5185,7 +5195,20 @@
 
   </main>
 
+  <div class="mvp-series-sheet" id="seriesActionSheet" onclick="if(event.target===this) closeSeriesActionSheet()">
+    <div class="mvp-series-card">
+      <div class="sheet-drag-handle" style="margin: 0 auto 12px;"></div>
+      <h3 style="font-size:16px;font-weight:800;color:#0F172A;margin:0 0 8px;" id="seriesSheetTitle">Update this booking</h3>
+      <p style="font-size:13px;color:#64748B;margin:0 0 14px;">Recurring rides can change one day or the whole series.</p>
+      <button class="btn-primary" style="margin-bottom:8px;" onclick="confirmSeriesAction('occurrence')">This occurrence</button>
+      <button class="btn-primary" style="background:#1B2B68;" onclick="confirmSeriesAction('series')">Entire series</button>
+      <button class="btn-secondary-link" onclick="closeSeriesActionSheet()">Cancel</button>
+    </div>
+  </div>
+
   <script src="/app.js"></script>
+  <script src="/mvp-parent.js"></script>
+  <script src="/mvp-driver.js"></script>
 </body>
 
 </html>

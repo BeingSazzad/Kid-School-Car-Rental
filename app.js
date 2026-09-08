@@ -15,6 +15,7 @@ const screens = [
   'authProfile',
   'authPhoto',
   'authAddChild',
+  'subscription',
   'authSuccess',
   'home',
   'myChildren',
@@ -28,6 +29,7 @@ const screens = [
   'bookingConfirmed',
   'bookingDetails',
   'tracking',
+  'inbox',
   'messages',
   'bookings',
   'profile',
@@ -49,7 +51,17 @@ const screens = [
   'driverSchedule',
   'driverActiveTrip',
   'driverSetup',
-  'driverProfile'
+  'driverProfile',
+  'driverOnboardProfile',
+  'driverOnboardVehicle',
+  'driverOnboardDocs',
+  'driverOnboardAvailability',
+  'driverOnboardRate',
+  'driverPending',
+  'driverSubscription',
+  'driverRequestDetail',
+  'driverTripPrep',
+  'driverRateParent'
 ];
 
 /* ==========================================================
@@ -191,20 +203,39 @@ window.appState = {
       photo: '/assets/avatar_school.jpg'
     }
   ],
-  selectedChildIds: ['arman', 'emma'],
+  selectedChildIds: [],
   bookingDraft: {
-    direction: 'bothway', // 'bothway' | 'oneway'
-    frequency: 'recurring', // 'recurring' | 'onetime'
-    serviceType: 'drivers', // 'all' | 'drivers' | 'walkshare'
+    direction: 'bothway',
+    frequency: 'onetime',
+    serviceType: 'drivers',
+    childIds: [],
     pickupLocation: '',
     schoolLocation: '',
     outboundTime: '',
     returnTime: '',
     startDate: '',
     tripDate: '',
-    selectedDays: ['M', 'T', 'W', 'T', 'F'],
+    selectedDays: [],
+    recurrenceEnds: 'until_cancelled',
+    recurrenceEndDate: '',
     providerId: 'tariq',
     paymentMethod: 'Visa •••• 4242'
+  },
+  parentSubscription: {
+    status: 'trial',
+    plan: 'monthly',
+    trialDaysLeft: 14,
+    priceMonthly: 9.99,
+    priceAnnual: 79,
+    renewal: 'Sep 22, 2026',
+    history: [
+      { id: 'sub-1', label: '14-day free trial started', date: 'Sep 8, 2026', amount: '$0.00' }
+    ]
+  },
+  paymentHandle: {
+    status: 'idle',
+    handle: 'sadia.khan@interac',
+    requestedBy: null
   },
   bookings: [
     // 1. Two-Way + Recurring (Active / In Progress)
@@ -518,12 +549,22 @@ window.appState = {
     phone: '+1 (416) 555-0182',
     email: 'tariq.ahmed@torontoschoolrides.ca',
     photo: '/assets/avatar_tariq.jpg',
+    serviceArea: 'Greenfield / Midtown Toronto',
     rating: 4.9,
     reviewsCount: 128,
     isOnline: true,
-    verificationStatus: 'verified',
-    homeScenario: 'B', // 'A': No Trips, 'B': Upcoming Trip, 'C': Trip Starts Soon
-    activeTripStage: 0, // 0: Confirmed, 1: On Way, 2: Arrived, 3: Boarded, 4: En Route, 5: Dropped Off, 6: Complete
+    verificationStatus: 'incomplete',
+    onboarding: {
+      profile: false,
+      vehicle: false,
+      docs: false,
+      availability: false,
+      rate: false
+    },
+    homeScenario: 'B',
+    activeTripStage: 0,
+    activeTrip: null,
+    selectedRequestId: null,
     attendance: {
       arman: true,
       emma: true
@@ -536,58 +577,104 @@ window.appState = {
       color: 'Celestial Silver',
       plate: 'SCH-4091',
       capacity: 4,
-      photo: '/assets/avatar_tariq.jpg'
+      photo: '/assets/sienna.jpg'
     },
     documents: [
-      { id: 'license', title: "Ontario Class G Driver's License", status: 'approved', expiry: 'Dec 14, 2028' },
-      { id: 'insurance', title: "Commercial Passenger Vehicle Insurance", status: 'approved', expiry: 'Nov 30, 2026' },
-      { id: 'registration', title: "Ontario Vehicle Registration & Safety", status: 'approved', expiry: 'Oct 22, 2027' },
-      { id: 'background', title: "Vulnerable Sector & Criminal Record Check", status: 'approved', expiry: 'Jan 15, 2027' }
+      { id: 'licence', title: "Driver's Licence", status: 'not_submitted', rejectReason: '' },
+      { id: 'insurance', title: 'Insurance', status: 'not_submitted', rejectReason: '' },
+      { id: 'registration', title: 'Registration', status: 'not_submitted', rejectReason: '' },
+      { id: 'criminal', title: 'Criminal Background', status: 'not_submitted', rejectReason: '' },
+      { id: 'vulnerable', title: 'Vulnerable Sector', status: 'not_submitted', rejectReason: '' }
     ],
     availability: {
       weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-      morningSlot: '06:30 AM – 09:30 AM',
-      afternoonSlot: '01:00 PM – 04:30 PM'
+      morningSlot: '06:30 AM – 09:00 AM',
+      afternoonSlot: '01:00 PM – 04:30 PM',
+      windows: [
+        { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '06:30', end: '09:00', label: 'Morning' },
+        { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '13:00', end: '16:30', label: 'Afternoon' }
+      ],
+      exceptions: []
+    },
+    rate: {
+      amount: 120,
+      period: 'week',
+      negotiable: true,
+      paymentMethod: 'Interac e-Transfer'
     },
     subscription: {
-      plan: 'Pro Driver Pass',
-      price: '$29 / mo',
-      renewal: 'Sep 30, 2026',
-      status: 'active'
+      plan: 'monthly',
+      priceMonthly: 29,
+      priceAnnual: 279,
+      renewal: 'Oct 8, 2026',
+      status: 'none',
+      trialDaysLeft: 14,
+      history: []
     },
+    notifications: [
+      { id: 'dn-1', title: 'New ride request', body: 'Nadia Rahman requested a Mon–Fri school commute for Yusuf and Ayla.', time: '12 min ago', unread: true, action: 'requests' },
+      { id: 'dn-2', title: 'Message from parent', body: 'Sadia: Arman and Emma will be at the porch at 07:28.', time: 'Yesterday', unread: true, action: 'inbox' }
+    ],
     requests: [
       {
         id: 'dreq-1',
-        parentId: 'PRNT-9042',
-        parentName: 'Sadia Khan',
-        parentPhone: '+1 (416) 555-0192',
-        children: ['Arman Khan (9 yrs)', 'Emma Khan (7 yrs)'],
-        childNamesShort: 'Arman + Emma',
+        bookingId: 'H2S-REQ-2201',
+        parentId: 'PRNT-2201',
+        parentName: 'Nadia Rahman',
+        parentRole: 'Mother',
+        parentPhoto: '/assets/avatar_rehana.jpg',
+        parentPhone: '+1 (416) 555-0160',
+        children: [
+          { id: 'yusuf', name: 'Yusuf Rahman', age: '8 yrs', grade: 'Grade 3', notes: 'Booster seat', photo: '/assets/avatar_arman.jpg' },
+          { id: 'ayla', name: 'Ayla Rahman', age: '6 yrs', grade: 'Grade 1', notes: 'Sits with brother', photo: '/assets/avatar_emma.jpg' }
+        ],
+        childNamesShort: 'Yusuf + Ayla',
         seatsNeeded: 2,
-        routeFrom: 'Home (12 Elm Street)',
+        pickupLocation: '18 Maple Avenue',
+        dropoffLocation: 'Greenfield International School',
+        routeFrom: '18 Maple Avenue',
         routeTo: 'Greenfield International School',
-        timing: 'Mon – Fri · Morning: 07:30 AM | Afternoon: 01:00 PM',
-        frequency: 'Round Trip · Recurring',
-        distance: '4.8 km (approx 14 min)',
-        price: '$120 /wk',
-        notes: 'Booster seat required for Arman. Front loop drop-off at Greenfield.',
+        dateLabel: 'Starts Mon, Sep 14, 2026',
+        pickupTime: '07:45 AM',
+        returnTime: '03:10 PM',
+        recurringDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        frequency: 'recurring',
+        direction: 'bothway',
+        timing: 'Mon–Fri · Pickup 07:45 AM · Return 03:10 PM',
+        rate: 120,
+        rateLabel: '$120 / week',
+        price: '$120 / week',
+        notes: 'Booster seat for Yusuf. Hand both children to the Greenfield loop supervisor.',
         status: 'new'
       },
       {
         id: 'dreq-2',
+        bookingId: 'H2S-REQ-9042',
         parentId: 'PRNT-9042',
         parentName: 'Sadia Khan',
+        parentRole: 'Mother (Primary Guardian)',
+        parentPhoto: '/assets/avatar_sadia.jpg',
         parentPhone: '+1 (416) 555-0192',
-        children: ['Zara Khan (5 yrs)'],
+        children: [
+          { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
+        ],
         childNamesShort: 'Zara',
         seatsNeeded: 1,
+        pickupLocation: 'Home (12 Elm Street)',
+        dropoffLocation: 'Sunshine Pre-school',
         routeFrom: 'Home (12 Elm Street)',
         routeTo: 'Sunshine Pre-school',
-        timing: 'Thursday, May 23 · 08:15 AM',
-        frequency: 'One-Way · Single Trip',
-        distance: '2.4 km (approx 8 min)',
-        price: '$35 trip',
-        notes: 'Hand to classroom teacher Ms. Jenkins at main entrance gate.',
+        dateLabel: 'Thursday, Sep 17, 2026',
+        pickupTime: '08:15 AM',
+        returnTime: '01:30 PM',
+        recurringDays: [],
+        frequency: 'onetime',
+        direction: 'bothway',
+        timing: 'Thu, Sep 17 · Pickup 08:15 AM · Return 01:30 PM',
+        rate: 45,
+        rateLabel: '$45 / day',
+        price: '$45 / day',
+        notes: 'Hand to classroom teacher Ms. Jenkins at the main entrance gate.',
         status: 'new'
       }
     ],
@@ -648,10 +735,32 @@ window.switchRole = function (role) {
   }
 
   if (role === 'driver') {
-    window.navigateTo('driverHome');
+    const next = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverSetup';
+    window.navigateTo(next);
   } else {
     window.navigateTo('home');
   }
+};
+
+window.enterDriverFromAuth = function () {
+  window.appState.activeRole = 'driver';
+  window.appState.driverEntryFromAuth = true;
+  localStorage.setItem('h2s_active_role', 'driver');
+  const btnP = document.getElementById('btnRoleParent');
+  const btnD = document.getElementById('btnRoleDriver');
+  if (btnP && btnD) {
+    btnP.classList.remove('active');
+    btnD.classList.add('active', 'driver-active');
+  }
+  window.navigateTo('authOtp');
+};
+
+window.triggerEmergencyAlert = function () {
+  if (typeof window.openEmergencySOSModal === 'function') {
+    window.openEmergencySOSModal();
+    return;
+  }
+  if (window.showToast) window.showToast('Emergency desk is unavailable in this session', 'error');
 };
 
 /* ==========================================================
@@ -686,13 +795,19 @@ window.navigateTo = function (screenName, isBack = false) {
   if (screenName === 'home') {
     renderHome();
   } else if (screenName === 'bookingTripSetup') {
-    if (window.renderBookingSavedLocations) window.renderBookingSavedLocations();
+    if (window.initBookingSetupPage) window.initBookingSetupPage();
+  } else if (screenName === 'bookingSearchProviders') {
+    if (window.initProviderSearchPage) window.initProviderSearchPage();
+  } else if (screenName === 'subscription') {
+    if (window.renderSubscriptionScreen) window.renderSubscriptionScreen();
+  } else if (screenName === 'inbox') {
+    if (window.renderInboxScreen) window.renderInboxScreen();
   } else if (screenName === 'bookingSummary') {
-    renderBookingSummary();
+    (window.renderBookingSummary || renderBookingSummary)();
   } else if (screenName === 'bookings') {
-    renderBookingsList('upcoming');
+    (window.renderBookingsList || renderBookingsList)('upcoming');
   } else if (screenName === 'bookingDetails') {
-    renderBookingDetails(window.appState.activeBookingId);
+    (window.renderBookingDetails || renderBookingDetails)(window.appState.activeBookingId);
   } else if (screenName === 'bookingConfirmed') {
     renderBookingConfirmation();
   } else if (screenName === 'myChildren') {
@@ -717,6 +832,26 @@ window.navigateTo = function (screenName, isBack = false) {
     renderDriverSetup();
   } else if (screenName === 'driverProfile') {
     renderDriverProfile();
+  } else if (screenName === 'driverOnboardProfile' && window.renderDriverOnboardProfile) {
+    window.renderDriverOnboardProfile();
+  } else if (screenName === 'driverOnboardVehicle' && window.renderDriverOnboardVehicle) {
+    window.renderDriverOnboardVehicle();
+  } else if (screenName === 'driverOnboardDocs' && window.renderDriverOnboardDocs) {
+    window.renderDriverOnboardDocs();
+  } else if (screenName === 'driverOnboardAvailability' && window.renderDriverOnboardAvailability) {
+    window.renderDriverOnboardAvailability();
+  } else if (screenName === 'driverOnboardRate' && window.renderDriverOnboardRate) {
+    window.renderDriverOnboardRate();
+  } else if (screenName === 'driverPending' && window.renderDriverPending) {
+    window.renderDriverPending();
+  } else if (screenName === 'driverSubscription' && window.renderDriverSubscription) {
+    window.renderDriverSubscription();
+  } else if (screenName === 'driverRequestDetail' && window.renderDriverRequestDetail) {
+    window.renderDriverRequestDetail();
+  } else if (screenName === 'driverTripPrep' && window.renderDriverTripPrep) {
+    window.renderDriverTripPrep();
+  } else if (screenName === 'driverRateParent' && window.renderDriverRateParent) {
+    window.renderDriverRateParent();
   } else if (screenName === 'tracking') {
     if (window.renderTrackingScreen) window.renderTrackingScreen();
   }
@@ -757,12 +892,14 @@ function updateBottomTabHighlights(screenName) {
     bookingConfirmed: 1,
     tracking: 2,
     messages: 3,
+    inbox: 3,
     profile: 4,
     myChildren: 4,
     profilePersonalInfo: 4,
     profileEmergency: 4,
     profileLocations: 4,
     profilePayments: 4,
+    subscription: 4,
     faq: 4,
     legal: 4,
     about: 4,
@@ -776,7 +913,20 @@ function updateBottomTabHighlights(screenName) {
     driverActiveTrip: 2,
     messages: 3,
     driverProfile: 4,
-    driverSetup: 4
+    driverSetup: 4,
+    driverOnboardProfile: 4,
+    driverOnboardVehicle: 4,
+    driverOnboardDocs: 4,
+    driverOnboardAvailability: 4,
+    driverOnboardRate: 4,
+    driverPending: 4,
+    driverSubscription: 4,
+    driverRequestDetail: 1,
+    driverTripPrep: 2,
+    driverRateParent: 0,
+    notifications: 0,
+    inbox: 3,
+    messages: 3
   };
 
   const parentIdx = parentTabMap[screenName];
@@ -835,7 +985,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (hash && screens.includes(hash)) {
     initial = hash;
   } else if (savedRole === 'driver') {
-    initial = 'driverHome';
+    initial = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverSetup';
   }
   window.navigateTo(initial);
 
@@ -1066,12 +1216,15 @@ window.handleScheduleDateChange = function (type, dateVal) {
   let displayStr = dateVal;
   if (parts.length === 3) {
     const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-    displayStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    displayStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   if (type === 'outbound') {
     const txt = document.getElementById('setupOutboundDateText');
-    if (txt) txt.value = displayStr;
+    if (txt) {
+      txt.value = displayStr;
+      txt.textContent = displayStr;
+    }
     window.appState.bookingDraft.tripDate = displayStr;
     window.appState.bookingDraft.startDate = dateVal;
     // Keep return date in sync if still default
@@ -1173,10 +1326,7 @@ window.applySavedBookingLocation = function (locId, btnEl) {
     if (typeof showToast === 'function') showToast(`Selected ${loc.name} as pickup point`);
   }
 
-  const outLabel = document.getElementById('outboundScheduleLabel');
-  const retLabel = document.getElementById('returnScheduleLabel');
-  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound</span>`;
-  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return</span>`;
+  if (typeof window.updateBookingSearchCta === 'function') window.updateBookingSearchCta();
 
   if (btnEl && btnEl.parentElement) {
     btnEl.parentElement.querySelectorAll('.clean-quick-chip').forEach(c => c.classList.remove('active'));
@@ -1198,15 +1348,6 @@ window.syncLocationInput = function (type, val) {
     if (hiddenS) hiddenS.value = value;
     window.appState.bookingDraft.schoolLocation = value;
   }
-
-  const inputP = document.getElementById('setupPickupLocationInput');
-  const inputS = document.getElementById('setupSchoolLocationInput');
-  const pName = (inputP && inputP.value ? inputP.value.split(',')[0].trim() : 'Home');
-  const sName = (inputS && inputS.value ? inputS.value.split(',')[0].trim() : 'School');
-  const outLabel = document.getElementById('outboundScheduleLabel');
-  const retLabel = document.getElementById('returnScheduleLabel');
-  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound</span>`;
-  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return</span>`;
 };
 
 window._currentMapPickerTarget = 'pickup';
@@ -1406,10 +1547,6 @@ window.applyPresetLocation = function (type, address, fullVal, btnEl) {
 
   const dispP = document.getElementById('displayPickupAddr');
   const dispS = document.getElementById('displaySchoolAddr');
-  const outLabel = document.getElementById('outboundScheduleLabel');
-  const retLabel = document.getElementById('returnScheduleLabel');
-  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound</span>`;
-  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return</span>`;
 
   if (btnEl && btnEl.parentElement) {
     btnEl.parentElement.querySelectorAll('.clean-quick-chip').forEach(c => c.classList.remove('active'));
@@ -2094,6 +2231,13 @@ function renderBookingConfirmation() {
       ? `$${active.amount}.00 / week (Recurring)` 
       : `$${active.amount}.00 Flat Rate (One-Time)`;
   }
+
+  const trackBtn = document.getElementById('btnConfirmedLiveTrack');
+  if (trackBtn) {
+    const live = active && active.status === 'in_progress';
+    trackBtn.style.display = live ? 'flex' : 'none';
+    if (live) trackBtn.setAttribute('onclick', `openLiveTracking('${active.id}')`);
+  }
 }
 
 /* ==========================================================
@@ -2264,9 +2408,9 @@ function renderBookingDetails(bookingId) {
           </div>
         </div>
 
-        <button class="btn-primary" onclick="navigateTo('tracking')" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 50px; font-size: 15.5px; font-weight: 800; border-radius: 14px;">
+        <button class="btn-primary" onclick="openLiveTracking('${booking.id}')" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 50px; font-size: 15.5px; font-weight: 800; border-radius: 14px;">
           <span class="live-pulse-dot" style="background: #FFFFFF; box-shadow: 0 0 0 3px rgba(255,255,255,0.3);"></span>
-          <span>Open Live GPS Tracking</span>
+          <span>Track</span>
           <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
         </button>
 
@@ -2295,7 +2439,7 @@ function renderBookingDetails(bookingId) {
           </div>
           <div class="status-tip-text">
             <div class="status-tip-title" style="color: #0369A1;">Scheduled Commute</div>
-            <div class="status-tip-sub" style="color: #0C4A6E;">Tomorrow at ${booking.outboundTime || '07:30 AM'}. Live GPS activates 15 mins prior.</div>
+            <div class="status-tip-sub" style="color: #0C4A6E;">Tomorrow at ${booking.outboundTime || '07:30 AM'}. Live GPS is available only while the trip is in progress.</div>
           </div>
         </div>
 
@@ -2332,27 +2476,23 @@ function renderBookingDetails(bookingId) {
         </button>
       `;
     } else if (booking.status === 'completed') {
+      const providerFirst = (provider.name || 'Provider').split(' ')[0];
       actionsWrap.innerHTML = `
-        <button class="btn-primary" onclick="navigateTo('rating')" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-          <i data-lucide="star" style="width: 16px; height: 16px; fill: #F59E0B; color: #F59E0B;"></i>
-          <span>Rate ${provider.name.split(' ')[0]} ⭐</span>
+        <button type="button" class="btn-primary" onclick="navigateTo('rating')" style="gap: 8px;">
+          <i data-lucide="star" style="width: 16px; height: 16px;"></i>
+          <span>Rate ${providerFirst}</span>
         </button>
 
-        <div class="booking-utility-actions-grid">
-          <button type="button" class="btn-utility-card" onclick="alert('Official receipt emailed to ${window.appState.user.email}')">
-            <i data-lucide="file-text" style="width: 15px; height: 15px; color: #0284C7;"></i>
-            <span>Official Receipt</span>
-          </button>
-          <button type="button" class="btn-utility-card" onclick="openTripReport('${booking.id}')">
-            <i data-lucide="help-circle" style="width: 15px; height: 15px; color: #64748B;"></i>
+        <div class="booking-post-ride-quiet">
+          <button type="button" class="btn-detail-quiet" onclick="openTripReport('${booking.id}')">
+            <i data-lucide="help-circle" style="width: 14px; height: 14px;"></i>
             <span>Report Issue</span>
           </button>
+          <button type="button" class="btn-ghost-cancel btn-ghost-tertiary" onclick="navigateTo('bookingTripSetup')">
+            <i data-lucide="repeat" style="width: 13px; height: 13px;"></i>
+            <span>Book again on this route</span>
+          </button>
         </div>
-
-        <button type="button" class="btn-ghost-cancel" onclick="navigateTo('bookingSelectChildren')" style="color: var(--color-primary);">
-          <i data-lucide="repeat" style="width: 13px; height: 13px;"></i>
-          <span>Book again on this route</span>
-        </button>
       `;
     } else if (booking.status === 'cancelled') {
       actionsWrap.innerHTML = `
@@ -2366,7 +2506,7 @@ function renderBookingDetails(bookingId) {
           </div>
         </div>
 
-        <button class="btn-primary" onclick="navigateTo('bookingSelectChildren')" style="margin-top: 6px;">
+        <button class="btn-primary" onclick="navigateTo('bookingTripSetup')" style="margin-top: 6px;">
           Re-book This School Route
         </button>
       `;
@@ -2424,27 +2564,30 @@ window.swapPickupDropoff = function () {
   window.appState.bookingDraft.pickupLocation = valS;
   window.appState.bookingDraft.schoolLocation = valP;
 
-  const outLabel = document.getElementById('outboundScheduleLabel');
-  const retLabel = document.getElementById('returnScheduleLabel');
-  if (outLabel) outLabel.innerHTML = `<span class="clean-dot navy"></span><span>Outbound</span>`;
-  if (retLabel) retLabel.innerHTML = `<span class="clean-dot orange"></span><span>Return</span>`;
-
+  if (typeof window.updateBookingSearchCta === 'function') window.updateBookingSearchCta();
   if (typeof showToast === 'function') showToast('Swapped pickup and drop-off locations');
 };
 
 window.rebookRide = function (bookingId) {
   const b = window.appState.bookings.find(x => x.id === bookingId);
   if (b) {
+    const childIds = b.childIds || [];
+    window.appState.selectedChildIds = [...childIds];
     window.appState.bookingDraft = {
       ...window.appState.bookingDraft,
-      childIds: b.childIds || ['arman'],
+      childIds: [...childIds],
       pickupLocation: b.pickupLocation,
       schoolLocation: b.schoolLocation,
       direction: b.direction,
-      frequency: b.frequency
+      frequency: b.frequency || 'onetime',
+      outboundTime: b.outboundTime || '',
+      returnTime: b.returnTime || '',
+      startDate: b.startDate || '',
+      tripDate: b.tripDate || '',
+      setupSource: 'rebook'
     };
     if (typeof showToast === 'function') showToast(`Loaded booking for ${b.schoolLocation}`);
-    navigateTo('bookingSelectChildren');
+    navigateTo('bookingTripSetup');
   }
 };
 
@@ -2477,7 +2620,7 @@ function renderBookingsList(tab) {
   const countH = window.appState.bookings.filter(b => b.status === 'completed').length;
   const countC = window.appState.bookings.filter(b => b.status === 'cancelled').length;
   if (btnU) btnU.textContent = `Upcoming (${countU})`;
-  if (btnH) btnH.textContent = `History (${countH})`;
+  if (btnH) btnH.textContent = `Past (${countH})`;
   if (btnC) btnC.textContent = `Cancelled (${countC})`;
 
   [btnU, btnH, btnC].forEach(b => b?.classList.remove('active'));
@@ -2506,7 +2649,7 @@ function renderBookingsList(tab) {
         </div>
         <div class="bookings-empty-title">No ${normTab} bookings</div>
         <p class="bookings-empty-sub">When you arrange rides or school commutes, they will appear here with live tracking updates.</p>
-        <button class="btn-primary" style="margin-top: 14px; max-width: 200px; height: 42px;" onclick="navigateTo('bookingSelectChildren')">+ Book a Ride</button>
+        <button class="btn-primary" style="margin-top: 14px; max-width: 200px; height: 42px;" onclick="navigateTo('bookingTripSetup')">+ Book a Ride</button>
       </div>
     `;
   } else {
@@ -2587,9 +2730,9 @@ function renderBookingsList(tab) {
                 <button class="btn-chat-compact" onclick="event.stopPropagation(); openChatWith('${provider.id}')" title="Message Driver">
                   <i data-lucide="message-square" style="width:12px;height:12px;"></i>
                 </button>
-                <button class="btn-live-track-compact" onclick="event.stopPropagation(); navigateTo('tracking')" title="Track Live GPS Ride">
+                <button class="btn-live-track-compact" onclick="event.stopPropagation(); openLiveTracking('${b.id}')" title="Track">
                   <span class="live-pulse-dot" style="margin:0;"></span>
-                  <span>Live Track</span>
+                  <span>Track</span>
                 </button>
               </div>
             </div>
@@ -2961,11 +3104,11 @@ window.zoomOutTrackingMap = function () {
 };
 
 const trackingStages = [
-  { chip: 'Live • Driver On Way', text: 'Tariq is driving towards your home', eta: '07:28 AM', pct: '18%' },
-  { chip: 'Live • Arrived At Pickup', text: 'Tariq has arrived at Home (12 Elm Street)', eta: '07:30 AM', pct: '45%' },
-  { chip: 'Live • En Route', text: 'En route to Greenfield International', eta: '07:42 AM', pct: '72%' },
-  { chip: 'Live • Approaching School', text: 'Approaching Greenfield School drop-off zone', eta: '07:44 AM', pct: '90%' },
-  { chip: 'Safe Drop-off Completed', text: 'Children safely handed to school attendant', eta: '07:46 AM', pct: '100%' }
+  { chip: 'Live • Trip Started', text: 'Tariq is on the way to pickup', eta: '07:28 AM', pct: '18%' },
+  { chip: 'Live • Provider Arrived', text: 'Tariq has arrived at Home (12 Elm Street)', eta: '07:30 AM', pct: '45%' },
+  { chip: 'Live • Child Picked Up', text: 'Arman and Emma are on the way to school', eta: '07:42 AM', pct: '72%' },
+  { chip: 'Live • Child Dropped Off', text: 'Approaching Greenfield School drop-off zone', eta: '07:44 AM', pct: '90%' },
+  { chip: 'Trip Completed', text: 'Children safely handed to school attendant', eta: '07:46 AM', pct: '100%' }
 ];
 
 window.advanceTrackingStage = function () {
@@ -3174,7 +3317,12 @@ document.querySelectorAll('.otp-box').forEach((box, idx, list) => {
         list[idx + 1].focus();
       } else {
         setTimeout(() => {
-          window.navigateTo('authProfile');
+          if (window.appState.activeRole === 'driver') {
+            const next = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverOnboardProfile';
+            window.navigateTo(next);
+          } else {
+            window.navigateTo('authProfile');
+          }
         }, 300);
       }
     } else {
@@ -3248,6 +3396,10 @@ window.showToast = function (msg, type = 'success') {
   }, isError ? 3400 : 2500);
 };
 
+window.showCustomToast = function (msg, type) {
+  window.showToast(msg, type || 'success');
+};
+
 /* ==========================================================
    Emergency Contacts Management System (Single Source of Truth)
    ========================================================== */
@@ -3295,7 +3447,7 @@ window.renderEmergencyContactsList = function () {
               <div class="contact-row-sub">${c.rel} • ${c.phone}</div>
             </div>
             <div class="contact-row-actions">
-              <a href="tel:${cleanPhone}" class="btn-contact-action-call" aria-label="Call ${c.name}" title="Call ${c.name}">
+              <a href="tel:${cleanPhone}" class="btn-contact-action-call mvp-hide-phone" aria-label="Call ${c.name}" title="Call ${c.name}" style="display:none;">
                 <i data-lucide="phone-call" style="width:14px;height:14px;"></i>
               </a>
               <div class="contact-menu-wrapper">
@@ -4731,8 +4883,7 @@ window.shareEmergencyLiveTelemetry = function () {
    Bottom Navigation Live Ride Pulse Indicator
    ========================================================== */
 window.updateNavLiveBadges = function () {
-  const hasActive = (window.appState?.homeScenario === 'C') || 
-    (window.appState?.bookings || []).some(b => b.status === 'in_progress');
+  const hasActive = (window.appState?.bookings || []).some(b => b.status === 'in_progress');
 
   const navButtons = document.querySelectorAll('.bottom-tab-bar button[onclick*="tracking"]');
   navButtons.forEach(btn => {
@@ -5399,7 +5550,7 @@ window.acceptDriverRequest = function (reqId) {
   });
 
   renderDriverRequests('new');
-  showCustomToast('Booking Accepted! Trip added to your schedule.');
+  if (window.showToast) window.showToast('Booking Accepted! Trip added to your schedule.');
 };
 
 window.declineDriverRequest = function (reqId) {
@@ -5409,7 +5560,7 @@ window.declineDriverRequest = function (reqId) {
 
   req.status = 'declined';
   renderDriverRequests('new');
-  showCustomToast('Request declined. Parent has been notified.');
+  if (window.showToast) window.showToast('Request declined. Parent has been notified.');
 };
 
 // 4. Driver Schedule Manager
@@ -5565,13 +5716,13 @@ window.advanceDriverActiveTrip = function () {
     // Reset and return
     d.activeTripStage = 0;
     navigateTo('driverHome');
-    showCustomToast('Trip completed! $120 added to your weekly earnings.');
+    if (window.showToast) window.showToast('Morning trip complete. Return leg stays on your schedule.');
     return;
   }
 
   d.activeTripStage++;
   renderDriverActiveTrip();
-  showCustomToast(driverMilestones[d.activeTripStage].chip);
+  if (window.showToast) window.showToast(driverMilestones[d.activeTripStage].chip);
 };
 
 // 6. Multi-Child Attendance Modal Logic
@@ -5604,7 +5755,7 @@ window.confirmDriverAttendance = function () {
   const d = window.appState.driver;
   d.activeTripStage = 3; // Advance to En Route
   renderDriverActiveTrip();
-  showCustomToast('Attendance confirmed! Live GPS ride in progress.');
+  if (window.showToast) window.showToast('Pickup confirmed. Ride is now active.');
 };
 
 // 7. Driver Setup & Profile Renderers
@@ -5621,6 +5772,9 @@ function renderDriverProfile() {
 }
 
 if (typeof document !== 'undefined') {
+  window.renderBookingSummary = renderBookingSummary;
+  window.renderBookingDetails = renderBookingDetails;
+  window.renderBookingsList = renderBookingsList;
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       if (window.renderBookingSavedLocations) window.renderBookingSavedLocations();
