@@ -360,6 +360,31 @@
     return `${pickup} · ${req.returnTime}`;
   }
 
+  function timeLineCard(req) {
+    const pickup = req.pickupTime || '';
+    if (req.direction === 'oneway' || !req.returnTime) return pickup;
+    return `${pickup} & ${req.returnTime}`;
+  }
+
+  function dateLineCard(req) {
+    if (req.frequency === 'recurring') return compactDays(req.recurringDays);
+    return dateShort(req.dateLabel) || 'Select date';
+  }
+
+  function parentInitials(name) {
+    const parts = String(name || 'P').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return 'P';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function avatarTone(name) {
+    const tones = ['rose', 'mint', 'sky', 'sand'];
+    let hash = 0;
+    String(name || '').split('').forEach((ch) => { hash = (hash + ch.charCodeAt(0)) % tones.length; });
+    return tones[hash];
+  }
+
   function metaLine(req) {
     const parts = [];
     if (req.frequency === 'recurring') {
@@ -1788,7 +1813,8 @@
         legLabel: 'Morning · home → school',
         seats,
         status: active && (d.activeTrip?.leg !== 'afternoon') ? 'active' : 'upcoming',
-        isActionableNow: true
+        isActionableNow: true,
+        when: b.scheduleText || 'Tue, Sep 9, 2026'
       });
       if (b.direction === 'bothway' && b.returnTime) {
         items.push({
@@ -1807,7 +1833,8 @@
           legLabel: 'Afternoon · school → home',
           seats,
           status: 'upcoming',
-          isActionableNow: false
+          isActionableNow: false,
+          when: b.scheduleText || 'Tue, Sep 9, 2026'
         });
       }
     });
@@ -1909,36 +1936,37 @@
     const rest = view.schedule.filter((item) => !view.next || item.id !== view.next.id);
     if (feedEl) {
       feedEl.innerHTML = `
-        <div class="section-block">
-          <h3 class="section-heading">Quick Actions</h3>
-          <div class="quick-actions-grid">
-            <div class="action-card navy" onclick="navigateTo('driverRequests')">
-              <div class="action-icon-circle white-glass"><i data-lucide="inbox"></i></div>
-              <h4 class="card-title-white">Requests</h4>
-              <p class="card-desc-white">${newCount ? newCount + ' new from parents' : 'Incoming from parents'}</p>
-            </div>
-            <div class="action-card light" onclick="navigateTo('driverSchedule')">
-              <div class="action-icon-circle blue-tint"><i data-lucide="calendar"></i></div>
-              <h4 class="card-title-navy">Schedule</h4>
-              <p class="card-desc-muted">Pickup &amp; return legs</p>
-            </div>
-            <div class="action-card light horizontal" onclick="openNestedScreen('driverOnboardAvailability')">
-              <div class="action-icon-circle blue-tint"><i data-lucide="clock"></i></div>
-              <h4 class="card-title-navy">Availability</h4>
-            </div>
-            <div class="action-card light horizontal" onclick="navigateTo('inbox')">
-              <div class="action-icon-circle blue-tint"><i data-lucide="message-square"></i></div>
-              <h4 class="card-title-navy">Messages</h4>
-            </div>
+        <div class="drv-home-section">
+          <h3 class="drv-home-heading">Quick Actions</h3>
+          <div class="drv-home-actions">
+            <button type="button" class="drv-home-action${newCount ? ' has-badge' : ''}" onclick="navigateTo('driverRequests')">
+              <span class="drv-home-action-ico"><i data-lucide="inbox"></i></span>
+              <span class="drv-home-action-label">Requests</span>
+              ${newCount ? `<span class="drv-home-action-badge">${newCount > 9 ? '9+' : newCount}</span>` : ''}
+            </button>
+            <button type="button" class="drv-home-action" onclick="navigateTo('driverSchedule')">
+              <span class="drv-home-action-ico"><i data-lucide="calendar"></i></span>
+              <span class="drv-home-action-label">Schedule</span>
+            </button>
+            <button type="button" class="drv-home-action" onclick="openNestedScreen('driverOnboardAvailability')">
+              <span class="drv-home-action-ico"><i data-lucide="clock"></i></span>
+              <span class="drv-home-action-label">Availability</span>
+            </button>
+            <button type="button" class="drv-home-action" onclick="navigateTo('inbox')">
+              <span class="drv-home-action-ico"><i data-lucide="message-square"></i></span>
+              <span class="drv-home-action-label">Messages</span>
+            </button>
           </div>
         </div>
-        ${rest.length ? `<div class="section-block">
-          <div class="section-header-row">
-            <h3 class="section-heading">Today's trips</h3>
-            <a href="#driverSchedule" onclick="navigateTo('driverSchedule');return false;" class="link-see-all">See All <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
+        <div class="drv-home-section">
+          <div class="drv-home-section-row">
+            <h3 class="drv-home-heading">Today's trips</h3>
+            <button type="button" class="drv-home-see-all" onclick="navigateTo('driverSchedule')">See all <i data-lucide="chevron-right"></i></button>
           </div>
-          <div class="upcoming-trips-list">${rest.map((item) => scheduleRow(item)).join('')}</div>
-        </div>` : ''}
+          ${rest.length
+            ? `<div class="drv-home-trip-list">${rest.map((item) => homeTripRow(item)).join('')}</div>`
+            : `<div class="drv-home-empty">No more trips today</div>`}
+        </div>
       `;
     }
     ['A', 'B', 'C'].forEach((sc) => {
@@ -1951,6 +1979,35 @@
     const raw = String(label || '').trim();
     const m = raw.match(/(\d{1,2}:\d{2})\s*(AM|PM)?/i);
     return { clock: m ? m[1] : raw || '--', mer: m && m[2] ? m[2].toUpperCase() : '' };
+  }
+
+  function routeShort(route) {
+    return String(route || '')
+      .replace(/\s*→\s*/g, ' → ')
+      .replace(/Greenfield International School/gi, 'Greenfield International')
+      .trim();
+  }
+
+  function homeTripRow(item) {
+    const d = dateParts(item.when || item.dateLabel);
+    const click = item.isActionableNow ? `onclick="startDriverTrip('${item.id}')"` : `onclick="navigateTo('driverSchedule')"`;
+    const badge = item.leg === 'afternoon' ? 'Return' : 'Round trip';
+    return `<button type="button" class="drv-home-trip" ${click}>
+      <div class="drv-home-trip-date">
+        <span class="drv-home-trip-month">${esc(d.month)}</span>
+        <span class="drv-home-trip-day">${esc(d.day)}</span>
+        <span class="drv-home-trip-wd">${esc(d.weekday || '')}</span>
+      </div>
+      <div class="drv-home-trip-body">
+        <div class="drv-home-trip-top">
+          <span class="drv-home-trip-time">${esc(item.time)}</span>
+          <span class="drv-home-trip-badge">${esc(badge)}</span>
+        </div>
+        <p class="drv-home-trip-route">${esc(routeShort(item.route))}</p>
+        <p class="drv-home-trip-kids">${esc(item.childNames || passengerSub(item, 'schedule'))}</p>
+      </div>
+      <i data-lucide="chevron-right" class="drv-home-trip-chevron"></i>
+    </button>`;
   }
 
   function compactTrip(item, kind) {
@@ -1973,117 +2030,126 @@
         </div>
       </div>`;
     }
-    const d = dateParts(item.when || item.dateLabel);
-    const click = item.isActionableNow ? `onclick="startDriverTrip('${item.id}')"` : `onclick="navigateTo('driverSchedule')"`;
-    return `<div class="trip-card-compact" ${click}>
-      <div class="trip-date-block">
-        <span class="td-month">${esc(d.month)}</span>
-        <span class="td-day">${esc(d.day)}</span>
-        <span class="td-weekday">${esc(d.weekday || (item.leg === 'afternoon' ? 'PM' : 'AM'))}</span>
-      </div>
-      <div class="trip-compact-content">
-        <div class="trip-compact-top">
-          <span class="trip-compact-time">${esc(item.time)}</span>
-          <span class="${item.leg === 'afternoon' ? 'one-way-badge' : 'both-way-badge'}">${esc(item.leg === 'afternoon' ? 'Return' : 'Round trip')}</span>
-        </div>
-        <div class="trip-compact-route">${esc(item.route || '')}</div>
-        <div class="trip-compact-sub">${esc(passengerSub(item, 'schedule'))}</div>
-      </div>
-    </div>`;
+    return homeTripRow(item);
   }
 
   function renderHero(view, d) {
     if (view.kind === 'idle') {
-      return `<div class="section-block">
-        <h3 class="section-heading">Upcoming Trips</h3>
-        <div class="empty-trips-card">
-          <div class="empty-trips-icon"><i data-lucide="calendar-x"></i></div>
-          <h4 class="empty-trips-title">No trips on deck</h4>
-          <p class="empty-trips-desc">Parent commute requests for your area will show here.</p>
+      return `<div class="drv-home-section">
+        <div class="drv-home-empty-card">
+          <div class="drv-home-empty-ico"><i data-lucide="calendar-x"></i></div>
+          <h4>No trips on deck</h4>
+          <p>Parent commute requests for your area will show here.</p>
           <button type="button" class="btn-primary" onclick="navigateTo('driverRequests')">View requests</button>
         </div>
-        ${!canAccept(d) ? `<div class="safety-reassurance-card">
-          <div class="reassurance-icon-badge"><i data-lucide="shield-check" style="width:20px;height:20px;"></i></div>
-          <div>
-            <div class="reassurance-title">Accept is gated on approval</div>
-            <div class="reassurance-desc">Finish documents and wait for Admin review before you can take school rides.</div>
-          </div>
-        </div>` : ''}
+        ${!canAccept(d) ? `<p class="drv-home-gate">Accept is gated until documents are approved.</p>` : ''}
       </div>`;
     }
     if (view.kind === 'requests') {
       const req = view.incoming[0];
-      return `<div class="section-block">
-        <div class="section-header-row">
-          <h3 class="section-heading">New request</h3>
-          <a href="#driverRequests" onclick="navigateTo('driverRequests');return false;" class="link-see-all">See All <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
+      return `<div class="drv-home-section">
+        <div class="drv-home-section-row">
+          <h3 class="drv-home-heading">New request</h3>
+          <button type="button" class="drv-home-see-all" onclick="navigateTo('driverRequests')">See all <i data-lucide="chevron-right"></i></button>
         </div>
         ${compactTrip(req, 'request')}
-        <button type="button" class="btn-primary" style="margin-top:12px;" onclick="openDriverRequest('${req.id}')">View request</button>
       </div>`;
     }
-    const next = view.next;
     if (view.kind === 'upcoming') {
-      return `<div class="section-block">
-        <div class="section-header-row">
-          <h3 class="section-heading">Upcoming Trips</h3>
-          <a href="#driverSchedule" onclick="navigateTo('driverSchedule');return false;" class="link-see-all">See All <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
+      const next = view.next;
+      return `<div class="drv-home-section">
+        <div class="drv-home-section-row">
+          <h3 class="drv-home-heading">Upcoming trip</h3>
+          <button type="button" class="drv-home-see-all" onclick="navigateTo('driverSchedule')">See all <i data-lucide="chevron-right"></i></button>
         </div>
-        ${compactTrip(next, 'schedule')}
+        ${activeTripCard(next, d, 'upcoming')}
       </div>`;
     }
-    const cta = view.kind === 'active' ? 'Open trip' : "I'm On the Way";
+    return `<div class="drv-home-section">${activeTripCard(view.next, d, 'active')}</div>`;
+  }
+
+  function activeTripCard(next, d, mode) {
+    if (!next) return '';
+    const live = mode === 'active';
+    const cta = live ? 'Open trip' : "I'm On the Way";
     const kids = next.children || [];
     const avatars = kids.slice(0, 2).map((c, i) => `<img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" />`).join('')
       || `<img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" />`;
     const parentPhoto = PARENTS[next.parentId]?.photo || '/assets/avatar_sadia.jpg';
-    return `<div class="section-block">
-      <h3 class="section-heading">${view.kind === 'active' ? 'Active trip' : 'Upcoming Trips'}</h3>
-      <div class="active-trip-hero-card">
-        <div class="active-trip-top-row">
-          <div class="active-trip-child-meta">
-            <div class="child-avatar-cluster">${avatars}</div>
-            <div>
-              <div class="child-name-text">${esc(next.childNames)}</div>
-              <div class="child-dest-text">${esc(next.legLabel || '')} · ${esc(next.route || '')}</div>
-            </div>
-          </div>
-          <div class="active-trip-status-col">
-            <span class="live-pill-tag"><span class="live-dot-pulse"></span><span>${view.kind === 'active' ? 'Live' : 'Soon'}</span></span>
-            <span class="active-trip-eta-text">${esc(next.time)}</span>
-          </div>
-        </div>
-        <div class="active-driver-contact-row">
-          <div class="driver-mini-info">
-            <img src="${esc(parentPhoto)}" alt="" class="driver-mini-avatar" />
-            <div class="driver-meta-text">
-              <div class="driver-mini-name"><span>${esc(parentLabel(next))}</span></div>
-              <div class="driver-mini-sub">Parent</div>
-            </div>
-          </div>
-        </div>
-        <button type="button" class="btn-primary" onclick="startDriverTrip('${next.id}', '${view.kind}')">${cta}</button>
+    const parentId = next.parentId || 'PRNT-9042';
+    const seats = d.vehicle?.capacity || 4;
+    const route = routeShort(next.route || '');
+    return `<div class="drv-active-card">
+      <div class="drv-active-head">
+        <h3 class="drv-home-heading">${live ? 'Active trip' : 'Upcoming trip'}</h3>
+        <span class="drv-live-pill${live ? '' : ' is-soon'}"><span class="drv-live-dot"></span>${live ? 'Live' : 'Soon'}</span>
       </div>
+      <div class="drv-active-passengers">
+        <div class="child-avatar-cluster">${avatars}</div>
+        <div class="drv-active-pass-copy">
+          <div class="drv-active-kids">${esc(next.childNames)}</div>
+          <div class="drv-active-route">${esc(route)}</div>
+          <div class="drv-active-meta">
+            <span><i data-lucide="clock"></i> ${esc(next.time)}</span>
+            <span><i data-lucide="users"></i> ${seats} seats</span>
+          </div>
+        </div>
+      </div>
+      <div class="drv-active-parent">
+        <div class="drv-active-parent-info">
+          <img src="${esc(parentPhoto)}" alt="" class="drv-active-parent-avatar" />
+          <div>
+            <div class="drv-active-parent-name">${esc(parentLabel(next))}</div>
+            <div class="drv-active-parent-role">Parent</div>
+          </div>
+        </div>
+        <div class="drv-active-parent-actions">
+          <button type="button" class="drv-active-ico-btn mvp-hide-phone" onclick="event.stopPropagation()" aria-label="Call" style="display:none;"><i data-lucide="phone"></i></button>
+          <button type="button" class="drv-active-ico-btn" onclick="event.stopPropagation(); openChatWith('${esc(parentId)}')" aria-label="Message"><i data-lucide="message-square"></i></button>
+        </div>
+      </div>
+      <button type="button" class="btn-primary drv-active-cta" onclick="startDriverTrip('${next.id}', '${mode}')">
+        <span>${cta}</span>
+        <i data-lucide="arrow-right"></i>
+      </button>
     </div>`;
   }
 
   function scheduleRow(item) {
-    return compactTrip(item, 'schedule');
+    return homeTripRow(item);
   }
 
   function ensureParentRequestChrome() {
     const screen = document.getElementById('screen-driverRequests');
     if (!screen) return;
+    screen.classList.add('drv-req-screen');
     screen.querySelector('.dreq-sticky')?.remove();
-    if (!screen.querySelector('.top-bar-sticky')) {
-      const bar = document.createElement('div');
-      bar.className = 'top-bar-sticky';
-      bar.innerHTML = `<button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button><h2 class="top-bar-title">Requests</h2><span style="width:26px;"></span>`;
+    let bar = screen.querySelector('.top-bar-sticky');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.className = 'top-bar-sticky drv-req-topbar';
       const status = screen.querySelector('.status-bar');
       if (status) status.insertAdjacentElement('afterend', bar);
     }
-    const title = screen.querySelector('.top-bar-title');
-    if (title) title.textContent = 'Requests';
+    bar.classList.add('drv-req-topbar');
+    if (!bar.querySelector('.drv-req-heading')) {
+      bar.innerHTML = `
+        <button type="button" class="back-btn" onclick="navigateTo('driverHome')" aria-label="Back"><i data-lucide="chevron-left"></i></button>
+        <div class="drv-req-heading">
+          <h2 class="top-bar-title">Requests</h2>
+          <p class="drv-req-sub">New ride requests from families</p>
+        </div>
+        <span class="drv-req-top-spacer" aria-hidden="true"></span>`;
+    }
+    const sub = bar.querySelector('.drv-req-sub');
+    const tab = state()._driverReqTab || 'new';
+    if (sub) {
+      sub.textContent = tab === 'accepted'
+        ? 'Accepted commute requests'
+        : tab === 'declined'
+          ? 'Declined commute requests'
+          : 'New ride requests from families';
+    }
     let tabs = screen.querySelector('.drv-req-tabs') || screen.querySelector('.segmented-control');
     if (!tabs) {
       tabs = document.createElement('div');
@@ -2101,13 +2167,14 @@
     if (!tabWrap) {
       tabWrap = document.createElement('div');
       tabWrap.className = 'drv-req-tabs-wrap';
-      const bar = screen.querySelector('.top-bar-sticky');
-      if (bar) bar.insertAdjacentElement('afterend', tabWrap);
-      else screen.querySelector('.status-bar')?.insertAdjacentElement('afterend', tabWrap);
+      bar.insertAdjacentElement('afterend', tabWrap);
     }
     if (tabs.parentElement !== tabWrap) tabWrap.appendChild(tabs);
     const scroll = screen.querySelector('.screen-scroll-body');
-    if (scroll) scroll.classList.remove('dreq-scroll');
+    if (scroll) {
+      scroll.classList.remove('dreq-scroll');
+      scroll.classList.add('drv-req-scroll');
+    }
     const wrap = document.getElementById('driverRequestsListWrap');
     if (wrap) wrap.className = 'drv-req-list';
   }
@@ -2128,28 +2195,62 @@
   }
 
   function requestStatusChip(status) {
-    if (status === 'accepted') return '<span class="drv-req-chip drv-req-chip-status">Accepted</span>';
-    if (status === 'declined') return '<span class="drv-req-chip drv-req-chip-status is-declined">Declined</span>';
+    if (status === 'accepted') return '<span class="drv-req-chip drv-req-chip-status"><i data-lucide="check"></i> Accepted</span>';
+    if (status === 'declined') return '<span class="drv-req-chip drv-req-chip-status is-declined"><i data-lucide="x"></i> Declined</span>';
     return '';
   }
 
   function requestCard(req, tab) {
+    const name = req.parentName || 'Parent';
+    const kindIcon = req.frequency === 'recurring' ? 'refresh-cw' : 'calendar';
+    const kindLabel = req.frequency === 'recurring' ? 'Recurring' : 'One-time';
     const actions = tab === 'new' ? `
       <div class="drv-req-card-actions" onclick="event.stopPropagation()">
-        <button type="button" class="btn-primary" onclick="acceptDriverRequest('${req.id}')">Accept</button>
-        <button type="button" class="drv-req-decline-link" onclick="declineDriverRequest('${req.id}')">Decline</button>
+        <button type="button" class="drv-req-accept" onclick="acceptDriverRequest('${req.id}')">
+          <span class="drv-req-btn-ico" aria-hidden="true"><i data-lucide="check"></i></span>
+          Accept
+        </button>
+        <button type="button" class="drv-req-decline" onclick="declineDriverRequest('${req.id}')">
+          <span class="drv-req-btn-ico" aria-hidden="true"><i data-lucide="x"></i></span>
+          Decline
+        </button>
       </div>` : '';
     return `<article class="drv-req-card" role="button" tabindex="0" onclick="openDriverRequest('${req.id}')">
-      <div class="drv-req-card-top">
-        <h3 class="drv-req-parent">${esc(req.parentName || 'Parent')}</h3>
-        <span class="drv-req-price">${esc(req.rateLabel || '')}</span>
+      <div class="drv-req-card-head">
+        <div class="drv-req-avatar tone-${avatarTone(name)}" aria-hidden="true">${esc(parentInitials(name))}</div>
+        <div class="drv-req-head-copy">
+          <h3 class="drv-req-parent">${esc(name)}</h3>
+          <p class="drv-req-kids">${esc(childScanLine(req))}</p>
+        </div>
+        <div class="drv-req-head-end">
+          <span class="drv-req-price">${esc(req.rateLabel || '')}</span>
+          <i data-lucide="chevron-right" class="drv-req-chevron"></i>
+        </div>
       </div>
-      <p class="drv-req-kids">${esc(childScanLine(req))}</p>
-      <p class="drv-req-route"><i data-lucide="map-pin"></i><span>${esc(routeLine(req))}</span></p>
-      <p class="drv-req-meta">${esc(metaLine(req))}</p>
+      <div class="drv-req-route-block">
+        <div class="drv-req-route-rail" aria-hidden="true">
+          <span class="drv-req-dot start"></span>
+          <span class="drv-req-rail-line"></span>
+          <span class="drv-req-dot end"><i data-lucide="map-pin"></i></span>
+        </div>
+        <div class="drv-req-route-copy">
+          <p class="drv-req-stop">${esc(req.pickupLocation || 'Pickup')}</p>
+          <p class="drv-req-stop is-end">${esc(req.dropoffLocation || 'Drop-off')}</p>
+        </div>
+      </div>
+      <div class="drv-req-schedule">
+        <div class="drv-req-sched-item">
+          <i data-lucide="calendar"></i>
+          <span>${esc(dateLineCard(req))}</span>
+        </div>
+        <div class="drv-req-sched-item">
+          <i data-lucide="clock"></i>
+          <span>${esc(timeLineCard(req))}</span>
+        </div>
+      </div>
       <div class="drv-req-chips">
-        <span class="drv-req-chip">${esc(seatsLabel(req.seatsNeeded))}</span>
-        ${req.frequency === 'recurring' ? '<span class="drv-req-chip">Recurring</span>' : ''}
+        <span class="drv-req-chip"><i data-lucide="${kindIcon}"></i> ${esc(kindLabel)}</span>
+        <span class="drv-req-chip"><i data-lucide="users"></i> ${esc(seatsLabel(req.seatsNeeded))}</span>
         ${requestStatusChip(req.status)}
       </div>
       ${actions}
@@ -2406,27 +2507,129 @@
   function renderSchedule(tab) {
     state()._driverSchedTab = tab;
     const wrap = document.getElementById('driverScheduleListWrap');
+    const screen = document.getElementById('screen-driverSchedule');
+    if (screen) screen.classList.add('drv-sched-screen');
     if (!wrap) return;
-    const all = deriveSchedule();
-    const today = all.filter((item) => item.frequency !== 'onetime');
+    const all = deriveSchedule().map((item) => {
+      if (!item.when) item.when = 'Tue, Sep 9, 2026';
+      return item;
+    });
+    const today = all.filter((item) => item.leg === 'morning' || item.leg === 'afternoon');
+    const morning = today.filter((item) => item.leg === 'morning');
+    const returns = today.filter((item) => item.leg === 'afternoon');
     const upcoming = all.filter((item) => item.frequency === 'onetime');
-    const list = tab === 'upcoming' ? upcoming : today;
+    const listMode = tab === 'upcoming' ? 'upcoming' : 'today';
     const btnT = document.getElementById('btnDSchedToday');
     const btnU = document.getElementById('btnDSchedUpcoming');
-    if (btnT) { btnT.textContent = `Today (${today.length})`; btnT.classList.toggle('active', tab === 'today'); }
-    if (btnU) { btnU.textContent = `Upcoming (${Math.max(upcoming.length, all.length - today.length) || all.length})`; btnU.classList.toggle('active', tab === 'upcoming'); }
-    if (!list.length) {
-      wrap.innerHTML = `<div class="empty-trips-card"><div class="empty-trips-icon"><i data-lucide="calendar"></i></div><h4 class="empty-trips-title">Nothing scheduled</h4><p class="empty-trips-desc">Accepted pickup and return legs appear here.</p></div>`;
+    if (btnT) {
+      btnT.textContent = `Today (${morning.length + returns.length})`;
+      btnT.classList.toggle('active', listMode === 'today');
+    }
+    if (btnU) {
+      const upCount = upcoming.length || Math.max(all.length - (morning.length + returns.length), 0);
+      btnU.textContent = `Upcoming (${upCount || all.length})`;
+      btnU.classList.toggle('active', listMode === 'upcoming');
+    }
+
+    function section(title, items) {
+      if (!items.length) return '';
+      const dateLabel = dateShort(items[0].when || items[0].dateLabel) || 'Tue, Sep 9';
+      return `<div class="drv-sched-section">
+        <div class="drv-sched-section-head">
+          <h3 class="drv-sched-section-title">${title}</h3>
+          <span class="drv-sched-section-date">${esc(dateLabel)}</span>
+        </div>
+        <div class="drv-sched-list">${items.map((item) => scheduleCard(item)).join('')}</div>
+      </div>`;
+    }
+
+    if (listMode === 'upcoming') {
+      const pool = upcoming.length ? upcoming : all;
+      if (!pool.length) {
+        wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="calendar"></i></div><h4>Nothing scheduled</h4><p>Accepted pickup and return legs appear here.</p></div>`;
+        icons();
+        return;
+      }
+      wrap.innerHTML = `<div class="drv-sched-list">${pool.map((item) => scheduleCard(item)).join('')}</div>`;
       icons();
       return;
     }
-    wrap.innerHTML = list.map((item) => `
-      <div class="drv-home-block">
-        ${compactTrip(item, 'schedule')}
-        ${item.isActionableNow ? `<button type="button" class="btn-primary" onclick="startDriverTrip('${item.id}')">${item.status === 'active' ? 'Open trip' : "I'm On the Way"}</button>` : ''}
-      </div>
-    `).join('');
+
+    if (!morning.length && !returns.length) {
+      wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="calendar"></i></div><h4>Nothing scheduled</h4><p>Accepted pickup and return legs appear here.</p></div>`;
+      icons();
+      return;
+    }
+    wrap.innerHTML = `${section('Morning trips', morning)}${section('Return trips', returns)}`;
     icons();
+  }
+
+  function passengerAvatars(item) {
+    const roster = (item.children || []).slice(0, 3);
+    const tones = ['rose', 'mint', 'sky', 'sand'];
+    const bits = roster.map((c, i) => {
+      const label = String(c.name || 'C').trim().split(/\s+/)[0];
+      const initial = (label[0] || 'C').toUpperCase();
+      return `<span class="drv-sched-ava tone-${tones[i % tones.length]}" title="${esc(label)}">${esc(initial)}</span>`;
+    });
+    if (item.parentName) {
+      const initial = parentInitials(item.parentName).slice(0, 1);
+      bits.push(`<span class="drv-sched-ava tone-sand" title="${esc(item.parentName)}">${esc(initial)}</span>`);
+    }
+    return bits.join('');
+  }
+
+  function passengerLine(item) {
+    const kidBits = (item.children || []).map((c) => String(c.name || '').split(' ')[0]).filter(Boolean);
+    const fallback = String(item.childNames || '').split(/\s*\+\s*/).map((s) => s.trim()).filter(Boolean);
+    const kids = kidBits.length ? kidBits : fallback;
+    if (item.parentName) return `${kids.join(' • ')}${kids.length ? ' • ' : ''}${item.parentName}`;
+    return kids.join(' • ') || 'Passengers';
+  }
+
+  function scheduleCard(item) {
+    const d = dateParts(item.when || item.dateLabel || 'Tue, Sep 9, 2026');
+    const isReturn = item.leg === 'afternoon';
+    const badge = isReturn ? 'Return' : 'Round trip';
+    const actionable = !!item.isActionableNow;
+    const open = item.status === 'active';
+    const cta = open
+      ? `<button type="button" class="drv-sched-cta primary" onclick="event.stopPropagation(); startDriverTrip('${item.id}', 'active')"><i data-lucide="send"></i> Open trip</button>`
+      : (actionable
+        ? `<button type="button" class="drv-sched-cta outline" onclick="event.stopPropagation(); startDriverTrip('${item.id}', 'soon')"><i data-lucide="send"></i> I'm on the way</button>`
+        : '');
+    return `<article class="drv-sched-card" onclick="startDriverTrip('${item.id}', '${open ? 'active' : (actionable ? 'soon' : 'prep')}')">
+      <div class="drv-sched-card-main">
+        <div class="drv-sched-date">
+          <span class="drv-sched-month">${esc(d.month)}</span>
+          <span class="drv-sched-day">${esc(d.day)}</span>
+          <span class="drv-sched-wd">${esc(d.weekday || '')}</span>
+        </div>
+        <div class="drv-sched-body">
+          <div class="drv-sched-top">
+            <span class="drv-sched-time">${esc(item.time)}</span>
+            <span class="drv-sched-badge${isReturn ? ' is-return' : ''}">${esc(badge)}</span>
+          </div>
+          <div class="drv-sched-route">
+            <div class="drv-sched-rail" aria-hidden="true">
+              <span class="drv-sched-dot start"></span>
+              <span class="drv-sched-line"></span>
+              <span class="drv-sched-dot end"><i data-lucide="map-pin"></i></span>
+            </div>
+            <div class="drv-sched-stops">
+              <p>${esc(item.from || '')}</p>
+              <p>${esc(item.to || '')}</p>
+            </div>
+          </div>
+          <div class="drv-sched-people">
+            <div class="drv-sched-avas">${passengerAvatars(item)}</div>
+            <span class="drv-sched-names">${esc(passengerLine(item))}</span>
+          </div>
+        </div>
+        <i data-lucide="chevron-right" class="drv-sched-chevron"></i>
+      </div>
+      ${cta}
+    </article>`;
   }
 
   function findLeg(id) {
@@ -2449,6 +2652,7 @@
     const live = assignedBookings().some((b) => b.id === leg.bookingId && b.status === 'in_progress');
     if (mode === 'soon' || mode === 'way') d.activeTripStage = 1;
     else if (live || mode === 'active') d.activeTripStage = Math.max(d.activeTripStage, 3);
+    else d.activeTripStage = 0;
     persist();
     if (d.activeTripStage > 0) window.navigateTo('driverActiveTrip');
     else window.navigateTo('driverTripPrep');

@@ -4803,7 +4803,7 @@
     </div>
 
     <!-- ================= 30. DRIVER HOME SCREEN ================= -->
-    <section class="screen-view" id="screen-driverHome" style="background-color: #FFFFFF;">
+    <section class="screen-view drv-home-screen" id="screen-driverHome" style="background-color: #F7F8FB;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
@@ -4815,8 +4815,8 @@
         </div>
       </div>
 
-      <div class="home-scroll-body">
-        <div class="state-switcher-container">
+      <div class="home-scroll-body drv-home-scroll">
+        <div class="state-switcher-container drv-proto-switcher" hidden>
           <span class="state-switcher-label">View State:</span>
           <div class="state-pills-group">
             <button type="button" class="state-pill-btn" id="dchipScenarioA" onclick="setDriverScenario('A')">A: No trips</button>
@@ -4873,7 +4873,7 @@
 
 
     <!-- ================= 31. DRIVER REQUESTS SCREEN ================= -->
-    <section class="screen-view" id="screen-driverRequests" style="background-color: #FFFFFF;">
+    <section class="screen-view drv-req-screen" id="screen-driverRequests" style="background-color: #F7F8FB;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
@@ -4883,10 +4883,13 @@
         </div>
       </div>
 
-      <div class="top-bar-sticky">
-        <button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button>
-        <h2 class="top-bar-title">Requests</h2>
-        <span style="width:26px;"></span>
+      <div class="top-bar-sticky drv-req-topbar">
+        <button type="button" class="back-btn" onclick="navigateTo('driverHome')" aria-label="Back"><i data-lucide="chevron-left"></i></button>
+        <div class="drv-req-heading">
+          <h2 class="top-bar-title">Requests</h2>
+          <p class="drv-req-sub">New ride requests from families</p>
+        </div>
+        <span class="drv-req-top-spacer" aria-hidden="true"></span>
       </div>
 
       <div class="drv-req-tabs-wrap">
@@ -4897,7 +4900,7 @@
         </div>
       </div>
 
-      <div class="screen-scroll-body" style="padding-bottom: 90px;">
+      <div class="screen-scroll-body drv-req-scroll" style="padding-bottom: 90px;">
         <div id="driverRequestsListWrap" class="drv-req-list"></div>
       </div>
 
@@ -4913,7 +4916,7 @@
 
 
     <!-- ================= 32. DRIVER SCHEDULE SCREEN ================= -->
-    <section class="screen-view" id="screen-driverSchedule" style="background-color: #FFFFFF;">
+    <section class="screen-view drv-sched-screen" id="screen-driverSchedule" style="background-color: #F7F8FB;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
@@ -4923,18 +4926,21 @@
         </div>
       </div>
 
-      <div class="top-bar-sticky">
-        <button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button>
+      <div class="top-bar-sticky drv-sched-topbar">
+        <button type="button" class="back-btn" onclick="navigateTo('driverHome')" aria-label="Back"><i data-lucide="chevron-left"></i></button>
         <h2 class="top-bar-title">Schedule</h2>
-        <span style="width:26px;"></span>
+        <button type="button" class="drv-sched-cal-btn" onclick="navigateTo('driverSchedule')" aria-label="Calendar"><i data-lucide="calendar"></i></button>
       </div>
 
-      <div class="screen-scroll-body" style="padding-bottom: 90px;">
-        <div class="segmented-control">
+      <div class="drv-sched-tabs-wrap">
+        <div class="segmented-control drv-sched-tabs">
           <button type="button" class="segment-btn active" id="btnDSchedToday" onclick="switchDriverScheduleTab('today')">Today</button>
           <button type="button" class="segment-btn" id="btnDSchedUpcoming" onclick="switchDriverScheduleTab('upcoming')">Upcoming</button>
         </div>
-        <div id="driverScheduleListWrap" class="upcoming-trips-list"></div>
+      </div>
+
+      <div class="screen-scroll-body drv-sched-scroll" style="padding-bottom: 90px;">
+        <div id="driverScheduleListWrap" class="drv-sched-feed"></div>
       </div>
 
       <nav class="bottom-tab-bar driver-nav-bar">
