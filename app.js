@@ -55,8 +55,10 @@ const screens = [
   'driverOnboardProfile',
   'driverOnboardVehicle',
   'driverOnboardDocs',
+  'driverDocDetail',
   'driverOnboardAvailability',
   'driverOnboardRate',
+  'driverPayment',
   'driverPending',
   'driverSubscription',
   'driverRequestDetail',
@@ -218,6 +220,8 @@ window.appState = {
     selectedDays: [],
     recurrenceEnds: 'until_cancelled',
     recurrenceEndDate: '',
+    untilCancelled: true,
+    untilDate: '',
     providerId: 'tariq',
     paymentMethod: 'Visa •••• 4242'
   },
@@ -321,6 +325,27 @@ window.appState = {
       amount: 35,
       paymentMethod: 'Visa •••• 4242',
       createdAt: 'May 21, 2026'
+    },
+    {
+      id: 'H2S-REQ-9042',
+      status: 'pending',
+      parentId: 'PRNT-9042',
+      parentName: 'Sadia Khan',
+      parentPhone: '+1 (416) 555-0192',
+      parentRole: 'Mother (Primary Guardian)',
+      parentPhoto: '/assets/avatar_sadia.jpg',
+      childIds: ['zara'],
+      direction: 'bothway',
+      frequency: 'onetime',
+      scheduleText: 'Thursday, Sep 17 • 08:15 AM & 01:30 PM',
+      pickupLocation: 'Home (12 Elm Street)',
+      schoolLocation: 'Sunshine Pre-school',
+      outboundTime: '08:15 AM',
+      returnTime: '01:30 PM',
+      providerId: 'tariq',
+      amount: 45,
+      paymentMethod: 'Interac e-Transfer',
+      createdAt: 'Sep 9, 2026'
     },
 
     // PAST / COMPLETED BOOKINGS (History)
@@ -580,19 +605,66 @@ window.appState = {
       photo: '/assets/sienna.jpg'
     },
     documents: [
-      { id: 'licence', title: "Driver's Licence", status: 'approved', rejectReason: '' },
-      { id: 'insurance', title: 'Insurance', status: 'approved', rejectReason: '' },
-      { id: 'registration', title: 'Registration', status: 'approved', rejectReason: '' },
-      { id: 'criminal', title: 'Criminal Background', status: 'approved', rejectReason: '' },
-      { id: 'vulnerable', title: 'Vulnerable Sector', status: 'approved', rejectReason: '' }
+      {
+        id: 'licence',
+        title: "Driver's Licence",
+        status: 'approved',
+        rejectReason: '',
+        number: 'A8472-19305-66120',
+        class: 'G',
+        province: 'Ontario',
+        expiry: '2028-06-14',
+        fileFront: { name: 'licence-front.jpg', attached: true },
+        fileBack: { name: 'licence-back.jpg', attached: true }
+      },
+      {
+        id: 'insurance',
+        title: 'Vehicle Insurance',
+        status: 'approved',
+        rejectReason: '',
+        insurer: 'Intact Insurance',
+        policyNumber: 'ON-884291-SIENNA',
+        expiry: '2027-03-31',
+        fileDoc: { name: 'insurance-pink-slip.pdf', attached: true }
+      },
+      {
+        id: 'registration',
+        title: 'Vehicle Registration',
+        status: 'approved',
+        rejectReason: '',
+        plate: 'SCH-4091',
+        vin: '5TDKRKEC8PS084091',
+        expiry: '2027-08-31',
+        fileDoc: { name: 'ontario-ownership.pdf', attached: true }
+      },
+      {
+        id: 'criminal',
+        title: 'Criminal Background Check',
+        status: 'under_review',
+        rejectReason: '',
+        issuer: 'Toronto Police Service',
+        issueDate: '2026-07-12',
+        expiry: '2029-07-12',
+        fileDoc: { name: 'crc-tariq-ahmed.pdf', attached: true }
+      },
+      {
+        id: 'vulnerable',
+        title: 'Vulnerable Sector Check',
+        status: 'not_submitted',
+        rejectReason: '',
+        issuer: '',
+        issueDate: '',
+        expiry: '',
+        fileDoc: { name: '', attached: false }
+      }
     ],
     availability: {
       weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
       morningSlot: '06:30 AM – 09:00 AM',
       afternoonSlot: '01:00 PM – 04:30 PM',
       windows: [
-        { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '06:30', end: '09:00', label: 'Morning' },
-        { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '13:00', end: '16:30', label: 'Afternoon' }
+        { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '06:30', end: '09:00', label: 'Morning', enabled: true },
+        { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '13:00', end: '16:30', label: 'Afternoon', enabled: true }
       ],
       exceptions: []
     },
@@ -625,8 +697,8 @@ window.appState = {
         parentPhoto: '/assets/avatar_rehana.jpg',
         parentPhone: '+1 (416) 555-0160',
         children: [
-          { id: 'yusuf', name: 'Yusuf Rahman', age: '8 yrs', grade: 'Grade 3', notes: 'Booster seat', photo: '/assets/avatar_arman.jpg' },
-          { id: 'ayla', name: 'Ayla Rahman', age: '6 yrs', grade: 'Grade 1', notes: 'Sits with brother', photo: '/assets/avatar_emma.jpg' }
+          { id: 'yusuf', name: 'Yusuf Rahman', age: '8 yrs', grade: 'Grade 3', school: 'Greenfield International School', notes: 'Booster seat', photo: '/assets/avatar_arman.jpg' },
+          { id: 'ayla', name: 'Ayla Rahman', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Sits with brother', photo: '/assets/avatar_emma.jpg' }
         ],
         childNamesShort: 'Yusuf + Ayla',
         seatsNeeded: 2,
@@ -656,7 +728,7 @@ window.appState = {
         parentPhoto: '/assets/avatar_sadia.jpg',
         parentPhone: '+1 (416) 555-0192',
         children: [
-          { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
+          { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
         ],
         childNamesShort: 'Zara',
         seatsNeeded: 1,
@@ -717,6 +789,7 @@ window.appState = {
    Dual-Role Switcher (Parent Mode ⇄ Driver Mode)
    ========================================================== */
 window.switchRole = function (role) {
+  if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
   window.appState.activeRole = role;
   localStorage.setItem('h2s_active_role', role);
 
@@ -736,9 +809,9 @@ window.switchRole = function (role) {
 
   if (role === 'driver') {
     const next = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverSetup';
-    window.navigateTo(next);
+    window.navigateTo(next, true);
   } else {
-    window.navigateTo('home');
+    window.navigateTo('home', true);
   }
 };
 
@@ -767,17 +840,104 @@ window.triggerEmergencyAlert = function () {
    Navigation Router
    ========================================================== */
 window.screenHistory = window.screenHistory || [];
+window.navReturnStack = window.navReturnStack || [];
+
+function navScreenBucket(name) {
+  if (!name) return 'unknown';
+  if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'report' || name === 'rating') return 'shared';
+  if (String(name).indexOf('driver') === 0) return 'driver';
+  if (name === 'splash' || String(name).indexOf('onboarding') === 0 || String(name).indexOf('auth') === 0) return 'auth';
+  return 'parent';
+}
+
+function activeNavRole() {
+  return (window.appState && window.appState.activeRole) || localStorage.getItem('h2s_active_role') || 'parent';
+}
+
+function roleDefaultScreen(kind) {
+  const role = activeNavRole();
+  if (kind === 'profile') return role === 'driver' ? 'driverProfile' : 'profile';
+  return role === 'driver' ? 'driverHome' : 'home';
+}
+
+function coerceScreenToRole(screenName) {
+  const role = activeNavRole();
+  const bucket = navScreenBucket(screenName);
+  if (role === 'driver' && bucket === 'parent') {
+    if (screenName === 'home' || screenName === 'bookings' || screenName === 'tracking') return 'driverHome';
+    if (screenName === 'profile' || screenName === 'profilePersonalInfo' || screenName === 'myChildren' || screenName === 'profileLocations' || screenName === 'profileEmergency' || screenName === 'profilePayments' || screenName === 'subscription') {
+      return screenName === 'subscription' || screenName === 'profilePayments' ? 'driverSubscription' : 'driverProfile';
+    }
+    return 'driverProfile';
+  }
+  if (role === 'parent' && bucket === 'driver') {
+    if (screenName === 'driverHome' || screenName === 'driverRequests' || screenName === 'driverSchedule' || screenName === 'driverActiveTrip') return 'home';
+    return 'profile';
+  }
+  return screenName;
+}
+
+window.clearNavStacks = function () {
+  window.screenHistory = [];
+  window.navReturnStack = [];
+};
+
+window.openNestedScreen = function (screenName, evt) {
+  if (evt && typeof evt === 'object') {
+    if (typeof evt.preventDefault === 'function') evt.preventDefault();
+    if (typeof evt.stopPropagation === 'function') evt.stopPropagation();
+  }
+  const role = activeNavRole();
+  const current = currentScreen || window.currentScreen;
+  if (current && current !== screenName) {
+    window.navReturnStack.push({ screen: current, role: role });
+  }
+  // Nested hops use replaceState (isBack) so browser Back cannot pop into the other role's hash.
+  window.navigateTo(screenName, true);
+};
+
+window.backNested = function (fallback) {
+  const role = activeNavRole();
+  // Role never changes on Back — only the explicit role switcher may flip Parent ↔ Driver.
+  let target = fallback || roleDefaultScreen('profile');
+  const stack = window.navReturnStack || [];
+  while (stack.length) {
+    const entry = stack.pop();
+    if (!entry) continue;
+    if (entry.role && entry.role !== role) continue;
+    if (!entry.screen || entry.screen === (currentScreen || window.currentScreen)) continue;
+    // Skip cross-role screen ids that leaked into the stack.
+    const bucket = navScreenBucket(entry.screen);
+    if (role === 'driver' && bucket === 'parent') continue;
+    if (role === 'parent' && bucket === 'driver') continue;
+    target = entry.screen;
+    break;
+  }
+  window.navigateTo(coerceScreenToRole(target), true);
+};
 
 window.navigateTo = function (screenName, isBack = false) {
+  // Always stay inside the active role's screen set (never flip role here).
+  screenName = coerceScreenToRole(screenName);
   if (!screens.includes(screenName)) return;
 
   if (!isBack && currentScreen && currentScreen !== screenName) {
     window.screenHistory.push(currentScreen);
   }
+  if (!isBack && ['home', 'bookings', 'tracking', 'inbox', 'profile', 'driverHome', 'driverRequests', 'driverSchedule', 'driverProfile'].indexOf(screenName) !== -1) {
+    window.navReturnStack = [];
+  }
 
   currentScreen = screenName;
-  if (window.location.hash !== `#${screenName}`) {
-    window.location.hash = screenName;
+  window.currentScreen = screenName;
+  const nextHash = `#${screenName}`;
+  if (window.location.hash !== nextHash) {
+    // Back + nested use replaceState so browser history cannot walk into the other role.
+    if (isBack && window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', nextHash);
+    } else {
+      window.location.hash = screenName;
+    }
   }
 
   // Hide all screens, show target screen
@@ -838,10 +998,14 @@ window.navigateTo = function (screenName, isBack = false) {
     window.renderDriverOnboardVehicle();
   } else if (screenName === 'driverOnboardDocs' && window.renderDriverOnboardDocs) {
     window.renderDriverOnboardDocs();
+  } else if (screenName === 'driverDocDetail' && window.renderDriverDocDetail) {
+    window.renderDriverDocDetail();
   } else if (screenName === 'driverOnboardAvailability' && window.renderDriverOnboardAvailability) {
     window.renderDriverOnboardAvailability();
   } else if (screenName === 'driverOnboardRate' && window.renderDriverOnboardRate) {
     window.renderDriverOnboardRate();
+  } else if (screenName === 'driverPayment' && window.renderDriverPayment) {
+    window.renderDriverPayment();
   } else if (screenName === 'driverPending' && window.renderDriverPending) {
     window.renderDriverPending();
   } else if (screenName === 'driverSubscription' && window.renderDriverSubscription) {
@@ -873,12 +1037,23 @@ window.navigateTo = function (screenName, isBack = false) {
 };
 
 window.navigateBack = function (fallback = 'home') {
-  if (window.screenHistory && window.screenHistory.length > 0) {
-    const prev = window.screenHistory.pop();
-    window.navigateTo(prev, true);
-  } else {
-    window.navigateTo(fallback, true);
+  // Prefer nested return stack (Profile → child) so Back never role-flips.
+  if (window.navReturnStack && window.navReturnStack.length) {
+    window.backNested(fallback || roleDefaultScreen('profile'));
+    return;
   }
+  const role = activeNavRole();
+  const history = window.screenHistory || [];
+  while (history.length) {
+    const prev = history.pop();
+    const bucket = navScreenBucket(prev);
+    if (role === 'driver' && bucket === 'parent') continue;
+    if (role === 'parent' && bucket === 'driver') continue;
+    window.navigateTo(coerceScreenToRole(prev), true);
+    return;
+  }
+  const safeFallback = coerceScreenToRole(fallback || roleDefaultScreen('home'));
+  window.navigateTo(safeFallback, true);
 };
 
 // Bottom Tab active highlight sync
@@ -917,7 +1092,9 @@ function updateBottomTabHighlights(screenName) {
     driverOnboardProfile: 4,
     driverOnboardVehicle: 4,
     driverOnboardDocs: 4,
+    driverDocDetail: 4,
     driverOnboardAvailability: 4,
+    driverPayment: 4,
     driverOnboardRate: 4,
     driverPending: 4,
     driverSubscription: 4,
@@ -952,12 +1129,18 @@ function updateBottomTabHighlights(screenName) {
   }
 }
 
-// Browser back/forward sync
+// Browser back/forward sync — coerce to active role; never switch Parent ↔ Driver.
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash.replace('#', '');
-  if (hash && screens.includes(hash) && hash !== currentScreen) {
-    window.navigateTo(hash);
+  if (!hash || !screens.includes(hash)) return;
+  const coerced = coerceScreenToRole(hash);
+  if (coerced === currentScreen) {
+    if (hash !== coerced && window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', `#${coerced}`);
+    }
+    return;
   }
+  window.navigateTo(coerced, true);
 });
 
 // Initialization
@@ -1092,37 +1275,34 @@ window.toggleChildSelection = function (childId) {
    Booking Wizard: Step 2 Trip Direction & Frequency
    ========================================================== */
 window.setTripDirection = function (dir) {
-  window.appState.bookingDraft.direction = dir;
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  const next = dir === 'oneway' ? 'oneway' : 'bothway';
+  window.appState.bookingDraft.direction = next;
   const btnOne = document.getElementById('btnDirOneWay');
   const btnBoth = document.getElementById('btnDirBothWay');
   const returnBlock = document.getElementById('returnScheduleBlock') || document.getElementById('returnTimePickerBox');
   const morningBlock = document.getElementById('morningScheduleBlock');
-  const timesGrid = document.querySelector('.clean-sched-times-grid');
+  const timesGrid = document.querySelector('#screen-bookingTripSetup .book-ride-times')
+    || document.querySelector('.clean-sched-times-grid');
   const badge = document.getElementById('tripTypeHelpBadge');
   const shiftRow = document.getElementById('oneWayShiftRow');
 
-  if (dir === 'oneway') {
-    btnOne?.classList.add('active');
-    btnBoth?.classList.remove('active');
+  btnOne?.classList.toggle('active', next === 'oneway');
+  btnBoth?.classList.toggle('active', next === 'bothway');
+  if (btnOne) btnOne.setAttribute('aria-pressed', next === 'oneway' ? 'true' : 'false');
+  if (btnBoth) btnBoth.setAttribute('aria-pressed', next === 'bothway' ? 'true' : 'false');
+
+  if (next === 'oneway') {
     if (badge) {
       badge.textContent = 'Single Ride';
       badge.style.background = '#FEF3C7';
       badge.style.color = '#92400E';
     }
-    if (shiftRow) shiftRow.style.display = 'block';
-
-    const isAfternoon = window.appState.bookingDraft.oneWayShift === 'afternoon';
-    if (isAfternoon) {
-      if (morningBlock) morningBlock.style.display = 'none';
-      if (returnBlock) returnBlock.style.display = 'flex';
-    } else {
-      if (morningBlock) morningBlock.style.display = 'flex';
-      if (returnBlock) returnBlock.style.display = 'none';
-    }
+    if (shiftRow) shiftRow.style.display = 'none';
+    if (morningBlock) morningBlock.style.display = 'flex';
+    if (returnBlock) returnBlock.style.display = 'none';
     if (timesGrid) timesGrid.classList.add('is-oneway');
   } else {
-    btnOne?.classList.remove('active');
-    btnBoth?.classList.add('active');
     if (badge) {
       badge.textContent = 'Morning & Afternoon';
       badge.style.background = '#DBEAFE';
@@ -1133,6 +1313,7 @@ window.setTripDirection = function (dir) {
     if (returnBlock) returnBlock.style.display = 'flex';
     if (timesGrid) timesGrid.classList.remove('is-oneway');
   }
+  if (typeof window.updateBookingSearchCta === 'function') window.updateBookingSearchCta();
 };
 
 window.setOneWayShift = function (shift) {
@@ -1161,11 +1342,17 @@ window.handleRecurringToggleChange = function (isRecurring) {
 
   if (isRecurring) {
     window.appState.bookingDraft.frequency = 'recurring';
-    if (repeatDaysSection) repeatDaysSection.style.display = 'block';
+    if (repeatDaysSection) {
+      repeatDaysSection.hidden = false;
+      repeatDaysSection.style.display = '';
+    }
     if (subTxt) subTxt.textContent = 'Repeats every week on selected days';
   } else {
     window.appState.bookingDraft.frequency = 'onetime';
-    if (repeatDaysSection) repeatDaysSection.style.display = 'none';
+    if (repeatDaysSection) {
+      repeatDaysSection.hidden = true;
+      repeatDaysSection.style.display = 'none';
+    }
     if (subTxt) subTxt.textContent = 'One-time ride on selected date';
   }
 };
@@ -1178,11 +1365,17 @@ window.setBookingFrequency = function (freq) {
 
   if (freq === 'onetime') {
     if (toggle) toggle.checked = false;
-    if (repeatDaysSection) repeatDaysSection.style.display = 'none';
+    if (repeatDaysSection) {
+      repeatDaysSection.hidden = true;
+      repeatDaysSection.style.display = 'none';
+    }
     if (subTxt) subTxt.textContent = 'One-time ride on selected date';
   } else {
     if (toggle) toggle.checked = true;
-    if (repeatDaysSection) repeatDaysSection.style.display = 'block';
+    if (repeatDaysSection) {
+      repeatDaysSection.hidden = false;
+      repeatDaysSection.style.display = '';
+    }
     if (subTxt) subTxt.textContent = 'Repeats every week on selected days';
   }
 };
@@ -1191,8 +1384,10 @@ window.toggleRepeatDay = function (btn) {
   if (!btn) return;
   btn.classList.toggle('active');
   const activeDays = Array.from(document.querySelectorAll('#cleanDaysGrid .clean-day-btn.active'))
-    .map(b => b.getAttribute('data-day') || b.textContent.trim());
+    .map(b => b.getAttribute('data-day'))
+    .filter(Boolean);
   window.appState.bookingDraft.selectedDays = activeDays;
+  if (window.updateBookingSearchCta) window.updateBookingSearchCta();
 };
 
 window.openDatePicker = function (inputId) {
@@ -1723,14 +1918,7 @@ window.proceedFromTripSetup = function () {
       window.appState.bookingDraft.returnTime = formatTime(returnTimeEl.value);
     }
   } else {
-    if (window.appState.bookingDraft.oneWayShift === 'afternoon') {
-      if (returnTimeEl && returnTimeEl.value) {
-        window.appState.bookingDraft.returnTime = formatTime(returnTimeEl.value);
-      }
-      window.appState.bookingDraft.outboundTime = '';
-    } else {
-      window.appState.bookingDraft.returnTime = '';
-    }
+    window.appState.bookingDraft.returnTime = '';
   }
 
   // Detect active Service Type
@@ -1748,10 +1936,20 @@ window.proceedFromTripSetup = function () {
 
   if (window.appState.bookingDraft.frequency === 'recurring') {
     const activeDays = Array.from(document.querySelectorAll('#cleanDaysGrid .clean-day-btn.active'))
-      .map(b => b.getAttribute('data-day') || b.textContent.trim());
+      .map(b => b.getAttribute('data-day'))
+      .filter(Boolean);
     window.appState.bookingDraft.selectedDays = activeDays;
+    const untilCancelled = !!document.getElementById('toggleUntilCancelled')?.checked;
+    window.appState.bookingDraft.untilCancelled = untilCancelled;
+    window.appState.bookingDraft.untilDate = untilCancelled
+      ? ''
+      : (window.appState.bookingDraft.untilDate || window.appState.bookingDraft.recurrenceEndDate || '');
+    window.appState.bookingDraft.recurrenceEnds = untilCancelled ? 'until_cancelled' : 'date';
+    if (untilCancelled) window.appState.bookingDraft.recurrenceEndDate = '';
   } else {
     window.appState.bookingDraft.selectedDays = [];
+    window.appState.bookingDraft.untilCancelled = false;
+    window.appState.bookingDraft.untilDate = '';
   }
 
   window.navigateTo('bookingSearchProviders');
@@ -2093,7 +2291,7 @@ function renderBookingSummary() {
     }
   }
   if (returnEl) {
-    if (draft.direction === 'bothway' || draft.returnTime) {
+    if (draft.direction === 'bothway') {
       returnEl.textContent = `${schoolShort} → ${pickupShort} (${draft.returnTime || '01:00 PM'}${walkSuffix})`;
       returnEl.parentElement.style.display = 'flex';
     } else {
@@ -2163,8 +2361,17 @@ window.submitBookingRequest = function () {
     parentRole: 'Mother (Primary Guardian)',
     parentPhoto: window.appState.user.photo || '/assets/avatar_sadia.jpg',
     childIds: [...window.appState.selectedChildIds],
-    direction: draft.direction,
+    direction: draft.direction === 'oneway' ? 'oneway' : 'bothway',
     frequency: draft.frequency,
+    selectedDays: draft.frequency === 'recurring' ? (draft.selectedDays || []) : [],
+    untilCancelled: draft.frequency === 'recurring' ? !!draft.untilCancelled : false,
+    untilDate: draft.frequency === 'recurring' && !draft.untilCancelled
+      ? (draft.untilDate || draft.recurrenceEndDate || '')
+      : '',
+    recurrenceEndDate: draft.frequency === 'recurring' && !draft.untilCancelled
+      ? (draft.untilDate || draft.recurrenceEndDate || '')
+      : '',
+    startDate: draft.startDate || '',
     scheduleText: draft.frequency === 'recurring'
       ? (draft.direction === 'bothway' 
           ? `Mon–Fri • Outbound: ${draft.outboundTime} | Return: ${draft.returnTime}` 
@@ -2584,6 +2791,11 @@ window.rebookRide = function (bookingId) {
       returnTime: b.returnTime || '',
       startDate: b.startDate || '',
       tripDate: b.tripDate || '',
+      selectedDays: b.selectedDays || [],
+      untilCancelled: b.frequency === 'recurring' ? (b.untilCancelled !== false && !b.untilDate && !b.recurrenceEndDate) : true,
+      untilDate: b.untilDate || b.recurrenceEndDate || '',
+      recurrenceEndDate: b.untilDate || b.recurrenceEndDate || '',
+      recurrenceEnds: (b.untilCancelled !== false && !b.untilDate && !b.recurrenceEndDate) ? 'until_cancelled' : 'date',
       setupSource: 'rebook'
     };
     if (typeof showToast === 'function') showToast(`Loaded booking for ${b.schoolLocation}`);
@@ -4216,7 +4428,8 @@ window.savePersonalInfo = function () {
   if (relation) window.appState.user.role = relation;
 
   alert('✓ Personal information updated successfully.');
-  window.navigateTo('profile');
+  if (typeof window.backNested === 'function') window.backNested('profile');
+  else window.navigateTo('profile');
 };
 
 window.setNotifFilter = function (filter) {

@@ -42,11 +42,15 @@
 
   function ensureDraftDefaults() {
     const draft = state().bookingDraft || (state().bookingDraft = {});
-    draft.direction = 'bothway';
+    if (draft.direction !== 'oneway' && draft.direction !== 'bothway') draft.direction = 'bothway';
     if (!draft.serviceType || draft.serviceType === 'all') draft.serviceType = 'drivers';
     if (!draft.frequency) draft.frequency = 'onetime';
     if (!Array.isArray(draft.childIds)) draft.childIds = [];
     if (!draft.recurrenceEnds) draft.recurrenceEnds = 'until_cancelled';
+    if (typeof draft.untilCancelled !== 'boolean') {
+      draft.untilCancelled = draft.recurrenceEnds !== 'date';
+    }
+    if (draft.untilDate == null) draft.untilDate = draft.recurrenceEndDate || '';
     if (!state().parentSubscription) {
       state().parentSubscription = {
         status: 'trial',
@@ -152,7 +156,6 @@
   function renderChildrenDropdown() {
     const panel = document.getElementById('bookingChildrenPanel');
     const summary = document.getElementById('bookingChildrenSummary');
-    const sub = document.getElementById('bookingChildrenSub');
     const hint = document.getElementById('bookingChildrenHint');
     const sheetHint = document.getElementById('bookingChildrenSheetHint');
     const done = document.getElementById('btnChildrenSheetDone');
@@ -162,10 +165,6 @@
     if (summary) {
       summary.textContent = formatChildrenTitle(selected);
       summary.classList.toggle('is-placeholder', selected.length === 0);
-    }
-    if (sub) {
-      sub.textContent = formatChildrenSub(selected);
-      sub.hidden = selected.length === 0;
     }
     trigger?.classList.toggle('is-empty', selected.length === 0);
     renderChildrenAvatars(selected);
@@ -178,8 +177,8 @@
       const on = bookingChildIds().includes(c.id);
       const photo = c.photo || '/assets/avatar_arman.jpg';
       return `
-        <button type="button" class="book-ride-child-row ${on ? 'selected' : ''}" onclick="toggleChildFromDropdown('${c.id}')">
-          <span class="mvp-child-check">${on ? '<i data-lucide="check" style="width:12px;height:12px;"></i>' : ''}</span>
+        <button type="button" class="book-ride-child-row${on ? ' selected' : ''}" aria-pressed="${on ? 'true' : 'false'}" onclick="toggleChildFromDropdown('${c.id}')">
+          <span class="mvp-child-check" aria-hidden="true"></span>
           <img src="${photo}" alt="" class="book-ride-child-photo" onerror="this.src='/assets/avatar_arman.jpg';" />
           <div class="book-ride-child-copy">
             <div class="mvp-child-option-name">${c.name}</div>
@@ -228,7 +227,7 @@
     const label = formatIsoDateLabel(iso);
     const text = document.getElementById('setupOutboundDateText');
     const retText = document.getElementById('setupReturnDateText');
-    setFieldPlaceholder(text, !!iso, label, 'Select');
+    setFieldPlaceholder(text, !!iso, label, 'Select date');
     if (retText) retText.value = label;
     ensureDraftDefaults();
     state().bookingDraft.tripDate = label;
@@ -238,30 +237,54 @@
   window.syncBookingTimeDisplays = function () {
     const out = document.getElementById('setupOutboundTime')?.value || '';
     const ret = document.getElementById('setupReturnTime')?.value || '';
-    setFieldPlaceholder(document.getElementById('setupOutboundTimeText'), !!out, formatTimeLabel(out), 'Select');
-    setFieldPlaceholder(document.getElementById('setupReturnTimeText'), !!ret, formatTimeLabel(ret), 'Select');
+    setFieldPlaceholder(document.getElementById('setupOutboundTimeText'), !!out, formatTimeLabel(out), 'Select pickup');
+    setFieldPlaceholder(document.getElementById('setupReturnTimeText'), !!ret, formatTimeLabel(ret), 'Select return');
     if (window.updateTripTime) {
       if (out) window.updateTripTime('outbound', out);
       if (ret) window.updateTripTime('return', ret);
     }
   };
 
-  window.syncBookingEndsLabel = function () {
-    const el = document.getElementById('bookingEndsValue');
-    if (!el) return;
+  window.syncUntilCancelledUi = function () {
     ensureDraftDefaults();
     const draft = state().bookingDraft;
-    if (draft.recurrenceEnds === 'date' && draft.recurrenceEndDate) {
-      el.textContent = formatIsoDateLabel(draft.recurrenceEndDate);
-    } else if (draft.recurrenceEnds === 'date') {
-      el.textContent = 'End date';
-    } else {
-      el.textContent = 'Until cancelled';
+    const cancelled = !!draft.untilCancelled;
+    const iso = cancelled ? '' : (draft.untilDate || draft.recurrenceEndDate || '');
+    const cb = document.getElementById('toggleUntilCancelled');
+    if (cb) cb.checked = cancelled;
+    const trigger = document.getElementById('bookingEndDateTrigger');
+    trigger?.classList.toggle('is-inactive', cancelled);
+    if (trigger) trigger.setAttribute('aria-disabled', cancelled ? 'true' : 'false');
+    setFieldPlaceholder(document.getElementById('bookingEndDateValue'), !!iso, formatIsoDateLabel(iso), 'End date');
+    const input = document.getElementById('repeatEndDateInput');
+    if (input) input.value = iso;
+  };
+
+  window.syncBookingEndsLabel = window.syncUntilCancelledUi;
+
+  window.clearRecurrenceEndDate = function () {
+    window.setRecurrenceEnds('until_cancelled');
+  };
+
+  window.handleUntilCancelledChange = function (checked) {
+    if (checked) window.setRecurrenceEnds('until_cancelled');
+    else {
+      ensureDraftDefaults();
+      const draft = state().bookingDraft;
+      draft.untilCancelled = false;
+      draft.recurrenceEnds = 'date';
+      window.syncUntilCancelledUi();
     }
+    window.updateBookingSearchCta();
+  };
+
+  window.openRecurrenceEndDatePicker = function () {
+    window.openBookingEndDateSheet();
   };
 
   let bookingCalCursor = { year: 2026, month: 8 };
   let bookingCalPending = '2026-09-08';
+  let bookingCalTarget = 'start';
 
   function renderBookingCalendar() {
     const grid = document.getElementById('bookingCalGrid');
@@ -309,17 +332,37 @@
     renderBookingCalendar();
   };
 
-  window.openBookingDateSheet = function () {
-    const iso = document.getElementById('setupStartDate')?.value || '2026-09-08';
-    bookingCalPending = iso || '2026-09-08';
+  function openCalendarSheet(target, isoHint) {
+    bookingCalTarget = target === 'end' ? 'end' : 'start';
+    const title = document.getElementById('bookingDateSheetTitle');
+    if (title) title.textContent = bookingCalTarget === 'end' ? 'End date' : 'Select Date';
+    const iso = isoHint || (bookingCalTarget === 'end'
+      ? (state().bookingDraft?.untilDate || state().bookingDraft?.recurrenceEndDate || '')
+      : '') || document.getElementById('setupStartDate')?.value || '2026-09-08';
+    bookingCalPending = iso;
     const parts = iso.split('-').map(Number);
-    bookingCalCursor = { year: parts[0], month: parts[1] - 1 };
+    bookingCalCursor = { year: parts[0], month: (parts[1] || 9) - 1 };
     renderBookingCalendar();
     document.getElementById('bookingDateSheet')?.classList.add('visible');
     if (window.lucide) window.lucide.createIcons();
+  }
+
+  window.openBookingDateSheet = function () {
+    openCalendarSheet('start', document.getElementById('setupStartDate')?.value);
+  };
+
+  window.openBookingEndDateSheet = function () {
+    openCalendarSheet('end');
   };
 
   window.confirmBookingDateSheet = function () {
+    if (bookingCalTarget === 'end') {
+      window.setRecurrenceEndDate(bookingCalPending);
+      window.updateBookingSearchCta();
+      window.closeBookingSheet('bookingDateSheet');
+      if (window.lucide) window.lucide.createIcons();
+      return;
+    }
     const start = document.getElementById('setupStartDate');
     const ret = document.getElementById('setupReturnDate');
     if (start) start.value = bookingCalPending;
@@ -401,43 +444,102 @@
     window.closeBookingSheet('bookingTimeSheet');
   };
 
-  window.openBookingEndsSheet = function () {
-    ensureDraftDefaults();
-    window.setRecurrenceEnds(state().bookingDraft.recurrenceEnds || 'until_cancelled');
-    document.getElementById('bookingEndsSheet')?.classList.add('visible');
-    if (window.lucide) window.lucide.createIcons();
-  };
-
   window.setRecurrenceEnds = function (mode) {
     ensureDraftDefaults();
-    state().bookingDraft.recurrenceEnds = mode;
-    const untilBtn = document.getElementById('btnEndsUntil');
-    const dateBtn = document.getElementById('btnEndsDate');
-    const dateRow = document.getElementById('repeatEndDateRow');
-    untilBtn?.classList.toggle('active', mode === 'until_cancelled');
-    dateBtn?.classList.toggle('active', mode === 'date');
-    const untilCheck = untilBtn?.querySelector('.book-ride-end-check');
-    const dateCheck = dateBtn?.querySelector('.book-ride-end-check');
-    if (untilCheck) untilCheck.style.display = mode === 'until_cancelled' ? 'block' : 'none';
-    if (dateCheck) dateCheck.style.display = mode === 'date' ? 'block' : 'none';
-    if (dateRow) dateRow.style.display = mode === 'date' ? 'block' : 'none';
-    window.syncBookingEndsLabel();
+    const untilCancelled = mode !== 'date';
+    const draft = state().bookingDraft;
+    draft.recurrenceEnds = untilCancelled ? 'until_cancelled' : 'date';
+    draft.untilCancelled = untilCancelled;
+    if (untilCancelled) {
+      draft.recurrenceEndDate = '';
+      draft.untilDate = '';
+      const endInput = document.getElementById('repeatEndDateInput');
+      if (endInput) endInput.value = '';
+    }
+    window.syncUntilCancelledUi();
   };
 
   window.setRecurrenceEndDate = function (value) {
     ensureDraftDefaults();
-    state().bookingDraft.recurrenceEndDate = value;
+    const draft = state().bookingDraft;
+    draft.recurrenceEndDate = value || '';
+    draft.untilDate = value || '';
+    if (value) {
+      draft.recurrenceEnds = 'date';
+      draft.untilCancelled = false;
+    } else {
+      draft.recurrenceEnds = 'until_cancelled';
+      draft.untilCancelled = true;
+    }
+    window.syncUntilCancelledUi();
+    window.updateBookingSearchCta();
   };
+
+  function defaultWeekdays() {
+    return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+  }
+
+  function syncRepeatDayButtons(days) {
+    const selected = days && days.length ? days : defaultWeekdays();
+    document.querySelectorAll('#cleanDaysGrid .clean-day-btn').forEach((btn) => {
+      const day = btn.getAttribute('data-day');
+      btn.classList.toggle('active', selected.includes(day));
+    });
+    state().bookingDraft.selectedDays = selected;
+  }
 
   const originalRecurring = window.handleRecurringToggleChange;
   window.handleRecurringToggleChange = function (isRecurring) {
     if (typeof originalRecurring === 'function') originalRecurring(isRecurring);
     const days = document.getElementById('repeatDaysSection');
-    if (days) days.style.display = isRecurring ? 'block' : 'none';
-    if (!isRecurring) window.setRecurrenceEnds('until_cancelled');
-    window.syncBookingEndsLabel();
+    if (days) {
+      days.hidden = !isRecurring;
+      days.style.display = isRecurring ? '' : 'none';
+    }
+    if (isRecurring) {
+      const current = state().bookingDraft.selectedDays || [];
+      syncRepeatDayButtons(current.length ? current : defaultWeekdays());
+      if (!state().bookingDraft.untilDate && !state().bookingDraft.recurrenceEndDate) {
+        window.setRecurrenceEnds('until_cancelled');
+      } else {
+        state().bookingDraft.untilCancelled = false;
+        window.syncUntilCancelledUi();
+      }
+    } else {
+      window.setRecurrenceEnds('until_cancelled');
+    }
+    window.updateBookingSearchCta();
+    if (window.lucide) window.lucide.createIcons();
+  };
+
+  const originalToggleDay = window.toggleRepeatDay;
+  window.toggleRepeatDay = function (btn) {
+    if (typeof originalToggleDay === 'function') originalToggleDay(btn);
+    const activeDays = Array.from(document.querySelectorAll('#cleanDaysGrid .clean-day-btn.active'))
+      .map((el) => el.getAttribute('data-day'))
+      .filter(Boolean);
+    state().bookingDraft.selectedDays = activeDays;
     window.updateBookingSearchCta();
   };
+
+  function applyRepeatUiFromDraft(draft) {
+    const recurring = draft.frequency === 'recurring';
+    const toggle = document.getElementById('toggleRecurringRide');
+    if (toggle) toggle.checked = recurring;
+    const days = document.getElementById('repeatDaysSection');
+    if (days) {
+      days.hidden = !recurring;
+      days.style.display = recurring ? '' : 'none';
+    }
+    if (recurring) syncRepeatDayButtons(draft.selectedDays);
+    const endInput = document.getElementById('repeatEndDateInput');
+    if (endInput) endInput.value = draft.untilDate || draft.recurrenceEndDate || '';
+    if (recurring && (draft.untilDate || draft.recurrenceEndDate) && draft.untilCancelled === false) {
+      window.setRecurrenceEndDate(draft.untilDate || draft.recurrenceEndDate);
+    } else {
+      window.setRecurrenceEnds('until_cancelled');
+    }
+  }
 
   function syncLocationClearButtons() {
     const pickup = (document.getElementById('setupPickupLocationInput')?.value || '').trim();
@@ -494,6 +596,8 @@
     const retTime = document.getElementById('setupReturnTime');
     if (outTime) outTime.value = parseDisplayTimeToHHMM(draft.outboundTime);
     if (retTime) retTime.value = parseDisplayTimeToHHMM(draft.returnTime);
+    applyRepeatUiFromDraft(draft);
+    if (window.setTripDirection) window.setTripDirection(draft.direction === 'oneway' ? 'oneway' : 'bothway');
   }
 
   window.isBookingSetupComplete = function () {
@@ -504,8 +608,15 @@
     const pickupTime = (document.getElementById('setupOutboundTime')?.value || '').trim();
     const returnTime = (document.getElementById('setupReturnTime')?.value || '').trim();
     const kids = bookingChildIds();
-    const service = state().bookingDraft.serviceType;
-    return kids.length > 0 && pickup && dropoff && dateIso && pickupTime && returnTime && (service === 'drivers' || service === 'walkshare');
+    const draft = state().bookingDraft;
+    const service = draft.serviceType;
+    const isRoundTrip = draft.direction !== 'oneway';
+    const returnOk = !isRoundTrip || !!returnTime;
+    const daysOk = draft.frequency !== 'recurring' || (draft.selectedDays || []).length > 0;
+    const endsOk = draft.frequency !== 'recurring'
+      || !!draft.untilCancelled
+      || !!(draft.untilDate || draft.recurrenceEndDate);
+    return kids.length > 0 && pickup && dropoff && dateIso && pickupTime && returnOk && daysOk && endsOk && (service === 'drivers' || service === 'walkshare');
   };
 
   window.updateBookingSearchCta = function () {
@@ -520,8 +631,8 @@
   window.initBookingSetupPage = function () {
     ensureDraftDefaults();
     const draft = state().bookingDraft;
-    draft.direction = 'bothway';
-    draft.frequency = 'onetime';
+    if (draft.direction !== 'oneway' && draft.direction !== 'bothway') draft.direction = 'bothway';
+    if (draft.setupSource !== 'rebook' && !draft.frequency) draft.frequency = 'onetime';
     if (draft.setupSource !== 'rebook' && !Array.isArray(draft.childIds)) {
       draft.childIds = [];
     }
@@ -541,7 +652,8 @@
   const originalProceed = window.proceedFromTripSetup;
   window.proceedFromTripSetup = function () {
     if (!window.isBookingSetupComplete()) {
-      toast('Add children, route, date, and both times to search');
+      const oneWay = state().bookingDraft?.direction === 'oneway';
+      toast(oneWay ? 'Add children, route, date, and pickup time to search' : 'Add children, route, date, and both times to search');
       return;
     }
     ensureDraftDefaults();
@@ -550,7 +662,21 @@
       window.navigateTo('subscription');
       return;
     }
-    state().bookingDraft.direction = 'bothway';
+    const direction = state().bookingDraft.direction === 'oneway' ? 'oneway' : 'bothway';
+    state().bookingDraft.direction = direction;
+    const draft = state().bookingDraft;
+    if (draft.frequency === 'recurring') {
+      draft.untilCancelled = !!document.getElementById('toggleUntilCancelled')?.checked;
+      draft.untilDate = draft.untilCancelled ? '' : (draft.untilDate || draft.recurrenceEndDate || '');
+      draft.recurrenceEnds = draft.untilCancelled ? 'until_cancelled' : 'date';
+      if (draft.untilCancelled) draft.recurrenceEndDate = '';
+      else draft.recurrenceEndDate = draft.untilDate;
+    } else {
+      draft.untilCancelled = false;
+      draft.untilDate = '';
+      draft.selectedDays = [];
+    }
+    state().selectedChildIds = bookingChildIds().slice();
     if (typeof originalProceed === 'function') originalProceed();
     const service = state().bookingDraft.serviceType || 'drivers';
     if (window.filterBookingProviders) window.filterBookingProviders(service);
@@ -668,9 +794,9 @@
     setText('summaryReturnText', draft.returnTime || '01:00 PM');
     if (draft.frequency === 'recurring') {
       const days = (draft.selectedDays || []).join(' ');
-      const ends = draft.recurrenceEnds === 'date' && draft.recurrenceEndDate
-        ? `Ends ${draft.recurrenceEndDate}`
-        : 'Until cancelled';
+      const ends = draft.untilCancelled || !(draft.untilDate || draft.recurrenceEndDate)
+        ? 'Until cancelled'
+        : `Ends ${draft.untilDate || draft.recurrenceEndDate}`;
       setText('summaryFreqText', `${days || 'M T W T F'} · ${ends}`);
     } else {
       setText('summaryFreqText', 'Off');
@@ -681,6 +807,11 @@
     if (typeof originalSummary === 'function') {
       try { originalSummary(); } catch (err) { /* older summary nodes may be gone */ }
     }
+    setText('summaryTripTypeText', draft.direction === 'oneway' ? 'One way' : 'Round trip');
+    setText('summaryOutboundText', draft.outboundTime || '07:30 AM');
+    setText('summaryReturnText', draft.returnTime || '01:00 PM');
+    const returnRow = document.getElementById('summaryReturnRow');
+    if (returnRow) returnRow.style.display = draft.direction === 'oneway' ? 'none' : '';
     renderPickupContacts();
   };
 
@@ -817,7 +948,7 @@
             </div>
             <div class="folio-parent-sub">${user.role || 'Mother'} · authorized pickup</div>
           </div>
-          <button type="button" class="mvp-pickup-edit" onclick="navigateTo('profileEmergency')">Edit</button>
+          <button type="button" class="mvp-pickup-edit" onclick="openNestedScreen('profileEmergency', event)">Edit</button>
         </div>
         ${backup ? `
         <div class="folio-backup-guardian-note">
@@ -825,7 +956,7 @@
             <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: #D97706; flex-shrink: 0;"></i>
             <span style="font-size: 11.5px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Backup pickup: <strong>${backup.name}</strong> (${backup.rel})</span>
           </div>
-          <button type="button" class="mvp-pickup-edit" onclick="navigateTo('profileEmergency')">Edit</button>
+          <button type="button" class="mvp-pickup-edit" onclick="openNestedScreen('profileEmergency', event)">Edit</button>
         </div>` : ''}
       `;
     }
@@ -1017,38 +1148,44 @@
   window.renderSubscriptionScreen = function () {
     ensureDraftDefaults();
     const sub = state().parentSubscription;
-    const title = document.getElementById('subscriptionPlanTitle');
-    const label = document.getElementById('subscriptionStatusLabel');
-    const copy = document.getElementById('subscriptionPlanSub');
+    const statusCard = document.getElementById('subscriptionStatusCard');
+    const kicker = document.getElementById('subscriptionStatusKicker');
+    const title = document.getElementById('subscriptionStatusTitle');
+    const subLine = document.getElementById('subscriptionStatusSub');
     const activate = document.getElementById('btnActivateSubscription');
     const continueBtn = document.getElementById('btnContinueTrial');
     const continueLabel = document.getElementById('btnContinueTrialLabel');
     const cancelBtn = document.getElementById('btnCancelSubscription');
-    const statusCard = document.getElementById('subscriptionStatusCard');
-    const statusIcon = document.getElementById('subscriptionStatusIcon');
     const history = document.getElementById('subscriptionHistoryList');
+    const planName = sub.plan === 'annual' ? 'Annual' : 'Monthly';
+    const planPrice = sub.plan === 'annual' ? '$79/year' : '$9.99/month';
     if (statusCard) statusCard.setAttribute('data-status', sub.status || 'trial');
-    if (statusIcon) {
-      const iconName = sub.status === 'failed' ? 'alert-circle' : sub.status === 'cancelled' ? 'circle-off' : sub.status === 'active' ? 'badge-check' : 'calendar';
-      statusIcon.innerHTML = `<i data-lucide="${iconName}"></i>`;
-    }
-    if (label) label.textContent = sub.status === 'trial' ? 'Free trial' : sub.status === 'active' ? 'Active' : sub.status === 'cancelled' ? 'Cancelled' : 'Payment failed';
-    if (title) {
-      title.textContent = sub.status === 'trial'
-        ? `${sub.trialDaysLeft} days remaining`
-        : sub.plan === 'annual' ? 'Annual access' : 'Monthly access';
-    }
-    if (copy) {
-      copy.textContent = sub.status === 'failed'
-        ? 'Search is paused until the platform fee is recovered.'
-        : `Renews ${sub.renewal}`;
+    if (sub.status === 'trial') {
+      if (kicker) kicker.textContent = 'Free trial';
+      if (title) title.textContent = `${sub.trialDaysLeft} days left`;
+      if (subLine) subLine.textContent = `Next billing ${sub.renewal} · ${planPrice}`;
+    } else if (sub.status === 'active') {
+      if (kicker) kicker.textContent = 'Active';
+      if (title) title.textContent = `${planName} plan`;
+      if (subLine) subLine.textContent = `Renews ${sub.renewal} · ${planPrice}`;
+    } else if (sub.status === 'cancelled') {
+      if (kicker) kicker.textContent = 'Cancelled';
+      if (title) title.textContent = 'Access until period ends';
+      if (subLine) subLine.textContent = `No further billing after ${sub.renewal}`;
+    } else if (sub.status === 'failed') {
+      if (kicker) kicker.textContent = 'Payment failed';
+      if (title) title.textContent = 'Search is paused';
+      if (subLine) subLine.textContent = 'Pay the platform fee to search providers again.';
+    } else {
+      if (kicker) kicker.textContent = '';
+      if (title) title.textContent = '';
+      if (subLine) subLine.textContent = '';
     }
     if (activate) {
       activate.textContent = sub.plan === 'annual' ? 'Activate annual access' : 'Activate monthly access';
+      activate.style.display = sub.status === 'trial' ? 'none' : 'flex';
     }
-    if (continueLabel) {
-      continueLabel.textContent = 'Continue with free trial';
-    }
+    if (continueLabel) continueLabel.textContent = 'Continue with free trial';
     if (continueBtn) continueBtn.style.display = sub.status === 'trial' ? 'flex' : 'none';
     if (cancelBtn) cancelBtn.style.display = sub.status === 'cancelled' ? 'none' : 'inline-flex';
     document.getElementById('btnRetrySubscription')?.remove();
@@ -1230,7 +1367,7 @@
 
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    ['bookingChildrenSheet', 'bookingDateSheet', 'bookingTimeSheet', 'bookingEndsSheet'].forEach((id) => {
+    ['bookingChildrenSheet', 'bookingDateSheet', 'bookingTimeSheet'].forEach((id) => {
       document.getElementById(id)?.classList.remove('visible');
     });
     document.getElementById('bookingChildrenTrigger')?.classList.remove('open');

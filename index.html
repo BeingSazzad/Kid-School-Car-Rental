@@ -305,7 +305,7 @@
             </div>
             <div class="driver-partner-info">
               <h5>School car driver or escort?</h5>
-              <p>Earn flexibly &amp; safely on school routes</p>
+              <p>Set up your vehicle and documents</p>
             </div>
           </div>
           <button type="button" class="driver-partner-pill-btn">
@@ -590,7 +590,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="window.navigateBack('profile')">
+        <button class="back-btn" onclick="backNested('home')">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Subscription</h2>
@@ -598,51 +598,52 @@
       </div>
 
       <div class="screen-scroll-body sub-screen-body">
-        <p class="sub-screen-lede">Home2School platform access is separate from a provider’s posted ride rate.</p>
-
-        <div class="sub-status-card" id="subscriptionStatusCard" data-status="trial">
-          <div class="sub-status-icon" id="subscriptionStatusIcon" aria-hidden="true">
-            <i data-lucide="calendar"></i>
-          </div>
-          <div class="sub-status-copy">
-            <div class="sub-status-kicker" id="subscriptionStatusLabel">Free trial</div>
-            <div class="sub-status-title" id="subscriptionPlanTitle">14 days remaining</div>
-            <div class="sub-status-sub" id="subscriptionPlanSub">Renews Sep 22, 2026</div>
-          </div>
+        <div class="sub-simple-intro">
+          <h3 class="sub-screen-lede">Choose your plan</h3>
+          <p class="sub-screen-note">This is the Home2School platform fee. Ride payment stays between you and the provider.</p>
         </div>
 
-        <div class="sub-plan-block">
-          <h3 class="sub-section-title">Choose your plan</h3>
-          <button type="button" class="sub-plan-card active" id="planMonthly" onclick="selectSubscriptionPlan('monthly')">
-            <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
-            <span class="sub-plan-copy">
-              <span class="sub-plan-name">Monthly</span>
-              <span class="sub-plan-price">$9.99 / month</span>
-            </span>
-            <span class="sub-plan-badge sub-plan-badge-selected">SELECTED</span>
-          </button>
+        <div class="sub-status-strip" id="subscriptionStatusCard" data-status="trial">
+          <span class="sub-status-kicker" id="subscriptionStatusKicker">Free trial</span>
+          <strong class="sub-status-title" id="subscriptionStatusTitle">14 days left</strong>
+          <span class="sub-status-sub" id="subscriptionStatusSub">Next billing Sep 22, 2026</span>
+        </div>
+
+        <div class="sub-plan-block" role="radiogroup" aria-label="Subscription plan">
           <button type="button" class="sub-plan-card" id="planAnnual" onclick="selectSubscriptionPlan('annual')">
             <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
             <span class="sub-plan-copy">
               <span class="sub-plan-name">Annual</span>
-              <span class="sub-plan-price">$79 / year</span>
+              <span class="sub-plan-desc">Best value for the school year</span>
             </span>
-            <span class="sub-plan-badge sub-plan-badge-save">SAVE 34%</span>
-            <span class="sub-plan-badge sub-plan-badge-selected">SELECTED</span>
+            <span class="sub-plan-pricing">
+              <span class="sub-plan-price">$79/year</span>
+              <span class="sub-plan-compare">$119.88/year</span>
+            </span>
+            <span class="sub-plan-badge sub-plan-badge-save">Save 34%</span>
+          </button>
+          <button type="button" class="sub-plan-card active" id="planMonthly" onclick="selectSubscriptionPlan('monthly')">
+            <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
+            <span class="sub-plan-copy">
+              <span class="sub-plan-name">Monthly</span>
+              <span class="sub-plan-desc">Individual platform access</span>
+            </span>
+            <span class="sub-plan-pricing">
+              <span class="sub-plan-price">$9.99/month</span>
+            </span>
           </button>
         </div>
 
         <div class="sub-actions">
-          <button type="button" class="btn-primary sub-btn-with-icon" id="btnContinueTrial" onclick="continueWithParentTrial()">
+          <button type="button" class="btn-primary" id="btnContinueTrial" onclick="continueWithParentTrial()">
             <span id="btnContinueTrialLabel">Continue with free trial</span>
-            <i data-lucide="arrow-right"></i>
           </button>
-          <button type="button" class="sub-btn-outline" id="btnActivateSubscription" onclick="activateParentSubscription()">Activate monthly access</button>
+          <button type="button" class="btn-primary" id="btnActivateSubscription" onclick="activateParentSubscription()" style="display:none;">Activate monthly access</button>
           <button type="button" class="sub-cancel-link" id="btnCancelSubscription" onclick="cancelParentSubscription()">Cancel automatic renewal</button>
         </div>
 
         <div class="sub-history-card">
-          <h3 class="sub-section-title">Billing History</h3>
+          <h3 class="sub-section-title">Billing history</h3>
           <div id="subscriptionHistoryList"></div>
         </div>
       </div>
@@ -770,7 +771,7 @@
             </div>
 
             <!-- Action 2: My Children -->
-            <div class="action-card light" onclick="navigateTo('myChildren')">
+            <div class="action-card light" onclick="openNestedScreen('myChildren')">
               <div class="action-icon-circle blue-tint">
                 <i data-lucide="users"></i>
               </div>
@@ -1016,7 +1017,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('home')">
+        <button class="back-btn" onclick="backNested('profile')">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">My Children</h2>
@@ -1083,7 +1084,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('myChildren')">
+        <button type="button" class="back-btn" onclick="backNested('myChildren')">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title" id="childFormTopTitle">Child Profile</h2>
@@ -1262,10 +1263,7 @@
         <button class="back-btn" onclick="navigateTo('home')">
           <i data-lucide="chevron-left"></i>
         </button>
-        <div class="book-ride-heading">
-          <h2 class="top-bar-title">Book a Ride</h2>
-          <p class="book-ride-sub">Let's get your child's school ride set up.</p>
-        </div>
+        <h2 class="top-bar-title">Book a Ride</h2>
         <span style="width: 28px;"></span>
       </div>
 
@@ -1273,16 +1271,12 @@
         <div class="book-ride-section">
           <div class="book-ride-section-head">
             <i data-lucide="users"></i>
-            <div class="book-ride-section-copy">
-              <div class="book-ride-section-title">Children</div>
-              <div class="book-ride-section-hint">Who's riding?</div>
-            </div>
+            <div class="book-ride-section-title">Children</div>
           </div>
           <button type="button" class="book-ride-children-card is-empty" id="bookingChildrenTrigger" onclick="toggleChildrenDropdown()">
             <div class="child-avatar-cluster" id="bookingChildrenAvatars" hidden></div>
             <div class="book-ride-children-meta">
               <div class="mvp-child-dropdown-value is-placeholder" id="bookingChildrenSummary">Select children</div>
-              <div class="mvp-child-dropdown-sub" id="bookingChildrenSub" hidden></div>
             </div>
             <i data-lucide="chevron-right"></i>
           </button>
@@ -1292,10 +1286,7 @@
         <div class="book-ride-section">
           <div class="book-ride-section-head">
             <i data-lucide="map-pin"></i>
-            <div class="book-ride-section-copy">
-              <div class="book-ride-section-title">Pickup &amp; Drop-off</div>
-              <div class="book-ride-section-hint">Where should we go?</div>
-            </div>
+            <div class="book-ride-section-title">Pickup &amp; Drop-off</div>
             <button type="button" class="book-ride-section-action" onclick="swapPickupDropoff()">
               <i data-lucide="arrow-left-right"></i>
               <span>Swap</span>
@@ -1307,8 +1298,7 @@
                 <i data-lucide="home"></i>
               </div>
               <div class="clean-route-info">
-                <div class="book-ride-loc-label">Pickup location</div>
-                <input type="text" id="setupPickupLocationInput" class="clean-route-input" value="" placeholder="Add pickup" oninput="syncLocationInput('pickup', this.value); updateBookingSearchCta();" />
+                <input type="text" id="setupPickupLocationInput" class="clean-route-input" value="" placeholder="Pickup location" oninput="syncLocationInput('pickup', this.value); updateBookingSearchCta();" />
                 <input type="hidden" id="setupPickupLocation" value="" />
               </div>
               <button type="button" class="book-ride-clear" id="btnClearPickup" hidden onclick="clearBookingLocation('pickup')" title="Clear pickup">
@@ -1320,8 +1310,7 @@
                 <i data-lucide="school"></i>
               </div>
               <div class="clean-route-info">
-                <div class="book-ride-loc-label dropoff">Drop-off location</div>
-                <input type="text" id="setupSchoolLocationInput" class="clean-route-input orange" value="" placeholder="Add drop-off" oninput="syncLocationInput('school', this.value); updateBookingSearchCta();" />
+                <input type="text" id="setupSchoolLocationInput" class="clean-route-input orange" value="" placeholder="Drop-off location" oninput="syncLocationInput('school', this.value); updateBookingSearchCta();" />
                 <input type="hidden" id="setupSchoolLocation" value="" />
               </div>
               <button type="button" class="book-ride-clear" id="btnClearDropoff" hidden onclick="clearBookingLocation('school')" title="Clear drop-off">
@@ -1334,17 +1323,15 @@
         <div class="book-ride-section">
           <div class="book-ride-section-head">
             <i data-lucide="calendar"></i>
-            <div class="book-ride-section-copy">
-              <div class="book-ride-section-title">Date &amp; Times</div>
-              <div class="book-ride-section-hint">When do you need the ride?</div>
-            </div>
+            <div class="book-ride-section-title">Date &amp; Times</div>
+          </div>
+          <div class="book-ride-trip-type" role="group" aria-label="Trip type">
+            <button type="button" class="book-ride-trip-type-btn" id="btnDirOneWay" aria-pressed="false" onclick="setTripDirection('oneway')">One way</button>
+            <button type="button" class="book-ride-trip-type-btn active" id="btnDirBothWay" aria-pressed="true" onclick="setTripDirection('bothway')">Round trip</button>
           </div>
           <button type="button" class="book-ride-date-field" id="bookingDateTrigger" onclick="openBookingDateSheet()">
             <i data-lucide="calendar"></i>
-            <div class="book-ride-field-copy">
-              <div class="book-ride-field-label">Date</div>
-              <span class="book-ride-field-value is-placeholder" id="setupOutboundDateText">Select</span>
-            </div>
+            <span class="book-ride-field-value is-placeholder" id="setupOutboundDateText">Select date</span>
             <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
           </button>
           <input type="date" id="setupStartDate" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" onchange="handleScheduleDateChange('outbound', this.value); syncBookingDateDisplay(); updateBookingSearchCta();" />
@@ -1353,52 +1340,62 @@
           <div class="book-ride-times clean-sched-times-grid">
             <button type="button" class="book-ride-time-field" id="morningScheduleBlock" onclick="openBookingTimeSheet('outbound')">
               <i data-lucide="clock"></i>
-              <div class="book-ride-field-copy">
-                <div class="book-ride-field-label" id="outboundScheduleLabel">Pickup</div>
-                <span class="book-ride-field-value is-placeholder" id="setupOutboundTimeText">Select</span>
-              </div>
+              <span class="book-ride-field-value is-placeholder" id="setupOutboundTimeText">Select pickup</span>
               <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
             </button>
             <button type="button" class="book-ride-time-field" id="returnScheduleBlock" onclick="openBookingTimeSheet('return')">
               <i data-lucide="clock"></i>
-              <div class="book-ride-field-copy">
-                <div class="book-ride-field-label" id="returnScheduleLabel">Return</div>
-                <span class="book-ride-field-value is-placeholder" id="setupReturnTimeText">Select</span>
-              </div>
+              <span class="book-ride-field-value is-placeholder" id="setupReturnTimeText">Select return</span>
               <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
             </button>
           </div>
           <input type="time" id="setupOutboundTime" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" onchange="updateTripTime('outbound', this.value); syncBookingTimeDisplays(); updateBookingSearchCta();" />
           <input type="time" id="setupReturnTime" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" onchange="updateTripTime('return', this.value); syncBookingTimeDisplays(); updateBookingSearchCta();" />
-          <div class="book-ride-info">
-            <i data-lucide="info"></i>
-            <span>This ride will include both pickup and return.</span>
+          <div class="book-ride-repeat-row">
+            <div class="book-ride-repeat-label">Repeat</div>
+            <label class="book-ride-switch">
+              <input type="checkbox" id="toggleRecurringRide" aria-label="Repeat this ride" onchange="handleRecurringToggleChange(this.checked)" />
+              <span class="book-ride-switch-ui" aria-hidden="true"></span>
+            </label>
+          </div>
+          <div id="repeatDaysSection" class="book-ride-repeat-details" hidden>
+            <div class="clean-days-grid" id="cleanDaysGrid">
+              <button type="button" class="clean-day-btn active" data-day="Mon" onclick="toggleRepeatDay(this)">M</button>
+              <button type="button" class="clean-day-btn active" data-day="Tue" onclick="toggleRepeatDay(this)">T</button>
+              <button type="button" class="clean-day-btn active" data-day="Wed" onclick="toggleRepeatDay(this)">W</button>
+              <button type="button" class="clean-day-btn active" data-day="Thu" onclick="toggleRepeatDay(this)">T</button>
+              <button type="button" class="clean-day-btn active" data-day="Fri" onclick="toggleRepeatDay(this)">F</button>
+              <button type="button" class="clean-day-btn" data-day="Sat" onclick="toggleRepeatDay(this)">S</button>
+              <button type="button" class="clean-day-btn" data-day="Sun" onclick="toggleRepeatDay(this)">S</button>
+            </div>
+            <label class="book-ride-until-check">
+              <input type="checkbox" id="toggleUntilCancelled" checked onchange="handleUntilCancelledChange(this.checked)" />
+              <span class="book-ride-check-box" aria-hidden="true"></span>
+              <span class="book-ride-until-check-text">Until cancelled</span>
+            </label>
+            <button type="button" class="book-ride-date-field book-ride-end-date-field is-inactive" id="bookingEndDateTrigger" onclick="openBookingEndDateSheet()">
+              <i data-lucide="calendar"></i>
+              <span class="book-ride-field-value is-placeholder" id="bookingEndDateValue">End date</span>
+              <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
+            </button>
+            <input type="date" id="repeatEndDateInput" class="book-ride-until-native" tabindex="-1" aria-hidden="true" onchange="setRecurrenceEndDate(this.value)" />
           </div>
         </div>
 
         <div class="book-ride-section">
           <div class="book-ride-section-head">
             <i data-lucide="car"></i>
-            <div class="book-ride-section-copy">
-              <div class="book-ride-section-title">Service type</div>
-              <div class="book-ride-section-hint">How would you like them to travel?</div>
-            </div>
+            <div class="book-ride-section-title">Service type</div>
           </div>
           <div class="book-ride-service-grid clean-service-toggle">
             <button type="button" class="clean-service-btn book-ride-service-card active" id="btnServiceDriver" onclick="setServiceType('drivers')">
               <span class="book-ride-service-icon" aria-hidden="true"><i data-lucide="car"></i></span>
-              <span class="book-ride-service-copy">
-                <span class="book-ride-service-name">Driver</span>
-                <span class="book-ride-service-desc">By vehicle</span>
-              </span>
+              <span class="book-ride-service-name">Driver</span>
               <i data-lucide="circle-check" class="book-ride-service-check"></i>
             </button>
             <button type="button" class="clean-service-btn book-ride-service-card" id="btnServiceWalk" onclick="setServiceType('walkshare')">
               <span class="book-ride-service-icon" aria-hidden="true"><i data-lucide="person-standing"></i></span>
-              <span class="book-ride-service-copy">
-                <span class="book-ride-service-name">WalkShare</span>
-                <span class="book-ride-service-desc">On foot with a trusted adult</span>
-              </span>
+              <span class="book-ride-service-name">WalkShare</span>
               <i data-lucide="circle-check" class="book-ride-service-check"></i>
             </button>
           </div>
@@ -1434,7 +1431,7 @@
         <div class="book-ride-sheet-card">
           <div class="sheet-drag-handle" style="margin: 0 auto 8px;"></div>
           <div class="book-ride-sheet-head">
-            <h3>Select Date</h3>
+            <h3 id="bookingDateSheetTitle">Select Date</h3>
             <button type="button" class="book-ride-sheet-close" onclick="closeBookingSheet('bookingDateSheet')" title="Close">
               <i data-lucide="x"></i>
             </button>
@@ -2082,6 +2079,11 @@
             <span class="summary-item-val" id="summaryDateText">Mon, Sep 8</span>
           </div>
 
+          <div class="summary-item-row" id="summaryTripTypeRow">
+            <span class="summary-item-label">Trip</span>
+            <span class="summary-item-val" id="summaryTripTypeText">Round trip</span>
+          </div>
+
           <div class="summary-item-row" id="summaryOutboundRow">
             <span class="summary-item-label">Pickup Time</span>
             <span class="summary-item-val" id="summaryOutboundText">07:30 AM</span>
@@ -2336,7 +2338,7 @@
                 <i data-lucide="shield-check" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
                 <span>Pickup contacts</span>
               </div>
-              <button type="button" class="folio-profile-link-btn" onclick="navigateTo('profileEmergency')" title="Manage pickup contacts">
+              <button type="button" class="folio-profile-link-btn" onclick="openNestedScreen('profileEmergency', event)" title="Manage pickup contacts">
                 <span>Manage</span>
                 <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
               </button>
@@ -2353,14 +2355,14 @@
                   </div>
                   <div class="folio-parent-sub">Mother · authorized pickup</div>
                 </div>
-                <button type="button" class="mvp-pickup-edit" onclick="navigateTo('profileEmergency')">Edit</button>
+                <button type="button" class="mvp-pickup-edit" onclick="openNestedScreen('profileEmergency', event)">Edit</button>
               </div>
               <div class="folio-backup-guardian-note">
                 <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
                   <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: #D97706; flex-shrink: 0;"></i>
                   <span style="font-size: 11.5px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Backup pickup: <strong>Farhan Khan</strong> (Father)</span>
                 </div>
-                <button type="button" class="mvp-pickup-edit" onclick="navigateTo('profileEmergency')">Edit</button>
+                <button type="button" class="mvp-pickup-edit" onclick="openNestedScreen('profileEmergency', event)">Edit</button>
               </div>
             </div>
           </div>
@@ -2834,7 +2836,7 @@
               <span>Tariq Ahmed</span>
               <i data-lucide="chevron-right" style="width: 13px; height: 13px; color: var(--color-body);"></i>
             </div>
-            <div style="font-size: 11.5px; color: #16A34A; font-weight: 600;" id="chatDriverSub">Active Trip • Toyota Sienna</div>
+            <div style="font-size: 11.5px; color: var(--color-body); font-weight: 600;" id="chatDriverSub">Active Trip • Toyota Sienna</div>
           </div>
         </div>
         <button class="btn-icon-contact mvp-hide-phone" id="chatDriverCallBtn" onclick="navigateTo('inbox')" style="display:none;">
@@ -2985,7 +2987,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="window.navigateBack('home')">
+        <button class="back-btn" onclick="backNested('home')">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Parent Profile</h2>
@@ -2994,7 +2996,7 @@
 
       <div class="screen-scroll-body">
         <!-- Parent Profile Header (With Luxury Dark Blue Gradient) -->
-        <div class="profile-user-card" onclick="navigateTo('profilePersonalInfo')">
+        <div class="profile-user-card" onclick="openNestedScreen('profilePersonalInfo', event)">
           <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0;">
             <img src="/assets/avatar_sadia.jpg" alt="Sadia Khan" class="profile-avatar-lg" />
             <span style="position: absolute; bottom: 0; right: 0; background: var(--color-secondary, #F2600C); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #09122C; box-shadow: 0 2px 5px rgba(0,0,0,0.35);">
@@ -3023,7 +3025,7 @@
 
         <!-- Section 1: Child & Ride Management -->
         <div class="profile-menu-section">
-          <div class="profile-menu-item" onclick="navigateTo('myChildren')">
+          <div class="profile-menu-item" onclick="openNestedScreen('myChildren', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="users"></i>
@@ -3033,7 +3035,7 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
-          <div class="profile-menu-item" onclick="navigateTo('profileLocations')">
+          <div class="profile-menu-item" onclick="openNestedScreen('profileLocations', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="map-pin"></i>
@@ -3043,9 +3045,9 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
-          <div class="profile-menu-item" onclick="navigateTo('profileEmergency')">
+          <div class="profile-menu-item" onclick="openNestedScreen('profileEmergency', event)">
             <div class="menu-item-left">
-              <div class="menu-icon-wrap" style="color: var(--color-danger);">
+              <div class="menu-icon-wrap">
                 <i data-lucide="shield-alert"></i>
               </div>
               <span class="menu-title-text">Pickup contacts</span>
@@ -3056,7 +3058,7 @@
 
         <!-- Section 2: Payments & Common App Information -->
         <div class="profile-menu-section">
-          <div class="profile-menu-item" onclick="navigateTo('subscription')">
+          <div class="profile-menu-item" onclick="openNestedScreen('subscription', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="sparkles"></i>
@@ -3066,7 +3068,7 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
-          <div class="profile-menu-item" onclick="navigateTo('profilePayments')">
+          <div class="profile-menu-item" onclick="openNestedScreen('profilePayments', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="receipt"></i>
@@ -3076,7 +3078,7 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
-          <div class="profile-menu-item" onclick="navigateTo('faq')">
+          <div class="profile-menu-item" onclick="openNestedScreen('faq', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="help-circle"></i>
@@ -3086,9 +3088,9 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
-          <div class="profile-menu-item" onclick="navigateTo('contactSupport')">
+          <div class="profile-menu-item" onclick="openNestedScreen('contactSupport', event)">
             <div class="menu-item-left">
-              <div class="menu-icon-wrap" style="color: var(--color-primary);">
+              <div class="menu-icon-wrap">
                 <i data-lucide="headset"></i>
               </div>
               <span class="menu-title-text">Contact Support</span>
@@ -3096,7 +3098,7 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
-          <div class="profile-menu-item" onclick="navigateTo('privacy')">
+          <div class="profile-menu-item" onclick="openNestedScreen('privacy', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="shield"></i>
@@ -3106,7 +3108,7 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
-          <div class="profile-menu-item" onclick="navigateTo('legal')">
+          <div class="profile-menu-item" onclick="openNestedScreen('legal', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="file-text"></i>
@@ -3116,7 +3118,7 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
-          <div class="profile-menu-item" onclick="navigateTo('about')">
+          <div class="profile-menu-item" onclick="openNestedScreen('about', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
                 <i data-lucide="info"></i>
@@ -3374,7 +3376,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('profile')">
+        <button class="back-btn" onclick="backNested()">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Personal Information</h2>
@@ -3548,7 +3550,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('profile')">
+        <button type="button" class="back-btn" onclick="backNested()">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Pickup contacts</h2>
@@ -3569,7 +3571,7 @@
               <div class="primary-guardian-sub">Mother · primary pickup</div>
             </div>
           </div>
-          <button type="button" class="mvp-pickup-edit" onclick="navigateTo('profilePersonalInfo')">Edit</button>
+          <button type="button" class="mvp-pickup-edit" onclick="openNestedScreen('profilePersonalInfo', event)">Edit</button>
         </div>
 
         <!-- Section: Authorized Child Guardians & Backup Contacts -->
@@ -3606,7 +3608,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('profile')">
+        <button type="button" class="back-btn" onclick="backNested()">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Saved Locations</h2>
@@ -3689,7 +3691,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('profile')">
+        <button type="button" class="back-btn" onclick="backNested()">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Billing &amp; Transactions</h2>
@@ -3736,7 +3738,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('profile')">
+        <button type="button" class="back-btn" onclick="backNested()">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">FAQ</h2>
@@ -3836,7 +3838,7 @@
             Our support team is available 24/7 to assist with custom routes, pricing, or driver questions.
           </p>
           <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
-            <button type="button" class="btn-primary" onclick="navigateTo('contactSupport')" style="height: 42px; font-size: 13px; font-weight: 700; padding: 0 16px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(27, 43, 104, 0.16); flex: 1; max-width: 175px; justify-content: center;">
+            <button type="button" class="btn-primary" onclick="openNestedScreen('contactSupport', event)" style="height: 42px; font-size: 13px; font-weight: 700; padding: 0 16px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(27, 43, 104, 0.16); flex: 1; max-width: 175px; justify-content: center;">
               <i data-lucide="message-square" style="width: 15px; height: 15px;"></i>
               <span>Contact Support</span>
             </button>
@@ -3863,7 +3865,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('profile')">
+        <button type="button" class="back-btn" onclick="backNested()">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Terms &amp; Privacy Policy</h2>
@@ -3943,7 +3945,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('profile')">
+        <button type="button" class="back-btn" onclick="backNested()">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">About Home2School</h2>
@@ -4069,7 +4071,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('profile')">
+        <button type="button" class="back-btn" onclick="backNested()">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Privacy Policy</h2>
@@ -4223,7 +4225,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('profile')">
+        <button type="button" class="back-btn" onclick="backNested()">
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Contact Support</h2>
@@ -4882,21 +4884,21 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button type="button" class="back-btn" onclick="navigateTo('driverHome')">
-          <i data-lucide="chevron-left"></i>
-        </button>
+        <button type="button" class="back-btn" onclick="navigateTo('driverHome')"><i data-lucide="chevron-left"></i></button>
         <h2 class="top-bar-title">Requests</h2>
         <span style="width:26px;"></span>
       </div>
 
-      <div class="segmented-control" style="margin-top:4px;">
-        <button type="button" class="segment-btn active" id="btnDReqNew" onclick="switchDriverRequestsTab('new')">New</button>
-        <button type="button" class="segment-btn" id="btnDReqAccepted" onclick="switchDriverRequestsTab('accepted')">Accepted</button>
-        <button type="button" class="segment-btn" id="btnDReqDeclined" onclick="switchDriverRequestsTab('declined')">Declined</button>
+      <div class="drv-req-tabs-wrap">
+        <div class="segmented-control drv-req-tabs" role="tablist" aria-label="Request status">
+          <button type="button" class="segment-btn active" id="btnDReqNew" role="tab" aria-selected="true" onclick="switchDriverRequestsTab('new')">New</button>
+          <button type="button" class="segment-btn" id="btnDReqAccepted" role="tab" aria-selected="false" onclick="switchDriverRequestsTab('accepted')">Accepted</button>
+          <button type="button" class="segment-btn" id="btnDReqDeclined" role="tab" aria-selected="false" onclick="switchDriverRequestsTab('declined')">Declined</button>
+        </div>
       </div>
 
       <div class="screen-scroll-body" style="padding-bottom: 90px;">
-        <div id="driverRequestsListWrap" style="display:flex;flex-direction:column;gap:14px;"></div>
+        <div id="driverRequestsListWrap" class="drv-req-list"></div>
       </div>
 
       <nav class="bottom-tab-bar driver-nav-bar">
@@ -4927,13 +4929,12 @@
         <span style="width:26px;"></span>
       </div>
 
-      <div class="segmented-control" style="margin-top:4px;">
-        <button type="button" class="segment-btn active" id="btnDSchedToday" onclick="switchDriverScheduleTab('today')">Today</button>
-        <button type="button" class="segment-btn" id="btnDSchedUpcoming" onclick="switchDriverScheduleTab('upcoming')">Upcoming</button>
-      </div>
-
       <div class="screen-scroll-body" style="padding-bottom: 90px;">
-        <div id="driverScheduleListWrap" style="display:flex;flex-direction:column;gap:14px;"></div>
+        <div class="segmented-control">
+          <button type="button" class="segment-btn active" id="btnDSchedToday" onclick="switchDriverScheduleTab('today')">Today</button>
+          <button type="button" class="segment-btn" id="btnDSchedUpcoming" onclick="switchDriverScheduleTab('upcoming')">Upcoming</button>
+        </div>
+        <div id="driverScheduleListWrap" class="upcoming-trips-list"></div>
       </div>
 
       <nav class="bottom-tab-bar driver-nav-bar">
@@ -4982,16 +4983,16 @@
               <span class="status-dot"></span>
               <span id="driverMilestoneText">On the way to pickup</span>
             </span>
-            <span class="user-question" id="driverActiveTripTimeLeft">07:28 AM</span>
+            <span class="card-desc-muted" id="driverActiveTripTimeLeft">07:28 AM</span>
           </div>
 
           <div class="trip-card">
             <h3 class="section-heading" style="margin-bottom:0;">Current stop</h3>
             <div>
               <h3 class="card-title-navy" id="driverActiveTargetTitle">Home (12 Elm Street, Toronto)</h3>
-              <p class="card-desc-muted" id="driverActiveTargetDesc">Passengers of Sadia Khan · morning pickup</p>
+              <p class="card-desc-muted" id="driverActiveTargetDesc">Arman + Emma · morning pickup</p>
             </div>
-            <span class="capacity-badge ok">Booster seat for Arman</span>
+            <span class="both-way-badge">Booster seat for Arman</span>
           </div>
 
           <div class="drv-actions-col">
@@ -5011,10 +5012,10 @@
     <div class="attendance-modal-backdrop" id="driverAttendanceModal">
       <div class="attendance-modal-sheet">
         <div style="display:flex;align-items:center;justify-content:space-between;">
-          <h3 style="font-size:17px;font-weight:800;color:#0F172A;margin:0;">Confirm Children Boarded</h3>
-          <button type="button" class="btn-text-link" onclick="closeDriverAttendanceModal()" style="font-size:13px;color:#64748B;">✕</button>
+          <h3 class="top-bar-title" style="margin:0;">Confirm children boarded</h3>
+          <button type="button" class="btn-text-link" onclick="closeDriverAttendanceModal()">Close</button>
         </div>
-        <p style="font-size:12.5px;color:var(--color-body);margin:0;">Mark who boarded. A child marked not riding stays on the booking.</p>
+        <p class="page-subtitle" style="margin:0;text-align:left;">Mark who boarded. A child marked not riding stays on the booking.</p>
 
         <div id="driverAttendanceList" style="display:flex;flex-direction:column;gap:10px;">
           <!-- Child 1: Arman -->
@@ -5022,8 +5023,8 @@
             <div style="display:flex;align-items:center;gap:10px;">
               <img src="/assets/avatar_arman.jpg" alt="Arman" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" onerror="this.src='/assets/avatar_arman.jpg';" />
               <div>
-                <div style="font-size:13.5px;font-weight:800;color:#0F172A;">Arman Khan</div>
-                <div style="font-size:11.5px;color:#64748B;">Grade 4 · Booster Seat Attached</div>
+                <div style="font-size:13.5px;font-weight:800;color:var(--color-title);">Arman Khan</div>
+                <div class="card-desc-muted">Grade 4 · Booster seat</div>
               </div>
             </div>
             <input type="checkbox" id="chkAttendArman" checked style="width:18px;height:18px;accent-color:var(--color-primary);pointer-events:none;" />
@@ -5034,8 +5035,8 @@
             <div style="display:flex;align-items:center;gap:10px;">
               <img src="/assets/avatar_emma.jpg" alt="Emma" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" onerror="this.src='/assets/avatar_emma.jpg';" />
               <div>
-                <div style="font-size:13.5px;font-weight:800;color:#0F172A;">Emma Khan</div>
-                <div style="font-size:11.5px;color:#64748B;">Grade 2 · Standard Seatbelt</div>
+                <div style="font-size:13.5px;font-weight:800;color:var(--color-title);">Emma Khan</div>
+                <div class="card-desc-muted">Grade 2 · Standard seatbelt</div>
               </div>
             </div>
             <input type="checkbox" id="chkAttendEmma" checked style="width:18px;height:18px;accent-color:var(--color-primary);pointer-events:none;" />
@@ -5063,7 +5064,7 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button type="button" class="back-btn" onclick="window.navigateBack('driverHome')"><i data-lucide="chevron-left"></i></button>
+        <button type="button" class="back-btn" onclick="backNested('driverHome')"><i data-lucide="chevron-left"></i></button>
         <h2 class="top-bar-title">Driver setup</h2>
         <span style="width:26px;"></span>
       </div>
