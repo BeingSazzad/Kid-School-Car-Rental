@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home2School — User Flows & Role Architecture Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --primary: #1B2B68;
+      --primary-dark: #121D47;
+      --secondary: #F2600C;
+      --accent: #2563EB;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .doc-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 48px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      border: 1px solid var(--border);
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+      gap: 16px;
+    }
+
+    .brand-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .brand-subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-download {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(27, 43, 104, 0.2);
+    }
+
+    .btn-download:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 36px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 20px 0 10px 0;
+    }
+
+    p {
+      color: #334155;
+      font-size: 14.5px;
+      margin-bottom: 16px;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .role-card {
+      background: #F1F5F9;
+      border-radius: 14px;
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .role-card.parent { border-left: 5px solid #2563EB; }
+    .role-card.driver { border-left: 5px solid #F2600C; }
+    .role-card.walker { border-left: 5px solid #10B981; }
+
+    .role-card h4 {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .role-card p {
+      font-size: 13.5px;
+      color: #475569;
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 13.5px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #F8FAFC;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+      background-color: #F8FAFC;
+    }
+
+    .mermaid {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .step-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 16px 0;
+    }
+
+    .step-list li {
+      padding: 10px 14px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .step-number {
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .doc-container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      .actions {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="doc-container">
+    <div class="header-bar">
+      <div>
+        <div class="brand-title">Home2School — Role Architecture & User Flows</div>
+        <div class="brand-subtitle">Complete Product Specification: Parent, Driver, and Walker (WalkShare)</div>
+      </div>
+      <div class="actions">
+        <button class="btn-download" onclick="window.print()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+          Download PDF / Print
+        </button>
+      </div>
+    </div>
+
+    <h2>📌 1. Executive Summary</h2>
+    <p><strong>Home2School</strong> is an institutional-grade child mobility and school transit platform engineered to ensure student safety, eliminate parental anxiety, and support flexible neighborhood transportation options. It connects three key roles:</p>
+
+    <div class="role-grid">
+      <div class="role-card parent">
+        <h4>👨‍👩‍👧 Parent</h4>
+        <p>Manages child profiles, chooses Car/Walk service, books recurring or one-off rides, and monitors commute progress with live GPS tracking & safe arrival notifications.</p>
+      </div>
+      <div class="role-card driver">
+        <h4>🚗 Driver (Vehicle Ride)</h4>
+        <p>Vetted independent drivers with multi-seat vehicles (Car/Van) offering medium-to-long distance commutes, route sequence optimization, and student check-in/out.</p>
+      </div>
+      <div class="role-card walker">
+        <h4>🚶‍♂️ Walker (WalkShare)</h4>
+        <p>Verified neighborhood chaperones leading a "Walking School Bus" for short-distance clusters, walking children safely along sidewalk corridors and zebra crossings.</p>
+      </div>
+    </div>
+
+    <h2>📊 2. Comparative Matrix</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Capability / Metric</th>
+          <th>👨‍👩‍👧 Parent</th>
+          <th>🚗 Driver (Vehicle Ride)</th>
+          <th>🚶‍♂️ Walker (WalkShare)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Primary Goal</strong></td>
+          <td>Book safe commute & live track kids</td>
+          <td>Transport kids via car/van</td>
+          <td>Escort kids safely on foot</td>
+        </tr>
+        <tr>
+          <td><strong>Commute Distance</strong></td>
+          <td>Any distance</td>
+          <td>2.5 km – 20+ km</td>
+          <td>400 m – 2.5 km</td>
+        </tr>
+        <tr>
+          <td><strong>Route Capacity</strong></td>
+          <td>1 – 4 children</td>
+          <td>4 – 12 seats per vehicle</td>
+          <td>3 – 8 children per group</td>
+        </tr>
+        <tr>
+          <td><strong>Payment Flow</strong></td>
+          <td>Payer (Subscription/Pass)</td>
+          <td>Recipient (Seat + Mileage)</td>
+          <td>Recipient (Group fee)</td>
+        </tr>
+        <tr>
+          <td><strong>Safety Features</strong></td>
+          <td>Live GPS, SOS, Status Chips</td>
+          <td>Vehicle KYC, Speed alert</td>
+          <td>High-vis vest, Gate handover</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>👨‍👩‍👧 3. Parent User Flow</h2>
+    <div class="mermaid">
+flowchart LR
+    A[Onboarding / Login] --> B[Add Child Profile]
+    B --> C[Select Service: Ride or Walk]
+    C --> D[Choose Provider & Book]
+    D --> E[Live GPS Tracking & SOS]
+    E --> F[Safe School Arrival Alert]
+    </div>
+
+    <ul class="step-list">
+      <li><span class="step-number">1</span> <div><strong>Authentication & Profile:</strong> Fast phone OTP verification, relationship setup (Mother/Father/Guardian), and emergency contacts.</div></li>
+      <li><span class="step-number">2</span> <div><strong>Child Rider Setup:</strong> Register child name, photo, school name, grade, dismissal hours, and preset pickup locations.</div></li>
+      <li><span class="step-number">3</span> <div><strong>Booking & Provider Selection:</strong> Choose Vehicle Ride or WalkShare, select recurring days (Mon–Fri), and inspect provider verification badges & ratings.</div></li>
+      <li><span class="step-number">4</span> <div><strong>Live Tracking & Safety:</strong> Real-time map location, status chips (<em>"On the way"</em>, <em>"Boarded"</em>, <em>"Arrived Safely"</em>), and instant call/chat.</div></li>
+    </ul>
+
+    <h2>🚗 4. Driver User Flow</h2>
+    <div class="mermaid">
+flowchart LR
+    A[Driver KYC & License] --> B[Set Vehicle & Seats]
+    B --> C[Receive & Accept Requests]
+    C --> D[Navigate Pickup Route]
+    D --> E[Check-in Child & Drop-off]
+    E --> F[Earnings & Rating Scorecard]
+    </div>
+
+    <ul class="step-list">
+      <li><span class="step-number">1</span> <div><strong>Onboarding & Verification:</strong> Upload Driving License, Vehicle Fitness, Insurance, and Police Background Clearance.</div></li>
+      <li><span class="step-number">2</span> <div><strong>Seat & Schedule Management:</strong> Set total available seats and morning/afternoon operating school zones.</div></li>
+      <li><span class="step-number">3</span> <div><strong>Trip Execution:</strong> Turn-by-turn multi-stop route navigation, 1-tap "Child Boarded" attendance check-in, and school drop-off.</div></li>
+      <li><span class="step-number">4</span> <div><strong>Earnings & Reviews:</strong> Transparent daily/weekly revenue balance and parent feedback scorecards.</div></li>
+    </ul>
+
+    <h2>🚶‍♂️ 5. Walker (WalkShare) User Flow</h2>
+    <div class="mermaid">
+flowchart LR
+    A[Walker Verification] --> B[Define Walking Corridor]
+    B --> C[Accept Neighborhood Kids]
+    C --> D[Morning Muster & Roll Call]
+    D --> E[Supervised Safe Walk]
+    E --> F[School Gate Handover]
+    </div>
+
+    <ul class="step-list">
+      <li><span class="step-number">1</span> <div><strong>Chaperone Verification:</strong> Identity & community safety clearance and child safety guideline briefing.</div></li>
+      <li><span class="step-number">2</span> <div><strong>Safe Walking Corridor:</strong> Designate low-traffic sidewalk routes and zebra crossing checkpoints.</div></li>
+      <li><span class="step-number">3</span> <div><strong>Escorted Morning Walk:</strong> Wear high-vis safety gear, gather children at muster points, and perform digital roll-call.</div></li>
+      <li><span class="step-number">4</span> <div><strong>Gate Handover:</strong> Hand children directly over to school duty staff and broadcast "Safe Arrival" notification to parents.</div></li>
+    </ul>
+
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); text-align: center;">
+      Home2School Product Architecture Document · Exported for Offline & Print Usage
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</body>
+</html>
