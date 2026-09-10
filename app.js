@@ -1144,7 +1144,7 @@ window.addEventListener('hashchange', () => {
 });
 
 // Initialization
-window.addEventListener('DOMContentLoaded', () => {
+function initApp() {
   renderHome();
 
   const savedRole = localStorage.getItem('h2s_active_role') || 'parent';
@@ -1175,7 +1175,13 @@ window.addEventListener('DOMContentLoaded', () => {
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 /* ==========================================================
    Home Screen: State-Driven Logic (Scenario A / B / C)
