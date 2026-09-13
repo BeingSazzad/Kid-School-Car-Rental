@@ -1102,7 +1102,11 @@ window.navigateBack = function (fallback = 'home') {
     const prev = history.pop();
     const bucket = navScreenBucket(prev);
     if (role === 'driver' && bucket === 'parent') continue;
+    if (role === 'walkshare' && bucket === 'parent') continue;
+    if (role === 'walkshare' && bucket === 'driver') continue;
     if (role === 'parent' && bucket === 'driver') continue;
+    if (role === 'parent' && bucket === 'walkshare') continue;
+    if (role === 'driver' && bucket === 'walkshare') continue;
     window.navigateTo(coerceScreenToRole(prev), true);
     return;
   }
@@ -1232,25 +1236,24 @@ window.addEventListener('hashchange', () => {
   window.navigateTo(coerced, true);
 });
 
-// Initialization
+// Initialization — wait until Driver + WalkShare wrappers register (module load order).
 function initApp() {
+  if (window.__h2sBooted) return;
+  window.__h2sBooted = true;
   renderHome();
 
   const savedRole = localStorage.getItem('h2s_active_role') || 'parent';
   window.appState.activeRole = savedRole;
   const btnP = document.getElementById('btnRoleParent');
   const btnD = document.getElementById('btnRoleDriver');
-  if (btnP && btnD) {
-    if (savedRole === 'driver') {
-      btnP.classList.remove('active');
-      btnD.classList.add('active');
-      btnD.classList.add('driver-active');
-    } else {
-      btnD.classList.remove('active');
-      btnD.classList.remove('driver-active');
-      btnP.classList.add('active');
-    }
-  }
+  const btnW = document.getElementById('btnRoleWalkShare');
+  [btnP, btnD, btnW].forEach((btn) => {
+    if (!btn) return;
+    btn.classList.remove('active', 'driver-active', 'walkshare-active');
+  });
+  if (savedRole === 'driver' && btnD) btnD.classList.add('active', 'driver-active');
+  else if (savedRole === 'walkshare' && btnW) btnW.classList.add('active', 'walkshare-active');
+  else if (btnP) btnP.classList.add('active');
 
   const hash = window.location.hash ? window.location.hash.replace('#', '') : '';
   let initial = 'home';
@@ -1258,6 +1261,8 @@ function initApp() {
     initial = hash;
   } else if (savedRole === 'driver') {
     initial = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverSetup';
+  } else if (savedRole === 'walkshare') {
+    initial = typeof window.getWalkShareLanding === 'function' ? window.getWalkShareLanding() : 'wsHome';
   }
   window.navigateTo(initial);
 
@@ -1266,10 +1271,29 @@ function initApp() {
   }
 }
 
-if (document.readyState === 'loading') {
-  window.addEventListener('DOMContentLoaded', initApp);
-} else {
+window.__h2sTryBoot = function () {
+  // Boot only after the outermost role layer (WalkShare) has wrapped navigateTo/switchRole.
+  if (window.__h2sBooted) return;
+  if (!window.__h2sWalkShareReady) {
+    // Module scripts can race DOMContentLoaded; retry briefly, then fall back.
+    if (!window.__h2sBootTimer) {
+      window.__h2sBootTimer = setTimeout(() => {
+        if (!window.__h2sBooted) initApp();
+      }, 50);
+    }
+    return;
+  }
+  if (window.__h2sBootTimer) clearTimeout(window.__h2sBootTimer);
   initApp();
+};
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', () => {
+    // If WalkShare already loaded (unlikely), boot; else WalkShare calls __h2sTryBoot.
+    window.__h2sTryBoot();
+  });
+} else {
+  window.__h2sTryBoot();
 }
 
 /* ==========================================================

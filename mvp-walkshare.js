@@ -830,6 +830,14 @@
     window.navigateTo('wsRequestDetail');
   };
 
+  function syncParentBookingStatus(req, next) {
+    const bookings = state().bookings || [];
+    const booking = bookings.find((b) => b.id === req.bookingId);
+    if (!booking) return;
+    if (next === 'accepted') booking.status = 'confirmed';
+    if (next === 'declined') booking.status = 'declined';
+  }
+
   window.acceptWalkShareRequest = function (id) {
     const w = ensureWalk();
     if (!canAccept(w)) {
@@ -837,21 +845,25 @@
       return;
     }
     const req = w.requests.find((r) => r.id === id);
-    if (!req) return;
+    if (!req || req.status !== 'new') return;
     req.status = 'accepted';
+    syncParentBookingStatus(req, 'accepted');
     persist();
     toast('WalkShare request accepted');
     renderRequests(state()._wsReqTab || 'new');
+    if (document.getElementById('screen-wsRequestDetail')?.classList.contains('active')) renderRequestDetail();
   };
 
   window.declineWalkShareRequest = function (id) {
     const w = ensureWalk();
     const req = w.requests.find((r) => r.id === id);
-    if (!req) return;
+    if (!req || req.status !== 'new') return;
     req.status = 'declined';
+    syncParentBookingStatus(req, 'declined');
     persist();
-    toast('Request declined');
+    toast('Request declined. Parent is notified in-app.');
     renderRequests(state()._wsReqTab || 'new');
+    if (document.getElementById('screen-wsRequestDetail')?.classList.contains('active')) renderRequestDetail();
   };
 
   function renderRequestDetail() {
@@ -868,10 +880,16 @@
             <p class="card-desc-muted" style="margin:2px 0 0;">${esc(childShort(req))} · ${esc(req.rateLabel || '')}</p>
           </div>
         </div>
-        <div class="drv-req-route" style="margin:12px 0;">
-          <div class="drv-req-stop"><span class="drv-rail-dot home"></span><span>${esc(req.pickupLocation)}</span></div>
-          <div class="drv-req-rail"></div>
-          <div class="drv-req-stop"><span class="drv-rail-dot school"></span><span>${esc(req.dropoffLocation)}</span></div>
+        <div class="drv-req-route-block" style="margin:12px 0;">
+          <div class="drv-req-route-rail" aria-hidden="true">
+            <span class="drv-req-dot start"></span>
+            <span class="drv-req-rail-line"></span>
+            <span class="drv-req-dot end"><i data-lucide="map-pin"></i></span>
+          </div>
+          <div class="drv-req-route-copy">
+            <p class="drv-req-stop">${esc(req.pickupLocation)}</p>
+            <p class="drv-req-stop is-end">${esc(req.dropoffLocation)}</p>
+          </div>
         </div>
         <p class="card-desc-muted">${esc(dateLineCard(req))} · ${esc(timeLineCard(req))}</p>
         <p class="card-desc-muted" style="margin-top:8px;">${esc(req.notes || '')}</p>
@@ -890,31 +908,52 @@
   };
 
   function renderSchedule(tab) {
-    ['today', 'upcoming'].forEach((key) => {
-      const btn = document.getElementById('btnWsSched' + key.charAt(0).toUpperCase() + key.slice(1));
-      if (btn) btn.classList.toggle('active', key === tab);
-    });
+    const mode = tab === 'upcoming' ? 'upcoming' : 'today';
+    state()._wsSchedTab = mode;
     const wrap = document.getElementById('wsScheduleListWrap');
     if (!wrap) return;
-    const items = deriveSchedule();
-    if (!items.length) {
+    const all = deriveSchedule().map((item) => {
+      if (!item.when) item.when = item.dateLabel || 'Tue, Sep 9, 2026';
+      return item;
+    });
+    const morning = all.filter((i) => i.leg === 'morning');
+    const returns = all.filter((i) => i.leg === 'afternoon');
+    const todayItems = all.filter((i) => i.leg === 'morning' || i.leg === 'afternoon');
+    const upcoming = all.filter((i) => i.frequency === 'onetime' || /Sep\s*1[4-9]|Sep\s*2/i.test(String(i.when || i.dateLabel || '')));
+    const list = mode === 'upcoming'
+      ? (upcoming.length ? upcoming : all)
+      : todayItems;
+    const btnT = document.getElementById('btnWsSchedToday');
+    const btnU = document.getElementById('btnWsSchedUpcoming');
+    if (btnT) {
+      btnT.textContent = `Today (${todayItems.length})`;
+      btnT.classList.toggle('active', mode === 'today');
+    }
+    if (btnU) {
+      btnU.textContent = `Upcoming (${upcoming.length || all.length})`;
+      btnU.classList.toggle('active', mode === 'upcoming');
+    }
+    if (!list.length) {
       wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="calendar"></i></div><h4>Nothing scheduled</h4><p>Accepted morning and return walks appear here.</p></div>`;
       icons();
       return;
     }
-    const morning = items.filter((i) => i.leg === 'morning');
-    const ret = items.filter((i) => i.leg === 'afternoon');
-    const section = (title, dateLabel, list) => {
-      if (!list.length) return '';
+    const section = (title, items) => {
+      if (!items.length) return '';
+      const dateLabel = dateShort(items[0].when || items[0].dateLabel) || 'Tue, Sep 9';
       return `<div class="drv-sched-section">
         <div class="drv-sched-section-head">
-          <h3>${esc(title)}</h3>
-          <span>${esc(dateShort(dateLabel) || 'Tue, Sep 9')}</span>
+          <h3 class="drv-sched-section-title">${esc(title)}</h3>
+          <span>${esc(dateLabel)}</span>
         </div>
-        ${list.map((item) => schedCard(item)).join('')}
+        ${items.map((item) => schedCard(item)).join('')}
       </div>`;
     };
-    wrap.innerHTML = section('Morning walks', items[0]?.when, morning) + section('Return walks', items[0]?.when, ret);
+    if (mode === 'upcoming') {
+      wrap.innerHTML = section('Upcoming walks', list);
+    } else {
+      wrap.innerHTML = section('Morning walks', morning) + section('Return walks', returns);
+    }
     icons();
   }
 
@@ -949,10 +988,16 @@
             <span class="drv-sched-time">${esc(item.time)}</span>
             <span class="drv-sched-badge ${item.leg === 'afternoon' ? 'return' : ''}">${esc(item.badge)}</span>
           </div>
-          <div class="drv-req-route">
-            <div class="drv-req-stop"><span class="drv-rail-dot home"></span><span>${esc(item.from)}</span></div>
-            <div class="drv-req-rail"></div>
-            <div class="drv-req-stop"><span class="drv-rail-dot school"></span><span>${esc(item.to)}</span></div>
+          <div class="drv-req-route-block">
+            <div class="drv-req-route-rail" aria-hidden="true">
+              <span class="drv-req-dot start"></span>
+              <span class="drv-req-rail-line"></span>
+              <span class="drv-req-dot end"><i data-lucide="map-pin"></i></span>
+            </div>
+            <div class="drv-req-route-copy">
+              <p class="drv-req-stop">${esc(item.from)}</p>
+              <p class="drv-req-stop is-end">${esc(item.to)}</p>
+            </div>
           </div>
           ${passengerAvatars(item)}
         </div>
@@ -1484,8 +1529,8 @@
     if (!booking) return;
     const provider = (state().providers || []).find((p) => p.id === booking.providerId);
     const isWalk = provider?.category === 'walkshare' || booking.providerId === 'sarah' || booking.providerId === 'elena';
-    // Sarah shell receives her own bookings; Elena bookings stay on Elena for future multi-escort.
-    if (!isWalk || booking.providerId !== w.id) return;
+    // MVP WalkShare shell (Sarah) receives all WalkShare-category bookings for demo routing.
+    if (!isWalk) return;
     const status = String(booking.status || '').toLowerCase();
     // Live pipeline only — skip archived declined noise on cold load.
     if (!['pending', 'confirmed', 'in_progress'].includes(status)) {
@@ -1579,4 +1624,6 @@
   ensureWalk();
   (state().bookings || []).forEach(ingestWalkShareBooking);
   applyRoleChrome();
+  window.__h2sWalkShareReady = true;
+  if (typeof window.__h2sTryBoot === 'function') window.__h2sTryBoot();
 })();

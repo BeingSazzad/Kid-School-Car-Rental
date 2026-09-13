@@ -3291,4 +3291,5 @@
   ensureDriver();
   ingestBookingAsRequest((state().bookings || []).find((b) => b.id === 'H2S-REQ-9042'));
   applyRoleChrome();
+  window.__h2sDriverReady = true;
 })();

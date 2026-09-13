@@ -9764,6 +9764,17 @@ textarea.form-textarea:not(.textarea-box-wrapper textarea):focus {
   border-color: #A7F3D0;
 }
 
+.walkshare-partner-card {
+  border-color: #A7F3D0;
+  background: #F0FDF4;
+}
+
+.role-switcher-floating-bar .role-pill-btn span {
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 [id^="screen-ws"],
 [id^="screen-ws"] button,
 [id^="screen-ws"] input,
