@@ -9735,6 +9735,117 @@ textarea.form-textarea:not(.textarea-box-wrapper textarea):focus {
   box-shadow: 0 2px 8px rgba(27, 43, 104, 0.28);
 }
 
+.role-pill-btn.active.walkshare-active {
+  background: #047857;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(4, 120, 87, 0.28);
+}
+
+.role-switcher-floating-bar .role-pill-btn {
+  padding: 6px 10px;
+  font-size: 11px;
+  gap: 4px;
+}
+
+.auth-partner-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.driver-partner-icon.walkshare {
+  color: #047857;
+}
+
+.driver-partner-pill-btn.walkshare {
+  background: #ECFDF5;
+  color: #047857;
+  border-color: #A7F3D0;
+}
+
+[id^="screen-ws"],
+[id^="screen-ws"] button,
+[id^="screen-ws"] input,
+[id^="screen-ws"] select,
+[id^="screen-ws"] textarea {
+  font-family: var(--font-family) !important;
+}
+
+#screen-wsActiveWalk .active-trip-cockpit {
+  height: calc(100% - 92px);
+}
+
+#screen-wsActiveWalk .cockpit-map-visual {
+  flex: 1.35;
+  min-height: 280px;
+  height: auto;
+}
+
+.ws-cockpit-map {
+  position: relative;
+  background:
+    linear-gradient(160deg, rgba(4, 120, 87, 0.08), rgba(27, 43, 104, 0.06)),
+    radial-gradient(circle at 20% 30%, rgba(242, 96, 12, 0.08), transparent 45%),
+    #EEF2F7;
+}
+
+.ws-cockpit-path {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 52%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #047857 var(--ws-progress, 28%), rgba(148, 163, 184, 0.45) var(--ws-progress, 28%));
+}
+
+.ws-cockpit-pin {
+  position: absolute;
+  top: 52%;
+  left: 28%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #047857;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(4, 120, 87, 0.35);
+  transition: left 0.35s ease;
+  z-index: 2;
+}
+
+.ws-map-node {
+  position: absolute;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1.5px solid var(--color-stroke);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.ws-map-node.start { left: 12%; }
+.ws-map-node.end { left: 88%; color: #F2600C; }
+.ws-map-node i, .ws-map-node svg { width: 14px; height: 14px; }
+
+.ws-live-chip {
+  background: rgba(4, 120, 87, 0.92) !important;
+}
+
+body[data-role="walkshare"] .role-switcher-floating-bar {
+  /* keep switcher readable over WalkShare home */
+}
+
 [id^="screen-driver"],
 [id^="screen-driver"] button,
 [id^="screen-driver"] input,

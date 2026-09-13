@@ -63,7 +63,25 @@ const screens = [
   'driverSubscription',
   'driverRequestDetail',
   'driverTripPrep',
-  'driverRateParent'
+  'driverRateParent',
+  // WalkShare Role Screens
+  'wsHome',
+  'wsRequests',
+  'wsSchedule',
+  'wsProfile',
+  'wsSetup',
+  'wsOnboardProfile',
+  'wsOnboardGroup',
+  'wsOnboardDocs',
+  'wsDocDetail',
+  'wsOnboardAvailability',
+  'wsOnboardRate',
+  'wsPayment',
+  'wsPending',
+  'wsSubscription',
+  'wsRequestDetail',
+  'wsWalkPrep',
+  'wsActiveWalk'
 ];
 
 /* ==========================================================
@@ -786,7 +804,7 @@ window.appState = {
 };
 
 /* ==========================================================
-   Dual-Role Switcher (Parent Mode ⇄ Driver Mode)
+   Dual-Role Switcher (Parent Mode ⇄ Driver Mode ⇄ WalkShare)
    ========================================================== */
 window.switchRole = function (role) {
   if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
@@ -795,20 +813,20 @@ window.switchRole = function (role) {
 
   const btnP = document.getElementById('btnRoleParent');
   const btnD = document.getElementById('btnRoleDriver');
-  if (btnP && btnD) {
-    if (role === 'driver') {
-      btnP.classList.remove('active');
-      btnD.classList.add('active');
-      btnD.classList.add('driver-active');
-    } else {
-      btnD.classList.remove('active');
-      btnD.classList.remove('driver-active');
-      btnP.classList.add('active');
-    }
-  }
+  const btnW = document.getElementById('btnRoleWalkShare');
+  [btnP, btnD, btnW].forEach((btn) => {
+    if (!btn) return;
+    btn.classList.remove('active', 'driver-active', 'walkshare-active');
+  });
+  if (role === 'driver' && btnD) btnD.classList.add('active', 'driver-active');
+  else if (role === 'walkshare' && btnW) btnW.classList.add('active', 'walkshare-active');
+  else if (btnP) btnP.classList.add('active');
 
   if (role === 'driver') {
     const next = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverSetup';
+    window.navigateTo(next, true);
+  } else if (role === 'walkshare') {
+    const next = typeof window.getWalkShareLanding === 'function' ? window.getWalkShareLanding() : 'wsHome';
     window.navigateTo(next, true);
   } else {
     window.navigateTo('home', true);
@@ -821,10 +839,27 @@ window.enterDriverFromAuth = function () {
   localStorage.setItem('h2s_active_role', 'driver');
   const btnP = document.getElementById('btnRoleParent');
   const btnD = document.getElementById('btnRoleDriver');
-  if (btnP && btnD) {
-    btnP.classList.remove('active');
-    btnD.classList.add('active', 'driver-active');
-  }
+  const btnW = document.getElementById('btnRoleWalkShare');
+  [btnP, btnD, btnW].forEach((btn) => {
+    if (!btn) return;
+    btn.classList.remove('active', 'driver-active', 'walkshare-active');
+  });
+  if (btnD) btnD.classList.add('active', 'driver-active');
+  window.navigateTo('authOtp');
+};
+
+window.enterWalkShareFromAuth = function () {
+  window.appState.activeRole = 'walkshare';
+  window.appState.walkshareEntryFromAuth = true;
+  localStorage.setItem('h2s_active_role', 'walkshare');
+  const btnP = document.getElementById('btnRoleParent');
+  const btnD = document.getElementById('btnRoleDriver');
+  const btnW = document.getElementById('btnRoleWalkShare');
+  [btnP, btnD, btnW].forEach((btn) => {
+    if (!btn) return;
+    btn.classList.remove('active', 'driver-active', 'walkshare-active');
+  });
+  if (btnW) btnW.classList.add('active', 'walkshare-active');
   window.navigateTo('authOtp');
 };
 
@@ -846,6 +881,7 @@ function navScreenBucket(name) {
   if (!name) return 'unknown';
   if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'report' || name === 'rating') return 'shared';
   if (String(name).indexOf('driver') === 0) return 'driver';
+  if (String(name).indexOf('ws') === 0) return 'walkshare';
   if (name === 'splash' || String(name).indexOf('onboarding') === 0 || String(name).indexOf('auth') === 0) return 'auth';
   return 'parent';
 }
@@ -856,8 +892,9 @@ function activeNavRole() {
 
 function roleDefaultScreen(kind) {
   const role = activeNavRole();
-  if (kind === 'profile') return role === 'driver' ? 'driverProfile' : 'profile';
-  return role === 'driver' ? 'driverHome' : 'home';
+  if (role === 'walkshare') return kind === 'profile' ? 'wsProfile' : 'wsHome';
+  if (role === 'driver') return kind === 'profile' ? 'driverProfile' : 'driverHome';
+  return kind === 'profile' ? 'profile' : 'home';
 }
 
 function coerceScreenToRole(screenName) {
@@ -870,8 +907,21 @@ function coerceScreenToRole(screenName) {
     }
     return 'driverProfile';
   }
+  if (role === 'driver' && bucket === 'walkshare') return 'driverHome';
+  if (role === 'walkshare' && bucket === 'parent') {
+    if (screenName === 'home' || screenName === 'bookings' || screenName === 'tracking') return 'wsHome';
+    if (screenName === 'profile' || screenName === 'profilePersonalInfo' || screenName === 'myChildren' || screenName === 'profileLocations' || screenName === 'profileEmergency' || screenName === 'profilePayments' || screenName === 'subscription') {
+      return screenName === 'subscription' || screenName === 'profilePayments' ? 'wsSubscription' : 'wsProfile';
+    }
+    return 'wsProfile';
+  }
+  if (role === 'walkshare' && bucket === 'driver') return 'wsHome';
   if (role === 'parent' && bucket === 'driver') {
     if (screenName === 'driverHome' || screenName === 'driverRequests' || screenName === 'driverSchedule' || screenName === 'driverActiveTrip') return 'home';
+    return 'profile';
+  }
+  if (role === 'parent' && bucket === 'walkshare') {
+    if (screenName === 'wsHome' || screenName === 'wsRequests' || screenName === 'wsSchedule' || screenName === 'wsActiveWalk') return 'home';
     return 'profile';
   }
   return screenName;
@@ -898,7 +948,7 @@ window.openNestedScreen = function (screenName, evt) {
 
 window.backNested = function (fallback) {
   const role = activeNavRole();
-  // Role never changes on Back — only the explicit role switcher may flip Parent ↔ Driver.
+  // Role never changes on Back — only the explicit role switcher may flip roles.
   let target = fallback || roleDefaultScreen('profile');
   const stack = window.navReturnStack || [];
   while (stack.length) {
@@ -909,7 +959,11 @@ window.backNested = function (fallback) {
     // Skip cross-role screen ids that leaked into the stack.
     const bucket = navScreenBucket(entry.screen);
     if (role === 'driver' && bucket === 'parent') continue;
+    if (role === 'walkshare' && bucket === 'parent') continue;
+    if (role === 'walkshare' && bucket === 'driver') continue;
     if (role === 'parent' && bucket === 'driver') continue;
+    if (role === 'parent' && bucket === 'walkshare') continue;
+    if (role === 'driver' && bucket === 'walkshare') continue;
     target = entry.screen;
     break;
   }
@@ -924,7 +978,7 @@ window.navigateTo = function (screenName, isBack = false) {
   if (!isBack && currentScreen && currentScreen !== screenName) {
     window.screenHistory.push(currentScreen);
   }
-  if (!isBack && ['home', 'bookings', 'tracking', 'inbox', 'profile', 'driverHome', 'driverRequests', 'driverSchedule', 'driverProfile'].indexOf(screenName) !== -1) {
+  if (!isBack && ['home', 'bookings', 'tracking', 'inbox', 'profile', 'driverHome', 'driverRequests', 'driverSchedule', 'driverProfile', 'wsHome', 'wsRequests', 'wsSchedule', 'wsProfile'].indexOf(screenName) !== -1) {
     window.navReturnStack = [];
   }
 
@@ -1106,6 +1160,29 @@ function updateBottomTabHighlights(screenName) {
     messages: 3
   };
 
+  const walkTabMap = {
+    wsHome: 0,
+    wsRequests: 1,
+    wsSchedule: 2,
+    wsActiveWalk: 2,
+    wsWalkPrep: 2,
+    wsProfile: 4,
+    wsSetup: 4,
+    wsOnboardProfile: 4,
+    wsOnboardGroup: 4,
+    wsOnboardDocs: 4,
+    wsDocDetail: 4,
+    wsOnboardAvailability: 4,
+    wsOnboardRate: 4,
+    wsPayment: 4,
+    wsPending: 4,
+    wsSubscription: 4,
+    wsRequestDetail: 1,
+    notifications: 0,
+    inbox: 3,
+    messages: 3
+  };
+
   const parentIdx = parentTabMap[screenName];
   if (parentIdx !== undefined) {
     document.querySelectorAll('.bottom-tab-bar:not(.driver-nav-bar)').forEach(bar => {
@@ -1118,11 +1195,23 @@ function updateBottomTabHighlights(screenName) {
   }
 
   const driverIdx = driverTabMap[screenName];
-  if (driverIdx !== undefined) {
+  if (driverIdx !== undefined && activeNavRole() === 'driver') {
     document.querySelectorAll('.driver-nav-bar').forEach(bar => {
+      if (bar.id === 'inboxWalkNav') return;
       const tabs = bar.querySelectorAll('.tab-item');
       tabs.forEach((tab, idx) => {
         if (idx === driverIdx) tab.classList.add('active');
+        else tab.classList.remove('active');
+      });
+    });
+  }
+
+  const walkIdx = walkTabMap[screenName];
+  if (walkIdx !== undefined && activeNavRole() === 'walkshare') {
+    document.querySelectorAll('#screen-wsHome .driver-nav-bar, #screen-wsRequests .driver-nav-bar, #screen-wsSchedule .driver-nav-bar, #screen-wsProfile .driver-nav-bar, #inboxWalkNav').forEach(bar => {
+      const tabs = bar.querySelectorAll('.tab-item');
+      tabs.forEach((tab, idx) => {
+        if (idx === walkIdx) tab.classList.add('active');
         else tab.classList.remove('active');
       });
     });

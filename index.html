@@ -51,15 +51,19 @@
     </div>
   </aside>
 
-  <!-- Persistent Floating Role Switcher Pill (Parent ⇄ Driver Mode) -->
+  <!-- Persistent Floating Role Switcher Pill (Parent ⇄ Driver ⇄ WalkShare) -->
   <aside class="role-switcher-floating-bar" id="roleSwitcherPill" aria-label="Role Switcher">
     <button type="button" class="role-pill-btn active" id="btnRoleParent" onclick="window.switchRole('parent')">
       <i data-lucide="user" style="width:13px;height:13px;"></i>
-      <span>Parent Mode</span>
+      <span>Parent</span>
     </button>
     <button type="button" class="role-pill-btn" id="btnRoleDriver" onclick="window.switchRole('driver')">
       <i data-lucide="car" style="width:13px;height:13px;"></i>
-      <span>Driver Mode</span>
+      <span>Driver</span>
+    </button>
+    <button type="button" class="role-pill-btn" id="btnRoleWalkShare" onclick="window.switchRole('walkshare')">
+      <i data-lucide="footprints" style="width:13px;height:13px;"></i>
+      <span>WalkShare</span>
     </button>
   </aside>
 
@@ -297,21 +301,38 @@
           </div>
         </div>
 
-        <!-- Modern Driver Portal Entry CTA -->
-        <div class="driver-partner-card" onclick="window.enterDriverFromAuth()">
-          <div class="driver-partner-left">
-            <div class="driver-partner-icon">
-              <i data-lucide="car" style="width: 18px; height: 18px;"></i>
+        <!-- Partner portal entry CTAs -->
+        <div class="auth-partner-stack">
+          <div class="driver-partner-card" onclick="window.enterDriverFromAuth()">
+            <div class="driver-partner-left">
+              <div class="driver-partner-icon">
+                <i data-lucide="car" style="width: 18px; height: 18px;"></i>
+              </div>
+              <div class="driver-partner-info">
+                <h5>School car driver?</h5>
+                <p>Set up your vehicle and documents</p>
+              </div>
             </div>
-            <div class="driver-partner-info">
-              <h5>School car driver or escort?</h5>
-              <p>Set up your vehicle and documents</p>
-            </div>
+            <button type="button" class="driver-partner-pill-btn">
+              <span>Drive</span>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+            </button>
           </div>
-          <button type="button" class="driver-partner-pill-btn">
-            <span>Drive</span>
-            <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
-          </button>
+          <div class="driver-partner-card walkshare-partner-card" onclick="window.enterWalkShareFromAuth()">
+            <div class="driver-partner-left">
+              <div class="driver-partner-icon walkshare">
+                <i data-lucide="footprints" style="width: 18px; height: 18px;"></i>
+              </div>
+              <div class="driver-partner-info">
+                <h5>Walking escort?</h5>
+                <p>Set up WalkShare routes and documents</p>
+              </div>
+            </div>
+            <button type="button" class="driver-partner-pill-btn walkshare">
+              <span>WalkShare</span>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -2803,6 +2824,13 @@
         <button type="button" class="tab-item active" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
         <button type="button" class="tab-item" onclick="navigateTo('driverProfile')"><i data-lucide="user"></i><span>Profile</span></button>
       </nav>
+      <nav class="bottom-tab-bar driver-nav-bar" id="inboxWalkNav" style="display:none;">
+        <button type="button" class="tab-item" onclick="navigateTo('wsHome')"><i data-lucide="home"></i><span>Home</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsRequests')"><i data-lucide="inbox"></i><span>Requests</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsSchedule')"><i data-lucide="calendar"></i><span>Schedule</span></button>
+        <button type="button" class="tab-item active" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsProfile')"><i data-lucide="user"></i><span>Profile</span></button>
+      </nav>
       <div class="home-indicator"></div>
     </section>
 
@@ -3137,6 +3165,15 @@
                   <i data-lucide="car"></i>
                 </div>
                 <span class="menu-title-text">Switch to Driver</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
+            <div class="profile-menu-item" onclick="window.switchRole('walkshare')">
+              <div class="menu-item-left">
+                <div class="menu-icon-wrap">
+                  <i data-lucide="footprints"></i>
+                </div>
+                <span class="menu-title-text">Switch to WalkShare</span>
               </div>
               <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
             </div>
@@ -5111,6 +5148,204 @@
       <div class="home-indicator"></div>
     </section>
 
+    <!-- ================= WALKSHARE HOME ================= -->
+    <section class="screen-view drv-home-screen" id="screen-wsHome" style="background-color: #F7F8FB;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" /></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+      <div class="home-scroll-body drv-home-scroll">
+        <div class="home-header-row">
+          <div class="user-profile-group" onclick="navigateTo('wsProfile')" style="cursor:pointer;">
+            <div class="user-avatar-wrap">
+              <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="user-avatar-img" id="wsHomeAvatar" />
+            </div>
+            <div class="user-welcome-texts">
+              <h2 class="user-greeting" id="wsHomeGreeting">Hello, Sarah</h2>
+              <p class="user-question" id="wsHomeMeta">Walking School Bus Escort · 3 kids</p>
+            </div>
+          </div>
+          <button type="button" class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
+            <i data-lucide="bell"></i>
+            <span class="unread-badge-dot"></span>
+          </button>
+        </div>
+        <div id="wsHeroContainer"></div>
+        <div id="wsHomeFeed"></div>
+      </div>
+      <nav class="bottom-tab-bar driver-nav-bar">
+        <button type="button" class="tab-item active" onclick="navigateTo('wsHome')"><i data-lucide="home"></i><span>Home</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsRequests')"><i data-lucide="inbox"></i><span>Requests</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsSchedule')"><i data-lucide="calendar"></i><span>Schedule</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsProfile')"><i data-lucide="user"></i><span>Profile</span></button>
+      </nav>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= WALKSHARE REQUESTS ================= -->
+    <section class="screen-view drv-req-screen" id="screen-wsRequests" style="background-color: #F7F8FB;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" /></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+      <div class="top-bar-sticky drv-req-topbar">
+        <button type="button" class="back-btn" onclick="navigateTo('wsHome')" aria-label="Back"><i data-lucide="chevron-left"></i></button>
+        <div class="drv-req-heading">
+          <h2 class="top-bar-title">Requests</h2>
+          <p class="drv-req-sub" id="wsReqSub">New walking escort requests from families</p>
+        </div>
+        <span class="drv-req-top-spacer" aria-hidden="true"></span>
+      </div>
+      <div class="drv-req-tabs-wrap">
+        <div class="segmented-control drv-req-tabs" role="tablist" aria-label="Request status">
+          <button type="button" class="segment-btn active" id="btnWsReqNew" role="tab" aria-selected="true" onclick="switchWalkShareRequestsTab('new')">New</button>
+          <button type="button" class="segment-btn" id="btnWsReqAccepted" role="tab" aria-selected="false" onclick="switchWalkShareRequestsTab('accepted')">Accepted</button>
+          <button type="button" class="segment-btn" id="btnWsReqDeclined" role="tab" aria-selected="false" onclick="switchWalkShareRequestsTab('declined')">Declined</button>
+        </div>
+      </div>
+      <div class="screen-scroll-body drv-req-scroll" style="padding-bottom: 90px;">
+        <div id="wsRequestsListWrap" class="drv-req-list"></div>
+      </div>
+      <nav class="bottom-tab-bar driver-nav-bar">
+        <button type="button" class="tab-item" onclick="navigateTo('wsHome')"><i data-lucide="home"></i><span>Home</span></button>
+        <button type="button" class="tab-item active" onclick="navigateTo('wsRequests')"><i data-lucide="inbox"></i><span>Requests</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsSchedule')"><i data-lucide="calendar"></i><span>Schedule</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsProfile')"><i data-lucide="user"></i><span>Profile</span></button>
+      </nav>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= WALKSHARE SCHEDULE ================= -->
+    <section class="screen-view drv-sched-screen" id="screen-wsSchedule" style="background-color: #F7F8FB;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" /></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+      <div class="top-bar-sticky drv-sched-topbar">
+        <button type="button" class="back-btn" onclick="navigateTo('wsHome')" aria-label="Back"><i data-lucide="chevron-left"></i></button>
+        <h2 class="top-bar-title">Schedule</h2>
+        <button type="button" class="drv-sched-cal-btn" onclick="navigateTo('wsSchedule')" aria-label="Calendar"><i data-lucide="calendar"></i></button>
+      </div>
+      <div class="drv-sched-tabs-wrap">
+        <div class="segmented-control drv-sched-tabs">
+          <button type="button" class="segment-btn active" id="btnWsSchedToday" onclick="switchWalkShareScheduleTab('today')">Today</button>
+          <button type="button" class="segment-btn" id="btnWsSchedUpcoming" onclick="switchWalkShareScheduleTab('upcoming')">Upcoming</button>
+        </div>
+      </div>
+      <div class="screen-scroll-body drv-sched-scroll" style="padding-bottom: 90px;">
+        <div id="wsScheduleListWrap" class="drv-sched-feed"></div>
+      </div>
+      <nav class="bottom-tab-bar driver-nav-bar">
+        <button type="button" class="tab-item" onclick="navigateTo('wsHome')"><i data-lucide="home"></i><span>Home</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsRequests')"><i data-lucide="inbox"></i><span>Requests</span></button>
+        <button type="button" class="tab-item active" onclick="navigateTo('wsSchedule')"><i data-lucide="calendar"></i><span>Schedule</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsProfile')"><i data-lucide="user"></i><span>Profile</span></button>
+      </nav>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= WALKSHARE ACTIVE WALK COCKPIT ================= -->
+    <section class="screen-view" id="screen-wsActiveWalk" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" /></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button type="button" class="back-btn" onclick="navigateTo('wsHome')"><i data-lucide="chevron-left"></i></button>
+        <h2 class="top-bar-title">Active walk</h2>
+        <button type="button" class="btn-text-link" onclick="triggerEmergencyAlert()" style="color:var(--color-danger);font-weight:800;">SOS</button>
+      </div>
+
+      <div class="active-trip-cockpit ws-active-cockpit">
+        <div class="cockpit-map-visual ws-cockpit-map">
+          <div class="cockpit-route-path ws-cockpit-path" id="wsCockpitPath"></div>
+          <div class="ws-map-node start" aria-hidden="true"><i data-lucide="home"></i></div>
+          <div class="ws-map-node end" aria-hidden="true"><i data-lucide="school"></i></div>
+          <div class="cockpit-driver-pin ws-cockpit-pin" id="wsCockpitPin">
+            <i data-lucide="footprints" style="width:18px;height:18px;"></i>
+          </div>
+          <span class="live-pill-tag driver-live-chip ws-live-chip">
+            <span class="live-dot-pulse"></span>
+            <span>Live to parent</span>
+          </span>
+        </div>
+
+        <div class="screen-scroll-body" style="padding-bottom:24px;flex:1;">
+          <div class="section-header-row" style="margin-bottom:0;">
+            <span class="status-chip in-progress" id="wsMilestoneBadge">
+              <span class="status-dot"></span>
+              <span id="wsMilestoneText">On the way</span>
+            </span>
+            <span class="card-desc-muted" id="wsActiveWalkTimeLeft">07:40 AM</span>
+          </div>
+
+          <div class="trip-card">
+            <h3 class="section-heading" style="margin-bottom:0;">Current stop</h3>
+            <div>
+              <h3 class="card-title-navy" id="wsActiveTargetTitle">Home (12 Elm Street)</h3>
+              <p class="card-desc-muted" id="wsActiveTargetDesc">Children · sidewalk escort</p>
+            </div>
+            <span class="both-way-badge" id="wsActiveWalkNote">High-vis vest on. Parent sees live WalkShare status.</span>
+          </div>
+
+          <div class="drv-actions-col">
+            <button type="button" class="btn-primary" id="btnWsMilestoneAction" onclick="advanceWalkShareWalk()">
+              <span id="btnWsMilestoneText">Arrived at meetup</span>
+            </button>
+            <button type="button" class="btn-secondary-surface" id="wsWalkMessageBtn" onclick="openChatWith('PRNT-9042')">Message parent</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= WALKSHARE PROFILE ================= -->
+    <section class="screen-view" id="screen-wsProfile" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" /></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+      <div class="top-bar-sticky">
+        <button type="button" class="back-btn" onclick="navigateTo('wsHome')"><i data-lucide="chevron-left"></i></button>
+        <h2 class="top-bar-title">WalkShare Profile</h2>
+        <span style="width:26px;"></span>
+      </div>
+      <div class="screen-scroll-body" id="wsProfileFeed"></div>
+      <nav class="bottom-tab-bar driver-nav-bar">
+        <button type="button" class="tab-item" onclick="navigateTo('wsHome')"><i data-lucide="home"></i><span>Home</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsRequests')"><i data-lucide="inbox"></i><span>Requests</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('wsSchedule')"><i data-lucide="calendar"></i><span>Schedule</span></button>
+        <button type="button" class="tab-item" onclick="navigateTo('inbox')"><i data-lucide="message-square"></i><span>Messages</span></button>
+        <button type="button" class="tab-item active" onclick="navigateTo('wsProfile')"><i data-lucide="user"></i><span>Profile</span></button>
+      </nav>
+      <div class="home-indicator"></div>
+    </section>
+
   </main>
 
   <div class="mvp-series-sheet" id="seriesActionSheet" onclick="if(event.target===this) closeSeriesActionSheet()">
@@ -5127,6 +5362,7 @@
   <script type="module" src="/app.js"></script>
   <script type="module" src="/mvp-parent.js"></script>
   <script type="module" src="/mvp-driver.js"></script>
+  <script type="module" src="/mvp-walkshare.js"></script>
 </body>
 
 </html>

@@ -529,14 +529,14 @@
     const role = state().activeRole || 'parent';
     const btnP = document.getElementById('btnRoleParent');
     const btnD = document.getElementById('btnRoleDriver');
-    if (!btnP || !btnD) return;
-    if (role === 'driver') {
-      btnP.classList.remove('active');
-      btnD.classList.add('active', 'driver-active');
-    } else {
-      btnD.classList.remove('active', 'driver-active');
-      btnP.classList.add('active');
-    }
+    const btnW = document.getElementById('btnRoleWalkShare');
+    [btnP, btnD, btnW].forEach((btn) => {
+      if (!btn) return;
+      btn.classList.remove('active', 'driver-active', 'walkshare-active');
+    });
+    if (role === 'driver' && btnD) btnD.classList.add('active', 'driver-active');
+    else if (role === 'walkshare' && btnW) btnW.classList.add('active', 'walkshare-active');
+    else if (btnP) btnP.classList.add('active');
   }
 
   let parentChatHtml = null;
@@ -570,12 +570,20 @@
     const role = state().activeRole || 'parent';
     const parentNav = document.getElementById('inboxParentNav');
     const driverNav = document.getElementById('inboxDriverNav');
+    const walkNav = document.getElementById('inboxWalkNav');
     const back = document.getElementById('inboxBackBtn');
-    if (parentNav) parentNav.style.display = role === 'driver' ? 'none' : '';
+    if (parentNav) parentNav.style.display = role === 'parent' ? '' : 'none';
     if (driverNav) driverNav.style.display = role === 'driver' ? 'flex' : 'none';
-    if (back) back.setAttribute('onclick', role === 'driver' ? "backNested('driverHome')" : "backNested('home')");
+    if (walkNav) walkNav.style.display = role === 'walkshare' ? 'flex' : 'none';
+    if (back) {
+      const home = role === 'driver' ? 'driverHome' : role === 'walkshare' ? 'wsHome' : 'home';
+      back.setAttribute('onclick', `backNested('${home}')`);
+    }
     const notifBack = document.querySelector('#screen-notifications .back-btn');
-    if (notifBack) notifBack.setAttribute('onclick', role === 'driver' ? "backNested('driverHome')" : "backNested('home')");
+    if (notifBack) {
+      const home = role === 'driver' ? 'driverHome' : role === 'walkshare' ? 'wsHome' : 'home';
+      notifBack.setAttribute('onclick', `backNested('${home}')`);
+    }
     const msgBack = document.querySelector('#screen-messages .back-btn');
     if (msgBack) msgBack.setAttribute('onclick', "backNested('inbox')");
     const sharedIds = ['faq', 'legal', 'about', 'privacy', 'contactSupport'];
@@ -588,7 +596,7 @@
       const sharedBack = document.querySelector(`#screen-${id} .back-btn`);
       if (sharedBack) {
         sharedBack.setAttribute('type', 'button');
-        const fallback = role === 'driver' ? 'driverProfile' : 'profile';
+        const fallback = role === 'driver' ? 'driverProfile' : role === 'walkshare' ? 'wsProfile' : 'profile';
         sharedBack.setAttribute('onclick', `event.preventDefault();event.stopPropagation();backNested('${fallback}')`);
       }
       const title = document.querySelector(`#screen-${id} .top-bar-title`);
@@ -634,13 +642,15 @@
   };
 
   window.switchRole = function (role) {
-    const next = role === 'driver' ? 'driver' : 'parent';
+    const next = role === 'driver' ? 'driver' : role === 'walkshare' ? 'walkshare' : 'parent';
     if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
     state().activeRole = next;
     localStorage.setItem('h2s_active_role', next);
     applyRoleChrome();
     // replaceState landing so Back cannot re-enter the previous role's hash trail
-    window.navigateTo(next === 'driver' ? window.getDriverLanding() : 'home', true);
+    if (next === 'driver') window.navigateTo(window.getDriverLanding(), true);
+    else if (next === 'walkshare' && typeof window.getWalkShareLanding === 'function') window.navigateTo(window.getWalkShareLanding(), true);
+    else window.navigateTo('home', true);
   };
 
   window.leaveDriverGate = function () {
@@ -2997,6 +3007,13 @@
           <div class="menu-item-left">
             <div class="menu-icon-wrap"><i data-lucide="users"></i></div>
             <span class="menu-title-text">Switch to Parent</span>
+          </div>
+          ${chevron}
+        </button>
+        <button type="button" class="profile-menu-item" onclick="window.switchRole('walkshare')">
+          <div class="menu-item-left">
+            <div class="menu-icon-wrap"><i data-lucide="footprints"></i></div>
+            <span class="menu-title-text">Switch to WalkShare</span>
           </div>
           ${chevron}
         </button>
