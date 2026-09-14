@@ -277,33 +277,91 @@
           </div>
 
           <!-- Mode 1: Email & Password Form (Primary per RFP Sec 4.1) -->
-          <form id="authEmailForm" onsubmit="event.preventDefault(); window.handleEmailLoginOrSignup();" style="display: flex; flex-direction: column; gap: 10px;">
-            <div class="form-group" style="margin-bottom: 0;">
-              <label class="form-label" style="font-size: 11px;">Email Address</label>
-              <div class="input-with-icon">
-                <i data-lucide="mail" style="width:16px;height:16px;color:#94A3B8;"></i>
-                <input type="email" id="authEmailInput" class="form-input" placeholder="parent@example.com" value="sadia.khan@example.com" required />
+          <div id="authEmailContainer" style="display: flex; flex-direction: column; gap: 10px;">
+            
+            <!-- 1A. Email Sign In View -->
+            <form id="authEmailSignInForm" onsubmit="event.preventDefault(); window.handleEmailSignIn();" style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" style="font-size: 11px;">Email Address</label>
+                <div class="input-with-icon">
+                  <i data-lucide="mail" style="width:16px;height:16px;color:#94A3B8;"></i>
+                  <input type="email" id="authEmailInput" class="form-input" placeholder="parent@example.com" value="sadia.khan@example.com" required />
+                </div>
               </div>
-            </div>
 
-            <div class="form-group" style="margin-bottom: 0;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                <label class="form-label" style="font-size: 11px; margin-bottom: 0;">Password</label>
-                <button type="button" onclick="window.openForgotPasswordModal()" style="background: none; border: none; color: var(--color-primary); font-size: 11px; font-weight: 700; cursor: pointer; padding: 0;">
-                  Forgot?
+              <div class="form-group" style="margin-bottom: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                  <label class="form-label" style="font-size: 11px; margin-bottom: 0;">Password</label>
+                  <button type="button" onclick="window.openForgotPasswordModal()" style="background: none; border: none; color: var(--color-primary); font-size: 11px; font-weight: 700; cursor: pointer; padding: 0;">
+                    Forgot?
+                  </button>
+                </div>
+                <div class="input-with-icon">
+                  <i data-lucide="lock" style="width:16px;height:16px;color:#94A3B8;"></i>
+                  <input type="password" id="authPasswordInput" class="form-input" placeholder="••••••••" value="Secur3P@ssword" required />
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary btn-auth-continue" style="margin-top: 4px;">
+                <span>Sign In</span>
+                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+              </button>
+
+              <div style="text-align: center; margin-top: 4px; font-size: 12px; color: #64748B;">
+                <span>Don't have an account? </span>
+                <button type="button" onclick="window.toggleAuthViewMode('signup')" style="background:none; border:none; color:var(--color-primary); font-weight:800; cursor:pointer; padding:0; text-decoration:underline;">
+                  Create Account
                 </button>
               </div>
-              <div class="input-with-icon">
-                <i data-lucide="lock" style="width:16px;height:16px;color:#94A3B8;"></i>
-                <input type="password" id="authPasswordInput" class="form-input" placeholder="••••••••" value="Secur3P@ssword" required />
-              </div>
-            </div>
+            </form>
 
-            <button type="submit" class="btn-primary btn-auth-continue" style="margin-top: 4px;">
-              <span>Continue with Email</span>
-              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
-            </button>
-          </form>
+            <!-- 1B. Email Sign Up View (Account Creation) -->
+            <form id="authEmailSignUpForm" onsubmit="event.preventDefault(); window.handleEmailSignUp();" style="display: none; flex-direction: column; gap: 10px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" style="font-size: 11px;">Parent Full Name</label>
+                <div class="input-with-icon">
+                  <i data-lucide="user" style="width:16px;height:16px;color:#94A3B8;"></i>
+                  <input type="text" id="authSignupNameInput" class="form-input" placeholder="e.g. Sadia Khan" value="Sadia Khan" required />
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" style="font-size: 11px;">Email Address</label>
+                <div class="input-with-icon">
+                  <i data-lucide="mail" style="width:16px;height:16px;color:#94A3B8;"></i>
+                  <input type="email" id="authSignupEmailInput" class="form-input" placeholder="parent@example.com" value="sadia.khan@example.com" required />
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" style="font-size: 11px;">Create Password</label>
+                <div class="input-with-icon">
+                  <i data-lucide="lock" style="width:16px;height:16px;color:#94A3B8;"></i>
+                  <input type="password" id="authSignupPasswordInput" class="form-input" placeholder="Min. 8 characters" value="Secur3P@ssword" required />
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: flex-start; gap: 8px; margin-top: 2px;">
+                <input type="checkbox" id="authSignupPipedaCheck" checked required style="margin-top: 2px; accent-color: var(--color-primary); cursor: pointer;" />
+                <label for="authSignupPipedaCheck" style="font-size: 11px; color: #64748B; line-height: 1.35; cursor: pointer;">
+                  I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">PIPEDA Parent Consent</a> &amp; Child Privacy Terms.
+                </label>
+              </div>
+
+              <button type="submit" class="btn-primary btn-auth-continue" style="margin-top: 4px;">
+                <span>Create Account &amp; Continue</span>
+                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+              </button>
+
+              <div style="text-align: center; margin-top: 4px; font-size: 12px; color: #64748B;">
+                <span>Already have an account? </span>
+                <button type="button" onclick="window.toggleAuthViewMode('signin')" style="background:none; border:none; color:var(--color-primary); font-weight:800; cursor:pointer; padding:0; text-decoration:underline;">
+                  Sign In
+                </button>
+              </div>
+            </form>
+
+          </div>
 
           <!-- Mode 2: Phone Number Form -->
           <form id="authPhoneForm" onsubmit="event.preventDefault(); navigateTo('authOtp');" style="display: none; flex-direction: column; gap: 10px;">
@@ -321,6 +379,9 @@
               <span>Continue with Phone / SMS</span>
               <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
             </button>
+            <div style="text-align: center; font-size: 11px; color: #64748B;">
+              New accounts will be registered automatically upon SMS verification.
+            </div>
           </form>
 
           <div class="auth-disclaimer" style="margin-top: 10px;">

@@ -5886,18 +5886,18 @@ window.setDistanceRadius = function (km, btn) {
 };
 
 window.switchAuthMethod = function (method) {
-  const emailForm = document.getElementById('authEmailForm');
+  const emailContainer = document.getElementById('authEmailContainer');
   const phoneForm = document.getElementById('authPhoneForm');
   const tabEmail = document.getElementById('authTabEmail');
   const tabPhone = document.getElementById('authTabPhone');
 
   if (method === 'email') {
-    if (emailForm) emailForm.style.display = 'flex';
+    if (emailContainer) emailContainer.style.display = 'flex';
     if (phoneForm) phoneForm.style.display = 'none';
     if (tabEmail) tabEmail.classList.add('active');
     if (tabPhone) tabPhone.classList.remove('active');
   } else {
-    if (emailForm) emailForm.style.display = 'none';
+    if (emailContainer) emailContainer.style.display = 'none';
     if (phoneForm) phoneForm.style.display = 'flex';
     if (tabEmail) tabEmail.classList.remove('active');
     if (tabPhone) tabPhone.classList.add('active');
@@ -5905,9 +5905,46 @@ window.switchAuthMethod = function (method) {
   if (window.lucide) window.lucide.createIcons();
 };
 
-window.handleEmailLoginOrSignup = function () {
-  const email = document.getElementById('authEmailInput')?.value || 'user@example.com';
+window.toggleAuthViewMode = function (mode) {
+  const signInForm = document.getElementById('authEmailSignInForm');
+  const signUpForm = document.getElementById('authEmailSignUpForm');
+  
+  if (mode === 'signup') {
+    if (signInForm) signInForm.style.display = 'none';
+    if (signUpForm) signUpForm.style.display = 'flex';
+  } else {
+    if (signInForm) signInForm.style.display = 'flex';
+    if (signUpForm) signUpForm.style.display = 'none';
+  }
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.handleEmailSignIn = function () {
+  const email = document.getElementById('authEmailInput')?.value || 'sadia.khan@example.com';
   window.appState.user.email = email;
+  if (typeof window.showToast === 'function') {
+    window.showToast('✓ Welcome back! Signed in successfully.', 'success');
+  }
+  window.navigateTo('home');
+};
+
+window.handleEmailSignUp = function () {
+  const name = document.getElementById('authSignupNameInput')?.value || 'Sadia Khan';
+  const email = document.getElementById('authSignupEmailInput')?.value || 'sadia.khan@example.com';
+  const pipedaChecked = document.getElementById('authSignupPipedaCheck')?.checked;
+  
+  if (!pipedaChecked) {
+    if (typeof window.showToast === 'function') {
+      window.showToast('Please accept the PIPEDA Parent Consent to continue', 'error');
+    }
+    return;
+  }
+  
+  window.appState.user.name = name;
+  window.appState.user.email = email;
+  if (typeof window.showToast === 'function') {
+    window.showToast('✓ Account created! Setting up your family profile.', 'success');
+  }
   window.navigateTo('authProfile');
 };
 
