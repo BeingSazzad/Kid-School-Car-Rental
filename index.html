@@ -51,20 +51,19 @@
     </div>
   </aside>
 
-  <!-- Persistent Floating Role Switcher Pill (Parent ⇄ Driver ⇄ WalkShare) -->
-  <aside class="role-switcher-floating-bar" id="roleSwitcherPill" aria-label="Role Switcher">
-    <button type="button" class="role-pill-btn active" id="btnRoleParent" onclick="window.switchRole('parent')">
-      <i data-lucide="user" style="width:13px;height:13px;"></i>
-      <span>Parent</span>
-    </button>
-    <button type="button" class="role-pill-btn" id="btnRoleDriver" onclick="window.switchRole('driver')">
-      <i data-lucide="car" style="width:13px;height:13px;"></i>
-      <span>Driver</span>
-    </button>
-    <button type="button" class="role-pill-btn" id="btnRoleWalkShare" onclick="window.switchRole('walkshare')">
-      <i data-lucide="footprints" style="width:13px;height:13px;"></i>
-      <span>WalkShare</span>
-    </button>
+  <!-- Floating Dynamic Role Capsule (Dynamic Island Style) -->
+  <aside class="role-capsule-island" id="roleCapsuleIsland" aria-label="Role Switcher" onclick="window.openRoleSwitcherModal()">
+    <div class="role-capsule-content" id="roleCapsuleContent">
+      <span class="role-status-dot active"></span>
+      <div class="role-capsule-icon-wrap" id="roleCapsuleIconWrap">
+        <i data-lucide="user" id="roleCapsuleIcon" style="width:14px;height:14px;"></i>
+      </div>
+      <div class="role-capsule-text">
+        <span class="role-capsule-title" id="roleCapsuleTitle">Parent Mode</span>
+        <span class="role-capsule-badge" id="roleCapsuleBadge">Guardian</span>
+      </div>
+      <i data-lucide="chevron-down" class="role-capsule-chevron" style="width:13px;height:13px;margin-left:2px;opacity:0.7;"></i>
+    </div>
   </aside>
 
   <!-- Centered 430px Mobile Container -->
@@ -265,9 +264,49 @@
         </div>
 
         <div class="auth-card-box">
-          <h3 class="form-title">Enter your mobile number</h3>
+          <!-- Auth Method Tab Switcher (RFP Section 4.1 Email Primary) -->
+          <div class="clean-pill-toggle" style="margin-bottom: 14px;">
+            <button type="button" class="clean-pill-btn active" id="authTabEmail" onclick="window.switchAuthMethod('email')">
+              <i data-lucide="mail" style="width:13px;height:13px;"></i>
+              <span>Email &amp; Password</span>
+            </button>
+            <button type="button" class="clean-pill-btn" id="authTabPhone" onclick="window.switchAuthMethod('phone')">
+              <i data-lucide="smartphone" style="width:13px;height:13px;"></i>
+              <span>Phone / SMS</span>
+            </button>
+          </div>
 
-          <form onsubmit="event.preventDefault(); navigateTo('authOtp');">
+          <!-- Mode 1: Email & Password Form (Primary per RFP Sec 4.1) -->
+          <form id="authEmailForm" onsubmit="event.preventDefault(); window.handleEmailLoginOrSignup();" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" style="font-size: 11px;">Email Address</label>
+              <div class="input-with-icon">
+                <i data-lucide="mail" style="width:16px;height:16px;color:#94A3B8;"></i>
+                <input type="email" id="authEmailInput" class="form-input" placeholder="parent@example.com" value="sadia.khan@example.com" required />
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <label class="form-label" style="font-size: 11px; margin-bottom: 0;">Password</label>
+                <button type="button" onclick="window.openForgotPasswordModal()" style="background: none; border: none; color: var(--color-primary); font-size: 11px; font-weight: 700; cursor: pointer; padding: 0;">
+                  Forgot?
+                </button>
+              </div>
+              <div class="input-with-icon">
+                <i data-lucide="lock" style="width:16px;height:16px;color:#94A3B8;"></i>
+                <input type="password" id="authPasswordInput" class="form-input" placeholder="••••••••" value="Secur3P@ssword" required />
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary btn-auth-continue" style="margin-top: 4px;">
+              <span>Continue with Email</span>
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </button>
+          </form>
+
+          <!-- Mode 2: Phone Number Form -->
+          <form id="authPhoneForm" onsubmit="event.preventDefault(); navigateTo('authOtp');" style="display: none; flex-direction: column; gap: 10px;">
             <div class="phone-input-row">
               <div class="country-pill country-picker" title="Country: Canada (+1)">
                 <span class="flag-icon">🇨🇦</span>
@@ -279,15 +318,15 @@
             </div>
 
             <button type="submit" class="btn-primary btn-auth-continue">
-              <span>Continue</span>
+              <span>Continue with Phone / SMS</span>
               <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
             </button>
-
-            <div class="auth-disclaimer">
-              <i data-lucide="lock" style="width:13px;height:13px;color:#94A3B8;"></i>
-              <span>We'll send a one-time code to verify your number.</span>
-            </div>
           </form>
+
+          <div class="auth-disclaimer" style="margin-top: 10px;">
+            <i data-lucide="shield-check" style="width:13px;height:13px;color:#16A34A;"></i>
+            <span>Encrypted transmission · PIPEDA compliant child safety</span>
+          </div>
         </div>
 
         <!-- Privacy Notice Card -->
@@ -452,6 +491,16 @@
               <i data-lucide="chevron-down" class="select-chevron"
                 style="width:18px;height:18px;color:currentColor;"></i>
             </div>
+          </div>
+
+          <!-- PIPEDA Parent Consent Form Checkbox (Mandatory Child Data & GPS Consent) -->
+          <div class="form-group" style="margin-top: 14px; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px 14px;">
+            <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; user-select: none;">
+              <input type="checkbox" id="authParentConsentCheckbox" checked required style="width: 18px; height: 18px; margin-top: 2px; accent-color: var(--color-primary); cursor: pointer;" />
+              <span style="font-size: 11.5px; color: #334155; line-height: 1.45;">
+                I agree to the <strong>Terms</strong>, <strong>Privacy Policy</strong> and give my explicit <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Parent Consent for Child Data &amp; Real-time GPS Tracking</a> pursuant to PIPEDA standards.
+              </span>
+            </label>
           </div>
 
           <div class="bottom-action-wrap">
@@ -655,7 +704,31 @@
           </button>
         </div>
 
-        <div class="sub-actions">
+        <!-- Promo / Discount Code Box -->
+        <div class="sub-promo-box" style="margin-top: 12px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 10px 12px;">
+          <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+            <span>Have a Promo / School Discount Code?</span>
+            <span id="promoBadgeSuccess" style="display:none; color:#16A34A; font-weight:800; font-size:11px;">✓ Applied 20% OFF</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="inputPromoCode" placeholder="Enter code (e.g. SCHOOL20)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 13px; font-weight: 600; text-transform: uppercase;" />
+            <button type="button" onclick="window.applyParentPromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;">
+              Apply
+            </button>
+          </div>
+        </div>
+
+        <!-- Supported Payment Methods (Stripe, Apple Pay, Google Pay, Cards) -->
+        <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px;">
+          <span style="font-size: 11px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: #1E293B;">
+            <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">💳 Cards</span>
+            <span style="background:#000; color:#fff; padding:2px 6px; border-radius:4px;"> Pay</span>
+            <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">G Pay</span>
+          </div>
+        </div>
+
+        <div class="sub-actions" style="margin-top: 14px;">
           <button type="button" class="btn-primary" id="btnContinueTrial" onclick="continueWithParentTrial()">
             <span id="btnContinueTrialLabel">Continue with free trial</span>
           </button>
@@ -664,7 +737,10 @@
         </div>
 
         <div class="sub-history-card">
-          <h3 class="sub-section-title">Billing history</h3>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+            <h3 class="sub-section-title" style="margin:0;">Billing history</h3>
+            <button type="button" onclick="window.openSubscriptionReceiptModal()" style="background:none; border:none; color:var(--color-primary); font-size:11.5px; font-weight:700; cursor:pointer; text-decoration:underline;">View Receipt</button>
+          </div>
           <div id="subscriptionHistoryList"></div>
         </div>
       </div>
@@ -891,12 +967,12 @@
           </button>
           <div class="ph-quick-row" role="navigation" aria-label="Quick links">
             <button type="button" class="ph-quick-item" onclick="openNestedScreen('myChildren')">
-              <span class="ph-quick-ico"><i data-lucide="users"></i></span>
+              <span class="ph-quick-ico is-children"><i data-lucide="users"></i></span>
               <span class="ph-quick-label">My Children</span>
             </button>
             <span class="ph-quick-divider" aria-hidden="true"></span>
             <button type="button" class="ph-quick-item" onclick="navigateTo('bookings')">
-              <span class="ph-quick-ico"><i data-lucide="calendar"></i></span>
+              <span class="ph-quick-ico is-bookings"><i data-lucide="calendar"></i></span>
               <span class="ph-quick-label">My Bookings</span>
             </button>
             <span class="ph-quick-divider" aria-hidden="true"></span>
@@ -1629,15 +1705,45 @@
       </div>
 
       <div class="screen-scroll-body" style="padding-bottom: 24px;">
-        <div class="mvp-search-toolbar">
-          <div class="clean-pill-toggle" style="flex: 1;">
-            <button type="button" class="clean-pill-btn active" id="searchViewList" onclick="setProviderSearchView('list')">List</button>
-            <button type="button" class="clean-pill-btn" id="searchViewMap" onclick="setProviderSearchView('map')">Map</button>
+        <div class="mvp-search-toolbar" style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div class="clean-pill-toggle" style="flex: 1;">
+              <button type="button" class="clean-pill-btn active" id="searchViewList" onclick="setProviderSearchView('list')">List</button>
+              <button type="button" class="clean-pill-btn" id="searchViewMap" onclick="setProviderSearchView('map')">Map</button>
+            </div>
+            <button type="button" onclick="window.toggleAdvancedSearchFilterDrawer()" style="height:36px; padding:0 12px; background:#F1F5F9; border:1px solid #CBD5E1; border-radius:10px; font-size:12px; font-weight:700; color:#334155; display:flex; align-items:center; gap:5px; cursor:pointer;">
+              <i data-lucide="sliders-horizontal" style="width:14px;height:14px;"></i>
+              <span>Filters</span>
+            </button>
+          </div>
+
+          <!-- Advanced Collapsible Search Filter Tray (RFP Section 4.2) -->
+          <div id="advancedSearchFilterTray" style="display:none; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px; padding:12px; font-size:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <strong style="font-size:12.5px; color:#0F172A;">Distance Radius</strong>
+              <span id="radiusFilterLabel" style="font-weight:700; color:var(--color-primary);">5 km radius</span>
+            </div>
+            <div style="display:flex; gap:6px; margin-bottom:10px;">
+              <button type="button" class="mvp-filter-chip active" onclick="window.setDistanceRadius(5, this)">5 km</button>
+              <button type="button" class="mvp-filter-chip" onclick="window.setDistanceRadius(10, this)">10 km</button>
+              <button type="button" class="mvp-filter-chip" onclick="window.setDistanceRadius(25, this)">25 km</button>
+              <button type="button" class="mvp-filter-chip" onclick="window.setDistanceRadius(0, this)">Any</button>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <strong style="font-size:12.5px; color:#0F172A;">Trip Timing</strong>
+            </div>
+            <div style="display:flex; gap:6px; margin-bottom:10px;">
+              <button type="button" class="mvp-filter-chip active" onclick="window.setTripTimingFilter('all', this)">All</button>
+              <button type="button" class="mvp-filter-chip" onclick="window.setTripTimingFilter('morning', this)">Morning Drop-off</button>
+              <button type="button" class="mvp-filter-chip" onclick="window.setTripTimingFilter('afternoon', this)">Afternoon Pick-up</button>
+            </div>
           </div>
         </div>
+
         <div class="mvp-filter-row" id="providerFilterRow">
           <button type="button" class="mvp-filter-chip active" data-filter="all" onclick="applyProviderCompactFilter('all', this)">All matches</button>
-          <button type="button" class="mvp-filter-chip" data-filter="distance" onclick="applyProviderCompactFilter('distance', this)">Nearest</button>
+          <button type="button" class="mvp-filter-chip" data-filter="distance" onclick="applyProviderCompactFilter('distance', this)">Nearest (&lt; 2km)</button>
           <button type="button" class="mvp-filter-chip" data-filter="rating" onclick="applyProviderCompactFilter('rating', this)">4.8+ rating</button>
           <button type="button" class="mvp-filter-chip" data-filter="verified" onclick="applyProviderCompactFilter('verified', this)">Verified only</button>
         </div>
@@ -2871,6 +2977,12 @@
       </div>
 
       <div class="chat-container">
+        <!-- Masked Contact Safety Banner (PIPEDA & Child Protection) -->
+        <div style="background: #F0FDF4; border-bottom: 1px solid #BBF7D0; padding: 8px 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; font-weight: 700; color: #15803D; text-align: center;">
+          <i data-lucide="shield-check" style="width: 14px; height: 14px; flex-shrink: 0; color: #16A34A;"></i>
+          <span>Masked Chat: Direct phone numbers &amp; emails remain hidden for child safety.</span>
+        </div>
+
         <div class="chat-messages-area" id="chatStream">
           <div class="system-status-bubble">
             <i data-lucide="clock" style="width:14px;height:14px;"></i>
@@ -3094,6 +3206,19 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
+          <div class="profile-menu-item" onclick="openNestedScreen('profileNotifications', event)">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap">
+                <i data-lucide="bell"></i>
+              </div>
+              <div>
+                <span class="menu-title-text">Notification Channels</span>
+                <span style="display:block; font-size:11px; color:#64748B;">Push, Twilio SMS &amp; Email</span>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+          </div>
+
           <div class="profile-menu-item" onclick="openNestedScreen('profilePayments', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
@@ -3156,25 +3281,18 @@
         </div>
 
         <div style="margin-top: 8px;">
-          <div class="profile-menu-section" style="margin-bottom: 12px;">
-            <div class="profile-menu-item" onclick="window.switchRole('driver')">
-              <div class="menu-item-left">
-                <div class="menu-icon-wrap">
-                  <i data-lucide="car"></i>
-                </div>
-                <span class="menu-title-text">Switch to Driver</span>
+          <!-- Modern Role / Workspace Switcher Card -->
+          <div class="profile-workspace-card" onclick="window.openRoleSwitcherModal()">
+            <div class="pwc-left">
+              <div class="pwc-icon-wrap parent">
+                <i data-lucide="layers" style="width:18px;height:18px;"></i>
               </div>
-              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
-            </div>
-            <div class="profile-menu-item" onclick="window.switchRole('walkshare')">
-              <div class="menu-item-left">
-                <div class="menu-icon-wrap">
-                  <i data-lucide="footprints"></i>
-                </div>
-                <span class="menu-title-text">Switch to WalkShare</span>
+              <div class="pwc-info">
+                <div class="pwc-title">Active Persona: Parent</div>
+                <div class="pwc-subtitle">Switch to Driver, WalkShare or Admin</div>
               </div>
-              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
             </div>
+            <button type="button" class="pwc-action-btn">Switch Role ▾</button>
           </div>
           <button id="logoutBtn"
             onclick="navigateTo('authWelcome')"
@@ -3285,9 +3403,18 @@
             placeholder="Leave an optional comment for other parents..."></textarea>
         </div>
 
+        <!-- Low Rating Auto-Flag Banner (< 3.5 Stars per RFP Section 4.8) -->
+        <div id="lowRatingAutoFlagNotice" style="display: none; width: 100%; background: #FEF3C7; border: 1.5px solid #FCD34D; border-radius: 10px; padding: 10px 12px; font-size: 11.5px; color: #92400E; text-align: left; line-height: 1.4;">
+          <strong style="display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
+            <i data-lucide="alert-triangle" style="width:14px;height:14px;color:#D97706;"></i>
+            Administrator Safety Alert Triggered
+          </strong>
+          Ratings below 3.5 stars are automatically submitted to the Home2School Compliance Queue for safety investigation.
+        </div>
+
         <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
           <button class="btn-primary"
-            onclick="alert('Thank you for rating your provider! ⭐'); navigateTo('home');">Submit Review</button>
+            onclick="window.handleParentReviewSubmit()">Submit Review</button>
           <button class="btn-secondary-link" onclick="navigateTo('home')">Skip for now</button>
         </div>
       </div>
@@ -3564,9 +3691,24 @@
         </div>
 
         <!-- Save Action -->
-        <div style="margin-top: 10px; margin-bottom: 24px;">
+        <div style="margin-top: 10px; margin-bottom: 16px;">
           <button class="btn-primary" onclick="savePersonalInfo()">Save Changes</button>
           <p style="text-align: center; font-size: 11.5px; color: #64748B; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 4px;"><i data-lucide="lock" style="width:12px;height:12px;color:#94A3B8;"></i><span>Data securely synced with verified driver handoffs only.</span></p>
+        </div>
+
+        <!-- PIPEDA Data Privacy & Right to Erasure -->
+        <div style="background: #FFF1F2; border: 1.5px solid #FECDD3; border-radius: 12px; padding: 14px; margin-bottom: 24px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <i data-lucide="shield-alert" style="width: 16px; height: 16px; color: #E11D48;"></i>
+            <strong style="font-size: 13px; color: #9F1239;">Data Privacy &amp; Account Control</strong>
+          </div>
+          <p style="font-size: 11.5px; color: #881337; line-height: 1.4; margin-bottom: 12px;">
+            In accordance with PIPEDA (Canada's Privacy Law), you have the right to permanently erase your profile, child records, and transit location logs.
+          </p>
+          <button type="button" onclick="window.openDeleteAccountModal()" style="width: 100%; height: 38px; background: #FFFFFF; border: 1.5px solid #E11D48; color: #E11D48; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+            <span>Delete Account &amp; Erase Data</span>
+          </button>
         </div>
       </div>
 
@@ -5344,6 +5486,236 @@
       <div class="home-indicator"></div>
     </section>
 
+    <!-- ================= 28. NOTIFICATION PREFERENCES SCREEN (RFP Sec 4.9) ================= -->
+    <section class="screen-view" id="screen-profileNotifications" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button type="button" class="back-btn" onclick="backNested('profile')">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Notification Channels</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body" style="padding-bottom: 28px;">
+        <p style="font-size:12.5px; color:#64748B; margin-bottom:14px; line-height:1.4;">
+          Configure how Home2School delivers real-time transit milestones, booking confirmations, and child safety alerts.
+        </p>
+
+        <!-- 3 Delivery Channels (Section 4.9) -->
+        <div class="profile-menu-section" style="margin-bottom:16px;">
+          <div class="profile-menu-item" style="cursor:default;">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap" style="background:#EFF6FF; color:#2563EB;"><i data-lucide="smartphone"></i></div>
+              <div>
+                <strong style="font-size:13px; color:#0F172A;">Mobile Push Notifications</strong>
+                <span style="display:block; font-size:11px; color:#64748B;">Instant in-app milestone alerts</span>
+              </div>
+            </div>
+            <input type="checkbox" checked style="width:18px; height:18px; accent-color:var(--color-primary); cursor:pointer;" />
+          </div>
+
+          <div class="profile-menu-item" style="cursor:default;">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap" style="background:#F0FDF4; color:#16A34A;"><i data-lucide="message-circle"></i></div>
+              <div>
+                <strong style="font-size:13px; color:#0F172A;">Twilio SMS Notifications</strong>
+                <span style="display:block; font-size:11px; color:#64748B;">To +1 (416) 555-0192</span>
+              </div>
+            </div>
+            <input type="checkbox" checked style="width:18px; height:18px; accent-color:var(--color-primary); cursor:pointer;" />
+          </div>
+
+          <div class="profile-menu-item" style="cursor:default;">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap" style="background:#FFF7ED; color:#EA580C;"><i data-lucide="mail"></i></div>
+              <div>
+                <strong style="font-size:13px; color:#0F172A;">Email Notifications (SendGrid)</strong>
+                <span style="display:block; font-size:11px; color:#64748B;">Invoices &amp; schedule summaries</span>
+              </div>
+            </div>
+            <input type="checkbox" checked style="width:18px; height:18px; accent-color:var(--color-primary); cursor:pointer;" />
+          </div>
+        </div>
+
+        <!-- Triggers List -->
+        <h4 style="font-size:13px; font-weight:800; color:#0F172A; margin:0 0 8px;">Active Safety Triggers</h4>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:12px; font-size:12px; display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span>Driver/WalkShare on the way</span>
+            <span style="color:#16A34A; font-weight:700;">✓ Active</span>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span>Child picked up &amp; buckled</span>
+            <span style="color:#16A34A; font-weight:700;">✓ Active</span>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span>Child dropped off at school</span>
+            <span style="color:#16A34A; font-weight:700;">✓ Active</span>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span>Booking accepted / modified</span>
+            <span style="color:#16A34A; font-weight:700;">✓ Active</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn-primary" style="margin-top:16px;" onclick="alert('Notification preferences updated successfully!'); backNested('profile');">Save Preferences</button>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 29. ADMINISTRATOR WEB PORTAL (RFP Sec 4.10) ================= -->
+    <section class="screen-view" id="screen-adminPortal" style="background-color: #F8FAFC;">
+      <div class="status-bar dark" style="background:#0F172A; color:#FFFFFF;">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky" style="background:#0F172A; color:#FFFFFF; border-bottom:1px solid #1E293B;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:28px; height:28px; border-radius:6px; background:#38BDF8; display:flex; align-items:center; justify-content:center; color:#0F172A;">
+            <i data-lucide="shield" style="width:16px; height:16px;"></i>
+          </div>
+          <div>
+            <h2 class="top-bar-title" style="color:#FFFFFF; font-size:14px;">Admin Web Portal</h2>
+            <span style="font-size:10px; color:#94A3B8;">Staff Operations Dashboard</span>
+          </div>
+        </div>
+        <button type="button" class="btn-text-link" onclick="window.switchRole('parent')" style="color:#38BDF8; font-size:11.5px; font-weight:700;">Exit Portal</button>
+      </div>
+
+      <div class="screen-scroll-body" style="padding: 12px 14px 30px;">
+        <!-- KPI Analytics Overview (RFP Sec 4.10) -->
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-bottom:12px;">
+          <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:10px;">
+            <span style="font-size:11px; color:#64748B; font-weight:700;">Total Registered</span>
+            <div style="font-size:18px; font-weight:900; color:#0F172A; margin-top:2px;">530 Users</div>
+            <span style="font-size:10px; color:#16A34A; font-weight:700;">428 Parents · 102 Providers</span>
+          </div>
+          <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:10px;">
+            <span style="font-size:11px; color:#64748B; font-weight:700;">Live Ongoing Trips</span>
+            <div style="font-size:18px; font-weight:900; color:#2563EB; margin-top:2px; display:flex; align-items:center; gap:5px;">
+              <span class="live-dot-pulse" style="width:8px; height:8px;"></span> 14 Active
+            </div>
+            <span style="font-size:10px; color:#64748B;">GPS Streaming</span>
+          </div>
+        </div>
+
+        <!-- Admin Subsections Navigator -->
+        <div class="clean-pill-toggle" style="margin-bottom:12px; overflow-x:auto;">
+          <button type="button" class="clean-pill-btn active" id="adminTabKyc" onclick="window.showAdminSection('kyc', this)">Verification Queue (2)</button>
+          <button type="button" class="clean-pill-btn" id="adminTabTrips" onclick="window.showAdminSection('trips', this)">Live Map</button>
+          <button type="button" class="clean-pill-btn" id="adminTabReviews" onclick="window.showAdminSection('reviews', this)">Flagged (1)</button>
+          <button type="button" class="clean-pill-btn" id="adminTabPricing" onclick="window.showAdminSection('pricing', this)">Pricing Config</button>
+        </div>
+
+        <!-- Section A: Verification Queue -->
+        <div id="adminSectionKyc" style="display:flex; flex-direction:column; gap:10px;">
+          <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div style="display:flex; gap:8px;">
+                <img src="/assets/avatar_tariq.jpg" style="width:36px; height:36px; border-radius:50%;" />
+                <div>
+                  <strong style="font-size:13px; color:#0F172A;">Tariq Ahmed (Driver)</strong>
+                  <span style="display:block; font-size:11px; color:#64748B;">Toyota Sienna · Ontario Plate SCH-4091</span>
+                </div>
+              </div>
+              <span style="background:#FEF3C7; color:#B45309; font-size:10px; font-weight:800; padding:2px 6px; border-radius:4px;">Pending VSC</span>
+            </div>
+            <div style="font-size:11.5px; color:#475569; margin:8px 0; background:#F8FAFC; padding:6px 8px; border-radius:6px;">
+              ✓ Licence G · ✓ Insurance · ✓ Registration · ⏳ Vulnerable Sector Check (Reviewing)
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="btn-primary" style="height:32px; font-size:11.5px; padding:0 10px;" onclick="alert('Provider Approved & Verified Badge Issued! ✓'); this.parentElement.innerHTML='<span style=\'color:#16A34A; font-weight:800; font-size:11.5px;\'>✓ Approved</span>';">Approve</button>
+              <button type="button" class="btn-secondary-surface" style="height:32px; font-size:11.5px; padding:0 10px;" onclick="prompt('Enter rejection reason note:');">Reject with Note</button>
+              <button type="button" class="btn-secondary-surface" style="height:32px; font-size:11.5px; padding:0 8px;" onclick="alert('Document request SMS sent to driver.');">Request Info</button>
+            </div>
+          </div>
+
+          <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div style="display:flex; gap:8px;">
+                <img src="/assets/avatar_sarah.jpg" style="width:36px; height:36px; border-radius:50%;" />
+                <div>
+                  <strong style="font-size:13px; color:#0F172A;">Sarah Jenkins (WalkShare)</strong>
+                  <span style="display:block; font-size:11px; color:#64748B;">Greenfield Sidewalk Corridor · 3 Kids Group</span>
+                </div>
+              </div>
+              <span style="background:#DCFCE7; color:#15803D; font-size:10px; font-weight:800; padding:2px 6px; border-radius:4px;">100% Verified</span>
+            </div>
+            <div style="font-size:11.5px; color:#475569; margin:8px 0; background:#F8FAFC; padding:6px 8px; border-radius:6px;">
+              ✓ Photo ID · ✓ Proof of Address · ✓ VSC · ✓ 2 References Checked · ✓ Safety Agreement
+            </div>
+          </div>
+        </div>
+
+        <!-- Section B: Live Trips Overview -->
+        <div id="adminSectionTrips" style="display:none; flex-direction:column; gap:10px;">
+          <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:12px;">
+            <strong style="font-size:13px; color:#0F172A; display:flex; align-items:center; gap:6px;">
+              <i data-lucide="map-pin" style="width:14px; height:14px; color:#2563EB;"></i>
+              Active Fleet Real-time Radar
+            </strong>
+            <div style="height:140px; background:#EFF6FF; border-radius:8px; margin:8px 0; display:flex; align-items:center; justify-content:center; text-align:center; font-size:12px; color:#1E40AF; position:relative; overflow:hidden;">
+              <div style="position:absolute; top:20%; left:30%; background:#1E293B; color:#fff; border-radius:6px; padding:3px 6px; font-size:10px; font-weight:700;">🚗 Tariq A. (2 Kids)</div>
+              <div style="position:absolute; bottom:30%; right:25%; background:#15803D; color:#fff; border-radius:6px; padding:3px 6px; font-size:10px; font-weight:700;">🚶 Sarah J. (3 Kids)</div>
+              <span>Live GPS Satellite Stream Active (14 Units)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section C: Flagged Reviews Moderation -->
+        <div id="adminSectionReviews" style="display:none; flex-direction:column; gap:10px;">
+          <div style="background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:12px; padding:12px;">
+            <div style="display:flex; justify-content:space-between;">
+              <strong style="font-size:12.5px; color:#92400E;">Flagged Review #FLG-2026</strong>
+              <span style="font-size:11px; font-weight:800; color:#D97706;">★ 2.0 Stars</span>
+            </div>
+            <p style="font-size:12px; color:#78350F; margin:6px 0;">"Driver was running 10 minutes late at morning pickup."</p>
+            <span style="font-size:10.5px; color:#92400E;">Reviewer: Parent #PRNT-4410 · Driver: Tariq Ahmed</span>
+            <div style="display:flex; gap:6px; margin-top:8px;">
+              <button type="button" class="btn-secondary-surface" style="height:28px; font-size:11px; padding:0 8px;" onclick="alert('Review published');">Approve Review</button>
+              <button type="button" class="btn-secondary-surface" style="height:28px; font-size:11px; padding:0 8px; color:#DC2626;" onclick="alert('Review hidden from provider profile');">Hide from Profile</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section D: Subscription Pricing Config -->
+        <div id="adminSectionPricing" style="display:none; flex-direction:column; gap:10px;">
+          <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:12px;">
+            <strong style="font-size:13px; color:#0F172A; margin-bottom:8px; display:block;">Platform Subscription Pricing (RFP Sec 4.7)</strong>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label class="form-label" style="font-size:11px;">Monthly Parent Fee ($ CAD)</label>
+              <input type="text" class="form-input" value="9.99" style="height:36px; font-size:12px;" />
+            </div>
+            <div class="form-group" style="margin-bottom:8px;">
+              <label class="form-label" style="font-size:11px;">Annual Parent Fee ($ CAD)</label>
+              <input type="text" class="form-input" value="79.00" style="height:36px; font-size:12px;" />
+            </div>
+            <div class="form-group" style="margin-bottom:10px;">
+              <label class="form-label" style="font-size:11px;">Free Trial Period (Days)</label>
+              <input type="number" class="form-input" value="14" style="height:36px; font-size:12px;" />
+            </div>
+            <button type="button" class="btn-primary" style="height:36px; font-size:12px;" onclick="alert('Platform pricing saved without code change!');">Save Pricing Changes</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
   </main>
 
   <div class="mvp-series-sheet" id="seriesActionSheet" onclick="if(event.target===this) closeSeriesActionSheet()">
@@ -5354,6 +5726,242 @@
       <button class="btn-primary" style="margin-bottom:8px;" onclick="confirmSeriesAction('occurrence')">This occurrence</button>
       <button class="btn-primary" style="background:#1B2B68;" onclick="confirmSeriesAction('series')">Entire series</button>
       <button class="btn-secondary-link" onclick="closeSeriesActionSheet()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- ================= 1. PIPEDA PARENT CONSENT MODAL ================= -->
+  <div class="custom-modal-overlay" id="pipedaConsentModal" style="display:none;" onclick="if(event.target===this) window.closePipedaConsentModal()">
+    <div class="custom-modal-box" style="max-height: 85vh; display: flex; flex-direction: column;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #E2E8F0; padding-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; color: var(--color-primary);">
+            <i data-lucide="shield-check" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;">Parent Consent Form</h3>
+            <span style="font-size: 11px; color: #64748B;">PIPEDA Compliance &amp; Child Safety</span>
+          </div>
+        </div>
+        <button type="button" class="btn-icon-close" onclick="window.closePipedaConsentModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div style="overflow-y: auto; padding-right: 4px; font-size: 12.5px; color: #334155; line-height: 1.5; display: flex; flex-direction: column; gap: 10px;">
+        <p><strong>1. Scope of Consent:</strong> As the lawful guardian, you give explicit consent to Home2School Inc. to process child profile details (name, grade level, school location) strictly for organizing verified school commutes.</p>
+        <p><strong>2. Live GPS Tracking (Privacy by Design):</strong> Real-time satellite GPS tracking activates <em>exclusively</em> when a trip is marked active and in-progress by your assigned provider. No background location is collected when trips are completed.</p>
+        <p><strong>3. Masked Communication:</strong> Contact details (phone number, email address) are masked between parents and providers to prevent unauthorized external contact.</p>
+        <p><strong>4. Right to Erasure (PIPEDA):</strong> You retain full authority to request permanent deletion of your profile, child information, and historical GPS transit records at any time via Profile Settings.</p>
+      </div>
+
+      <div style="margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 12px; display: flex; gap: 10px;">
+        <button type="button" class="btn-primary" onclick="window.acceptPipedaConsent()">I Understand &amp; Consent</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 2. FORGOT PASSWORD MODAL ================= -->
+  <div class="custom-modal-overlay" id="forgotPasswordModal" style="display:none;" onclick="if(event.target===this) window.closeForgotPasswordModal()">
+    <div class="custom-modal-box">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0;">Reset Password</h3>
+        <button type="button" class="btn-icon-close" onclick="window.closeForgotPasswordModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <p style="font-size: 12.5px; color: #64748B; margin-bottom: 14px; line-height: 1.4;">
+        Enter your registered email address and we'll send you a secure password reset link.
+      </p>
+      <form onsubmit="window.handleSendPasswordReset(event)">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">Email Address</label>
+          <div class="input-with-icon">
+            <i data-lucide="mail" style="width: 18px; height: 18px; color: #94A3B8;"></i>
+            <input type="email" id="forgotPasswordEmailInput" class="form-input" placeholder="name@example.com" value="sadia.khan@example.com" required />
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%;">Send Reset Link</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= 3. DELETE ACCOUNT & PIPEDA ERASURE MODAL ================= -->
+  <div class="custom-modal-overlay" id="deleteAccountModal" style="display:none;" onclick="if(event.target===this) window.closeDeleteAccountModal()">
+    <div class="custom-modal-box">
+      <div style="width: 44px; height: 44px; border-radius: 50%; background: #FEE2E2; display: flex; align-items: center; justify-content: center; color: #DC2626; margin: 0 auto 12px;">
+        <i data-lucide="trash-2" style="width: 22px; height: 22px;"></i>
+      </div>
+      <h3 style="font-size: 16px; font-weight: 800; color: #0F172A; text-align: center; margin-bottom: 6px;">Delete Account Permanently?</h3>
+      <p style="font-size: 12.5px; color: #64748B; text-align: center; line-height: 1.45; margin-bottom: 14px;">
+        Under PIPEDA regulations, deleting your account will permanently wipe your profile, children rider records, active passes, and transit history. This action cannot be undone.
+      </p>
+      <div class="form-group" style="margin-bottom: 14px; text-align: left;">
+        <label class="form-label" style="font-size: 11.5px;">Reason for Leaving (Optional)</label>
+        <select class="form-input" style="font-size: 12px; height: 38px;">
+          <option>Child graduated or changed schools</option>
+          <option>Found alternative transportation</option>
+          <option>Moving to a different city</option>
+          <option>Other / Privacy preference</option>
+        </select>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button type="button" class="btn-primary" style="background: #DC2626; border-color: #DC2626;" onclick="window.confirmDeleteAccountAndData()">
+          Permanently Erase My Data
+        </button>
+        <button type="button" class="btn-secondary-link" onclick="window.closeDeleteAccountModal()">Cancel &amp; Keep Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 4. SUBSCRIPTION INVOICE RECEIPT MODAL ================= -->
+  <div class="custom-modal-overlay" id="subscriptionInvoiceModal" style="display:none;" onclick="if(event.target===this) window.closeSubscriptionReceiptModal()">
+    <div class="custom-modal-box" style="max-height: 88vh; overflow-y: auto;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1.5px solid #F1F5F9; padding-bottom: 10px;">
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: var(--color-primary); letter-spacing: 0.5px; text-transform: uppercase;">Home2School Official Receipt</div>
+          <h3 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 2px 0 0;">Invoice #H2S-2026-8841</h3>
+        </div>
+        <button type="button" class="btn-icon-close" onclick="window.closeSubscriptionReceiptModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px; font-size: 12px; margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span style="color: #64748B;">Billed To:</span>
+          <strong>Sadia Khan (Toronto, ON)</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span style="color: #64748B;">Billing Date:</span>
+          <span>Sep 01, 2026</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #64748B;">Payment Status:</span>
+          <span style="color: #16A34A; font-weight: 800;">✓ Paid via Stripe ( Apple Pay)</span>
+        </div>
+      </div>
+
+      <div style="font-size: 12.5px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #F1F5F9;">
+          <span>Monthly Parent Platform Access</span>
+          <strong>$9.99 CAD</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #F1F5F9; color: #64748B;">
+          <span>Provincial Tax (13% HST)</span>
+          <span>$1.30 CAD</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 14px; font-weight: 800; color: #0F172A;">
+          <span>Total Paid</span>
+          <span style="color: var(--color-primary);">$11.29 CAD</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="btn-primary" onclick="alert('Receipt downloaded to your device! 📄'); window.closeSubscriptionReceiptModal();">
+          <i data-lucide="download" style="width: 15px; height: 15px;"></i>
+          <span>Download PDF</span>
+        </button>
+        <button type="button" class="btn-secondary-surface" onclick="window.closeSubscriptionReceiptModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 5. DYNAMIC ROLE SWITCHER MODAL / BOTTOM SHEET ================= -->
+  <div class="custom-modal-overlay role-switcher-modal-backdrop" id="roleSwitcherModal" style="display:none;" onclick="if(event.target===this) window.closeRoleSwitcherModal()">
+    <div class="role-switcher-modal-box">
+      <div class="role-switcher-sheet-handle"></div>
+      <div class="role-switcher-header">
+        <div class="role-switcher-header-title-wrap">
+          <div class="role-switcher-header-icon">
+            <i data-lucide="layers" style="width:20px;height:20px;"></i>
+          </div>
+          <div>
+            <h3 class="role-switcher-title">Switch Persona &amp; Workspace</h3>
+            <p class="role-switcher-subtitle">Simulate &amp; operate seamlessly across Guardian, Partner, and Admin roles</p>
+          </div>
+        </div>
+        <button type="button" class="btn-icon-close" onclick="window.closeRoleSwitcherModal()" aria-label="Close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="role-switcher-grid">
+        <!-- Role 1: Parent -->
+        <div class="role-persona-card active" id="roleCardParent" onclick="window.handleSelectRole('parent')">
+          <div class="role-persona-icon-box parent">
+            <i data-lucide="user-check"></i>
+          </div>
+          <div class="role-persona-info">
+            <div class="role-persona-top">
+              <h4 class="role-persona-name">Parent &amp; Guardian</h4>
+              <span class="role-persona-chip active" id="chipRoleParent">Active Persona</span>
+            </div>
+            <p class="role-persona-desc">Book vetted school rides &amp; walking buses, manage children profiles, and track commutes live.</p>
+            <div class="role-persona-meta">
+              <span class="role-meta-badge"><i data-lucide="users" style="width:12px;height:12px;"></i> 2 Saved Children</span>
+              <span class="role-shortcut-tag">Alt + 1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Role 2: Driver -->
+        <div class="role-persona-card" id="roleCardDriver" onclick="window.handleSelectRole('driver')">
+          <div class="role-persona-icon-box driver">
+            <i data-lucide="car"></i>
+          </div>
+          <div class="role-persona-info">
+            <div class="role-persona-top">
+              <h4 class="role-persona-name">School Driver Partner</h4>
+              <span class="role-persona-chip" id="chipRoleDriver">Switch Mode</span>
+            </div>
+            <p class="role-persona-desc">Manage school ride bookings, vehicle safety documents, turn-by-turn navigation &amp; rider check-in.</p>
+            <div class="role-persona-meta">
+              <span class="role-meta-badge"><i data-lucide="shield-check" style="width:12px;height:12px;"></i> 5 KYC Docs Verified</span>
+              <span class="role-shortcut-tag">Alt + 2</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Role 3: WalkShare -->
+        <div class="role-persona-card" id="roleCardWalkshare" onclick="window.handleSelectRole('walkshare')">
+          <div class="role-persona-icon-box walkshare">
+            <i data-lucide="footprints"></i>
+          </div>
+          <div class="role-persona-info">
+            <div class="role-persona-top">
+              <h4 class="role-persona-name">WalkShare Escort</h4>
+              <span class="role-persona-chip" id="chipRoleWalkshare">Switch Mode</span>
+            </div>
+            <p class="role-persona-desc">Lead neighborhood walking school bus groups, monitor pedestrian safety &amp; verify attendance roster.</p>
+            <div class="role-persona-meta">
+              <span class="role-meta-badge"><i data-lucide="map-pin" style="width:12px;height:12px;"></i> 2 Active Route Groups</span>
+              <span class="role-shortcut-tag">Alt + 3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Role 4: Admin Portal -->
+        <div class="role-persona-card admin" id="roleCardAdmin" onclick="window.handleSelectRole('admin')">
+          <div class="role-persona-icon-box admin">
+            <i data-lucide="shield-alert"></i>
+          </div>
+          <div class="role-persona-info">
+            <div class="role-persona-top">
+              <h4 class="role-persona-name">Admin Operations Portal</h4>
+              <span class="role-persona-chip admin" id="chipRoleAdmin">Staff Console</span>
+            </div>
+            <p class="role-persona-desc">KYC background check review queue, real-time live map radar, review moderation &amp; pricing.</p>
+            <div class="role-persona-meta">
+              <span class="role-meta-badge"><i data-lucide="activity" style="width:12px;height:12px;"></i> Radar &amp; KYC Verification</span>
+              <span class="role-shortcut-tag">Alt + 4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="role-switcher-footer">
+        <span class="role-switcher-tip">⚡ <strong>Product Tip:</strong> Press <kbd>Alt</kbd> + <kbd>1</kbd>/<kbd>2</kbd>/<kbd>3</kbd>/<kbd>4</kbd> or <kbd>Alt</kbd> + <kbd>R</kbd> anywhere to quickly switch personas.</span>
+      </div>
     </div>
   </div>
 

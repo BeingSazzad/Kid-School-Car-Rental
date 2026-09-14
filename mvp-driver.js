@@ -527,16 +527,9 @@
 
   function syncPills() {
     const role = state().activeRole || 'parent';
-    const btnP = document.getElementById('btnRoleParent');
-    const btnD = document.getElementById('btnRoleDriver');
-    const btnW = document.getElementById('btnRoleWalkShare');
-    [btnP, btnD, btnW].forEach((btn) => {
-      if (!btn) return;
-      btn.classList.remove('active', 'driver-active', 'walkshare-active');
-    });
-    if (role === 'driver' && btnD) btnD.classList.add('active', 'driver-active');
-    else if (role === 'walkshare' && btnW) btnW.classList.add('active', 'walkshare-active');
-    else if (btnP) btnP.classList.add('active');
+    if (typeof window.syncRoleCapsuleUI === 'function') {
+      window.syncRoleCapsuleUI(role);
+    }
   }
 
   let parentChatHtml = null;
@@ -642,7 +635,11 @@
   };
 
   window.switchRole = function (role) {
-    const next = role === 'driver' ? 'driver' : role === 'walkshare' ? 'walkshare' : 'parent';
+    if (typeof window.coreSwitchRole === 'function') {
+      window.coreSwitchRole(role);
+      return;
+    }
+    const next = role === 'driver' ? 'driver' : role === 'walkshare' ? 'walkshare' : role === 'admin' ? 'admin' : 'parent';
     if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
     state().activeRole = next;
     localStorage.setItem('h2s_active_role', next);
@@ -650,6 +647,7 @@
     // replaceState landing so Back cannot re-enter the previous role's hash trail
     if (next === 'driver') window.navigateTo(window.getDriverLanding(), true);
     else if (next === 'walkshare' && typeof window.getWalkShareLanding === 'function') window.navigateTo(window.getWalkShareLanding(), true);
+    else if (next === 'admin') window.navigateTo('adminPortal', true);
     else window.navigateTo('home', true);
   };
 
@@ -1728,12 +1726,40 @@
         </button>
       </div>
       ${failed ? `<div class="drv-failed-pay"><div class="drv-section-label">Last payment failed</div><button type="button" class="btn-primary" style="margin-top:10px;" onclick="recoverDriverPayment()">Retry payment</button></div>` : ''}
-      <div class="sub-actions">
+      
+      <!-- Promo / Discount Code Box for Drivers -->
+      <div class="sub-promo-box" style="margin-top: 12px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 10px 12px;">
+        <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+          <span>Have a Promo Code?</span>
+          <span id="driverPromoBadge" style="display:none; color:#16A34A; font-weight:800; font-size:11px;">✓ Applied 20% OFF</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="inputDriverPromoCode" placeholder="Enter code (e.g. PRO2026)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 13px; font-weight: 600; text-transform: uppercase;" />
+          <button type="button" onclick="window.applyDriverPromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;">
+            Apply
+          </button>
+        </div>
+      </div>
+
+      <!-- Supported Payment Methods -->
+      <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px;">
+        <span style="font-size: 11px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: #1E293B;">
+          <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">💳 Cards</span>
+          <span style="background:#000; color:#fff; padding:2px 6px; border-radius:4px;"> Pay</span>
+          <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">G Pay</span>
+        </div>
+      </div>
+
+      <div class="sub-actions" style="margin-top: 14px;">
         <button type="button" class="btn-primary" onclick="continueDriverTrial()">Continue with free trial</button>
         <button type="button" class="btn-primary" onclick="activateDriverSubscription()">Activate ${sub.plan === 'annual' ? 'annual' : 'monthly'} access</button>
       </div>
       <div class="sub-history-card">
-        <h3 class="sub-section-title">Billing history</h3>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <h3 class="sub-section-title" style="margin:0;">Billing history</h3>
+          <button type="button" onclick="window.openSubscriptionReceiptModal()" style="background:none; border:none; color:var(--color-primary); font-size:11.5px; font-weight:700; cursor:pointer; text-decoration:underline;">View Receipt</button>
+        </div>
         ${history}
       </div>
     `;
@@ -2965,6 +2991,13 @@
           </div>
           ${chevron}
         </button>
+        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('profileNotifications', event)">
+          <div class="menu-item-left">
+            <div class="menu-icon-wrap"><i data-lucide="bell"></i></div>
+            <span class="menu-title-text">Notification Channels</span>
+          </div>
+          ${chevron}
+        </button>
         <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('faq', event)">
           <div class="menu-item-left">
             <div class="menu-icon-wrap"><i data-lucide="help-circle"></i></div>
@@ -3000,23 +3033,26 @@
           </div>
           ${chevron}
         </button>
+        <button type="button" class="profile-menu-item" onclick="window.openDeleteAccountModal()" style="color:#E11D48;">
+          <div class="menu-item-left">
+            <div class="menu-icon-wrap" style="background:#FFF1F2; color:#E11D48;"><i data-lucide="trash-2"></i></div>
+            <span class="menu-title-text" style="color:#E11D48;">Delete Driver Account (PIPEDA)</span>
+          </div>
+          ${chevron}
+        </button>
       </div>
 
-      <div class="profile-menu-section">
-        <button type="button" class="profile-menu-item" onclick="window.switchRole('parent')">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="users"></i></div>
-            <span class="menu-title-text">Switch to Parent</span>
+      <div class="profile-workspace-card" onclick="window.openRoleSwitcherModal()">
+        <div class="pwc-left">
+          <div class="pwc-icon-wrap driver">
+            <i data-lucide="layers" style="width:18px;height:18px;"></i>
           </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="window.switchRole('walkshare')">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="footprints"></i></div>
-            <span class="menu-title-text">Switch to WalkShare</span>
+          <div class="pwc-info">
+            <div class="pwc-title">Active Persona: Driver Partner</div>
+            <div class="pwc-subtitle">Switch to Parent, WalkShare or Admin</div>
           </div>
-          ${chevron}
-        </button>
+        </div>
+        <button type="button" class="pwc-action-btn">Switch Role ▾</button>
       </div>
 
       <button type="button" onclick="navigateTo('authWelcome')" style="width:100%;padding:13px 16px;font-size:14px;font-weight:700;border-radius:12px;border:1.5px solid #FEE2E2;background:#FFF5F5;color:#DC2626;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;">
@@ -3286,6 +3322,18 @@
       ingestBookingAsRequest((state().bookings || [])[0]);
     };
   }
+
+  window.applyDriverPromoCode = function () {
+    const input = document.getElementById('inputDriverPromoCode');
+    const code = (input?.value || '').trim().toUpperCase();
+    const badge = document.getElementById('driverPromoBadge');
+    if (code === 'PRO20' || code === 'PRO2026' || code === 'SCHOOL20' || code.length >= 3) {
+      if (badge) badge.style.display = 'inline';
+      alert(`🎉 Promo Code "${code || 'PRO2026'}" applied! 20% discount activated on your driver platform fee.`);
+    } else {
+      alert('Please enter a valid driver promo code (e.g. PRO2026)');
+    }
+  };
 
   injectScreens();
   ensureDriver();

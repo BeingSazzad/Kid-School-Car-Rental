@@ -81,10 +81,11 @@
 
   function demoDocuments() {
     return [
-      { id: 'id', title: 'Government ID', status: 'approved', file: demoUpload('sarah-id.pdf'), number: 'ON-4819203' },
-      { id: 'criminal', title: 'Criminal Background Check', status: 'approved', file: demoUpload('cbc-sarah.pdf') },
-      { id: 'vulnerable', title: 'Vulnerable Sector Check', status: 'approved', file: demoUpload('vsc-sarah.pdf') },
-      { id: 'firstaid', title: 'Pediatric First-Aid / CPR', status: 'approved', file: demoUpload('cpr-sarah.pdf'), expires: 'Aug 2027' }
+      { id: 'id', title: 'Government-Issued Photo ID', status: 'approved', file: demoUpload('sarah-passport.pdf'), number: 'ON-4819203' },
+      { id: 'proofAddress', title: 'Proof of Address (Utility Bill)', status: 'approved', file: demoUpload('utility-bill-sarah.pdf') },
+      { id: 'vulnerable', title: 'Vulnerable Sector Check (VSC)', status: 'approved', file: demoUpload('vsc-sarah.pdf') },
+      { id: 'references', title: 'Two Personal References', status: 'approved', ref1: 'Principal Miller (Greenfield School) · (416) 555-0144', ref2: 'Dr. Rebecca Vance · (416) 555-0189' },
+      { id: 'safetyAgreement', title: 'Signed Safety Agreement', status: 'approved', file: demoUpload('signed-safety-agreement.pdf') }
     ];
   }
 
@@ -459,16 +460,9 @@
 
   function syncPills() {
     const role = state().activeRole || 'parent';
-    const btnP = document.getElementById('btnRoleParent');
-    const btnD = document.getElementById('btnRoleDriver');
-    const btnW = document.getElementById('btnRoleWalkShare');
-    [btnP, btnD, btnW].forEach((btn) => {
-      if (!btn) return;
-      btn.classList.remove('active', 'driver-active', 'walkshare-active');
-    });
-    if (role === 'driver' && btnD) btnD.classList.add('active', 'driver-active');
-    else if (role === 'walkshare' && btnW) btnW.classList.add('active', 'walkshare-active');
-    else if (btnP) btnP.classList.add('active');
+    if (typeof window.syncRoleCapsuleUI === 'function') {
+      window.syncRoleCapsuleUI(role);
+    }
   }
 
   function applyRoleChrome() {
@@ -560,13 +554,18 @@
   };
 
   window.switchRole = function (role) {
-    const next = role === 'driver' ? 'driver' : role === 'walkshare' ? 'walkshare' : 'parent';
+    if (typeof window.coreSwitchRole === 'function') {
+      window.coreSwitchRole(role);
+      return;
+    }
+    const next = role === 'driver' ? 'driver' : role === 'walkshare' ? 'walkshare' : role === 'admin' ? 'admin' : 'parent';
     if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
     state().activeRole = next;
     localStorage.setItem('h2s_active_role', next);
     applyRoleChrome();
     if (next === 'walkshare') window.navigateTo(window.getWalkShareLanding(), true);
     else if (next === 'driver') window.navigateTo(typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverHome', true);
+    else if (next === 'admin') window.navigateTo('adminPortal', true);
     else window.navigateTo('home', true);
   };
 
@@ -1177,6 +1176,9 @@
         <button type="button" class="profile-menu-item" onclick="openNestedScreen('wsSubscription', event)">
           <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="sparkles"></i></div><span class="menu-title-text">WalkShare subscription</span></div>${chevron}
         </button>
+        <button type="button" class="profile-menu-item" onclick="openNestedScreen('profileNotifications', event)">
+          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="bell"></i></div><span class="menu-title-text">Notification Channels</span></div>${chevron}
+        </button>
         <button type="button" class="profile-menu-item" onclick="openNestedScreen('faq', event)">
           <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="help-circle"></i></div><span class="menu-title-text">FAQ</span></div>${chevron}
         </button>
@@ -1192,15 +1194,22 @@
         <button type="button" class="profile-menu-item" onclick="openNestedScreen('about', event)">
           <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="info"></i></div><span class="menu-title-text">About Home2School</span></div>${chevron}
         </button>
+        <button type="button" class="profile-menu-item" onclick="window.openDeleteAccountModal()" style="color:#E11D48;">
+          <div class="menu-item-left"><div class="menu-icon-wrap" style="background:#FFF1F2; color:#E11D48;"><i data-lucide="trash-2"></i></div><span class="menu-title-text" style="color:#E11D48;">Delete WalkShare Account (PIPEDA)</span></div>${chevron}
+        </button>
       </div>
 
-      <div class="profile-menu-section">
-        <button type="button" class="profile-menu-item" onclick="window.switchRole('parent')">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="users"></i></div><span class="menu-title-text">Switch to Parent</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="window.switchRole('driver')">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="car"></i></div><span class="menu-title-text">Switch to Driver</span></div>${chevron}
-        </button>
+      <div class="profile-workspace-card" onclick="window.openRoleSwitcherModal()">
+        <div class="pwc-left">
+          <div class="pwc-icon-wrap walkshare">
+            <i data-lucide="layers" style="width:18px;height:18px;"></i>
+          </div>
+          <div class="pwc-info">
+            <div class="pwc-title">Active Persona: WalkShare Escort</div>
+            <div class="pwc-subtitle">Switch to Parent, Driver or Admin</div>
+          </div>
+        </div>
+        <button type="button" class="pwc-action-btn">Switch Role ▾</button>
       </div>
 
       <button type="button" onclick="navigateTo('authWelcome')" style="width:100%;padding:13px 16px;font-size:14px;font-weight:700;border-radius:12px;border:1.5px solid #FEE2E2;background:#FFF5F5;color:#DC2626;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;">
@@ -1216,11 +1225,12 @@
     const el = feed('wsOnboardProfileFeed');
     if (!el) return;
     el.innerHTML = `
+      <p class="drv-lede" style="margin-bottom:12px;">Parents see your verified name, photo, and walking corridor.</p>
       <div class="form-group"><label class="form-label">Full name</label><input class="form-input" id="wsProfileName" value="${esc(w.name)}" /></div>
       <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="wsProfilePhone" value="${esc(w.phone)}" /></div>
       <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="wsProfileEmail" value="${esc(w.email)}" /></div>
       <div class="form-group"><label class="form-label">Service area</label><input class="form-input" id="wsProfileArea" value="${esc(w.serviceArea)}" /></div>
-      <button type="button" class="btn-primary" onclick="saveWalkShareProfile()">Save profile</button>
+      <button type="button" class="btn-primary" onclick="saveWalkShareProfile()">Save and continue</button>
     `;
     icons();
   }
@@ -1242,17 +1252,11 @@
     const el = feed('wsOnboardGroupFeed');
     if (!el) return;
     el.innerHTML = `
-      <div class="trip-card">
-        <h3 class="section-heading" style="margin-bottom:4px;">Walking group</h3>
-        <p class="drv-lede">No vehicle. Set capacity and the sidewalk corridor parents already see on your WalkShare card.</p>
-      </div>
+      <p class="drv-lede" style="margin-bottom:12px;">Group size (3–8 children) and corridor path.</p>
       <div class="form-group"><label class="form-label">Group label</label><input class="form-input" id="wsGroupLabel" value="${esc(w.group.label)}" /></div>
-      <div class="form-group"><label class="form-label">Max children</label><input class="form-input" id="wsGroupCap" type="number" min="1" max="8" value="${esc(w.group.capacity)}" /></div>
-      <div class="form-group"><label class="form-label">Route corridor</label><input class="form-input" id="wsGroupRoute" value="${esc(w.group.route)}" /></div>
-      <div class="drv-req-chips" style="margin-bottom:16px;">
-        ${(w.group.safety || []).map((s) => `<span class="provider-safety-chip walkshare"><i data-lucide="check"></i> ${esc(s)}</span>`).join('')}
-      </div>
-      <button type="button" class="btn-primary" onclick="saveWalkShareGroup()">Save walking group</button>
+      <div class="form-group"><label class="form-label">Capacity (children)</label><input class="form-input" type="number" min="2" max="10" id="wsGroupCap" value="${esc(w.group.capacity)}" /></div>
+      <div class="form-group"><label class="form-label">Sidewalk corridor</label><input class="form-input" id="wsGroupRoute" value="${esc(w.group.route)}" /></div>
+      <button type="button" class="btn-primary" onclick="saveWalkShareGroup()">Save and continue</button>
     `;
     icons();
   }
@@ -1273,7 +1277,7 @@
     const el = feed('wsOnboardDocsFeed');
     if (!el) return;
     el.innerHTML = `
-      <p class="drv-lede" style="margin-bottom:12px;">Same trust bar parents see on WalkShare profiles — ID, background, vulnerable sector, first-aid.</p>
+      <p class="drv-lede" style="margin-bottom:12px;">Same trust bar parents see on WalkShare profiles — Photo ID, proof of address, Canadian VSC, 2 personal references, and signed safety agreement.</p>
       <div class="profile-menu-section">
         ${w.documents.map((doc) => `
           <button type="button" class="profile-menu-item" onclick="openWalkShareDoc('${esc(doc.id)}')">
@@ -1308,8 +1312,8 @@
         <h3 class="card-title-navy">${esc(doc.title)}</h3>
         <p class="card-desc-muted">Status: ${esc(doc.status || 'Under review')}</p>
         ${doc.number ? `<p class="card-desc-muted">ID: ${esc(doc.number)}</p>` : ''}
-        ${doc.expires ? `<p class="card-desc-muted">Expires: ${esc(doc.expires)}</p>` : ''}
-        <p class="card-desc-muted" style="margin-top:8px;">File: ${esc(doc.file?.name || 'Attached')}</p>
+        ${doc.ref1 ? `<div style="background:#F8FAFC; padding:10px; border-radius:8px; margin:8px 0; font-size:12px;"><strong>Ref 1:</strong> ${esc(doc.ref1)}<br><strong>Ref 2:</strong> ${esc(doc.ref2)}</div>` : ''}
+        <p class="card-desc-muted" style="margin-top:8px;">File: ${esc(doc.file?.name || 'Verified Record On File')}</p>
       </div>
       <button type="button" class="btn-primary" onclick="navigateTo('wsOnboardDocs')">Back to documents</button>
     `;
@@ -1329,32 +1333,27 @@
     const el = feed('wsOnboardAvailabilityFeed');
     if (!el) return;
     el.innerHTML = `
-      <div class="trip-card">
-        <h3 class="section-heading" style="margin-bottom:4px;">Weekly walking hours</h3>
-        <p class="drv-lede">Morning and after-school windows parents match against.</p>
-      </div>
-      ${(a.windows || []).map((win, idx) => `
-        <div class="trip-card">
-          <div class="form-group"><label class="form-label">From</label><input class="form-input" id="wsAvailStart${idx}" value="${esc(win.start)}" /></div>
-          <div class="form-group"><label class="form-label">To</label><input class="form-input" id="wsAvailEnd${idx}" value="${esc(win.end)}" /></div>
+      <p class="drv-lede" style="margin-bottom:12px;">Select recurring walking windows (Mon–Fri).</p>
+      <div class="profile-menu-section">
+        <div class="profile-menu-item" style="cursor:default;">
+          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="sun"></i></div><span class="menu-title-text">Morning Walk (07:15 – 08:45 AM)</span></div>
+          <span class="both-way-badge">Active</span>
         </div>
-      `).join('')}
-      <p class="card-desc-muted" style="margin-bottom:12px;">Days: Mon–Fri</p>
-      <button type="button" class="btn-primary" onclick="saveWalkShareAvailability()">Save availability</button>
+        <div class="profile-menu-item" style="cursor:default;">
+          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="sunset"></i></div><span class="menu-title-text">Afternoon Walk (02:30 – 04:00 PM)</span></div>
+          <span class="both-way-badge">Active</span>
+        </div>
+      </div>
+      <button type="button" class="btn-primary" onclick="saveWalkShareAvailability()">Save and continue</button>
     `;
     icons();
   }
 
   window.saveWalkShareAvailability = function () {
-    const w = ensureWalk();
-    (w.availability.windows || []).forEach((win, idx) => {
-      win.start = document.getElementById('wsAvailStart' + idx)?.value || win.start;
-      win.end = document.getElementById('wsAvailEnd' + idx)?.value || win.end;
-    });
-    w.onboarding.availability = true;
+    ensureWalk().onboarding.availability = true;
     persist();
     toast('Availability saved');
-    window.navigateTo(onboardingDone(w) ? 'wsProfile' : 'wsOnboardRate');
+    window.navigateTo(onboardingDone(ensureWalk()) ? 'wsProfile' : 'wsOnboardRate');
   };
 
   function renderOnboardRate() {
@@ -1362,19 +1361,15 @@
     const el = feed('wsOnboardRateFeed');
     if (!el) return;
     el.innerHTML = `
-      <div class="form-group"><label class="form-label">Posted weekly rate (CAD)</label><input class="form-input" id="wsRateAmount" type="number" value="${esc(w.rate.amount)}" /></div>
-      <label class="mvp-check-row" style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
-        <input type="checkbox" id="wsRateNeg" ${w.rate.negotiable ? 'checked' : ''} />
-        <span>Negotiable with parent</span>
-      </label>
-      <button type="button" class="btn-primary" onclick="saveWalkShareRate()">Save posted rate</button>
+      <p class="drv-lede" style="margin-bottom:12px;">Flat walking bus rate per child per week.</p>
+      <div class="form-group"><label class="form-label">Weekly rate ($ CAD / child)</label><input class="form-input" type="number" id="wsRateAmount" value="${esc(w.rate.amount)}" /></div>
+      <button type="button" class="btn-primary" onclick="saveWalkShareRate()">Save and continue</button>
     `;
   }
 
   window.saveWalkShareRate = function () {
     const w = ensureWalk();
     w.rate.amount = Number(document.getElementById('wsRateAmount')?.value || w.rate.amount);
-    w.rate.negotiable = !!document.getElementById('wsRateNeg')?.checked;
     w.onboarding.rate = true;
     persist();
     toast('Posted rate saved');
@@ -1422,12 +1417,51 @@
     el.innerHTML = `
       <div class="trip-card">
         <h3 class="section-heading" style="margin-bottom:4px;">WalkShare platform access</h3>
-        <p class="drv-lede">${w.subscription.status === 'trial' ? `${w.subscription.trialDaysLeft} days left on trial` : 'Choose a plan to keep accepting escorts.'}</p>
+        <p class="drv-lede">${w.subscription.status === 'trial' ? `${w.subscription.trialDaysLeft} days left on free trial` : 'Choose a plan to keep accepting escorts.'}</p>
         <p class="card-desc-muted">$${w.subscription.priceMonthly}/mo · $${w.subscription.priceAnnual}/yr</p>
       </div>
-      <button type="button" class="btn-primary" onclick="activateWalkShareTrial()">Continue with trial</button>
+
+      <!-- Promo / Discount Code Box for WalkShare -->
+      <div class="sub-promo-box" style="margin-top: 10px; margin-bottom: 12px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 10px 12px;">
+        <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+          <span>Have a WalkShare Promo Code?</span>
+          <span id="wsPromoBadge" style="display:none; color:#16A34A; font-weight:800; font-size:11px;">✓ Applied 20% OFF</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="inputWsPromoCode" placeholder="Enter code (e.g. WALK20)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 13px; font-weight: 600; text-transform: uppercase;" />
+          <button type="button" onclick="window.applyWalkSharePromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;">
+            Apply
+          </button>
+        </div>
+      </div>
+
+      <!-- Supported Payment Methods -->
+      <div style="margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px;">
+        <span style="font-size: 11px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: #1E293B;">
+          <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">💳 Cards</span>
+          <span style="background:#000; color:#fff; padding:2px 6px; border-radius:4px;"> Pay</span>
+          <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">G Pay</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn-primary" onclick="activateWalkShareTrial()">Continue with free trial</button>
+      <button type="button" onclick="window.openSubscriptionReceiptModal()" style="margin-top:8px; background:none; border:none; color:var(--color-primary); font-size:12px; font-weight:700; cursor:pointer; text-decoration:underline;">View Receipt &amp; Billing History</button>
     `;
+    icons();
   }
+
+  window.applyWalkSharePromoCode = function () {
+    const input = document.getElementById('inputWsPromoCode');
+    const code = (input?.value || '').trim().toUpperCase();
+    const badge = document.getElementById('wsPromoBadge');
+    if (code === 'WALK20' || code === 'SCHOOL20' || code.length >= 3) {
+      if (badge) badge.style.display = 'inline';
+      alert(`🎉 Promo Code "${code || 'WALK20'}" applied! 20% discount activated on your WalkShare platform fee.`);
+    } else {
+      alert('Please enter a valid WalkShare promo code (e.g. WALK20)');
+    }
+  };
 
   window.activateWalkShareTrial = function () {
     const w = ensureWalk();

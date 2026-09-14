@@ -81,7 +81,9 @@ const screens = [
   'wsSubscription',
   'wsRequestDetail',
   'wsWalkPrep',
-  'wsActiveWalk'
+  'wsActiveWalk',
+  'profileNotifications',
+  'adminPortal'
 ];
 
 /* ==========================================================
@@ -804,47 +806,186 @@ window.appState = {
 };
 
 /* ==========================================================
-   Dual-Role Switcher (Parent Mode ⇄ Driver Mode ⇄ WalkShare)
+   Product-Grade Unified Role & Workspace Switcher Engine
+   (Parent ⇄ Driver Partner ⇄ WalkShare Escort ⇄ Admin Portal)
    ========================================================== */
-window.switchRole = function (role) {
-  if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
-  window.appState.activeRole = role;
-  localStorage.setItem('h2s_active_role', role);
+window.ROLE_METADATA = {
+  parent: {
+    label: 'Parent Mode',
+    badge: 'Guardian',
+    icon: 'user',
+    color: '#4F46E5',
+    toast: '👨‍👩‍👧 Switched to Parent & Guardian Mode'
+  },
+  driver: {
+    label: 'Driver Mode',
+    badge: 'Driver Partner',
+    icon: 'car',
+    color: '#D97706',
+    toast: '🚗 Switched to School Driver Partner Mode'
+  },
+  walkshare: {
+    label: 'WalkShare Mode',
+    badge: 'Walk Escort',
+    icon: 'footprints',
+    color: '#059669',
+    toast: '🚶 Switched to WalkShare Escort Mode'
+  },
+  admin: {
+    label: 'Admin Portal',
+    badge: 'Staff Console',
+    icon: 'shield',
+    color: '#0284C7',
+    toast: '🛡️ Switched to Admin Operations Portal'
+  }
+};
 
-  const btnP = document.getElementById('btnRoleParent');
-  const btnD = document.getElementById('btnRoleDriver');
-  const btnW = document.getElementById('btnRoleWalkShare');
-  [btnP, btnD, btnW].forEach((btn) => {
-    if (!btn) return;
-    btn.classList.remove('active', 'driver-active', 'walkshare-active');
+window.openRoleSwitcherModal = function () {
+  const modal = document.getElementById('roleSwitcherModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  modal.classList.add('active');
+  const current = window.appState.activeRole || localStorage.getItem('h2s_active_role') || 'parent';
+  window.syncRoleSwitcherCards(current);
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.closeRoleSwitcherModal = function () {
+  const modal = document.getElementById('roleSwitcherModal');
+  if (!modal) return;
+  modal.classList.remove('active');
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 180);
+};
+
+window.handleSelectRole = function (role) {
+  window.closeRoleSwitcherModal();
+  setTimeout(() => {
+    window.switchRole(role);
+  }, 100);
+};
+
+window.syncRoleSwitcherCards = function (role) {
+  const roles = ['parent', 'driver', 'walkshare', 'admin'];
+  roles.forEach((r) => {
+    const card = document.getElementById(`roleCard${r.charAt(0).toUpperCase() + r.slice(1)}`);
+    const chip = document.getElementById(`chipRole${r.charAt(0).toUpperCase() + r.slice(1)}`);
+    if (card) {
+      if (r === role) {
+        card.classList.add('active');
+      } else {
+        card.classList.remove('active');
+      }
+    }
+    if (chip) {
+      if (r === role) {
+        chip.textContent = 'Active Persona';
+        chip.classList.add('active');
+      } else {
+        chip.textContent = r === 'admin' ? 'Staff Console' : 'Switch Mode';
+        chip.classList.remove('active');
+      }
+    }
   });
-  if (role === 'driver' && btnD) btnD.classList.add('active', 'driver-active');
-  else if (role === 'walkshare' && btnW) btnW.classList.add('active', 'walkshare-active');
-  else if (btnP) btnP.classList.add('active');
+};
 
-  if (role === 'driver') {
+window.syncRoleCapsuleUI = function (role) {
+  const meta = window.ROLE_METADATA[role] || window.ROLE_METADATA.parent;
+  const capsule = document.getElementById('roleCapsuleIsland');
+  const title = document.getElementById('roleCapsuleTitle');
+  const badge = document.getElementById('roleCapsuleBadge');
+  const iconWrap = document.getElementById('roleCapsuleIconWrap');
+  
+  if (capsule) {
+    capsule.setAttribute('data-role', role);
+  }
+  if (title) title.textContent = meta.label;
+  if (badge) badge.textContent = meta.badge;
+  if (iconWrap) {
+    iconWrap.innerHTML = `<i data-lucide="${meta.icon}" style="width:14px;height:14px;"></i>`;
+    if (window.lucide) window.lucide.createIcons();
+  }
+  
+  window.syncRoleSwitcherCards(role);
+
+  // Sync profile workspace cards across screens if present
+  document.querySelectorAll('.profile-workspace-card').forEach((card) => {
+    const titleEl = card.querySelector('.pwc-title');
+    if (titleEl) {
+      titleEl.textContent = `Active Persona: ${meta.label.replace(' Mode', '')}`;
+    }
+  });
+};
+
+window.coreSwitchRole = function (role) {
+  const valid = ['parent', 'driver', 'walkshare', 'admin'].includes(role) ? role : 'parent';
+  if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
+  window.appState.activeRole = valid;
+  localStorage.setItem('h2s_active_role', valid);
+  
+  document.body.setAttribute('data-role', valid);
+  const shell = document.getElementById('appShell');
+  if (shell) shell.setAttribute('data-role', valid);
+  
+  window.syncRoleCapsuleUI(valid);
+  
+  // Show rich role toast
+  const meta = window.ROLE_METADATA[valid] || window.ROLE_METADATA.parent;
+  if (typeof window.showToast === 'function') {
+    window.showToast(meta.toast, 'info');
+  }
+
+  // Navigate to appropriate landing page
+  if (valid === 'driver') {
     const next = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverSetup';
     window.navigateTo(next, true);
-  } else if (role === 'walkshare') {
+  } else if (valid === 'walkshare') {
     const next = typeof window.getWalkShareLanding === 'function' ? window.getWalkShareLanding() : 'wsHome';
     window.navigateTo(next, true);
+  } else if (valid === 'admin') {
+    window.navigateTo('adminPortal', true);
   } else {
     window.navigateTo('home', true);
   }
 };
 
+window.switchRole = function (role) {
+  window.coreSwitchRole(role);
+};
+
+// Global Hotkeys for seamless demo & power user switching
+document.addEventListener('keydown', (e) => {
+  if (e.altKey) {
+    if (e.key === '1') {
+      e.preventDefault();
+      window.switchRole('parent');
+    } else if (e.key === '2') {
+      e.preventDefault();
+      window.switchRole('driver');
+    } else if (e.key === '3') {
+      e.preventDefault();
+      window.switchRole('walkshare');
+    } else if (e.key === '4') {
+      e.preventDefault();
+      window.switchRole('admin');
+    } else if (e.key === 'r' || e.key === 'R') {
+      e.preventDefault();
+      const modal = document.getElementById('roleSwitcherModal');
+      if (modal && modal.style.display !== 'none' && modal.classList.contains('active')) {
+        window.closeRoleSwitcherModal();
+      } else {
+        window.openRoleSwitcherModal();
+      }
+    }
+  }
+});
+
 window.enterDriverFromAuth = function () {
   window.appState.activeRole = 'driver';
   window.appState.driverEntryFromAuth = true;
   localStorage.setItem('h2s_active_role', 'driver');
-  const btnP = document.getElementById('btnRoleParent');
-  const btnD = document.getElementById('btnRoleDriver');
-  const btnW = document.getElementById('btnRoleWalkShare');
-  [btnP, btnD, btnW].forEach((btn) => {
-    if (!btn) return;
-    btn.classList.remove('active', 'driver-active', 'walkshare-active');
-  });
-  if (btnD) btnD.classList.add('active', 'driver-active');
+  window.syncRoleCapsuleUI('driver');
   window.navigateTo('authOtp');
 };
 
@@ -852,14 +993,7 @@ window.enterWalkShareFromAuth = function () {
   window.appState.activeRole = 'walkshare';
   window.appState.walkshareEntryFromAuth = true;
   localStorage.setItem('h2s_active_role', 'walkshare');
-  const btnP = document.getElementById('btnRoleParent');
-  const btnD = document.getElementById('btnRoleDriver');
-  const btnW = document.getElementById('btnRoleWalkShare');
-  [btnP, btnD, btnW].forEach((btn) => {
-    if (!btn) return;
-    btn.classList.remove('active', 'driver-active', 'walkshare-active');
-  });
-  if (btnW) btnW.classList.add('active', 'walkshare-active');
+  window.syncRoleCapsuleUI('walkshare');
   window.navigateTo('authOtp');
 };
 
@@ -1160,8 +1294,7 @@ function updateBottomTabHighlights(screenName) {
     driverTripPrep: 2,
     driverRateParent: 0,
     notifications: 0,
-    inbox: 3,
-    messages: 3
+    inbox: 3
   };
 
   const walkTabMap = {
@@ -3614,10 +3747,10 @@ function simulateDriverReply() {
   }, 1200);
 }
 
-/* ==========================================================
-   Rating System
-   ========================================================== */
+window.currentRatingScore = 5;
+
 window.setRatingScore = function (score) {
+  window.currentRatingScore = score;
   const starsContainer = document.getElementById('ratingStars');
   if (!starsContainer) return;
 
@@ -3629,6 +3762,99 @@ window.setRatingScore = function (score) {
       btn.classList.remove('active');
     }
   });
+
+  const flagNotice = document.getElementById('lowRatingAutoFlagNotice');
+  if (flagNotice) {
+    flagNotice.style.display = score <= 3 ? 'block' : 'none';
+  }
+};
+
+window.handleParentReviewSubmit = function () {
+  const score = window.currentRatingScore || 5;
+  if (score <= 3) {
+    alert(`⚠️ Notice: Your ${score}-star review has been submitted. A platform administrator ticket has been auto-generated for child safety review.`);
+  } else {
+    alert(`Thank you for rating your provider ${score} stars! ⭐`);
+  }
+  window.navigateTo('home');
+};
+
+/* ==========================================================
+   PIPEDA & Account Management Modals
+   ========================================================== */
+window.openPipedaConsentModal = function () {
+  const modal = document.getElementById('pipedaConsentModal');
+  if (modal) modal.style.display = 'flex';
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.closePipedaConsentModal = function () {
+  const modal = document.getElementById('pipedaConsentModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.acceptPipedaConsent = function () {
+  const checkbox = document.getElementById('authParentConsentCheckbox');
+  if (checkbox) checkbox.checked = true;
+  window.closePipedaConsentModal();
+};
+
+window.openForgotPasswordModal = function () {
+  const modal = document.getElementById('forgotPasswordModal');
+  if (modal) modal.style.display = 'flex';
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.closeForgotPasswordModal = function () {
+  const modal = document.getElementById('forgotPasswordModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.handleSendPasswordReset = function (e) {
+  if (e) e.preventDefault();
+  const email = document.getElementById('forgotPasswordEmailInput')?.value || 'your email';
+  alert(`✓ Password reset email sent to: ${email}\nPlease check your inbox to complete verification.`);
+  window.closeForgotPasswordModal();
+};
+
+window.openDeleteAccountModal = function () {
+  const modal = document.getElementById('deleteAccountModal');
+  if (modal) modal.style.display = 'flex';
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.closeDeleteAccountModal = function () {
+  const modal = document.getElementById('deleteAccountModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.confirmDeleteAccountAndData = function () {
+  alert('Your Home2School account, children records, and all transit GPS data have been permanently erased pursuant to PIPEDA standards.');
+  window.closeDeleteAccountModal();
+  window.navigateTo('authWelcome');
+};
+
+window.openSubscriptionReceiptModal = function () {
+  const modal = document.getElementById('subscriptionInvoiceModal');
+  if (modal) modal.style.display = 'flex';
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.closeSubscriptionReceiptModal = function () {
+  const modal = document.getElementById('subscriptionInvoiceModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.applyParentPromoCode = function () {
+  const input = document.getElementById('inputPromoCode');
+  const code = (input?.value || '').trim().toUpperCase();
+  const badge = document.getElementById('promoBadgeSuccess');
+  if (code === 'SCHOOL20' || code === 'SCHOOL2026' || code === 'SAVE20' || code.length >= 3) {
+    if (badge) badge.style.display = 'inline';
+    alert(`🎉 Promo Code "${code || 'SCHOOL20'}" applied! 20% discount activated on your platform fee.`);
+  } else {
+    alert('Please enter a valid promo code (e.g. SCHOOL20)');
+  }
 };
 
 /* ==========================================================
@@ -5627,6 +5853,64 @@ if (typeof document !== 'undefined') {
     if (window.renderBookingSavedLocations) window.renderBookingSavedLocations();
   }
 }
+
+/* ==========================================================
+   Admin Portal & Search Filter Helpers (RFP Sec 4.2 & 4.10)
+   ========================================================== */
+window.showAdminSection = function (sectionName, btn) {
+  const sections = ['kyc', 'trips', 'reviews', 'pricing'];
+  sections.forEach((s) => {
+    const el = document.getElementById('adminSection' + s.charAt(0).toUpperCase() + s.slice(1));
+    if (el) el.style.display = s === sectionName ? 'flex' : 'none';
+  });
+
+  document.querySelectorAll('#screen-adminPortal .clean-pill-btn').forEach((b) => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.toggleAdvancedSearchFilterDrawer = function () {
+  const tray = document.getElementById('advancedSearchFilterTray');
+  if (tray) {
+    tray.style.display = tray.style.display === 'none' ? 'block' : 'none';
+  }
+};
+
+window.setDistanceRadius = function (km, btn) {
+  const label = document.getElementById('radiusFilterLabel');
+  if (label) label.textContent = km === 0 ? 'Any distance' : `${km} km radius`;
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.mvp-filter-chip').forEach((c) => c.classList.remove('active'));
+    btn.classList.add('active');
+  }
+};
+
+window.switchAuthMethod = function (method) {
+  const emailForm = document.getElementById('authEmailForm');
+  const phoneForm = document.getElementById('authPhoneForm');
+  const tabEmail = document.getElementById('authTabEmail');
+  const tabPhone = document.getElementById('authTabPhone');
+
+  if (method === 'email') {
+    if (emailForm) emailForm.style.display = 'flex';
+    if (phoneForm) phoneForm.style.display = 'none';
+    if (tabEmail) tabEmail.classList.add('active');
+    if (tabPhone) tabPhone.classList.remove('active');
+  } else {
+    if (emailForm) emailForm.style.display = 'none';
+    if (phoneForm) phoneForm.style.display = 'flex';
+    if (tabEmail) tabEmail.classList.remove('active');
+    if (tabPhone) tabPhone.classList.add('active');
+  }
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.handleEmailLoginOrSignup = function () {
+  const email = document.getElementById('authEmailInput')?.value || 'user@example.com';
+  window.appState.user.email = email;
+  window.navigateTo('authProfile');
+};
+
 
 
 
