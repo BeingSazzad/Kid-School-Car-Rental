@@ -579,7 +579,7 @@ window.appState = {
     }
   ],
   activeBookingId: 'H2S-84920',
-  homeScenario: 'C', // Default to Scenario C (Active Trip In Progress)
+  homeScenario: 'B', // Default matches redesigned Upcoming home (A/B/C switcher still works)
   trackingStageIndex: 2,
 
   // ==========================================================
@@ -1309,6 +1309,7 @@ function renderHome() {
   const viewA = document.getElementById('homeStateAView');
   const viewB = document.getElementById('homeStateBView');
   const viewC = document.getElementById('homeStateCView');
+  const nextBlock = document.getElementById('homeNextTripBlock');
 
   const btnA = document.getElementById('btnStateA');
   const btnB = document.getElementById('btnStateB');
@@ -1320,31 +1321,37 @@ function renderHome() {
     if (viewA) viewA.style.display = 'flex';
     if (viewB) viewB.style.display = 'none';
     if (viewC) viewC.style.display = 'none';
+    if (nextBlock) nextBlock.style.display = 'none';
     btnA?.classList.add('active');
   } else if (state === 'B') {
     if (viewA) viewA.style.display = 'none';
     if (viewB) viewB.style.display = 'flex';
     if (viewC) viewC.style.display = 'none';
+    if (nextBlock) nextBlock.style.display = 'block';
     btnB?.classList.add('active');
 
-    // Populate upcoming ride card from active booking
+    // Populate next-trip card from active booking
     const activeBooking = window.appState.bookings.find(b => b.id === window.appState.activeBookingId) || window.appState.bookings[0];
     if (activeBooking) {
       const provider = window.appState.providers.find(p => p.id === activeBooking.providerId) || window.appState.providers[0];
       const childNames = activeBooking.childIds.map(cid => {
         const c = window.appState.children.find(ch => ch.id === cid);
         return c ? c.name.split(' ')[0] : cid;
-      }).join(' & ');
-
-      const cardMeta = document.getElementById('homeNextTripMeta');
-      if (cardMeta) {
-        cardMeta.textContent = `${childNames} • Driver ${provider.name.split(' ')[0]} A.`;
+      });
+      const kidsEl = document.getElementById('homeNextTripKids');
+      const metaEl = document.getElementById('homeNextTripMeta');
+      if (kidsEl) kidsEl.textContent = childNames.join(', ');
+      if (metaEl) {
+        const first = (provider.name || 'Driver').replace(/\s*\(WalkShare\)/i, '').split(' ')[0];
+        const isWalk = provider.category === 'walkshare';
+        metaEl.textContent = isWalk ? `${first} (WalkShare)` : `Driver ${first} A.`;
       }
     }
   } else if (state === 'C') {
     if (viewA) viewA.style.display = 'none';
     if (viewB) viewB.style.display = 'none';
     if (viewC) viewC.style.display = 'flex';
+    if (nextBlock) nextBlock.style.display = 'none';
     btnC?.classList.add('active');
   }
 

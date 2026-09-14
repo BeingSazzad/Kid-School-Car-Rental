@@ -742,7 +742,7 @@
       </div>
 
       <!-- Scrollable Home Content -->
-      <div class="home-scroll-body">
+      <div class="home-scroll-body ph-home">
 
         <!-- Interactive Parent State Switcher (A / B / C Demo Selector) -->
         <div class="state-switcher-container">
@@ -761,157 +761,20 @@
               <img src="/assets/avatar_sadia.jpg" alt="Sadia Avatar" class="user-avatar-img" />
             </div>
             <div class="user-welcome-texts">
-              <h2 class="user-greeting">Hello, Sadia</h2>
-              <p class="user-question">Where should we drive your children?</p>
+              <h2 class="user-greeting">Hello, Sadia <span aria-hidden="true">👋</span></h2>
+              <p class="user-question">Where would you like to go?</p>
             </div>
           </div>
 
-          <!-- Bell Button with Notification Dot (Lucide) -->
           <button class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
             <i data-lucide="bell"></i>
             <span class="unread-badge-dot"></span>
           </button>
         </div>
 
-        <!-- Hero Promo Card: Safe Ride / Brighter Future -->
-        <div class="home-hero-card" onclick="navigateTo('bookingTripSetup')" style="cursor: pointer;" title="Book a safe school ride">
-          <img src="/assets/home_hero_card.png" alt="Safe Ride - Brighter Future" class="hero-card-full-img" />
-        </div>
-
-        <!-- Quick Actions Section (Consistent Across States) -->
-        <div class="section-block">
-          <h3 class="section-heading">Quick Actions</h3>
-          <div class="quick-actions-grid">
-            <!-- Action 1: New Booking (Featured Navy Card) -->
-            <div class="action-card navy" onclick="navigateTo('bookingTripSetup')">
-              <div class="action-icon-circle white-glass">
-                <i data-lucide="calendar-plus"></i>
-              </div>
-              <h4 class="card-title-white">New Booking</h4>
-              <p class="card-desc-white">Arrange school ride</p>
-            </div>
-
-            <!-- Action 2: My Children -->
-            <div class="action-card light" onclick="openNestedScreen('myChildren')">
-              <div class="action-icon-circle blue-tint">
-                <i data-lucide="users"></i>
-              </div>
-              <h4 class="card-title-navy">My Children</h4>
-              <p class="card-desc-muted">Manage profiles</p>
-            </div>
-
-            <!-- Action 3: My Bookings -->
-            <div class="action-card light horizontal" onclick="navigateTo('bookings')">
-              <div class="action-icon-circle red-tint">
-                <i data-lucide="calendar"></i>
-              </div>
-              <h4 class="card-title-navy">My Bookings</h4>
-            </div>
-
-            <!-- Action 4: Child Safety Center -->
-            <div class="action-card light horizontal" onclick="openChildSafetyCenter()">
-              <div class="action-icon-circle green-tint">
-                <i data-lucide="shield-check"></i>
-              </div>
-              <h4 class="card-title-navy">Safety Center</h4>
-            </div>
-          </div>
-        </div>
-
-        <!-- ================= STATE A: NEW PARENT / NO RIDES ================= -->
-        <div id="homeStateAView" style="display: none; flex-direction: column; gap: 16px;">
-          <div class="empty-trips-card">
-            <div class="empty-trips-icon">
-              <i data-lucide="calendar-x" style="width:28px;height:28px;"></i>
-            </div>
-            <h4 class="empty-trips-title">No Upcoming Rides Yet</h4>
-            <p class="empty-trips-desc">Set up school transportation for your children with background-checked local
-              providers.</p>
-            <button class="btn-primary" onclick="navigateTo('bookingTripSetup')" style="margin-top: 4px;">Book Your
-              First Ride</button>
-          </div>
-
-          <!-- Trust & Safety Reassurance -->
-          <div class="safety-reassurance-card">
-            <div class="reassurance-icon-badge">
-              <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
-            </div>
-            <div>
-              <div class="reassurance-title">100% Verified Providers</div>
-              <div class="reassurance-desc">Every school driver undergoes criminal record verification, driving history
-                inspection, and CPR training.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ================= STATE B: UPCOMING RIDE ================= -->
-        <div id="homeStateBView" style="display: flex; flex-direction: column; gap: 16px;">
-          <div class="section-block">
-            <div class="section-header-row">
-              <h3 class="section-heading">Upcoming Trips</h3>
-              <a href="#bookings" onclick="navigateTo('bookings')" class="link-see-all">See All <i
-                  data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
-            </div>
-
-            <div class="upcoming-trips-list">
-              <!-- Trip Card 1: Both-Way Recurring Daily Commute -->
-              <div class="trip-card-compact" onclick="openBookingDetails('H2S-84920')">
-                <div class="trip-date-block">
-                  <span class="td-month">MAY</span>
-                  <span class="td-day">22</span>
-                  <span class="td-weekday">Wed</span>
-                </div>
-                <div class="trip-compact-content">
-                  <div class="trip-compact-top">
-                    <span class="trip-compact-time">07:30 AM &amp; 01:00 PM</span>
-                    <span class="both-way-badge"><i data-lucide="repeat" style="width:11px;height:11px;"></i> Round Trip</span>
-                  </div>
-                  <div class="trip-compact-route">Home ⇄ Greenfield International</div>
-                  <div class="trip-compact-sub">Arman &amp; Emma • Driver Tariq A.</div>
-                </div>
-              </div>
-
-              <!-- Trip Card 2: One-Way Morning Ride -->
-              <div class="trip-card-compact" onclick="openBookingDetails('H2S-73190')">
-                <div class="trip-date-block">
-                  <span class="td-month">MAY</span>
-                  <span class="td-day">23</span>
-                  <span class="td-weekday">Thu</span>
-                </div>
-                <div class="trip-compact-content">
-                  <div class="trip-compact-top">
-                    <span class="trip-compact-time">08:15 AM</span>
-                    <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
-                  </div>
-                  <div class="trip-compact-route">Home → Sunshine Pre-school</div>
-                  <div class="trip-compact-sub">Zara Khan • Sarah Jenkins (WalkShare)</div>
-                </div>
-              </div>
-
-              <!-- Trip Card 3: One-Way Afternoon Return -->
-              <div class="trip-card-compact" onclick="openBookingDetails('H2S-84920')">
-                <div class="trip-date-block">
-                  <span class="td-month">MAY</span>
-                  <span class="td-day">24</span>
-                  <span class="td-weekday">Fri</span>
-                </div>
-                <div class="trip-compact-content">
-                  <div class="trip-compact-top">
-                    <span class="trip-compact-time">03:45 PM</span>
-                    <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
-                  </div>
-                  <div class="trip-compact-route">Greenfield International → Home</div>
-                  <div class="trip-compact-sub">Arman Khan • Driver Tariq A.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ================= STATE C: ACTIVE TRIP IN PROGRESS ================= -->
+        <!-- ================= STATE C: ACTIVE TRIP (featured) ================= -->
         <div id="homeStateCView" style="display: none; flex-direction: column; gap: 16px;">
           <div class="active-trip-hero-card">
-            <!-- Unified Top Row: Children & Live Status -->
             <div class="active-trip-top-row">
               <div class="active-trip-child-meta">
                 <div class="child-avatar-cluster">
@@ -932,7 +795,6 @@
               </div>
             </div>
 
-            <!-- Clean Modern Route Tracker (Zero Box/Grid Clutter) -->
             <div class="active-route-tracker" onclick="openLiveTracking('H2S-84920')" title="Tap to view live tracking" role="button" tabindex="0">
               <div class="route-track-bar">
                 <div class="route-track-fill" style="width: 65%;"></div>
@@ -954,7 +816,6 @@
               </div>
             </div>
 
-            <!-- Driver Info & Actions Row -->
             <div class="active-driver-contact-row">
               <div class="driver-mini-info" onclick="openDriverProfile('tariq', 'home')" style="cursor: pointer;" title="View Driver Profile">
                 <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-mini-avatar" />
@@ -988,6 +849,143 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- ================= STATE B: NEXT TRIP FEATURED ================= -->
+        <div id="homeNextTripBlock" class="ph-next-block" style="display: block;">
+          <div class="ph-next-head">
+            <h3 class="section-heading ph-next-title">Next trip</h3>
+            <span class="ph-round-badge"><i data-lucide="refresh-cw"></i> Round trip</span>
+          </div>
+          <button type="button" class="ph-next-card" onclick="openBookingDetails('H2S-84920')">
+            <div class="ph-next-date">
+              <span class="ph-next-month">MAY</span>
+              <span class="ph-next-day">22</span>
+              <span class="ph-next-wd">Wed</span>
+            </div>
+            <div class="ph-next-body">
+              <div class="ph-next-times">
+                <div class="ph-next-time-col">
+                  <span class="ph-next-time-label">Departure</span>
+                  <span class="ph-next-time-val">07:30 AM</span>
+                </div>
+                <div class="ph-next-time-col">
+                  <span class="ph-next-time-label">Return</span>
+                  <span class="ph-next-time-val">01:00 PM</span>
+                </div>
+              </div>
+              <p class="ph-next-route">Home → Greenfield International</p>
+              <div class="ph-next-meta">
+                <span class="ph-next-meta-item"><i data-lucide="users"></i> <span id="homeNextTripKids">Arman, Emma</span></span>
+                <span class="ph-next-meta-item"><i data-lucide="steering-wheel"></i> <span id="homeNextTripMeta">Driver Tariq A.</span></span>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Primary CTA + Quick links (always) -->
+        <div class="ph-actions">
+          <button type="button" class="ph-new-booking-btn" onclick="navigateTo('bookingTripSetup')">
+            <i data-lucide="calendar-plus"></i>
+            <span>New Booking</span>
+          </button>
+          <div class="ph-quick-row" role="navigation" aria-label="Quick links">
+            <button type="button" class="ph-quick-item" onclick="openNestedScreen('myChildren')">
+              <span class="ph-quick-ico"><i data-lucide="users"></i></span>
+              <span class="ph-quick-label">My Children</span>
+            </button>
+            <span class="ph-quick-divider" aria-hidden="true"></span>
+            <button type="button" class="ph-quick-item" onclick="navigateTo('bookings')">
+              <span class="ph-quick-ico"><i data-lucide="calendar"></i></span>
+              <span class="ph-quick-label">My Bookings</span>
+            </button>
+            <span class="ph-quick-divider" aria-hidden="true"></span>
+            <button type="button" class="ph-quick-item" onclick="openChildSafetyCenter()">
+              <span class="ph-quick-ico is-safety"><i data-lucide="shield-check"></i></span>
+              <span class="ph-quick-label">Safety &amp; Help</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= STATE A: NEW PARENT / NO RIDES ================= -->
+        <div id="homeStateAView" style="display: none; flex-direction: column; gap: 16px;">
+          <div class="empty-trips-card">
+            <div class="empty-trips-icon">
+              <i data-lucide="calendar-x" style="width:28px;height:28px;"></i>
+            </div>
+            <h4 class="empty-trips-title">No Upcoming Rides Yet</h4>
+            <p class="empty-trips-desc">Set up school transportation for your children with background-checked local
+              providers.</p>
+            <button class="btn-primary" onclick="navigateTo('bookingTripSetup')" style="margin-top: 4px;">Book Your
+              First Ride</button>
+          </div>
+
+          <div class="safety-reassurance-card">
+            <div class="reassurance-icon-badge">
+              <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
+            </div>
+            <div>
+              <div class="reassurance-title">100% Verified Providers</div>
+              <div class="reassurance-desc">Every school driver undergoes criminal record verification, driving history
+                inspection, and CPR training.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= STATE B: UPCOMING LIST ================= -->
+        <div id="homeStateBView" style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="section-block">
+            <div class="section-header-row">
+              <h3 class="section-heading">Upcoming trips</h3>
+              <a href="#bookings" onclick="navigateTo('bookings'); return false;" class="link-see-all">View all <i
+                  data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
+            </div>
+
+            <div class="upcoming-trips-list ph-upcoming-list">
+              <button type="button" class="ph-upcoming-row" onclick="openBookingDetails('H2S-73190')">
+                <div class="ph-up-date">
+                  <span class="ph-up-month">MAY</span>
+                  <span class="ph-up-day">23</span>
+                  <span class="ph-up-wd">Thu</span>
+                </div>
+                <div class="ph-up-body">
+                  <div class="ph-up-top">
+                    <span class="ph-up-time">08:15 AM</span>
+                    <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
+                  </div>
+                  <div class="ph-up-route">Home → Sunshine Pre-school</div>
+                  <div class="ph-up-sub">Zara Khan • Sarah Jenkins (WalkShare)</div>
+                </div>
+                <i data-lucide="chevron-right" class="ph-up-chevron"></i>
+              </button>
+
+              <button type="button" class="ph-upcoming-row" onclick="openBookingDetails('H2S-84920')">
+                <div class="ph-up-date">
+                  <span class="ph-up-month">MAY</span>
+                  <span class="ph-up-day">24</span>
+                  <span class="ph-up-wd">Fri</span>
+                </div>
+                <div class="ph-up-body">
+                  <div class="ph-up-top">
+                    <span class="ph-up-time">03:45 PM</span>
+                    <span class="one-way-badge"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>
+                  </div>
+                  <div class="ph-up-route">Greenfield International → Home</div>
+                  <div class="ph-up-sub">Arman Khan • Driver Tariq A.</div>
+                </div>
+                <i data-lucide="chevron-right" class="ph-up-chevron"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Promo banner (bottom) -->
+        <div class="ph-promo-card" onclick="navigateTo('bookingTripSetup')" style="cursor: pointer;" title="Book a safe school ride">
+          <div class="ph-promo-copy">
+            <h3 class="ph-promo-title">Safe Ride <span>Brighter Future</span></h3>
+            <p class="ph-promo-desc">Trusted school transport for your child's everyday journey.</p>
+          </div>
+          <img src="/assets/home_hero_card.png" alt="" class="ph-promo-img" />
         </div>
 
       </div>
