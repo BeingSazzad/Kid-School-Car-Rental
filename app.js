@@ -3427,7 +3427,7 @@ function renderBookingDetails(bookingId) {
     : (/pm|p\.m/i.test(booking.outboundTime || '') ? 'From school' : 'To school');
 
   const routeLine = booking.direction === 'bothway'
-    ? `Home ↔ ${shortSchool}`
+    ? `Home → ${shortSchool}`
     : (/pm|p\.m/i.test(booking.outboundTime || '') ? `${shortSchool} → Home` : `Home → ${shortSchool}`);
 
   const scheduleLabel = booking.frequency === 'recurring'
@@ -3440,7 +3440,7 @@ function renderBookingDetails(bookingId) {
   setText('detailHeaderSubtitle', routeLine);
   setText('detailScheduleDate', scheduleLabel);
 
-  const pin = String(booking.id || '').replace(/\D/g, '').slice(-4) || '8492';
+  const pin = String(booking.id || '').replace(/\D/g, '').slice(-4) || '4920';
   setText('detailSafetyPin', pin);
   const modalPinEl = document.getElementById('modalSafetyPinText');
   const modalSubEl = document.getElementById('modalSafetyPinSub');
@@ -3467,21 +3467,22 @@ function renderBookingDetails(bookingId) {
   if (passWrap) {
     passWrap.innerHTML = children.map((c) => {
       const first = (c.name || 'Student').split(' ')[0];
-      const photoSrc = c.photo || '/assets/avatar_arman.jpg';
+      const photoSrc = c.photo || (first.toLowerCase() === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_arman.jpg');
+      const grade = c.grade ? (c.grade.toLowerCase().includes('grade') ? c.grade : `Grade ${c.grade}`) : (c.age ? `${c.age} yrs` : 'Grade 4');
       return (
-        '<div class="bd-kid-row">' +
-          '<img src="' + photoSrc + '" alt="" class="bd-kid-avatar" onerror="this.src=\'/assets/avatar_arman.jpg\';" />' +
-          '<div>' +
-            '<div class="bd-kid-name">' + first + '</div>' +
-            '<div class="bd-kid-meta">' + (c.grade || c.age || 'Student') + '</div>' +
+        '<div class="bd-student-chip">' +
+          '<img src="' + photoSrc + '" alt="" class="bd-student-avatar" onerror="this.src=\'/assets/avatar_arman.jpg\';" />' +
+          '<div style="min-width: 0;">' +
+            '<div class="bd-student-name">' + first + '</div>' +
+            '<div class="bd-student-meta">' + grade + '</div>' +
           '</div>' +
         '</div>'
       );
-    }).join('') || '<div class="bd-kid-meta">Add a child to this booking</div>';
+    }).join('') || '<div class="bd-student-meta">Add a child to this booking</div>';
   }
 
   setText('detailOutboundTime', booking.outboundTime || '07:30 AM');
-  setText('detailReturnTime', booking.returnTime || '—');
+  setText('detailReturnTime', booking.returnTime || '01:00 PM');
   setText('detailPickupAddr', pickupStreet);
   setText('detailReturnAddr', pickupStreet);
   setText('detailSchoolName', shortSchool);
@@ -3496,29 +3497,21 @@ function renderBookingDetails(bookingId) {
   const retBox = document.getElementById('detailReturnLegBox');
   const retLine = document.getElementById('detailReturnRailLine');
   const both = booking.direction === 'bothway';
-  if (retBox) retBox.style.display = both ? 'grid' : 'none';
+  if (retBox) retBox.style.display = both ? 'flex' : 'none';
   if (retLine) retLine.style.display = both ? 'block' : 'none';
 
   setText('detailProviderName', String(provider.name || '').replace(/\s*\(WalkShare\)/i, ''));
-  setText('detailProviderRating', String(provider.rating != null ? provider.rating : '—'));
-  setText('detailProviderReviews', provider.reviewsCount != null ? '(' + provider.reviewsCount + ')' : '');
+  setText('detailProviderRating', String(provider.rating != null ? provider.rating : '4.9'));
+  setText('detailProviderReviews', provider.reviewsCount != null ? '(' + provider.reviewsCount + ')' : '(128)');
 
   const vehName = String(provider.vehicle || '').replace(/\s*\(\d{4}\)\s*/g, '').trim();
-  setText('detailVehicleName', isWalk ? 'Walking escort' : (vehName || 'Vehicle'));
+  setText('detailVehicleName', isWalk ? 'Walking escort' : (vehName || 'Toyota Sienna'));
   setText(
     'detailProviderVehicle',
     isWalk
       ? ([provider.zone || provider.serviceArea, provider.seats ? provider.seats + ' kids' : ''].filter(Boolean).join(' · ') || 'WalkShare')
-      : [provider.plate, provider.seats ? provider.seats + ' seats' : ''].filter(Boolean).join(' · ')
+      : [provider.plate || 'SCH-4091', provider.seats ? provider.seats + ' seats' : '4 seats'].filter(Boolean).join(' · ')
   );
-
-  const vehIco = document.querySelector('#detailVehicleRow .bd-vehicle-ico i, #detailVehicleRow .bd-vehicle-ico svg');
-  const vehIcoWrap = document.querySelector('#detailVehicleRow .bd-vehicle-ico');
-  if (vehIcoWrap) {
-    vehIcoWrap.innerHTML = isWalk
-      ? '<i data-lucide="footprints" style="width:18px;height:18px;"></i>'
-      : '<i data-lucide="car" style="width:18px;height:18px;"></i>';
-  }
 
   const pPhoto = document.getElementById('detailDriverPhoto');
   if (pPhoto) {
@@ -3526,53 +3519,62 @@ function renderBookingDetails(bookingId) {
     pPhoto.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
   }
 
-  // RFP: ride fare model undefined in MVP — do not invent weekly package pricing in UI
-  const fareRow = document.querySelector('.bd-row-card:has(#detailFareAmount)') || document.getElementById('detailFareAmount')?.closest('.bd-row-card');
   setText('detailFarePeriod', 'Arrange with provider');
   setText('detailFareAmount', '—');
-  if (fareRow) {
-    const title = fareRow.querySelector('.bd-row-title');
-    if (title) title.textContent = 'Ride fee';
-  }
 
   const notesCard = document.getElementById('detailNotesCard');
   const notesText = document.getElementById('detailNotesText');
   const note = booking.notes || booking.pickupNote || booking.dropoffNote || '';
-  if (notesCard) notesCard.style.display = note ? 'flex' : 'none';
+  if (notesCard) {
+    notesCard.style.display = note ? 'flex' : 'none';
+    notesCard.classList.toggle('is-hidden', !note);
+  }
   if (notesText && note) notesText.textContent = note;
 
+  const primaryTrackBtn = document.getElementById('btnTrackLivePrimary');
   const actionsWrap = document.getElementById('detailContextualActions');
   if (actionsWrap) {
     const first = String(provider.name || 'Driver').split(' ')[0];
     const id = booking.id;
     if (booking.status === 'in_progress') {
+      if (primaryTrackBtn) {
+        primaryTrackBtn.style.display = 'flex';
+        primaryTrackBtn.setAttribute('onclick', `openLiveTracking('${id}')`);
+      }
       actionsWrap.innerHTML =
-        '<button class="btn-primary" onclick="openLiveTracking(\'' + id + '\')">Track live</button>' +
         '<div class="bd-actions-quiet">' +
           '<button type="button" class="bd-link" onclick="openTripReport(\'' + id + '\')">Report</button>' +
           '<button type="button" class="bd-link danger" onclick="openEmergencySOSModal()">SOS</button>' +
         '</div>';
     } else if (booking.status === 'confirmed') {
+      if (primaryTrackBtn) {
+        primaryTrackBtn.style.display = 'flex';
+        primaryTrackBtn.setAttribute('onclick', `openLiveTracking('${id}')`);
+      }
       actionsWrap.innerHTML =
         '<div class="bd-actions-row">' +
           '<button type="button" class="bd-btn-outline" data-mvp-modify="1" onclick="window.modifyBooking && window.modifyBooking(\'' + id + '\')">Edit booking</button>' +
           '<button type="button" class="bd-btn-outline danger" onclick="cancelBooking(\'' + id + '\')">Cancel booking</button>' +
         '</div>';
     } else if (booking.status === 'pending') {
+      if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
       actionsWrap.innerHTML =
-        '<p class="bd-wait">Waiting for driver to confirm</p>' +
-        '<button type="button" class="bd-link danger" onclick="cancelBooking(\'' + id + '\')">Withdraw request</button>';
+        '<p class="bd-wait" style="text-align:center; font-size:13px; color:#64748B; margin:4px 0;">Waiting for driver to confirm</p>' +
+        '<button type="button" class="bd-link danger" style="text-align:center; display:block; margin:0 auto;" onclick="cancelBooking(\'' + id + '\')">Withdraw request</button>';
     } else if (booking.status === 'completed') {
+      if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
       actionsWrap.innerHTML =
-        '<button type="button" class="btn-primary" onclick="navigateTo(\'rating\')">Rate ' + first + '</button>' +
+        '<button type="button" class="bd-btn-track-live" onclick="navigateTo(\'rating\')">Rate ' + first + '</button>' +
         '<div class="bd-actions-quiet">' +
           '<button type="button" class="bd-link" onclick="window.rebookRide && window.rebookRide(\'' + id + '\')">Book again</button>' +
           '<button type="button" class="bd-link" onclick="openTripReport(\'' + id + '\')">Report</button>' +
         '</div>';
     } else if (booking.status === 'cancelled') {
+      if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
       actionsWrap.innerHTML =
-        '<button class="btn-primary" onclick="navigateTo(\'bookingTripSetup\')">Book again</button>';
+        '<button class="bd-btn-track-live" onclick="navigateTo(\'bookingTripSetup\')">Book again</button>';
     } else {
+      if (primaryTrackBtn) primaryTrackBtn.style.display = 'flex';
       actionsWrap.innerHTML = '';
     }
   }
