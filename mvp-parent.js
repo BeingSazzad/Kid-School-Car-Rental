@@ -435,6 +435,13 @@
   function fillTimeCol(id, values, selected) {
     const col = document.getElementById(id);
     if (!col) return;
+    if (id === 'bookingTimePeriodCol') {
+      const btns = values.map((val) => 
+        `<button type="button" class="book-ride-period-btn${val === selected ? ' selected' : ''}" data-val="${val}" onclick="selectBookingPeriod('${val}')">${val}</button>`
+      ).join('');
+      col.innerHTML = btns;
+      return;
+    }
     const opts = values.map((val) => `<button type="button" class="book-ride-time-opt${val === selected ? ' selected' : ''}" data-val="${val}" onclick="selectBookingTimePart(this)">${val}</button>`).join('');
     col.innerHTML = `<div class="book-ride-time-opt" style="pointer-events:none;visibility:hidden;">00</div>${opts}<div class="book-ride-time-opt" style="pointer-events:none;visibility:hidden;">00</div>`;
     const active = col.querySelector('.book-ride-time-opt.selected');
@@ -448,18 +455,67 @@
     scrollTimeOptIntoCenter(col, btn);
   };
 
+  window.selectBookingPeriod = function (val) {
+    const col = document.getElementById('bookingTimePeriodCol');
+    if (!col) return;
+    col.querySelectorAll('.book-ride-period-btn').forEach((btn) => {
+      if (btn.getAttribute('data-val') === val) btn.classList.add('selected');
+      else btn.classList.remove('selected');
+    });
+  };
+
+  window.setBookingPresetTime = function (h, m, p) {
+    fillTimeCol('bookingTimeHourCol', TIME_HOURS, h);
+    fillTimeCol('bookingTimeMinuteCol', TIME_MINUTES, m);
+    fillTimeCol('bookingTimePeriodCol', TIME_PERIODS, p);
+    requestAnimationFrame(() => {
+      ['bookingTimeHourCol', 'bookingTimeMinuteCol'].forEach((id) => {
+        const col = document.getElementById(id);
+        scrollTimeOptIntoCenter(col, col?.querySelector('.book-ride-time-opt.selected'));
+      });
+    });
+  };
+
   window.openBookingTimeSheet = function (target) {
     bookingTimeTarget = target === 'return' ? 'return' : 'outbound';
     const input = document.getElementById(bookingTimeTarget === 'return' ? 'setupReturnTime' : 'setupOutboundTime');
-    const parts = parseTimeParts(input?.value || (bookingTimeTarget === 'return' ? '13:00' : '07:30'));
+    // Logically: Outbound default is 07:30 AM, Return default is 03:30 PM (15:30)
+    const fallbackDefault = bookingTimeTarget === 'return' ? '15:30' : '07:30';
+    const parts = parseTimeParts(input?.value || fallbackDefault);
+    
     const title = document.getElementById('bookingTimeSheetTitle');
-    if (title) title.textContent = bookingTimeTarget === 'return' ? 'Return' : 'Pickup';
+    const sub = document.getElementById('bookingTimeSheetSub');
+    if (title) title.textContent = bookingTimeTarget === 'return' ? 'Return Time' : 'Pickup Time';
+    if (sub) sub.textContent = bookingTimeTarget === 'return' ? 'Afternoon school dismissal commute' : 'Morning school departure commute';
+
+    // Render presets
+    const presetsContainer = document.getElementById('bookingTimePresets');
+    if (presetsContainer) {
+      const presets = bookingTimeTarget === 'return'
+        ? [
+            { label: '02:30 PM', h: '02', m: '30', p: 'PM' },
+            { label: '03:15 PM', h: '03', m: '15', p: 'PM' },
+            { label: '03:30 PM', h: '03', m: '30', p: 'PM' },
+            { label: '04:00 PM', h: '04', m: '00', p: 'PM' }
+          ]
+        : [
+            { label: '07:15 AM', h: '07', m: '15', p: 'AM' },
+            { label: '07:30 AM', h: '07', m: '30', p: 'AM' },
+            { label: '08:00 AM', h: '08', m: '00', p: 'AM' },
+            { label: '08:15 AM', h: '08', m: '15', p: 'AM' }
+          ];
+      presetsContainer.innerHTML = presets.map((ps) => 
+        `<button type="button" class="book-ride-preset-chip" onclick="setBookingPresetTime('${ps.h}','${ps.m}','${ps.p}')">${ps.label}</button>`
+      ).join('');
+    }
+
     fillTimeCol('bookingTimeHourCol', TIME_HOURS, parts.hour);
     fillTimeCol('bookingTimeMinuteCol', TIME_MINUTES, parts.minute);
     fillTimeCol('bookingTimePeriodCol', TIME_PERIODS, parts.period);
+    
     document.getElementById('bookingTimeSheet')?.classList.add('visible');
     requestAnimationFrame(() => {
-      ['bookingTimeHourCol', 'bookingTimeMinuteCol', 'bookingTimePeriodCol'].forEach((id) => {
+      ['bookingTimeHourCol', 'bookingTimeMinuteCol'].forEach((id) => {
         const col = document.getElementById(id);
         scrollTimeOptIntoCenter(col, col?.querySelector('.book-ride-time-opt.selected'));
       });
@@ -470,11 +526,45 @@
   window.confirmBookingTimeSheet = function () {
     const hour = document.querySelector('#bookingTimeHourCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '07';
     const minute = document.querySelector('#bookingTimeMinuteCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '30';
-    const period = document.querySelector('#bookingTimePeriodCol .book-ride-time-opt.selected')?.getAttribute('data-val') || 'AM';
+    const period = document.querySelector('#bookingTimePeriodCol .book-ride-period-btn.selected, #bookingTimePeriodCol .book-ride-time-opt.selected')?.getAttribute('data-val') || (bookingTimeTarget === 'return' ? 'PM' : 'AM');
+    
     let h = parseInt(hour, 10);
     if (period === 'AM') h = h === 12 ? 0 : h;
     else h = h === 12 ? 12 : h + 12;
     const value = `${String(h).padStart(2, '0')}:${minute}`;
+
+    // Logical School Commute Cross-Check
+    const outboundVal = document.getElementById('setupOutboundTime')?.value || '07:30';
+    const tripType = state().bookingDraft?.tripType || 'both';
+    
+    if (bookingTimeTarget === 'return' && (tripType === 'both' || tripType === 'outbound_return')) {
+      const outParts = outboundVal.split(':').map(Number);
+      const outMins = (outParts[0] || 7) * 60 + (outParts[1] || 30);
+      const retMins = h * 60 + parseInt(minute, 10);
+
+      // If Return is same or earlier than Outbound on the same day:
+      if (retMins <= outMins) {
+        // Auto-fix if user mistakenly set AM for return (e.g. 03:30 AM instead of 03:30 PM)
+        if (period === 'AM' && ((parseInt(hour, 10) % 12) + 12) * 60 + parseInt(minute, 10) > outMins) {
+          const adjH = (parseInt(hour, 10) % 12) + 12;
+          const adjValue = `${String(adjH).padStart(2, '0')}:${minute}`;
+          const input = document.getElementById('setupReturnTime');
+          if (input) input.value = adjValue;
+          if (typeof window.showToast === 'function') {
+            window.showToast(`✓ Auto-adjusted return time to ${hour}:${minute} PM`, 'info');
+          }
+          window.syncBookingTimeDisplays();
+          window.updateBookingSearchCta();
+          window.closeBookingSheet('bookingTimeSheet');
+          return;
+        }
+
+        if (typeof window.showToast === 'function') {
+          window.showToast(`⚠️ Return time (${hour}:${minute} ${period}) must be after morning pickup`, 'error');
+        }
+      }
+    }
+    
     const input = document.getElementById(bookingTimeTarget === 'return' ? 'setupReturnTime' : 'setupOutboundTime');
     if (input) input.value = value;
     window.syncBookingTimeDisplays();

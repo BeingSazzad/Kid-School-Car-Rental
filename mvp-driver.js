@@ -1625,10 +1625,26 @@
   function fillAvailTimeCol(id, values, selected) {
     const col = document.getElementById(id);
     if (!col) return;
+    if (id === 'drvAvailPeriodCol') {
+      const btns = values.map((val) => 
+        `<button type="button" class="book-ride-period-btn${val === selected ? ' selected' : ''}" data-val="${val}" onclick="selectDriverAvailPeriod('${val}')">${val}</button>`
+      ).join('');
+      col.innerHTML = btns;
+      return;
+    }
     const opts = values.map((val) => `<button type="button" class="book-ride-time-opt${val === selected ? ' selected' : ''}" data-val="${val}" onclick="selectDriverAvailTimePart(this)">${val}</button>`).join('');
     col.innerHTML = `<div class="book-ride-time-opt" style="pointer-events:none;visibility:hidden;">00</div>${opts}<div class="book-ride-time-opt" style="pointer-events:none;visibility:hidden;">00</div>`;
     scrollAvailTimeOpt(col, col.querySelector('.book-ride-time-opt.selected'));
   }
+
+  window.selectDriverAvailPeriod = function (val) {
+    const col = document.getElementById('drvAvailPeriodCol');
+    if (!col) return;
+    col.querySelectorAll('.book-ride-period-btn').forEach((btn) => {
+      if (btn.getAttribute('data-val') === val) btn.classList.add('selected');
+      else btn.classList.remove('selected');
+    });
+  };
 
   function parseAvailTimeParts(value) {
     const mins = toMinutes(value || '07:30');
@@ -1648,30 +1664,24 @@
     bindChildTitle(el, 'Availability');
     bindChildBack(el, "navigateTo('driverOnboardDocs')");
     const editing = editingProfileChild();
-    const pending = availDraft.pendingDate;
+    if (editing) {
+      bindChildBack(el, "navigateTo('driverProfile')");
+    }
     el.innerHTML = `
-      ${editing ? '' : stepHint(4, 5, 'Weekly time windows')}
       <div class="drv-avail-card">
-        <div class="drv-avail-card-head">
-          <span class="drv-avail-title">Weekly hours</span>
-          <span class="drv-avail-days-chip">Mon–Fri</span>
+        <div class="drv-avail-row">
+          <span>Active Service Days</span>
+          <strong>${(availDraft.days || []).join(', ') || 'Mon-Fri'}</strong>
         </div>
-        ${availWindowRow('morningStart', 'morningEnd')}
-        <div class="drv-avail-divider" role="presentation"></div>
-        ${availWindowRow('afternoonStart', 'afternoonEnd')}
-      </div>
-      <div class="form-group drv-avail-exception">
-        <label class="form-label">Exception date (optional)</label>
-        <div class="drv-avail-exception-row">
-          <button type="button" class="drv-date-field" id="drvExceptionTrigger" onclick="openDriverAvailDate()">
-            <span class="drv-date-field-value${pending ? '' : ' is-placeholder'}">${pending ? esc(isoToMdY(pending)) : 'mm/dd/yyyy'}</span>
-            <i data-lucide="calendar"></i>
-          </button>
-          <button type="button" class="drv-btn-outline drv-avail-add" onclick="addDriverException()">Add</button>
+        <div class="drv-avail-row">
+          <span>Morning Shift</span>
+          <strong>${availDraft.morningStart || '07:00'} - ${availDraft.morningEnd || '09:00'}</strong>
         </div>
-        ${exceptionChips()}
+        <div class="drv-avail-row">
+          <span>Afternoon Shift</span>
+          <strong>${availDraft.afternoonStart || '14:30'} - ${availDraft.afternoonEnd || '17:00'}</strong>
+        </div>
       </div>
-      <button type="button" class="btn-primary" onclick="saveDriverAvailability()">${editing ? 'Save' : 'Continue'}</button>
     `;
     icons();
   }
@@ -1704,7 +1714,7 @@
     fillAvailTimeCol('drvAvailPeriodCol', AVAIL_PERIODS, parts.period);
     document.getElementById('drvAvailTimeSheet')?.classList.add('visible');
     requestAnimationFrame(() => {
-      ['drvAvailHourCol', 'drvAvailMinuteCol', 'drvAvailPeriodCol'].forEach((id) => {
+      ['drvAvailHourCol', 'drvAvailMinuteCol'].forEach((id) => {
         const col = document.getElementById(id);
         scrollAvailTimeOpt(col, col?.querySelector('.book-ride-time-opt.selected'));
       });
@@ -1715,7 +1725,7 @@
   window.confirmDriverAvailTime = function () {
     const hour = document.querySelector('#drvAvailHourCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '07';
     const minute = document.querySelector('#drvAvailMinuteCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '30';
-    const period = document.querySelector('#drvAvailPeriodCol .book-ride-time-opt.selected')?.getAttribute('data-val') || 'AM';
+    const period = document.querySelector('#drvAvailPeriodCol .book-ride-period-btn.selected, #drvAvailPeriodCol .book-ride-time-opt.selected')?.getAttribute('data-val') || 'AM';
     let h = parseInt(hour, 10);
     if (period === 'AM') h = h === 12 ? 0 : h;
     else h = h === 12 ? 12 : h + 12;

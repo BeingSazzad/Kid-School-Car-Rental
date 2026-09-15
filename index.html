@@ -1565,15 +1565,22 @@
         <div class="book-ride-sheet-card">
           <div class="sheet-drag-handle" style="margin: 0 auto 8px;"></div>
           <div class="book-ride-sheet-head">
-            <h3 id="bookingTimeSheetTitle">Select Time</h3>
+            <div>
+              <h3 id="bookingTimeSheetTitle" style="margin:0 0 2px;">Select Time</h3>
+              <p style="margin:0; font-size:11px; color:#64748B;" id="bookingTimeSheetSub">Pick standard school schedule time</p>
+            </div>
             <button type="button" class="book-ride-sheet-close" onclick="closeBookingSheet('bookingTimeSheet')" title="Close">
               <i data-lucide="x"></i>
             </button>
           </div>
+
+          <!-- Quick School Commute Presets -->
+          <div class="book-ride-time-presets" id="bookingTimePresets"></div>
+
           <div class="book-ride-time-wheels">
             <div class="book-ride-time-col" id="bookingTimeHourCol"></div>
             <div class="book-ride-time-col" id="bookingTimeMinuteCol"></div>
-            <div class="book-ride-time-col" id="bookingTimePeriodCol"></div>
+            <div class="book-ride-time-col period-col" id="bookingTimePeriodCol"></div>
           </div>
           <button type="button" class="btn-primary" onclick="confirmBookingTimeSheet()">Done</button>
         </div>
