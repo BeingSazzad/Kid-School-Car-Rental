@@ -484,7 +484,6 @@
       <div class="auth-subpage-content">
         <div class="text-center">
           <h1 class="page-title">Let's get to know you</h1>
-          <p class="page-subtitle">Your basic info</p>
         </div>
 
         <form onsubmit="event.preventDefault(); navigateTo('authPhoto');" class="profile-fields-form">
@@ -568,7 +567,6 @@
       <div class="auth-subpage-content">
         <div class="text-center">
           <h1 class="page-title">Add Your Photo</h1>
-          <p class="page-subtitle">Add a profile photo</p>
         </div>
 
         <div class="avatar-picker-wrap" onclick="triggerPhotoUpload()">
@@ -621,7 +619,6 @@
       <div class="auth-subpage-content">
         <div class="text-center">
           <h1 class="page-title">Add Your Child</h1>
-          <p class="page-subtitle">Add your child</p>
         </div>
 
           <form onsubmit="event.preventDefault(); navigateTo('authSuccess');" class="profile-fields-form" id="authAddChildForm">
@@ -699,7 +696,7 @@
       <div class="screen-scroll-body sub-screen-body">
         <div class="sub-simple-intro">
           <h3 class="sub-screen-lede">Choose your plan</h3>
-          <p class="sub-screen-note">This is the Home2School platform fee. Ride payment stays between you and the provider.</p>
+          <p class="sub-screen-note">Platform fee only. Ride pay stays with your provider.</p>
         </div>
 
         <div class="sub-status-strip" id="subscriptionStatusCard" data-status="trial">
@@ -713,7 +710,7 @@
             <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
             <span class="sub-plan-copy">
               <span class="sub-plan-name">Annual</span>
-              <span class="sub-plan-desc">Best value for the school year</span>
+              <span class="sub-plan-desc">Best for the school year</span>
             </span>
             <span class="sub-plan-pricing">
               <span class="sub-plan-price">$79/year</span>
@@ -725,7 +722,7 @@
             <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
             <span class="sub-plan-copy">
               <span class="sub-plan-name">Monthly</span>
-              <span class="sub-plan-desc">Individual platform access</span>
+              <span class="sub-plan-desc">Platform access</span>
             </span>
             <span class="sub-plan-pricing">
               <span class="sub-plan-price">$9.99/month</span>
@@ -733,27 +730,16 @@
           </button>
         </div>
 
-        <!-- Promo / Discount Code Box -->
         <div class="sub-promo-box" style="margin-top: 12px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 10px 12px;">
           <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
-            <span>Have a Promo / School Discount Code?</span>
-            <span id="promoBadgeSuccess" style="display:none; color:#16A34A; font-weight:800; font-size:10px;">✓ Applied 20% OFF</span>
+            <span>Promo code</span>
+            <span id="promoBadgeSuccess" style="display:none; color:#16A34A; font-weight:800; font-size:10px;">✓ Applied</span>
           </div>
           <div style="display: flex; gap: 8px;">
-            <input type="text" id="inputPromoCode" placeholder="Enter code (e.g. SCHOOL20)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 12px; font-weight: 600; text-transform: uppercase;" />
+            <input type="text" id="inputPromoCode" placeholder="SCHOOL20" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 12px; font-weight: 600; text-transform: uppercase;" />
             <button type="button" onclick="window.applyParentPromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
               Apply
             </button>
-          </div>
-        </div>
-
-        <!-- Supported Payment Methods (Stripe, Apple Pay, Google Pay, Cards) -->
-        <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px;">
-          <span style="font-size: 10px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 800; color: #1E293B;">
-            <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">💳 Cards</span>
-            <span style="background:#000; color:#fff; padding:2px 6px; border-radius:4px;"> Pay</span>
-            <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">G Pay</span>
           </div>
         </div>
 
@@ -761,8 +747,8 @@
           <button type="button" class="btn-primary" id="btnContinueTrial" onclick="continueWithParentTrial()">
             <span id="btnContinueTrialLabel">Keep free trial</span>
           </button>
-          <button type="button" class="btn-primary" id="btnActivateSubscription" onclick="activateParentSubscription()" style="display:none;">Activate monthly access</button>
-          <button type="button" class="sub-cancel-link" id="btnCancelSubscription" onclick="cancelParentSubscription()">Cancel automatic renewal</button>
+          <button type="button" class="btn-primary" id="btnActivateSubscription" onclick="activateParentSubscription()" style="display:none;">Activate</button>
+          <button type="button" class="sub-cancel-link" id="btnCancelSubscription" onclick="cancelParentSubscription()">Cancel renewal</button>
         </div>
 
         <div class="sub-history-card">
@@ -817,11 +803,11 @@
           </div>
 
           <h1 class="welcome-name-title">Welcome, Sadia!</h1>
-          <p class="account-created-sub">Arman's profile is ready. Next: start your free platform trial.</p>
+          <p class="account-created-sub">Next: start your free trial.</p>
         </div>
 
         <div class="bottom-action-wrap">
-          <button class="btn-primary" onclick="navigateTo('subscription')">Continue to subscription</button>
+          <button class="btn-primary" onclick="navigateTo('subscription')">Continue</button>
         </div>
       </div>
 
@@ -2140,7 +2126,7 @@
         <span id="summaryDateText" style="display:none;">Mon, Sep 8</span>
         <span id="summaryTripTypeText" style="display:none;">Round trip</span>
 
-        <p class="rs-note">Request only. Ride fee is paid to the provider.</p>
+        <p class="rs-note">Request only — ride fee paid to the provider.</p>
 
         <div class="rs-actions">
           <button class="btn-primary" onclick="submitBookingRequest()">Send request</button>
@@ -2178,34 +2164,27 @@
 
         <div>
           <span class="status-chip pending" style="font-size: 12px; padding: 5px 12px;">Pending Acceptance</span>
-          <h2 style="font-size: 24px; font-weight: 800; color: var(--color-title); margin: 12px 0 6px;">Booking Request Sent!</h2>
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--color-title); margin: 12px 0 6px;">Request sent</h2>
           <p style="font-size: 14px; color: var(--color-body); line-height: 1.45; max-width: 320px; margin: 0 auto;"
             id="requestSentDesc">
-            Your request has been forwarded to your provider. Providers typically respond within 15 minutes.
+            Waiting for the provider — usually within 15 minutes.
           </p>
         </div>
 
         <div
           style="background-color: var(--color-fade); border: 1px solid var(--color-stroke); border-radius: var(--radius-md); padding: 14px 18px; width: 100%; text-align: left;">
-          <div style="font-size: 14px; font-weight: 800; color: var(--color-title); margin-bottom: 4px;">Trip
-            Highlights:</div>
-          <div style="font-size: 12px; color: var(--color-body);">• Home ⇄ Greenfield International</div>
-          <div style="font-size: 12px; color: var(--color-body);">• Pickup 07:30 AM | Return pickup 01:00 PM</div>
-          <div style="font-size: 12px; color: var(--color-body);">• Status updates sent via SMS &amp; notification
-          </div>
+          <div style="font-size: 12px; color: var(--color-body);">Home ⇄ Greenfield International</div>
+          <div style="font-size: 12px; color: var(--color-body); margin-top: 4px;">07:30 AM · Return 01:00 PM</div>
         </div>
 
-        <!-- Interactive Demo Button to Simulate Provider Acceptance -->
-        <div
-          style="background-color: #EFF6FF; border: 1.5px dashed #3B82F6; border-radius: var(--radius-md); padding: 12px; width: 100%;">
-          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #1D4ED8; margin-bottom: 6px;"><i data-lucide="zap" style="width:14px;height:14px;"></i><span>Demo Fast-Forward:</span></div>
-          <button class="btn-primary" style="height: 38px; font-size: 12px;"
-            onclick="simulateProviderAcceptance()">Simulate Provider Acceptance →</button>
+        <div style="width: 100%;">
+          <button class="btn-primary" style="height: 38px; font-size: 12px; width: 100%;"
+            onclick="simulateProviderAcceptance()">Simulate accept</button>
         </div>
 
         <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-          <button class="btn-primary" onclick="navigateTo('bookings')">View in My Bookings</button>
-          <button class="btn-secondary-link" onclick="navigateTo('messages')">Message Provider</button>
+          <button class="btn-primary" onclick="navigateTo('bookings')">My Bookings</button>
+          <button class="btn-secondary-link" onclick="navigateTo('messages')">Message</button>
         </div>
       </div>
 
@@ -2238,15 +2217,15 @@
         </div>
 
         <div>
-          <h2 style="font-size: 24px; font-weight: 800; color: var(--color-title); margin: 0 0 8px;">Booking Confirmed!</h2>
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--color-title); margin: 0 0 8px;">Confirmed</h2>
           <p style="font-size: 14px; color: var(--color-body); line-height: 1.45; max-width: 320px; margin: 0 auto;">
-            Your provider has confirmed your transportation schedule. First pickup is set for 07:30 AM.
+            First pickup 07:30 AM.
           </p>
         </div>
 
         <div class="summary-card" style="width: 100%; text-align: left;">
           <div class="summary-item-row">
-            <span class="summary-item-label">Booking Reference</span>
+            <span class="summary-item-label">Reference</span>
             <span class="summary-item-val" id="confirmedRefText">#H2S-84920</span>
           </div>
           <div class="summary-item-row">
@@ -2258,16 +2237,15 @@
             <span class="summary-item-val" id="confirmedChildrenText">Arman &amp; Emma Khan</span>
           </div>
           <div class="summary-item-row">
-            <span class="summary-item-label">Posted Rate</span>
-            <span class="summary-item-val" id="confirmedTotalText">Platform access only</span>
+            <span class="summary-item-label">Ride fee</span>
+            <span class="summary-item-val" id="confirmedTotalText">Arrange with provider</span>
           </div>
         </div>
 
         <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-          <button class="btn-primary" onclick="openBookingDetails(window.appState.activeBookingId)">View Booking
-            Details</button>
+          <button class="btn-primary" onclick="openBookingDetails(window.appState.activeBookingId)">View booking</button>
           <button class="btn-secondary-surface" id="btnConfirmedLiveTrack" onclick="openLiveTracking(window.appState.activeBookingId)" style="display:none;">Track</button>
-          <button class="btn-secondary-link" onclick="navigateTo('home')">Return to Parent Home</button>
+          <button class="btn-secondary-link" onclick="navigateTo('home')">Home</button>
         </div>
       </div>
 
@@ -3671,13 +3649,13 @@
             </div>
             <span style="background: rgba(255,255,255,0.18); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 99px;">Trial / Plan</span>
           </div>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.4;">Ride fees are paid directly to your provider — not through this balance.</div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.4;">Ride fees paid direct to provider.</div>
         </div>
 
         <!-- Transaction History Minimal Header -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px; margin-bottom: 8px;">
-          <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Platform billing</div>
-          <span style="font-size: 12px; font-weight: 600; color: #64748B;" id="txCountLabel">2 Transactions</span>
+          <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Billing history</div>
+          <span style="font-size: 12px; font-weight: 600; color: #64748B;" id="txCountLabel">2</span>
         </div>
 
         <!-- Dynamic Transactions List -->
@@ -3727,89 +3705,75 @@
           <!-- Question 1 -->
           <div class="faq-accordion-item open" data-topic="safety">
             <div class="faq-header-row" onclick="toggleFaq(this)">
-              <span class="faq-question-text">How are drivers background-checked and vetted?</span>
+              <span class="faq-question-text">How are drivers vetted?</span>
               <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
             </div>
             <div class="faq-body-text">
-              Every Home2School driver passes a multi-tier vulnerable sector criminal record check, clean driving abstract verification, annual vehicle inspection, and in-person orientation before accepting student rides.
+              Vulnerable-sector check, driving abstract, vehicle inspection, and orientation before any student rides.
             </div>
           </div>
 
           <!-- Question 2 -->
           <div class="faq-accordion-item" data-topic="safety">
             <div class="faq-header-row" onclick="toggleFaq(this)">
-              <span class="faq-question-text">Can parents track child rides with live GPS?</span>
+              <span class="faq-question-text">Can I track rides live?</span>
               <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
             </div>
             <div class="faq-body-text">
-              Yes! During active school commutes, parents receive live telemetry showing vehicle position, estimated arrival times, driver status, and instant push notifications upon pickup and safe school drop-off.
+              Yes — live location and ETAs during active trips, plus pickup and drop-off alerts.
             </div>
           </div>
 
           <!-- Question 3 -->
           <div class="faq-accordion-item" data-topic="safety">
             <div class="faq-header-row" onclick="toggleFaq(this)">
-              <span class="faq-question-text">Can I book for multiple children attending different schools?</span>
+              <span class="faq-question-text">Multiple children, different schools?</span>
               <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
             </div>
             <div class="faq-body-text">
-              Yes. Select every child on the trip setup step. Providers who can cover those schools and seats will appear in search. Any multi-child pricing is arranged directly with the provider — Home2School does not auto-apply sibling discounts.
+              Select every child in trip setup. Multi-child pricing is arranged with the provider — no auto sibling discount.
             </div>
           </div>
 
           <!-- Question 4 -->
           <div class="faq-accordion-item" data-topic="safety">
             <div class="faq-header-row" onclick="toggleFaq(this)">
-              <span class="faq-question-text">What happens if a driver is delayed in morning traffic?</span>
+              <span class="faq-question-text">What if the driver is late?</span>
               <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
             </div>
             <div class="faq-body-text">
-              If a driver encounters delays beyond 5 minutes, our automated tracking algorithm immediately alerts parents via SMS and push notification, and standby dispatch is notified.
+              Delays over 5 minutes trigger parent SMS and push alerts.
             </div>
           </div>
 
           <!-- Question 5 -->
           <div class="faq-accordion-item" data-topic="billing">
             <div class="faq-header-row" onclick="toggleFaq(this)">
-              <span class="faq-question-text">Can I pause or cancel during school vacations?</span>
+              <span class="faq-question-text">Pause during school breaks?</span>
               <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
             </div>
             <div class="faq-body-text">
-              Yes. Pause or cancel a recurring booking from Bookings with enough notice for your provider. Ride fees are arranged with the provider. Home2School only bills the platform subscription (or trial) — there is no in-app ride wallet or unused-day credit.
+              Pause or cancel from Bookings with notice to your provider. Platform subscription is separate — no ride wallet credits.
             </div>
           </div>
 
           <!-- Question 6 -->
           <div class="faq-accordion-item" data-topic="billing">
             <div class="faq-header-row" onclick="toggleFaq(this)">
-              <span class="faq-question-text">What does Home2School charge vs the ride fee?</span>
+              <span class="faq-question-text">Platform fee vs ride fee?</span>
               <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
             </div>
             <div class="faq-body-text">
-              Home2School charges a platform subscription (monthly or annual) for app access. Ride payment stays between you and the driver or WalkShare escort — arrange the amount and payment handle directly after they accept your request.
+              Home2School bills the subscription. Ride pay stays between you and the provider after they accept.
             </div>
           </div>
         </div>
 
-        <!-- Still Need Help / Contact Support Resolution Card (Product Manager Designed) -->
-        <div style="background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%); border: 1.5px solid #DBEAFE; border-radius: 18px; padding: 18px 16px; margin: 20px 0 24px; text-align: center; box-shadow: 0 2px 10px rgba(27, 43, 104, 0.04);">
-          <div style="width: 42px; height: 42px; border-radius: 12px; background: #FFFFFF; border: 1.5px solid #DBEAFE; color: var(--color-primary); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(27, 43, 104, 0.08);">
-            <i data-lucide="headset" style="width: 20px; height: 20px;"></i>
-          </div>
-          <h4 style="font-size: 14px; font-weight: 800; color: #0F172A; margin: 0 0 4px; letter-spacing: -0.2px;">Didn't find your answer?</h4>
-          <p style="font-size: 12px; color: #64748B; margin: 0 0 14px; line-height: 1.4;">
-            Our support team is available 24/7 to assist with custom routes, pricing, or driver questions.
-          </p>
-          <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
-            <button type="button" class="btn-primary" onclick="openNestedScreen('contactSupport', event)" style="padding: 0 16px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; flex: 1; max-width: 175px; justify-content: center;">
-              <i data-lucide="message-square" style="width: 15px; height: 15px;"></i>
-              <span>Contact Support</span>
-            </button>
-            <a href="tel:18005555437" style="height: var(--button-height); min-height: var(--button-height); font-size: var(--button-font-size); font-weight: 700; padding: 0 14px; border-radius: 12px; border: 1.5px solid #CBD5E1; background: #FFFFFF; color: #334155; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: all 0.15s ease;">
-              <i data-lucide="phone-call" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
-              <span>Call Helpline</span>
-            </a>
-          </div>
+        <div style="margin: 16px 0 24px; text-align: center;">
+          <button type="button" class="btn-primary" onclick="openNestedScreen('contactSupport', event)" style="padding: 0 20px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; justify-content: center;">
+            <i data-lucide="message-square" style="width: 15px; height: 15px;"></i>
+            <span>Contact Support</span>
+          </button>
         </div>
       </div>
 
@@ -3840,28 +3804,28 @@
           <div class="legal-policy-card">
             <div class="legal-card-header">
               <span class="legal-badge">01</span>
-              <span class="legal-title">Child Safety &amp; Custody Handoff Protocol</span>
+              <span class="legal-title">Child safety &amp; handoff</span>
             </div>
             <p class="legal-desc">
-              Home2School operates strictly under verified guardian custody transfer protocols. Drivers and walking escorts are mandated to verify child identity and hand off minors only to certified school staff or verified parents.
+              Drivers and escorts hand off children only to verified parents or school staff.
             </p>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>Verified Guardian Sign-off at school gates.</span>
+              <span>Guardian or school staff sign-off.</span>
             </div>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>Real-time photo verification upon student pickup.</span>
+              <span>Photo check at pickup.</span>
             </div>
           </div>
 
           <div class="legal-policy-card">
             <div class="legal-card-header">
               <span class="legal-badge">02</span>
-              <span class="legal-title">Platform Subscription &amp; Ride Payment</span>
+              <span class="legal-title">Subscription &amp; ride payment</span>
             </div>
             <p class="legal-desc">
-              Platform subscription (or trial) can be cancelled or changed from Profile → Subscription. Ride fees are not collected by Home2School and are not credited to an in-app wallet — parents arrange payment directly with the provider.
+              Manage subscription in Profile. Ride fees stay with the provider — not billed or walleted by Home2School.
             </p>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
@@ -3869,25 +3833,25 @@
             </div>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>Cancel renewal anytime; access continues until the period ends.</span>
+              <span>Cancel renewal anytime.</span>
             </div>
           </div>
 
           <div class="legal-policy-card">
             <div class="legal-card-header">
               <span class="legal-badge">03</span>
-              <span class="legal-title">Encrypted GPS Telemetry &amp; Minor Privacy</span>
+              <span class="legal-title">Location privacy</span>
             </div>
             <p class="legal-desc">
-              Student real-time telemetry and geofencing coordinates are encrypted end-to-end (AES-256) and are accessible only to verified parents and emergency dispatch during active trips. Data is purged after 30 days.
+              Live location is encrypted and shared only with verified parents during active trips. Purged after 30 days.
             </p>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>AES-256 bank-grade encrypted location feeds.</span>
+              <span>Encrypted location during trips.</span>
             </div>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>Automated 30-day telemetry purging cycle.</span>
+              <span>30-day purge.</span>
             </div>
           </div>
         </div>
@@ -3923,7 +3887,7 @@
         <div>
           <h2 style="font-size: 20px; font-weight: 800; color: #0F172A; letter-spacing: -0.02em;">Home2School</h2>
           <p style="font-size: 12px; color: #64748B; margin-top: 6px; line-height: 1.45; max-width: 280px; margin-left: auto; margin-right: auto;">
-            Safe, verified school rides and WalkShare for kids — built for parents.
+            Safe school rides and WalkShare for kids.
           </p>
         </div>
       </div>
@@ -3955,50 +3919,50 @@
           <div class="legal-policy-card">
             <div class="legal-card-header">
               <span class="legal-badge">01</span>
-              <span class="legal-title">Student Data &amp; COPPA Protection</span>
+              <span class="legal-title">Child data</span>
             </div>
             <p class="legal-desc">
-              We hold child privacy to the highest global standards. Photos, names, and school rosters are never shared with third parties or advertisers. All driver access to minor data is strictly temporary and locked during active commute hours.
+              Child photos, names, and school details are not sold or used for ads. Drivers see them only for active trips.
             </p>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>No commercial advertising or data broker sharing.</span>
+              <span>No ads or data brokers.</span>
             </div>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>Parent custody phone numbers are masked with secure proxy numbers.</span>
+              <span>Masked parent phone numbers.</span>
             </div>
           </div>
 
           <div class="legal-policy-card">
             <div class="legal-card-header">
               <span class="legal-badge">02</span>
-              <span class="legal-title">Real-Time GPS &amp; Geofencing Privacy</span>
+              <span class="legal-title">Live GPS</span>
             </div>
             <p class="legal-desc">
-              Live route telemetry is encrypted in transit and at rest using AES-256 standards. Location streaming is enabled only from vehicle engine start until safe school hand-off verification.
+              Location streams only during active trips to authorized guardians.
             </p>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>Telemetry broadcast restricted to authorized guardians.</span>
+              <span>Guardians only.</span>
             </div>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>Automated 30-day deletion cycle for historic route breadcrumbs.</span>
+              <span>30-day route history delete.</span>
             </div>
           </div>
 
           <div class="legal-policy-card">
             <div class="legal-card-header">
               <span class="legal-badge">03</span>
-              <span class="legal-title">Your Rights &amp; Data Deletion</span>
+              <span class="legal-title">Your rights</span>
             </div>
             <p class="legal-desc">
-              Under PIPEDA, you can permanently erase your profile, child records, and transit logs anytime.
+              Under PIPEDA you can erase your profile, children, and trip logs anytime.
             </p>
             <button type="button" class="privacy-delete-btn" onclick="window.openDeleteAccountModal()">
               <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
-              Delete account &amp; erase data
+              Delete account
             </button>
           </div>
         </div>

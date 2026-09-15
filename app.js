@@ -4992,7 +4992,7 @@ window.renderTransactions = function (filter = 'all') {
   // Update transaction count label
   const countLabel = document.getElementById('txCountLabel');
   if (countLabel) {
-    countLabel.textContent = `${filtered.length} Transaction${filtered.length === 1 ? '' : 's'}`;
+    countLabel.textContent = String(filtered.length);
   }
 
   if (filtered.length === 0) {
