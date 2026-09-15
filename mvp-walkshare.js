@@ -22,7 +22,50 @@
   ]);
   const PARENTS = {
     'PRNT-9042': { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Arman, Emma & Zara' },
-    'PRNT-2201': { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', sub: 'Parent · Yusuf & Ayla' }
+    'PRNT-2201': { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', sub: 'Parent · Yusuf & Ayla' },
+    'PRNT-3310': { id: 'PRNT-3310', name: 'Priya Patel', photo: '/assets/avatar_farhana.jpg', sub: 'Parent · Riya' },
+    'PRNT-1188': { id: 'PRNT-1188', name: 'Marcus Chen', photo: '/assets/avatar_john.png', sub: 'Parent · Leo & Mia' }
+  };
+  const DEMO_INBOX = [
+    { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', preview: 'Zara is at the corner with her high-vis vest.', time: '08:06 AM', unread: 2 },
+    { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', preview: 'Yusuf will wait at Maple & 2nd — blue backpack.', time: '07:48 AM', unread: 1 },
+    { id: 'PRNT-3310', name: 'Priya Patel', photo: '/assets/avatar_farhana.jpg', preview: 'Can Riya join the west-gate group next week?', time: 'Yesterday', unread: 1 },
+    { id: 'PRNT-1188', name: 'Marcus Chen', photo: '/assets/avatar_john.png', preview: 'Thanks for walking Leo to the after-care door.', time: 'Mon', unread: 0 }
+  ];
+  const DEMO_CHATS = {
+    'PRNT-9042': [
+      { type: 'system', text: 'WalkShare escort · Zara · Sunshine Pre-school' },
+      { type: 'provider', text: 'Morning Sarah — Zara is ready for the Elm & Maple meet-up.', time: '08:02 AM' },
+      { type: 'parent', text: 'Leaving the corner in 2 minutes with the group.', time: '08:04 AM' },
+      { type: 'provider', text: 'Zara is at the corner with her high-vis vest.', time: '08:06 AM' },
+      { type: 'system', text: 'Child joined walking group · 08:07 AM', tone: 'blue' },
+      { type: 'parent', text: 'Got her — sidewalks are clear. Heading to Sunshine.', time: '08:08 AM' },
+      { type: 'provider', text: 'Please hand to Ms. Jenkins at the west gate.', time: '08:09 AM' },
+      { type: 'parent', text: 'Will do. About 4 minutes out.', time: '08:10 AM' }
+    ],
+    'PRNT-2201': [
+      { type: 'system', text: 'Morning walk · Yusuf · Greenfield International' },
+      { type: 'provider', text: 'Hi Sarah — Yusuf will wait at Maple & 2nd — blue backpack.', time: '07:42 AM' },
+      { type: 'parent', text: 'Perfect. Group reaches Maple around 07:50.', time: '07:44 AM' },
+      { type: 'provider', text: 'He’s wearing the neon jacket today.', time: '07:48 AM' },
+      { type: 'parent', text: 'Seen him — joining now. Crosswalk light is green.', time: '07:51 AM' },
+      { type: 'system', text: 'En route to Greenfield · sidewalk escort', tone: 'amber' },
+      { type: 'provider', text: 'Text when you reach the school loop please.', time: '07:52 AM' }
+    ],
+    'PRNT-3310': [
+      { type: 'system', text: 'Capacity inquiry · west-gate walk group' },
+      { type: 'provider', text: 'Can Riya join the west-gate group next week?', time: 'Yesterday 6:10 PM' },
+      { type: 'parent', text: 'We have one spot Mon–Thu mornings. Pickup near Birchwood?', time: 'Yesterday 6:18 PM' },
+      { type: 'provider', text: 'Yes — 42 Birchwood at 07:55. She has an epi-pen in the front pocket.', time: 'Yesterday 6:22 PM' },
+      { type: 'parent', text: 'Noted on the roster. I’ll confirm Thursday night.', time: 'Yesterday 6:25 PM' }
+    ],
+    'PRNT-1188': [
+      { type: 'system', text: 'After-care handoff · Leo' },
+      { type: 'provider', text: 'Thanks for walking Leo to the after-care door yesterday.', time: 'Mon 4:40 PM' },
+      { type: 'parent', text: 'Happy to help. Staff signed him in at 3:52.', time: 'Mon 4:44 PM' },
+      { type: 'provider', text: 'Great — same route Wednesday?', time: 'Mon 4:46 PM' },
+      { type: 'parent', text: 'Yes — same meet point at Elm.', time: 'Mon 4:48 PM' }
+    ]
   };
   const REQUIRED_DOCS = [
     { id: 'id', title: 'Government ID' },
@@ -95,18 +138,19 @@
     }
     const w = state().walkshare;
     if (!w.onboarding) w.onboarding = { profile: true, group: true, docs: true, availability: true, rate: true };
-    if (!w.group) w.group = { label: 'Walking School Bus Escort', capacity: 3, route: 'Elm → Greenfield sidewalk corridor', safety: ['High-Vis Vests', 'Crossing Guard', 'Pediatric CPR'] };
+    if (!w.group) w.group = { label: 'Walking School Bus', capacity: 3, route: 'Elm → Greenfield', safety: ['High-Vis Vests', 'Crossing Guard', 'Pediatric CPR'] };
     if (!Array.isArray(w.documents) || !w.documents.length) w.documents = demoDocuments();
     if (!w.availability) {
       w.availability = {
         weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
         windows: [
-          { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '07:15', end: '08:45', enabled: true },
-          { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '14:30', end: '16:00', enabled: true }
+          { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '07:15', end: '08:45', label: 'Morning', enabled: true },
+          { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '14:30', end: '16:00', label: 'Afternoon', enabled: true }
         ],
         exceptions: []
       };
     }
+    if (window.H2SAvailability) w.availability = window.H2SAvailability.normalize(w.availability);
     if (!w.rate) w.rate = { amount: 75, period: 'week', negotiable: true, paymentMethod: 'Interac e-Transfer', paymentHandle: w.email || '' };
     if (!w.subscription) w.subscription = { status: 'trial', plan: 'monthly', priceMonthly: 19, priceAnnual: 179, trialDaysLeft: 14, history: [] };
     if (!Array.isArray(w.requests)) w.requests = [];
@@ -138,16 +182,16 @@
       phone: '+1 (416) 555-0185',
       email: 'sarah.jenkins@walkshare.ca',
       photo: '/assets/avatar_sarah.jpg',
-      serviceArea: 'Greenfield / Midtown sidewalk corridor',
+      serviceArea: 'Elm → Greenfield',
       rating: 4.9,
       reviewsCount: 45,
       isOnline: true,
       verificationStatus: 'approved',
       onboarding: { profile: true, group: true, docs: true, availability: true, rate: true },
       group: {
-        label: 'Walking School Bus Escort',
+        label: 'Walking School Bus',
         capacity: 3,
-        route: 'Elm → Greenfield sidewalk corridor',
+        route: 'Elm → Greenfield',
         safety: ['High-Vis Vests', 'Crossing Guard', 'Pediatric CPR']
       },
       documents: demoDocuments(),
@@ -165,8 +209,8 @@
       activeWalk: null,
       selectedRequestId: null,
       notifications: [
-        { id: 'wn-1', title: 'New WalkShare request', body: 'Sadia Khan requested a morning walking escort for Arman and Emma.', time: '18 min ago', unread: true },
-        { id: 'wn-2', title: 'Message from parent', body: 'Nadia: Yusuf will wait at the corner with his high-vis vest.', time: 'Yesterday', unread: true }
+        { id: 'wn-1', title: 'New request', body: 'Sadia asked for a morning walk for Arman and Emma.', time: '18 min ago', unread: true },
+        { id: 'wn-2', title: 'Message', body: 'Nadia: Yusuf will wait at the corner.', time: 'Yesterday', unread: true }
       ],
       requests: [
         {
@@ -181,7 +225,7 @@
           ],
           childNamesShort: 'Arman + Emma',
           seatsNeeded: 2,
-          pickupLocation: 'Home (12 Elm Street)',
+          pickupLocation: '12 Elm Street',
           dropoffLocation: 'Greenfield International School',
           dateLabel: 'Starts Mon, Sep 14, 2026',
           pickupTime: '07:40 AM',
@@ -244,12 +288,48 @@
     return isApproved(w) && hasAccess(w) && docsApproved(w);
   }
 
+  function acceptedSeatsAt(timeStr, ignoreId) {
+    if (!timeStr) return 0;
+    const t = String(timeStr).trim();
+    return ensureWalk().requests
+      .filter((r) => r.status === 'accepted' && r.id !== ignoreId)
+      .filter((r) => String(r.pickupTime || '') === t || String(r.returnTime || '') === t)
+      .reduce((sum, r) => sum + (Number(r.seatsNeeded) || kids(r).length || 1), 0);
+  }
+
+  function requestCapacityBlock(w, req) {
+    if (!req) return '';
+    const seats = Number(req.seatsNeeded) || kids(req).length || 1;
+    const cap = Number(w.group?.capacity) || 0;
+    if (!cap) return 'Set group capacity first';
+    if (seats > cap) return `Need ${seats} spots — group holds ${cap}`;
+    const pickup = req.pickupTime || '';
+    if (pickup) {
+      const used = acceptedSeatsAt(pickup, req.id);
+      if (used + seats > cap) return `Only ${Math.max(0, cap - used)} spot(s) free at ${pickup}`;
+    }
+    const ret = req.returnTime || '';
+    if (ret && req.direction !== 'oneway') {
+      const usedR = acceptedSeatsAt(ret, req.id);
+      if (usedR + seats > cap) return `Only ${Math.max(0, cap - usedR)} spot(s) free at ${ret}`;
+    }
+    return '';
+  }
+
   function kids(req) {
     return Array.isArray(req?.children) ? req.children.filter(Boolean) : [];
   }
 
   function childShort(req) {
     return kids(req).map((c) => String(c.name || '').split(' ')[0]).join(' + ') || req?.childNamesShort || 'Children';
+  }
+
+  function cleanPlace(value) {
+    let s = String(value || '').trim();
+    if (!s) return '';
+    s = s.replace(/^(Home|School|Pickup|Drop-?off|Meetup|Meeting point)\s*[:(–-]\s*/i, '');
+    s = s.replace(/\)\s*$/, '').trim();
+    return s || String(value || '').trim();
   }
 
   function parentInitials(name) {
@@ -268,29 +348,50 @@
 
   function compactDays(days) {
     const list = Array.isArray(days) ? days.filter(Boolean) : [];
-    if (!list.length) return 'Mon–Fri';
-    if (list.length === 5) return 'Mon–Fri';
+    if (!list.length || list.length === 5) return 'Mon–Fri';
     return list.join(', ');
   }
 
   function dateShort(label) {
-    return String(label || '').replace(/,?\s*\d{4}\s*$/, '').replace(/^Starts\s+/i, '').trim();
+    return String(label || '').replace(/,?\s*\d{4}\s*$/, '').replace(/^Starts\s+/i, '').replace(/\s*•.*$/, '').trim();
+  }
+
+  function formatCardDate(req) {
+    if (req.frequency === 'recurring') return compactDays(req.recurringDays);
+    const raw = String(req.dateLabel || '').replace(/^Starts\s+/i, '').replace(/\s*[·•].*$/, '').trim();
+    const withYear = /\d{4}/.test(raw) ? raw : `${raw} 2026`;
+    const parsed = Date.parse(withYear);
+    if (!Number.isNaN(parsed)) {
+      return new Date(parsed).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+    return dateShort(raw)
+      .replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/gi, (m) => m.slice(0, 3))
+      || 'Date TBD';
   }
 
   function tripKindLabel(req) {
     if (req.frequency === 'recurring') return 'Recurring';
-    if (req.direction === 'oneway') return 'One way';
+    if (req.direction === 'oneway') return 'One-time';
     return 'Round trip';
   }
 
   function timeLineCard(req) {
     if (req.direction === 'oneway' || !req.returnTime) return req.pickupTime || '';
-    return `${req.pickupTime || ''} & ${req.returnTime}`;
+    return `${req.pickupTime || ''} · ${req.returnTime}`;
   }
 
   function dateLineCard(req) {
-    if (req.frequency === 'recurring') return compactDays(req.recurringDays);
-    return dateShort(req.dateLabel) || 'Select date';
+    return formatCardDate(req);
+  }
+
+  function cardMetaLine(req) {
+    const seats = Number(req.seatsNeeded) || kids(req).length || 1;
+    const seatBit = seats === 1 ? '1 child' : `${seats} children`;
+    return `${tripKindLabel(req)} · ${seatBit}`;
+  }
+
+  function scheduleMetaLine(req) {
+    return [formatCardDate(req), timeLineCard(req)].filter(Boolean).join(' · ');
   }
 
   function toMinutes(label) {
@@ -350,9 +451,9 @@
         children: kids(r),
         parentId: r.parentId,
         parentName: r.parentName,
-        from: r.pickupLocation,
-        to: r.dropoffLocation,
-        route: `${r.pickupLocation} → ${r.dropoffLocation}`,
+        from: cleanPlace(r.pickupLocation),
+        to: cleanPlace(r.dropoffLocation),
+        route: `${cleanPlace(r.pickupLocation)} → ${cleanPlace(r.dropoffLocation)}`,
         leg: 'morning',
         badge: r.direction === 'oneway' ? 'One way' : 'Round trip',
         status: 'upcoming',
@@ -368,9 +469,9 @@
           children: kids(r),
           parentId: r.parentId,
           parentName: r.parentName,
-          from: r.dropoffLocation,
-          to: r.pickupLocation,
-          route: `${r.dropoffLocation} → ${r.pickupLocation}`,
+          from: cleanPlace(r.dropoffLocation),
+          to: cleanPlace(r.pickupLocation),
+          route: `${cleanPlace(r.dropoffLocation)} → ${cleanPlace(r.pickupLocation)}`,
           leg: 'afternoon',
           badge: 'Return',
           status: 'upcoming',
@@ -390,7 +491,13 @@
     if (!w.onboarding.availability) return 'wsOnboardAvailability';
     if (!w.onboarding.rate) return 'wsOnboardRate';
     if (!isApproved(w)) return 'wsPending';
-    if (!hasAccess(w)) return 'wsSubscription';
+    // Subscription stays inside Profile — never block signup/onboarding
+    if (!hasAccess(w)) {
+      w.subscription = w.subscription || {};
+      w.subscription.status = 'trial';
+      w.subscription.trialDaysLeft = w.subscription.trialDaysLeft || 14;
+      persist();
+    }
     return 'wsHome';
   };
 
@@ -558,14 +665,17 @@
       window.coreSwitchRole(role);
       return;
     }
-    const next = role === 'driver' ? 'driver' : role === 'walkshare' ? 'walkshare' : role === 'admin' ? 'admin' : 'parent';
+    if (role === 'admin') {
+      if (typeof window.showToast === 'function') window.showToast('Admin web dashboard comes later', 'info');
+      return;
+    }
+    const next = role === 'driver' ? 'driver' : role === 'walkshare' ? 'walkshare' : 'parent';
     if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
     state().activeRole = next;
     localStorage.setItem('h2s_active_role', next);
     applyRoleChrome();
     if (next === 'walkshare') window.navigateTo(window.getWalkShareLanding(), true);
     else if (next === 'driver') window.navigateTo(typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverHome', true);
-    else if (next === 'admin') window.navigateTo('adminPortal', true);
     else window.navigateTo('home', true);
   };
 
@@ -609,6 +719,7 @@
     if (avatar) {
       avatar.src = w.photo || '/assets/avatar_sarah.jpg';
       avatar.alt = w.name || 'WalkShare';
+      avatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_sarah.jpg'; };
     }
     const schedule = deriveSchedule();
     const incoming = newRequests();
@@ -642,22 +753,22 @@
     if (feedEl) {
       feedEl.innerHTML = `
         <div class="drv-home-section">
-          <h3 class="drv-home-heading">Quick Actions</h3>
+          <h3 class="drv-home-heading">Quick actions</h3>
           <div class="drv-home-actions">
-            <button type="button" class="drv-home-action${incoming.length ? ' has-badge' : ''}" onclick="navigateTo('wsRequests')">
+            <button type="button" class="drv-home-action drv-qa-requests${incoming.length ? ' has-badge' : ''}" onclick="navigateTo('wsRequests')">
               <span class="drv-home-action-ico"><i data-lucide="inbox"></i></span>
               <span class="drv-home-action-label">Requests</span>
               ${incoming.length ? `<span class="drv-home-action-badge">${incoming.length}</span>` : ''}
             </button>
-            <button type="button" class="drv-home-action" onclick="navigateTo('wsSchedule')">
+            <button type="button" class="drv-home-action drv-qa-schedule" onclick="navigateTo('wsSchedule')">
               <span class="drv-home-action-ico"><i data-lucide="calendar"></i></span>
               <span class="drv-home-action-label">Schedule</span>
             </button>
-            <button type="button" class="drv-home-action" onclick="openNestedScreen('wsOnboardAvailability')">
+            <button type="button" class="drv-home-action drv-qa-availability" onclick="openNestedScreen('wsOnboardAvailability')">
               <span class="drv-home-action-ico"><i data-lucide="clock"></i></span>
               <span class="drv-home-action-label">Availability</span>
             </button>
-            <button type="button" class="drv-home-action" onclick="navigateTo('inbox')">
+            <button type="button" class="drv-home-action drv-qa-messages" onclick="navigateTo('inbox')">
               <span class="drv-home-action-ico"><i data-lucide="message-square"></i></span>
               <span class="drv-home-action-label">Messages</span>
             </button>
@@ -679,8 +790,8 @@
 
   function activeWalkCard(item, live) {
     const kidsList = item.children || [];
-    const avatars = kidsList.slice(0, 2).map((c, i) => `<img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" />`).join('')
-      || `<img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" />`;
+    const avatars = kidsList.slice(0, 2).map((c, i) => `<img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" onerror="this.src='/assets/avatar_arman.jpg'" />`).join('')
+      || `<img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" onerror="this.src='/assets/avatar_arman.jpg'" />`;
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
     const cap = ensureWalk().group?.capacity || 3;
     return `<div class="drv-active-card">
@@ -701,7 +812,7 @@
       </div>
       <div class="drv-active-parent">
         <div class="drv-active-parent-info">
-          <img src="${esc(parentPhoto)}" alt="" class="drv-active-parent-avatar" />
+          <img src="${esc(parentPhoto)}" alt="" class="drv-active-parent-avatar" onerror="this.src='/assets/avatar_sadia.jpg'" />
           <div>
             <div class="drv-active-parent-name">${esc(item.parentName || 'Parent')}</div>
             <div class="drv-active-parent-role">Parent</div>
@@ -740,31 +851,24 @@
 
   function requestCard(req) {
     const name = req.parentName || 'Parent';
-    const kindIcon = req.frequency === 'recurring' ? 'refresh-cw' : 'calendar';
-    const kindLabel = req.frequency === 'recurring' ? 'Recurring' : 'One-time';
-    const seats = Number(req.seatsNeeded) || kids(req).length || 1;
-    const seatsText = seats === 1 ? '1 spot' : `${seats} spots`;
+    const from = cleanPlace(req.pickupLocation) || 'Pickup';
+    const to = cleanPlace(req.dropoffLocation) || 'School';
     const actions = req.status === 'new' ? `
       <div class="drv-req-card-actions" onclick="event.stopPropagation()">
-        <button type="button" class="drv-req-accept" onclick="acceptWalkShareRequest('${esc(req.id)}')" ${canAccept(ensureWalk()) ? '' : 'disabled'}>
-          <span class="drv-req-btn-ico" aria-hidden="true"><i data-lucide="check"></i></span>
-          Accept
-        </button>
-        <button type="button" class="drv-req-decline" onclick="declineWalkShareRequest('${esc(req.id)}')">
-          <span class="drv-req-btn-ico" aria-hidden="true"><i data-lucide="x"></i></span>
-          Decline
-        </button>
+        <button type="button" class="drv-req-accept" onclick="acceptWalkShareRequest('${esc(req.id)}')" ${canAccept(ensureWalk()) ? '' : 'disabled'}>Accept</button>
+        <button type="button" class="drv-req-decline" onclick="declineWalkShareRequest('${esc(req.id)}')">Decline</button>
       </div>` : '';
+    const photo = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
     return `<article class="drv-req-card" role="button" tabindex="0" onclick="openWalkShareRequest('${esc(req.id)}')">
       <div class="drv-req-card-head">
-        <div class="drv-req-avatar tone-${avatarTone(name)}" aria-hidden="true">${esc(parentInitials(name))}</div>
+        <img class="drv-req-avatar" src="${esc(photo)}" alt="" onerror="this.src='/assets/avatar_sadia.jpg'" />
         <div class="drv-req-head-copy">
           <h3 class="drv-req-parent">${esc(name)}</h3>
           <p class="drv-req-kids">${esc(childShort(req))}</p>
         </div>
         <div class="drv-req-head-end">
           <span class="drv-req-price">${esc(req.rateLabel || '')}</span>
-          <i data-lucide="chevron-right" class="drv-req-chevron"></i>
+          <i data-lucide="chevron-right" class="drv-req-chevron" aria-hidden="true"></i>
         </div>
       </div>
       <div class="drv-req-route-block">
@@ -774,25 +878,12 @@
           <span class="drv-req-dot end"><i data-lucide="map-pin"></i></span>
         </div>
         <div class="drv-req-route-copy">
-          <p class="drv-req-stop">${esc(req.pickupLocation || 'Meetup')}</p>
-          <p class="drv-req-stop is-end">${esc(req.dropoffLocation || 'School')}</p>
+          <p class="drv-req-stop">${esc(from)}</p>
+          <p class="drv-req-stop is-end">${esc(to)}</p>
         </div>
       </div>
-      <div class="drv-req-schedule">
-        <div class="drv-req-sched-item">
-          <i data-lucide="calendar"></i>
-          <span>${esc(dateLineCard(req))}</span>
-        </div>
-        <div class="drv-req-sched-item">
-          <i data-lucide="clock"></i>
-          <span>${esc(timeLineCard(req))}</span>
-        </div>
-      </div>
-      <div class="drv-req-chips">
-        <span class="drv-req-chip"><i data-lucide="${kindIcon}"></i> ${esc(kindLabel)}</span>
-        <span class="drv-req-chip"><i data-lucide="users"></i> ${esc(seatsText)}</span>
-        <span class="drv-req-chip"><i data-lucide="footprints"></i> WalkShare</span>
-      </div>
+      <p class="drv-req-when"><i data-lucide="calendar" aria-hidden="true"></i><span>${esc(scheduleMetaLine(req))}</span></p>
+      <p class="drv-req-meta-line">${esc(cardMetaLine(req))}</p>
       ${actions}
     </article>`;
   }
@@ -813,11 +904,11 @@
       }
     });
     const countEl = document.getElementById('wsReqSub');
-    if (countEl) countEl.textContent = tab === 'new' ? 'New walking escort requests from families' : tab === 'accepted' ? 'Walks you have accepted' : 'Declined WalkShare requests';
+    if (countEl) countEl.textContent = tab === 'new' ? 'Incoming family requests' : tab === 'accepted' ? 'Accepted walks' : 'Declined requests';
     const wrap = document.getElementById('wsRequestsListWrap');
     if (!wrap) return;
     if (!list.length) {
-      wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="inbox"></i></div><h4>No ${tab} requests</h4><p>Parents book WalkShare from Search when they need a walking escort.</p></div>`;
+      wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="inbox"></i></div><h4>No ${tab} requests</h4><p>New requests show up here.</p></div>`;
     } else {
       wrap.innerHTML = list.map((r) => requestCard(r)).join('');
     }
@@ -840,15 +931,20 @@
   window.acceptWalkShareRequest = function (id) {
     const w = ensureWalk();
     if (!canAccept(w)) {
-      toast(docsApproved(w) ? 'Platform access required before you can accept.' : 'Documents must be approved before you can accept.');
+      toast(docsApproved(w) ? 'Start trial first' : 'Docs must be approved');
       return;
     }
     const req = w.requests.find((r) => r.id === id);
     if (!req || req.status !== 'new') return;
+    const block = requestCapacityBlock(w, req);
+    if (block) {
+      toast(block, 'error');
+      return;
+    }
     req.status = 'accepted';
     syncParentBookingStatus(req, 'accepted');
     persist();
-    toast('WalkShare request accepted');
+    toast('Accepted');
     renderRequests(state()._wsReqTab || 'new');
     if (document.getElementById('screen-wsRequestDetail')?.classList.contains('active')) renderRequestDetail();
   };
@@ -860,7 +956,7 @@
     req.status = 'declined';
     syncParentBookingStatus(req, 'declined');
     persist();
-    toast('Request declined. Parent is notified in-app.');
+    toast('Request declined');
     renderRequests(state()._wsReqTab || 'new');
     if (document.getElementById('screen-wsRequestDetail')?.classList.contains('active')) renderRequestDetail();
   };
@@ -870,10 +966,11 @@
     const req = w.requests.find((r) => r.id === w.selectedRequestId) || w.requests[0];
     const el = feed('wsRequestDetailFeed');
     if (!el || !req) return;
+    const block = req.status === 'new' ? (canAccept(w) ? requestCapacityBlock(w, req) : (docsApproved(w) ? 'Start trial first' : 'Docs must be approved')) : '';
     el.innerHTML = `
       <div class="trip-card">
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">
-          <img src="${esc(req.parentPhoto || '/assets/avatar_sadia.jpg')}" alt="" class="provider-large-avatar" style="width:56px;height:56px;" />
+          <img src="${esc(req.parentPhoto || '/assets/avatar_sadia.jpg')}" alt="" class="provider-large-avatar" style="width:56px;height:56px;" onerror="this.src='/assets/avatar_sadia.jpg'" />
           <div>
             <h3 class="card-title-navy" style="margin:0;">${esc(req.parentName)}</h3>
             <p class="card-desc-muted" style="margin:2px 0 0;">${esc(childShort(req))} · ${esc(req.rateLabel || '')}</p>
@@ -886,17 +983,18 @@
             <span class="drv-req-dot end"><i data-lucide="map-pin"></i></span>
           </div>
           <div class="drv-req-route-copy">
-            <p class="drv-req-stop">${esc(req.pickupLocation)}</p>
-            <p class="drv-req-stop is-end">${esc(req.dropoffLocation)}</p>
+            <p class="drv-req-stop">${esc(cleanPlace(req.pickupLocation))}</p>
+            <p class="drv-req-stop is-end">${esc(cleanPlace(req.dropoffLocation))}</p>
           </div>
         </div>
         <p class="card-desc-muted">${esc(dateLineCard(req))} · ${esc(timeLineCard(req))}</p>
-        <p class="card-desc-muted" style="margin-top:8px;">${esc(req.notes || '')}</p>
+        ${req.notes ? `<p class="card-desc-muted" style="margin-top:8px;">${esc(req.notes)}</p>` : ''}
+        ${block ? `<p class="drv-home-gate" style="margin-top:10px;">${esc(block)}</p>` : ''}
       </div>
       ${req.status === 'new' ? `<div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" ${canAccept(w) ? '' : 'disabled'}>Accept WalkShare</button>
+        <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" ${(!canAccept(w) || block) ? 'disabled' : ''}>Accept</button>
         <button type="button" class="btn-secondary-link" onclick="declineWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')">Decline</button>
-      </div>` : `<button type="button" class="btn-primary" onclick="openChatWith('${esc(req.parentId)}')">Message parent</button>`}
+      </div>` : `<button type="button" class="btn-primary" onclick="openChatWith('${esc(req.parentId)}')">Message</button>`}
     `;
     icons();
   }
@@ -933,7 +1031,7 @@
       btnU.classList.toggle('active', mode === 'upcoming');
     }
     if (!list.length) {
-      wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="calendar"></i></div><h4>Nothing scheduled</h4><p>Accepted morning and return walks appear here.</p></div>`;
+      wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="calendar"></i></div><h4>Nothing scheduled</h4><p>Accepted walks show here.</p></div>`;
       icons();
       return;
     }
@@ -943,9 +1041,9 @@
       return `<div class="drv-sched-section">
         <div class="drv-sched-section-head">
           <h3 class="drv-sched-section-title">${esc(title)}</h3>
-          <span>${esc(dateLabel)}</span>
+          <span class="drv-sched-section-date">${esc(dateLabel)}</span>
         </div>
-        ${items.map((item) => schedCard(item)).join('')}
+        <div class="drv-sched-list">${items.map((item) => schedCard(item)).join('')}</div>
       </div>`;
     };
     if (mode === 'upcoming') {
@@ -957,52 +1055,74 @@
   }
 
   function passengerAvatars(item) {
-    const list = item.children || [];
-    if (!list.length) return '';
-    const dots = list.slice(0, 3).map((c) => {
-      const letter = String(c.name || '?')[0].toUpperCase();
-      const tone = avatarTone(c.name);
-      return `<span class="drv-sched-avatar tone-${tone}">${esc(letter)}</span>`;
+    const roster = (item.children || []).slice(0, 3);
+    const tones = ['rose', 'mint', 'sky', 'sand'];
+    if (roster.length) {
+      return roster.map((c, i) => {
+        const label = String(c.name || 'C').trim().split(/\s+/)[0];
+        const initial = (label[0] || 'C').toUpperCase();
+        return `<span class="drv-sched-ava tone-${tones[i % tones.length]}" aria-hidden="true">${esc(initial)}</span>`;
+      }).join('');
+    }
+    const fallback = String(item.childNames || '')
+      .split(/\s*[+·•,]\s*/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .slice(0, 3);
+    return fallback.map((name, i) => {
+      const initial = (name[0] || 'C').toUpperCase();
+      return `<span class="drv-sched-ava tone-${tones[i % tones.length]}" aria-hidden="true">${esc(initial)}</span>`;
     }).join('');
-    const names = list.map((c) => String(c.name || '').split(' ')[0]).join(' · ');
-    return `<div class="drv-sched-passengers">${dots}<span class="drv-sched-pass-names">${esc(names)}</span></div>`;
+  }
+
+  function passengerLine(item) {
+    const kidBits = (item.children || []).map((c) => String(c.name || '').split(' ')[0]).filter(Boolean);
+    const fallback = String(item.childNames || '').split(/\s*[+·•,]\s*/).map((s) => s.trim()).filter(Boolean);
+    const kids = kidBits.length ? kidBits : fallback;
+    return kids.join(' · ') || 'Children';
   }
 
   function schedCard(item) {
-    const d = dateParts(item.when);
-    const cta = item.isActionableNow
-      ? `<button type="button" class="btn-primary" onclick="startWalkShareWalk('${esc(item.id)}')"><i data-lucide="footprints" style="width:16px;height:16px;"></i> Open walk</button>`
-      : item.leg === 'morning'
-        ? `<button type="button" class="btn-secondary-surface" onclick="startWalkShareWalk('${esc(item.id)}')"><i data-lucide="navigation" style="width:16px;height:16px;"></i> I'm on the way</button>`
-        : '';
-    return `<article class="drv-sched-card">
-      <button type="button" class="drv-sched-card-main" onclick="startWalkShareWalk('${esc(item.id)}')">
+    const d = dateParts(item.when || item.dateLabel || 'Tue, Sep 9, 2026');
+    const isReturn = item.leg === 'afternoon';
+    const badge = item.badge || (isReturn ? 'Return' : 'One way');
+    const open = !!item.isActionableNow || item.status === 'active';
+    const cta = open
+      ? `<button type="button" class="drv-sched-cta primary" onclick="event.stopPropagation(); startWalkShareWalk('${esc(item.id)}')"><i data-lucide="footprints"></i> Open walk</button>`
+      : (item.leg === 'morning'
+        ? `<button type="button" class="drv-sched-cta outline" onclick="event.stopPropagation(); startWalkShareWalk('${esc(item.id)}')"><i data-lucide="navigation"></i> I'm on the way</button>`
+        : '');
+    return `<article class="drv-sched-card" onclick="startWalkShareWalk('${esc(item.id)}')">
+      <div class="drv-sched-card-main">
         <div class="drv-sched-date">
-          <span class="drv-home-trip-month">${esc(d.month)}</span>
-          <span class="drv-home-trip-day">${esc(d.day)}</span>
-          <span class="drv-home-trip-wd">${esc(d.weekday || '')}</span>
+          <span class="drv-sched-month">${esc(d.month)}</span>
+          <span class="drv-sched-day">${esc(d.day)}</span>
+          <span class="drv-sched-wd">${esc(d.weekday || '')}</span>
         </div>
         <div class="drv-sched-body">
           <div class="drv-sched-top">
             <span class="drv-sched-time">${esc(item.time)}</span>
-            <span class="drv-sched-badge ${item.leg === 'afternoon' ? 'return' : ''}">${esc(item.badge)}</span>
+            <span class="drv-sched-badge${isReturn ? ' is-return' : ''}">${esc(badge)}</span>
           </div>
-          <div class="drv-req-route-block">
-            <div class="drv-req-route-rail" aria-hidden="true">
-              <span class="drv-req-dot start"></span>
-              <span class="drv-req-rail-line"></span>
-              <span class="drv-req-dot end"><i data-lucide="map-pin"></i></span>
+          <div class="drv-sched-route">
+            <div class="drv-sched-rail" aria-hidden="true">
+              <span class="drv-sched-dot start"></span>
+              <span class="drv-sched-line"></span>
+              <span class="drv-sched-dot end"><i data-lucide="map-pin"></i></span>
             </div>
-            <div class="drv-req-route-copy">
-              <p class="drv-req-stop">${esc(item.from)}</p>
-              <p class="drv-req-stop is-end">${esc(item.to)}</p>
+            <div class="drv-sched-stops">
+              <p>${esc(cleanPlace(item.from) || item.from || '')}</p>
+              <p>${esc(cleanPlace(item.to) || item.to || '')}</p>
             </div>
           </div>
-          ${passengerAvatars(item)}
+          <div class="drv-sched-people">
+            <div class="drv-sched-avas">${passengerAvatars(item)}</div>
+            <span class="drv-sched-names">${esc(passengerLine(item))}</span>
+          </div>
         </div>
-        <i data-lucide="chevron-right" class="drv-home-trip-chevron"></i>
-      </button>
-      ${cta ? `<div class="drv-sched-cta">${cta}</div>` : ''}
+        <i data-lucide="chevron-right" class="drv-sched-chevron"></i>
+      </div>
+      ${cta}
     </article>`;
   }
 
@@ -1034,12 +1154,12 @@
   }
 
   const WALK_STAGES = [
-    { key: 0, chip: 'Confirmed', cta: "I'm on the way", pin: 12 },
-    { key: 1, chip: 'On the way', cta: 'Arrived at meetup', pin: 28 },
-    { key: 2, chip: 'At meetup', cta: 'Confirm children with me', pin: 42 },
-    { key: 3, chip: 'Walking', cta: 'Arrived at school gate', pin: 68 },
-    { key: 4, chip: 'At school gate', cta: 'Confirm handoff', pin: 86 },
-    { key: 5, chip: 'Handoff', cta: 'Complete walk', pin: 96 }
+    { key: 0, chip: 'Confirmed', cta: "I'm on the way", progress: 8, pin: { left: '19%', top: '74%' } },
+    { key: 1, chip: 'On the way', cta: 'Arrived at meetup', progress: 22, pin: { left: '19%', top: '58%' } },
+    { key: 2, chip: 'At meetup', cta: 'Confirm children with me', progress: 34, pin: { left: '19%', top: '36%' } },
+    { key: 3, chip: 'Walking', cta: 'Arrived at school gate', progress: 58, pin: { left: '48%', top: '24%' } },
+    { key: 4, chip: 'At school gate', cta: 'Confirm handoff', progress: 78, pin: { left: '78%', top: '28%' } },
+    { key: 5, chip: 'Handoff', cta: 'Complete walk', progress: 92, pin: { left: '80%', top: '48%' } }
   ];
 
   function renderActiveWalk() {
@@ -1054,22 +1174,27 @@
     const btn = document.getElementById('btnWsMilestoneText');
     const note = document.getElementById('wsActiveWalkNote');
     const pin = document.getElementById('wsCockpitPin');
-    const path = document.getElementById('wsCockpitPath');
+    const progressPath = document.getElementById('wsRouteProgress');
     if (chip) chip.textContent = stage.chip;
     if (title) title.textContent = atDest ? (item.to || 'School gate') : (item.from || 'Meetup');
     if (desc) desc.textContent = `${item.childNames || 'Children'} · sidewalk escort`;
-    if (eta) eta.textContent = item.time || '';
+    if (eta) eta.textContent = item.time || '07:50 AM';
     if (btn) btn.textContent = stage.cta;
     if (note) {
       note.textContent = atDest
         ? 'Stay on verified sidewalks. Hand children only to authorized school staff.'
         : 'High-vis vest on. Parent sees live WalkShare status.';
     }
-    if (pin) pin.style.left = `${stage.pin}%`;
-    if (path) path.style.setProperty('--ws-progress', `${Math.max(18, stage.pin)}%`);
+    if (pin && stage.pin) {
+      pin.style.left = stage.pin.left;
+      pin.style.top = stage.pin.top;
+    }
+    if (progressPath) {
+      const p = Math.max(6, Math.min(96, stage.progress || 22));
+      progressPath.style.strokeDasharray = `${p} 100`;
+    }
     const msg = document.getElementById('wsWalkMessageBtn');
     if (msg) msg.setAttribute('onclick', `openChatWith('${item.parentId || 'PRNT-9042'}')`);
-    // Fallback feed if HTML cockpit missing
     const el = feed('wsActiveWalkFeed');
     if (el && !document.getElementById('wsMilestoneText')) {
       el.innerHTML = `<div class="trip-card"><span class="status-chip in-progress"><span class="status-dot"></span><span>${esc(stage.chip)}</span></span><h3 class="card-title-navy" style="margin-top:12px;">${esc(atDest ? item.to : item.from)}</h3><p class="card-desc-muted">${esc(item.childNames)} · sidewalk escort</p></div><button type="button" class="btn-primary" onclick="advanceWalkShareWalk()">${esc(stage.cta)}</button>`;
@@ -1107,7 +1232,7 @@
     el.innerHTML = `
       <div class="trip-card">
         <h3 class="section-heading" style="margin-bottom:0;">${isApproved(w) ? 'Verified WalkShare' : 'Finish setup'}</h3>
-        <p class="drv-lede">Walking escorts — no vehicle. Complete each step to accept family requests.</p>
+        <p class="drv-lede">Complete setup to accept walks.</p>
       </div>
       <div class="profile-menu-section">
         ${steps.map(([key, title, sub, screen]) => `
@@ -1127,94 +1252,62 @@
     icons();
   }
 
+  function profileMenuRow(icon, label, onclick) {
+    return `<button type="button" class="profile-menu-item" onclick="${onclick}">
+      <div class="menu-item-left">
+        <div class="menu-icon-wrap"><i data-lucide="${icon}"></i></div>
+        <span class="menu-title-text">${label}</span>
+      </div>
+      <i data-lucide="chevron-right" class="profile-menu-chevron"></i>
+    </button>`;
+  }
+
   function renderProfile() {
     const w = ensureWalk();
     const el = document.getElementById('wsProfileFeed');
     if (!el) return;
-    const badge = isApproved(w) ? 'Verified WalkShare' : onboardingDone(w) ? 'Pending review' : 'Setup incomplete';
-    const chevron = '<i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>';
+    const idLabel = `ID: WS-${String(w.group?.capacity || 3).padStart(2, '0')}15-2201`;
     el.innerHTML = `
       <div class="profile-user-card" role="button" tabindex="0" onclick="openNestedScreen('wsOnboardProfile', event)">
-        <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0;">
-          <img src="${esc(w.photo || '/assets/avatar_sarah.jpg')}" alt="${esc(w.name)}" class="profile-avatar-lg" />
-          <span style="position: absolute; bottom: 0; right: 0; background: var(--color-secondary, #F2600C); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #09122C;">
-            <i data-lucide="edit-2" style="width:11px;height:11px;"></i>
-          </span>
-        </div>
-        <div style="flex: 1; min-width: 0;">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <h3 style="font-size: 18px; font-weight: 800; color: #FFFFFF; margin: 0;">${esc(w.name)}</h3>
-            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: rgba(255, 255, 255, 0.7);"></i>
+        <img src="${esc(w.photo || '/assets/avatar_sarah.jpg')}" alt="${esc(w.name)}" class="profile-avatar-lg" onerror="this.src='/assets/avatar_sarah.jpg'" />
+        <div class="profile-user-meta">
+          <div class="profile-user-top">
+            <div class="profile-user-name-row">
+              <h3 class="profile-user-name">${esc(w.name)}</h3>
+              ${isApproved(w) ? '<i data-lucide="badge-check" class="profile-verified-badge"></i>' : ''}
+            </div>
+            <i data-lucide="chevron-right" class="profile-user-chevron"></i>
           </div>
-          <p style="font-size: 13px; color: rgba(255, 255, 255, 0.78); margin: 3px 0 0 0;">${esc(w.phone)}</p>
-          <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
-            <span class="profile-child-count-pill"><i data-lucide="shield-check" style="width: 11px; height: 11px;"></i> ${esc(badge)}</span>
-            <span class="profile-child-count-pill" style="background: rgba(255, 255, 255, 0.22);"><i data-lucide="footprints" style="width: 11px; height: 11px;"></i> ${esc(w.group.capacity)} kids</span>
-          </div>
+          <p class="profile-user-phone">${esc(w.phone)}</p>
+          <span class="profile-id-pill">${esc(idLabel)}</span>
         </div>
       </div>
 
       <div class="profile-menu-section">
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('wsOnboardGroup', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="users"></i></div><span class="menu-title-text">${esc(w.group.label)}</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('wsOnboardDocs', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="file-check"></i></div><span class="menu-title-text">Verification documents</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('wsOnboardAvailability', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="clock"></i></div><span class="menu-title-text">Availability</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('wsOnboardRate', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="banknote"></i></div><span class="menu-title-text">Posted rate</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('wsPayment', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="wallet"></i></div><span class="menu-title-text">Payment preference</span></div>${chevron}
-        </button>
+        ${profileMenuRow('users', esc(w.group.label), "openNestedScreen('wsOnboardGroup', event)")}
+        ${profileMenuRow('file-check', 'Verification documents', "openNestedScreen('wsOnboardDocs', event)")}
+        ${profileMenuRow('clock', 'Availability', "openNestedScreen('wsOnboardAvailability', event)")}
+        ${profileMenuRow('circle-dollar-sign', 'Posted rate', "openNestedScreen('wsOnboardRate', event)")}
+        ${profileMenuRow('wallet', 'Payment preference', "openNestedScreen('wsPayment', event)")}
       </div>
 
       <div class="profile-menu-section">
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('wsSubscription', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="sparkles"></i></div><span class="menu-title-text">WalkShare subscription</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('profileNotifications', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="bell"></i></div><span class="menu-title-text">Notification Channels</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('faq', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="help-circle"></i></div><span class="menu-title-text">FAQ</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('contactSupport', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="headset"></i></div><span class="menu-title-text">Contact Support</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('privacy', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="shield"></i></div><span class="menu-title-text">Privacy Policy</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('legal', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="file-text"></i></div><span class="menu-title-text">Terms of Service</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openNestedScreen('about', event)">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="info"></i></div><span class="menu-title-text">About Home2School</span></div>${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="window.openDeleteAccountModal()" style="color:#E11D48;">
-          <div class="menu-item-left"><div class="menu-icon-wrap" style="background:#FFF1F2; color:#E11D48;"><i data-lucide="trash-2"></i></div><span class="menu-title-text" style="color:#E11D48;">Delete WalkShare Account (PIPEDA)</span></div>${chevron}
-        </button>
+        ${profileMenuRow('credit-card', 'WalkShare subscription', "openNestedScreen('wsSubscription', event)")}
+        ${profileMenuRow('bell', 'Notifications', "openNestedScreen('profileNotifications', event)")}
+        ${profileMenuRow('help-circle', 'FAQ', "openNestedScreen('faq', event)")}
+        ${profileMenuRow('headphones', 'Contact Support', "openNestedScreen('contactSupport', event)")}
+        ${profileMenuRow('shield', 'Privacy Policy', "openNestedScreen('privacy', event)")}
+        ${profileMenuRow('file-text', 'Terms of Service', "openNestedScreen('legal', event)")}
+        ${profileMenuRow('info', 'About Home2School', "openNestedScreen('about', event)")}
       </div>
 
-      <div class="profile-workspace-card" onclick="window.openRoleSwitcherModal()">
-        <div class="pwc-left">
-          <div class="pwc-icon-wrap walkshare">
-            <i data-lucide="layers" style="width:18px;height:18px;"></i>
-          </div>
-          <div class="pwc-info">
-            <div class="pwc-title">Active Persona: WalkShare Escort</div>
-            <div class="pwc-subtitle">Switch to Parent, Driver or Admin</div>
-          </div>
-        </div>
-        <button type="button" class="pwc-action-btn">Switch Role ▾</button>
+      <div class="profile-menu-section">
+        ${profileMenuRow('users', 'Switch to Parent', 'window.openRoleSwitcherModal()')}
       </div>
 
-      <button type="button" onclick="navigateTo('authWelcome')" style="width:100%;padding:13px 16px;font-size:14px;font-weight:700;border-radius:12px;border:1.5px solid #FEE2E2;background:#FFF5F5;color:#DC2626;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;">
-        <i data-lucide="log-out" style="width:15px;height:15px;"></i>
-        Log Out
+      <button type="button" class="profile-logout-btn" onclick="navigateTo('authWelcome')">
+        <i data-lucide="log-out"></i>
+        Log out
       </button>
     `;
     icons();
@@ -1225,11 +1318,11 @@
     const el = feed('wsOnboardProfileFeed');
     if (!el) return;
     el.innerHTML = `
-      <p class="drv-lede" style="margin-bottom:12px;">Parents see your verified name, photo, and walking corridor.</p>
+      <p class="drv-lede" style="margin-bottom:12px;">Name, photo, zone.</p>
       <div class="form-group"><label class="form-label">Full name</label><input class="form-input" id="wsProfileName" value="${esc(w.name)}" /></div>
       <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="wsProfilePhone" value="${esc(w.phone)}" /></div>
       <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="wsProfileEmail" value="${esc(w.email)}" /></div>
-      <div class="form-group"><label class="form-label">Service area</label><input class="form-input" id="wsProfileArea" value="${esc(w.serviceArea)}" /></div>
+      <div class="form-group"><label class="form-label">Service zone</label><input class="form-input" id="wsProfileArea" value="${esc(w.serviceArea)}" placeholder="e.g. Elm → Greenfield" /></div>
       <button type="button" class="btn-primary" onclick="saveWalkShareProfile()">Save and continue</button>
     `;
     icons();
@@ -1241,6 +1334,13 @@
     w.phone = document.getElementById('wsProfilePhone')?.value || w.phone;
     w.email = document.getElementById('wsProfileEmail')?.value || w.email;
     w.serviceArea = document.getElementById('wsProfileArea')?.value || w.serviceArea;
+    const provider = (state().providers || []).find((p) => p.id === 'sarah');
+    if (provider) {
+      provider.serviceArea = w.serviceArea;
+      provider.zone = window.H2SZone
+        ? window.H2SZone.clean(w.group?.route || w.serviceArea)
+        : (w.group?.route || w.serviceArea);
+    }
     w.onboarding.profile = true;
     persist();
     toast('Profile saved');
@@ -1252,10 +1352,10 @@
     const el = feed('wsOnboardGroupFeed');
     if (!el) return;
     el.innerHTML = `
-      <p class="drv-lede" style="margin-bottom:12px;">Group size (3–8 children) and corridor path.</p>
+      <p class="drv-lede" style="margin-bottom:12px;">Size and walking path.</p>
       <div class="form-group"><label class="form-label">Group label</label><input class="form-input" id="wsGroupLabel" value="${esc(w.group.label)}" /></div>
-      <div class="form-group"><label class="form-label">Capacity (children)</label><input class="form-input" type="number" min="2" max="10" id="wsGroupCap" value="${esc(w.group.capacity)}" /></div>
-      <div class="form-group"><label class="form-label">Sidewalk corridor</label><input class="form-input" id="wsGroupRoute" value="${esc(w.group.route)}" /></div>
+      <div class="form-group"><label class="form-label">Capacity</label><input class="form-input" type="number" min="2" max="10" id="wsGroupCap" value="${esc(w.group.capacity)}" /></div>
+      <div class="form-group"><label class="form-label">Corridor</label><input class="form-input" id="wsGroupRoute" value="${esc(w.group.route)}" placeholder="e.g. Elm → Greenfield" /></div>
       <button type="button" class="btn-primary" onclick="saveWalkShareGroup()">Save and continue</button>
     `;
     icons();
@@ -1266,6 +1366,11 @@
     w.group.label = document.getElementById('wsGroupLabel')?.value || w.group.label;
     w.group.capacity = Number(document.getElementById('wsGroupCap')?.value || w.group.capacity);
     w.group.route = document.getElementById('wsGroupRoute')?.value || w.group.route;
+    const provider = (state().providers || []).find((p) => p.id === 'sarah');
+    if (provider) {
+      provider.zone = window.H2SZone ? window.H2SZone.clean(w.group.route || w.serviceArea) : (w.group.route || w.serviceArea);
+      provider.seats = w.group.capacity;
+    }
     w.onboarding.group = true;
     persist();
     toast('Walking group saved');
@@ -1277,7 +1382,7 @@
     const el = feed('wsOnboardDocsFeed');
     if (!el) return;
     el.innerHTML = `
-      <p class="drv-lede" style="margin-bottom:12px;">Same trust bar parents see on WalkShare profiles — Photo ID, proof of address, Canadian VSC, 2 personal references, and signed safety agreement.</p>
+      <p class="drv-lede" style="margin-bottom:12px;">ID, address, VSC, references, agreement.</p>
       <div class="profile-menu-section">
         ${w.documents.map((doc) => `
           <button type="button" class="profile-menu-item" onclick="openWalkShareDoc('${esc(doc.id)}')">
@@ -1329,31 +1434,48 @@
 
   function renderOnboardAvailability() {
     const w = ensureWalk();
+    if (window.H2SAvailability) w.availability = window.H2SAvailability.normalize(w.availability);
     const a = w.availability;
     const el = feed('wsOnboardAvailabilityFeed');
     if (!el) return;
+    const m = a.windows[0] || {};
+    const n = a.windows[1] || {};
     el.innerHTML = `
-      <p class="drv-lede" style="margin-bottom:12px;">Select recurring walking windows (Mon–Fri).</p>
-      <div class="profile-menu-section">
-        <div class="profile-menu-item" style="cursor:default;">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="sun"></i></div><span class="menu-title-text">Morning Walk (07:15 – 08:45 AM)</span></div>
-          <span class="both-way-badge">Active</span>
-        </div>
-        <div class="profile-menu-item" style="cursor:default;">
-          <div class="menu-item-left"><div class="menu-icon-wrap"><i data-lucide="sunset"></i></div><span class="menu-title-text">Afternoon Walk (02:30 – 04:00 PM)</span></div>
-          <span class="both-way-badge">Active</span>
-        </div>
-      </div>
+      <p class="drv-lede" style="margin-bottom:12px;">Morning & afternoon windows (Mon–Fri).</p>
+      <div class="form-group"><label class="form-label">Morning from</label><input class="form-input" id="wsAvailMStart" value="${esc(m.start || '07:15')}" placeholder="07:15" /></div>
+      <div class="form-group"><label class="form-label">Morning to</label><input class="form-input" id="wsAvailMEnd" value="${esc(m.end || '08:45')}" placeholder="08:45" /></div>
+      <div class="form-group"><label class="form-label">Afternoon from</label><input class="form-input" id="wsAvailAStart" value="${esc(n.start || '14:30')}" placeholder="14:30" /></div>
+      <div class="form-group"><label class="form-label">Afternoon to</label><input class="form-input" id="wsAvailAEnd" value="${esc(n.end || '16:00')}" placeholder="16:00" /></div>
       <button type="button" class="btn-primary" onclick="saveWalkShareAvailability()">Save and continue</button>
     `;
     icons();
   }
 
   window.saveWalkShareAvailability = function () {
-    ensureWalk().onboarding.availability = true;
+    const w = ensureWalk();
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+    w.availability = window.H2SAvailability
+      ? window.H2SAvailability.normalize({
+          weekly: days,
+          windows: [
+            { id: 'w1', days, start: document.getElementById('wsAvailMStart')?.value || '07:15', end: document.getElementById('wsAvailMEnd')?.value || '08:45', label: 'Morning', enabled: true },
+            { id: 'w2', days, start: document.getElementById('wsAvailAStart')?.value || '14:30', end: document.getElementById('wsAvailAEnd')?.value || '16:00', label: 'Afternoon', enabled: true }
+          ],
+          exceptions: []
+        })
+      : w.availability;
+    w.onboarding.availability = true;
+    const provider = (state().providers || []).find((p) => p.id === 'sarah');
+    if (provider) provider.availability = w.availability;
     persist();
     toast('Availability saved');
     window.navigateTo(onboardingDone(ensureWalk()) ? 'wsProfile' : 'wsOnboardRate');
+  };
+
+  window.walkshareMatchesParentSearch = function (draft) {
+    const w = ensureWalk();
+    if (window.H2SAvailability) return window.H2SAvailability.matchesSearch(w.availability, draft || {});
+    return true;
   };
 
   function renderOnboardRate() {
@@ -1361,7 +1483,7 @@
     const el = feed('wsOnboardRateFeed');
     if (!el) return;
     el.innerHTML = `
-      <p class="drv-lede" style="margin-bottom:12px;">Flat walking bus rate per child per week.</p>
+      <p class="drv-lede" style="margin-bottom:12px;">Rate per child / week.</p>
       <div class="form-group"><label class="form-label">Weekly rate ($ CAD / child)</label><input class="form-input" type="number" id="wsRateAmount" value="${esc(w.rate.amount)}" /></div>
       <button type="button" class="btn-primary" onclick="saveWalkShareRate()">Save and continue</button>
     `;
@@ -1417,19 +1539,19 @@
     el.innerHTML = `
       <div class="trip-card">
         <h3 class="section-heading" style="margin-bottom:4px;">WalkShare platform access</h3>
-        <p class="drv-lede">${w.subscription.status === 'trial' ? `${w.subscription.trialDaysLeft} days left on free trial` : 'Choose a plan to keep accepting escorts.'}</p>
+        <p class="drv-lede">${w.subscription.status === 'trial' ? `${w.subscription.trialDaysLeft} days left on trial` : 'Choose a plan to continue.'}</p>
         <p class="card-desc-muted">$${w.subscription.priceMonthly}/mo · $${w.subscription.priceAnnual}/yr</p>
       </div>
 
       <!-- Promo / Discount Code Box for WalkShare -->
       <div class="sub-promo-box" style="margin-top: 10px; margin-bottom: 12px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 10px 12px;">
-        <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
           <span>Have a WalkShare Promo Code?</span>
-          <span id="wsPromoBadge" style="display:none; color:#16A34A; font-weight:800; font-size:11px;">✓ Applied 20% OFF</span>
+          <span id="wsPromoBadge" style="display:none; color:#16A34A; font-weight:800; font-size:10px;">✓ Applied 20% OFF</span>
         </div>
         <div style="display: flex; gap: 8px;">
-          <input type="text" id="inputWsPromoCode" placeholder="Enter code (e.g. WALK20)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 13px; font-weight: 600; text-transform: uppercase;" />
-          <button type="button" onclick="window.applyWalkSharePromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;">
+          <input type="text" id="inputWsPromoCode" placeholder="Enter code (e.g. WALK20)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 12px; font-weight: 600; text-transform: uppercase;" />
+          <button type="button" onclick="window.applyWalkSharePromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
             Apply
           </button>
         </div>
@@ -1437,15 +1559,15 @@
 
       <!-- Supported Payment Methods -->
       <div style="margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px;">
-        <span style="font-size: 11px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
-        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: #1E293B;">
+        <span style="font-size: 10px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 800; color: #1E293B;">
           <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">💳 Cards</span>
           <span style="background:#000; color:#fff; padding:2px 6px; border-radius:4px;"> Pay</span>
           <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">G Pay</span>
         </div>
       </div>
 
-      <button type="button" class="btn-primary" onclick="activateWalkShareTrial()">Continue with free trial</button>
+      <button type="button" class="btn-primary" onclick="activateWalkShareTrial()">Save</button>
       <button type="button" onclick="window.openSubscriptionReceiptModal()" style="margin-top:8px; background:none; border:none; color:var(--color-primary); font-size:12px; font-weight:700; cursor:pointer; text-decoration:underline;">View Receipt &amp; Billing History</button>
     `;
     icons();
@@ -1468,37 +1590,53 @@
     w.subscription.status = 'trial';
     persist();
     toast('Trial active');
-    window.navigateTo('wsHome');
+    if (typeof window.backNested === 'function') window.backNested('wsProfile');
+    else window.navigateTo('wsProfile');
   };
 
-  function renderInbox() {
-    if (state().activeRole !== 'walkshare') return;
-    const wrap = document.getElementById('inboxThreadList');
-    if (!wrap) return;
+  function walkInboxThreads() {
     const map = {};
-    ensureWalk().requests.forEach((r) => {
-      if (!r.parentId) return;
+    DEMO_INBOX.forEach((t) => {
+      map[t.id] = { ...t };
+    });
+    (ensureWalk().requests || []).forEach((r) => {
+      if (!r.parentId || map[r.parentId]) return;
       map[r.parentId] = {
         id: r.parentId,
         name: r.parentName,
         photo: r.parentPhoto || '/assets/avatar_sadia.jpg',
         preview: r.notes || `${childShort(r)} walking escort`,
-        time: r.pickupTime || ''
+        time: r.pickupTime || '',
+        unread: 0
       };
     });
-    Object.values(PARENTS).forEach((p) => {
-      if (!map[p.id]) map[p.id] = { id: p.id, name: p.name, photo: p.photo, preview: p.sub, time: '' };
-    });
-    wrap.innerHTML = Object.values(map).map((t) => `
-      <button type="button" class="mvp-inbox-row" onclick="openChatWith('${t.id}')">
-        <img src="${t.photo}" alt="${esc(t.name)}" />
+    return Object.values(map);
+  }
+
+  function renderInbox() {
+    if (state().activeRole !== 'walkshare') return;
+    const wrap = document.getElementById('inboxThreadList');
+    if (!wrap) return;
+    const threads = walkInboxThreads();
+    wrap.innerHTML = threads.map((t) => `
+      <button type="button" class="mvp-inbox-row${t.unread ? ' is-unread' : ''}" onclick="openChatWith('${t.id}')">
+        <img src="${t.photo || '/assets/avatar_sadia.jpg'}" alt="${esc(t.name)}" onerror="this.src='/assets/avatar_sadia.jpg'" />
         <div style="flex:1;min-width:0;">
-          <div class="mvp-inbox-name">${esc(t.name)}</div>
+          <div class="mvp-inbox-name">${esc(t.name)}${t.unread ? `<span class="mvp-inbox-unread">${t.unread > 9 ? '9+' : t.unread}</span>` : ''}</div>
           <div class="mvp-inbox-preview">${esc(t.preview)}</div>
         </div>
         <span class="notif-time-text">${esc(t.time)}</span>
       </button>
     `).join('');
+  }
+
+  function parentParty(id) {
+    if (PARENTS[id]) return PARENTS[id];
+    const demo = DEMO_INBOX.find((t) => t.id === id);
+    if (demo) return { id: demo.id, name: demo.name, photo: demo.photo, sub: 'Parent' };
+    const req = (ensureWalk().requests || []).find((r) => r.parentId === id);
+    if (req) return { id: req.parentId, name: req.parentName, photo: req.parentPhoto || '/assets/avatar_sadia.jpg', sub: 'Parent · ' + childShort(req) };
+    return PARENTS['PRNT-9042'];
   }
 
   const prevChat = window.openChatWith;
@@ -1511,18 +1649,114 @@
     if (typeof prevChat === 'function') prevChat(partyId);
   };
 
+  function chatBubbleHtml(item) {
+    if (item.type === 'system') {
+      const tone = item.tone === 'amber'
+        ? 'background:#FEF3C7;border-color:#FDE68A;color:#B45309;'
+        : item.tone === 'blue'
+          ? 'background:#EFF6FF;border-color:#DBEAFE;color:var(--color-primary);'
+          : '';
+      return `<div class="system-status-bubble" style="${tone}display:flex;align-items:center;justify-content:flex-start;gap:6px;">
+        <i data-lucide="clock" style="width:14px;height:14px;"></i>
+        <span>${esc(item.text)}</span>
+      </div>`;
+    }
+    // WalkShare chat: "provider" = parent message; "parent" = escort (me)
+    const cls = item.type === 'provider' ? 'provider' : 'parent';
+    return `<div class="chat-bubble ${cls}">
+      ${esc(item.text)}
+      <div class="chat-timestamp">${esc(item.time || '')}</div>
+    </div>`;
+  }
+
+  function paintWalkChat(party) {
+    const stream = document.getElementById('chatStream');
+    if (!stream) return;
+    const key = party.id || window.activeChatProviderId || 'PRNT-9042';
+    const script = DEMO_CHATS[key] || DEMO_CHATS['PRNT-9042'];
+    stream.dataset.walkParty = key;
+    stream.innerHTML = script.map(chatBubbleHtml).join('');
+    icons();
+    stream.scrollTop = stream.scrollHeight;
+  }
+
   function renderChatHeader() {
     if (state().activeRole !== 'walkshare') return;
-    const id = window.activeChatProviderId || 'PRNT-9042';
-    const p = PARENTS[id] || { name: 'Parent', photo: '/assets/avatar_sadia.jpg', sub: 'Parent' };
+    const party = parentParty(window.activeChatProviderId) || PARENTS['PRNT-9042'];
+    const avatar = document.getElementById('chatDriverAvatar');
     const nameEl = document.getElementById('chatDriverName');
-    if (nameEl) {
-      nameEl.innerHTML = `${esc(p.name)} <i data-lucide="chevron-right" style="width:14px;height:14px;"></i>`;
+    const subEl = document.getElementById('chatDriverSub');
+    const input = document.getElementById('chatInputField');
+    const header = document.getElementById('chatHeaderProfileBtn');
+    const callBtn = document.getElementById('chatDriverCallBtn');
+    if (avatar) {
+      avatar.src = party.photo || '/assets/avatar_sadia.jpg';
+      avatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_sadia.jpg'; };
     }
-    const avatar = document.querySelector('#screen-messages .chat-header-avatar, #chatHeaderAvatar');
-    if (avatar && avatar.tagName === 'IMG') avatar.src = p.photo;
-    icons();
+    if (nameEl) nameEl.textContent = party.name;
+    if (subEl) {
+      subEl.textContent = '';
+      subEl.style.display = 'none';
+    }
+    if (input) input.placeholder = 'Message…';
+    if (header) { header.onclick = null; header.style.cursor = 'default'; }
+    if (callBtn) callBtn.style.display = 'none';
+    const quick = document.getElementById('chatQuickReplies');
+    if (quick) {
+      quick.innerHTML = [
+        "I'm on my way",
+        'Group is leaving now',
+        'Arrived at school gate',
+        'Child joined the group',
+        'Handed off safely'
+      ].map((t) => `<button class="quick-reply-pill" onclick="sendQuickReply('${t.replace(/'/g, "\\'")}')">${t}</button>`).join('');
+    }
+    paintWalkChat(party);
   }
+
+  function appendMine(text) {
+    const stream = document.getElementById('chatStream');
+    if (!stream) return;
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble parent';
+    bubble.innerHTML = `${esc(text)}<div class="chat-timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
+    stream.appendChild(bubble);
+    stream.scrollTop = stream.scrollHeight;
+  }
+
+  function appendTheirs(text) {
+    const stream = document.getElementById('chatStream');
+    if (!stream) return;
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble provider';
+    bubble.innerHTML = `${esc(text)}<div class="chat-timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
+    stream.appendChild(bubble);
+    stream.scrollTop = stream.scrollHeight;
+  }
+
+  const prevQuick = window.sendQuickReply;
+  window.sendQuickReply = function (text) {
+    if (state().activeRole === 'walkshare') {
+      appendMine(text);
+      setTimeout(() => appendTheirs('Thank you — we will be ready.'), 900);
+      return;
+    }
+    if (typeof prevQuick === 'function') prevQuick(text);
+  };
+
+  const prevSend = window.handleSendChatMessage;
+  window.handleSendChatMessage = function (e) {
+    if (state().activeRole !== 'walkshare') {
+      if (typeof prevSend === 'function') return prevSend(e);
+      return;
+    }
+    e.preventDefault();
+    const input = document.getElementById('chatInputField');
+    if (!input || !input.value.trim()) return;
+    appendMine(input.value.trim());
+    input.value = '';
+    setTimeout(() => appendTheirs('Got it — thanks Sarah.'), 900);
+  };
 
   function renderNotifications() {
     if (state().activeRole !== 'walkshare') return;

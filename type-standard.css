@@ -1,0 +1,195 @@
+/* App type standard — only 10 / 12 / 14 / 16 / 20 / 24 / 28 */
+
+:root {
+  --type-display: 24px;
+  --type-title: 20px;
+  --type-heading: 16px;
+  --type-body: 14px;
+  --type-caption: 12px;
+  --type-micro: 10px;
+}
+
+/* Profile + nested detail screens */
+#screen-profile .top-bar-title,
+#screen-profilePersonalInfo .top-bar-title,
+#screen-profileEmergency .top-bar-title,
+#screen-profileLocations .top-bar-title,
+#screen-profilePayments .top-bar-title,
+#screen-myChildren .top-bar-title,
+#screen-subscription .top-bar-title,
+#screen-faq .top-bar-title,
+#screen-legal .top-bar-title,
+#screen-privacy .top-bar-title,
+#screen-about .top-bar-title,
+#screen-contactSupport .top-bar-title,
+#screen-bookingProviderDetails .top-bar-title,
+#screen-bookingDetails .top-bar-title,
+#screen-bookingSummary .top-bar-title {
+  font-size: var(--type-heading) !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+}
+
+#screen-profile .profile-user-card h3 {
+  font-size: var(--type-title) !important;
+  line-height: 1.25 !important;
+}
+
+#screen-profile .profile-user-card p {
+  font-size: var(--type-caption) !important;
+}
+
+#screen-profile .profile-menu-item,
+#screen-profile .profile-menu-label {
+  font-size: var(--type-body) !important;
+  font-weight: 600 !important;
+}
+
+#screen-profile .profile-menu-sub,
+#screen-profile .profile-menu-desc {
+  font-size: var(--type-caption) !important;
+  font-weight: 500 !important;
+  color: var(--color-body) !important;
+}
+
+/* Forms inside profile / details */
+.form-label,
+#screen-profilePersonalInfo .form-label,
+#screen-myChildren .form-label,
+#screen-profileEmergency .form-label {
+  font-size: var(--type-caption) !important;
+  font-weight: 600 !important;
+  color: var(--color-title) !important;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  font-size: var(--type-body) !important;
+  font-weight: 500 !important;
+}
+
+.page-title {
+  font-size: var(--type-title) !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+
+.page-subtitle {
+  font-size: var(--type-body) !important;
+  font-weight: 500 !important;
+  color: var(--color-body) !important;
+  line-height: 1.55 !important;
+}
+
+/* Section labels across detail surfaces */
+.profile-section-label,
+.pp-label,
+.bd-label,
+.rs-label,
+.csc-section-label,
+.sos-family-label,
+.sub-screen-lede {
+  font-size: var(--type-caption) !important;
+  font-weight: 600 !important;
+  color: var(--color-body) !important;
+}
+
+.sub-screen-lede {
+  font-size: var(--type-title) !important;
+  font-weight: 800 !important;
+  color: var(--color-title) !important;
+}
+
+.sub-screen-note,
+.card-desc-muted,
+.empty-trips-desc {
+  font-size: var(--type-caption) !important;
+  line-height: 1.45 !important;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-secondary-surface,
+.pp-btn-outline,
+.bd-btn-outline {
+  font-size: var(--type-body) !important;
+  font-weight: 700 !important;
+}
+
+.btn-secondary-link,
+.bd-link,
+.pcs-book,
+.bk-cta,
+.bd-msg-link,
+.bd-pin-link {
+  font-size: var(--type-body) !important;
+  font-weight: 700 !important;
+}
+
+/* List row hierarchy */
+.pcs-book,
+.provider-card-slim .provider-name-verified,
+.bd-trip-title,
+.profile-hero-name,
+.bk-title {
+  font-size: var(--type-heading) !important;
+}
+
+.profile-hero-name {
+  font-size: var(--type-title) !important;
+}
+
+.bd-trip-title {
+  font-size: var(--type-title) !important;
+}
+
+.provider-meta-row,
+.pcs-sub,
+.bd-trip-route,
+.bd-tl-sub,
+.bd-kid-meta,
+.bk-sub,
+.rs-provider-meta,
+.profile-hero-sub,
+.profile-service-subtitle {
+  font-size: var(--type-caption) !important;
+  font-weight: 500 !important;
+}
+
+.bd-tl-name,
+.bd-kid-name,
+.bd-driver-name,
+.bd-vehicle-name,
+.rs-provider-name,
+.profile-service-title,
+.rs-meta-val {
+  font-size: var(--type-body) !important;
+  font-weight: 600 !important;
+}
+
+.bd-tl-time,
+.bd-status,
+.bd-date,
+.bk-status,
+.rs-meta-lbl,
+.rs-route-lbl {
+  font-size: var(--type-caption) !important;
+}
+
+/* Micro only for true badges */
+.status-chip,
+.profile-spec-chip,
+.bd-ref,
+.telemetry-pill {
+  font-size: var(--type-caption) !important;
+}
+
+.live-pulse-dot + span,
+.segment-btn {
+  font-size: var(--type-caption) !important;
+}
+
+#screen-bookings .bk-tabs .segment-btn {
+  font-size: var(--type-body) !important;
+}

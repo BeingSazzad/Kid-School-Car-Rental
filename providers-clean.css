@@ -1,0 +1,208 @@
+/* Parent search — flat list standard (no card stack) */
+
+#screen-bookingSearchProviders {
+  background: #FFFFFF !important;
+}
+
+#screen-bookingSearchProviders .status-bar,
+#screen-bookingSearchProviders .top-bar-sticky,
+#screen-bookingSearchProviders .screen-scroll-body {
+  background: #FFFFFF !important;
+}
+
+#screen-bookingSearchProviders .top-bar-sticky {
+  border-bottom: 1px solid #ECECF0;
+}
+
+/* List | Map — text tabs, no segment box */
+#screen-bookingSearchProviders .mvp-search-toolbar {
+  justify-content: flex-start;
+  margin: 0 0 4px;
+  padding: 0;
+}
+
+#screen-bookingSearchProviders .provider-view-toggle {
+  display: inline-flex;
+  width: auto;
+  max-width: none;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  gap: 16px;
+  border-bottom: 1px solid #ECECF0;
+  width: 100%;
+}
+
+#screen-bookingSearchProviders .provider-view-btn {
+  height: 36px;
+  padding: 0 2px 10px;
+  border-radius: 0;
+  background: transparent !important;
+  color: #6B7280;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: none !important;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+#screen-bookingSearchProviders .provider-view-btn.active {
+  background: transparent !important;
+  color: #1A1D24;
+  font-weight: 700;
+  box-shadow: none !important;
+  border-bottom-color: #1B2B68;
+}
+
+/* Filters — soft text chips, not bordered boxes */
+#screen-bookingSearchProviders .mvp-filter-row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  margin: 12px 0 4px;
+  padding: 0;
+}
+
+#screen-bookingSearchProviders .mvp-filter-chip {
+  flex: 0 0 auto;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: #4B5563;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+#screen-bookingSearchProviders .mvp-filter-chip.active {
+  background: #1B2B68;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+#screen-bookingSearchProviders .mvp-filter-chip:not(.active) {
+  background: #F3F4F6;
+}
+
+/* Provider rows — divider list, zero card chrome */
+.providers-result-list {
+  gap: 0 !important;
+  margin-top: 4px;
+  background: #FFFFFF;
+}
+
+.provider-card-slim,
+#screen-bookingSearchProviders .provider-result-card {
+  padding: 14px 0 !important;
+  gap: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid #ECECF0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.provider-card-slim:hover,
+#screen-bookingSearchProviders .provider-result-card:hover {
+  border-color: transparent !important;
+  border-bottom-color: #ECECF0 !important;
+  transform: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.providers-result-list .provider-card-slim:last-child {
+  border-bottom: none !important;
+}
+
+.pcs-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.provider-card-slim .provider-card-avatar {
+  width: 44px !important;
+  height: 44px !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.provider-card-slim .provider-name-block {
+  flex: 1;
+  min-width: 0;
+  gap: 2px !important;
+}
+
+.provider-card-slim .provider-name-verified {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #1A1D24 !important;
+}
+
+.provider-card-slim .provider-meta-row {
+  font-size: 12px !important;
+  color: #6B7280 !important;
+  font-weight: 500 !important;
+}
+
+.provider-card-slim .rating-badge {
+  background: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #B45309 !important;
+}
+
+.pcs-sub {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #6B7280 !important;
+}
+
+/* Book = text action, not a box button */
+.pcs-book {
+  flex-shrink: 0;
+  align-self: center;
+  height: auto;
+  min-width: 0;
+  padding: 6px 0 6px 8px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #1B2B68;
+  font-family: Manrope, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1.2;
+  box-shadow: none;
+}
+
+.pcs-book:active {
+  opacity: 0.7;
+}
+
+.mvp-card-actions--slim {
+  display: none !important;
+}
+
+.pcs-verified-icon {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+#screen-bookingSearchProviders .mvp-adv-filter-chips .mvp-filter-chip {
+  height: 28px;
+  border: none;
+  background: #F3F4F6;
+  border-radius: 999px;
+}
+
+#screen-bookingSearchProviders .mvp-adv-filter-chips .mvp-filter-chip.active {
+  background: #1B2B68;
+  color: #FFFFFF;
+}

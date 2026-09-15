@@ -43,9 +43,12 @@
   function ensureDraftDefaults() {
     const draft = state().bookingDraft || (state().bookingDraft = {});
     if (draft.direction !== 'oneway' && draft.direction !== 'bothway') draft.direction = 'bothway';
-    if (!draft.serviceType || draft.serviceType === 'all') draft.serviceType = 'drivers';
+    if (!draft.serviceType) draft.serviceType = 'drivers';
+    if (draft.serviceType === 'all') draft.serviceType = 'drivers';
     if (!draft.frequency) draft.frequency = 'onetime';
     if (!Array.isArray(draft.childIds)) draft.childIds = [];
+    if (draft.searchRadiusKm == null) draft.searchRadiusKm = 5;
+    if (!draft.timingFilter) draft.timingFilter = 'all';
     if (!draft.recurrenceEnds) draft.recurrenceEnds = 'until_cancelled';
     if (typeof draft.untilCancelled !== 'boolean') {
       draft.untilCancelled = draft.recurrenceEnds !== 'date';
@@ -254,7 +257,12 @@
     if (cb) cb.checked = cancelled;
     const trigger = document.getElementById('bookingEndDateTrigger');
     trigger?.classList.toggle('is-inactive', cancelled);
-    if (trigger) trigger.setAttribute('aria-disabled', cancelled ? 'true' : 'false');
+    if (trigger) {
+      // Always clickable: tap End date turns off Until cancelled and opens the date sheet
+      trigger.removeAttribute('disabled');
+      trigger.setAttribute('aria-disabled', 'false');
+      trigger.tabIndex = 0;
+    }
     setFieldPlaceholder(document.getElementById('bookingEndDateValue'), !!iso, formatIsoDateLabel(iso), 'End date');
     const input = document.getElementById('repeatEndDateInput');
     if (input) input.value = iso;
@@ -267,12 +275,21 @@
   };
 
   window.handleUntilCancelledChange = function (checked) {
-    if (checked) window.setRecurrenceEnds('until_cancelled');
-    else {
+    if (checked) {
+      window.setRecurrenceEnds('until_cancelled');
+    } else {
       ensureDraftDefaults();
       const draft = state().bookingDraft;
       draft.untilCancelled = false;
       draft.recurrenceEnds = 'date';
+      // Seed a sensible end date so the field is ready to edit
+      if (!draft.untilDate && !draft.recurrenceEndDate) {
+        const start = document.getElementById('setupStartDate')?.value;
+        if (start) {
+          draft.untilDate = start;
+          draft.recurrenceEndDate = start;
+        }
+      }
       window.syncUntilCancelledUi();
     }
     window.updateBookingSearchCta();
@@ -299,7 +316,7 @@
     const prevMonthDays = new Date(year, month, 0).getDate();
     const cells = [];
     for (let i = 0; i < firstDow; i += 1) {
-      cells.push(`<button type="button" class="book-ride-cal-day muted">${prevMonthDays - firstDow + 1 + i}</button>`);
+      cells.push(`<button type="button" class="book-ride-cal-day muted" tabindex="-1">${prevMonthDays - firstDow + 1 + i}</button>`);
     }
     for (let d = 1; d <= daysInMonth; d += 1) {
       const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -308,7 +325,7 @@
     }
     let next = 1;
     while (cells.length % 7 !== 0) {
-      cells.push(`<button type="button" class="book-ride-cal-day muted">${next}</button>`);
+      cells.push(`<button type="button" class="book-ride-cal-day muted" tabindex="-1">${next}</button>`);
       next += 1;
     }
     grid.innerHTML = cells.join('');
@@ -336,14 +353,15 @@
     bookingCalTarget = target === 'end' ? 'end' : 'start';
     const title = document.getElementById('bookingDateSheetTitle');
     if (title) title.textContent = bookingCalTarget === 'end' ? 'End date' : 'Select Date';
-    const iso = isoHint || (bookingCalTarget === 'end'
-      ? (state().bookingDraft?.untilDate || state().bookingDraft?.recurrenceEndDate || '')
-      : '') || document.getElementById('setupStartDate')?.value || '2026-09-08';
+    const startVal = document.getElementById('setupStartDate')?.value || '';
+    const endVal = state().bookingDraft?.untilDate || state().bookingDraft?.recurrenceEndDate || '';
+    const iso = isoHint || (bookingCalTarget === 'end' ? endVal : startVal) || startVal || '2026-09-08';
     bookingCalPending = iso;
     const parts = iso.split('-').map(Number);
-    bookingCalCursor = { year: parts[0], month: (parts[1] || 9) - 1 };
+    bookingCalCursor = { year: parts[0] || 2026, month: (parts[1] || 9) - 1 };
     renderBookingCalendar();
-    document.getElementById('bookingDateSheet')?.classList.add('visible');
+    const sheet = document.getElementById('bookingDateSheet');
+    if (sheet) sheet.classList.add('visible');
     if (window.lucide) window.lucide.createIcons();
   }
 
@@ -352,7 +370,27 @@
   };
 
   window.openBookingEndDateSheet = function () {
-    openCalendarSheet('end');
+    ensureDraftDefaults();
+    const draft = state().bookingDraft;
+    // Picking an end date exits "until cancelled"
+    if (draft.untilCancelled) {
+      draft.untilCancelled = false;
+      draft.recurrenceEnds = 'date';
+      const cb = document.getElementById('toggleUntilCancelled');
+      if (cb) cb.checked = false;
+      if (!draft.untilDate && !draft.recurrenceEndDate) {
+        const start = document.getElementById('setupStartDate')?.value;
+        if (start) {
+          draft.untilDate = start;
+          draft.recurrenceEndDate = start;
+        }
+      }
+      window.syncUntilCancelledUi();
+    }
+    const hint = draft.untilDate || draft.recurrenceEndDate
+      || document.getElementById('setupStartDate')?.value
+      || '';
+    openCalendarSheet('end', hint || undefined);
   };
 
   window.confirmBookingDateSheet = function () {
@@ -705,61 +743,168 @@
     if (list) list.style.display = isMap ? 'none' : 'flex';
     listBtn?.classList.toggle('active', !isMap);
     mapBtn?.classList.toggle('active', isMap);
+    if (listBtn) listBtn.setAttribute('aria-selected', String(!isMap));
+    if (mapBtn) mapBtn.setAttribute('aria-selected', String(isMap));
+    if (isMap) window.initProviderSearchMap();
+  };
+
+  const PROVIDER_MAP_FALLBACK = {
+    tariq: [43.6620, -79.3900],
+    farhana: [43.6655, -79.4030],
+    kabir: [43.6890, -79.3480],
+    sarah: [43.6582, -79.3855],
+    elena: [43.6608, -79.3960]
+  };
+
+  window.initProviderSearchMap = function () {
+    const host = document.getElementById('providerSearchMapHost');
+    if (!host || !window.L || typeof window.L.map !== 'function') return;
+
+    const providers = state().providers || [];
+    const visibleIds = Array.from(document.querySelectorAll('#providersResultList .provider-result-card'))
+      .filter((c) => c.style.display !== 'none')
+      .map((c) => (c.getAttribute('data-provider-id') || '').toLowerCase())
+      .filter(Boolean);
+
+    const points = (visibleIds.length ? visibleIds : Object.keys(PROVIDER_MAP_FALLBACK)).map((id) => {
+      const p = providers.find((x) => x.id === id);
+      const fb = PROVIDER_MAP_FALLBACK[id] || [43.6635, -79.3885];
+      return {
+        id,
+        name: (p?.name || id).replace(/\s*\(WalkShare\)/i, ''),
+        rating: p?.rating || 4.9,
+        price: p?.baseWeekly || 0,
+        walk: p?.category === 'walkshare',
+        lat: Number(p?.lat) || fb[0],
+        lng: Number(p?.lng) || fb[1]
+      };
+    });
+
+    try {
+      if (window._providerMapTimers) {
+        window._providerMapTimers.forEach((t) => clearTimeout(t));
+      }
+      window._providerMapTimers = [];
+      if (window.providerSearchMapInstance) {
+        try {
+          window.providerSearchMapInstance.off();
+          window.providerSearchMapInstance.remove();
+        } catch (_) { /* stale map */ }
+        window.providerSearchMapInstance = null;
+      }
+      host.innerHTML = '';
+
+      const map = L.map(host, {
+        zoomControl: false,
+        attributionControl: false
+      }).setView([43.6635, -79.3885], 13);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        subdomains: 'abcd'
+      }).addTo(map);
+
+      const homeIcon = L.divIcon({
+        className: 'leaflet-custom-marker',
+        html: '<div class="map-pin-badge home"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
+      });
+      L.marker([43.6575, -79.3838], { icon: homeIcon }).addTo(map);
+
+      const bounds = [[43.6575, -79.3838]];
+      points.forEach((pt) => {
+        const icon = L.divIcon({
+          className: 'leaflet-custom-marker',
+          html: `<div class="provider-map-pin ${pt.walk ? 'walk' : 'drive'}"><span>${pt.walk ? 'W' : 'D'}</span><em>${pt.name.split(' ')[0]}</em></div>`,
+          iconSize: [44, 48],
+          iconAnchor: [22, 40]
+        });
+        const marker = L.marker([pt.lat, pt.lng], { icon }).addTo(map);
+        marker.bindPopup(
+          `<strong style="font-size:14px">${pt.name}</strong><br/><span style="font-size:12px">★ ${Number(pt.rating).toFixed(1)}</span><br/>` +
+          `<button type="button" class="provider-map-book" onclick="window.startBookingReview('${pt.id}')">Book</button>`,
+          { closeButton: false, className: 'provider-map-popup' }
+        );
+        bounds.push([pt.lat, pt.lng]);
+      });
+
+      if (bounds.length > 1) {
+        map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14 });
+      }
+      window.providerSearchMapInstance = map;
+      const refresh = () => {
+        if (window.providerSearchMapInstance !== map) return;
+        try { map.invalidateSize(); } catch (_) { /* destroyed */ }
+      };
+      window._providerMapTimers.push(setTimeout(refresh, 80));
+      window._providerMapTimers.push(setTimeout(refresh, 280));
+    } catch (err) {
+      console.warn('Provider search map init failed:', err);
+    }
   };
 
   window.applyProviderCompactFilter = function (filter, btnEl) {
     document.querySelectorAll('#providerFilterRow .mvp-filter-chip').forEach((chip) => chip.classList.remove('active'));
     btnEl?.classList.add('active');
-    const service = state().bookingDraft.serviceType === 'walkshare' ? 'walkshare' : 'drivers';
+    const serviceRaw = state().bookingDraft.serviceType || 'drivers';
+    const service = serviceRaw === 'walkshare' ? 'walkshare' : (serviceRaw === 'all' ? 'all' : 'drivers');
     const cards = Array.from(document.querySelectorAll('#providersResultList .provider-result-card'));
-    const seatsNeeded = (state().selectedChildIds || []).length || 1;
+    const seatsNeeded = (state().selectedChildIds || []).length || (state().bookingDraft.childIds || []).length || 1;
+    const radiusKm = Number(state().bookingDraft.searchRadiusKm);
+    const hasRadius = Number.isFinite(radiusKm) && radiusKm > 0;
 
     cards.forEach((card) => {
       const cat = card.getAttribute('data-category');
       const rating = parseFloat(card.getAttribute('data-rating') || '0');
       const verified = card.getAttribute('data-verified') === 'true';
-      let show = cat === service;
+      const distance = parseFloat(card.getAttribute('data-distance') || '99');
+      let show = service === 'all' ? true : cat === service;
+      if (filter === 'distance') show = show && distance <= 2;
       if (filter === 'rating') show = show && rating >= 4.8;
       if (filter === 'verified') show = show && verified;
+      if (hasRadius) show = show && distance <= radiusKm;
       const providerId = (card.getAttribute('data-provider-id') || '').toLowerCase();
       const provider = (state().providers || []).find((p) => p.id === providerId);
-      if (provider && provider.seats < seatsNeeded) show = false;
+      if (provider && Number(provider.seats) > 0 && provider.seats < seatsNeeded) show = false;
       card.style.display = show ? 'flex' : 'none';
+      if (show) card.removeAttribute('data-hide-reason');
+      else card.setAttribute('data-hide-reason', 'compact');
     });
 
-    if (filter === 'distance') {
+    if (filter === 'distance' || filter === 'all') {
       const wrap = document.getElementById('providersResultList');
       const visible = cards.filter((c) => c.style.display !== 'none');
       visible.sort((a, b) => (parseFloat(a.getAttribute('data-distance') || '99') - parseFloat(b.getAttribute('data-distance') || '99')));
       visible.forEach((card) => wrap.appendChild(card));
     }
+    if (window.H2SAvailability) window.H2SAvailability.applyToProviderCards(state().bookingDraft || {});
+    if (window.H2SZone) window.H2SZone.paintProviderCards();
+    if (document.getElementById('providerSearchMap')?.classList.contains('visible')) {
+      window.initProviderSearchMap();
+    }
   };
 
   window.initProviderSearchPage = function () {
-    const service = state().bookingDraft.serviceType === 'walkshare' ? 'walkshare' : 'drivers';
+    const draft = state().bookingDraft || {};
+    if (draft.searchRadiusKm == null) draft.searchRadiusKm = 5;
     document.querySelectorAll('#providersResultList .provider-result-card').forEach((card) => {
-      card.classList.add('mvp-compact');
-      card.removeAttribute('onclick');
-      if (!card.getAttribute('data-provider-id')) {
-        const name = card.querySelector('.provider-name-verified span')?.textContent || '';
-        const match = (state().providers || []).find((p) => name.includes(p.name.split(' ')[0]) || p.name.includes(name.split(' ')[0]));
-        if (match) card.setAttribute('data-provider-id', match.id);
-      }
-      const distText = card.querySelector('.provider-meta-row')?.textContent || '';
-      const km = parseFloat((distText.match(/([\d.]+)\s*km/) || [])[1] || '9');
-      card.setAttribute('data-distance', String(km));
+      card.classList.add('mvp-compact', 'provider-card-slim');
+      const id = card.getAttribute('data-provider-id') || 'tariq';
+      card.onclick = function (e) {
+        if (e.target.closest('.mvp-card-actions, button, a')) return;
+        openDriverProfile(id, 'bookingSearchProviders');
+      };
       if (!card.querySelector('.mvp-card-actions')) {
-        const id = card.getAttribute('data-provider-id') || 'tariq';
         const actions = document.createElement('div');
-        actions.className = 'mvp-card-actions';
-        actions.innerHTML = `
-          <button type="button" class="btn-secondary-surface" onclick="event.stopPropagation(); openDriverProfile('${id}', 'bookingSearchProviders')">View Profile</button>
-          <button type="button" class="btn-primary" onclick="event.stopPropagation(); startBookingReview('${id}')">Book</button>
-        `;
+        actions.className = 'mvp-card-actions mvp-card-actions--slim';
+        actions.innerHTML = `<button type="button" class="btn-primary" onclick="event.stopPropagation(); startBookingReview('${id}')">Book</button>`;
         card.appendChild(actions);
       }
     });
-    window.applyProviderCompactFilter('all', document.querySelector('#providerFilterRow .mvp-filter-chip'));
+    const activeChip = document.querySelector('#providerFilterRow .mvp-filter-chip.active')
+      || document.querySelector('#providerFilterRow .mvp-filter-chip');
+    window.applyProviderCompactFilter(activeChip?.getAttribute('data-filter') || 'all', activeChip);
     window.setProviderSearchView('list');
     if (window.lucide) window.lucide.createIcons();
   };
@@ -771,9 +916,7 @@
   };
 
   window.toggleVerifiedDocuments = function () {
-    const panel = document.getElementById('verifiedDocsPanel');
-    if (!panel) return;
-    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    /* Parent profile no longer exposes a docs accordion */
   };
 
   const originalSummary = window.renderBookingSummary;
@@ -786,33 +929,70 @@
       const el = document.getElementById(id);
       if (el) el.textContent = value;
     };
-    setText('summaryChildrenText', formatChildrenSummary(children));
-    setText('summaryPickupText', document.getElementById('setupPickupLocationInput')?.value || draft.pickupLocation || 'Pickup');
-    setText('summaryDropoffText', document.getElementById('setupSchoolLocationInput')?.value || draft.schoolLocation || 'Drop-off');
-    setText('summaryDateText', draft.tripDate || document.getElementById('setupOutboundDateText')?.value || 'Mon, Sep 8');
+
+    const kidsLabel = children.length
+      ? children.map((c) => String(c.name || '').split(' ')[0]).join(' + ')
+      : 'No children selected';
+    setText('summaryChildrenText', kidsLabel);
+
+    const pickup = document.getElementById('setupPickupLocationInput')?.value || draft.pickupLocation || 'Home';
+    const school = document.getElementById('setupSchoolLocationInput')?.value || draft.schoolLocation || 'School';
+    setText('summaryPickupText', pickup);
+    setText('summaryDropoffText', school);
     setText('summaryOutboundText', draft.outboundTime || '07:30 AM');
     setText('summaryReturnText', draft.returnTime || '01:00 PM');
+
+    const dateLabel = draft.tripDate || document.getElementById('setupOutboundDateText')?.value || 'Mon, Sep 8';
+    const tripType = draft.direction === 'oneway' ? 'One way' : 'Round trip';
+    setText('summaryDateText', dateLabel);
+    setText('summaryTripTypeText', tripType);
+    setText('summaryWhenText', `${dateLabel} · ${tripType}`);
+
     if (draft.frequency === 'recurring') {
-      const days = (draft.selectedDays || []).join(' ');
-      const ends = draft.untilCancelled || !(draft.untilDate || draft.recurrenceEndDate)
-        ? 'Until cancelled'
-        : `Ends ${draft.untilDate || draft.recurrenceEndDate}`;
-      setText('summaryFreqText', `${days || 'M T W T F'} · ${ends}`);
+      const days = (draft.selectedDays || []).join(' ') || 'Mon–Fri';
+      setText('summaryFreqText', days);
     } else {
-      setText('summaryFreqText', 'Off');
+      setText('summaryFreqText', 'One-time');
     }
-    setText('summaryProviderText', (provider?.name || '').replace(/\s*\(WalkShare\)/i, ''));
-    setText('summaryVehicleText', provider?.vehicle || 'Vehicle');
-    setText('summaryPostedRateText', `$${provider?.baseWeekly || 120} /wk`);
+
+    const cleanName = String(provider?.name || '').replace(/\s*\(WalkShare\)/i, '');
+    setText('summaryProviderText', cleanName || 'Provider');
+    setText('summaryVehicleText', [provider?.vehicle, provider?.plate].filter(Boolean).join(' · ') || 'Vehicle');
+    const rateEl = document.getElementById('summaryPostedRateText');
+    if (rateEl) {
+      rateEl.textContent = '';
+      rateEl.style.display = 'none';
+    }
+
+    const avatar = document.getElementById('summaryProviderAvatar');
+    if (avatar && provider?.photo) {
+      avatar.src = provider.photo;
+      avatar.onerror = function () { this.src = '/assets/avatar_tariq.jpg'; };
+    }
+
+    const returnRow = document.getElementById('summaryReturnRow');
+    if (returnRow) returnRow.style.display = draft.direction === 'oneway' ? 'none' : 'flex';
+
     if (typeof originalSummary === 'function') {
       try { originalSummary(); } catch (err) { /* older summary nodes may be gone */ }
     }
-    setText('summaryTripTypeText', draft.direction === 'oneway' ? 'One way' : 'Round trip');
+
+    // Re-assert clean values after older renderer (it may overwrite times with long route strings)
+    setText('summaryChildrenText', kidsLabel);
+    setText('summaryPickupText', pickup);
+    setText('summaryDropoffText', school);
     setText('summaryOutboundText', draft.outboundTime || '07:30 AM');
     setText('summaryReturnText', draft.returnTime || '01:00 PM');
-    const returnRow = document.getElementById('summaryReturnRow');
-    if (returnRow) returnRow.style.display = draft.direction === 'oneway' ? 'none' : '';
-    renderPickupContacts();
+    setText('summaryWhenText', `${dateLabel} · ${tripType}`);
+    setText('summaryProviderText', cleanName || 'Provider');
+    setText('summaryVehicleText', [provider?.vehicle, provider?.plate].filter(Boolean).join(' · ') || 'Vehicle');
+    if (rateEl) {
+      rateEl.textContent = '';
+      rateEl.style.display = 'none';
+    }
+    if (returnRow) returnRow.style.display = draft.direction === 'oneway' ? 'none' : 'flex';
+
+    if (window.lucide) window.lucide.createIcons();
   };
 
   window.openSeriesActionSheet = function (mode, bookingId) {
@@ -868,34 +1048,29 @@
     const card = document.getElementById('paymentHandleCard');
     if (!card) return;
     const confirmed = booking && (booking.status === 'confirmed' || booking.status === 'in_progress' || booking.status === 'completed');
-    card.style.display = confirmed ? 'block' : 'none';
+    card.style.display = confirmed ? 'flex' : 'none';
     const handle = state().paymentHandle || { status: 'idle' };
     const label = document.getElementById('paymentHandleStatusLabel');
     const copy = document.getElementById('paymentHandleCopy');
     const value = document.getElementById('paymentHandleValue');
     const primary = document.getElementById('btnPaymentHandlePrimary');
     const secondary = document.getElementById('btnPaymentHandleSecondary');
-    const statusMap = {
-      idle: 'Request Handle',
-      requested: 'Consent',
-      consented: 'Revealed',
-      revealed: 'Revealed',
-      revoked: 'Revoked'
-    };
-    if (label) label.textContent = statusMap[handle.status] || 'Request Handle';
+    if (label) label.textContent = 'Payment';
     if (value) {
       value.style.display = handle.status === 'revealed' ? 'block' : 'none';
       value.textContent = handle.status === 'revealed' ? handle.handle : '';
     }
     if (copy) {
       copy.textContent = handle.status === 'revealed'
-        ? 'Handle is visible for this confirmed booking only.'
-        : 'After confirmation, parent or provider may request consent to share a payment handle. Home2School does not process the ride fee.';
+        ? 'Visible for this booking only.'
+        : 'Pay the driver directly.';
     }
     if (primary) {
-      primary.className = 'btn-secondary-surface';
       primary.style.display = handle.status === 'revoked' ? 'none' : 'inline-flex';
-      primary.textContent = handle.status === 'idle' ? 'Request Handle' : handle.status === 'requested' ? 'Give consent' : handle.status === 'consented' ? 'Reveal handle' : 'Handle revealed';
+      primary.textContent = handle.status === 'idle' ? 'Request handle'
+        : handle.status === 'requested' ? 'Give consent'
+        : handle.status === 'consented' ? 'Reveal'
+        : 'Shared';
     }
     if (secondary) secondary.style.display = handle.status === 'revealed' ? 'inline-flex' : 'none';
   }
@@ -918,18 +1093,6 @@
     if (typeof originalDetails === 'function') originalDetails(bookingId);
     const booking = (state().bookings || []).find((b) => b.id === bookingId) || state().bookings[0];
     renderPaymentHandle(booking);
-    const actions = document.getElementById('detailContextualActions');
-    if (actions && booking && (booking.status === 'confirmed' || booking.status === 'pending')) {
-      if (!actions.querySelector('[data-mvp-modify]')) {
-        const btn = document.createElement('button');
-        btn.className = 'btn-secondary-surface';
-        btn.setAttribute('data-mvp-modify', '1');
-        btn.textContent = 'Modify booking';
-        btn.onclick = () => window.modifyBooking(booking.id);
-        actions.insertBefore(btn, actions.firstChild);
-      }
-    }
-    renderPickupContacts();
   };
 
   function renderPickupContacts() {
@@ -939,7 +1102,7 @@
     if (wrap) {
       wrap.innerHTML = `
         <div class="mvp-pickup-row">
-          <img src="${user.photo || '/assets/avatar_sadia.jpg'}" alt="" class="folio-parent-avatar" />
+          <img src="${user.photo || '/assets/avatar_sadia.jpg'}" alt="" class="folio-parent-avatar" onerror="this.src='/assets/avatar_sadia.jpg'" />
           <div class="folio-parent-info">
             <div class="folio-parent-name-row">
               <span class="folio-parent-name">${user.name || 'Sadia Khan'}</span>
@@ -954,7 +1117,7 @@
         <div class="folio-backup-guardian-note">
           <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
             <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: #D97706; flex-shrink: 0;"></i>
-            <span style="font-size: 11.5px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Backup pickup: <strong>${backup.name}</strong> (${backup.rel})</span>
+            <span style="font-size: 12px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Backup pickup: <strong>${backup.name}</strong> (${backup.rel})</span>
           </div>
           <button type="button" class="mvp-pickup-edit" onclick="openNestedScreen('profileEmergency', event)">Edit</button>
         </div>` : ''}
@@ -972,26 +1135,97 @@
     const wrap = document.getElementById('inboxThreadList');
     if (!wrap) return;
     const threads = [
-      { id: 'tariq', name: 'Tariq Ahmed', preview: 'Arman and Emma are buckled in.', time: '07:34 AM' },
-      { id: 'sarah', name: 'Sarah Jenkins', preview: 'Walking group is 2 minutes from school.', time: 'Yesterday' }
+      { id: 'tariq', name: 'Tariq Ahmed', photo: '/assets/avatar_tariq.jpg', preview: 'Got both of them buckled in safely! Heading to Greenfield.', time: '07:34 AM', unread: 2 },
+      { id: 'sarah', name: 'Sarah Jenkins', photo: '/assets/avatar_sarah.jpg', preview: 'Walking group is 2 minutes from Sunshine Pre-school.', time: '08:12 AM', unread: 1 },
+      { id: 'farhana', name: 'Farhana Yasmin', photo: '/assets/avatar_farhana.jpg', preview: 'Happy to cover Emma’s Friday return if Tariq is full.', time: 'Yesterday', unread: 1 },
+      { id: 'kabir', name: 'Kabir Hossain', photo: '/assets/avatar_kabir.jpg', preview: 'Confirmed Mon–Wed backup for Arman’s soccer practice ride.', time: 'Mon', unread: 0 },
+      { id: 'elena', name: 'Elena Rostova', photo: '/assets/avatar_rehana.jpg', preview: 'West-gate walk group has space for Zara next week.', time: 'Sun', unread: 0 }
     ];
     wrap.innerHTML = threads.map((t) => `
-      <button type="button" class="mvp-inbox-row" onclick="openChatWith('${t.id}')">
-        <img src="/assets/avatar_${t.id === 'sarah' ? 'sarah' : 'tariq'}.jpg" alt="${t.name}" />
+      <button type="button" class="mvp-inbox-row${t.unread ? ' is-unread' : ''}" onclick="openChatWith('${t.id}')">
+        <img src="${t.photo}" alt="${t.name}" onerror="this.src='/assets/avatar_tariq.jpg'" />
         <div style="flex:1; min-width:0;">
-          <div class="mvp-inbox-name">${t.name}</div>
+          <div class="mvp-inbox-name">${t.name}${t.unread ? `<span class="mvp-inbox-unread">${t.unread}</span>` : ''}</div>
           <div class="mvp-inbox-preview">${t.preview}</div>
         </div>
-        <span style="font-size:11px; color:#64748B; font-weight:700;">${t.time}</span>
+        <span style="font-size:10px; color:#64748B; font-weight:700;">${t.time}</span>
       </button>
     `).join('');
   };
+
+  const PARENT_DEMO_CHATS = {
+    tariq: [
+      { type: 'system', text: 'Trip started · 07:22 AM' },
+      { type: 'provider', text: 'Good morning Sadia! I am about 5 minutes away from your home pickup.', time: '07:25 AM' },
+      { type: 'system', text: 'Driver arrived at Home (12 Elm Street) · 07:30 AM', tone: 'amber' },
+      { type: 'parent', text: 'Good morning Tariq! Arman and Emma are waiting at the front porch with their school backpacks.', time: '07:31 AM' },
+      { type: 'system', text: 'Children safely boarded & buckled in · 07:33 AM', tone: 'blue' },
+      { type: 'provider', text: 'Got both of them buckled in safely! We are now heading towards Greenfield International School.', time: '07:34 AM' },
+      { type: 'parent', text: 'Thank you — please ping when you reach the loop.', time: '07:35 AM' },
+      { type: 'provider', text: 'Will do. Traffic is light on Mt Pleasant.', time: '07:36 AM' }
+    ],
+    sarah: [
+      { type: 'system', text: 'WalkShare escort · Zara · Sunshine Pre-school' },
+      { type: 'provider', text: 'Morning Sadia — walking group leaves Elm & Maple in 3 minutes.', time: '08:05 AM' },
+      { type: 'parent', text: 'Zara is at the corner with her high-vis vest.', time: '08:06 AM' },
+      { type: 'provider', text: 'Joined the group. Sidewalks are clear today.', time: '08:08 AM' },
+      { type: 'provider', text: 'Walking group is 2 minutes from Sunshine Pre-school.', time: '08:12 AM' },
+      { type: 'parent', text: 'Perfect — hand to Ms. Jenkins at the gate please.', time: '08:13 AM' }
+    ],
+    farhana: [
+      { type: 'system', text: 'Backup driver chat' },
+      { type: 'provider', text: 'Hi Sadia — I can cover Emma’s Friday return if Tariq’s afternoon fills up.', time: 'Yesterday 5:40 PM' },
+      { type: 'parent', text: 'That would help. Pickup from Greenfield at 01:00 PM?', time: 'Yesterday 5:44 PM' },
+      { type: 'provider', text: 'Yes — Odyssey is booster-ready. I’ll confirm Thursday night.', time: 'Yesterday 5:46 PM' }
+    ],
+    kabir: [
+      { type: 'system', text: 'Activity ride · Arman soccer' },
+      { type: 'parent', text: 'Kabir — can you do Mon/Wed backup from Greenfield to the community centre?', time: 'Mon 7:10 PM' },
+      { type: 'provider', text: 'Confirmed Mon–Wed backup for Arman’s soccer practice ride.', time: 'Mon 7:18 PM' },
+      { type: 'parent', text: 'Great — practice ends at 5:30 PM.', time: 'Mon 7:20 PM' }
+    ],
+    elena: [
+      { type: 'system', text: 'WalkShare capacity inquiry' },
+      { type: 'provider', text: 'West-gate walk group has space for Zara next week.', time: 'Sun 11:02 AM' },
+      { type: 'parent', text: 'Tempting — keeping Sarah for now but thank you!', time: 'Sun 11:20 AM' }
+    ]
+  };
+
+  function paintParentChat(providerId) {
+    const stream = document.getElementById('chatStream');
+    if (!stream) return;
+    const key = providerId || 'tariq';
+    const script = PARENT_DEMO_CHATS[key] || PARENT_DEMO_CHATS.tariq;
+    stream.dataset.parentParty = key;
+    stream.innerHTML = script.map((item) => {
+      if (item.type === 'system') {
+        const tone = item.tone === 'amber'
+          ? 'background:#FEF3C7;border-color:#FDE68A;color:#B45309;'
+          : item.tone === 'blue'
+            ? 'background:#EFF6FF;border-color:#DBEAFE;color:var(--color-primary);'
+            : '';
+        return `<div class="system-status-bubble" style="${tone}display:flex;align-items:center;justify-content:flex-start;gap:6px;">
+          <i data-lucide="clock" style="width:14px;height:14px;"></i>
+          <span>${item.text}</span>
+        </div>`;
+      }
+      return `<div class="chat-bubble ${item.type}">
+        ${item.text}
+        <div class="chat-timestamp">${item.time || ''}</div>
+      </div>`;
+    }).join('');
+    if (window.lucide) window.lucide.createIcons();
+    stream.scrollTop = stream.scrollHeight;
+  }
 
   const originalChat = window.openChatWith;
   window.openChatWith = function (providerId) {
     if (typeof originalChat === 'function') originalChat(providerId);
     const callBtn = document.getElementById('chatDriverCallBtn');
     if (callBtn) callBtn.style.display = 'none';
+    if ((window.appState?.activeRole || 'parent') === 'parent') {
+      paintParentChat(providerId || window.activeChatProviderId || 'tariq');
+    }
   };
 
   function liveBookings() {
@@ -1039,19 +1273,20 @@
       const el = document.getElementById(id);
       if (el) el.textContent = value;
     };
+    const kidsLabel = shortChildLabel(booking);
     const kidsEl = document.getElementById('trackingHeaderChildren');
     const multi = document.getElementById('trackingRideSwitcher')?.style.display === 'flex';
     if (kidsEl) {
-      if (multi) {
-        kidsEl.style.display = 'none';
-        kidsEl.textContent = '';
-      } else {
-        kidsEl.style.display = '';
-        kidsEl.textContent = shortChildLabel(booking);
-      }
+      kidsEl.style.display = 'none';
+      kidsEl.textContent = '';
     }
-    setText('trackingHeaderRoute', `En route to ${schoolShort(booking)}`);
-    setText('trackingStageText', `En route to ${booking.schoolLocation || 'school'}`);
+    setText('trackingChipText', 'Live');
+    setText('trackingStageText', booking.schoolLocation || schoolShort(booking) || 'School');
+    const kidsMeta = document.getElementById('trackingKidsMeta');
+    if (kidsMeta) {
+      kidsMeta.style.display = multi ? 'none' : '';
+      kidsMeta.textContent = kidsLabel;
+    }
     setText('trackingDriverName', String(provider?.name || '').replace(/\s*\(WalkShare\)/i, ''));
     setText('trackingDriverVehicle', [provider?.vehicle, provider?.plate].filter(Boolean).join(' • '));
     const photo = document.getElementById('trackingDriverPhoto');
@@ -1076,7 +1311,10 @@
     if (live.length < 2) {
       wrap.style.display = 'none';
       wrap.innerHTML = '';
-      if (kids) kids.style.display = '';
+      if (kids) {
+        kids.style.display = 'none';
+        kids.textContent = '';
+      }
       return;
     }
     wrap.style.display = 'flex';
@@ -1132,11 +1370,6 @@
     if (window.lucide) window.lucide.createIcons();
   };
 
-  function isSubscriptionOnboardingFlow() {
-    const hist = window.screenHistory || [];
-    return hist[hist.length - 1] === 'authAddChild';
-  }
-
   window.selectSubscriptionPlan = function (plan) {
     ensureDraftDefaults();
     state().parentSubscription.plan = plan;
@@ -1185,7 +1418,7 @@
       activate.textContent = sub.plan === 'annual' ? 'Activate annual access' : 'Activate monthly access';
       activate.style.display = sub.status === 'trial' ? 'none' : 'flex';
     }
-    if (continueLabel) continueLabel.textContent = 'Continue with free trial';
+    if (continueLabel) continueLabel.textContent = 'Keep free trial';
     if (continueBtn) continueBtn.style.display = sub.status === 'trial' ? 'flex' : 'none';
     if (cancelBtn) cancelBtn.style.display = sub.status === 'cancelled' ? 'none' : 'inline-flex';
     document.getElementById('btnRetrySubscription')?.remove();
@@ -1209,12 +1442,8 @@
   window.continueWithParentTrial = function () {
     ensureDraftDefaults();
     state().parentSubscription.status = 'trial';
-    if (isSubscriptionOnboardingFlow()) {
-      window.navigateTo('authSuccess');
-      return;
-    }
     window.renderSubscriptionScreen();
-    toast('Free trial continues. You can manage renewal anytime.');
+    toast('Free trial continues. Manage anytime in Profile.');
   };
 
   window.activateParentSubscription = function () {
@@ -1339,31 +1568,6 @@
       createdAt: 'Sep 7, 2026'
     });
   }
-
-  const originalBookingsList = window.renderBookingsList;
-  window.renderBookingsList = function (tab) {
-    if (typeof originalBookingsList === 'function') originalBookingsList(tab);
-    if (tab === 'upcoming' || !tab) {
-      const wrap = document.getElementById('bookingsListWrap');
-      const declined = (state().bookings || []).filter((b) => b.status === 'declined');
-      if (wrap && declined.length && !wrap.querySelector('[data-declined-card]')) {
-        declined.forEach((b) => {
-          const provider = (state().providers || []).find((p) => p.id === b.providerId);
-          const card = document.createElement('div');
-          card.className = 'booking-card';
-          card.setAttribute('data-declined-card', b.id);
-          card.style.cssText = 'padding:14px;border:1.5px solid #FECACA;background:#FEF2F2;border-radius:14px;margin-bottom:10px;';
-          card.innerHTML = `
-            <div style="font-size:12px;font-weight:800;color:#991B1B;">Declined</div>
-            <div style="font-size:14px;font-weight:800;color:#0F172A;margin-top:4px;">${b.schoolLocation}</div>
-            <div style="font-size:12px;color:#64748B;">${provider ? provider.name : 'Provider'} did not accept this request.</div>
-            <button class="btn-primary" style="height:40px;margin-top:10px;font-size:13px;" onclick="navigateTo('bookingTripSetup')">Book another provider</button>
-          `;
-          wrap.prepend(card);
-        });
-      }
-    }
-  };
 
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;

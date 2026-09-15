@@ -24,6 +24,7 @@ const screens = [
   'bookingTripSetup',
   'bookingSearchProviders',
   'bookingProviderDetails',
+  'bookingProviderReviews',
   'bookingSummary',
   'bookingRequestSent',
   'bookingConfirmed',
@@ -86,6 +87,54 @@ const screens = [
   'adminPortal'
 ];
 
+window.personAvatar = function (name, fallback) {
+  const raw = String(name || '').trim();
+  const n = raw.toLowerCase();
+  const map = [
+    ['sadia', '/assets/avatar_sadia.jpg'],
+    ['tariq', '/assets/avatar_tariq.jpg'],
+    ['farhana', '/assets/avatar_farhana.jpg'],
+    ['sarah', '/assets/avatar_sarah.jpg'],
+    ['elena', '/assets/avatar_rehana.jpg'],
+    ['rehana', '/assets/avatar_rehana.jpg'],
+    ['nadia', '/assets/avatar_rehana.jpg'],
+    ['kabir', '/assets/avatar_kabir.jpg'],
+    ['farhan', '/assets/avatar_farhan.jpg'],
+    ['marcus', '/assets/avatar_john.png'],
+    ['priya', '/assets/avatar_farhana.jpg'],
+    ['amira', '/assets/avatar_sarah.jpg'],
+    ['arman', '/assets/avatar_arman.jpg'],
+    ['emma', '/assets/avatar_emma.jpg'],
+    ['zara', '/assets/avatar_zara.jpg'],
+    ['omar', '/assets/avatar_arman.jpg'],
+    ['yusuf', '/assets/avatar_arman.jpg'],
+    ['ayla', '/assets/avatar_emma.jpg'],
+    ['riya', '/assets/avatar_emma.jpg'],
+    ['leo', '/assets/avatar_arman.jpg'],
+    ['mia', '/assets/avatar_zara.jpg'],
+    ['david', '/assets/avatar_kabir.jpg'],
+    ['sumaiya', '/assets/avatar_farhana.jpg'],
+    ['james', '/assets/avatar_john.png'],
+    ['lisa', '/assets/avatar_sadia.jpg'],
+    ['school', '/assets/avatar_school.jpg']
+  ];
+  for (let i = 0; i < map.length; i++) {
+    if (n.indexOf(map[i][0]) !== -1) return map[i][1];
+  }
+  if (fallback) return fallback;
+  const pool = [
+    '/assets/avatar_sadia.jpg',
+    '/assets/avatar_farhana.jpg',
+    '/assets/avatar_kabir.jpg',
+    '/assets/avatar_rehana.jpg',
+    '/assets/avatar_john.png',
+    '/assets/avatar_sarah.jpg'
+  ];
+  let h = 0;
+  for (let i = 0; i < n.length; i++) h = (h + n.charCodeAt(i) * (i + 1)) % pool.length;
+  return pool[h] || '/assets/avatar_sadia.jpg';
+};
+
 /* ==========================================================
    Central Application State (Single Source of Truth)
    ========================================================== */
@@ -124,7 +173,18 @@ window.appState = {
       experience: '4+ Yrs',
       onTimeRate: '99.8%',
       quote: '"Tariq has safely driven our kids to Greenfield School for over 8 months. Very gentle, always punctual, and sends notifications right away."',
-      reviewer: '— Nadia Rahman (Parent of 2)'
+      reviewer: '— Nadia Rahman (Parent of 2)',
+      availability: {
+        weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        windows: [
+          { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '06:30', end: '09:00', label: 'Morning', enabled: true },
+          { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '13:00', end: '16:30', label: 'Afternoon', enabled: true }
+        ],
+        exceptions: []
+      },
+      zone: 'Greenfield / Midtown',
+      lat: 43.6620,
+      lng: -79.3900
     },
     {
       id: 'farhana',
@@ -140,7 +200,18 @@ window.appState = {
       experience: '6+ Yrs',
       onTimeRate: '100%',
       quote: '"Farhana is amazing with younger kids! Emma always looks forward to her morning commute and arrives at school with a big smile."',
-      reviewer: '— David Miller (Parent of 1)'
+      reviewer: '— David Miller (Parent of 1)',
+      availability: {
+        weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        windows: [
+          { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '07:00', end: '09:30', label: 'Morning', enabled: true },
+          { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '14:00', end: '17:00', label: 'Afternoon', enabled: true }
+        ],
+        exceptions: []
+      },
+      zone: 'Annex / Midtown',
+      lat: 43.6655,
+      lng: -79.4030
     },
     {
       id: 'kabir',
@@ -156,13 +227,24 @@ window.appState = {
       experience: '3+ Yrs',
       onTimeRate: '99.2%',
       quote: '"Kabir is extremely reliable, always takes the safest routes and never speeds. Highly recommended for daily school carpool."',
-      reviewer: '— Sumaiya Akter (Parent of 2)'
+      reviewer: '— Sumaiya Akter (Parent of 2)',
+      availability: {
+        weekly: ['Mon', 'Wed', 'Fri'],
+        windows: [
+          { id: 'w1', days: ['Mon', 'Wed', 'Fri'], start: '07:00', end: '08:30', label: 'Morning', enabled: true },
+          { id: 'w2', days: ['Mon', 'Wed', 'Fri'], start: '14:00', end: '16:00', label: 'Afternoon', enabled: true }
+        ],
+        exceptions: []
+      },
+      zone: 'East York',
+      lat: 43.6890,
+      lng: -79.3480
     },
     {
       id: 'sarah',
-      name: 'Sarah Jenkins (WalkShare)',
+      name: 'Sarah Jenkins',
       category: 'walkshare',
-      vehicle: 'Walking School Bus Escort',
+      vehicle: 'Walking School Bus',
       plate: 'VERIFIED-WALK',
       rating: 4.9,
       reviewsCount: 45,
@@ -173,11 +255,22 @@ window.appState = {
       experience: '5+ Yrs',
       onTimeRate: '99.5%',
       quote: '"Sarah\'s walking school bus is the healthiest and most enjoyable commute for our son. He walks safely with neighborhood kids every morning."',
-      reviewer: '— Marcus Vance (Parent of 1)'
+      reviewer: '— Marcus Vance (Parent of 1)',
+      availability: {
+        weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        windows: [
+          { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '07:15', end: '08:45', label: 'Morning', enabled: true },
+          { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '14:30', end: '16:00', label: 'Afternoon', enabled: true }
+        ],
+        exceptions: []
+      },
+      zone: 'Elm → Greenfield',
+      lat: 43.6582,
+      lng: -79.3855
     },
     {
       id: 'elena',
-      name: 'Elena Rostova (WalkShare)',
+      name: 'Elena Rostova',
       category: 'walkshare',
       vehicle: 'Greenfield Walk Escort',
       plate: 'WALK-SAFE-02',
@@ -190,7 +283,18 @@ window.appState = {
       experience: '4+ Yrs',
       onTimeRate: '100%',
       quote: '"Elena leads the morning walking group with immense care. The children practice safe sidewalk habits while getting fresh morning air."',
-      reviewer: '— Sophia Lin (Parent of 1)'
+      reviewer: '— Sophia Lin (Parent of 1)',
+      availability: {
+        weekly: ['Tue', 'Thu'],
+        windows: [
+          { id: 'w1', days: ['Tue', 'Thu'], start: '07:30', end: '08:30', label: 'Morning', enabled: true },
+          { id: 'w2', days: ['Tue', 'Thu'], start: '14:30', end: '15:30', label: 'Afternoon', enabled: true }
+        ],
+        exceptions: []
+      },
+      zone: 'West-gate / Greenfield',
+      lat: 43.6608,
+      lng: -79.3960
     }
   ],
   emergencyContacts: [
@@ -594,7 +698,7 @@ window.appState = {
     phone: '+1 (416) 555-0182',
     email: 'tariq.ahmed@torontoschoolrides.ca',
     photo: '/assets/avatar_tariq.jpg',
-    serviceArea: 'Greenfield / Midtown Toronto',
+    serviceArea: 'Greenfield / Midtown',
     rating: 4.9,
     reviewsCount: 128,
     isOnline: true,
@@ -622,7 +726,7 @@ window.appState = {
       color: 'Celestial Silver',
       plate: 'SCH-4091',
       capacity: 4,
-      photo: '/assets/sienna.jpg'
+      photo: '/assets/home_van_banner.jpg'
     },
     documents: [
       {
@@ -660,7 +764,7 @@ window.appState = {
       {
         id: 'criminal',
         title: 'Criminal Background Check',
-        status: 'under_review',
+        status: 'approved',
         rejectReason: '',
         issuer: 'Toronto Police Service',
         issueDate: '2026-07-12',
@@ -670,12 +774,12 @@ window.appState = {
       {
         id: 'vulnerable',
         title: 'Vulnerable Sector Check',
-        status: 'not_submitted',
+        status: 'approved',
         rejectReason: '',
-        issuer: '',
-        issueDate: '',
-        expiry: '',
-        fileDoc: { name: '', attached: false }
+        issuer: 'Toronto Police Service',
+        issueDate: '2026-07-12',
+        expiry: '2029-07-12',
+        fileDoc: { name: 'vsc-tariq-ahmed.pdf', attached: true }
       }
     ],
     availability: {
@@ -705,7 +809,11 @@ window.appState = {
     },
     notifications: [
       { id: 'dn-1', title: 'New ride request', body: 'Nadia Rahman requested a Mon–Fri school commute for Yusuf and Ayla.', time: '12 min ago', unread: true, action: 'requests' },
-      { id: 'dn-2', title: 'Message from parent', body: 'Sadia: Arman and Emma will be at the porch at 07:28.', time: 'Yesterday', unread: true, action: 'inbox' }
+      { id: 'dn-2', title: 'New ride request', body: 'Priya Patel asked for a one-time afternoon pickup for Riya.', time: '28 min ago', unread: true, action: 'requests' },
+      { id: 'dn-3', title: 'Message from parent', body: 'Sadia: Arman and Emma will be at the porch at 07:28.', time: '1 hr ago', unread: true, action: 'inbox' },
+      { id: 'dn-4', title: 'Message from Nadia', body: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday', unread: true, action: 'inbox' },
+      { id: 'dn-5', title: 'Booking accepted', body: 'You accepted Marcus Chen’s Mon–Wed morning commute.', time: '2 days ago', unread: false, action: 'requests' },
+      { id: 'dn-6', title: 'Trip reminder', body: 'Morning pickup for Arman & Emma starts in 25 minutes.', time: 'Tue', unread: false, action: 'inbox' }
     ],
     requests: [
       {
@@ -768,6 +876,97 @@ window.appState = {
         price: '$45 / day',
         notes: 'Hand to classroom teacher Ms. Jenkins at the main entrance gate.',
         status: 'new'
+      },
+      {
+        id: 'dreq-3',
+        bookingId: 'H2S-REQ-3310',
+        parentId: 'PRNT-3310',
+        parentName: 'Priya Patel',
+        parentRole: 'Mother',
+        parentPhoto: '/assets/avatar_farhana.jpg',
+        parentPhone: '+1 (416) 555-0177',
+        children: [
+          { id: 'riya', name: 'Riya Patel', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', notes: 'Carries epi-pen in backpack', photo: '/assets/avatar_emma.jpg' }
+        ],
+        childNamesShort: 'Riya',
+        seatsNeeded: 1,
+        pickupLocation: '42 Birchwood Crescent',
+        dropoffLocation: 'Greenfield International School',
+        routeFrom: '42 Birchwood Crescent',
+        routeTo: 'Greenfield International School',
+        dateLabel: 'Friday, Sep 18, 2026',
+        pickupTime: '02:50 PM',
+        returnTime: '',
+        recurringDays: [],
+        frequency: 'onetime',
+        direction: 'oneway',
+        timing: 'Fri, Sep 18 · School pickup 02:50 PM',
+        rate: 28,
+        rateLabel: '$28 / day',
+        price: '$28 / day',
+        notes: 'One-way afternoon only. Parent works late — drop at front door and wait until porch light is on.',
+        status: 'new'
+      },
+      {
+        id: 'dreq-4',
+        bookingId: 'H2S-REQ-1188',
+        parentId: 'PRNT-1188',
+        parentName: 'Marcus Chen',
+        parentRole: 'Father',
+        parentPhoto: '/assets/avatar_john.png',
+        parentPhone: '+1 (416) 555-0148',
+        children: [
+          { id: 'leo', name: 'Leo Chen', age: '9 yrs', grade: 'Grade 4', school: 'Greenfield International School', notes: '', photo: '/assets/avatar_arman.jpg' },
+          { id: 'mia', name: 'Mia Chen', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Booster', photo: '/assets/avatar_zara.jpg' }
+        ],
+        childNamesShort: 'Leo + Mia',
+        seatsNeeded: 2,
+        pickupLocation: '9 Harbourview Lane',
+        dropoffLocation: 'Greenfield International School',
+        routeFrom: '9 Harbourview Lane',
+        routeTo: 'Greenfield International School',
+        dateLabel: 'Starts Mon, Sep 7, 2026',
+        pickupTime: '07:20 AM',
+        returnTime: '',
+        recurringDays: ['Mon', 'Wed', 'Fri'],
+        frequency: 'recurring',
+        direction: 'oneway',
+        timing: 'Mon/Wed/Fri · Pickup 07:20 AM',
+        rate: 85,
+        rateLabel: '$85 / week',
+        price: '$85 / week',
+        notes: 'Morning-only. Dad works downtown — kids ready at curb by 07:15.',
+        status: 'accepted'
+      },
+      {
+        id: 'dreq-5',
+        bookingId: 'H2S-REQ-5520',
+        parentId: 'PRNT-5520',
+        parentName: 'Amira Hassan',
+        parentRole: 'Mother',
+        parentPhoto: '/assets/avatar_sarah.jpg',
+        parentPhone: '+1 (416) 555-0133',
+        children: [
+          { id: 'omar', name: 'Omar Hassan', age: '10 yrs', grade: 'Grade 5', school: 'Rosedale Public School', notes: '', photo: '/assets/avatar_arman.jpg' }
+        ],
+        childNamesShort: 'Omar',
+        seatsNeeded: 1,
+        pickupLocation: '77 Rosedale Valley Road',
+        dropoffLocation: 'Rosedale Public School',
+        routeFrom: '77 Rosedale Valley Road',
+        routeTo: 'Rosedale Public School',
+        dateLabel: 'Mon–Fri starting Sep 21',
+        pickupTime: '08:05 AM',
+        returnTime: '03:40 PM',
+        recurringDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        frequency: 'recurring',
+        direction: 'bothway',
+        timing: 'Mon–Fri · 08:05 AM & 03:40 PM',
+        rate: 110,
+        rateLabel: '$110 / week',
+        price: '$110 / week',
+        notes: 'Outside usual Greenfield corridor — declined for route distance.',
+        status: 'declined'
       }
     ],
     schedule: [
@@ -806,37 +1005,298 @@ window.appState = {
 };
 
 /* ==========================================================
+   Shared Availability + Timeline (Driver & WalkShare)
+   ========================================================== */
+window.H2SAvailability = (function () {
+  const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  function toMinutes(value) {
+    if (!value) return null;
+    const raw = String(value).trim();
+    const ampm = raw.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (ampm) {
+      let h = Number(ampm[1]);
+      const m = Number(ampm[2]);
+      const mer = ampm[3].toUpperCase();
+      if (mer === 'PM' && h !== 12) h += 12;
+      if (mer === 'AM' && h === 12) h = 0;
+      return h * 60 + m;
+    }
+    const parts = raw.split(':').map(Number);
+    if (parts.length < 2 || Number.isNaN(parts[0])) return null;
+    return parts[0] * 60 + parts[1];
+  }
+
+  function toLabel(hhmm) {
+    if (!hhmm) return '';
+    if (/AM|PM/i.test(String(hhmm))) return String(hhmm);
+    const [h, m] = String(hhmm).split(':').map(Number);
+    const am = h < 12;
+    const hr = h % 12 || 12;
+    return `${String(hr).padStart(2, '0')}:${String(m || 0).padStart(2, '0')} ${am ? 'AM' : 'PM'}`;
+  }
+
+  function formatWindow(w) {
+    if (!w) return '';
+    return `${toLabel(w.start)} – ${toLabel(w.end)}`;
+  }
+
+  function defaultWindows() {
+    return [
+      { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '06:30', end: '09:00', label: 'Morning', enabled: true },
+      { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '13:00', end: '16:30', label: 'Afternoon', enabled: true }
+    ];
+  }
+
+  function normalize(raw) {
+    const a = raw && typeof raw === 'object' ? raw : {};
+    const defaults = defaultWindows();
+    const existing = Array.isArray(a.windows) ? a.windows : [];
+    const windows = defaults.map((base, i) => {
+      const extra = existing[i] && typeof existing[i] === 'object' ? existing[i] : {};
+      return {
+        id: extra.id || base.id,
+        label: base.label,
+        start: extra.start || base.start,
+        end: extra.end || base.end,
+        days: Array.isArray(extra.days) && extra.days.length ? extra.days.slice() : base.days.slice(),
+        enabled: extra.enabled !== false
+      };
+    });
+    const weekly = Array.isArray(a.weekly) && a.weekly.length
+      ? a.weekly.slice()
+      : [...new Set(windows.flatMap((w) => w.days || []))];
+    return {
+      weekly,
+      windows,
+      exceptions: Array.isArray(a.exceptions) ? a.exceptions.filter(Boolean) : [],
+      morningSlot: windows[0].enabled ? formatWindow(windows[0]) : '',
+      afternoonSlot: windows[1].enabled ? formatWindow(windows[1]) : ''
+    };
+  }
+
+  function summary(raw) {
+    const a = normalize(raw);
+    const bits = a.windows.filter((w) => w.enabled).map(formatWindow);
+    const days = (a.weekly || []).join('/');
+    if (!bits.length) return 'Set weekly hours';
+    return `${days || 'Mon–Fri'} · ${bits.join(' · ')}`;
+  }
+
+  function dayFromIso(iso) {
+    if (!iso || !/^\d{4}-\d{2}-\d{2}/.test(iso)) return '';
+    const d = new Date(`${iso.slice(0, 10)}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return '';
+    return DAY_NAMES[d.getDay()];
+  }
+
+  function coversDay(avail, day) {
+    if (!day) return true;
+    const a = normalize(avail);
+    if ((a.weekly || []).includes(day)) return true;
+    return (a.windows || []).some((w) => w.enabled && (w.days || []).includes(day));
+  }
+
+  function timeInWindows(timeStr, windows, preferLabel) {
+    const mins = toMinutes(timeStr);
+    if (mins == null) return true;
+    return (windows || []).some((w) => {
+      if (!w || w.enabled === false) return false;
+      if (preferLabel && w.label && w.label !== preferLabel) return false;
+      return mins >= toMinutes(w.start) && mins <= toMinutes(w.end);
+    });
+  }
+
+  function matchesSearch(rawAvail, draft) {
+    const a = normalize(rawAvail);
+    const search = draft || {};
+    const dateIso = search.startDate || '';
+    if (dateIso && (a.exceptions || []).includes(dateIso)) return false;
+
+    if (search.frequency === 'recurring' && Array.isArray(search.selectedDays) && search.selectedDays.length) {
+      const hit = search.selectedDays.some((d) => coversDay(a, d));
+      if (!hit) return false;
+    } else {
+      const day = dayFromIso(dateIso);
+      if (day && !coversDay(a, day)) return false;
+    }
+
+    const timing = search.timingFilter || 'all';
+    const pickup = search.outboundTime;
+    const ret = search.returnTime;
+    const morning = a.windows.filter((w) => w.label === 'Morning');
+    const afternoon = a.windows.filter((w) => w.label === 'Afternoon');
+
+    if (timing === 'morning') {
+      if (pickup && !timeInWindows(pickup, morning.length ? morning : a.windows, 'Morning')) return false;
+      return morning.some((w) => w.enabled) || timeInWindows(pickup || '08:00', a.windows);
+    }
+    if (timing === 'afternoon') {
+      const t = ret || pickup;
+      if (t && !timeInWindows(t, afternoon.length ? afternoon : a.windows, 'Afternoon')) return false;
+      return afternoon.some((w) => w.enabled) || timeInWindows(t || '15:00', a.windows);
+    }
+
+    if (pickup && !timeInWindows(pickup, a.windows)) return false;
+    if (search.direction !== 'oneway' && ret && !timeInWindows(ret, a.windows)) return false;
+    return true;
+  }
+
+  function applyToProviderCards(draft) {
+    const search = draft || (window.appState && window.appState.bookingDraft) || {};
+    const providers = (window.appState && window.appState.providers) || [];
+    const timing = search.timingFilter || 'all';
+    // Only hard-filter when parent explicitly picks Morning/Afternoon.
+    // Default "All" must keep demo cards visible (times/zones are soft signals).
+    const strictTiming = timing === 'morning' || timing === 'afternoon';
+
+    document.querySelectorAll('#providersResultList .provider-result-card').forEach((card) => {
+      const id = (card.getAttribute('data-provider-id') || '').toLowerCase();
+      const provider = providers.find((p) => p.id === id);
+      if (!provider) return;
+
+      let avail = provider.availability;
+      if (!avail && id === 'tariq' && window.appState.driver) avail = window.appState.driver.availability;
+      if (!avail && id === 'sarah' && window.appState.walkshare) avail = window.appState.walkshare.availability;
+
+      let line = card.querySelector('.provider-avail-line');
+      if (!line) {
+        line = document.createElement('div');
+        line.className = 'provider-avail-line';
+        line.hidden = true;
+        card.appendChild(line);
+      }
+      line.hidden = true;
+      line.textContent = summary(avail);
+      line.style.display = 'none';
+
+      const reason = card.getAttribute('data-hide-reason');
+      if (card.style.display === 'none' && reason && reason !== 'availability') return;
+
+      if (!strictTiming) {
+        if (reason === 'availability') {
+          card.style.display = 'flex';
+          card.removeAttribute('data-hide-reason');
+        }
+        return;
+      }
+
+      const ok = matchesSearch(avail, search);
+      if (!ok) {
+        card.style.display = 'none';
+        card.setAttribute('data-hide-reason', 'availability');
+      } else if (reason === 'availability') {
+        card.style.display = 'flex';
+        card.removeAttribute('data-hide-reason');
+      }
+    });
+  }
+
+  return { toMinutes, toLabel, formatWindow, defaultWindows, normalize, summary, matchesSearch, applyToProviderCards, coversDay };
+})();
+
+window.H2SZone = (function () {
+  function clean(value) {
+    let s = String(value || '').trim();
+    if (!s) return '';
+    s = s.replace(/\s*sidewalk corridor\s*/gi, ' ')
+      .replace(/\s*walking school bus escort\s*/gi, ' ')
+      .replace(/\s*corridor\s*/gi, ' ')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+    return s;
+  }
+
+  function label(provider) {
+    if (!provider) return '';
+    return clean(provider.zone || provider.serviceArea || provider.corridor || '');
+  }
+
+  function tokens(text) {
+    return clean(text)
+      .toLowerCase()
+      .split(/[\/,·•→\-]+/)
+      .map((t) => t.trim())
+      .filter((t) => t.length > 2);
+  }
+
+  function matchesSearch(provider, draft) {
+    const zone = label(provider);
+    if (!zone) return true;
+    const search = draft || {};
+    const hay = `${search.pickupLocation || ''} ${search.schoolLocation || ''}`.toLowerCase();
+    if (!hay.trim()) return true;
+    const zTokens = tokens(zone);
+    if (!zTokens.length) return true;
+    return zTokens.some((t) => hay.includes(t));
+  }
+
+  function paintProviderCards() {
+    const providers = (window.appState && window.appState.providers) || [];
+    document.querySelectorAll('#providersResultList .provider-result-card').forEach((card) => {
+      const id = (card.getAttribute('data-provider-id') || '').toLowerCase();
+      const provider = providers.find((p) => p.id === id);
+      if (!provider) return;
+      if (!provider.zone) {
+        if (id === 'tariq' && window.appState.driver) provider.zone = clean(window.appState.driver.serviceArea);
+        if (id === 'sarah' && window.appState.walkshare) {
+          provider.zone = clean(window.appState.walkshare.group?.route || window.appState.walkshare.serviceArea);
+        }
+      }
+      let line = card.querySelector('.provider-zone-line');
+      if (line) {
+        line.style.display = 'none';
+        line.textContent = '';
+      }
+      const z = label(provider);
+      const zoneChip = card.querySelector('.pcs-zone');
+      if (zoneChip && z) {
+        const short = z.split(/[\/→]/)[0].trim();
+        zoneChip.textContent = short;
+      }
+      // Zone is a display signal on search cards — never hard-hide the demo list.
+      if (card.getAttribute('data-hide-reason') === 'zone') {
+        card.style.display = 'flex';
+        card.removeAttribute('data-hide-reason');
+      }
+    });
+  }
+
+  return { clean, label, matchesSearch, paintProviderCards };
+})();
+
+/* ==========================================================
    Product-Grade Unified Role & Workspace Switcher Engine
    (Parent ⇄ Driver Partner ⇄ WalkShare Escort ⇄ Admin Portal)
    ========================================================== */
 window.ROLE_METADATA = {
   parent: {
-    label: 'Parent Mode',
+    label: 'Parent',
     badge: 'Guardian',
     icon: 'user',
     color: '#4F46E5',
-    toast: '👨‍👩‍👧 Switched to Parent & Guardian Mode'
+    toast: 'Parent mode'
   },
   driver: {
-    label: 'Driver Mode',
-    badge: 'Driver Partner',
+    label: 'Driver',
+    badge: 'Partner',
     icon: 'car',
     color: '#D97706',
-    toast: '🚗 Switched to School Driver Partner Mode'
+    toast: 'Driver mode'
   },
   walkshare: {
-    label: 'WalkShare Mode',
-    badge: 'Walk Escort',
+    label: 'WalkShare',
+    badge: 'Escort',
     icon: 'footprints',
     color: '#059669',
-    toast: '🚶 Switched to WalkShare Escort Mode'
+    toast: 'WalkShare mode'
   },
   admin: {
-    label: 'Admin Portal',
-    badge: 'Staff Console',
+    label: 'Admin',
+    badge: 'Later',
     icon: 'shield',
     color: '#0284C7',
-    toast: '🛡️ Switched to Admin Operations Portal'
+    toast: 'Admin web dashboard comes later'
   }
 };
 
@@ -867,7 +1327,7 @@ window.handleSelectRole = function (role) {
 };
 
 window.syncRoleSwitcherCards = function (role) {
-  const roles = ['parent', 'driver', 'walkshare', 'admin'];
+  const roles = ['parent', 'driver', 'walkshare'];
   roles.forEach((r) => {
     const card = document.getElementById(`roleCard${r.charAt(0).toUpperCase() + r.slice(1)}`);
     const chip = document.getElementById(`chipRole${r.charAt(0).toUpperCase() + r.slice(1)}`);
@@ -880,10 +1340,10 @@ window.syncRoleSwitcherCards = function (role) {
     }
     if (chip) {
       if (r === role) {
-        chip.textContent = 'Active Persona';
+        chip.textContent = 'Active';
         chip.classList.add('active');
       } else {
-        chip.textContent = r === 'admin' ? 'Staff Console' : 'Switch Mode';
+        chip.textContent = 'Switch';
         chip.classList.remove('active');
       }
     }
@@ -912,14 +1372,24 @@ window.syncRoleCapsuleUI = function (role) {
   // Sync profile workspace cards across screens if present
   document.querySelectorAll('.profile-workspace-card').forEach((card) => {
     const titleEl = card.querySelector('.pwc-title');
+    const subEl = card.querySelector('.pwc-subtitle');
     if (titleEl) {
-      titleEl.textContent = `Active Persona: ${meta.label.replace(' Mode', '')}`;
+      titleEl.textContent = `Role: ${meta.label.replace(' Mode', '')}`;
+    }
+    if (subEl) {
+      subEl.textContent = 'Switch role';
     }
   });
 };
 
 window.coreSwitchRole = function (role) {
-  const valid = ['parent', 'driver', 'walkshare', 'admin'].includes(role) ? role : 'parent';
+  if (role === 'admin') {
+    if (typeof window.showToast === 'function') {
+      window.showToast('Admin web dashboard comes later', 'info');
+    }
+    return;
+  }
+  const valid = ['parent', 'driver', 'walkshare'].includes(role) ? role : 'parent';
   if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
   window.appState.activeRole = valid;
   localStorage.setItem('h2s_active_role', valid);
@@ -930,21 +1400,17 @@ window.coreSwitchRole = function (role) {
   
   window.syncRoleCapsuleUI(valid);
   
-  // Show rich role toast
   const meta = window.ROLE_METADATA[valid] || window.ROLE_METADATA.parent;
   if (typeof window.showToast === 'function') {
     window.showToast(meta.toast, 'info');
   }
 
-  // Navigate to appropriate landing page
   if (valid === 'driver') {
     const next = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverSetup';
     window.navigateTo(next, true);
   } else if (valid === 'walkshare') {
     const next = typeof window.getWalkShareLanding === 'function' ? window.getWalkShareLanding() : 'wsHome';
     window.navigateTo(next, true);
-  } else if (valid === 'admin') {
-    window.navigateTo('adminPortal', true);
   } else {
     window.navigateTo('home', true);
   }
@@ -966,9 +1432,6 @@ document.addEventListener('keydown', (e) => {
     } else if (e.key === '3') {
       e.preventDefault();
       window.switchRole('walkshare');
-    } else if (e.key === '4') {
-      e.preventDefault();
-      window.switchRole('admin');
     } else if (e.key === 'r' || e.key === 'R') {
       e.preventDefault();
       const modal = document.getElementById('roleSwitcherModal');
@@ -1013,6 +1476,7 @@ window.navReturnStack = window.navReturnStack || [];
 
 function navScreenBucket(name) {
   if (!name) return 'unknown';
+  if (name === 'adminPortal') return 'admin';
   if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'report' || name === 'rating') return 'shared';
   if (String(name).indexOf('driver') === 0) return 'driver';
   if (String(name).indexOf('ws') === 0) return 'walkshare';
@@ -1032,6 +1496,7 @@ function roleDefaultScreen(kind) {
 }
 
 function coerceScreenToRole(screenName) {
+  if (screenName === 'adminPortal') return roleDefaultScreen('home');
   const role = activeNavRole();
   const bucket = navScreenBucket(screenName);
   if (role === 'driver' && bucket === 'parent') {
@@ -1132,6 +1597,10 @@ window.navigateTo = function (screenName, isBack = false) {
   document.querySelectorAll('.screen-view').forEach(el => {
     el.classList.remove('active');
   });
+
+  document.body.setAttribute('data-screen', screenName);
+  const isAuthFlow = ['splash', 'onboarding1', 'onboarding2', 'onboarding3', 'authWelcome', 'authOtp', 'authProfile', 'authPhoto', 'authAddChild', 'authSuccess'].includes(screenName);
+  document.body.classList.toggle('is-auth-flow', isAuthFlow);
 
   const targetEl = document.getElementById(`screen-${screenName}`);
   if (targetEl) {
@@ -1375,7 +1844,11 @@ function initApp() {
   window.__h2sBooted = true;
   renderHome();
 
-  const savedRole = localStorage.getItem('h2s_active_role') || 'parent';
+  let savedRole = localStorage.getItem('h2s_active_role') || 'parent';
+  if (savedRole === 'admin' || !['parent', 'driver', 'walkshare'].includes(savedRole)) {
+    savedRole = 'parent';
+    localStorage.setItem('h2s_active_role', 'parent');
+  }
   window.appState.activeRole = savedRole;
   const btnP = document.getElementById('btnRoleParent');
   const btnD = document.getElementById('btnRoleDriver');
@@ -1437,6 +1910,96 @@ window.setHomeState = function (state) {
   renderHome();
 };
 
+/** Soft upcoming trip cards on parent Home (State B). */
+window.HOME_UPCOMING_TRIPS = [
+  {
+    id: 'H2S-84920',
+    month: 'MAY',
+    day: '22',
+    weekday: 'Wed',
+    direction: 'bothway',
+    frequency: 'recurring',
+    repeats: 'Mon–Fri',
+    legs: [
+      { type: 'drop', label: 'Drop-off', time: '07:30 AM', route: 'Home → Greenfield' },
+      { type: 'pick', label: 'Pick-up', time: '01:00 PM', route: 'Greenfield → Home' }
+    ]
+  },
+  {
+    id: 'H2S-73190',
+    month: 'MAY',
+    day: '23',
+    weekday: 'Thu',
+    direction: 'oneway',
+    frequency: 'onetime',
+    repeats: 'One-time',
+    legs: [
+      { type: 'drop', label: 'Drop-off', time: '08:15 AM', route: 'Home → Sunshine' }
+    ]
+  }
+];
+
+window.buildPhUpcomingLegHtml = function (leg) {
+  const kind = leg.type === 'pick' ? 'pick' : 'drop';
+  return `<div class="ph-up-leg ph-up-leg--${kind}">
+      <span class="ph-up-dot" aria-hidden="true"></span>
+      <div class="ph-up-leg-main">
+        <div class="ph-up-leg-top">
+          <span class="ph-up-leg-label">${leg.label || (kind === 'pick' ? 'Pick-up' : 'Drop-off')}</span>
+          <span class="ph-up-leg-time">${leg.time || ''}</span>
+        </div>
+        <div class="ph-up-leg-route">${leg.route || ''}</div>
+      </div>
+    </div>`;
+};
+
+window.buildPhUpcomingRowHtml = function (trip) {
+  const id = String(trip.id || '').replace(/'/g, '');
+  const both = trip.direction === 'bothway' || (Array.isArray(trip.legs) && trip.legs.length > 1);
+  const chip = trip.chip || (both ? 'Both-way' : 'One-way');
+  const repeats = trip.repeats
+    || (trip.frequency === 'recurring' ? 'Repeats: Mon–Fri' : 'One-time');
+  const repeatsLabel = /^Repeats:|^One-time/i.test(repeats)
+    ? repeats
+    : (trip.frequency === 'recurring' ? `Repeats: ${repeats}` : repeats);
+  let legs = Array.isArray(trip.legs) ? trip.legs.slice() : [];
+  if (!legs.length) {
+    if (trip.time || trip.route) {
+      const isReturn = /→\s*Home/i.test(trip.route || '') && !/Home\s*→/i.test(trip.route || '');
+      legs.push({
+        type: isReturn ? 'pick' : 'drop',
+        label: isReturn ? 'Pick-up' : 'Drop-off',
+        time: trip.time || '',
+        route: trip.route || ''
+      });
+    }
+  }
+  if (!both && legs.length > 1) legs = [legs[0]];
+  const timelineClass = legs.length > 1 ? 'ph-up-timeline' : 'ph-up-timeline ph-up-timeline--single';
+  const legsHtml = legs.map(window.buildPhUpcomingLegHtml).join('');
+  return `<button type="button" class="ph-upcoming-row" onclick="openBookingDetails('${id}')">
+    <div class="ph-up-date" aria-hidden="true">
+      <span class="ph-up-month">${trip.month || ''}</span>
+      <span class="ph-up-day">${trip.day || ''}</span>
+      <span class="ph-up-wd">${trip.weekday || ''}</span>
+    </div>
+    <div class="ph-up-body">
+      <div class="${timelineClass}">${legsHtml}</div>
+      <div class="ph-up-footer">
+        <span class="ph-up-repeats">${repeatsLabel}</span>
+        <span class="ph-up-chip">${chip}</span>
+      </div>
+    </div>
+  </button>`;
+};
+
+window.renderHomeUpcomingList = function (trips) {
+  const list = document.getElementById('homeUpcomingList');
+  if (!list) return;
+  const rows = Array.isArray(trips) && trips.length ? trips : window.HOME_UPCOMING_TRIPS;
+  list.innerHTML = rows.map(window.buildPhUpcomingRowHtml).join('');
+};
+
 function renderHome() {
   const state = window.appState.homeScenario;
   const viewA = document.getElementById('homeStateAView');
@@ -1462,6 +2025,8 @@ function renderHome() {
     if (viewC) viewC.style.display = 'none';
     if (nextBlock) nextBlock.style.display = 'block';
     btnB?.classList.add('active');
+
+    if (window.renderHomeUpcomingList) window.renderHomeUpcomingList();
 
     // Populate next-trip card from active booking
     const activeBooking = window.appState.bookings.find(b => b.id === window.appState.activeBookingId) || window.appState.bookings[0];
@@ -1704,7 +2269,7 @@ window.renderBookingSavedLocations = function () {
   if (locs.length === 0) {
     container.innerHTML = `
       <div style="display: flex; align-items: center; gap: 8px;">
-        <span style="font-size: 11px; color: #94A3B8; font-weight: 600;">No saved locations yet</span>
+        <span style="font-size: 10px; color: #94A3B8; font-weight: 600;">No saved locations yet</span>
         <button type="button" class="clean-quick-chip add-new" onclick="openAddLocationModal()">
           <i data-lucide="plus"></i>
           <span>Add New</span>
@@ -2254,7 +2819,22 @@ window.filterBookingProviders = function (filterType, btnEl) {
       show = cat === 'walkshare';
     }
     card.style.display = show ? 'flex' : 'none';
+    if (show) card.removeAttribute('data-hide-reason');
+    else card.setAttribute('data-hide-reason', 'service');
   });
+
+  if (typeof window.applyProviderCompactFilter === 'function') {
+    const active = document.querySelector('#providerFilterRow .mvp-filter-chip.active');
+    window.applyProviderCompactFilter(active?.getAttribute('data-filter') || 'all', active);
+    return;
+  }
+
+  if (window.H2SAvailability && typeof window.H2SAvailability.applyToProviderCards === 'function') {
+    window.H2SAvailability.applyToProviderCards(window.appState?.bookingDraft);
+  }
+  if (window.H2SZone && typeof window.H2SZone.paintProviderCards === 'function') {
+    window.H2SZone.paintProviderCards();
+  }
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
@@ -2296,6 +2876,104 @@ window.triggerChildSafetySOS = function () {
 window.currentDriverProfileReturnScreen = 'home';
 window.currentDriverProfileId = 'tariq';
 
+window.getProviderReviews = function (provider) {
+  if (!provider) return [];
+  if (Array.isArray(provider.reviews) && provider.reviews.length) return provider.reviews;
+
+  const mainQuote = String(provider.quote || '').replace(/^"|"$/g, '').trim()
+    || 'Reliable and great with kids.';
+  const mainName = String(provider.reviewer || 'Parent')
+    .replace(/^—\s*/, '')
+    .replace(/\s*\(.*\)$/, '')
+    .trim() || 'Parent';
+  const shortName = mainName.split(' ').map((p, i) => (i === 0 ? p : (p[0] ? p[0] + '.' : ''))).join(' ').trim();
+
+  const extras = provider.category === 'walkshare'
+    ? [
+        { name: shortName, rating: 5, date: '3 wk ago', text: mainQuote },
+        { name: 'Priya S.', rating: 5, date: '1 mo ago', text: 'Kids love the morning walk. Clear updates every day.' },
+        { name: 'Omar H.', rating: 5, date: '2 mo ago', text: 'Safe crossings and friendly group. Highly recommend.' },
+        { name: 'Lisa M.', rating: 4, date: '3 mo ago', text: 'Punctual and calm. Would book again.' }
+      ]
+    : [
+        { name: shortName, rating: 5, date: '2 wk ago', text: mainQuote },
+        { name: 'David M.', rating: 5, date: '1 mo ago', text: 'Always on time. Kids feel safe in the car.' },
+        { name: 'Sumaiya A.', rating: 5, date: '6 wk ago', text: 'Clear chat updates and careful driving.' },
+        { name: 'James K.', rating: 4, date: '2 mo ago', text: 'Professional and friendly. Easy booking.' }
+      ];
+  return extras;
+};
+
+window.openProviderReviews = function () {
+  const id = window.currentDriverProfileId;
+  const provider = (window.appState.providers || []).find((p) => p.id === id) || window.appState.providers[0];
+  if (!provider) return;
+
+  const cleanName = provider.name.replace(/\s*\(WalkShare\)/i, '');
+  const titleEl = document.getElementById('providerReviewsTitle');
+  if (titleEl) titleEl.textContent = 'Reviews · ' + cleanName.split(' ')[0];
+
+  const scoreEl = document.getElementById('providerReviewsScore');
+  const starsEl = document.getElementById('providerReviewsStars');
+  const countEl = document.getElementById('providerReviewsCountLabel');
+  const rating = Number(provider.rating) || 4.9;
+  const reviews = window.getProviderReviews(provider);
+  const count = provider.reviewsCount || reviews.length;
+  if (scoreEl) scoreEl.textContent = rating.toFixed(1);
+  if (starsEl) {
+    const full = Math.round(rating);
+    starsEl.textContent = '★★★★★'.slice(0, full) + '☆☆☆☆☆'.slice(0, 5 - full);
+  }
+  if (countEl) countEl.textContent = count + ' reviews';
+
+  const list = document.getElementById('providerReviewsList');
+  if (list) {
+    list.innerHTML = reviews.map((r) => {
+      const stars = '★'.repeat(r.rating || 5);
+      const photo = window.personAvatar(r.name, '/assets/avatar_sadia.jpg');
+      return (
+        '<article class="provider-review-card">' +
+          '<div class="profile-review-top-row">' +
+            '<div class="profile-reviewer-info">' +
+              '<div class="provider-review-avatar"><img src="' + photo + '" alt="" onerror="this.src=\'/assets/avatar_sadia.jpg\'" /></div>' +
+              '<div>' +
+                '<div class="profile-reviewer-name">' + r.name + '</div>' +
+                '<div class="profile-reviewer-sub">Verified parent</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="provider-review-meta">' +
+              '<span class="profile-rating-stars-gold">' + stars + '</span>' +
+              '<span class="profile-review-date">' + (r.date || '') + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<p class="profile-review-quote">' + r.text + '</p>' +
+        '</article>'
+      );
+    }).join('');
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+  window.navigateTo('bookingProviderReviews');
+};
+
+window.formatProviderSchedule = function (provider) {
+  const avail = provider && provider.availability;
+  if (!avail) return 'School days';
+  const days = Array.isArray(avail.weekly) && avail.weekly.length
+    ? (avail.weekly.length >= 5 ? 'Mon–Fri' : avail.weekly.join(', '))
+    : 'School days';
+  const windows = (avail.windows || []).filter((w) => w && w.enabled !== false);
+  if (!windows.length) return days;
+  const hasAm = windows.some((w) => Number(String(w.start || '12').split(':')[0]) < 12);
+  const hasPm = windows.some((w) => Number(String(w.start || '0').split(':')[0]) >= 12);
+  if (hasAm && hasPm) return days + ' · AM & PM';
+  if (hasAm) return days + ' · Morning';
+  if (hasPm) return days + ' · Afternoon';
+  return days;
+};
+
 window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (returnScreen) {
     window.currentDriverProfileReturnScreen = returnScreen;
@@ -2317,17 +2995,27 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
   const cleanFirstName = provider.name.replace(/\s*\(WalkShare\)/i, '').split(' ')[0];
   const cleanFullName = provider.name.replace(/\s*\(WalkShare\)/i, '');
+  const zone = (window.H2SZone && window.H2SZone.label(provider)) || provider.zone || '';
+  const reviews = window.getProviderReviews(provider);
+  const schedule = window.formatProviderSchedule(provider);
 
-  // 1. Top Bar Title
   const titleEl = document.getElementById('providerDetailsTitle');
-  if (titleEl) titleEl.textContent = isWalk ? 'Chaperone Profile' : 'Driver Profile';
+  if (titleEl) titleEl.textContent = isWalk ? 'WalkShare profile' : 'Driver profile';
 
-  // 2. Hero Section
   const imgEl = document.getElementById('detailsProviderImg');
   const nameEl = document.getElementById('detailsProviderName');
   const ratingEl = document.getElementById('detailsProviderRatingVal');
+  const reviewCountEl = document.getElementById('detailsProviderReviewCount');
   const distEl = document.getElementById('detailsProviderDistance');
-  const roleTag = document.getElementById('detailsProviderRoleTag');
+  const trustEl = document.getElementById('detailsTrustLine');
+  const trustTitle = document.getElementById('detailsTrustTitle');
+  const roleChip = document.getElementById('detailsRoleChip');
+  const roleChipText = document.getElementById('detailsRoleChipText');
+  const serviceLabel = document.getElementById('detailsServiceLabel');
+  const zoneEl = document.getElementById('detailsZoneText');
+  const availEl = document.getElementById('detailsAvailText');
+  const safetyList = document.getElementById('detailsSafetyList');
+  const plateLbl = document.getElementById('specPlateLbl');
 
   if (imgEl) {
     imgEl.src = provider.photo || '/assets/avatar_tariq.jpg';
@@ -2335,20 +3023,40 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
     imgEl.onerror = function () { this.src = '/assets/avatar_tariq.jpg'; };
   }
   if (nameEl) nameEl.textContent = cleanFullName;
-  if (ratingEl) ratingEl.textContent = `★ ${provider.rating} (${provider.reviewsCount || 128} reviews)`;
-  if (distEl) distEl.textContent = isWalk ? '0.4 km route · ~8 min walk' : '0.8 km away';
+  if (ratingEl) ratingEl.textContent = '★ ' + provider.rating;
+  if (reviewCountEl) reviewCountEl.textContent = (provider.reviewsCount || reviews.length) + ' reviews';
+  if (distEl) {
+    distEl.textContent = isWalk
+      ? ('~8 min walk · ' + (zone || 'Neighborhood corridor'))
+      : ('0.8 km away · ' + (zone || 'School corridor'));
+  }
+  if (trustTitle) trustTitle.textContent = 'Home2School verified';
+  if (trustEl) {
+    trustEl.textContent = isWalk
+      ? 'Background, vulnerable sector & safety agreement checked'
+      : 'Licence, insurance, background & vulnerable sector checked';
+  }
+  if (roleChip) roleChip.className = isWalk ? 'pp-role-chip walkshare' : 'pp-role-chip';
+  if (roleChipText) roleChipText.textContent = isWalk ? 'WalkShare escort' : 'School Driver';
+  if (roleChip) {
+    roleChip.innerHTML = (isWalk
+      ? '<i data-lucide="footprints" style="width: 12px; height: 12px;"></i>'
+      : '<i data-lucide="car" style="width: 12px; height: 12px;"></i>')
+      + '<span id="detailsRoleChipText">' + (isWalk ? 'WalkShare escort' : 'School Driver') + '</span>';
+  }
+  if (serviceLabel) serviceLabel.textContent = isWalk ? 'Walking school bus' : 'School commute';
+  if (zoneEl) zoneEl.textContent = zone || (isWalk ? 'Local sidewalks' : 'School corridor');
+  if (availEl) availEl.textContent = schedule;
 
-  if (roleTag) {
-    if (isWalk) {
-      roleTag.className = 'profile-role-tag walkshare';
-      roleTag.innerHTML = '<i data-lucide="footprints" style="width: 13px; height: 13px;"></i><span>WalkShare Community Chaperone</span>';
-    } else {
-      roleTag.className = 'profile-role-tag';
-      roleTag.innerHTML = '<i data-lucide="car" style="width: 13px; height: 13px;"></i><span>Vetted School Carpool Driver</span>';
-    }
+  if (safetyList) {
+    const checks = isWalk
+      ? ['ID verification', 'Background check', 'Vulnerable sector check', 'Signed safety agreement']
+      : ["Driver's licence", 'Vehicle insurance', 'Background check', 'Vulnerable sector check'];
+    safetyList.innerHTML = checks.map((label) =>
+      '<li><i data-lucide="check" style="width:14px;height:14px;"></i><span>' + label + '</span></li>'
+    ).join('');
   }
 
-  // 3. Stat Strip
   const expPillar = document.getElementById('detailsProviderExpPillar');
   const tripsPillar = document.getElementById('detailsProviderTripsPillar');
   const tripsLbl = document.getElementById('detailsProviderTripsLbl');
@@ -2357,15 +3065,13 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
 
   if (expPillar) expPillar.textContent = provider.experience || '5+ Yrs';
   if (tripsPillar) tripsPillar.textContent = isWalk ? '320+' : '500+';
-  if (tripsLbl) tripsLbl.textContent = isWalk ? 'Safe Walks' : 'Trips Completed';
+  if (tripsLbl) tripsLbl.textContent = isWalk ? 'Safe walks' : 'School trips';
   if (onTimePillar) onTimePillar.textContent = provider.onTimeRate || '99.8%';
-  if (onTimeLbl) onTimeLbl.textContent = isWalk ? 'Safe Record' : 'On-Time Rate';
+  if (onTimeLbl) onTimeLbl.textContent = isWalk ? 'Safety record' : 'On time';
 
-  // 4. Service Card & Rich Specs
   const iconBox = document.getElementById('detailsVehIconBox');
   const vehTitle = document.getElementById('detailsProviderVehTitle');
   const vehSubtitle = document.getElementById('detailsProviderVehSubtitle');
-  const vehBadgeText = document.getElementById('detailsProviderBadgeText');
   const specSeats = document.getElementById('specSeatsText');
   const specPlate = document.getElementById('specPlateText');
   const specBooster = document.getElementById('specBoosterText');
@@ -2376,56 +3082,44 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
       iconBox.className = 'profile-service-icon-box walkshare';
       iconBox.innerHTML = '<i data-lucide="footprints" style="width: 22px; height: 22px;"></i>';
     }
-    if (vehTitle) vehTitle.textContent = 'Walking School Bus Escort';
-    if (vehSubtitle) vehSubtitle.textContent = 'Supervised Neighborhood Pedestrian Walk';
-    if (vehBadgeText) vehBadgeText.textContent = 'Safe Route';
-    if (specSeats) specSeats.textContent = 'Max 5 Kids (3 spots open)';
-    if (specPlate) specPlate.textContent = 'Sidewalks Only';
-    if (specBooster) specBooster.textContent = 'High-Vis Vests Included';
-    if (specLocks) specLocks.textContent = 'Crossing Guard Supervised';
+    if (vehTitle) vehTitle.textContent = provider.vehicle || 'Walking School Bus';
+    if (vehSubtitle) vehSubtitle.textContent = 'Supervised group walk to school';
+    if (specSeats) specSeats.textContent = (provider.seats || 3) + ' kids';
+    if (plateLbl) plateLbl.textContent = 'Path';
+    if (specPlate) specPlate.textContent = 'Sidewalks only';
+    if (specBooster) specBooster.textContent = 'High-vis vests';
+    if (specLocks) specLocks.textContent = 'Crossing care';
   } else {
     if (iconBox) {
       iconBox.className = 'profile-service-icon-box';
       iconBox.innerHTML = '<i data-lucide="car" style="width: 22px; height: 22px;"></i>';
     }
     if (vehTitle) vehTitle.textContent = provider.vehicle || 'Toyota Sienna (2023)';
-    if (vehSubtitle) vehSubtitle.textContent = 'Clean & Audited School Commute Vehicle';
-    if (vehBadgeText) vehBadgeText.textContent = 'Inspected';
-    if (specSeats) specSeats.textContent = `${provider.seats || 4} seats available`;
-    if (specPlate) specPlate.textContent = `Plate: ${provider.plate || 'SCH-4091'}`;
-    if (specBooster) specBooster.textContent = 'Booster Seats Equipped';
-    if (specLocks) specLocks.textContent = 'Child Door Locks';
+    if (vehSubtitle) vehSubtitle.textContent = (provider.seats || 4) + ' seats · Plate ' + (provider.plate || '—');
+    if (specSeats) specSeats.textContent = (provider.seats || 4) + ' seats';
+    if (plateLbl) plateLbl.textContent = 'Plate';
+    if (specPlate) specPlate.textContent = provider.plate || '—';
+    if (specBooster) specBooster.textContent = 'Booster seats';
+    if (specLocks) specLocks.textContent = 'Child locks';
   }
 
-  // 5. About Provider
   const aboutLbl = document.getElementById('detailsAboutLabel');
   const bioEl = document.getElementById('detailsProviderBio');
-  if (aboutLbl) aboutLbl.textContent = `About ${cleanFirstName}`;
+  if (aboutLbl) aboutLbl.textContent = 'About ' + cleanFirstName;
   if (bioEl) {
-    bioEl.textContent = isWalk 
-      ? 'Certified neighborhood walking school bus chaperone. We walk safely as a supervised group along sidewalks, observing crossing guard signals. Children stay healthy, active, and arrive safely every morning.'
-      : 'Experienced school transport provider with a strong focus on child safety. Verified background check, booster seat equipped, and CPR certified.';
+    bioEl.textContent = isWalk
+      ? (cleanFirstName + ' leads a supervised walking school bus so neighborhood kids arrive together—active, visible, and safely escorted to the school gate.')
+      : (cleanFirstName + ' provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.');
   }
 
-  const routeNote = document.getElementById('detailsRouteNote');
-  if (routeNote) {
-    routeNote.textContent = isWalk 
-      ? 'Walk Route: Elm St Corner ➔ Greenfield School Gates'
-      : 'Route: Maple Ridge ➔ Greenfield Elementary';
-  }
-
-  // 9. Sticky Footer Price Preview & Booking Button
-  const rateVal = isWalk ? 75 : (provider.baseWeekly || 120);
   const stickyPrice = document.getElementById('detailsStickyPrice');
-  if (stickyPrice) {
-    stickyPrice.innerHTML = `$${rateVal} <small>/wk</small>`;
-  }
+  if (stickyPrice) stickyPrice.style.display = 'none';
+  const stickyBlock = document.querySelector('.profile-sticky-price-block');
+  if (stickyBlock) stickyBlock.style.display = 'none';
 
   const bookBtnEl = document.getElementById('btnBookWithProvider');
   if (bookBtnEl) {
-    bookBtnEl.textContent = isWalk 
-      ? `Book WalkShare with ${cleanFirstName} →` 
-      : `Book Ride with ${cleanFirstName} →`;
+    bookBtnEl.textContent = 'Request ' + cleanFirstName + ' →';
     bookBtnEl.onclick = function () {
       window.appState.bookingDraft.providerId = provider.id;
       navigateTo('bookingSummary');
@@ -2693,9 +3387,7 @@ function renderBookingConfirmation() {
   if (providerEl) providerEl.textContent = `${provider.name} (${provider.vehicle})`;
   if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
   if (totalEl) {
-    totalEl.textContent = active.frequency === 'recurring' 
-      ? `$${active.amount}.00 / week (Recurring)` 
-      : `$${active.amount}.00 Flat Rate (One-Time)`;
+    totalEl.textContent = 'Ride fee · arrange with provider';
   }
 
   const trackBtn = document.getElementById('btnConfirmedLiveTrack');
@@ -2714,268 +3406,231 @@ window.openBookingDetails = function (bookingId) {
   window.navigateTo('bookingDetails');
 };
 
+window.openTripReport = function (bookingId) {
+  const booking = (window.appState.bookings || []).find(b => b.id === bookingId)
+    || (window.appState.bookings || [])[0];
+  if (!booking) {
+    window.navigateTo('report');
+    return;
+  }
+
+  const kids = (booking.childIds || [])
+    .map(id => (window.appState.children || []).find(ch => ch.id === id))
+    .filter(Boolean)
+    .map(ch => (ch.name || '').split(' ')[0])
+    .filter(Boolean);
+  const shortPlace = (loc) => {
+    if (!loc) return '';
+    if (/home/i.test(loc)) return 'Home';
+    if (/greenfield/i.test(loc)) return 'Greenfield';
+    if (/sunshine/i.test(loc)) return 'Sunshine';
+    return String(loc).replace(/\s*\([^)]*\)\s*/g, '').split(',')[0].trim().split(' ').slice(0, 2).join(' ');
+  };
+  const from = shortPlace(booking.pickupLocation) || 'Home';
+  const to = shortPlace(booking.schoolLocation) || 'School';
+  const idShort = String(booking.id || '').replace(/^H2S-?/i, '');
+
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+  const hidden = document.getElementById('reportTripSelect');
+  if (hidden) hidden.value = booking.id;
+
+  setText('tripReportTitle', kids.length ? kids.join(' & ') : 'Trip');
+  setText('tripReportRoute', `${from} → ${to}`);
+  setText('tripReportBookingBadge', idShort ? '#' + idShort : '');
+
+  window.navigateTo('report');
+};
+
+window.handleTripReportBack = function () {
+  window.navigateBack('bookingDetails');
+};
+
 function renderBookingDetails(bookingId) {
   const booking = window.appState.bookings.find(b => b.id === bookingId) || window.appState.bookings[0];
   if (!booking) return;
 
   const provider = window.appState.providers.find(p => p.id === booking.providerId) || window.appState.providers[0];
   window.currentBookingProviderId = provider.id;
-  const children = booking.childIds.map(id => window.appState.children.find(ch => ch.id === id)).filter(Boolean);
+  let children = (booking.childIds || []).map(id => window.appState.children.find(ch => ch.id === id)).filter(Boolean);
+  if (!children.length && Array.isArray(window.appState.children) && window.appState.children.length) {
+    children = window.appState.children.slice(0, 1);
+  }
+  const isWalk = provider.category === 'walkshare' || /walk/i.test(provider.name || '') || /walk/i.test(provider.vehicle || '');
 
-  // Reference & status
-  const refEl = document.getElementById('detailRefId');
-  const statusEl = document.getElementById('detailStatusBadge');
-  const titleEl = document.getElementById('detailHeaderTitle');
-  const subEl = document.getElementById('detailHeaderSubtitle');
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
 
-  if (refEl) refEl.textContent = booking.id.startsWith('#') ? booking.id : `#${booking.id}`;
-  if (titleEl) titleEl.textContent = booking.schoolLocation || 'School Commute';
+  const shortPlace = (loc) => {
+    if (!loc) return '';
+    if (/home/i.test(loc)) return 'Home';
+    if (/greenfield/i.test(loc)) return 'Greenfield';
+    if (/sunshine/i.test(loc)) return 'Sunshine';
+    return String(loc).replace(/\s*\([^)]*\)\s*/g, '').replace(/\s+International School/i, '').replace(/\s+Pre-school/i, '').split(',')[0].trim();
+  };
 
-  // Child Boarding Safety PIN (Unique real-world student security concept)
-  const pin = booking.id.replace(/\D/g, '').slice(-4) || '8492';
-  const pinEl = document.getElementById('detailSafetyPin');
+  const shortSchool = shortPlace(booking.schoolLocation) || 'School';
+  const pickupStreet = String(booking.pickupLocation || '12 Elm Street')
+    .replace(/^Home\s*\(?/i, '')
+    .replace(/\)$/, '')
+    .trim() || '12 Elm Street';
+
+  const tripTitle = booking.direction === 'bothway'
+    ? 'Round trip'
+    : (/pm|p\.m/i.test(booking.outboundTime || '') ? 'From school' : 'To school');
+
+  const routeLine = booking.direction === 'bothway'
+    ? `Home ↔ ${shortSchool}`
+    : (/pm|p\.m/i.test(booking.outboundTime || '') ? `${shortSchool} → Home` : `Home → ${shortSchool}`);
+
+  const scheduleLabel = booking.frequency === 'recurring'
+    ? 'Mon–Fri'
+    : (booking.createdAt || booking.completedAt || 'One-time');
+
+  const idShort = String(booking.id || '').replace(/^H2S-?/i, '');
+  setText('detailRefId', idShort ? '#' + idShort : '');
+  setText('detailHeaderTitle', tripTitle);
+  setText('detailHeaderSubtitle', routeLine);
+  setText('detailScheduleDate', scheduleLabel);
+
+  const pin = String(booking.id || '').replace(/\D/g, '').slice(-4) || '8492';
+  setText('detailSafetyPin', pin);
   const modalPinEl = document.getElementById('modalSafetyPinText');
   const modalSubEl = document.getElementById('modalSafetyPinSub');
   const modalVehEl = document.getElementById('modalSafetyVehicleSub');
-
-  if (pinEl) pinEl.textContent = pin;
   if (modalPinEl) modalPinEl.textContent = pin;
-  if (modalSubEl) modalSubEl.textContent = `Assigned: ${children.map(c => c.name).join(' & ')}`;
-  if (modalVehEl) modalVehEl.textContent = `Vehicle: ${provider.vehicle} (${provider.plate})`;
+  if (modalSubEl) modalSubEl.textContent = children.map(c => c.name.split(' ')[0]).join(' + ') || 'Children';
+  if (modalVehEl) modalVehEl.textContent = (provider.vehicle || '') + (provider.plate ? ' · ' + provider.plate : '');
 
+  const statusEl = document.getElementById('detailStatusBadge');
   if (statusEl) {
-    if (booking.status === 'in_progress') {
-      statusEl.className = 'status-chip in-progress';
-      statusEl.innerHTML = '<span class="live-pulse-dot"></span> In Transit';
-    } else if (booking.status === 'confirmed') {
-      statusEl.className = 'status-chip confirmed';
-      statusEl.textContent = 'Scheduled';
-    } else {
-      statusEl.className = `status-chip ${booking.status}`;
-      statusEl.textContent = booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase() : '';
-    }
+    const map = {
+      in_progress: { cls: 'bd-status in-progress', html: '<span class="live-pulse-dot"></span><span>Live</span>' },
+      confirmed: { cls: 'bd-status confirmed', html: '<i data-lucide="calendar" style="width:12px;height:12px;"></i><span>Scheduled</span>' },
+      pending: { cls: 'bd-status pending', html: '<span>Pending</span>' },
+      completed: { cls: 'bd-status completed', html: '<span>Completed</span>' },
+      cancelled: { cls: 'bd-status cancelled', html: '<span>Cancelled</span>' }
+    };
+    const s = map[booking.status] || { cls: 'bd-status', html: '<span>' + (booking.status || '') + '</span>' };
+    statusEl.className = s.cls;
+    statusEl.innerHTML = s.html;
   }
 
-  // Direction & frequency subtitle in top card
-  if (subEl) {
-    let subText = '';
-    if (booking.direction === 'bothway' && booking.frequency === 'recurring') {
-      subText = '⇄ Round Trip • Recurring (Mon–Fri)';
-    } else if (booking.direction === 'oneway' && booking.frequency === 'recurring') {
-      subText = '→ One Way • Recurring (Mon–Fri)';
-    } else if (booking.direction === 'bothway' && booking.frequency === 'onetime') {
-      subText = '⇄ Round Trip • Day Pass';
-    } else {
-      subText = '→ One Way • Single Trip';
-    }
-    subEl.textContent = subText;
-  }
-
-  // Children passengers
   const passWrap = document.getElementById('detailPassengersWrap');
   if (passWrap) {
-    const isLive = booking.status === 'in_progress';
-    passWrap.innerHTML = children.map((c, idx) => {
-      const photoSrc = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
-      const badgeText = isLive ? 'On Board' : 'Confirmed';
-      const gradeAge = [c.grade, c.age].filter(Boolean).join(' • ') || 'Student';
-      return `
-        <div style="display:flex; align-items:center; justify-content:space-between; padding: 8px 0; ${idx < children.length - 1 ? 'border-bottom: 1px solid #F1F5F9;' : ''}">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <img src="${photoSrc}" alt="${c.name}" class="child-photo-avatar" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:1px solid #E2E8F0;" onerror="this.src='/assets/avatar_arman.jpg';" />
-            <div>
-              <div style="font-size:14px;font-weight:800;color:var(--color-title); line-height:1.2;">${c.name}</div>
-              <div style="font-size:12px;color:var(--color-body); margin-top: 2px;">${gradeAge}</div>
-            </div>
-          </div>
-          <span style="font-size:11px; font-weight:700; color:#15803D; background:#F0FDF4; padding:3px 8px; border-radius:99px; border:1px solid #DCFCE7; white-space:nowrap;">${badgeText}</span>
-        </div>
-      `;
-    }).join('');
-    if (window.lucide) window.lucide.createIcons();
+    passWrap.innerHTML = children.map((c) => {
+      const first = (c.name || 'Student').split(' ')[0];
+      const photoSrc = c.photo || '/assets/avatar_arman.jpg';
+      return (
+        '<div class="bd-kid-row">' +
+          '<img src="' + photoSrc + '" alt="" class="bd-kid-avatar" onerror="this.src=\'/assets/avatar_arman.jpg\';" />' +
+          '<div>' +
+            '<div class="bd-kid-name">' + first + '</div>' +
+            '<div class="bd-kid-meta">' + (c.grade || c.age || 'Student') + '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('') || '<div class="bd-kid-meta">Add a child to this booking</div>';
   }
 
-  // Route breakdown
-  const outTime = document.getElementById('detailOutboundTime');
-  const retTime = document.getElementById('detailReturnTime');
+  setText('detailOutboundTime', booking.outboundTime || '07:30 AM');
+  setText('detailReturnTime', booking.returnTime || '—');
+  setText('detailPickupAddr', pickupStreet);
+  setText('detailReturnAddr', pickupStreet);
+  setText('detailSchoolName', shortSchool);
+  const schoolSub = /greenfield/i.test(booking.schoolLocation || '')
+    ? 'Gate drop-off'
+    : /sunshine/i.test(booking.schoolLocation || '')
+      ? 'Pre-school gate'
+      : (shortSchool !== 'School' ? shortSchool + ' gate' : 'School gate');
+  setText('detailSchoolAddr', schoolSub);
+  setText('detailSchoolTime', booking.schoolArriveTime || '07:45 AM');
+
   const retBox = document.getElementById('detailReturnLegBox');
+  const retLine = document.getElementById('detailReturnRailLine');
+  const both = booking.direction === 'bothway';
+  if (retBox) retBox.style.display = both ? 'grid' : 'none';
+  if (retLine) retLine.style.display = both ? 'block' : 'none';
 
-  // Parent / Guardian Information sync
-  const parent = window.appState.user;
-  const parentId = booking.parentId || parent.id || 'PRNT-9042';
-  const parentName = booking.parentName || parent.name || 'Sadia Khan';
-  const parentPhone = booking.parentPhone || parent.phone || '+1 (416) 555-0192';
-  const parentRole = booking.parentRole || `${parent.role || 'Mother'} (Primary Guardian)`;
-  const parentPhoto = booking.parentPhoto || parent.photo || '/assets/avatar_sadia.jpg';
+  setText('detailProviderName', String(provider.name || '').replace(/\s*\(WalkShare\)/i, ''));
+  setText('detailProviderRating', String(provider.rating != null ? provider.rating : '—'));
+  setText('detailProviderReviews', provider.reviewsCount != null ? '(' + provider.reviewsCount + ')' : '');
 
-  const parentRefText = document.getElementById('detailParentRefText');
-  const parentIdEl = document.getElementById('detailParentId');
-  const parentNameEl = document.getElementById('detailParentName');
-  const parentContactEl = document.getElementById('detailParentContact');
-  const parentAvatarEl = document.getElementById('detailParentAvatar');
-  const backupGuardianEl = document.getElementById('detailBackupGuardianText');
+  const vehName = String(provider.vehicle || '').replace(/\s*\(\d{4}\)\s*/g, '').trim();
+  setText('detailVehicleName', isWalk ? 'Walking escort' : (vehName || 'Vehicle'));
+  setText(
+    'detailProviderVehicle',
+    isWalk
+      ? ([provider.zone || provider.serviceArea, provider.seats ? provider.seats + ' kids' : ''].filter(Boolean).join(' · ') || 'WalkShare')
+      : [provider.plate, provider.seats ? provider.seats + ' seats' : ''].filter(Boolean).join(' · ')
+  );
 
-  if (parentRefText) parentRefText.textContent = `Parent ID: #${parentId}`;
-  if (parentIdEl) parentIdEl.textContent = parentId;
-  if (parentNameEl) parentNameEl.textContent = parentName;
-  if (parentContactEl) {
-    parentContactEl.innerHTML = `<i data-lucide="phone" style="width: 11px; height: 11px; display: inline-block; vertical-align: middle; margin-right: 3px; color: #64748B;"></i><span>${parentPhone}</span>`;
-  }
-  if (parentAvatarEl) parentAvatarEl.src = parentPhoto;
-
-  const primaryEmergency = window.appState.emergencyContacts?.find(ec => ec.pickupAuth) || window.appState.emergencyContacts?.[0];
-  if (backupGuardianEl && primaryEmergency) {
-    backupGuardianEl.innerHTML = `Backup Pickup: <strong>${primaryEmergency.name}</strong> (${primaryEmergency.rel} · ${primaryEmergency.phone})`;
-    const backupCallBtn = document.getElementById('detailBackupCallBtn');
-    if (backupCallBtn && primaryEmergency.phone) {
-      backupCallBtn.href = `tel:${primaryEmergency.phone.replace(/[^0-9+]/g, '')}`;
-    }
+  const vehIco = document.querySelector('#detailVehicleRow .bd-vehicle-ico i, #detailVehicleRow .bd-vehicle-ico svg');
+  const vehIcoWrap = document.querySelector('#detailVehicleRow .bd-vehicle-ico');
+  if (vehIcoWrap) {
+    vehIcoWrap.innerHTML = isWalk
+      ? '<i data-lucide="footprints" style="width:18px;height:18px;"></i>'
+      : '<i data-lucide="car" style="width:18px;height:18px;"></i>';
   }
 
-  if (outTime) outTime.textContent = booking.outboundTime || '07:30 AM';
-  if (retTime) retTime.textContent = booking.returnTime || 'N/A';
-  if (retBox) {
-    retBox.style.display = booking.direction === 'bothway' ? 'flex' : 'none';
-  }
-
-  // Provider info
-  const pName = document.getElementById('detailProviderName');
-  const pVeh = document.getElementById('detailProviderVehicle');
-  const pRating = document.getElementById('detailProviderRating');
   const pPhoto = document.getElementById('detailDriverPhoto');
-
-  if (pName) pName.textContent = provider.name;
-  if (pVeh) pVeh.textContent = `${provider.vehicle} • ${provider.plate}`;
-  if (pRating) pRating.textContent = `★ ${provider.rating} (${provider.reviewsCount} reviews)`;
-  if (pPhoto && provider.photo) pPhoto.src = provider.photo;
-
-  // Payment
-  const pAmount = document.getElementById('detailTotalAmount');
-  const pMethod = document.getElementById('detailPayMethod');
-  if (pAmount) {
-    pAmount.textContent = booking.frequency === 'recurring' 
-      ? `$${booking.amount}.00 / wk` 
-      : `$${booking.amount}.00`;
+  if (pPhoto) {
+    pPhoto.src = provider.photo || '/assets/avatar_tariq.jpg';
+    pPhoto.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
   }
-  if (pMethod) pMethod.textContent = booking.paymentMethod || 'Visa •••• 4242';
 
-  // Dynamic Contextual Actions based on status (Clean, uncluttered, top-tier UX)
+  // RFP: ride fare model undefined in MVP — do not invent weekly package pricing in UI
+  const fareRow = document.querySelector('.bd-row-card:has(#detailFareAmount)') || document.getElementById('detailFareAmount')?.closest('.bd-row-card');
+  setText('detailFarePeriod', 'Arrange with provider');
+  setText('detailFareAmount', '—');
+  if (fareRow) {
+    const title = fareRow.querySelector('.bd-row-title');
+    if (title) title.textContent = 'Ride fee';
+  }
+
+  const notesCard = document.getElementById('detailNotesCard');
+  const notesText = document.getElementById('detailNotesText');
+  const note = booking.notes || booking.pickupNote || booking.dropoffNote || '';
+  if (notesCard) notesCard.style.display = note ? 'flex' : 'none';
+  if (notesText && note) notesText.textContent = note;
+
   const actionsWrap = document.getElementById('detailContextualActions');
   if (actionsWrap) {
+    const first = String(provider.name || 'Driver').split(' ')[0];
+    const id = booking.id;
     if (booking.status === 'in_progress') {
-      actionsWrap.innerHTML = `
-        <div class="booking-status-tip-card live" style="margin-bottom: 4px;">
-          <div class="status-tip-icon" style="background: #DCFCE7;">
-            <span class="live-pulse-dot" style="margin: 0;"></span>
-          </div>
-          <div class="status-tip-text">
-            <div class="status-tip-title" style="color: #14532D;">Live Ride in Progress</div>
-            <div class="status-tip-sub" style="color: #166534;">Driver ${provider.name} is en route • Est. school arrival <strong>07:42 AM</strong></div>
-          </div>
-        </div>
-
-        <button class="btn-primary" onclick="openLiveTracking('${booking.id}')" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 50px; font-size: 15.5px; font-weight: 800; border-radius: 14px;">
-          <span class="live-pulse-dot" style="background: #FFFFFF; box-shadow: 0 0 0 3px rgba(255,255,255,0.3);"></span>
-          <span>Track</span>
-          <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-        </button>
-
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 0;">
-          <button type="button" onclick="openTripReport('${booking.id}')" style="background: none; border: none; font-size: 12.5px; font-weight: 600; color: #64748B; display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 4px 0;">
-            <i data-lucide="help-circle" style="width: 14px; height: 14px;"></i>
-            <span>Report Issue</span>
-          </button>
-          <button type="button" onclick="openEmergencySOSModal()" style="background: none; border: none; font-size: 12.5px; font-weight: 700; color: #DC2626; display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 4px 0;">
-            <i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i>
-            <span>SOS Emergency</span>
-          </button>
-        </div>
-
-        <div style="text-align: center; margin-top: 2px;">
-          <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')" style="font-size: 12px; color: #94A3B8; padding: 4px 8px;">
-            <span>Cancel this active ride</span>
-          </button>
-        </div>
-      `;
+      actionsWrap.innerHTML =
+        '<button class="btn-primary" onclick="openLiveTracking(\'' + id + '\')">Track live</button>' +
+        '<div class="bd-actions-quiet">' +
+          '<button type="button" class="bd-link" onclick="openTripReport(\'' + id + '\')">Report</button>' +
+          '<button type="button" class="bd-link danger" onclick="openEmergencySOSModal()">SOS</button>' +
+        '</div>';
     } else if (booking.status === 'confirmed') {
-      actionsWrap.innerHTML = `
-        <div class="booking-status-tip-card upcoming" style="margin-bottom: 4px;">
-          <div class="status-tip-icon" style="background: #E0F2FE;">
-            <i data-lucide="calendar" style="width: 16px; height: 16px; color: #0284C7;"></i>
-          </div>
-          <div class="status-tip-text">
-            <div class="status-tip-title" style="color: #0369A1;">Scheduled Commute</div>
-            <div class="status-tip-sub" style="color: #0C4A6E;">Tomorrow at ${booking.outboundTime || '07:30 AM'}. Live GPS is available only while the trip is in progress.</div>
-          </div>
-        </div>
-
-        <button class="btn-primary" onclick="openChatWith(window.currentBookingProviderId || 'tariq')" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; font-size: 15px; font-weight: 700; border-radius: 14px;">
-          <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
-          <span>Message Driver</span>
-        </button>
-
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 0;">
-          <button type="button" onclick="openTripReport('${booking.id}')" style="background: none; border: none; font-size: 12.5px; font-weight: 600; color: #64748B; display: flex; align-items: center; gap: 5px; cursor: pointer;">
-            <i data-lucide="help-circle" style="width: 14px; height: 14px;"></i>
-            <span>Trip Support</span>
-          </button>
-          <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')" style="font-size: 12px; color: #EF4444; padding: 0;">
-            <span>Cancel booking</span>
-          </button>
-        </div>
-      `;
+      actionsWrap.innerHTML =
+        '<div class="bd-actions-row">' +
+          '<button type="button" class="bd-btn-outline" data-mvp-modify="1" onclick="window.modifyBooking && window.modifyBooking(\'' + id + '\')">Edit booking</button>' +
+          '<button type="button" class="bd-btn-outline danger" onclick="cancelBooking(\'' + id + '\')">Cancel booking</button>' +
+        '</div>';
     } else if (booking.status === 'pending') {
-      actionsWrap.innerHTML = `
-        <div class="booking-status-tip-card" style="margin-bottom: 6px;">
-          <div class="status-tip-icon" style="background: #FEF3C7;">
-            <i data-lucide="clock" style="width: 16px; height: 16px; color: #D97706;"></i>
-          </div>
-          <div class="status-tip-text">
-            <div class="status-tip-title" style="color: #92400E;">Awaiting Escort Confirmation</div>
-            <div class="status-tip-sub">The provider is reviewing your request. You will receive a notification once confirmed.</div>
-          </div>
-        </div>
-
-        <button type="button" class="btn-ghost-cancel" onclick="cancelBooking('${booking.id}')" style="margin-top: 4px; font-size: 12.5px; color: #EF4444;">
-          <i data-lucide="x-circle" style="width: 14px; height: 14px;"></i>
-          <span>Withdraw Booking Request</span>
-        </button>
-      `;
+      actionsWrap.innerHTML =
+        '<p class="bd-wait">Waiting for driver to confirm</p>' +
+        '<button type="button" class="bd-link danger" onclick="cancelBooking(\'' + id + '\')">Withdraw request</button>';
     } else if (booking.status === 'completed') {
-      const providerFirst = (provider.name || 'Provider').split(' ')[0];
-      actionsWrap.innerHTML = `
-        <button type="button" class="btn-primary" onclick="navigateTo('rating')" style="gap: 8px;">
-          <i data-lucide="star" style="width: 16px; height: 16px;"></i>
-          <span>Rate ${providerFirst}</span>
-        </button>
-
-        <div class="booking-post-ride-quiet">
-          <button type="button" class="btn-detail-quiet" onclick="openTripReport('${booking.id}')">
-            <i data-lucide="help-circle" style="width: 14px; height: 14px;"></i>
-            <span>Report Issue</span>
-          </button>
-          <button type="button" class="btn-ghost-cancel btn-ghost-tertiary" onclick="navigateTo('bookingTripSetup')">
-            <i data-lucide="repeat" style="width: 13px; height: 13px;"></i>
-            <span>Book again on this route</span>
-          </button>
-        </div>
-      `;
+      actionsWrap.innerHTML =
+        '<button type="button" class="btn-primary" onclick="navigateTo(\'rating\')">Rate ' + first + '</button>' +
+        '<div class="bd-actions-quiet">' +
+          '<button type="button" class="bd-link" onclick="window.rebookRide && window.rebookRide(\'' + id + '\')">Book again</button>' +
+          '<button type="button" class="bd-link" onclick="openTripReport(\'' + id + '\')">Report</button>' +
+        '</div>';
     } else if (booking.status === 'cancelled') {
-      actionsWrap.innerHTML = `
-        <div class="booking-status-tip-card" style="background: #FEF2F2; border-color: #FECACA;">
-          <div class="status-tip-icon" style="background: #FEE2E2;">
-            <i data-lucide="x-circle" style="width: 16px; height: 16px; color: #DC2626;"></i>
-          </div>
-          <div class="status-tip-text">
-            <div class="status-tip-title" style="color: #991B1B;">Booking Cancelled</div>
-            <div class="status-tip-sub" style="color: #B91C1C;">This school ride was cancelled. No charges were billed.</div>
-          </div>
-        </div>
-
-        <button class="btn-primary" onclick="navigateTo('bookingTripSetup')" style="margin-top: 6px;">
-          Re-book This School Route
-        </button>
-      `;
+      actionsWrap.innerHTML =
+        '<button class="btn-primary" onclick="navigateTo(\'bookingTripSetup\')">Book again</button>';
+    } else {
+      actionsWrap.innerHTML = '';
     }
   }
 
@@ -3086,22 +3741,20 @@ function renderBookingsList(tab) {
   const btnC = document.getElementById('tabCancelled');
   const wrap = document.getElementById('bookingsListWrap');
 
-  // Dynamically update tab badges count
-  const countU = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending' || b.status === 'in_progress').length;
+  const countU = window.appState.bookings.filter(b => ['confirmed', 'pending', 'in_progress', 'declined'].includes(b.status)).length;
   const countH = window.appState.bookings.filter(b => b.status === 'completed').length;
   const countC = window.appState.bookings.filter(b => b.status === 'cancelled').length;
   if (btnU) btnU.textContent = `Upcoming (${countU})`;
   if (btnH) btnH.textContent = `Past (${countH})`;
   if (btnC) btnC.textContent = `Cancelled (${countC})`;
-
   [btnU, btnH, btnC].forEach(b => b?.classList.remove('active'));
 
   let filtered = [];
   if (normTab === 'upcoming') {
     btnU?.classList.add('active');
-    filtered = window.appState.bookings.filter(b => b.status === 'confirmed' || b.status === 'pending' || b.status === 'in_progress');
-    // Sort so in_progress is strictly first
-    filtered.sort((a, b) => (b.status === 'in_progress' ? 1 : 0) - (a.status === 'in_progress' ? 1 : 0));
+    filtered = window.appState.bookings.filter(b => ['confirmed', 'pending', 'in_progress', 'declined'].includes(b.status));
+    const rank = { in_progress: 0, declined: 1, pending: 2, confirmed: 3 };
+    filtered.sort((a, b) => (rank[a.status] ?? 9) - (rank[b.status] ?? 9));
   } else if (normTab === 'history') {
     btnH?.classList.add('active');
     filtered = window.appState.bookings.filter(b => b.status === 'completed');
@@ -3112,306 +3765,89 @@ function renderBookingsList(tab) {
 
   if (!wrap) return;
 
+  const shortSchool = (loc) => {
+    if (!loc) return 'School';
+    if (/greenfield/i.test(loc)) return 'Greenfield';
+    if (/sunshine/i.test(loc)) return 'Sunshine';
+    return String(loc).split(',')[0].replace(/\s+International.*$/i, '').trim();
+  };
+
+  const kidNames = (b) => {
+    const names = (b.childIds || []).map(id => {
+      const c = window.appState.children.find(ch => ch.id === id);
+      return c ? (c.name || '').split(' ')[0] : '';
+    }).filter(Boolean);
+    return names.length ? names.join(' & ') : 'Trip';
+  };
+
+  const statusLabel = (b) => {
+    if (b.status === 'in_progress') return 'Live';
+    if (b.status === 'pending') return 'Pending';
+    if (b.status === 'confirmed') return 'Confirmed';
+    if (b.status === 'completed') return 'Completed';
+    if (b.status === 'cancelled') return 'Cancelled';
+    if (b.status === 'declined') return 'Declined';
+    return b.status;
+  };
+
+  const statusClass = (b) => {
+    if (b.status === 'in_progress') return 'in-progress';
+    if (b.status === 'pending') return 'pending';
+    if (b.status === 'completed') return 'completed';
+    if (b.status === 'cancelled' || b.status === 'declined') return 'cancelled';
+    return 'confirmed';
+  };
+
   if (filtered.length === 0) {
     wrap.innerHTML = `
       <div class="bookings-empty-state">
-        <div class="bookings-empty-icon-box">
-          <i data-lucide="calendar-x" style="width:24px;height:24px;"></i>
-        </div>
-        <div class="bookings-empty-title">No ${normTab} bookings</div>
-        <p class="bookings-empty-sub">When you arrange rides or school commutes, they will appear here with live tracking updates.</p>
-        <button class="btn-primary" style="margin-top: 14px; max-width: 200px; height: 42px;" onclick="navigateTo('bookingTripSetup')">+ Book a Ride</button>
-      </div>
-    `;
+        <div class="bookings-empty-icon-box"><i data-lucide="calendar-x" style="width:24px;height:24px;"></i></div>
+        <div class="bookings-empty-title">No ${normTab === 'history' ? 'past' : normTab} bookings</div>
+        <p class="bookings-empty-sub">Book a school ride to see it here.</p>
+        <button class="btn-primary" style="margin-top:14px;max-width:200px;height:44px;" onclick="navigateTo('bookingTripSetup')">Book a ride</button>
+      </div>`;
   } else {
-    const activeTrips = filtered.filter(b => b.status === 'in_progress');
-    const scheduledTrips = filtered.filter(b => b.status !== 'in_progress');
-
-    const renderCard = (b) => {
+    wrap.innerHTML = filtered.map((b) => {
       const provider = window.appState.providers.find(p => p.id === b.providerId) || window.appState.providers[0];
-      const children = (b.childIds || []).map(id => {
-        const c = window.appState.children.find(ch => ch.id === id);
-        return c ? c.name : id;
-      });
+      const kids = kidNames(b);
+      const school = shortSchool(b.schoolLocation);
+      const time = b.outboundTime || '';
+      const driverFirst = (provider?.name || 'Driver').split(' ')[0];
+      const live = b.status === 'in_progress';
+      const done = b.status === 'completed';
+      const pending = b.status === 'pending';
+      const declined = b.status === 'declined';
+      const title = declined ? school : kids;
+      const sub = declined
+        ? `${driverFirst} didn’t accept`
+        : [school, time, driverFirst].filter(Boolean).join(' · ');
 
-      // Friendly child display (e.g. "Arman & Emma" or "Arman Khan")
-      let childText = '';
-      if (children.length > 1) {
-        childText = children.map(c => c.split(' ')[0]).join(' & ');
-      } else {
-        childText = children[0] || 'Child Rider';
+      let action = '';
+      if (live) {
+        action = `<button type="button" class="bk-cta bk-cta-live" onclick="event.stopPropagation(); openLiveTracking('${b.id}')">Track</button>`;
+      } else if (pending) {
+        action = `<button type="button" class="bk-cta bk-cta-ghost" onclick="event.stopPropagation(); withdrawBookingRequest('${b.id}')">Withdraw</button>`;
+      } else if (done || declined) {
+        action = `<button type="button" class="bk-cta bk-cta-ghost" onclick="event.stopPropagation(); ${declined ? "navigateTo('bookingTripSetup')" : `rebookRide('${b.id}')`}">Book again</button>`;
       }
 
-      // Parse schedule
-      let dayChip = 'Mon – Fri';
-      let timeChip = '';
-      if (b.direction === 'bothway' && b.outboundTime && b.returnTime) {
-        timeChip = `${b.outboundTime} & ${b.returnTime}`;
-      } else if (b.outboundTime) {
-        timeChip = b.outboundTime;
-      }
-
-      if (b.scheduleText) {
-        if (b.scheduleText.includes('•')) {
-          const parts = b.scheduleText.split('•');
-          dayChip = parts[0].trim();
-          if (parts[1]) timeChip = parts[1].trim();
-        } else if (b.scheduleText.includes('Mon–Fri') || b.scheduleText.includes('Mon-Fri')) {
-          dayChip = 'Mon – Fri';
-        }
-      }
-
-      if (timeChip) {
-        timeChip = timeChip.replace(/Outbound:\s*/i, '').replace(/Return:\s*/i, '').replace(/\(.*?\)/g, '').replace(/\|/g, '&').trim();
-      }
-
-      // 1. In Transit Active Ride Card
-      if (b.status === 'in_progress') {
-        return `
-          <div class="booking-item-card is-live" onclick="openBookingDetails('${b.id}')">
-            <div class="bcard-header">
-              <span class="status-chip in-progress" style="font-weight:700;">
-                <span class="status-dot"></span>
-                In Transit · ETA 07:42 AM
-              </span>
-              <div class="bcard-price">
-                <strong>$${b.amount}</strong>
-                <small>/wk</small>
-              </div>
-            </div>
-
-            <div class="bcard-route-block">
-              <div class="bcard-child-title">${childText}</div>
-              <div class="bcard-school-target">${b.schoolLocation}</div>
-              <div class="bcard-meta-line">
-                <span>${dayChip}</span>
-                ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
-              </div>
-            </div>
-
-            <div class="bcard-footer">
-              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')" title="View ${provider.name}'s Profile">
-                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
-                <div class="bcard-driver-text">
-                  <div class="bcard-driver-name">${provider.name}</div>
-                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
-                </div>
-              </div>
-              <div class="bcard-action-wrap" style="display:flex; gap:6px;">
-                <button class="btn-chat-compact" onclick="event.stopPropagation(); openChatWith('${provider.id}')" title="Message Driver">
-                  <i data-lucide="message-square" style="width:12px;height:12px;"></i>
-                </button>
-                <button class="btn-live-track-compact" onclick="event.stopPropagation(); openLiveTracking('${b.id}')" title="Track">
-                  <span class="live-pulse-dot" style="margin:0;"></span>
-                  <span>Track</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      // 2. Pending Ride Card (Awaiting Provider)
-      if (b.status === 'pending') {
-        return `
-          <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
-            <div class="bcard-header">
-              <span class="status-chip pending" style="font-weight:700;">
-                <span class="status-dot"></span>
-                Matching Driver · Pending
-              </span>
-              <div class="bcard-price">
-                <strong>$${b.amount}</strong>
-                <small>trip</small>
-              </div>
-            </div>
-
-            <div class="bcard-route-block">
-              <div class="bcard-child-title">${childText}</div>
-              <div class="bcard-school-target">${b.schoolLocation}</div>
-              <div class="bcard-meta-line">
-                <span>${dayChip}</span>
-                ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
-              </div>
-            </div>
-
-            <div class="bcard-footer">
-              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')">
-                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_sarah.jpg';" />
-                <div class="bcard-driver-text">
-                  <div class="bcard-driver-name">${provider.name}</div>
-                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
-                </div>
-              </div>
-              <div class="bcard-action-wrap">
-                <button class="btn-support-compact" style="color:#EF4444;" onclick="event.stopPropagation(); withdrawBookingRequest('${b.id}')" title="Withdraw Request">
-                  <i data-lucide="x-circle" style="width:12px;height:12px;"></i>
-                  <span>Withdraw</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      // 3. Past Completed Card (History)
-      if (b.status === 'completed') {
-        const dateLabel = b.completedAt ? b.completedAt.split('•')[0].trim() : 'May 19';
-        return `
-          <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
-            <div class="bcard-header">
-              <span class="status-chip completed" style="font-weight:700;">
-                <i data-lucide="check-circle" style="width:12px;height:12px;color:#059669;"></i>
-                Completed · ${dateLabel}
-              </span>
-              <div class="bcard-price">
-                <strong style="color:#0F172A;">$${b.amount}</strong>
-                <small style="color:#64748B;">Paid</small>
-              </div>
-            </div>
-
-            <div class="bcard-route-block">
-              <div class="bcard-child-title">${childText}</div>
-              <div class="bcard-school-target">${b.schoolLocation}</div>
-              <div class="bcard-meta-line">
-                <span>${dayChip}</span>
-                ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
-              </div>
-            </div>
-
-            <div class="bcard-footer">
-              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')" title="View ${provider.name}'s Profile">
-                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_tariq.jpg';" />
-                <div class="bcard-driver-text">
-                  <div class="bcard-driver-name">${provider.name}</div>
-                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${b.userRating || provider.rating}</span></div>
-                </div>
-              </div>
-
-              <div class="bcard-action-wrap" style="display:flex; gap:6px;">
-                <button class="btn-receipt-compact" onclick="event.stopPropagation(); openBookingReceipt('${b.id}')" title="View Official Receipt">
-                  <i data-lucide="receipt" style="width:12px;height:12px;"></i>
-                  <span>Receipt</span>
-                </button>
-                <button class="btn-rebook-compact" onclick="event.stopPropagation(); rebookRide('${b.id}')" title="Rebook this route">
-                  <i data-lucide="rotate-cw" style="width:12px;height:12px;"></i>
-                  <span>Book Again</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      // 4. Cancelled Card
-      if (b.status === 'cancelled') {
-        const cancelDate = b.cancelledAt ? b.cancelledAt.split('•')[0].trim() : 'May 08';
-        return `
-          <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
-            <div class="bcard-header">
-              <span class="status-chip cancelled" style="font-weight:700;">
-                <i data-lucide="x-circle" style="width:12px;height:12px;color:#DC2626;"></i>
-                Cancelled · ${cancelDate}
-              </span>
-              <div class="bcard-price">
-                <strong style="color:#64748B; font-size:14px;">$0 Paid</strong>
-              </div>
-            </div>
-
-            <div class="bcard-route-block">
-              <div class="bcard-child-title">${childText}</div>
-              <div class="bcard-school-target">${b.schoolLocation}</div>
-              <div class="bcard-meta-line">
-                <span>${dayChip}</span>
-                ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
-              </div>
-            </div>
-
-            <div class="bcard-footer">
-              <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')">
-                <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_sarah.jpg';" />
-                <div class="bcard-driver-text">
-                  <div class="bcard-driver-name">${provider.name}</div>
-                  <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
-                </div>
-              </div>
-
-              <div class="bcard-action-wrap">
-                <button class="btn-rebook-compact" onclick="event.stopPropagation(); rebookRide('${b.id}')" title="Rebook this ride">
-                  <i data-lucide="rotate-cw" style="width:12px;height:12px;"></i>
-                  <span>Rebook</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      // 5. Regular Confirmed Scheduled Ride Card
       return `
-        <div class="booking-item-card" onclick="openBookingDetails('${b.id}')">
-          <div class="bcard-header">
-            <span class="status-chip confirmed" style="font-weight:700;">
-              <span class="status-dot"></span>
-              Scheduled Commute
-            </span>
-            <div class="bcard-price">
-              <strong>$${b.amount}</strong>
-              <small>${b.frequency === 'recurring' ? '/wk' : 'trip'}</small>
-            </div>
+        <article class="bk-row${live ? ' is-live' : ''}${declined ? ' is-declined' : ''}" onclick="openBookingDetails('${b.id}')">
+          <div class="bk-row-top">
+            <span class="bk-status ${statusClass(b)}"><span class="bk-status-dot" aria-hidden="true"></span>${statusLabel(b)}</span>
+            ${action}
           </div>
-
-          <div class="bcard-route-block">
-            <div class="bcard-child-title">${childText}</div>
-            <div class="bcard-school-target">${b.schoolLocation}</div>
-            <div class="bcard-meta-line">
-              <span>${dayChip}</span>
-              ${timeChip ? `<span class="meta-dot">·</span><span>${timeChip}</span>` : ''}
-            </div>
-          </div>
-
-          <div class="bcard-footer">
-            <div class="bcard-driver" onclick="event.stopPropagation(); openDriverProfile('${b.providerId || provider.id}', 'bookings')" title="View ${provider.name}'s Profile">
-              <img src="${provider.photo}" alt="${provider.name}" class="bcard-driver-img" onerror="this.src='/assets/avatar_farhana.jpg';" />
-              <div class="bcard-driver-text">
-                <div class="bcard-driver-name">${provider.name}</div>
-                <div class="bcard-driver-veh"><span style="color:#D97706;font-weight:700;">★ ${provider.rating}</span></div>
-              </div>
-            </div>
-
-            <div class="bcard-action-wrap">
-              <button class="btn-chat-compact" onclick="event.stopPropagation(); openChatWith('${provider.id}')" title="Message Driver">
-                <i data-lucide="message-square" style="width:12px;height:12px;"></i>
-                <span>Message</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    };
-
-    if (normTab === 'upcoming' && activeTrips.length > 0 && scheduledTrips.length > 0) {
-      wrap.innerHTML = `
-        <div class="booking-section-heading live">
-          <span class="live-pulse-dot"></span>
-          <span>Active Trip Right Now (${activeTrips.length})</span>
-        </div>
-        ${activeTrips.map(renderCard).join('')}
-        <div class="booking-section-heading" style="margin-top: 14px;">
-          <i data-lucide="calendar" style="width:14px;height:14px;color:#64748B;"></i>
-          <span>Scheduled Commutes (${scheduledTrips.length})</span>
-        </div>
-        ${scheduledTrips.map(renderCard).join('')}
-      `;
-    } else {
-      wrap.innerHTML = filtered.map(renderCard).join('');
-    }
+          <h3 class="bk-title">${title}</h3>
+          <p class="bk-sub">${sub}</p>
+        </article>`;
+    }).join('');
   }
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
   }
 }
+
 
 /* ==========================================================
    Live Tracking: Realistic Leaflet Map Engine & Lifecycle
@@ -3686,7 +4122,10 @@ window.openChatWith = function (providerId) {
   const subEl = document.getElementById('chatDriverSub');
   const inputEl = document.getElementById('chatInputField');
 
-  if (avatar) avatar.src = provider.photo || '/assets/avatar_tariq.jpg';
+  if (avatar) {
+    avatar.src = provider.photo || '/assets/avatar_tariq.jpg';
+    avatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
+  }
   if (nameEl) nameEl.textContent = provider.name;
   if (subEl) subEl.textContent = `${provider.vehicle || 'School Escort'} • ${provider.rating} ★`;
   if (inputEl) inputEl.placeholder = `Type a message to ${provider.name.split(' ')[0]}...`;
@@ -3984,19 +4423,17 @@ window.renderEmergencyContactsList = function () {
           <div style="width: 44px; height: 44px; border-radius: 50%; background: #F1F5F9; color: #64748B; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
             <i data-lucide="shield-alert" style="width: 22px; height: 22px;"></i>
           </div>
-          <div style="font-size: 13.5px; font-weight: 700; color: #0F172A;">No Emergency Contacts Added</div>
+          <div style="font-size: 14px; font-weight: 700; color: #0F172A;">No Emergency Contacts Added</div>
           <p style="font-size: 12px; color: #64748B; margin: 4px 0 14px; line-height: 1.4;">Add at least one trusted guardian or family member.</p>
-          <button class="btn-primary" style="height: 38px; font-size: 12.5px; padding: 0 16px; margin: 0 auto;" onclick="openAddEmergencyContactModal()">+ Add Contact</button>
+          <button class="btn-primary" style="height: 38px; font-size: 12px; padding: 0 16px; margin: 0 auto;" onclick="openAddEmergencyContactModal()">+ Add Contact</button>
         </div>
       `;
     } else {
       container.innerHTML = contacts.map(c => {
-        const initials = c.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'EC';
         const cleanPhone = c.phone.replace(/[^0-9+]/g, '');
         const primaryBadge = c.isPrimary ? `<span class="contact-primary-tag">Primary</span>` : '';
-        const avatarHtml = c.photo
-          ? `<img src="${c.photo}" alt="${c.name}" class="contact-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" /><span class="contact-avatar-circle" style="display:none">${initials}</span>`
-          : `<div class="contact-avatar-circle">${initials}</div>`;
+        const photo = c.photo || window.personAvatar(c.name, '/assets/avatar_sadia.jpg');
+        const avatarHtml = `<img src="${photo}" alt="${c.name}" class="contact-avatar-img" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`;
 
         return `
           <div class="emergency-contact-row" id="contactItem-${c.id}">
@@ -4041,25 +4478,21 @@ window.renderEmergencyContactsList = function () {
     const familyContacts = contacts.filter(c => c.rel !== 'School Admin').slice(0, 4);
     if (familyContacts.length === 0) {
       sosContainer.innerHTML = `
-        <div style="grid-column: 1 / -1; font-size: 11.5px; color: #64748B; text-align: center; padding: 10px;">
+        <div style="grid-column: 1 / -1; font-size: 12px; color: #64748B; text-align: center; padding: 10px;">
           No personal contacts registered. Please add contacts in Emergency Hub.
         </div>
       `;
     } else {
       sosContainer.innerHTML = familyContacts.map(c => {
-        const initials = c.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'EC';
+        const photo = c.photo || window.personAvatar(c.name, '/assets/avatar_sadia.jpg');
         const cleanPhone = c.phone.replace(/[^0-9+]/g, '');
         const relLabel = c.rel;
         return `
-          <a href="tel:${cleanPhone}" class="sos-contact-pill-card">
-            <div class="contact-pill-avatar">${initials}</div>
-            <div class="contact-pill-info">
-              <div class="contact-pill-name">${c.name}</div>
-              <div class="contact-pill-rel">${relLabel}</div>
-            </div>
-            <div class="contact-pill-action" aria-label="Call">
-              <i data-lucide="phone"></i>
-            </div>
+          <a href="tel:${cleanPhone}" class="sos-family-row">
+            <img class="sos-family-avatar" src="${photo}" alt="" onerror="this.src='/assets/avatar_sadia.jpg'" />
+            <span class="sos-family-name">${c.name}</span>
+            <span class="sos-family-rel">${relLabel}</span>
+            <span class="sos-family-call" aria-hidden="true"><i data-lucide="phone" style="width:14px;height:14px;"></i></span>
           </a>
         `;
       }).join('');
@@ -4233,7 +4666,8 @@ window.saveEmergencyContactForm = function (event) {
       phone,
       isPrimary,
       pickupAuth,
-      notes
+      notes,
+      photo: window.personAvatar(name, '/assets/avatar_sadia.jpg')
     };
     window.appState.emergencyContacts.push(newContact);
     if (window.showToast) window.showToast(`✓ Added ${name} to emergency contacts`);
@@ -4314,7 +4748,7 @@ window.renderSavedLocations = function () {
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:8px; flex-shrink: 0;">
-          ${loc.isDefault ? '<span class="status-chip confirmed" style="font-size: 11px; padding: 3px 9px; font-weight: 700;">Default</span>' : ''}
+          ${loc.isDefault ? '<span class="status-chip confirmed" style="font-size: 10px; padding: 3px 9px; font-weight: 700;">Default</span>' : ''}
           <div class="location-menu-wrapper" style="position: relative; display: inline-flex;" onclick="event.stopPropagation();">
             <button type="button" class="btn-contact-action-icon" onclick="event.stopPropagation(); window.toggleLocationMenu('${loc.id}')" aria-label="Options for ${loc.name}" title="Options">
               <i data-lucide="more-vertical" style="width:15px;height:15px;"></i>
@@ -4643,8 +5077,8 @@ window.renderTransactions = function (filter = 'all') {
   if (filtered.length === 0) {
     container.innerHTML = `
       <div style="background:#F8FAFC; border:1px dashed #E2E8F0; border-radius:14px; padding:28px 16px; text-align:center;">
-        <div style="font-size:13px; font-weight:700; color:#64748B;">No transactions found</div>
-        <div style="font-size:11.5px; color:#94A3B8; margin-top:3px;">There are no transactions recorded under this filter.</div>
+        <div style="font-size:12px; font-weight:700; color:#64748B;">No transactions found</div>
+        <div style="font-size:12px; color:#94A3B8; margin-top:3px;">There are no transactions recorded under this filter.</div>
       </div>
     `;
     return;
@@ -5108,7 +5542,7 @@ window.renderMyChildrenList = function () {
 
   if (children.length === 0) {
     container.innerHTML = `
-      <div style="text-align:center; padding: 24px; color: var(--color-body); font-size: 13px;">
+      <div style="text-align:center; padding: 24px; color: var(--color-body); font-size: 12px;">
         No child profiles registered yet. Click "+ Add" above to register a child.
       </div>
     `;
@@ -5339,6 +5773,8 @@ window.closeEmergencySOSModal = function (event) {
 /* ==========================================================
    Child Boarding Safety PIN Pass Modal (Unique Concept)
    ========================================================== */
+
+
 window.openSafetyPinModal = function () {
   const modal = document.getElementById('safetyPinModal');
   if (modal) {
@@ -5365,13 +5801,9 @@ window.closeSafetyPinModal = function (event) {
 
 window.handleSosCall = function (event, type) {
   if (type === '911') {
-    if (window.showToast) {
-      window.showToast('🚨 Connecting to Emergency 911 Dispatcher...', 'error');
-    }
+    if (window.showToast) window.showToast('Calling 911…', 'error');
   } else if (type === 'dispatch') {
-    if (window.showToast) {
-      window.showToast('🛡️ Connecting to 24/7 Safety Dispatch Desk (1-800-555-5437)...', 'info');
-    }
+    if (window.showToast) window.showToast('Calling support…', 'info');
   }
 };
 
@@ -5493,66 +5925,68 @@ window._countryPickerData = [
 ];
 
 window.openCountryPicker = function () {
-  // Remove any existing picker
   const old = document.getElementById('countryPickerModal');
   if (old) old.remove();
 
+  // Never leave address map open under the picker
+  const profileMap = document.getElementById('profileMapPicker');
+  if (profileMap) profileMap.style.display = 'none';
+  window._profileMapOpen = false;
+
   const overlay = document.createElement('div');
   overlay.id = 'countryPickerModal';
-  overlay.style.cssText = `
-    position: fixed; inset: 0; z-index: 9999;
-    background: rgba(15,23,42,0.45);
-    display: flex; align-items: flex-end; justify-content: center;
-    animation: fadeInOverlay 0.18s ease;
-  `;
-  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  overlay.className = 'country-picker-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Select country');
+  overlay.onclick = (e) => {
+    if (e.target === overlay) overlay.remove();
+  };
 
   const sheet = document.createElement('div');
-  sheet.style.cssText = `
-    width: 430px; max-width: 100%;
-    background: #fff;
-    border-radius: 20px 20px 0 0;
-    padding: 0 0 24px;
-    max-height: 70vh;
-    display: flex; flex-direction: column;
-    animation: slideUpSheet 0.22s ease;
-    overflow: hidden;
-  `;
+  sheet.className = 'country-picker-sheet';
+  sheet.onclick = (e) => e.stopPropagation();
 
   sheet.innerHTML = `
-    <div style="padding: 16px 16px 10px; display:flex; align-items:center; justify-content:space-between; border-bottom: 1px solid #F1F5F9;">
-      <div style="font-size:15px; font-weight:800; color:#0F172A;">Select Country</div>
-      <button onclick="document.getElementById('countryPickerModal').remove()" style="background:none;border:none;cursor:pointer;padding:4px;color:#64748B;">
-        <i data-lucide="x" style="width:18px;height:18px;"></i>
+    <div class="country-picker-head">
+      <div class="country-picker-title">Select Country</div>
+      <button type="button" class="btn-icon-close" onclick="document.getElementById('countryPickerModal')?.remove()" aria-label="Close">
+        <i data-lucide="x"></i>
       </button>
     </div>
-    <div style="overflow-y: auto; flex:1;">
-      ${window._countryPickerData.map((c, i) => `
-        <div onclick="window.selectCountry('${c.flag}','${c.code}','${c.name}')"
-          style="display:flex; align-items:center; gap:12px; padding:11px 16px; cursor:pointer; border-bottom:1px solid #F8FAFC; transition:background 0.12s;"
-          onmouseover="this.style.background='#F0F9FF'" onmouseout="this.style.background='transparent'">
-          <span style="font-size:22px;">${c.flag}</span>
-          <div style="flex:1;">
-            <div style="font-size:13.5px; font-weight:600; color:#0F172A;">${c.name}</div>
-          </div>
-          <span style="font-size:13px; font-weight:700; color:#64748B; font-variant-numeric:tabular-nums;">${c.code}</span>
-        </div>
+    <div class="country-picker-list">
+      ${window._countryPickerData.map((c) => `
+        <button type="button" class="country-picker-row" onclick="window.selectCountry('${c.flag}','${c.code}','${c.name}')">
+          <span class="country-picker-flag">${c.flag}</span>
+          <span class="country-picker-name">${c.name}</span>
+          <span class="country-picker-code">${c.code}</span>
+        </button>
       `).join('')}
     </div>
   `;
 
   overlay.appendChild(sheet);
-  document.body.appendChild(overlay);
+  const shell = document.getElementById('appShell') || document.body;
+  shell.appendChild(overlay);
   if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 };
 
-window.selectCountry = function (flag, code, name) {
+window.selectCountry = function (flag, code) {
   const flagEl = document.getElementById('profileCountryFlag');
   const codeEl = document.getElementById('profileCountryCode');
   if (flagEl) flagEl.textContent = flag;
   if (codeEl) codeEl.textContent = code;
-  const modal = document.getElementById('countryPickerModal');
-  if (modal) modal.remove();
+
+  // Auth welcome phone pill (if present)
+  const authPill = document.querySelector('#authPhoneForm .country-picker');
+  if (authPill) {
+    const authFlag = authPill.querySelector('.flag-icon');
+    const authCode = authPill.querySelector('.country-code');
+    if (authFlag) authFlag.textContent = flag;
+    if (authCode) authCode.textContent = code;
+  }
+
+  document.getElementById('countryPickerModal')?.remove();
 };
 
 /* ==========================================================
@@ -5871,17 +6305,44 @@ window.showAdminSection = function (sectionName, btn) {
 
 window.toggleAdvancedSearchFilterDrawer = function () {
   const tray = document.getElementById('advancedSearchFilterTray');
-  if (tray) {
-    tray.style.display = tray.style.display === 'none' ? 'block' : 'none';
-  }
+  if (!tray) return;
+  const open = tray.hasAttribute('hidden');
+  if (open) tray.removeAttribute('hidden');
+  else tray.setAttribute('hidden', '');
 };
 
 window.setDistanceRadius = function (km, btn) {
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.searchRadiusKm = Number(km) || 0;
   const label = document.getElementById('radiusFilterLabel');
-  if (label) label.textContent = km === 0 ? 'Any distance' : `${km} km radius`;
+  if (label) label.textContent = km === 0 ? 'Any' : `${km} km`;
   if (btn && btn.parentElement) {
     btn.parentElement.querySelectorAll('.mvp-filter-chip').forEach((c) => c.classList.remove('active'));
     btn.classList.add('active');
+  }
+  const active = document.querySelector('#providerFilterRow .mvp-filter-chip.active');
+  if (typeof window.applyProviderCompactFilter === 'function') {
+    window.applyProviderCompactFilter(active?.getAttribute('data-filter') || 'all', active);
+  }
+};
+
+window.setTripTimingFilter = function (timing, btn) {
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.mvp-filter-chip').forEach((c) => c.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.timingFilter = timing || 'all';
+  if (timing === 'all') {
+    /* keep existing direction from trip setup */
+  } else if (timing === 'morning' || timing === 'afternoon') {
+    window.appState.bookingDraft.direction = 'oneway';
+  }
+  if (typeof window.applyProviderCompactFilter === 'function') {
+    const active = document.querySelector('#providerFilterRow .mvp-filter-chip.active');
+    window.applyProviderCompactFilter(active?.getAttribute('data-filter') || 'all', active);
+  } else if (window.H2SAvailability) {
+    window.H2SAvailability.applyToProviderCards(window.appState.bookingDraft);
   }
 };
 
@@ -5912,9 +6373,52 @@ window.toggleAuthViewMode = function (mode) {
   if (mode === 'signup') {
     if (signInForm) signInForm.style.display = 'none';
     if (signUpForm) signUpForm.style.display = 'flex';
+    window.selectSignupRole(window.appState._signupRole || 'parent');
   } else {
     if (signInForm) signInForm.style.display = 'flex';
     if (signUpForm) signUpForm.style.display = 'none';
+  }
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.selectSignupRole = function (role) {
+  const valid = role === 'driver' || role === 'walkshare' ? role : 'parent';
+  window.appState._signupRole = valid;
+  document.querySelectorAll('.auth-role-chip').forEach((btn) => {
+    const on = btn.getAttribute('data-role') === valid;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  const nameLabel = document.getElementById('authSignupNameLabel');
+  const nameInput = document.getElementById('authSignupNameInput');
+  const consent = document.getElementById('authSignupConsentLabel');
+  if (valid === 'driver') {
+    if (nameLabel) nameLabel.textContent = 'Driver Full Name';
+    if (nameInput) {
+      nameInput.placeholder = 'e.g. Tariq Ahmed';
+      if (!nameInput.dataset.touched) nameInput.value = 'Tariq Ahmed';
+    }
+    if (consent) {
+      consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Partner Terms &amp; Privacy</a>.';
+    }
+  } else if (valid === 'walkshare') {
+    if (nameLabel) nameLabel.textContent = 'WalkShare Escort Name';
+    if (nameInput) {
+      nameInput.placeholder = 'e.g. Farhana Begum';
+      if (!nameInput.dataset.touched) nameInput.value = 'Farhana Begum';
+    }
+    if (consent) {
+      consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">WalkShare Terms &amp; Privacy</a>.';
+    }
+  } else {
+    if (nameLabel) nameLabel.textContent = 'Parent Full Name';
+    if (nameInput) {
+      nameInput.placeholder = 'e.g. Sadia Khan';
+      if (!nameInput.dataset.touched) nameInput.value = 'Sadia Khan';
+    }
+    if (consent) {
+      consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Terms &amp; Parent Consent</a>.';
+    }
   }
   if (window.lucide) window.lucide.createIcons();
 };
@@ -5929,19 +6433,50 @@ window.handleEmailSignIn = function () {
 };
 
 window.handleEmailSignUp = function () {
+  const role = window.appState._signupRole || 'parent';
   const name = document.getElementById('authSignupNameInput')?.value || 'Sadia Khan';
   const email = document.getElementById('authSignupEmailInput')?.value || 'sadia.khan@example.com';
   const pipedaChecked = document.getElementById('authSignupPipedaCheck')?.checked;
   
   if (!pipedaChecked) {
     if (typeof window.showToast === 'function') {
-      window.showToast('Please accept the PIPEDA Parent Consent to continue', 'error');
+      window.showToast('Please accept the consent terms to continue', 'error');
     }
     return;
   }
   
   window.appState.user.name = name;
   window.appState.user.email = email;
+  window.appState.activeRole = role;
+  localStorage.setItem('h2s_active_role', role);
+  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(role);
+
+  if (role === 'driver') {
+    window.appState.driverEntryFromAuth = true;
+    if (window.appState.driver) {
+      window.appState.driver.name = name;
+      window.appState.driver.email = email;
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('✓ Driver account created — continue with partner setup.', 'success');
+    }
+    window.navigateTo('driverOnboardProfile');
+    return;
+  }
+
+  if (role === 'walkshare') {
+    window.appState.walkshareEntryFromAuth = true;
+    if (window.appState.walkshare) {
+      window.appState.walkshare.name = name;
+      window.appState.walkshare.email = email;
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('✓ WalkShare account created — set up your walking group.', 'success');
+    }
+    window.navigateTo('wsOnboardProfile');
+    return;
+  }
+
   if (typeof window.showToast === 'function') {
     window.showToast('✓ Account created! Setting up your family profile.', 'success');
   }

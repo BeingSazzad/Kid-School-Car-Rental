@@ -1,0 +1,311 @@
+/* Booking flow — flat profile + review (ref-aligned, no card stack) */
+
+/* Provider profile */
+#screen-bookingProviderDetails {
+  background: #FFFFFF !important;
+}
+
+#screen-bookingProviderDetails .profile-details-scroll {
+  background: #FFFFFF;
+  gap: 0 !important;
+  padding-bottom: 100px;
+}
+
+#screen-bookingProviderDetails .pp-hero {
+  text-align: center;
+  padding: 8px 0 16px;
+  border-bottom: 1px solid #ECECF0;
+}
+
+#screen-bookingProviderDetails .profile-hero-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#screen-bookingProviderDetails .profile-hero-name {
+  margin: 10px 0 4px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #1A1D24;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+
+#screen-bookingProviderDetails .profile-rating-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-top: 4px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#screen-bookingProviderDetails .profile-rating-pill {
+  background: transparent;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #B45309;
+}
+
+#screen-bookingProviderDetails .profile-rating-count {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+#screen-bookingProviderDetails .profile-hero-sub {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #6B7280;
+}
+
+#screen-bookingProviderDetails .pp-section {
+  padding: 16px 0;
+  border-bottom: 1px solid #ECECF0;
+}
+
+#screen-bookingProviderDetails .pp-label,
+#screen-bookingProviderDetails .profile-section-label {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+#screen-bookingProviderDetails .pp-card,
+#screen-bookingProviderDetails .profile-section-block {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#screen-bookingProviderDetails .profile-service-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A1D24;
+}
+
+#screen-bookingProviderDetails .profile-service-subtitle {
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+#screen-bookingProviderDetails .pp-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+  margin-top: 12px;
+}
+
+#screen-bookingProviderDetails .pp-info-lbl {
+  display: block;
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+#screen-bookingProviderDetails .pp-info-item strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1D24;
+}
+
+#screen-bookingProviderDetails .profile-spec-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+#screen-bookingProviderDetails .profile-spec-chip {
+  background: #F3F4F6;
+  border: none;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4B5563;
+}
+
+#screen-bookingProviderDetails .pp-safety-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#screen-bookingProviderDetails .pp-safety-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #1A1D24;
+  font-weight: 500;
+}
+
+#screen-bookingProviderDetails .pp-safety-list li i,
+#screen-bookingProviderDetails .pp-safety-list li svg {
+  color: #059669;
+}
+
+#screen-bookingProviderDetails .profile-about-text {
+  margin: 0;
+  font-size: 14px;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+#screen-bookingProviderDetails .booking-flow-sticky-footer {
+  border-top: 1px solid #ECECF0;
+  background: #FFFFFF;
+}
+
+#screen-bookingProviderDetails .pp-footer-dual {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+#screen-bookingProviderDetails .pp-btn-outline {
+  flex: 1;
+  height: 48px;
+  border-radius: 12px;
+  border: 1.5px solid #1B2B68;
+  background: #FFFFFF;
+  color: #1B2B68;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#screen-bookingProviderDetails .pp-footer-dual .btn-primary {
+  flex: 1;
+  width: auto;
+  height: 48px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+/* Review booking */
+#screen-bookingSummary .rs-scroll {
+  gap: 0 !important;
+  padding-bottom: 28px;
+}
+
+#screen-bookingSummary .rs-provider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 0 16px;
+  border: none;
+  border-bottom: 1px solid #ECECF0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#screen-bookingSummary .rs-provider-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#screen-bookingSummary .rs-provider-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A1D24;
+}
+
+#screen-bookingSummary .rs-provider-meta {
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+#screen-bookingSummary .rs-section {
+  padding: 16px 0;
+  border-bottom: 1px solid #ECECF0;
+}
+
+#screen-bookingSummary .rs-label {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+#screen-bookingSummary .rs-card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+#screen-bookingSummary .rs-meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+#screen-bookingSummary .rs-meta-lbl {
+  font-size: 14px;
+  color: #6B7280;
+}
+
+#screen-bookingSummary .rs-meta-val {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1D24;
+  text-align: right;
+}
+
+#screen-bookingSummary .rs-note {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: #6B7280;
+}
+
+#screen-bookingSummary .rs-actions {
+  margin-top: 16px;
+}
+
+/* Confirmed booking twin actions */
+#screen-bookingDetails .bd-actions-row {
+  display: flex;
+  gap: 10px;
+}
+
+#screen-bookingDetails .bd-btn-outline {
+  flex: 1;
+  height: 48px;
+  border-radius: 12px;
+  border: 1.5px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #1A1D24;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#screen-bookingDetails .bd-btn-outline.danger {
+  border-color: #FECACA;
+  color: #DC2626;
+}

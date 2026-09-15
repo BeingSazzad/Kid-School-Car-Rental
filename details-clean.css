@@ -1,0 +1,301 @@
+/* Booking details — flat sections, no card stack */
+
+#screen-bookingDetails.screen-bd-flat {
+  background: #FFFFFF !important;
+}
+
+#screen-bookingDetails .bd-topbar {
+  background: #FFFFFF;
+  border-bottom: 1px solid #ECECF0;
+}
+
+#screen-bookingDetails .bd-scroll {
+  background: #FFFFFF;
+  padding: 8px 20px 28px;
+  gap: 0 !important;
+}
+
+#screen-bookingDetails .bd-hero {
+  padding: 8px 0 16px;
+  border-bottom: 1px solid #ECECF0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+}
+
+#screen-bookingDetails .bd-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+#screen-bookingDetails .bd-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  background: transparent !important;
+  border-radius: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+#screen-bookingDetails .bd-status.in-progress { color: #059669; }
+#screen-bookingDetails .bd-status.pending { color: #B45309; }
+#screen-bookingDetails .bd-status.cancelled { color: #DC2626; }
+#screen-bookingDetails .bd-status.confirmed,
+#screen-bookingDetails .bd-status.completed { color: #6B7280; }
+
+#screen-bookingDetails .bd-date {
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+#screen-bookingDetails .bd-trip-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #1A1D24;
+  letter-spacing: -0.3px;
+}
+
+#screen-bookingDetails .bd-trip-route {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+#screen-bookingDetails .bd-hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0 0;
+}
+
+#screen-bookingDetails .bd-pin-link {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1B2B68;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#screen-bookingDetails .bd-pin-link strong {
+  letter-spacing: 0.5px;
+}
+
+#screen-bookingDetails .bd-ref {
+  font-size: 12px;
+  color: #9CA3AF;
+  font-weight: 500;
+}
+
+#screen-bookingDetails .bd-section {
+  padding: 16px 0;
+  border-bottom: 1px solid #ECECF0;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+}
+
+#screen-bookingDetails .bd-section:last-of-type {
+  border-bottom: none;
+}
+
+#screen-bookingDetails .bd-label {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+#screen-bookingDetails .bd-card,
+#screen-bookingDetails .bd-summary,
+#screen-bookingDetails .bd-row-card {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+#screen-bookingDetails .bd-tl-row {
+  grid-template-columns: 64px 14px 1fr;
+  min-height: 44px;
+}
+
+#screen-bookingDetails .bd-tl-time {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1A1D24;
+}
+
+#screen-bookingDetails .bd-tl-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A1D24;
+}
+
+#screen-bookingDetails .bd-tl-sub {
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+#screen-bookingDetails .bd-driver-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+#screen-bookingDetails .bd-driver-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  min-width: 0;
+}
+
+#screen-bookingDetails .bd-driver-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#screen-bookingDetails .bd-driver-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A1D24;
+}
+
+#screen-bookingDetails .bd-driver-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+#screen-bookingDetails .bd-star {
+  color: #B45309;
+}
+
+#screen-bookingDetails .bd-msg-link,
+#screen-bookingDetails .bd-msg-btn {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1B2B68;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#screen-bookingDetails .bd-vehicle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 0;
+  border-top: none;
+}
+
+#screen-bookingDetails .bd-vehicle-ico {
+  display: none !important;
+}
+
+#screen-bookingDetails .bd-vehicle-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1D24;
+}
+
+#screen-bookingDetails .bd-vehicle-meta {
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+#screen-bookingDetails .bd-students {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#screen-bookingDetails .bd-kid-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#screen-bookingDetails .bd-kid-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#screen-bookingDetails .bd-kid-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1D24;
+}
+
+#screen-bookingDetails .bd-kid-meta {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+#screen-bookingDetails .bd-fee-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#screen-bookingDetails .bd-row-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1D24;
+}
+
+#screen-bookingDetails .bd-row-sub {
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+#screen-bookingDetails .bd-fare-amt {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+#screen-bookingDetails .bd-actions {
+  padding-top: 16px;
+}

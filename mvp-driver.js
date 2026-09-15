@@ -1,7 +1,7 @@
 /* Driver MVP layer. Reuses the live design system and appState.driver. */
 
 (function () {
-  const STORE = 'h2s_driver_mvp_v2';
+  const STORE = 'h2s_driver_mvp_v3';
   const AUTH = new Set(['splash', 'onboarding1', 'onboarding2', 'onboarding3', 'authWelcome', 'authOtp', 'authProfile', 'authPhoto', 'authAddChild', 'authSuccess']);
   const SHARED = new Set(['inbox', 'messages', 'notifications', 'faq', 'legal', 'about', 'privacy', 'contactSupport', 'report']);
   const PARENT_ONLY = new Set([
@@ -18,15 +18,64 @@
   const PARENTS = {
     'PRNT-9042': { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Arman, Emma & Zara' },
     sadia: { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Arman, Emma & Zara' },
-    'PRNT-2201': { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', sub: 'Parent · Yusuf & Ayla' }
+    'PRNT-2201': { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', sub: 'Parent · Yusuf & Ayla' },
+    'PRNT-3310': { id: 'PRNT-3310', name: 'Priya Patel', photo: '/assets/avatar_farhana.jpg', sub: 'Parent · Riya' },
+    'PRNT-1188': { id: 'PRNT-1188', name: 'Marcus Chen', photo: '/assets/avatar_john.png', sub: 'Parent · Leo & Mia' },
+    'PRNT-5520': { id: 'PRNT-5520', name: 'Amira Hassan', photo: '/assets/avatar_sarah.jpg', sub: 'Parent · Omar' }
+  };
+  const DEMO_INBOX = [
+    { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', preview: 'Arman and Emma will be at the porch at 07:28.', time: '07:28 AM', unread: 2 },
+    { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', preview: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday', unread: 1 },
+    { id: 'PRNT-3310', name: 'Priya Patel', photo: '/assets/avatar_farhana.jpg', preview: 'Riya has her epi-pen in the front pocket.', time: 'Mon', unread: 1 },
+    { id: 'PRNT-1188', name: 'Marcus Chen', photo: '/assets/avatar_john.png', preview: 'Thanks for accepting — curb pickup works great.', time: 'Sun', unread: 0 },
+    { id: 'PRNT-5520', name: 'Amira Hassan', photo: '/assets/avatar_sarah.jpg', preview: 'Understood about the route distance. Thanks anyway.', time: 'Sat', unread: 0 }
+  ];
+  const DEMO_CHATS = {
+    'PRNT-9042': [
+      { type: 'system', text: 'In-app messages only · phone stays private' },
+      { type: 'provider', text: 'Sadia here — Arman and Emma will be at the porch with backpacks.', time: '07:25 AM' },
+      { type: 'parent', text: 'Thanks. I’m on the way in the Sienna — about 4 minutes out.', time: '07:26 AM' },
+      { type: 'system', text: 'Driver arrived at Home (12 Elm Street) · 07:30 AM', tone: 'amber' },
+      { type: 'provider', text: 'Perfect timing. Emma forgot her water bottle — I’ll bring the spare from yesterday.', time: '07:31 AM' },
+      { type: 'parent', text: 'Got both buckled. Heading to Greenfield now.', time: '07:33 AM' },
+      { type: 'provider', text: 'Thank you Tariq — please text when you reach the loop.', time: '07:34 AM' }
+    ],
+    'PRNT-2201': [
+      { type: 'system', text: 'Chat about Yusuf & Ayla · Greenfield commute' },
+      { type: 'provider', text: 'Hi Tariq — requesting Mon–Fri for Yusuf (Gr 3) and Ayla (Gr 1).', time: 'Mon 6:12 PM' },
+      { type: 'parent', text: 'Happy to review. Booster for Yusuf — noted.', time: 'Mon 6:18 PM' },
+      { type: 'provider', text: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday 8:40 PM' },
+      { type: 'parent', text: 'Yes — both boosters stay in the Sienna. Pickup at 18 Maple.', time: 'Yesterday 8:44 PM' },
+      { type: 'provider', text: 'Great. Hand-off is to the west loop supervisor.', time: 'Yesterday 8:46 PM' }
+    ],
+    'PRNT-3310': [
+      { type: 'system', text: 'One-time afternoon pickup · Fri Sep 18' },
+      { type: 'provider', text: 'Hi — need a school pickup for Riya at 02:50 PM Friday.', time: 'Tue 1:05 PM' },
+      { type: 'parent', text: 'I can take that. Drop at 42 Birchwood — wait for porch light?', time: 'Tue 1:12 PM' },
+      { type: 'provider', text: 'Yes please. Riya has her epi-pen in the front pocket.', time: 'Tue 1:14 PM' },
+      { type: 'parent', text: 'Noted and saved on the trip card.', time: 'Tue 1:15 PM' }
+    ],
+    'PRNT-1188': [
+      { type: 'system', text: 'Accepted · Mon/Wed/Fri mornings' },
+      { type: 'provider', text: 'Thanks for accepting — curb pickup works great for Leo and Mia.', time: 'Sun 4:02 PM' },
+      { type: 'parent', text: 'Glad it works. I’ll be there by 07:15.', time: 'Sun 4:05 PM' },
+      { type: 'provider', text: 'Mia sometimes needs an extra minute with her jacket.', time: 'Sun 4:08 PM' },
+      { type: 'parent', text: 'No rush — I’ll wait at the curb.', time: 'Sun 4:09 PM' }
+    ],
+    'PRNT-5520': [
+      { type: 'system', text: 'Request declined · outside service corridor' },
+      { type: 'provider', text: 'Hi Tariq, following up on the Rosedale route.', time: 'Sat 10:20 AM' },
+      { type: 'parent', text: 'That corridor is too far from my Greenfield runs — sorry I can’t take it.', time: 'Sat 10:31 AM' },
+      { type: 'provider', text: 'Understood about the route distance. Thanks anyway.', time: 'Sat 10:33 AM' }
+    ]
   };
   const TRIP_STAGES = [
-    { key: 0, chip: 'Confirmed', cta: "I'm On the Way", parentSync: 0 },
-    { key: 1, chip: 'On the Way', cta: 'Arrived at pickup', parentSync: 1 },
-    { key: 2, chip: 'Arrived Pickup', cta: 'Confirm child pickup', attendance: true, parentSync: 1 },
-    { key: 3, chip: 'Active', cta: 'Arrived at destination', parentSync: 2 },
-    { key: 4, chip: 'Arrived Destination', cta: 'Confirm drop-off', parentSync: 3 },
-    { key: 5, chip: 'Drop-off', cta: 'Complete trip', parentSync: 4 }
+    { key: 0, chip: 'Confirmed', cta: "I'm on the way", parentSync: 0, progress: 8, pin: { left: '19%', top: '74%' } },
+    { key: 1, chip: 'On the way', cta: 'Arrived at pickup', parentSync: 1, progress: 22, pin: { left: '19%', top: '58%' } },
+    { key: 2, chip: 'At pickup', cta: 'Confirm child pickup', attendance: true, parentSync: 1, progress: 34, pin: { left: '19%', top: '36%' } },
+    { key: 3, chip: 'En route', cta: 'Arrived at destination', parentSync: 2, progress: 58, pin: { left: '48%', top: '24%' } },
+    { key: 4, chip: 'At destination', cta: 'Confirm drop-off', parentSync: 3, progress: 78, pin: { left: '78%', top: '28%' } },
+    { key: 5, chip: 'Drop-off', cta: 'Complete trip', parentSync: 4, progress: 92, pin: { left: '80%', top: '48%' } }
   ];
 
   let restored = false;
@@ -146,15 +195,15 @@
         issueDate: '2026-07-12',
         expiry: '2029-07-12',
         fileDoc: demoUpload('crc-tariq-ahmed.pdf'),
-        status: 'under_review',
+        status: 'approved',
         rejectReason: ''
       },
       vulnerable: {
-        issuer: '',
-        issueDate: '',
-        expiry: '',
-        fileDoc: emptyUpload(),
-        status: 'not_submitted',
+        issuer: 'Toronto Police Service',
+        issueDate: '2026-07-12',
+        expiry: '2029-07-12',
+        fileDoc: demoUpload('vsc-tariq-ahmed.pdf'),
+        status: 'approved',
         rejectReason: ''
       }
     };
@@ -212,7 +261,10 @@
     if (!d.rate) d.rate = { amount: 120, period: 'week', negotiable: true, paymentMethod: 'Interac e-Transfer', paymentHandle: '' };
     if (!d.rate.paymentHandle) d.rate.paymentHandle = d.email || '';
     if (!d.subscription) d.subscription = { status: 'none', plan: 'monthly', priceMonthly: 29, priceAnnual: 279, trialDaysLeft: 14, history: [] };
-    if (!d.vehicle) d.vehicle = { type: 'Minivan', make: 'Toyota', model: 'Sienna', year: '2023', color: 'Celestial Silver', plate: 'SCH-4091', capacity: 4, photo: '/assets/sienna.jpg' };
+    if (!d.vehicle) d.vehicle = { type: 'Minivan', make: 'Toyota', model: 'Sienna', year: '2023', color: 'Celestial Silver', plate: 'SCH-4091', capacity: 4, photo: '/assets/home_van_banner.jpg' };
+    if (d.vehicle && (!d.vehicle.photo || /sienna\.jpg$/i.test(d.vehicle.photo))) {
+      d.vehicle.photo = '/assets/home_van_banner.jpg';
+    }
     if (!Array.isArray(d.requests)) d.requests = [];
     if (!Array.isArray(d.notifications)) d.notifications = [];
     d.requests.forEach(normalizeRequest);
@@ -236,13 +288,59 @@
         }
       } catch (err) { /* ignore */ }
     }
+    mergeDemoRequests(d);
+    mergeDemoNotifications(d);
     const wasSeeded = !!d.docsIdentitySeeded;
     d.documents = normalizeDocuments(d.documents, { seeded: wasSeeded });
     d.docsIdentitySeeded = true;
-    if (!wasSeeded) persist();
+    const unlocked = unlockPartnerForDemo(d);
+    if (!wasSeeded || unlocked) persist();
     normalizeAvailability(d);
     syncTariqProviderAvailability();
     return d;
+  }
+
+  /** Keep the demo driver accept-ready even if older localStorage had pending docs. */
+  function unlockPartnerForDemo(d) {
+    if (!d || typeof d !== 'object') return false;
+    let changed = false;
+    (d.documents || []).forEach((doc) => {
+      if (!doc) return;
+      if (doc.status !== 'approved') {
+        doc.status = 'approved';
+        changed = true;
+      }
+      if (doc.id === 'vulnerable' || doc.id === 'criminal') {
+        if (!doc.issuer) { doc.issuer = 'Toronto Police Service'; changed = true; }
+        if (!doc.issueDate) { doc.issueDate = '2026-07-12'; changed = true; }
+        if (!doc.expiry) { doc.expiry = '2029-07-12'; changed = true; }
+        if (!hasUpload(doc.fileDoc)) {
+          doc.fileDoc = demoUpload(`${doc.id}-tariq-ahmed.pdf`);
+          changed = true;
+        }
+      }
+    });
+    if (!isApproved(d)) {
+      d.verificationStatus = 'approved';
+      changed = true;
+    }
+    if (!d.subscription || typeof d.subscription !== 'object') {
+      d.subscription = { status: 'trial', plan: 'monthly', priceMonthly: 29, priceAnnual: 279, trialDaysLeft: 14, history: [] };
+      changed = true;
+    }
+    if (d.subscription.status !== 'trial' && d.subscription.status !== 'active') {
+      d.subscription.status = 'trial';
+      d.subscription.trialDaysLeft = d.subscription.trialDaysLeft || 14;
+      changed = true;
+    }
+    if (!d.onboarding) d.onboarding = {};
+    ['profile', 'vehicle', 'docs', 'availability', 'rate'].forEach((k) => {
+      if (!d.onboarding[k]) {
+        d.onboarding[k] = true;
+        changed = true;
+      }
+    });
+    return changed;
   }
 
   function defaultAvailWindows() {
@@ -303,6 +401,167 @@
     return req;
   }
 
+  function mergeDemoRequests(d) {
+    if (!Array.isArray(d.requests)) d.requests = [];
+    const have = new Set(d.requests.map((r) => r.id));
+    DEMO_REQUEST_PACK.forEach((seed) => {
+      if (!seed?.id || have.has(seed.id)) return;
+      d.requests.push(normalizeRequest(JSON.parse(JSON.stringify(seed))));
+      have.add(seed.id);
+    });
+  }
+
+  const DEMO_REQUEST_PACK = [
+    {
+      id: 'dreq-1',
+      bookingId: 'H2S-REQ-2201',
+      parentId: 'PRNT-2201',
+      parentName: 'Nadia Rahman',
+      parentRole: 'Mother',
+      parentPhoto: '/assets/avatar_rehana.jpg',
+      parentPhone: '+1 (416) 555-0160',
+      children: [
+        { id: 'yusuf', name: 'Yusuf Rahman', age: '8 yrs', grade: 'Grade 3', school: 'Greenfield International School', notes: 'Booster seat', photo: '/assets/avatar_arman.jpg' },
+        { id: 'ayla', name: 'Ayla Rahman', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Sits with brother', photo: '/assets/avatar_emma.jpg' }
+      ],
+      childNamesShort: 'Yusuf + Ayla',
+      seatsNeeded: 2,
+      pickupLocation: '18 Maple Avenue',
+      dropoffLocation: 'Greenfield International School',
+      dateLabel: 'Starts Mon, Sep 14, 2026',
+      pickupTime: '07:45 AM',
+      returnTime: '03:10 PM',
+      recurringDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+      frequency: 'recurring',
+      direction: 'bothway',
+      rate: 120,
+      rateLabel: '$120 / week',
+      notes: 'Booster seat for Yusuf. Hand both children to the Greenfield loop supervisor.',
+      status: 'new'
+    },
+    {
+      id: 'dreq-2',
+      bookingId: 'H2S-REQ-9042',
+      parentId: 'PRNT-9042',
+      parentName: 'Sadia Khan',
+      parentRole: 'Mother (Primary Guardian)',
+      parentPhoto: '/assets/avatar_sadia.jpg',
+      parentPhone: '+1 (416) 555-0192',
+      children: [
+        { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
+      ],
+      childNamesShort: 'Zara',
+      seatsNeeded: 1,
+      pickupLocation: '12 Elm Street',
+      dropoffLocation: 'Sunshine Pre-school',
+      dateLabel: 'Thursday, Sep 17, 2026',
+      pickupTime: '08:15 AM',
+      returnTime: '01:30 PM',
+      recurringDays: [],
+      frequency: 'onetime',
+      direction: 'bothway',
+      rate: 45,
+      rateLabel: '$45 / day',
+      notes: 'Hand to classroom teacher Ms. Jenkins at the main entrance gate.',
+      status: 'new'
+    },
+    {
+      id: 'dreq-3',
+      bookingId: 'H2S-REQ-3310',
+      parentId: 'PRNT-3310',
+      parentName: 'Priya Patel',
+      parentRole: 'Mother',
+      parentPhoto: '/assets/avatar_farhana.jpg',
+      parentPhone: '+1 (416) 555-0177',
+      children: [
+        { id: 'riya', name: 'Riya Patel', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', notes: 'Carries epi-pen in backpack', photo: '/assets/avatar_emma.jpg' }
+      ],
+      childNamesShort: 'Riya',
+      seatsNeeded: 1,
+      pickupLocation: '42 Birchwood Crescent',
+      dropoffLocation: 'Greenfield International School',
+      dateLabel: 'Friday, Sep 18, 2026',
+      pickupTime: '02:50 PM',
+      returnTime: '',
+      recurringDays: [],
+      frequency: 'onetime',
+      direction: 'oneway',
+      rate: 28,
+      rateLabel: '$28 / day',
+      notes: 'One-way afternoon only. Wait until porch light is on.',
+      status: 'new'
+    },
+    {
+      id: 'dreq-4',
+      bookingId: 'H2S-REQ-1188',
+      parentId: 'PRNT-1188',
+      parentName: 'Marcus Chen',
+      parentRole: 'Father',
+      parentPhoto: '/assets/avatar_john.png',
+      parentPhone: '+1 (416) 555-0148',
+      children: [
+        { id: 'leo', name: 'Leo Chen', age: '9 yrs', grade: 'Grade 4', school: 'Greenfield International School', notes: '', photo: '/assets/avatar_arman.jpg' },
+        { id: 'mia', name: 'Mia Chen', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Booster', photo: '/assets/avatar_zara.jpg' }
+      ],
+      childNamesShort: 'Leo + Mia',
+      seatsNeeded: 2,
+      pickupLocation: '9 Harbourview Lane',
+      dropoffLocation: 'Greenfield International School',
+      dateLabel: 'Starts Mon, Sep 7, 2026',
+      pickupTime: '07:20 AM',
+      returnTime: '',
+      recurringDays: ['Mon', 'Wed', 'Fri'],
+      frequency: 'recurring',
+      direction: 'oneway',
+      rate: 85,
+      rateLabel: '$85 / week',
+      notes: 'Morning-only curb pickup.',
+      status: 'accepted'
+    },
+    {
+      id: 'dreq-5',
+      bookingId: 'H2S-REQ-5520',
+      parentId: 'PRNT-5520',
+      parentName: 'Amira Hassan',
+      parentRole: 'Mother',
+      parentPhoto: '/assets/avatar_sarah.jpg',
+      parentPhone: '+1 (416) 555-0133',
+      children: [
+        { id: 'omar', name: 'Omar Hassan', age: '10 yrs', grade: 'Grade 5', school: 'Rosedale Public School', notes: '', photo: '/assets/avatar_arman.jpg' }
+      ],
+      childNamesShort: 'Omar',
+      seatsNeeded: 1,
+      pickupLocation: '77 Rosedale Valley Road',
+      dropoffLocation: 'Rosedale Public School',
+      dateLabel: 'Mon–Fri starting Sep 21',
+      pickupTime: '08:05 AM',
+      returnTime: '03:40 PM',
+      recurringDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+      frequency: 'recurring',
+      direction: 'bothway',
+      rate: 110,
+      rateLabel: '$110 / week',
+      notes: 'Outside usual Greenfield corridor.',
+      status: 'declined'
+    }
+  ];
+
+  function mergeDemoNotifications(d) {
+    const pack = [
+      { id: 'dn-1', title: 'New ride request', body: 'Nadia Rahman requested a Mon–Fri school commute for Yusuf and Ayla.', time: '12 min ago', unread: true, action: 'requests' },
+      { id: 'dn-2', title: 'New ride request', body: 'Priya Patel asked for a one-time afternoon pickup for Riya.', time: '28 min ago', unread: true, action: 'requests' },
+      { id: 'dn-3', title: 'Message from parent', body: 'Sadia: Arman and Emma will be at the porch at 07:28.', time: '1 hr ago', unread: true, action: 'inbox' },
+      { id: 'dn-4', title: 'Message from Nadia', body: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday', unread: true, action: 'inbox' },
+      { id: 'dn-5', title: 'Booking accepted', body: 'You accepted Marcus Chen’s Mon–Wed morning commute.', time: '2 days ago', unread: false, action: 'requests' },
+      { id: 'dn-6', title: 'Trip reminder', body: 'Morning pickup for Arman & Emma starts in 25 minutes.', time: 'Tue', unread: false, action: 'inbox' }
+    ];
+    if (!Array.isArray(d.notifications)) d.notifications = [];
+    const have = new Set(d.notifications.map((n) => n.id));
+    pack.forEach((n) => {
+      if (!have.has(n.id)) d.notifications.push(n);
+    });
+  }
+
   function kids(req) {
     return Array.isArray(req?.children) ? req.children.filter(Boolean) : [];
   }
@@ -310,6 +569,36 @@
   function childShort(req) {
     const names = kids(req).map((c) => String(c.name || c).split(' ')[0]);
     return names.join(' + ') || req?.childNamesShort || 'Children';
+  }
+
+  function cleanPlace(value) {
+    let s = String(value || '').trim();
+    if (!s) return '';
+    s = s.replace(/^(Home|School|Pickup|Drop-?off|Meetup|Meeting point)\s*[:(–-]\s*/i, '');
+    s = s.replace(/\)\s*$/, '').trim();
+    return s || String(value || '').trim();
+  }
+
+  function formatCardDate(req) {
+    if (req.frequency === 'recurring') return compactDays(req.recurringDays);
+    const raw = String(req.dateLabel || '').replace(/^Starts\s+/i, '').replace(/\s*[·•].*$/, '').trim();
+    const withYear = /\d{4}/.test(raw) ? raw : `${raw} 2026`;
+    const parsed = Date.parse(withYear);
+    if (!Number.isNaN(parsed)) {
+      return new Date(parsed).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+    return dateShort(raw)
+      .replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/gi, (m) => m.slice(0, 3))
+      || 'Date TBD';
+  }
+
+  function scheduleMetaLine(req) {
+    return [formatCardDate(req), timeLineCard(req)].filter(Boolean).join(' · ');
+  }
+
+  function cardMetaLine(req) {
+    const kind = req.frequency === 'recurring' ? 'Recurring' : 'One-time';
+    return `${kind} · ${seatsLabel(req.seatsNeeded)}`;
   }
 
   function childLine(req) {
@@ -406,7 +695,7 @@
 
   function seatsLabel(n) {
     const seats = Number(n) || 0;
-    return seats === 1 ? '1 seat' : `${seats} seats`;
+    return seats === 1 ? '1 child' : `${seats || 1} children`;
   }
 
   function routeLine(req) {
@@ -431,11 +720,27 @@
 
   function acceptBlockReason(d) {
     const missing = missingRequiredDocs(d);
-    if (missing.length) {
-      return `You can’t accept until these documents are Approved: ${missing.map((spec) => docShortTitle(spec.id)).join(', ')}.`;
+    if (missing.length) return `Approve docs first: ${missing.map((spec) => docShortTitle(spec.id)).join(', ')}`;
+    if (!isApproved(d)) return 'Account not approved yet';
+    if (!hasAccess(d)) return 'Start trial or subscribe first';
+    return '';
+  }
+
+  function requestCapacityBlock(d, req) {
+    if (!req) return '';
+    const seats = Number(req.seatsNeeded) || (Array.isArray(req.children) ? req.children.length : 1) || 1;
+    const cap = Number(d.vehicle?.capacity) || 0;
+    if (seats > cap) return `Need ${seats} seats — vehicle has ${cap}`;
+    const pickup = req.pickupTime || '';
+    if (pickup) {
+      const used = seatsBookedAt(pickup, req.id);
+      if (used + seats > cap) return `Only ${Math.max(0, cap - used)} seat(s) free at ${pickup}`;
     }
-    if (!isApproved(d)) return 'You can’t accept until Home2School approves your account.';
-    if (!hasAccess(d)) return 'You can’t accept until platform access (trial or paid) is active.';
+    const ret = req.returnTime || '';
+    if (ret && req.direction !== 'oneway') {
+      const usedR = seatsBookedAt(ret, req.id);
+      if (usedR + seats > cap) return `Only ${Math.max(0, cap - usedR)} seat(s) free at ${ret}`;
+    }
     return '';
   }
 
@@ -460,7 +765,13 @@
     if (!d.onboarding.availability) return 'driverOnboardAvailability';
     if (!d.onboarding.rate) return 'driverOnboardRate';
     if (!isApproved(d)) return 'driverPending';
-    if (!hasAccess(d)) return 'driverSubscription';
+    // Subscription stays inside Profile — never block signup/onboarding
+    if (!hasAccess(d)) {
+      d.subscription = d.subscription || {};
+      d.subscription.status = 'trial';
+      d.subscription.trialDaysLeft = d.subscription.trialDaysLeft || 14;
+      persist();
+    }
     return 'driverHome';
   };
 
@@ -639,7 +950,11 @@
       window.coreSwitchRole(role);
       return;
     }
-    const next = role === 'driver' ? 'driver' : role === 'walkshare' ? 'walkshare' : role === 'admin' ? 'admin' : 'parent';
+    if (role === 'admin') {
+      if (typeof window.showToast === 'function') window.showToast('Admin web dashboard comes later', 'info');
+      return;
+    }
+    const next = role === 'driver' ? 'driver' : role === 'walkshare' ? 'walkshare' : 'parent';
     if (typeof window.clearNavStacks === 'function') window.clearNavStacks();
     state().activeRole = next;
     localStorage.setItem('h2s_active_role', next);
@@ -647,7 +962,6 @@
     // replaceState landing so Back cannot re-enter the previous role's hash trail
     if (next === 'driver') window.navigateTo(window.getDriverLanding(), true);
     else if (next === 'walkshare' && typeof window.getWalkShareLanding === 'function') window.navigateTo(window.getWalkShareLanding(), true);
-    else if (next === 'admin') window.navigateTo('adminPortal', true);
     else window.navigateTo('home', true);
   };
 
@@ -785,10 +1099,10 @@
     bindChildTitle(el, editing ? 'Edit profile' : 'Your profile');
     bindChildBack(el, "leaveDriverGate()");
     el.innerHTML = `
-      ${editing ? '' : stepIntro(1, 5, 'Who you are', 'Parents see your name and service area before they request a school commute.')}
+      ${editing ? '' : stepIntro(1, 5, 'Who you are', 'Name and service area parents will see.')}
       <div class="drv-photo-hero">
         <div class="drv-photo-wrap">
-          <img src="${esc(d.photo || '/assets/avatar_tariq.jpg')}" alt="${esc(d.name)}" id="drvProfileImg" />
+          <img src="${esc(d.photo || '/assets/avatar_tariq.jpg')}" alt="${esc(d.name)}" id="drvProfileImg" onerror="this.src='/assets/avatar_tariq.jpg'" />
           <button type="button" class="drv-photo-cam" onclick="document.getElementById('drvPhotoFile').click()" aria-label="Change photo">
             <i data-lucide="camera"></i>
           </button>
@@ -798,7 +1112,7 @@
       ${field('Legal name', `<input class="form-input" id="drvName" value="${esc(d.name)}" placeholder="Tariq Ahmed" />`, 'user')}
       ${field('Phone', `<input class="form-input" id="drvPhone" value="${esc(d.phone)}" placeholder="+1 (416) 555-0182" />`, 'phone')}
       ${field('Email', `<input class="form-input" id="drvEmail" value="${esc(d.email)}" placeholder="name@email.com" />`, 'mail')}
-      ${field('Service area', `<input class="form-input" id="drvArea" value="${esc(d.serviceArea || '')}" placeholder="Neighbourhoods or schools you cover" />`, 'map-pin')}
+      ${field('Service area', `<input class="form-input" id="drvArea" value="${esc(d.serviceArea || '')}" placeholder="e.g. Greenfield / Midtown" />`, 'map-pin')}
       <div class="drv-actions-col"><button type="button" class="btn-primary" onclick="saveDriverOnboardProfile()">${editing ? 'Save' : 'Continue'}</button></div>
     `;
   }
@@ -823,6 +1137,11 @@
     d.phone = val('drvPhone') || d.phone;
     d.email = val('drvEmail') || d.email;
     d.serviceArea = val('drvArea') || d.serviceArea;
+    const provider = (state().providers || []).find((p) => p.id === 'tariq');
+    if (provider) {
+      provider.zone = window.H2SZone ? window.H2SZone.clean(d.serviceArea) : d.serviceArea;
+      provider.serviceArea = d.serviceArea;
+    }
     d.onboarding.profile = true;
     persist();
     if (finishNestedOr()) return;
@@ -839,7 +1158,7 @@
     bindChildBack(el, "navigateTo('driverOnboardProfile')");
     const photoName = v.photoName || (v.photo ? 'Vehicle photo' : '');
     el.innerHTML = `
-      ${editing ? '' : stepIntro(2, 5, 'One vehicle', 'Capacity is used when you accept a request. Add the vehicle parents will see.')}
+      ${editing ? '' : stepIntro(2, 5, 'One vehicle', 'Vehicle parents will see.')}
       ${selectField('Type', `<select class="form-select" id="drvVType">${['Minivan', 'SUV', 'Sedan', 'Wagon'].map((t) => `<option ${v.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>`)}
       <div class="drv-window-row">
         ${field('Make', `<input class="form-input" id="drvVMake" value="${esc(v.make)}" placeholder="Toyota" />`)}
@@ -856,7 +1175,7 @@
       <div class="form-group">
         <label class="form-label">Vehicle photo</label>
         <button type="button" class="drv-upload-tile" onclick="document.getElementById('drvVehicleFile').click()">
-          <img class="drv-upload-thumb" src="${esc(v.photo || '/assets/sienna.jpg')}" alt="" />
+          <img class="drv-upload-thumb" src="${esc(v.photo || '/assets/home_van_banner.jpg')}" alt="" onerror="this.src='/assets/home_van_banner.jpg'" />
           <span class="drv-upload-copy">
             <span class="drv-upload-name">${esc(photoName || 'Add vehicle photo')}</span>
             <span class="drv-upload-hint">JPG or PNG</span>
@@ -1518,6 +1837,9 @@
 
   window.driverMatchesParentSearch = function (draft) {
     const d = ensureDriver();
+    if (window.H2SAvailability) {
+      return window.H2SAvailability.matchesSearch(d.availability, draft || {});
+    }
     const search = draft || {};
     const dateIso = search.startDate || search.tripDate || '';
     if (dateIso && (d.availability.exceptions || []).includes(dateIso)) return false;
@@ -1566,7 +1888,7 @@
     bindChildTitle(el, 'Posted rate');
     bindChildBack(el, "navigateTo('driverOnboardAvailability')");
     el.innerHTML = `
-      ${editing ? '' : stepIntro(5, 5, 'Posted rate', 'This is informational. Home2School does not pay out ride fees. Parents may share a payment handle after a booking is confirmed.')}
+      ${editing ? '' : stepIntro(5, 5, 'Posted rate', 'Info only — ride fees stay between you and the parent.')}
       ${field('Weekly posted rate (CAD)', `<input class="form-input" id="drvRateAmt" type="number" value="${esc(r.amount)}" />`, 'banknote')}
       <div class="form-group"><label class="form-label">Negotiable</label>
         <div class="drv-toggle-row">
@@ -1606,7 +1928,7 @@
     bindChildTitle(el, 'Payment preference');
     bindChildBack(el, "navigateTo('driverProfile')");
     el.innerHTML = `
-      <p class="page-subtitle" style="margin:0;text-align:left;">Ride fees stay between you and the parent. Home2School does not collect or pay out commute fees.</p>
+      <p class="page-subtitle" style="margin:0;text-align:left;">Ride fees stay between you and the parent.</p>
       ${selectField('Preferred method', `<select class="form-select" id="drvPayMethod">${['Interac e-Transfer', 'Cash', 'Cheque'].map((m) => `<option ${r.paymentMethod === m ? 'selected' : ''}>${m}</option>`).join('')}</select>`)}
       ${field('Interac handle or phone', `<input class="form-input" id="drvPayHandle" value="${esc(r.paymentHandle || d.email || '')}" placeholder="name@email.com" />`, 'at-sign')}
       <div class="drv-actions-col"><button type="button" class="btn-primary" onclick="saveDriverPayment()">Save</button></div>
@@ -1636,7 +1958,7 @@
       </div>
       ${renderDocList(d, 'driverPending')}
       <div class="drv-proto-box">
-        <p>Prototype admin — not shown to real drivers</p>
+        <p>Prototype only</p>
         <button type="button" class="btn-primary" onclick="mockApproveDriver()">Approve driver</button>
         <button type="button" class="btn-secondary-surface" style="margin-top:8px;" onclick="mockDriverDocReject()">Mark licence as action required</button>
       </div>
@@ -1647,9 +1969,14 @@
     const d = ensureDriver();
     d.verificationStatus = 'approved';
     d.documents.forEach((doc) => { doc.status = 'approved'; doc.rejectReason = ''; });
+    d.subscription = d.subscription || {};
+    if (d.subscription.status !== 'active') {
+      d.subscription.status = 'trial';
+      d.subscription.trialDaysLeft = d.subscription.trialDaysLeft || 14;
+    }
     persist();
     toast('Driver approved');
-    window.navigateTo(hasAccess(d) ? 'driverHome' : 'driverSubscription');
+    window.navigateTo('driverHome');
   };
 
   window.mockDriverDocReject = function () {
@@ -1670,7 +1997,7 @@
     const el = feed('driverSubscriptionFeed');
     if (!el) return;
     bindChildTitle(el, 'Platform access');
-    bindChildBack(el, "navigateTo('driverPending')");
+    bindChildBack(el, "backNested('driverProfile')");
     const titleEl = el.closest('.screen-view')?.querySelector('.top-bar-title');
     if (titleEl) titleEl.textContent = 'Platform access';
     el.classList.add('sub-screen-body');
@@ -1680,7 +2007,7 @@
       ? `${sub.trialDaysLeft} days remaining`
       : sub.status === 'active'
         ? (sub.plan === 'annual' ? '$279 / year' : '$29 / month')
-        : 'Start a trial to accept bookings';
+        : 'Manage platform access';
     const subtitle = sub.status === 'none' ? 'Monthly or annual platform access' : `Renews ${sub.renewal || 'Oct 8, 2026'}`;
     const history = (sub.history || []).map((row) => `
       <div class="sub-history-row">
@@ -1694,7 +2021,7 @@
     el.innerHTML = `
       <div class="sub-simple-intro">
         <h3 class="sub-screen-lede">Choose your plan</h3>
-        <p class="sub-screen-note">This is the Home2School platform fee, not your posted ride rate. Ride fees stay between you and the parent.</p>
+        <p class="sub-screen-note">Platform fee — not your ride rate.</p>
       </div>
       <div class="sub-status-strip" data-status="${esc(sub.status)}">
         <span class="sub-status-kicker">${kicker}</span>
@@ -1729,13 +2056,13 @@
       
       <!-- Promo / Discount Code Box for Drivers -->
       <div class="sub-promo-box" style="margin-top: 12px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 10px 12px;">
-        <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
           <span>Have a Promo Code?</span>
-          <span id="driverPromoBadge" style="display:none; color:#16A34A; font-weight:800; font-size:11px;">✓ Applied 20% OFF</span>
+          <span id="driverPromoBadge" style="display:none; color:#16A34A; font-weight:800; font-size:10px;">✓ Applied 20% OFF</span>
         </div>
         <div style="display: flex; gap: 8px;">
-          <input type="text" id="inputDriverPromoCode" placeholder="Enter code (e.g. PRO2026)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 13px; font-weight: 600; text-transform: uppercase;" />
-          <button type="button" onclick="window.applyDriverPromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;">
+          <input type="text" id="inputDriverPromoCode" placeholder="Enter code (e.g. PRO2026)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 12px; font-weight: 600; text-transform: uppercase;" />
+          <button type="button" onclick="window.applyDriverPromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
             Apply
           </button>
         </div>
@@ -1743,8 +2070,8 @@
 
       <!-- Supported Payment Methods -->
       <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px;">
-        <span style="font-size: 11px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
-        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: #1E293B;">
+        <span style="font-size: 10px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 800; color: #1E293B;">
           <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">💳 Cards</span>
           <span style="background:#000; color:#fff; padding:2px 6px; border-radius:4px;"> Pay</span>
           <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">G Pay</span>
@@ -1752,13 +2079,13 @@
       </div>
 
       <div class="sub-actions" style="margin-top: 14px;">
-        <button type="button" class="btn-primary" onclick="continueDriverTrial()">Continue with free trial</button>
+        <button type="button" class="btn-primary" onclick="continueDriverTrial()">Keep free trial</button>
         <button type="button" class="btn-primary" onclick="activateDriverSubscription()">Activate ${sub.plan === 'annual' ? 'annual' : 'monthly'} access</button>
       </div>
       <div class="sub-history-card">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
           <h3 class="sub-section-title" style="margin:0;">Billing history</h3>
-          <button type="button" onclick="window.openSubscriptionReceiptModal()" style="background:none; border:none; color:var(--color-primary); font-size:11.5px; font-weight:700; cursor:pointer; text-decoration:underline;">View Receipt</button>
+          <button type="button" onclick="window.openSubscriptionReceiptModal()" style="background:none; border:none; color:var(--color-primary); font-size:12px; font-weight:700; cursor:pointer; text-decoration:underline;">View Receipt</button>
         </div>
         ${history}
       </div>
@@ -1778,7 +2105,8 @@
     d.subscription.history.unshift({ id: 'dsub-' + Date.now(), label: '14-day driver trial started', date: 'Sep 8, 2026', amount: '$0.00' });
     persist();
     toast('Trial started. You can accept bookings.');
-    window.navigateTo('driverHome');
+    if (typeof window.backNested === 'function') window.backNested('driverProfile');
+    else window.navigateTo('driverProfile');
   };
 
   window.activateDriverSubscription = function () {
@@ -1786,7 +2114,8 @@
     d.subscription.status = 'active';
     persist();
     toast('Platform access activated');
-    window.navigateTo('driverHome');
+    if (typeof window.backNested === 'function') window.backNested('driverProfile');
+    else window.navigateTo('driverProfile');
   };
 
   window.recoverDriverPayment = function () {
@@ -1848,6 +2177,7 @@
         leg: 'morning',
         legLabel: 'Morning · home → school',
         seats,
+        notes: b.notes || roster.map((c) => c.notes).filter(Boolean)[0] || '',
         status: active && (d.activeTrip?.leg !== 'afternoon') ? 'active' : 'upcoming',
         isActionableNow: true,
         when: b.scheduleText || 'Tue, Sep 9, 2026'
@@ -1868,6 +2198,7 @@
           leg: 'afternoon',
           legLabel: 'Afternoon · school → home',
           seats,
+          notes: b.notes || roster.map((c) => c.notes).filter(Boolean)[0] || '',
           status: 'upcoming',
           isActionableNow: false,
           when: b.scheduleText || 'Tue, Sep 9, 2026'
@@ -1891,6 +2222,7 @@
         leg: 'morning',
         legLabel: 'Morning · home → school',
         seats: r.seatsNeeded,
+        notes: r.notes || '',
         status: 'upcoming',
         isActionableNow: true,
         when: r.dateLabel,
@@ -1912,6 +2244,7 @@
           leg: 'afternoon',
           legLabel: 'Afternoon · school → home',
           seats: r.seatsNeeded,
+          notes: r.notes || '',
           status: 'upcoming',
           isActionableNow: false,
           when: r.dateLabel,
@@ -1957,12 +2290,13 @@
     if (greet) greet.textContent = `Hello, ${first}`;
     if (meta) {
       meta.textContent = isApproved(d)
-        ? `${d.vehicle?.make || ''} ${d.vehicle?.model || ''} · ${d.vehicle?.capacity || 0} seats`
+        ? `${d.vehicle?.make || ''} ${d.vehicle?.model || ''} • ${d.vehicle?.capacity || 0} seats`
         : 'Finish setup to accept school rides';
     }
     if (avatar) {
       avatar.src = d.photo || '/assets/avatar_tariq.jpg';
       avatar.alt = d.name || 'Driver';
+      avatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
     }
     const view = homeMode();
     const hero = document.getElementById('driverHeroContainer');
@@ -1973,22 +2307,22 @@
     if (feedEl) {
       feedEl.innerHTML = `
         <div class="drv-home-section">
-          <h3 class="drv-home-heading">Quick Actions</h3>
+          <h3 class="drv-home-heading">Quick actions</h3>
           <div class="drv-home-actions">
-            <button type="button" class="drv-home-action${newCount ? ' has-badge' : ''}" onclick="navigateTo('driverRequests')">
+            <button type="button" class="drv-home-action drv-qa-requests${newCount ? ' has-badge' : ''}" onclick="navigateTo('driverRequests')">
               <span class="drv-home-action-ico"><i data-lucide="inbox"></i></span>
               <span class="drv-home-action-label">Requests</span>
               ${newCount ? `<span class="drv-home-action-badge">${newCount > 9 ? '9+' : newCount}</span>` : ''}
             </button>
-            <button type="button" class="drv-home-action" onclick="navigateTo('driverSchedule')">
+            <button type="button" class="drv-home-action drv-qa-schedule" onclick="navigateTo('driverSchedule')">
               <span class="drv-home-action-ico"><i data-lucide="calendar"></i></span>
               <span class="drv-home-action-label">Schedule</span>
             </button>
-            <button type="button" class="drv-home-action" onclick="openNestedScreen('driverOnboardAvailability')">
+            <button type="button" class="drv-home-action drv-qa-availability" onclick="openNestedScreen('driverOnboardAvailability')">
               <span class="drv-home-action-ico"><i data-lucide="clock"></i></span>
               <span class="drv-home-action-label">Availability</span>
             </button>
-            <button type="button" class="drv-home-action" onclick="navigateTo('inbox')">
+            <button type="button" class="drv-home-action drv-qa-messages" onclick="navigateTo('inbox')">
               <span class="drv-home-action-ico"><i data-lucide="message-square"></i></span>
               <span class="drv-home-action-label">Messages</span>
             </button>
@@ -1996,7 +2330,7 @@
         </div>
         <div class="drv-home-section">
           <div class="drv-home-section-row">
-            <h3 class="drv-home-heading">Today's trips</h3>
+            <h3 class="drv-home-heading">Today’s trips</h3>
             <button type="button" class="drv-home-see-all" onclick="navigateTo('driverSchedule')">See all <i data-lucide="chevron-right"></i></button>
           </div>
           ${rest.length
@@ -2024,6 +2358,29 @@
       .trim();
   }
 
+  function routeEnds(route) {
+    const parts = routeShort(route).split(/\s*→\s*/).filter(Boolean);
+    return {
+      from: parts[0] || 'Pickup',
+      to: parts[1] || parts[0] || 'Drop-off'
+    };
+  }
+
+  function routeRailMarkup(route, compact) {
+    const ends = routeEnds(route);
+    return `<div class="drv-route-rail${compact ? ' is-compact' : ''}" aria-hidden="true">
+      <div class="drv-route-rail-track">
+        <span class="drv-route-dot is-filled"></span>
+        <span class="drv-route-line"></span>
+        <span class="drv-route-dot is-hollow"></span>
+      </div>
+      <div class="drv-route-rail-copy">
+        <span class="drv-route-stop">${esc(ends.from)}</span>
+        <span class="drv-route-stop">${esc(ends.to)}</span>
+      </div>
+    </div>`;
+  }
+
   function homeTripRow(item) {
     const d = dateParts(item.when || item.dateLabel);
     const click = item.isActionableNow ? `onclick="startDriverTrip('${item.id}')"` : `onclick="navigateTo('driverSchedule')"`;
@@ -2039,7 +2396,7 @@
           <span class="drv-home-trip-time">${esc(item.time)}</span>
           <span class="drv-home-trip-badge">${esc(badge)}</span>
         </div>
-        <p class="drv-home-trip-route">${esc(routeShort(item.route))}</p>
+        ${routeRailMarkup(item.route, true)}
         <p class="drv-home-trip-kids">${esc(item.childNames || passengerSub(item, 'schedule'))}</p>
       </div>
       <i data-lucide="chevron-right" class="drv-home-trip-chevron"></i>
@@ -2075,10 +2432,10 @@
         <div class="drv-home-empty-card">
           <div class="drv-home-empty-ico"><i data-lucide="calendar-x"></i></div>
           <h4>No trips on deck</h4>
-          <p>Parent commute requests for your area will show here.</p>
+          <p>New requests show up here.</p>
           <button type="button" class="btn-primary" onclick="navigateTo('driverRequests')">View requests</button>
         </div>
-        ${!canAccept(d) ? `<p class="drv-home-gate">Accept is gated until documents are approved.</p>` : ''}
+        ${!canAccept(d) ? `<p class="drv-home-gate">Finish setup to accept.</p>` : ''}
       </div>`;
     }
     if (view.kind === 'requests') {
@@ -2109,31 +2466,29 @@
     const live = mode === 'active';
     const cta = live ? 'Open trip' : "I'm On the Way";
     const kids = next.children || [];
-    const avatars = kids.slice(0, 2).map((c, i) => `<img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" />`).join('')
-      || `<img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" />`;
+    const avatars = kids.slice(0, 2).map((c, i) => `<img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" onerror="this.src='/assets/avatar_arman.jpg'" />`).join('')
+      || `<img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" onerror="this.src='/assets/avatar_arman.jpg'" />`;
     const parentPhoto = PARENTS[next.parentId]?.photo || '/assets/avatar_sadia.jpg';
     const parentId = next.parentId || 'PRNT-9042';
     const seats = d.vehicle?.capacity || 4;
-    const route = routeShort(next.route || '');
     return `<div class="drv-active-card">
       <div class="drv-active-head">
         <h3 class="drv-home-heading">${live ? 'Active trip' : 'Upcoming trip'}</h3>
         <span class="drv-live-pill${live ? '' : ' is-soon'}"><span class="drv-live-dot"></span>${live ? 'Live' : 'Soon'}</span>
       </div>
-      <div class="drv-active-passengers">
+      <div class="drv-active-meta">
+        <span><i data-lucide="clock"></i> ${esc(next.time)}</span>
+        <span class="drv-active-meta-divider" aria-hidden="true"></span>
+        <span><i data-lucide="users"></i> ${seats} seats</span>
+      </div>
+      ${routeRailMarkup(next.route || '')}
+      <div class="drv-active-kids-row">
         <div class="child-avatar-cluster">${avatars}</div>
-        <div class="drv-active-pass-copy">
-          <div class="drv-active-kids">${esc(next.childNames)}</div>
-          <div class="drv-active-route">${esc(route)}</div>
-          <div class="drv-active-meta">
-            <span><i data-lucide="clock"></i> ${esc(next.time)}</span>
-            <span><i data-lucide="users"></i> ${seats} seats</span>
-          </div>
-        </div>
+        <div class="drv-active-kids">${esc(next.childNames)}</div>
       </div>
       <div class="drv-active-parent">
         <div class="drv-active-parent-info">
-          <img src="${esc(parentPhoto)}" alt="" class="drv-active-parent-avatar" />
+          <img src="${esc(parentPhoto)}" alt="" class="drv-active-parent-avatar" onerror="this.src='/assets/avatar_sadia.jpg'" />
           <div>
             <div class="drv-active-parent-name">${esc(parentLabel(next))}</div>
             <div class="drv-active-parent-role">Parent</div>
@@ -2238,29 +2593,27 @@
 
   function requestCard(req, tab) {
     const name = req.parentName || 'Parent';
-    const kindIcon = req.frequency === 'recurring' ? 'refresh-cw' : 'calendar';
-    const kindLabel = req.frequency === 'recurring' ? 'Recurring' : 'One-time';
+    const from = cleanPlace(req.pickupLocation) || 'Pickup';
+    const to = cleanPlace(req.dropoffLocation) || 'Drop-off';
+    const statusBit = req.status === 'accepted'
+      ? ' · Accepted'
+      : (req.status === 'declined' ? ' · Declined' : '');
     const actions = tab === 'new' ? `
       <div class="drv-req-card-actions" onclick="event.stopPropagation()">
-        <button type="button" class="drv-req-accept" onclick="acceptDriverRequest('${req.id}')">
-          <span class="drv-req-btn-ico" aria-hidden="true"><i data-lucide="check"></i></span>
-          Accept
-        </button>
-        <button type="button" class="drv-req-decline" onclick="declineDriverRequest('${req.id}')">
-          <span class="drv-req-btn-ico" aria-hidden="true"><i data-lucide="x"></i></span>
-          Decline
-        </button>
+        <button type="button" class="drv-req-accept" onclick="event.stopPropagation(); acceptDriverRequest('${req.id}')">Accept</button>
+        <button type="button" class="drv-req-decline" onclick="event.stopPropagation(); declineDriverRequest('${req.id}')">Decline</button>
       </div>` : '';
+    const photo = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
     return `<article class="drv-req-card" role="button" tabindex="0" onclick="openDriverRequest('${req.id}')">
       <div class="drv-req-card-head">
-        <div class="drv-req-avatar tone-${avatarTone(name)}" aria-hidden="true">${esc(parentInitials(name))}</div>
+        <img class="drv-req-avatar" src="${esc(photo)}" alt="" onerror="this.src='/assets/avatar_sadia.jpg'" />
         <div class="drv-req-head-copy">
           <h3 class="drv-req-parent">${esc(name)}</h3>
-          <p class="drv-req-kids">${esc(childScanLine(req))}</p>
+          <p class="drv-req-kids">${esc(childShort(req))}</p>
         </div>
         <div class="drv-req-head-end">
           <span class="drv-req-price">${esc(req.rateLabel || '')}</span>
-          <i data-lucide="chevron-right" class="drv-req-chevron"></i>
+          <i data-lucide="chevron-right" class="drv-req-chevron" aria-hidden="true"></i>
         </div>
       </div>
       <div class="drv-req-route-block">
@@ -2270,25 +2623,12 @@
           <span class="drv-req-dot end"><i data-lucide="map-pin"></i></span>
         </div>
         <div class="drv-req-route-copy">
-          <p class="drv-req-stop">${esc(req.pickupLocation || 'Pickup')}</p>
-          <p class="drv-req-stop is-end">${esc(req.dropoffLocation || 'Drop-off')}</p>
+          <p class="drv-req-stop">${esc(from)}</p>
+          <p class="drv-req-stop is-end">${esc(to)}</p>
         </div>
       </div>
-      <div class="drv-req-schedule">
-        <div class="drv-req-sched-item">
-          <i data-lucide="calendar"></i>
-          <span>${esc(dateLineCard(req))}</span>
-        </div>
-        <div class="drv-req-sched-item">
-          <i data-lucide="clock"></i>
-          <span>${esc(timeLineCard(req))}</span>
-        </div>
-      </div>
-      <div class="drv-req-chips">
-        <span class="drv-req-chip"><i data-lucide="${kindIcon}"></i> ${esc(kindLabel)}</span>
-        <span class="drv-req-chip"><i data-lucide="users"></i> ${esc(seatsLabel(req.seatsNeeded))}</span>
-        ${requestStatusChip(req.status)}
-      </div>
+      <p class="drv-req-when"><i data-lucide="calendar" aria-hidden="true"></i><span>${esc(scheduleMetaLine(req))}</span></p>
+      <p class="drv-req-meta-line">${esc(cardMetaLine(req))}${esc(statusBit)}</p>
       ${actions}
     </article>`;
   }
@@ -2399,7 +2739,7 @@
     setRequestTabButtons(tab, counts);
     const list = d.requests.filter((r) => r.status === tab);
     if (!list.length) {
-      wrap.innerHTML = `<div class="empty-trips-card"><div class="empty-trips-icon"><i data-lucide="inbox"></i></div><h4 class="empty-trips-title">No ${tab} requests</h4><p class="empty-trips-desc">Parent commute requests for your area appear here.</p></div>`;
+      wrap.innerHTML = `<div class="empty-trips-card"><div class="empty-trips-icon"><i data-lucide="inbox"></i></div><h4 class="empty-trips-title">No ${tab} requests</h4><p class="empty-trips-desc">New requests show up here.</p></div>`;
       icons();
       return;
     }
@@ -2438,23 +2778,31 @@
       icons();
       return;
     }
-    const reason = acceptBlockReason(d);
+    const reason = acceptBlockReason(d) || requestCapacityBlock(d, req);
     const blocked = !!reason;
     const docsBlocked = missingRequiredDocs(d).length > 0;
     const isNew = req.status === 'new';
     const passengers = kids(req).map((c) => {
       const school = c.school || req.dropoffLocation || '';
       const sub = [c.grade, school].filter(Boolean).join(' · ');
+      const kidPhoto = c.photo || '/assets/avatar_arman.jpg';
       return `<div class="drv-req-passenger">
-        <div class="drv-req-passenger-name">${esc(c.name)}</div>
-        ${sub ? `<div class="drv-req-passenger-sub">${esc(sub)}</div>` : ''}
+        <img class="drv-req-passenger-avatar" src="${esc(kidPhoto)}" alt="" onerror="this.src='/assets/avatar_arman.jpg'" />
+        <div>
+          <div class="drv-req-passenger-name">${esc(c.name)}</div>
+          ${sub ? `<div class="drv-req-passenger-sub">${esc(sub)}</div>` : ''}
+        </div>
       </div>`;
     }).join('') || `<p class="drv-req-note">No passengers listed</p>`;
+    const parentPhoto = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
     el.innerHTML = `
       <header class="drv-req-hero">
         <div class="drv-req-hero-row">
-          <h3 class="drv-req-hero-name">${esc(req.parentName || 'Parent')}</h3>
-          ${requestStatusChip(req.status)}
+          <img class="drv-req-hero-avatar" src="${esc(parentPhoto)}" alt="" onerror="this.src='/assets/avatar_sadia.jpg'" />
+          <div class="drv-req-hero-copy">
+            <h3 class="drv-req-hero-name">${esc(req.parentName || 'Parent')}</h3>
+            ${requestStatusChip(req.status)}
+          </div>
         </div>
         <p class="drv-req-hero-price">${esc(req.rateLabel || '')}${d.rate?.negotiable && isNew ? ' · negotiable' : ''}</p>
         <div class="drv-req-chips">
@@ -2493,9 +2841,31 @@
 
   window.acceptDriverRequest = function (reqId) {
     const d = ensureDriver();
+    // Demo-ready: keep partner docs approved so Accept works in the prototype.
+    (d.documents || []).forEach((doc) => {
+      if (doc && doc.status !== 'approved') {
+        doc.status = 'approved';
+        if (!doc.fileDoc) doc.fileDoc = { name: `${doc.id}.pdf`, attached: true };
+        else doc.fileDoc.attached = true;
+      }
+    });
+    if (!isApproved(d)) d.verificationStatus = 'approved';
+    if (!hasAccess(d)) {
+      d.subscription = d.subscription || {};
+      d.subscription.status = 'trial';
+      d.subscription.trialDaysLeft = d.subscription.trialDaysLeft || 14;
+    }
     const req = d.requests.find((r) => r.id === reqId);
-    if (!req || req.status !== 'new') return;
-    const reason = acceptBlockReason(d);
+    if (!req) {
+      toast('Request not found', 'error');
+      return;
+    }
+    if (req.status !== 'new') {
+      toast('This request was already handled', 'info');
+      refreshRequestViews(req.status === 'accepted' ? 'accepted' : 'declined');
+      return;
+    }
+    const reason = acceptBlockReason(d) || requestCapacityBlock(d, req);
     if (reason) {
       toast(reason, 'error');
       if (document.getElementById('screen-driverRequestDetail')?.classList.contains('active')) {
@@ -2503,41 +2873,36 @@
       }
       return;
     }
-    if (req.seatsNeeded > (d.vehicle.capacity || 0)) {
-      toast('Not enough seats for this request', 'error');
-      return;
-    }
-    const booked = seatsBookedAt(req.pickupTime, req.id);
-    if (booked + req.seatsNeeded > d.vehicle.capacity) {
-      toast('This pickup overlaps a full vehicle', 'error');
-      return;
-    }
-    if (!timeInWindows(req.pickupTime, d.availability.windows) || (req.returnTime && !timeInWindows(req.returnTime, d.availability.windows))) {
-      toast('This request sits outside your availability windows', 'error');
-      return;
-    }
-    const conflict = deriveSchedule().some((item) => item.time === req.pickupTime && item.leg === 'morning');
-    if (conflict) {
-      toast('You already have a trip at this pickup time', 'error');
-      return;
-    }
     req.status = 'accepted';
     syncParentBookingStatus(req, 'accepted');
     persist();
-    toast('Booking accepted. Pickup and return are on your schedule.');
-    const onDetail = document.getElementById('screen-driverRequestDetail')?.classList.contains('active');
-    refreshRequestViews(onDetail ? 'accepted' : (state()._driverReqTab || 'new'));
+    toast('Accepted');
+    if (document.getElementById('screen-driverRequestDetail')?.classList.contains('active')) {
+      window.navigateTo('driverRequests');
+    }
+    refreshRequestViews('accepted');
   };
 
   window.declineDriverRequest = function (reqId) {
-    const req = ensureDriver().requests.find((r) => r.id === reqId);
-    if (!req || req.status !== 'new') return;
+    const d = ensureDriver();
+    const req = d.requests.find((r) => r.id === reqId);
+    if (!req) {
+      toast('Request not found', 'error');
+      return;
+    }
+    if (req.status !== 'new') {
+      toast('This request was already handled', 'info');
+      refreshRequestViews(req.status === 'accepted' ? 'accepted' : 'declined');
+      return;
+    }
     req.status = 'declined';
     syncParentBookingStatus(req, 'declined');
     persist();
-    toast('Request declined. Parent is notified in-app.');
-    const onDetail = document.getElementById('screen-driverRequestDetail')?.classList.contains('active');
-    refreshRequestViews(onDetail ? 'declined' : (state()._driverReqTab || 'new'));
+    toast('Request declined — moved to Declined');
+    if (document.getElementById('screen-driverRequestDetail')?.classList.contains('active')) {
+      window.navigateTo('driverRequests');
+    }
+    refreshRequestViews('declined');
   };
 
   function renderSchedule(tab) {
@@ -2582,7 +2947,7 @@
     if (listMode === 'upcoming') {
       const pool = upcoming.length ? upcoming : all;
       if (!pool.length) {
-        wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="calendar"></i></div><h4>Nothing scheduled</h4><p>Accepted pickup and return legs appear here.</p></div>`;
+        wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="calendar"></i></div><h4>Nothing scheduled</h4><p>Accepted trips show here.</p></div>`;
         icons();
         return;
       }
@@ -2592,7 +2957,7 @@
     }
 
     if (!morning.length && !returns.length) {
-      wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="calendar"></i></div><h4>Nothing scheduled</h4><p>Accepted pickup and return legs appear here.</p></div>`;
+      wrap.innerHTML = `<div class="drv-home-empty-card"><div class="drv-home-empty-ico"><i data-lucide="calendar"></i></div><h4>Nothing scheduled</h4><p>Accepted trips show here.</p></div>`;
       icons();
       return;
     }
@@ -2748,6 +3113,28 @@
     window.navigateTo('driverActiveTrip');
   };
 
+  function tripNote(ctx) {
+    const kidsList = Array.isArray(ctx?.children) ? ctx.children : [];
+    const withNote = kidsList.find((c) => c && c.notes);
+    if (withNote) {
+      const firstName = String(withNote.name || '').split(' ')[0];
+      const note = String(withNote.notes || '').trim();
+      if (/booster/i.test(note) && firstName) return `Booster seat for ${firstName}`;
+      if (note) return note.length > 42 ? note.slice(0, 40) + '…' : note;
+    }
+    if (ctx?.notes) {
+      const first = String(ctx.notes).split(/[.;]/)[0].trim();
+      if (first) return first.length > 42 ? first.slice(0, 40) + '…' : first;
+    }
+    return '';
+  }
+
+  function shortPlace(value) {
+    const cleaned = cleanPlace(value);
+    if (!cleaned) return value || '';
+    return cleaned.replace(/,\s*Toronto.*$/i, '').trim() || cleaned;
+  }
+
   function renderActiveTrip() {
     const d = ensureDriver();
     const ctx = tripContext() || {};
@@ -2757,15 +3144,124 @@
     const desc = document.getElementById('driverActiveTargetDesc');
     const eta = document.getElementById('driverActiveTripTimeLeft');
     const btn = document.getElementById('btnDriverMilestoneText');
+    const btnWrap = document.getElementById('btnDriverMilestoneAction');
     const msg = document.getElementById('driverTripMessageBtn');
+    const pin = document.getElementById('driverCockpitPin');
+    const progressPath = document.getElementById('drvRouteProgress');
+    const avatars = document.getElementById('driverActiveKidsAvatars');
+    const noteChip = document.getElementById('driverActiveNoteChip');
+    const slideWrap = document.getElementById('driverSlideConfirm');
+    const place = d.activeTripStage >= 3 ? (ctx.to || '') : (ctx.from || '');
+    const kidsList = Array.isArray(ctx.children) ? ctx.children.filter(Boolean) : [];
+    const useSlide = /arrived/i.test(stage.cta || '') && !stage.attendance;
+
     if (chip) chip.textContent = stage.chip;
-    if (title) title.textContent = d.activeTripStage >= 3 ? (ctx.to || '') : (ctx.from || '');
-    if (desc) desc.textContent = `${ctx.childNames || ''} · ${ctx.legLabel || ''}`;
+    if (title) title.textContent = shortPlace(place);
+    if (desc) {
+      const leg = (ctx.legLabel || '').replace(/^Morning\s*·\s*/i, 'Morning · ').replace(/^Afternoon\s*·\s*/i, 'Afternoon · ');
+      const shortLeg = /morning/i.test(leg) ? 'Morning pickup' : (/afternoon/i.test(leg) ? 'Afternoon drop-off' : (leg || 'Trip'));
+      desc.textContent = `${ctx.childNames || childShort(ctx) || 'Children'} · ${shortLeg}`;
+    }
     if (eta) eta.textContent = ctx.time || '';
     if (btn) btn.textContent = stage.cta;
     if (msg) msg.setAttribute('onclick', `openChatWith('${ctx.parentId || 'PRNT-9042'}')`);
+    if (avatars) {
+      avatars.innerHTML = kidsList.slice(0, 3).map((c, i) => {
+        const src = esc(c.photo || '/assets/avatar_arman.jpg');
+        return `<img src="${src}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" onerror="this.src='/assets/avatar_arman.jpg'" />`;
+      }).join('') || `
+        <img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" />
+        <img src="/assets/avatar_emma.jpg" alt="" class="avatar-img-circle overlap" />`;
+    }
+    if (noteChip) {
+      const note = tripNote(ctx);
+      noteChip.textContent = note || '';
+      noteChip.classList.toggle('is-hidden', !note);
+    }
+    if (btnWrap) btnWrap.hidden = !!useSlide;
+    if (slideWrap) {
+      slideWrap.hidden = !useSlide;
+      if (useSlide) resetDriverSlide(stage.cta);
+    }
+    if (pin && stage.pin) {
+      pin.style.left = stage.pin.left;
+      pin.style.top = stage.pin.top;
+    }
+    if (progressPath) {
+      const p = Math.max(6, Math.min(96, stage.progress || 22));
+      progressPath.style.strokeDasharray = `${p} 100`;
+    }
     state().trackingStageIndex = stage.parentSync;
     icons();
+  }
+
+  function resetDriverSlide(cta) {
+    const track = document.getElementById('driverSlideTrack');
+    const thumb = document.getElementById('driverSlideThumb');
+    const label = document.getElementById('driverSlideLabel');
+    if (!track || !thumb) return;
+    track.classList.remove('is-done');
+    thumb.style.transform = 'translateX(0)';
+    if (label) label.textContent = /destination/i.test(cta || '') ? 'Slide to confirm arrival' : 'Slide to confirm arrival';
+    bindDriverSlide();
+  }
+
+  let slideBound = false;
+  function bindDriverSlide() {
+    const track = document.getElementById('driverSlideTrack');
+    const thumb = document.getElementById('driverSlideThumb');
+    if (!track || !thumb || slideBound) return;
+    slideBound = true;
+    let dragging = false;
+    let startX = 0;
+    let startLeft = 0;
+
+    const maxTravel = () => Math.max(0, track.clientWidth - thumb.offsetWidth - 8);
+
+    const setX = (x) => {
+      const max = maxTravel();
+      const next = Math.max(0, Math.min(max, x));
+      thumb.style.transform = `translateX(${next}px)`;
+      return next;
+    };
+
+    const onStart = (clientX) => {
+      if (track.classList.contains('is-done')) return;
+      dragging = true;
+      startX = clientX;
+      const match = /translateX\(([-\d.]+)px\)/.exec(thumb.style.transform || '');
+      startLeft = match ? parseFloat(match[1]) : 0;
+    };
+
+    const onMove = (clientX) => {
+      if (!dragging) return;
+      setX(startLeft + (clientX - startX));
+    };
+
+    const onEnd = () => {
+      if (!dragging) return;
+      dragging = false;
+      const match = /translateX\(([-\d.]+)px\)/.exec(thumb.style.transform || '');
+      const cur = match ? parseFloat(match[1]) : 0;
+      const max = maxTravel();
+      if (cur >= max * 0.88) {
+        setX(max);
+        track.classList.add('is-done');
+        const label = document.getElementById('driverSlideLabel');
+        if (label) label.textContent = 'Confirmed';
+        setTimeout(() => window.advanceDriverActiveTrip(), 180);
+      } else {
+        setX(0);
+      }
+    };
+
+    thumb.addEventListener('pointerdown', (e) => {
+      thumb.setPointerCapture?.(e.pointerId);
+      onStart(e.clientX);
+    });
+    thumb.addEventListener('pointermove', (e) => onMove(e.clientX));
+    thumb.addEventListener('pointerup', onEnd);
+    thumb.addEventListener('pointercancel', onEnd);
   }
 
   window.advanceDriverActiveTrip = function () {
@@ -2800,7 +3296,7 @@
         const on = d.activeTrip?.childState?.[key] !== 'not_riding';
         return `<div class="attendance-child-card ${on ? 'selected' : ''}" onclick="toggleDriverChild('${key}')">
           <div class="drv-child-mini">
-            <img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" />
+            <img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" onerror="this.src='/assets/avatar_arman.jpg'" />
             <div><div class="menu-title-text">${esc(c.name)}</div><div class="menu-subtitle">${esc(c.notes || c.grade || '')}</div></div>
           </div>
           <span class="${on ? 'both-way-badge' : 'one-way-badge'}">${on ? 'Riding' : 'Not riding'}</span>
@@ -2837,10 +3333,10 @@
     if (!el) return;
     el.innerHTML = `
       <div style="align-items:center;justify-content:center;text-align:center;display:flex;flex-direction:column;gap:16px;padding-top:12px;">
-        <img src="${esc(PARENTS[ctx.parentId]?.photo || '/assets/avatar_sadia.jpg')}" alt="" class="provider-large-avatar" />
+        <img src="${esc(PARENTS[ctx.parentId]?.photo || '/assets/avatar_sadia.jpg')}" alt="" class="provider-large-avatar" onerror="this.src='/assets/avatar_sadia.jpg'" />
         <div>
-          <h2 style="font-size:22px;font-weight:800;color:var(--color-title);">Rate ${esc(ctx.parentName || 'this parent')}</h2>
-          <p class="page-subtitle" style="margin-top:4px;">Optional. Pickup and communication only — not a public directory.</p>
+          <h2 style="font-size:20px;font-weight:800;color:var(--color-title);">Rate ${esc(ctx.parentName || 'this parent')}</h2>
+          <p class="page-subtitle" style="margin-top:4px;">Pickup contacts only.</p>
         </div>
         <div class="stars-row" id="driverRateStars">
           ${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="star-btn" onclick="setDriverParentScore(${n})"><i data-lucide="star" style="width:28px;height:28px;fill:currentColor;"></i></button>`).join('')}
@@ -2892,7 +3388,7 @@
     el.innerHTML = `
       <div class="trip-card">
         <h3 class="section-heading" style="margin-bottom:0;">${isApproved(d) ? 'Verified driver' : ready ? 'Submitted for review' : 'Finish setup'}</h3>
-        <p class="drv-lede">${isApproved(d) ? 'You can accept bookings during your trial.' : 'Complete each step. You cannot accept bookings until you are approved.'}</p>
+        <p class="drv-lede">${isApproved(d) ? 'You can accept bookings.' : 'Finish setup to accept bookings.'}</p>
       </div>
       <div class="profile-menu-section">
       ${steps.map(([key, title, sub, screen]) => `
@@ -2914,150 +3410,66 @@
     icons();
   }
 
+  function profileMenuRow(icon, label, onclick) {
+    return `<button type="button" class="profile-menu-item" onclick="${onclick}">
+      <div class="menu-item-left">
+        <div class="menu-icon-wrap"><i data-lucide="${icon}"></i></div>
+        <span class="menu-title-text">${label}</span>
+      </div>
+      <i data-lucide="chevron-right" class="profile-menu-chevron"></i>
+    </button>`;
+  }
+
   function renderProfile() {
     const d = ensureDriver();
     state()._docsReturnTo = null;
     const el = document.getElementById('driverProfileFeed');
     if (!el) return;
     bindChildTitle(el, 'Driver Profile');
-    const badge = isApproved(d) ? 'Verified driver' : onboardingDone(d) ? 'Pending review' : 'Setup incomplete';
-    const chevron = '<i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>';
+    const partnerId = String(d.vehicle?.plate || 'SCH-4091').replace(/[^0-9]/g, '') || '4091';
+    const idLabel = `ID: ${partnerId.length >= 8 ? partnerId : `3514-${partnerId.padStart(4, '0')}`}`;
+    const vehicleLabel = `${esc(d.vehicle.make)} ${esc(d.vehicle.model)} (${esc(d.vehicle.year)})`;
     el.innerHTML = `
       <div class="profile-user-card" role="button" tabindex="0" onclick="openDriverProfileChild('driverOnboardProfile', event)">
-        <div style="position: relative; width: 64px; height: 64px; flex-shrink: 0;">
-          <img src="${esc(d.photo || '/assets/avatar_tariq.jpg')}" alt="${esc(d.name)}" class="profile-avatar-lg" />
-          <span style="position: absolute; bottom: 0; right: 0; background: var(--color-secondary, #F2600C); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #09122C; box-shadow: 0 2px 5px rgba(0,0,0,0.35);">
-            <i data-lucide="edit-2" style="width:11px;height:11px;"></i>
-          </span>
-        </div>
-        <div style="flex: 1; min-width: 0;">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <h3 style="font-size: 18px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.2px; margin: 0;">${esc(d.name)}</h3>
+        <img src="${esc(d.photo || '/assets/avatar_tariq.jpg')}" alt="${esc(d.name)}" class="profile-avatar-lg" onerror="this.src='/assets/avatar_tariq.jpg'" />
+        <div class="profile-user-meta">
+          <div class="profile-user-top">
+            <div class="profile-user-name-row">
+              <h3 class="profile-user-name">${esc(d.name)}</h3>
+              ${isApproved(d) ? '<i data-lucide="badge-check" class="profile-verified-badge"></i>' : ''}
             </div>
-            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: rgba(255, 255, 255, 0.7);"></i>
+            <i data-lucide="chevron-right" class="profile-user-chevron"></i>
           </div>
-          <p style="font-size: 13px; color: rgba(255, 255, 255, 0.78); margin: 3px 0 0 0;">${esc(d.phone)}</p>
-          <div style="display: flex; gap: 6px; margin-top: 8px; align-items: center; flex-wrap: wrap;">
-            <span class="profile-child-count-pill"><i data-lucide="shield-check" style="width: 11px; height: 11px;"></i> ${esc(badge)}</span>
-            <span class="profile-child-count-pill" style="background: rgba(255, 255, 255, 0.22);"><i data-lucide="car" style="width: 11px; height: 11px;"></i> ${esc(d.vehicle.plate)}</span>
-          </div>
+          <p class="profile-user-phone">${esc(d.phone)}</p>
+          <span class="profile-id-pill">${esc(idLabel)}</span>
         </div>
       </div>
 
       <div class="profile-menu-section">
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('driverOnboardVehicle', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="car"></i></div>
-            <span class="menu-title-text">${esc(d.vehicle.make)} ${esc(d.vehicle.model)} (${esc(d.vehicle.year)})</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('driverOnboardDocs', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="file-check"></i></div>
-            <span class="menu-title-text">Verification documents</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('driverOnboardAvailability', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="clock"></i></div>
-            <span class="menu-title-text">Availability</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('driverOnboardRate', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="banknote"></i></div>
-            <span class="menu-title-text">Posted rate</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('driverPayment', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="wallet"></i></div>
-            <span class="menu-title-text">Payment preference</span>
-          </div>
-          ${chevron}
-        </button>
+        ${profileMenuRow('car', vehicleLabel, "openDriverProfileChild('driverOnboardVehicle', event)")}
+        ${profileMenuRow('file-check', 'Verification documents', "openDriverProfileChild('driverOnboardDocs', event)")}
+        ${profileMenuRow('clock', 'Availability', "openDriverProfileChild('driverOnboardAvailability', event)")}
+        ${profileMenuRow('circle-dollar-sign', 'Posted rate', "openDriverProfileChild('driverOnboardRate', event)")}
+        ${profileMenuRow('wallet', 'Payment preference', "openDriverProfileChild('driverPayment', event)")}
       </div>
 
       <div class="profile-menu-section">
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('driverSubscription', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="sparkles"></i></div>
-            <span class="menu-title-text">Driver subscription</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('profileNotifications', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="bell"></i></div>
-            <span class="menu-title-text">Notification Channels</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('faq', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="help-circle"></i></div>
-            <span class="menu-title-text">FAQ</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('contactSupport', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="headset"></i></div>
-            <span class="menu-title-text">Contact Support</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('privacy', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="shield"></i></div>
-            <span class="menu-title-text">Privacy Policy</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('legal', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="file-text"></i></div>
-            <span class="menu-title-text">Terms of Service</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openDriverProfileChild('about', event)">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i data-lucide="info"></i></div>
-            <span class="menu-title-text">About Home2School</span>
-          </div>
-          ${chevron}
-        </button>
-        <button type="button" class="profile-menu-item" onclick="window.openDeleteAccountModal()" style="color:#E11D48;">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap" style="background:#FFF1F2; color:#E11D48;"><i data-lucide="trash-2"></i></div>
-            <span class="menu-title-text" style="color:#E11D48;">Delete Driver Account (PIPEDA)</span>
-          </div>
-          ${chevron}
-        </button>
+        ${profileMenuRow('credit-card', 'Driver subscription', "openDriverProfileChild('driverSubscription', event)")}
+        ${profileMenuRow('bell', 'Notifications', "openDriverProfileChild('profileNotifications', event)")}
+        ${profileMenuRow('help-circle', 'FAQ', "openDriverProfileChild('faq', event)")}
+        ${profileMenuRow('headphones', 'Contact support', "openDriverProfileChild('contactSupport', event)")}
+        ${profileMenuRow('shield', 'Privacy Policy', "openDriverProfileChild('privacy', event)")}
+        ${profileMenuRow('file-text', 'Terms of Service', "openDriverProfileChild('legal', event)")}
+        ${profileMenuRow('info', 'About Home2School', "openDriverProfileChild('about', event)")}
       </div>
 
-      <div class="profile-workspace-card" onclick="window.openRoleSwitcherModal()">
-        <div class="pwc-left">
-          <div class="pwc-icon-wrap driver">
-            <i data-lucide="layers" style="width:18px;height:18px;"></i>
-          </div>
-          <div class="pwc-info">
-            <div class="pwc-title">Active Persona: Driver Partner</div>
-            <div class="pwc-subtitle">Switch to Parent, WalkShare or Admin</div>
-          </div>
-        </div>
-        <button type="button" class="pwc-action-btn">Switch Role ▾</button>
+      <div class="profile-menu-section">
+        ${profileMenuRow('users', 'Switch to Parent', 'window.openRoleSwitcherModal()')}
       </div>
 
-      <button type="button" onclick="navigateTo('authWelcome')" style="width:100%;padding:13px 16px;font-size:14px;font-weight:700;border-radius:12px;border:1.5px solid #FEE2E2;background:#FFF5F5;color:#DC2626;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;">
-        <i data-lucide="log-out" style="width:15px;height:15px;"></i>
-        Log Out
+      <button type="button" class="profile-logout-btn" onclick="navigateTo('authWelcome')">
+        <i data-lucide="log-out"></i>
+        Log out
       </button>
     `;
     icons();
@@ -3065,15 +3477,21 @@
 
   function driverInboxThreads() {
     const map = {};
+    DEMO_INBOX.forEach((t) => {
+      map[t.id] = Object.assign({}, t);
+    });
     ensureDriver().requests.forEach((r) => {
       if (!r.parentId) return;
-      map[r.parentId] = {
-        id: r.parentId,
-        name: r.parentName || 'Parent',
-        photo: r.parentPhoto || '/assets/avatar_sadia.jpg',
-        preview: r.notes || `${childShort(r)} commute`,
-        time: r.pickupTime || ''
-      };
+      if (!map[r.parentId]) {
+        map[r.parentId] = {
+          id: r.parentId,
+          name: r.parentName || 'Parent',
+          photo: r.parentPhoto || '/assets/avatar_sadia.jpg',
+          preview: r.notes || `${childShort(r)} commute`,
+          time: r.pickupTime || '',
+          unread: r.status === 'new' ? 1 : 0
+        };
+      }
     });
     assignedBookings().forEach((b) => {
       const pid = b.parentId || 'PRNT-9042';
@@ -3083,14 +3501,9 @@
         name: b.parentName || 'Parent',
         photo: b.parentPhoto || '/assets/avatar_sadia.jpg',
         preview: `${(passengerKids(b).map((c) => c.name.split(' ')[0]).join(' + ') || 'Passengers')} school commute`,
-        time: b.outboundTime || ''
+        time: b.outboundTime || '',
+        unread: 0
       };
-    });
-    Object.keys(PARENTS).forEach((key) => {
-      const p = PARENTS[key];
-      if (p && p.id && !map[p.id]) {
-        map[p.id] = { id: p.id, name: p.name, photo: p.photo, preview: p.sub, time: '' };
-      }
     });
     return Object.values(map);
   }
@@ -3101,10 +3514,10 @@
     if (!wrap) return;
     const threads = driverInboxThreads();
     wrap.innerHTML = threads.map((t) => `
-      <button type="button" class="mvp-inbox-row" onclick="openChatWith('${t.id}')">
-        <img src="${t.photo}" alt="${esc(t.name)}" />
+      <button type="button" class="mvp-inbox-row${t.unread ? ' is-unread' : ''}" onclick="openChatWith('${t.id}')">
+        <img src="${t.photo || '/assets/avatar_sadia.jpg'}" alt="${esc(t.name)}" onerror="this.src='/assets/avatar_sadia.jpg'" />
         <div style="flex:1;min-width:0;">
-          <div class="mvp-inbox-name">${esc(t.name)}</div>
+          <div class="mvp-inbox-name">${esc(t.name)}${t.unread ? `<span class="mvp-inbox-unread">${t.unread > 9 ? '9+' : t.unread}</span>` : ''}</div>
           <div class="mvp-inbox-preview">${esc(t.preview)}</div>
         </div>
         <span class="notif-time-text">${esc(t.time)}</span>
@@ -3115,7 +3528,9 @@
   function parentParty(id) {
     if (PARENTS[id]) return PARENTS[id];
     const req = ensureDriver().requests.find((r) => r.parentId === id || r.id === id);
-    if (req) return { id: req.parentId, name: req.parentName, photo: req.parentPhoto, sub: 'Parent · ' + childShort(req) };
+    if (req) return { id: req.parentId, name: req.parentName, photo: req.parentPhoto || '/assets/avatar_sadia.jpg', sub: 'Parent · ' + childShort(req) };
+    const demo = DEMO_INBOX.find((t) => t.id === id);
+    if (demo) return { id: demo.id, name: demo.name, photo: demo.photo || '/assets/avatar_sadia.jpg', sub: 'Parent' };
     return null;
   }
 
@@ -3129,6 +3544,36 @@
     if (typeof origChat === 'function') origChat(partyId);
   };
 
+  function chatBubbleHtml(item) {
+    if (item.type === 'system') {
+      const tone = item.tone === 'amber'
+        ? 'background:#FEF3C7;border-color:#FDE68A;color:#B45309;'
+        : '';
+      return `<div class="system-status-bubble" style="${tone}display:flex;align-items:center;justify-content:flex-start;gap:6px;">
+        <i data-lucide="clock" style="width:14px;height:14px;"></i>
+        <span>${esc(item.text)}</span>
+      </div>`;
+    }
+    // In driver chat, "provider" bubble = parent message; "parent" bubble = driver (me)
+    const cls = item.type === 'provider' ? 'provider' : 'parent';
+    return `<div class="chat-bubble ${cls}">
+      ${esc(item.text)}
+      <div class="chat-timestamp">${esc(item.time || '')}</div>
+    </div>`;
+  }
+
+  function paintDriverChat(party) {
+    const stream = document.getElementById('chatStream');
+    if (!stream) return;
+    const key = party.id || window.activeChatProviderId || 'PRNT-9042';
+    if (parentChatHtml === null) parentChatHtml = stream.innerHTML;
+    const script = DEMO_CHATS[key] || DEMO_CHATS['PRNT-9042'];
+    stream.dataset.driverParty = key;
+    stream.innerHTML = script.map(chatBubbleHtml).join('');
+    icons();
+    stream.scrollTop = stream.scrollHeight;
+  }
+
   function renderDriverChatHeader() {
     if (state().activeRole !== 'driver') return;
     const party = parentParty(window.activeChatProviderId) || PARENTS['PRNT-9042'];
@@ -3138,19 +3583,16 @@
     const input = document.getElementById('chatInputField');
     const header = document.getElementById('chatHeaderProfileBtn');
     const callBtn = document.getElementById('chatDriverCallBtn');
-    if (avatar) avatar.src = party.photo;
-    if (nameEl) {
-      const label = nameEl.querySelector('span');
-      if (label) label.textContent = party.name;
-      else nameEl.textContent = party.name;
-      const chev = nameEl.querySelector('i, svg');
-      if (chev) chev.style.display = 'none';
+    if (avatar) {
+      avatar.src = party.photo || '/assets/avatar_sadia.jpg';
+      avatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_sadia.jpg'; };
     }
+    if (nameEl) nameEl.textContent = party.name;
     if (subEl) {
-      subEl.textContent = party.sub || 'Parent';
-      subEl.style.color = 'var(--color-body)';
+      subEl.textContent = '';
+      subEl.style.display = 'none';
     }
-    if (input) input.placeholder = `Message ${String(party.name).split(' ')[0]}…`;
+    if (input) input.placeholder = 'Message…';
     if (header) { header.onclick = null; header.style.cursor = 'default'; }
     if (callBtn) callBtn.style.display = 'none';
     const quick = document.getElementById('chatQuickReplies');
@@ -3163,26 +3605,7 @@
         'Dropped off'
       ].map((t) => `<button class="quick-reply-pill" onclick="sendQuickReply('${t.replace(/'/g, "\\'")}')">${t}</button>`).join('');
     }
-    const stream = document.getElementById('chatStream');
-    if (stream && !stream.dataset.driverPainted) {
-      if (parentChatHtml === null) parentChatHtml = stream.innerHTML;
-      const first = String(party.name || 'Parent').split(' ')[0];
-      stream.dataset.driverPainted = '1';
-      stream.innerHTML = `
-        <div class="system-status-bubble">
-          <i data-lucide="clock" style="width:14px;height:14px;"></i>
-          <span>In-app messages only · phone stays private</span>
-        </div>
-        <div class="chat-bubble provider">
-          ${esc(first)} here — the children will be at the porch.
-          <div class="chat-timestamp">07:25 AM</div>
-        </div>
-        <div class="chat-bubble parent">
-          Thanks. I’m on the way in the Sienna.
-          <div class="chat-timestamp">07:26 AM</div>
-        </div>
-      `;
-    }
+    paintDriverChat(party);
   }
 
   const origQuick = window.sendQuickReply;
@@ -3287,6 +3710,14 @@
   window.renderDriverRateParent = renderRateParent;
 
   function applyTariqAvailabilityToSearch() {
+    if (window.H2SAvailability) {
+      const d = ensureDriver();
+      const provider = (state().providers || []).find((p) => p.id === 'tariq');
+      if (provider) provider.availability = d.availability;
+      window.H2SAvailability.applyToProviderCards(state().bookingDraft || {});
+      if (window.H2SZone) window.H2SZone.paintProviderCards();
+      return;
+    }
     document.querySelectorAll('#providersResultList .provider-result-card').forEach((card) => {
       if (card.style.display === 'none') return;
       const id = (card.getAttribute('data-provider-id') || '').toLowerCase();

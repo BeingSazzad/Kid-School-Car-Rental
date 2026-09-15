@@ -1,0 +1,125 @@
+/* Child Safety sheet — clutter-free */
+
+.csc-header {
+  padding: 8px 20px 12px;
+  border-bottom: none;
+}
+
+.csc-shield-badge {
+  display: none !important;
+}
+
+.csc-title {
+  font-size: 20px !important;
+  font-weight: 800;
+  color: #1A1D24;
+  letter-spacing: -0.3px;
+}
+
+.csc-body {
+  padding: 4px 20px 28px !important;
+  gap: 20px !important;
+}
+
+.csc-sos-card {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.csc-sos-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #991B1B;
+  line-height: 1.3;
+}
+
+.csc-sos-desc {
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+  color: #B91C1C;
+  margin: 6px 0 14px !important;
+  font-weight: 500;
+}
+
+.csc-sos-trigger-btn {
+  height: 48px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: none !important;
+}
+
+.csc-standard-card {
+  display: none !important;
+}
+
+.csc-section-label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.csc-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  counter-reset: csc-step;
+}
+
+.csc-steps li {
+  counter-increment: csc-step;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1A1D24;
+  line-height: 1.4;
+}
+
+.csc-steps li::before {
+  content: counter(csc-step);
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #F0F3FA;
+  color: #1B2B68;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.csc-contacts-grid {
+  gap: 10px;
+}
+
+.csc-contact-btn {
+  padding: 12px;
+  border-radius: 12px;
+  background: #F7F8FA !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.csc-contact-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A1D24;
+}
+
+.csc-contact-num {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6B7280;
+}
