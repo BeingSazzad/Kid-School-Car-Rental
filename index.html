@@ -1725,7 +1725,7 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title">Available Providers</h2>
-        <button type="button" class="btn-icon-contact" onclick="window.toggleAdvancedSearchFilterDrawer()" aria-label="Filters" title="Filters">
+        <button type="button" class="btn-icon-contact" onclick="window.openSearchFilterModal()" aria-label="Filters" title="Filters">
           <i data-lucide="sliders-horizontal" style="width:18px;height:18px;"></i>
         </button>
       </div>
@@ -5556,6 +5556,128 @@
 
       <div class="role-switcher-footer">
         <span class="role-switcher-tip">Tip: <kbd>Alt</kbd> + <kbd>1</kbd>–<kbd>3</kbd> to switch</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 6. SEARCH & DISTANCE RADIUS FILTER MODAL ================= -->
+  <div class="custom-modal-overlay search-filter-modal-backdrop" id="searchFilterModal" style="display:none;" onclick="if(event.target===this) window.closeSearchFilterModal()">
+    <div class="search-filter-modal-box">
+      <div class="sheet-drag-handle" style="margin: 0 auto 12px;"></div>
+      
+      <div class="search-filter-header">
+        <div class="sf-header-title-wrap">
+          <div class="sf-header-icon">
+            <i data-lucide="sliders-horizontal" style="width:20px;height:20px;"></i>
+          </div>
+          <div>
+            <h3 class="sf-title">Filter Providers</h3>
+            <p class="sf-subtitle">Adjust radius, shift timing &amp; verified badges</p>
+          </div>
+        </div>
+        <button type="button" class="btn-icon-close" onclick="window.closeSearchFilterModal()" aria-label="Close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="search-filter-body">
+        
+        <!-- 1. Interactive Drag Radius Slider Section -->
+        <div class="sf-section">
+          <div class="sf-section-header">
+            <div class="sf-section-label-group">
+              <i data-lucide="radar" style="width:16px;height:16px;color:var(--color-primary);"></i>
+              <span class="sf-section-label">Search Distance Radius</span>
+            </div>
+            <div class="sf-radius-badge" id="modalRadiusBadge">10 km</div>
+          </div>
+          
+          <div class="sf-slider-container">
+            <input type="range" id="modalRadiusSlider" min="1" max="50" step="1" value="10" 
+              class="sf-range-slider" 
+              oninput="window.handleRadiusSliderChange(this.value)" />
+            <div class="sf-slider-ticks">
+              <span>1 km</span>
+              <span>10 km</span>
+              <span>25 km</span>
+              <span>50 km (Any)</span>
+            </div>
+          </div>
+
+          <!-- Quick Preset Chips -->
+          <div class="sf-chip-row" id="modalRadiusPresetChips">
+            <button type="button" class="sf-chip" onclick="window.setModalRadius(3)">3 km</button>
+            <button type="button" class="sf-chip" onclick="window.setModalRadius(5)">5 km</button>
+            <button type="button" class="sf-chip active" onclick="window.setModalRadius(10)">10 km</button>
+            <button type="button" class="sf-chip" onclick="window.setModalRadius(25)">25 km</button>
+            <button type="button" class="sf-chip" onclick="window.setModalRadius(50)">50 km (Any)</button>
+          </div>
+        </div>
+
+        <!-- 2. Trip Timing Shift Section -->
+        <div class="sf-section">
+          <div class="sf-section-header">
+            <div class="sf-section-label-group">
+              <i data-lucide="clock" style="width:16px;height:16px;color:#D97706;"></i>
+              <span class="sf-section-label">Commute Shift / Timing</span>
+            </div>
+          </div>
+          <div class="sf-chip-row" id="modalTimingChips">
+            <button type="button" class="sf-chip active" onclick="window.setModalTiming('all', this)">All Shifts</button>
+            <button type="button" class="sf-chip" onclick="window.setModalTiming('morning', this)">Morning (07:00–09:00)</button>
+            <button type="button" class="sf-chip" onclick="window.setModalTiming('afternoon', this)">Afternoon (14:30–17:00)</button>
+          </div>
+        </div>
+
+        <!-- 3. Commute Mode Section -->
+        <div class="sf-section">
+          <div class="sf-section-header">
+            <div class="sf-section-label-group">
+              <i data-lucide="car" style="width:16px;height:16px;color:#059669;"></i>
+              <span class="sf-section-label">Service Type</span>
+            </div>
+          </div>
+          <div class="sf-chip-row" id="modalServiceTypeChips">
+            <button type="button" class="sf-chip active" onclick="window.setModalServiceType('all', this)">All Services</button>
+            <button type="button" class="sf-chip" onclick="window.setModalServiceType('drivers', this)">School Driver 🚗</button>
+            <button type="button" class="sf-chip" onclick="window.setModalServiceType('walkshare', this)">WalkShare Escort 🚶</button>
+          </div>
+        </div>
+
+        <!-- 4. Trust & Safety Filters -->
+        <div class="sf-section">
+          <div class="sf-section-header">
+            <div class="sf-section-label-group">
+              <i data-lucide="shield-check" style="width:16px;height:16px;color:#16A34A;"></i>
+              <span class="sf-section-label">Trust &amp; Verification</span>
+            </div>
+          </div>
+          <div class="sf-toggle-list">
+            <label class="sf-toggle-row">
+              <div class="sf-toggle-info">
+                <span class="sf-toggle-title">Verified Canadian VSC / KYC Only</span>
+                <span class="sf-toggle-desc">Show only background-checked providers</span>
+              </div>
+              <input type="checkbox" id="modalFilterVerifiedCheck" class="sf-checkbox" onchange="window.updateLiveFilterCount()" />
+            </label>
+            <label class="sf-toggle-row">
+              <div class="sf-toggle-info">
+                <span class="sf-toggle-title">Top Rated Only (4.8+ ★)</span>
+                <span class="sf-toggle-desc">Show top parent-rated providers</span>
+              </div>
+              <input type="checkbox" id="modalFilterTopRatedCheck" class="sf-checkbox" onchange="window.updateLiveFilterCount()" />
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="search-filter-footer">
+        <button type="button" class="btn-secondary-surface" style="flex:1;" onclick="window.resetSearchFilters()">Reset</button>
+        <button type="button" class="btn-primary" style="flex:2;" onclick="window.applySearchFiltersAndClose()">
+          <span id="modalApplyFilterBtnText">Apply Filters</span>
+        </button>
       </div>
     </div>
   </div>

@@ -14550,6 +14550,271 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   color: var(--color-primary);
 }
 
+/* ==========================================================
+   Search & Distance Radius Filter Modal & Slider Styles
+   ========================================================== */
+.search-filter-modal-backdrop {
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  align-items: flex-end !important;
+  padding: 0 !important;
+}
+
+@media (min-width: 640px) {
+  .search-filter-modal-backdrop {
+    align-items: center !important;
+    padding: 20px !important;
+  }
+}
+
+.search-filter-modal-box {
+  background: #FFFFFF;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 28px 28px 0 0;
+  padding: 20px 20px 24px;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+  animation: slideUpRoleSheet 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  max-height: 90vh;
+  overflow-y: auto;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .search-filter-modal-box {
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    animation: zoomInRoleSheet 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+.search-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.sf-header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sf-header-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sf-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 2px;
+}
+
+.sf-subtitle {
+  font-size: 11.5px;
+  color: #64748B;
+  margin: 0;
+}
+
+.search-filter-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.sf-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sf-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sf-section-label-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sf-section-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.sf-radius-badge {
+  font-size: 12px;
+  font-weight: 800;
+  color: #FFFFFF;
+  background: #1E293B;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
+}
+
+/* Range Slider */
+.sf-slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 2px;
+}
+
+.sf-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: #E2E8F0;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sf-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+  cursor: grab;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sf-range-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.18);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.55);
+}
+
+.sf-range-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+  cursor: grab;
+}
+
+.sf-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: #94A3B8;
+  font-weight: 600;
+  padding: 0 2px;
+}
+
+/* Chip Row */
+.sf-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sf-chip {
+  padding: 7px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  border: 1.5px solid #E2E8F0;
+  background: #F8FAFC;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.sf-chip:hover {
+  border-color: #CBD5E1;
+  background: #F1F5F9;
+}
+
+.sf-chip.active {
+  background: #1E293B;
+  border-color: #1E293B;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+}
+
+/* Toggle List */
+.sf-toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sf-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1.5px solid #E2E8F0;
+  background: #F8FAFC;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.sf-toggle-row:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+}
+
+.sf-toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sf-toggle-title {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.sf-toggle-desc {
+  font-size: 11px;
+  color: #64748B;
+}
+
+.sf-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.search-filter-footer {
+  display: flex;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid #F1F5F9;
+}
+
 
 #screen-bookingTripSetup .book-ride-children-card,
 #screen-bookingTripSetup .book-ride-date-field,

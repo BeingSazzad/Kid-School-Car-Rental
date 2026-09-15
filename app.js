@@ -6224,12 +6224,158 @@ window.showAdminSection = function (sectionName, btn) {
   if (window.lucide) window.lucide.createIcons();
 };
 
+/* ==========================================================
+   Search & Distance Radius Filter Modal & Drag Slider Logic
+   ========================================================== */
+window.openSearchFilterModal = function () {
+  const modal = document.getElementById('searchFilterModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  modal.classList.add('active');
+
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  const currentRadius = Number(window.appState.bookingDraft.searchRadiusKm);
+  const radiusVal = (Number.isFinite(currentRadius) && currentRadius > 0) ? currentRadius : 10;
+  
+  const slider = document.getElementById('modalRadiusSlider');
+  const badge = document.getElementById('modalRadiusBadge');
+  if (slider) slider.value = radiusVal >= 50 ? 50 : radiusVal;
+  if (badge) badge.textContent = radiusVal >= 50 ? 'Any (50 km)' : `${radiusVal} km`;
+
+  // Sync radius preset chips
+  document.querySelectorAll('#modalRadiusPresetChips .sf-chip').forEach((chip) => {
+    const text = chip.textContent.trim();
+    if (radiusVal >= 50 && text.includes('Any')) chip.classList.add('active');
+    else if (text === `${radiusVal} km`) chip.classList.add('active');
+    else chip.classList.remove('active');
+  });
+
+  window.updateLiveFilterCount();
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.closeSearchFilterModal = function () {
+  const modal = document.getElementById('searchFilterModal');
+  if (!modal) return;
+  modal.classList.remove('active');
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 180);
+};
+
+window.handleRadiusSliderChange = function (val) {
+  const km = Number(val);
+  const badge = document.getElementById('modalRadiusBadge');
+  if (badge) badge.textContent = km >= 50 ? 'Any (50 km)' : `${km} km`;
+
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.searchRadiusKm = km >= 50 ? 0 : km;
+
+  // Sync preset chips
+  document.querySelectorAll('#modalRadiusPresetChips .sf-chip').forEach((chip) => {
+    const text = chip.textContent.trim();
+    if (km >= 50 && text.includes('Any')) chip.classList.add('active');
+    else if (text === `${km} km`) chip.classList.add('active');
+    else chip.classList.remove('active');
+  });
+
+  window.updateLiveFilterCount();
+};
+
+window.setModalRadius = function (km) {
+  const slider = document.getElementById('modalRadiusSlider');
+  if (slider) slider.value = km;
+  window.handleRadiusSliderChange(km);
+};
+
+window.setModalTiming = function (timing, btn) {
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.sf-chip').forEach((c) => c.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.timingFilter = timing || 'all';
+  window.updateLiveFilterCount();
+};
+
+window.setModalServiceType = function (type, btn) {
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.sf-chip').forEach((c) => c.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.serviceType = type || 'all';
+  window.updateLiveFilterCount();
+};
+
+window.updateLiveFilterCount = function () {
+  const cards = Array.from(document.querySelectorAll('#providersResultList .provider-result-card'));
+  if (!cards.length) return;
+
+  const draft = window.appState.bookingDraft || {};
+  const radiusKm = Number(draft.searchRadiusKm);
+  const hasRadius = Number.isFinite(radiusKm) && radiusKm > 0;
+  const service = draft.serviceType || 'all';
+  const verifiedOnly = document.getElementById('modalFilterVerifiedCheck')?.checked;
+  const topRatedOnly = document.getElementById('modalFilterTopRatedCheck')?.checked;
+
+  let count = 0;
+  cards.forEach((card) => {
+    const cat = card.getAttribute('data-category');
+    const rating = parseFloat(card.getAttribute('data-rating') || '0');
+    const verified = card.getAttribute('data-verified') === 'true';
+    const distance = parseFloat(card.getAttribute('data-distance') || '99');
+
+    let match = true;
+    if (service !== 'all' && cat !== service) match = false;
+    if (hasRadius && distance > radiusKm) match = false;
+    if (verifiedOnly && !verified) match = false;
+    if (topRatedOnly && rating < 4.8) match = false;
+
+    if (match) count++;
+  });
+
+  const btnText = document.getElementById('modalApplyFilterBtnText');
+  if (btnText) {
+    btnText.textContent = count > 0 ? `Apply Filters (${count} Providers)` : 'Apply Filters (0 Found)';
+  }
+};
+
+window.resetSearchFilters = function () {
+  window.setModalRadius(10);
+  
+  const allTiming = document.querySelector('#modalTimingChips .sf-chip');
+  if (allTiming) window.setModalTiming('all', allTiming);
+
+  const allService = document.querySelector('#modalServiceTypeChips .sf-chip');
+  if (allService) window.setModalServiceType('all', allService);
+
+  const verifiedCheck = document.getElementById('modalFilterVerifiedCheck');
+  if (verifiedCheck) verifiedCheck.checked = false;
+
+  const topRatedCheck = document.getElementById('modalFilterTopRatedCheck');
+  if (topRatedCheck) topRatedCheck.checked = false;
+
+  window.updateLiveFilterCount();
+};
+
+window.applySearchFiltersAndClose = function () {
+  window.closeSearchFilterModal();
+
+  const active = document.querySelector('#providerFilterRow .mvp-filter-chip.active');
+  if (typeof window.applyProviderCompactFilter === 'function') {
+    window.applyProviderCompactFilter(active?.getAttribute('data-filter') || 'all', active);
+  }
+
+  const radius = window.appState.bookingDraft?.searchRadiusKm;
+  const radiusText = radius && radius > 0 ? `Within ${radius} km` : 'All distances';
+  if (typeof window.showToast === 'function') {
+    window.showToast(`✓ Filter applied: ${radiusText}`, 'info');
+  }
+};
+
 window.toggleAdvancedSearchFilterDrawer = function () {
-  const tray = document.getElementById('advancedSearchFilterTray');
-  if (!tray) return;
-  const open = tray.hasAttribute('hidden');
-  if (open) tray.removeAttribute('hidden');
-  else tray.setAttribute('hidden', '');
+  window.openSearchFilterModal();
 };
 
 window.setDistanceRadius = function (km, btn) {
