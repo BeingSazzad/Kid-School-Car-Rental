@@ -421,9 +421,14 @@
     /* 4. Booking Details Screen Styles (1:1 with Reference UI) */
     #screen-bookingDetails {
       background: #F8FAFC !important;
-      min-height: 100% !important;
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
       display: flex !important;
       flex-direction: column !important;
+      overflow: hidden !important;
     }
 
     #screen-bookingDetails .bd-topbar {
@@ -434,9 +439,9 @@
       justify-content: space-between !important;
       padding: 10px 16px !important;
       height: 52px !important;
+      flex-shrink: 0 !important;
       box-sizing: border-box !important;
-      position: sticky !important;
-      top: 0 !important;
+      position: relative !important;
       z-index: 40 !important;
     }
 
@@ -466,12 +471,18 @@
 
     #screen-bookingDetails .bd-scroll {
       background: #F8FAFC !important;
-      padding: 14px 16px 110px !important;
+      padding: 14px 16px calc(24px + env(safe-area-inset-bottom, 10px)) !important;
       display: flex !important;
       flex-direction: column !important;
       gap: 12px !important;
+      flex: 1 1 0% !important;
+      min-height: 0 !important;
+      height: auto !important;
       overflow-y: auto !important;
-      flex: 1 !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior-y: contain !important;
+      scrollbar-width: thin !important;
     }
 
     #screen-bookingDetails .bd-card,
@@ -914,11 +925,11 @@
     }
 
     #screen-bookingDetails .bd-bottom-bar {
-      position: sticky !important;
-      bottom: 0 !important;
+      position: relative !important;
+      flex-shrink: 0 !important;
       width: 100% !important;
       background: #FFFFFF !important;
-      padding: 12px 16px 20px !important;
+      padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 6px)) !important;
       box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04) !important;
       border-top: 1px solid #F1F5F9 !important;
       box-sizing: border-box !important;
@@ -1004,9 +1015,14 @@
     /* 5. Bookings List Screen (Rich Cards Design) */
     #screen-bookings {
       background: #F8FAFC !important;
-      min-height: 100% !important;
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
       display: flex !important;
       flex-direction: column !important;
+      overflow: hidden !important;
     }
 
     #screen-bookings .bk-topbar {
@@ -1017,9 +1033,9 @@
       justify-content: space-between !important;
       padding: 10px 16px !important;
       height: 52px !important;
+      flex-shrink: 0 !important;
       box-sizing: border-box !important;
-      position: sticky !important;
-      top: 0 !important;
+      position: relative !important;
       z-index: 40 !important;
     }
 
@@ -1060,11 +1076,17 @@
 
     #screen-bookings .bk-scroll {
       background: #F8FAFC !important;
-      padding: 12px 16px 90px !important;
+      padding: 12px 16px calc(76px + env(safe-area-inset-bottom, 16px)) !important;
       display: flex !important;
       flex-direction: column !important;
+      flex: 1 1 0% !important;
+      min-height: 0 !important;
+      height: auto !important;
       overflow-y: auto !important;
-      flex: 1 !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior-y: contain !important;
+      scrollbar-width: thin !important;
     }
 
     #screen-bookings .bk-tabs.segmented-control {

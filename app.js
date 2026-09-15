@@ -1591,6 +1591,10 @@ window.navigateTo = function (screenName, isBack = false) {
   if (targetEl) {
     targetEl.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
+    const scrollContainer = targetEl.querySelector('.screen-scroll-body, .bk-scroll, .bd-scroll, .flow-scroll-body, .chat-messages, .scroll-body');
+    if (scrollContainer) {
+      scrollContainer.scrollTop = 0;
+    }
   }
 
   // Dynamic View Renderers
