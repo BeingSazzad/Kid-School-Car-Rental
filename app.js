@@ -6252,7 +6252,6 @@ window.showAdminSection = function (sectionName, btn) {
 window.openSearchFilterModal = function () {
   const modal = document.getElementById('searchFilterModal');
   if (!modal) return;
-  modal.style.display = 'flex';
   modal.classList.add('active');
 
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
@@ -6272,6 +6271,16 @@ window.openSearchFilterModal = function () {
     else chip.classList.remove('active');
   });
 
+  // Sync Trust & Safety toggle cards
+  const verifiedCheck = document.getElementById('modalFilterVerifiedCheck');
+  if (verifiedCheck) {
+    verifiedCheck.closest('.sf-feature-card')?.classList.toggle('is-checked', verifiedCheck.checked);
+  }
+  const topRatedCheck = document.getElementById('modalFilterTopRatedCheck');
+  if (topRatedCheck) {
+    topRatedCheck.closest('.sf-feature-card')?.classList.toggle('is-checked', topRatedCheck.checked);
+  }
+
   window.updateLiveFilterCount();
   if (window.lucide) window.lucide.createIcons();
 };
@@ -6280,9 +6289,6 @@ window.closeSearchFilterModal = function () {
   const modal = document.getElementById('searchFilterModal');
   if (!modal) return;
   modal.classList.remove('active');
-  setTimeout(() => {
-    modal.style.display = 'none';
-  }, 180);
 };
 
 window.handleRadiusSliderChange = function (val) {
