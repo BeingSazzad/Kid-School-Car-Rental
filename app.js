@@ -3841,12 +3841,7 @@ function renderBookingsList(tab) {
           </div>
 
           <div class="bk-card-foot">
-            <div class="bk-pin-chip">
-              <span class="bk-pin-label">PIN</span>
-              <span class="bk-pin-val">${pin}</span>
-              <span class="bk-id-sep">|</span>
-              <span class="bk-id-val">${idShort}</span>
-            </div>
+            <span class="bk-ref-pill">${idShort}</span>
             ${ctaBtn}
           </div>
         </article>`;

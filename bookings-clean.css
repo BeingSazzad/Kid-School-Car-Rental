@@ -363,6 +363,15 @@
   margin-top: 2px !important;
 }
 
+#screen-bookings .bk-ref-pill {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #64748B !important;
+  background: #F1F5F9 !important;
+  padding: 4px 10px !important;
+  border-radius: 8px !important;
+}
+
 #screen-bookings .bk-pin-chip {
   display: flex !important;
   align-items: center !important;
