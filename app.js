@@ -6240,12 +6240,12 @@ window.openSearchFilterModal = function () {
   const slider = document.getElementById('modalRadiusSlider');
   const badge = document.getElementById('modalRadiusBadge');
   if (slider) slider.value = radiusVal >= 50 ? 50 : radiusVal;
-  if (badge) badge.textContent = radiusVal >= 50 ? 'Any (50 km)' : `${radiusVal} km`;
+  if (badge) badge.textContent = radiusVal >= 50 ? 'Any' : `${radiusVal} km`;
 
   // Sync radius preset chips
   document.querySelectorAll('#modalRadiusPresetChips .sf-chip').forEach((chip) => {
     const text = chip.textContent.trim();
-    if (radiusVal >= 50 && text.includes('Any')) chip.classList.add('active');
+    if (radiusVal >= 50 && text === 'Any') chip.classList.add('active');
     else if (text === `${radiusVal} km`) chip.classList.add('active');
     else chip.classList.remove('active');
   });
@@ -6266,7 +6266,7 @@ window.closeSearchFilterModal = function () {
 window.handleRadiusSliderChange = function (val) {
   const km = Number(val);
   const badge = document.getElementById('modalRadiusBadge');
-  if (badge) badge.textContent = km >= 50 ? 'Any (50 km)' : `${km} km`;
+  if (badge) badge.textContent = km >= 50 ? 'Any' : `${km} km`;
 
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
   window.appState.bookingDraft.searchRadiusKm = km >= 50 ? 0 : km;
@@ -6274,7 +6274,7 @@ window.handleRadiusSliderChange = function (val) {
   // Sync preset chips
   document.querySelectorAll('#modalRadiusPresetChips .sf-chip').forEach((chip) => {
     const text = chip.textContent.trim();
-    if (km >= 50 && text.includes('Any')) chip.classList.add('active');
+    if (km >= 50 && text === 'Any') chip.classList.add('active');
     else if (text === `${km} km`) chip.classList.add('active');
     else chip.classList.remove('active');
   });
@@ -6337,7 +6337,7 @@ window.updateLiveFilterCount = function () {
 
   const btnText = document.getElementById('modalApplyFilterBtnText');
   if (btnText) {
-    btnText.textContent = count > 0 ? `Apply Filters (${count} Providers)` : 'Apply Filters (0 Found)';
+    btnText.textContent = count > 0 ? `Apply (${count})` : 'Apply (0)';
   }
 };
 
