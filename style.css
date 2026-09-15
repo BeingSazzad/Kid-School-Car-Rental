@@ -14417,137 +14417,263 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   box-shadow: none;
 }
 
-.book-ride-time-wheels {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  position: relative;
-  height: 144px;
-  margin: 12px 0 16px;
-  align-items: center;
-}
-
-.book-ride-time-wheels::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: #F1F5F9;
-  border: 1.5px solid #E2E8F0;
-  pointer-events: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-}
-
-.book-ride-time-col {
-  height: 144px;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  position: relative;
-  z-index: 1;
-  scrollbar-width: none;
-}
-
-.book-ride-time-col::-webkit-scrollbar {
-  display: none;
-}
-
-.book-ride-time-col.period-col {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 2px;
-}
-
-.book-ride-time-opt {
-  height: 48px;
-  scroll-snap-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  font-weight: 500;
-  color: #94A3B8;
-  font-family: var(--font-family);
-  border: none;
-  background: none;
+/* ==========================================================
+   TIME PICKER SHEET DESIGN SYSTEM ALIGNMENT
+   ========================================================== */
+#bookingTimeSheet .book-ride-sheet-card,
+#bookingDateSheet .book-ride-sheet-card {
   width: 100%;
-  cursor: pointer;
-  box-shadow: none;
-  transition: all 0.18s ease;
+  background: #FFFFFF !important;
+  border-radius: 24px 24px 0 0 !important;
+  border: 1px solid #E2E8F0 !important;
+  border-bottom: none !important;
+  padding: 16px 20px 24px !important;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.12) !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-.book-ride-time-opt.selected {
-  color: #0F172A;
-  font-size: 18px;
-  font-weight: 800;
+#bookingTimeSheet .sheet-drag-handle,
+#bookingDateSheet .sheet-drag-handle {
+  width: 40px !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background: #CBD5E1 !important;
+  margin: 0 auto 12px !important;
 }
 
-.book-ride-period-btn {
-  height: 44px;
-  border-radius: 12px;
-  border: 1.5px solid #E2E8F0;
-  background: #FFFFFF;
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #64748B;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
+#bookingTimeSheet .book-ride-sheet-head,
+#bookingDateSheet .book-ride-sheet-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 14px !important;
 }
 
-.book-ride-period-btn:hover {
-  border-color: #CBD5E1;
-  background: #F8FAFC;
+#bookingTimeSheet .book-ride-sheet-close,
+#bookingDateSheet .book-ride-sheet-close {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: #F1F5F9 !important;
+  border: none !important;
+  color: #64748B !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  padding: 0 !important;
 }
 
-.book-ride-period-btn.selected {
-  background: #1E293B;
-  border-color: #1E293B;
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
-  font-weight: 800;
+#bookingTimeSheet .book-ride-sheet-close:hover,
+#bookingDateSheet .book-ride-sheet-close:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
 }
 
-/* Time Quick Presets */
-.book-ride-time-presets {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 14px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding: 2px 0;
+/* Time Presets Pill Bar */
+#bookingTimeSheet .book-ride-time-presets {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 16px !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  padding: 2px 0 4px !important;
 }
 
-.book-ride-time-presets::-webkit-scrollbar {
-  display: none;
+#bookingTimeSheet .book-ride-time-presets::-webkit-scrollbar {
+  display: none !important;
 }
 
-.book-ride-preset-chip {
-  padding: 6px 11px;
-  font-size: 11.5px;
-  font-weight: 700;
-  border-radius: 999px;
-  border: 1.5px solid #E2E8F0;
-  background: #F8FAFC;
-  color: #475569;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.18s ease;
+#bookingTimeSheet .book-ride-preset-chip {
+  all: unset !important;
+  box-sizing: border-box !important;
+  padding: 7px 14px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  font-family: var(--font-family) !important;
+  border-radius: 999px !important;
+  border: 1.5px solid #E2E8F0 !important;
+  background: #F8FAFC !important;
+  color: #475569 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  user-select: none !important;
 }
 
-.book-ride-preset-chip:hover {
-  background: #EEF2FF;
-  border-color: #C7D2FE;
-  color: var(--color-primary);
+#bookingTimeSheet .book-ride-preset-chip:hover {
+  background: #EEF2FF !important;
+  border-color: #C7D2FE !important;
+  color: #1B2B68 !important;
+}
+
+#bookingTimeSheet .book-ride-preset-chip.active {
+  background: #1B2B68 !important;
+  border-color: #1B2B68 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.25) !important;
+}
+
+/* Time Picker Main Box */
+#bookingTimeSheet .book-ride-time-picker-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 4px 0 20px !important;
+  position: relative !important;
+}
+
+#bookingTimeSheet .book-ride-time-wheels {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  position: relative !important;
+  height: 150px !important;
+  background: #F8FAFC !important;
+  border: 1.5px solid #E2E8F0 !important;
+  border-radius: 18px !important;
+  padding: 0 8px !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+}
+
+/* Center Highlight Bar */
+#bookingTimeSheet .book-ride-time-wheels::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 8px !important;
+  right: 8px !important;
+  top: 50px !important;
+  height: 50px !important;
+  border-radius: 12px !important;
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  pointer-events: none !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  z-index: 1 !important;
+}
+
+#bookingTimeSheet .book-ride-time-col {
+  flex: 1 !important;
+  height: 150px !important;
+  overflow-y: auto !important;
+  scroll-snap-type: y mandatory !important;
+  position: relative !important;
+  z-index: 2 !important;
+  scrollbar-width: none !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%) !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%) !important;
+}
+
+#bookingTimeSheet .book-ride-time-col::-webkit-scrollbar {
+  display: none !important;
+}
+
+#bookingTimeSheet .book-ride-time-divider {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  z-index: 2 !important;
+  margin-top: -2px !important;
+  user-select: none !important;
+}
+
+#bookingTimeSheet .book-ride-time-opt {
+  all: unset !important;
+  box-sizing: border-box !important;
+  height: 50px !important;
+  scroll-snap-align: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #94A3B8 !important;
+  font-family: var(--font-family) !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.2s ease !important;
+}
+
+#bookingTimeSheet .book-ride-time-opt.selected {
+  color: #0F172A !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+}
+
+/* Period Toggle (AM / PM) */
+#bookingTimeSheet .book-ride-period-toggle {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  background: #F8FAFC !important;
+  border: 1.5px solid #E2E8F0 !important;
+  border-radius: 18px !important;
+  padding: 6px !important;
+  width: 72px !important;
+  height: 150px !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+#bookingTimeSheet .book-ride-period-btn {
+  all: unset !important;
+  box-sizing: border-box !important;
+  height: 58px !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  color: #64748B !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  font-family: var(--font-family) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  user-select: none !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#bookingTimeSheet .book-ride-period-btn:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+#bookingTimeSheet .book-ride-period-btn.selected {
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 12px rgba(27, 43, 104, 0.3) !important;
+}
+
+#bookingTimeSheet .btn-primary,
+#bookingDateSheet .btn-primary {
+  height: 48px !important;
+  border-radius: 14px !important;
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 14px rgba(27, 43, 104, 0.2) !important;
+  transition: all 0.2s ease !important;
+  width: 100% !important;
+}
+
+#bookingTimeSheet .btn-primary:hover,
+#bookingDateSheet .btn-primary:hover {
+  background: #142050 !important;
+  transform: translateY(-1px) !important;
 }
 
 /* ==========================================================

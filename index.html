@@ -1563,11 +1563,11 @@
 
       <div class="book-ride-sheet" id="bookingTimeSheet" onclick="if(event.target===this) closeBookingSheet('bookingTimeSheet')">
         <div class="book-ride-sheet-card">
-          <div class="sheet-drag-handle" style="margin: 0 auto 8px;"></div>
+          <div class="sheet-drag-handle" style="margin: 0 auto 10px;"></div>
           <div class="book-ride-sheet-head">
             <div>
-              <h3 id="bookingTimeSheetTitle" style="margin:0 0 2px;">Select Time</h3>
-              <p style="margin:0; font-size:11px; color:#64748B;" id="bookingTimeSheetSub">Pick standard school schedule time</p>
+              <h3 id="bookingTimeSheetTitle" style="margin:0 0 2px; font-size:16px; font-weight:800; color:var(--color-title);">Select Time</h3>
+              <p style="margin:0; font-size:12px; font-weight:500; color:#64748B;" id="bookingTimeSheetSub">Pick standard school schedule time</p>
             </div>
             <button type="button" class="book-ride-sheet-close" onclick="closeBookingSheet('bookingTimeSheet')" title="Close">
               <i data-lucide="x"></i>
@@ -1577,10 +1577,13 @@
           <!-- Quick School Commute Presets -->
           <div class="book-ride-time-presets" id="bookingTimePresets"></div>
 
-          <div class="book-ride-time-wheels">
-            <div class="book-ride-time-col" id="bookingTimeHourCol"></div>
-            <div class="book-ride-time-col" id="bookingTimeMinuteCol"></div>
-            <div class="book-ride-time-col period-col" id="bookingTimePeriodCol"></div>
+          <div class="book-ride-time-picker-box">
+            <div class="book-ride-time-wheels">
+              <div class="book-ride-time-col" id="bookingTimeHourCol"></div>
+              <div class="book-ride-time-divider">:</div>
+              <div class="book-ride-time-col" id="bookingTimeMinuteCol"></div>
+            </div>
+            <div class="book-ride-period-toggle" id="bookingTimePeriodCol"></div>
           </div>
           <button type="button" class="btn-primary" onclick="confirmBookingTimeSheet()">Done</button>
         </div>

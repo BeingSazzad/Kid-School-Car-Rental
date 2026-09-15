@@ -448,11 +448,22 @@
     scrollTimeOptIntoCenter(col, active);
   }
 
+  function updatePresetChipStates(h, m, p) {
+    document.querySelectorAll('#bookingTimePresets .book-ride-preset-chip').forEach((chip) => {
+      const isMatch = chip.getAttribute('data-preset-h') === h && chip.getAttribute('data-preset-m') === m && chip.getAttribute('data-preset-p') === p;
+      chip.classList.toggle('active', isMatch);
+    });
+  }
+
   window.selectBookingTimePart = function (btn) {
     const col = btn.parentElement;
     col.querySelectorAll('.book-ride-time-opt').forEach((el) => el.classList.remove('selected'));
     btn.classList.add('selected');
     scrollTimeOptIntoCenter(col, btn);
+    const currH = document.querySelector('#bookingTimeHourCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '07';
+    const currM = document.querySelector('#bookingTimeMinuteCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '30';
+    const currP = document.querySelector('#bookingTimePeriodCol .book-ride-period-btn.selected')?.getAttribute('data-val') || 'AM';
+    updatePresetChipStates(currH, currM, currP);
   };
 
   window.selectBookingPeriod = function (val) {
@@ -462,12 +473,16 @@
       if (btn.getAttribute('data-val') === val) btn.classList.add('selected');
       else btn.classList.remove('selected');
     });
+    const currH = document.querySelector('#bookingTimeHourCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '07';
+    const currM = document.querySelector('#bookingTimeMinuteCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '30';
+    updatePresetChipStates(currH, currM, val);
   };
 
   window.setBookingPresetTime = function (h, m, p) {
     fillTimeCol('bookingTimeHourCol', TIME_HOURS, h);
     fillTimeCol('bookingTimeMinuteCol', TIME_MINUTES, m);
     fillTimeCol('bookingTimePeriodCol', TIME_PERIODS, p);
+    updatePresetChipStates(h, m, p);
     requestAnimationFrame(() => {
       ['bookingTimeHourCol', 'bookingTimeMinuteCol'].forEach((id) => {
         const col = document.getElementById(id);
@@ -504,9 +519,10 @@
             { label: '08:00 AM', h: '08', m: '00', p: 'AM' },
             { label: '08:15 AM', h: '08', m: '15', p: 'AM' }
           ];
-      presetsContainer.innerHTML = presets.map((ps) => 
-        `<button type="button" class="book-ride-preset-chip" onclick="setBookingPresetTime('${ps.h}','${ps.m}','${ps.p}')">${ps.label}</button>`
-      ).join('');
+      presetsContainer.innerHTML = presets.map((ps) => {
+        const isSelected = ps.h === parts.hour && ps.m === parts.minute && ps.p === parts.period;
+        return `<button type="button" class="book-ride-preset-chip${isSelected ? ' active' : ''}" data-preset-h="${ps.h}" data-preset-m="${ps.m}" data-preset-p="${ps.p}" onclick="setBookingPresetTime('${ps.h}','${ps.m}','${ps.p}')">${ps.label}</button>`;
+      }).join('');
     }
 
     fillTimeCol('bookingTimeHourCol', TIME_HOURS, parts.hour);
