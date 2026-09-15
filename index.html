@@ -624,7 +624,7 @@
           <p class="page-subtitle">Add your child</p>
         </div>
 
-          <form onsubmit="event.preventDefault(); navigateTo('authSuccess');" class="profile-fields-form">
+          <form onsubmit="event.preventDefault(); navigateTo('authSuccess');" class="profile-fields-form" id="authAddChildForm">
           <!-- Child Full Name -->
           <div class="form-group">
             <label class="form-label">Child's Full Name</label>
@@ -817,11 +817,11 @@
           </div>
 
           <h1 class="welcome-name-title">Welcome, Sadia!</h1>
-          <p class="account-created-sub">Arman's school transport profile is ready.</p>
+          <p class="account-created-sub">Arman's profile is ready. Next: start your free platform trial.</p>
         </div>
 
         <div class="bottom-action-wrap">
-          <button class="btn-primary" onclick="navigateTo('home')">Go to Home</button>
+          <button class="btn-primary" onclick="navigateTo('subscription')">Continue to subscription</button>
         </div>
       </div>
 
@@ -3662,22 +3662,22 @@
       </div>
 
       <div class="screen-scroll-body">
-        <!-- In-App Parent Credit Card -->
-        <div style="background: linear-gradient(135deg, var(--color-brand-navy) 0%, #2A3F8E 100%); border-radius: var(--radius-lg); padding: 16px; color: #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12);">
+        <!-- Platform billing (not a ride wallet) -->
+        <div style="background: linear-gradient(135deg, var(--color-brand-navy) 0%, #2A3F8E 100%); border-radius: var(--radius-lg); padding: 16px; color: #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); cursor: pointer;" onclick="openNestedScreen('subscription', event)">
           <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
-              <div style="font-size: 10px; color: rgba(255,255,255,0.8); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Parent Wallet Credit</div>
-              <div style="font-size: 28px; font-weight: 800; margin: 4px 0 8px;">$45.00</div>
+              <div style="font-size: 10px; color: rgba(255,255,255,0.8); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Platform subscription</div>
+              <div style="font-size: 20px; font-weight: 800; margin: 4px 0 8px;">$9.99 / month</div>
             </div>
-            <span style="background: rgba(255,255,255,0.18); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 99px;">Active Balance</span>
+            <span style="background: rgba(255,255,255,0.18); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 99px;">Trial / Plan</span>
           </div>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.4;">Applied to your platform subscription when eligible</div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.4;">Ride fees are paid directly to your provider — not through this balance.</div>
         </div>
 
         <!-- Transaction History Minimal Header -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px; margin-bottom: 8px;">
-          <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Recent Transactions</div>
-          <span style="font-size: 12px; font-weight: 600; color: #64748B;" id="txCountLabel">6 Transactions</span>
+          <div style="font-size: 14px; font-weight: 800; color: var(--color-title);">Platform billing</div>
+          <span style="font-size: 12px; font-weight: 600; color: #64748B;" id="txCountLabel">2 Transactions</span>
         </div>
 
         <!-- Dynamic Transactions List -->
@@ -3753,7 +3753,7 @@
               <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
             </div>
             <div class="faq-body-text">
-              Yes! In Step 1, select all children traveling. The system matches you with neighborhood providers certified for sequential drop-off routes with multi-child sibling discounts automatically applied.
+              Yes. Select every child on the trip setup step. Providers who can cover those schools and seats will appear in search. Any multi-child pricing is arranged directly with the provider — Home2School does not auto-apply sibling discounts.
             </div>
           </div>
 
@@ -3775,18 +3775,18 @@
               <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
             </div>
             <div class="faq-body-text">
-              Absolutely. You can pause recurring bookings from the Bookings tab up to 24 hours in advance with zero penalty fees, and unused days remain as credit in your In-App Wallet.
+              Yes. Pause or cancel a recurring booking from Bookings with enough notice for your provider. Ride fees are arranged with the provider. Home2School only bills the platform subscription (or trial) — there is no in-app ride wallet or unused-day credit.
             </div>
           </div>
 
           <!-- Question 6 -->
           <div class="faq-accordion-item" data-topic="billing">
             <div class="faq-header-row" onclick="toggleFaq(this)">
-              <span class="faq-question-text">How are multi-child sibling discounts applied?</span>
+              <span class="faq-question-text">What does Home2School charge vs the ride fee?</span>
               <i data-lucide="chevron-down" class="faq-arrow-icon"></i>
             </div>
             <div class="faq-body-text">
-              Sibling discounts, when offered, are applied by Home2School on eligible bookings — not a fixed weekly invoice rate.
+              Home2School charges a platform subscription (monthly or annual) for app access. Ride payment stays between you and the driver or WalkShare escort — arrange the amount and payment handle directly after they accept your request.
             </div>
           </div>
         </div>
@@ -3858,18 +3858,18 @@
           <div class="legal-policy-card">
             <div class="legal-card-header">
               <span class="legal-badge">02</span>
-              <span class="legal-title">Recurring Commute Pausing &amp; Refund Policy</span>
+              <span class="legal-title">Platform Subscription &amp; Ride Payment</span>
             </div>
             <p class="legal-desc">
-              Recurring subscriptions can be cancelled or paused with 24-hour advance notice before the scheduled school commute week. Unused days are credited immediately back to your in-app wallet.
+              Platform subscription (or trial) can be cancelled or changed from Profile → Subscription. Ride fees are not collected by Home2School and are not credited to an in-app wallet — parents arrange payment directly with the provider.
             </p>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>Zero penalty cancellation up to 24h prior.</span>
+              <span>Platform fee ≠ ride fare.</span>
             </div>
             <div class="legal-point-row">
               <span class="legal-bullet-dot"></span>
-              <span>In-App Wallet credits never expire.</span>
+              <span>Cancel renewal anytime; access continues until the period ends.</span>
             </div>
           </div>
 

@@ -773,7 +773,6 @@
         id,
         name: (p?.name || id).replace(/\s*\(WalkShare\)/i, ''),
         rating: p?.rating || 4.9,
-        price: p?.baseWeekly || 0,
         walk: p?.category === 'walkshare',
         lat: Number(p?.lat) || fb[0],
         lng: Number(p?.lng) || fb[1]
@@ -1443,7 +1442,8 @@
     ensureDraftDefaults();
     state().parentSubscription.status = 'trial';
     window.renderSubscriptionScreen();
-    toast('Free trial continues. Manage anytime in Profile.');
+    toast('Free trial continues');
+    window.navigateTo('home');
   };
 
   window.activateParentSubscription = function () {

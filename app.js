@@ -594,94 +594,38 @@ window.appState = {
       paymentMethod: 'Visa •••• 4242',
       cancelledAt: 'May 01, 2026 • 09:15 PM',
       cancelReason: 'School Emergency Weather Advisory — Greenfield Campus Closed',
-      refundStatus: 'Full $120.00 credited to Parent H2S Wallet',
+      refundStatus: 'Arrange any ride-fee adjustment directly with the provider',
       createdAt: 'May 02, 2026'
     }
   ],
   transactions: [
     {
       id: 'tx_1',
-      receiptNo: 'H2S-REC-8492',
-      date: 'May 20, 2026 • 09:15 AM',
-      title: 'Weekly Commute (Round Trip)',
-      subtitle: 'Arman & Emma • Greenfield International',
-      provider: 'Tariq Ahmed (Toyota Sienna)',
-      amount: 120.00,
+      receiptNo: 'H2S-SUB-0999',
+      date: 'Sep 1, 2026 • 09:15 AM',
+      title: 'Platform subscription — Monthly',
+      subtitle: 'Home2School app access',
+      provider: 'Home2School',
+      amount: 9.99,
       paymentMethod: 'Stripe • Visa •••• 4242',
       status: 'paid',
       statusText: 'Paid via Stripe',
       type: 'recurring',
-      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8492'
+      stripeTxId: 'ch_sub_monthly_0999'
     },
     {
       id: 'tx_2',
-      receiptNo: 'H2S-REC-8410',
-      date: 'May 22, 2026 • 02:40 PM',
-      title: 'Weekly Commute (One Way)',
-      subtitle: 'Arman • Morning Commute',
-      provider: 'Farhana Yasmin (Honda Odyssey)',
-      amount: 65.00,
-      paymentMethod: 'Stripe • Apple Pay',
+      receiptNo: 'H2S-SUB-0000',
+      date: 'Aug 18, 2026 • 10:00 AM',
+      title: '14-day free trial started',
+      subtitle: 'No charge during trial',
+      provider: 'Home2School',
+      amount: 0.00,
+      paymentMethod: 'Trial · no charge',
       status: 'paid',
-      statusText: 'Paid via Stripe',
-      type: 'recurring',
-      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8410'
-    },
-    {
-      id: 'tx_3',
-      receiptNo: 'H2S-REC-8395',
-      date: 'May 23, 2026 • 11:30 AM',
-      title: 'Single Day Pass (Round Trip)',
-      subtitle: 'Emma & Zara • Sunshine Pre-school',
-      provider: 'Kabir Hossain (Nissan Rogue)',
-      amount: 55.00,
-      paymentMethod: 'Stripe • Mastercard •••• 8821',
-      status: 'paid',
-      statusText: 'Paid via Stripe',
+      statusText: 'Trial',
       type: 'onetime',
-      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8395'
-    },
-    {
-      id: 'tx_4',
-      receiptNo: 'H2S-REC-8302',
-      date: 'May 14, 2026 • 08:00 AM',
-      title: 'Weekly Commute (Round Trip)',
-      subtitle: 'Arman & Emma • Greenfield International',
-      provider: 'Tariq Ahmed (Toyota Sienna)',
-      amount: 120.00,
-      paymentMethod: 'Stripe • Visa •••• 4242',
-      status: 'paid',
-      statusText: 'Paid via Stripe',
-      type: 'recurring',
-      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8302'
-    },
-    {
-      id: 'tx_5',
-      receiptNo: 'H2S-REC-8245',
-      date: 'May 12, 2026 • 04:15 PM',
-      title: 'Sports Day Ride (Round Trip)',
-      subtitle: 'Arman • Greenfield International',
-      provider: 'Farhana Yasmin (Honda Odyssey)',
-      amount: 50.00,
-      paymentMethod: 'Stripe • Apple Pay',
-      status: 'paid',
-      statusText: 'Paid via Stripe',
-      type: 'onetime',
-      stripeTxId: 'ch_3N8zYk2eZvKYlo2C8245'
-    },
-    {
-      id: 'tx_6',
-      receiptNo: 'H2S-REF-7104',
-      date: 'May 10, 2026 • 01:20 PM',
-      title: 'Weather Cancellation Refund',
-      subtitle: 'Zara • Morning WalkShare Credited',
-      provider: 'Sarah Jenkins (Escort)',
-      amount: 35.00,
-      paymentMethod: 'Refunded to Parent Wallet',
-      status: 'refunded',
-      statusText: 'Refunded to Balance',
-      type: 'refund',
-      stripeTxId: 're_3N8zYk2eZvKYlo2C7104'
+      stripeTxId: 'ch_sub_trial_0000'
     }
   ],
   activeBookingId: 'H2S-84920',
@@ -1495,6 +1439,29 @@ function roleDefaultScreen(kind) {
   return kind === 'profile' ? 'profile' : 'home';
 }
 
+function impliedRoleFromScreen(screenName) {
+  const bucket = navScreenBucket(screenName);
+  if (bucket === 'driver') return 'driver';
+  if (bucket === 'walkshare') return 'walkshare';
+  if (bucket === 'parent') return 'parent';
+  return null;
+}
+
+/** Intentional deep-link / hash: adopt the role that owns that screen so parent URLs stay parent. */
+function adoptRoleFromIntentionalHash(screenName) {
+  const implied = impliedRoleFromScreen(screenName);
+  if (!implied) return false;
+  const current = activeNavRole();
+  if (implied === current) return false;
+  window.appState.activeRole = implied;
+  localStorage.setItem('h2s_active_role', implied);
+  document.body.setAttribute('data-role', implied);
+  const shell = document.getElementById('appShell');
+  if (shell) shell.setAttribute('data-role', implied);
+  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(implied);
+  return true;
+}
+
 function coerceScreenToRole(screenName) {
   if (screenName === 'adminPortal') return roleDefaultScreen('home');
   const role = activeNavRole();
@@ -1824,10 +1791,11 @@ function updateBottomTabHighlights(screenName) {
   }
 }
 
-// Browser back/forward sync — coerce to active role; never switch Parent ↔ Driver.
+// Browser back/forward sync — intentional role-screen hashes adopt that role; never flip on shared/auth.
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash.replace('#', '');
   if (!hash || !screens.includes(hash)) return;
+  adoptRoleFromIntentionalHash(hash);
   const coerced = coerceScreenToRole(hash);
   if (coerced === currentScreen) {
     if (hash !== coerced && window.history && window.history.replaceState) {
@@ -1864,12 +1832,15 @@ function initApp() {
   const hash = window.location.hash ? window.location.hash.replace('#', '') : '';
   let initial = 'home';
   if (hash && screens.includes(hash)) {
+    adoptRoleFromIntentionalHash(hash);
     initial = hash;
   } else if (savedRole === 'driver') {
     initial = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverSetup';
   } else if (savedRole === 'walkshare') {
     initial = typeof window.getWalkShareLanding === 'function' ? window.getWalkShareLanding() : 'wsHome';
   }
+  // Re-read role after intentional hash adopt
+  window.appState.activeRole = localStorage.getItem('h2s_active_role') || window.appState.activeRole || 'parent';
   window.navigateTo(initial);
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -3148,47 +3119,13 @@ window.selectProviderAndReview = function (name) {
    Booking Wizard: Step 4 Dynamic Summary & Calculations
    ========================================================== */
 function calculateDraftPrice() {
-  const draft = window.appState.bookingDraft;
-  const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
-  const count = window.appState.selectedChildIds.length || 1;
-  const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
-
-  let baseRate = provider.baseWeekly || (isWalk ? 75 : 120);
-
-  if (draft.frequency === 'onetime') {
-    // One-time single trip flat rate
-    baseRate = isWalk ? (draft.direction === 'bothway' ? 35 : 20) : (draft.direction === 'bothway' ? 55 : 35);
-    const insurance = isWalk ? 3 : 5;
-    const discount = count > 1 ? Math.round(baseRate * 0.2 * (count - 1)) : 0;
-    const total = (baseRate * count) - discount + insurance;
-    return {
-      baseRate: baseRate * count,
-      discount,
-      insurance,
-      total,
-      period: 'total'
-    };
-  }
-
-  // Recurring weekly commute rate
-  if (draft.direction === 'oneway') {
-    baseRate = Math.round(baseRate * 0.55); // 55% for morning drop-off only
-  }
-
-  let discount = 0;
-  if (count > 1) {
-    discount = Math.round(baseRate * 0.2 * (count - 1));
-  }
-
-  const insurance = isWalk ? 4 : 8;
-  const total = (baseRate * count) - discount + insurance;
-
+  // MVP truth: ride fare is arranged parent↔provider. Do not invent weekly/package totals.
   return {
-    baseRate: baseRate * count,
-    discount,
-    insurance,
-    total,
-    period: 'week'
+    baseRate: null,
+    discount: 0,
+    insurance: 0,
+    total: null,
+    period: 'arrange'
   };
 }
 
@@ -3238,34 +3175,33 @@ function renderBookingSummary() {
   if (outboundEl) {
     if (draft.outboundTime) {
       outboundEl.textContent = `${pickupShort} → ${schoolShort} (${draft.outboundTime}${walkSuffix})`;
-      outboundEl.parentElement.style.display = 'flex';
-    } else {
+      if (outboundEl.parentElement) outboundEl.parentElement.style.display = 'flex';
+    } else if (outboundEl.parentElement) {
       outboundEl.parentElement.style.display = 'none';
     }
   }
   if (returnEl) {
     if (draft.direction === 'bothway') {
       returnEl.textContent = `${schoolShort} → ${pickupShort} (${draft.returnTime || '01:00 PM'}${walkSuffix})`;
-      returnEl.parentElement.style.display = 'flex';
-    } else {
+      if (returnEl.parentElement) returnEl.parentElement.style.display = 'flex';
+    } else if (returnEl.parentElement) {
       returnEl.parentElement.style.display = 'none';
     }
   }
 
   if (freqEl) {
-    freqEl.textContent = draft.frequency === 'recurring' 
-      ? 'Recurring (Mon – Fri Commute)' 
+    freqEl.textContent = draft.frequency === 'recurring'
+      ? 'Recurring (Mon – Fri Commute)'
       : `One-Time Ride (${draft.tripDate || 'Single Day Pass'})`;
   }
   const cleanFullName = provider.name.replace(/\s*\(WalkShare\)/i, '');
   if (providerEl) {
-    providerEl.textContent = isWalk 
-      ? `${cleanFullName} (WalkShare Escort)` 
+    providerEl.textContent = isWalk
+      ? `${cleanFullName} (WalkShare Escort)`
       : `${cleanFullName} (${provider.vehicle.split('(')[0].trim()})`;
   }
 
-  // Price calculations & dynamic labels
-  const price = calculateDraftPrice();
+  // Never write invented $/wk package numbers into parent UI
   const baseEl = document.getElementById('summaryBasePriceText');
   const discEl = document.getElementById('summaryDiscountPriceText');
   const totalEl = document.getElementById('summaryTotalPriceText');
@@ -3273,27 +3209,13 @@ function renderBookingSummary() {
   const totalLbl = document.getElementById('summaryTotalPriceLabel');
   const insLbl = document.getElementById('summaryInsuranceLabel');
   const insVal = document.getElementById('summaryInsurancePriceText');
-
-  if (baseEl) baseEl.textContent = `$${price.baseRate}.00`;
-  if (discEl) discEl.textContent = price.discount > 0 ? `-$${price.discount}.00` : '$0.00';
-  if (insLbl) {
-    insLbl.textContent = isWalk 
-      ? 'Pedestrian Safety & Telemetry Insurance' 
-      : 'Safety & Real-time GPS Insurance';
-  }
-  if (insVal) {
-    insVal.textContent = `$${price.insurance}.00`;
-  }
-
-  if (draft.frequency === 'onetime') {
-    if (baseLbl) baseLbl.textContent = isWalk ? 'Single Walk Base Fare' : 'Single Ride Base Fare';
-    if (totalLbl) totalLbl.textContent = 'Total One-Time Amount';
-    if (totalEl) totalEl.textContent = `$${price.total}.00 Flat Rate`;
-  } else {
-    if (baseLbl) baseLbl.textContent = isWalk ? 'Weekly Chaperone Rate' : 'Weekly Base Rate';
-    if (totalLbl) totalLbl.textContent = 'Total Weekly Amount';
-    if (totalEl) totalEl.textContent = `$${price.total}.00 / week`;
-  }
+  if (baseLbl) baseLbl.textContent = 'Ride fee';
+  if (baseEl) baseEl.textContent = 'Arrange with provider';
+  if (discEl) discEl.textContent = '—';
+  if (insLbl) insLbl.textContent = 'Platform fee';
+  if (insVal) insVal.textContent = 'Subscription / trial';
+  if (totalLbl) totalLbl.textContent = 'Ride payment';
+  if (totalEl) totalEl.textContent = 'Direct to provider';
 }
 
 /* ==========================================================
@@ -3303,7 +3225,6 @@ window.submitBookingRequest = function () {
   const draft = window.appState.bookingDraft;
   const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
   const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
-  const price = calculateDraftPrice();
 
   const newBooking = {
     id: `H2S-${Math.floor(10000 + Math.random() * 90000)}`,
@@ -3337,8 +3258,8 @@ window.submitBookingRequest = function () {
     outboundTime: draft.outboundTime,
     returnTime: draft.direction === 'bothway' ? draft.returnTime : '',
     providerId: provider.id,
-    amount: price.total,
-    paymentMethod: draft.paymentMethod,
+    amount: null,
+    paymentMethod: 'Arrange with provider',
     createdAt: 'Just now'
   };
 
@@ -5148,7 +5069,7 @@ window.openTransactionReceipt = function (txId) {
   if (amtEl) amtEl.textContent = `${isRefund ? '+' : ''}$${tx.amount.toFixed(2)}`;
   if (badgeEl) {
     badgeEl.className = `tx-status-pill ${isRefund ? 'refunded' : 'paid'}`;
-    badgeEl.textContent = isRefund ? '↩ Refund Credited to Parent Wallet' : '✓ Payment Successful via Stripe';
+    badgeEl.textContent = isRefund ? '↩ Subscription refund' : '✓ Platform fee paid via Stripe';
   }
   if (dateEl) dateEl.textContent = tx.date;
   if (srvEl) srvEl.textContent = tx.title;
