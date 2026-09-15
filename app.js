@@ -6351,10 +6351,16 @@ window.resetSearchFilters = function () {
   if (allService) window.setModalServiceType('all', allService);
 
   const verifiedCheck = document.getElementById('modalFilterVerifiedCheck');
-  if (verifiedCheck) verifiedCheck.checked = false;
+  if (verifiedCheck) {
+    verifiedCheck.checked = false;
+    verifiedCheck.closest('.sf-feature-card')?.classList.remove('is-checked');
+  }
 
   const topRatedCheck = document.getElementById('modalFilterTopRatedCheck');
-  if (topRatedCheck) topRatedCheck.checked = false;
+  if (topRatedCheck) {
+    topRatedCheck.checked = false;
+    topRatedCheck.closest('.sf-feature-card')?.classList.remove('is-checked');
+  }
 
   window.updateLiveFilterCount();
 };

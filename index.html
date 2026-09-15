@@ -273,6 +273,129 @@
       background: #142050 !important;
       transform: translateY(-1px) !important;
     }
+
+    /* 2. Trust & Safety Feature Cards */
+    .sf-feature-card {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      padding: 12px 14px !important;
+      border-radius: 16px !important;
+      border: 1.5px solid #E2E8F0 !important;
+      background: #FFFFFF !important;
+      cursor: pointer !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+      user-select: none !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+    }
+
+    .sf-feature-card:hover {
+      border-color: #CBD5E1 !important;
+      background: #F8FAFC !important;
+    }
+
+    .sf-feature-card.is-checked {
+      border-color: #1B2B68 !important;
+      background: #F8FAFC !important;
+      box-shadow: 0 2px 8px rgba(27, 43, 104, 0.08) !important;
+    }
+
+    .sf-feature-icon-wrap {
+      width: 38px !important;
+      height: 38px !important;
+      border-radius: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+    }
+
+    .sf-feature-icon-wrap.is-verified {
+      background: #EFF6FF !important;
+      color: #2563EB !important;
+    }
+
+    .sf-feature-icon-wrap.is-rating {
+      background: #FEF3C7 !important;
+      color: #D97706 !important;
+    }
+
+    .sf-feature-icon-wrap i,
+    .sf-feature-icon-wrap svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    .sf-feature-content {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2px !important;
+      flex: 1 !important;
+      min-width: 0 !important;
+    }
+
+    .sf-feature-title {
+      font-size: 13.5px !important;
+      font-weight: 800 !important;
+      color: #0F172A !important;
+      letter-spacing: -0.1px !important;
+      line-height: 1.25 !important;
+    }
+
+    .sf-feature-sub {
+      font-size: 11.5px !important;
+      font-weight: 500 !important;
+      color: #64748B !important;
+      line-height: 1.3 !important;
+    }
+
+    /* Modern iOS Toggle Switch */
+    .sf-switch {
+      position: relative !important;
+      width: 44px !important;
+      height: 26px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .sf-switch-input {
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      position: absolute !important;
+      pointer-events: none !important;
+    }
+
+    .sf-switch-slider {
+      position: absolute !important;
+      inset: 0 !important;
+      background: #E2E8F0 !important;
+      border-radius: 999px !important;
+      cursor: pointer !important;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    .sf-switch-slider::before {
+      content: '' !important;
+      position: absolute !important;
+      left: 3px !important;
+      top: 3px !important;
+      width: 20px !important;
+      height: 20px !important;
+      border-radius: 50% !important;
+      background: #FFFFFF !important;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    .sf-switch-input:checked + .sf-switch-slider {
+      background: #1B2B68 !important;
+    }
+
+    .sf-switch-input:checked + .sf-switch-slider::before {
+      transform: translateX(18px) !important;
+    }
   </style>
 
   <!-- Lucide Icons Official Library -->
@@ -5881,16 +6004,35 @@
         <!-- 4. Trust & Safety Filters -->
         <div class="sf-section">
           <div class="sf-section-header">
-            <span class="sf-section-label">Trust &amp; Quality</span>
+            <span class="sf-section-label">Trust &amp; Safety</span>
           </div>
           <div class="sf-toggle-list">
-            <label class="sf-toggle-row">
-              <span class="sf-toggle-title">Verified Only</span>
-              <input type="checkbox" id="modalFilterVerifiedCheck" class="sf-checkbox" onchange="window.updateLiveFilterCount()" />
+            <label class="sf-feature-card" for="modalFilterVerifiedCheck">
+              <div class="sf-feature-icon-wrap is-verified">
+                <i data-lucide="badge-check"></i>
+              </div>
+              <div class="sf-feature-content">
+                <span class="sf-feature-title">Verified Only</span>
+                <span class="sf-feature-sub">Background &amp; police check certified</span>
+              </div>
+              <div class="sf-switch">
+                <input type="checkbox" id="modalFilterVerifiedCheck" class="sf-switch-input" onchange="window.updateLiveFilterCount(); this.closest('.sf-feature-card').classList.toggle('is-checked', this.checked);" />
+                <span class="sf-switch-slider"></span>
+              </div>
             </label>
-            <label class="sf-toggle-row">
-              <span class="sf-toggle-title">Top Rated (4.8+ ★)</span>
-              <input type="checkbox" id="modalFilterTopRatedCheck" class="sf-checkbox" onchange="window.updateLiveFilterCount()" />
+
+            <label class="sf-feature-card" for="modalFilterTopRatedCheck">
+              <div class="sf-feature-icon-wrap is-rating">
+                <i data-lucide="star"></i>
+              </div>
+              <div class="sf-feature-content">
+                <span class="sf-feature-title">Top Rated (4.8+ ★)</span>
+                <span class="sf-feature-sub">Highest rated by parents</span>
+              </div>
+              <div class="sf-switch">
+                <input type="checkbox" id="modalFilterTopRatedCheck" class="sf-switch-input" onchange="window.updateLiveFilterCount(); this.closest('.sf-feature-card').classList.toggle('is-checked', this.checked);" />
+                <span class="sf-switch-slider"></span>
+              </div>
             </label>
           </div>
         </div>
