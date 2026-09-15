@@ -1560,6 +1560,24 @@ window.navigateTo = function (screenName, isBack = false) {
     }
   }
 
+  // Auto-dismiss all open modals and bottom sheets when navigating
+  const filterModal = document.getElementById('searchFilterModal');
+  if (filterModal) {
+    filterModal.classList.remove('active');
+    filterModal.style.display = 'none';
+  }
+  const roleModal = document.getElementById('roleSwitcherModal');
+  if (roleModal) {
+    roleModal.classList.remove('active');
+    roleModal.style.display = 'none';
+  }
+  document.querySelectorAll('.book-ride-sheet.visible, .clean-modal-overlay[style*="display: flex"], .custom-modal-overlay.active').forEach((sheet) => {
+    sheet.classList.remove('visible', 'active');
+    if (sheet.classList.contains('custom-modal-overlay') || sheet.classList.contains('clean-modal-overlay')) {
+      sheet.style.display = 'none';
+    }
+  });
+
   // Hide all screens, show target screen
   document.querySelectorAll('.screen-view').forEach(el => {
     el.classList.remove('active');
@@ -1646,6 +1664,10 @@ window.navigateTo = function (screenName, isBack = false) {
 
   // Update Bottom Tab Bar highlights
   updateBottomTabHighlights(screenName);
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
 
   // Screen specific triggers
   if (screenName === 'authSuccess' || screenName === 'bookingConfirmed') {
