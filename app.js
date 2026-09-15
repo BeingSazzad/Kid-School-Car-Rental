@@ -3756,34 +3756,99 @@ function renderBookingsList(tab) {
       const provider = window.appState.providers.find(p => p.id === b.providerId) || window.appState.providers[0];
       const kids = kidNames(b);
       const school = shortSchool(b.schoolLocation);
-      const time = b.outboundTime || '';
-      const driverFirst = (provider?.name || 'Driver').split(' ')[0];
+      const time = b.outboundTime || '07:30 AM';
+      const schedule = b.frequency === 'recurring' ? 'Mon–Fri' : (b.createdAt || 'One-time');
+      const driverName = provider?.name || 'Driver';
+      const driverRating = provider?.rating != null ? provider.rating : '4.9';
+      const driverPhoto = provider?.photo || '/assets/avatar_tariq.jpg';
+      const vehicle = provider?.vehicle || 'Toyota Sienna';
+      const isWalk = provider?.category === 'walkshare' || /walk/i.test(provider?.name || '');
+      const pin = String(b.id || '').replace(/\D/g, '').slice(-4) || '4920';
+      const idShort = String(b.id || '').replace(/^H2S-?/i, '#');
+      
+      const childObjects = (b.childIds || []).map(id => (window.appState.children || []).find(c => c.id === id)).filter(Boolean);
+      const childAvatars = childObjects.length ? childObjects.map((c, i) => {
+        const photo = c.photo || (c.name.toLowerCase().includes('emma') ? '/assets/avatar_emma.jpg' : '/assets/avatar_arman.jpg');
+        return `<img src="${photo}" alt="" class="bk-kid-avatar" style="margin-left: ${i > 0 ? '-12px' : '0'}; z-index: ${5 - i};" onerror="this.src='/assets/avatar_arman.jpg';" />`;
+      }).join('') : `<img src="/assets/avatar_arman.jpg" alt="" class="bk-kid-avatar" />`;
+
       const live = b.status === 'in_progress';
-      const done = b.status === 'completed';
       const pending = b.status === 'pending';
       const declined = b.status === 'declined';
-      const title = declined ? school : kids;
-      const sub = declined
-        ? `${driverFirst} didn’t accept`
-        : [school, time, driverFirst].filter(Boolean).join(' · ');
+      const done = b.status === 'completed';
+      const confirmed = b.status === 'confirmed';
 
-      let action = '';
+      let statusBadge = '';
       if (live) {
-        action = `<button type="button" class="bk-cta bk-cta-live" onclick="event.stopPropagation(); openLiveTracking('${b.id}')">Track</button>`;
+        statusBadge = `<span class="bk-card-status is-live"><span class="live-pulse-dot"></span><span>Live</span></span>`;
+      } else if (confirmed) {
+        statusBadge = `<span class="bk-card-status is-confirmed"><i data-lucide="calendar" style="width:12px;height:12px;"></i><span>Confirmed</span></span>`;
       } else if (pending) {
-        action = `<button type="button" class="bk-cta bk-cta-ghost" onclick="event.stopPropagation(); withdrawBookingRequest('${b.id}')">Withdraw</button>`;
-      } else if (done || declined) {
-        action = `<button type="button" class="bk-cta bk-cta-ghost" onclick="event.stopPropagation(); ${declined ? "navigateTo('bookingTripSetup')" : `rebookRide('${b.id}')`}">Book again</button>`;
+        statusBadge = `<span class="bk-card-status is-pending"><i data-lucide="clock" style="width:12px;height:12px;"></i><span>Pending</span></span>`;
+      } else if (declined) {
+        statusBadge = `<span class="bk-card-status is-declined"><span class="bk-declined-dot"></span><span>Declined</span></span>`;
+      } else if (done) {
+        statusBadge = `<span class="bk-card-status is-completed"><i data-lucide="check-circle" style="width:12px;height:12px;"></i><span>Completed</span></span>`;
+      } else {
+        statusBadge = `<span class="bk-card-status is-cancelled"><span>Cancelled</span></span>`;
+      }
+
+      let ctaBtn = '';
+      if (live) {
+        ctaBtn = `<button type="button" class="bk-card-btn is-track" onclick="event.stopPropagation(); openLiveTracking('${b.id}')"><i data-lucide="map-pin" style="width:13px;height:13px;"></i><span>Track</span></button>`;
+      } else if (pending) {
+        ctaBtn = `<button type="button" class="bk-card-btn is-withdraw" onclick="event.stopPropagation(); withdrawBookingRequest('${b.id}')">Withdraw</button>`;
+      } else if (declined) {
+        ctaBtn = `<button type="button" class="bk-card-btn is-rebook" onclick="event.stopPropagation(); navigateTo('bookingTripSetup')">Book again</button>`;
+      } else if (done) {
+        ctaBtn = `<button type="button" class="bk-card-btn is-rebook" onclick="event.stopPropagation(); rebookRide('${b.id}')">Book again</button>`;
+      } else {
+        ctaBtn = `<span class="bk-card-arrow">View <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>`;
       }
 
       return `
-        <article class="bk-row${live ? ' is-live' : ''}${declined ? ' is-declined' : ''}" onclick="openBookingDetails('${b.id}')">
-          <div class="bk-row-top">
-            <span class="bk-status ${statusClass(b)}"><span class="bk-status-dot" aria-hidden="true"></span>${statusLabel(b)}</span>
-            ${action}
+        <article class="bk-booking-card ${live ? 'is-live-card' : ''}" onclick="openBookingDetails('${b.id}')">
+          <div class="bk-card-head">
+            ${statusBadge}
+            <span class="bk-card-recurrence"><i data-lucide="calendar" style="width:12px;height:12px;"></i> ${schedule}</span>
           </div>
-          <h3 class="bk-title">${title}</h3>
-          <p class="bk-sub">${sub}</p>
+          <div class="bk-card-body">
+            <div class="bk-avatar-stack">
+              ${childAvatars}
+            </div>
+            <div class="bk-info-col">
+              <h3 class="bk-card-title">${declined ? `${school} Ride` : kids}</h3>
+              <div class="bk-card-route">
+                <i data-lucide="map-pin" class="bk-ico-pin"></i>
+                <span>${declined ? `${driverName} didn’t accept` : school}</span>
+              </div>
+              <div class="bk-card-time-row">
+                <i data-lucide="clock" class="bk-ico-clock"></i>
+                <span>${time}</span>
+                <span class="bk-dot-sep">•</span>
+                <span>${b.direction === 'bothway' ? 'Round trip' : 'One-way'}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bk-driver-strip">
+            <div class="bk-driver-left">
+              <img src="${driverPhoto}" alt="" class="bk-driver-mini-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
+              <span class="bk-driver-mini-name">${driverName}</span>
+              <span class="bk-driver-mini-rating"><span class="bk-star">★</span> ${driverRating}</span>
+            </div>
+            <span class="bk-driver-mini-veh">${isWalk ? 'WalkShare' : (vehicle.split(' ')[0] || 'Car')}</span>
+          </div>
+
+          <div class="bk-card-foot">
+            <div class="bk-pin-chip">
+              <span class="bk-pin-label">PIN</span>
+              <span class="bk-pin-val">${pin}</span>
+              <span class="bk-id-sep">|</span>
+              <span class="bk-id-val">${idShort}</span>
+            </div>
+            ${ctaBtn}
+          </div>
         </article>`;
     }).join('');
   }
