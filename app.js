@@ -3701,14 +3701,31 @@ function renderBookingDetails(bookingId) {
   const isCancelled = booking.status === 'cancelled';
   const isConfirmed = booking.status === 'confirmed';
 
-  // 1. Hero Summary Titles & Date
+  // 1. Hero Summary Titles & Date (Audited Input -> Output)
   const isRecurring = booking.frequency === 'recurring';
-  const tripTitle = booking.title || (booking.direction === 'bothway'
-    ? 'Round Trip to School'
-    : (/pm|p\.m/i.test(booking.outboundTime || '') ? 'Afternoon Return' : 'Morning to School'));
+  const isBothWay = booking.direction === 'bothway';
+  
+  // Dynamic School display name for Title
+  const schoolCleanName = shortSchool.includes('School') || shortSchool.includes('Pre-school') ? shortSchool : (shortSchool + ' School');
+  
+  const tripTitle = booking.title || (isBothWay
+    ? `Round Trip to ${schoolCleanName}`
+    : (/pm|p\.m/i.test(booking.outboundTime || '') ? `Afternoon Return from ${schoolCleanName}` : `One-Way to ${schoolCleanName}`));
 
-  const tripSub = isRecurring ? 'Regular Trip • Weekdays (Mon – Fri)' : (booking.scheduleText || 'One-time Trip');
-  const tripDate = booking.date || (booking.createdAt ? (booking.createdAt.includes('2026') ? booking.createdAt : booking.createdAt + ', 2026') : 'Mon, Sep 1, 2026');
+  // Dynamic recurrence or single pass subtitle
+  let tripSub = '';
+  if (isRecurring) {
+    if (booking.selectedDays && booking.selectedDays.length) {
+      tripSub = `Weekly Commute • ${booking.selectedDays.join(', ')}`;
+    } else {
+      tripSub = 'Weekly Commute • Weekdays (Mon – Fri)';
+    }
+  } else {
+    tripSub = `One-Time Pass • ${isBothWay ? 'Round Trip' : 'Single Ride'}`;
+  }
+
+  // Exact date without fallback mismatch
+  const tripDate = booking.tripDate || booking.date || booking.startDate || (booking.createdAt ? (booking.createdAt.includes('2026') ? booking.createdAt : booking.createdAt + ', 2026') : 'Mon, Sep 1, 2026');
 
   setText('detailHeaderTitle', tripTitle);
   setText('detailHeaderSubtitle', tripSub);
