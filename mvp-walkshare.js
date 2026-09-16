@@ -1743,7 +1743,7 @@
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${partnerOnlineRow(!!w.isOnline && isApproved(w), !isApproved(w))}
         ${profileMenuRow('eye', 'Preview Public Profile & Rates', "openDriverProfile('sarah', 'wsProfile')")}
-        ${profileMenuRow('star', `Escort Ratings & Reviews · ${Number(w.rating || 4.9).toFixed(1)} ★`, "openNestedScreen('wsRatings', event)")}
+        ${profileMenuRow('star', 'Ratings & reviews', "openNestedScreen('wsRatings', event)")}
       </div>
 
       <!-- Section 1: Walking Group & Operations -->
@@ -1757,7 +1757,7 @@
 
       <!-- Section 2: Subscription, FAQ, Support & Policies -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
-        ${profileMenuRow('sparkles', 'WalkShare subscription', "openNestedScreen('wsSubscription', event)")}
+        ${profileMenuRow('crown', 'WalkShare subscription', "openNestedScreen('wsSubscription', event)")}
         ${profileMenuRow('help-circle', 'FAQ', "openNestedScreen('faq', event)")}
         ${profileMenuRow('headphones', 'Contact Support', "openNestedScreen('contactSupport', event)")}
         ${profileMenuRow('alert-triangle', 'Safety Center', "openNestedScreen('report', event)")}

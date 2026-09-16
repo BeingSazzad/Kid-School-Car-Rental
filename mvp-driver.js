@@ -4337,12 +4337,12 @@
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${partnerOnlineRow('driver', !!d.isOnline && isApproved(d), !isApproved(d), 'window.setDriverOnlineStatus(this.checked)')}
         ${profileMenuRow('eye', 'Preview Public Profile & Rates', "openDriverProfile('tariq', 'driverProfile')")}
-        ${profileMenuRow('star', `Driver Ratings & Reviews · ${Number(d.rating || 4.9).toFixed(1)} ★`, "openDriverProfileChild('driverRatings', event)")}
+        ${profileMenuRow('star', 'Ratings & reviews', "openDriverProfileChild('driverRatings', event)")}
       </div>
 
       <!-- Section 1: Operations & Vehicle -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
-        ${profileMenuRow('car', vehicleLabel, "openDriverProfileChild('driverOnboardVehicle', event)")}
+        ${profileMenuRow('car', 'Vehicle info', "openDriverProfileChild('driverOnboardVehicle', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openDriverProfileChild('driverOnboardDocs', event)")}
         ${profileMenuRow('clock', 'Availability', "openDriverProfileChild('driverOnboardAvailability', event)")}
         ${profileMenuRow('circle-dollar-sign', 'Posted rate', "openDriverProfileChild('driverOnboardRate', event)")}
@@ -4351,7 +4351,7 @@
 
       <!-- Section 2: Subscription, FAQ, Support & Policies -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
-        ${profileMenuRow('sparkles', 'Driver subscription', "openDriverProfileChild('driverSubscription', event)")}
+        ${profileMenuRow('crown', 'Driver subscription', "openDriverProfileChild('driverSubscription', event)")}
         ${profileMenuRow('help-circle', 'FAQ', "openDriverProfileChild('faq', event)")}
         ${profileMenuRow('headphones', 'Contact Support', "openDriverProfileChild('contactSupport', event)")}
         ${profileMenuRow('alert-triangle', 'Safety Center', "openDriverProfileChild('report', event)")}

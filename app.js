@@ -1761,17 +1761,17 @@ window.navigateTo = function (screenName, isBack = false) {
   } else if (screenName === 'bookingDetails') {
     (window.renderBookingDetails || renderBookingDetails)(window.appState.activeBookingId);
   } else if (screenName === 'bookingConfirmed') {
-    renderBookingConfirmation();
+    if (window.renderBookingConfirmation) window.renderBookingConfirmation();
   } else if (screenName === 'myChildren') {
-    renderMyChildrenList();
+    if (window.renderMyChildrenList) window.renderMyChildrenList();
   } else if (screenName === 'profilePayments') {
-    renderTransactions('all');
+    if (window.renderTransactions) window.renderTransactions('all');
   } else if (screenName === 'profileEmergency') {
-    renderEmergencyContactsList();
+    if (window.renderEmergencyContactsList) window.renderEmergencyContactsList();
   } else if (screenName === 'contactSupport') {
-    renderSupportScreen();
+    if (window.renderSupportScreen) window.renderSupportScreen();
   } else if (screenName === 'profileLocations') {
-    renderSavedLocations();
+    if (window.renderSavedLocations) window.renderSavedLocations();
   } else if (screenName === 'driverHome') {
     if (window.renderDriverHome) window.renderDriverHome();
   } else if (screenName === 'driverRequests') {
