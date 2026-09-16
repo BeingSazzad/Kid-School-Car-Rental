@@ -19953,10 +19953,10 @@ img.drv-req-avatar {
   color: #64748B !important;
 }
 
-/* 3-Column Stats Strip */
+/* 2-Column Stats Strip */
 #screen-bookingDetails .bd-stats-strip {
   display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr !important;
+  grid-template-columns: 1fr 1fr !important;
   background: #F8FAFC !important;
   border-radius: 14px !important;
   padding: 10px 8px !important;

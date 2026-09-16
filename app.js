@@ -3705,12 +3705,13 @@ function renderBookingDetails(bookingId) {
   const isRecurring = booking.frequency === 'recurring';
   const isBothWay = booking.direction === 'bothway';
   
-  // Dynamic School display name for Title
-  const schoolCleanName = shortSchool.includes('School') || shortSchool.includes('Pre-school') ? shortSchool : (shortSchool + ' School');
+  // Option A Format: Home ⇄ Greenfield International
+  const cleanPickupShort = /home/i.test(booking.pickupLocation || '') ? 'Home' : String(booking.pickupLocation || 'Home').replace(/\s*\([^)]*\)/g, '').split(',')[0].trim();
+  const cleanSchoolShort = String(booking.schoolLocation || 'Greenfield International').replace(/\s*\([^)]*\)/g, '').split(',')[0].trim();
   
   const tripTitle = booking.title || (isBothWay
-    ? `Round Trip to ${schoolCleanName}`
-    : (/pm|p\.m/i.test(booking.outboundTime || '') ? `Afternoon Return from ${schoolCleanName}` : `One-Way to ${schoolCleanName}`));
+    ? `${cleanPickupShort} ⇄ ${cleanSchoolShort}`
+    : `${cleanPickupShort} → ${cleanSchoolShort}`);
 
   // Dynamic recurrence or single pass subtitle
   let tripSub = '';
