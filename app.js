@@ -4258,7 +4258,7 @@ function renderBookingsList(tab) {
           ${returnStopHtml}
         </div>
 
-        <!-- Driver & Vehicle Footer Row -->
+        <!-- Driver Footer Row -->
         <div class="ph-tt-footer-row">
           <div class="ph-tt-driver-col">
             <img src="${driverPhoto}" alt="Driver" class="ph-tt-driver-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
@@ -4268,14 +4268,6 @@ function renderBookingsList(tab) {
                 <span style="color:#F59E0B;">★</span>
                 <strong style="color:#0F172A; font-weight:700;">${driverRating}</strong>
               </div>
-            </div>
-          </div>
-          <div class="ph-tt-divider"></div>
-          <div class="ph-tt-vehicle-col">
-            <img src="${vehPhoto}" alt="Vehicle" class="ph-tt-vehicle-img" onerror="this.src='/assets/vehicle_hiace_white.jpg';" />
-            <div style="min-width:0;">
-              <div class="ph-tt-vehicle-name">${vehName}</div>
-              <div class="ph-tt-vehicle-plate">${vehPlate}</div>
             </div>
           </div>
           ${actionColHtml}
