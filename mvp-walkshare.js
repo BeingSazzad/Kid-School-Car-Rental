@@ -1850,20 +1850,24 @@
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${partnerOnlineRow(!!w.isOnline && isApproved(w), !isApproved(w))}
         ${profileMenuRow('eye', 'Preview Public Profile & Rates', "openDriverProfile('sarah', 'wsProfile')")}
-        ${profileMenuRow('star', 'Ratings & reviews', "openNestedScreen('wsRatings', event)")}
       </div>
 
-      <!-- Section 1: Walking Group & Operations -->
+      <!-- Section 1: Walking Group & Operations (3 links) -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('users', esc(w.group.label || 'Walking School Bus'), "openNestedScreen('wsOnboardGroup', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openNestedScreen('wsOnboardDocs', event)")}
         ${profileMenuRow('clock', 'Availability', "openNestedScreen('wsOnboardAvailability', event)")}
-        ${profileMenuRow('wallet', 'Payment & Rates', "openNestedScreen('wsPayment', event)")}
       </div>
 
-      <!-- Section 2: Subscription, FAQ, Support & Policies -->
+      <!-- Section 2: Earnings, Reviews & Subscription (3 links) -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
+        ${profileMenuRow('wallet', 'Payment & Rates', "openNestedScreen('wsPayment', event)")}
+        ${profileMenuRow('star', 'Ratings & reviews', "openNestedScreen('wsRatings', event)")}
         ${profileMenuRow('crown', 'WalkShare subscription', "openNestedScreen('wsSubscription', event)")}
+      </div>
+
+      <!-- Section 3: FAQ, Support & Policies -->
+      <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('help-circle', 'FAQ', "openNestedScreen('faq', event)")}
         ${profileMenuRow('headphones', 'Contact Support', "openNestedScreen('contactSupport', event)")}
         ${profileMenuRow('alert-triangle', 'Safety Center', "openNestedScreen('report', event)")}

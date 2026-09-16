@@ -4531,20 +4531,24 @@
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${partnerOnlineRow('driver', !!d.isOnline && isApproved(d), !isApproved(d), 'window.setDriverOnlineStatus(this.checked)')}
         ${profileMenuRow('eye', 'Preview Public Profile & Rates', "openDriverProfile('tariq', 'driverProfile')")}
-        ${profileMenuRow('star', 'Ratings & reviews', "openDriverProfileChild('driverRatings', event)")}
       </div>
 
-      <!-- Section 1: Operations & Vehicle -->
+      <!-- Section 1: Operations (3 links) -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('car', 'Vehicle info', "openDriverProfileChild('driverOnboardVehicle', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openDriverProfileChild('driverOnboardDocs', event)")}
         ${profileMenuRow('clock', 'Availability', "openDriverProfileChild('driverOnboardAvailability', event)")}
-        ${profileMenuRow('wallet', 'Payment & Rates', "openDriverProfileChild('driverPayment', event)")}
       </div>
 
-      <!-- Section 2: Subscription, FAQ, Support & Policies -->
+      <!-- Section 2: Earnings, Reviews & Subscription (3 links) -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
+        ${profileMenuRow('wallet', 'Payment & Rates', "openDriverProfileChild('driverPayment', event)")}
+        ${profileMenuRow('star', 'Ratings & reviews', "openDriverProfileChild('driverRatings', event)")}
         ${profileMenuRow('crown', 'Driver subscription', "openDriverProfileChild('driverSubscription', event)")}
+      </div>
+
+      <!-- Section 3: FAQ, Support & Policies -->
+      <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('help-circle', 'FAQ', "openDriverProfileChild('faq', event)")}
         ${profileMenuRow('headphones', 'Contact Support', "openDriverProfileChild('contactSupport', event)")}
         ${profileMenuRow('alert-triangle', 'Safety Center', "openDriverProfileChild('report', event)")}
