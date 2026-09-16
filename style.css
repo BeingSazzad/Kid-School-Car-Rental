@@ -17539,14 +17539,56 @@ button.drv-doc-row.profile-menu-item {
   margin: 0;
 }
 
-#screen-driverOnboardAvailability {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) {
   --book-ride-row: 48px;
   --book-ride-pad-x: 14px;
   --book-ride-icon: 18px;
   background: #FFFFFF;
 }
 
-#screen-driverOnboardAvailability .screen-scroll-body {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #F1F5F9 !important;
+  padding: 10px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky .back-btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: #F1F5F9 !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #1B2B68 !important;
+  cursor: pointer !important;
+  margin-left: 0 !important;
+  padding: 0 !important;
+  transition: background 0.15s ease !important;
+}
+
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky .back-btn i,
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky .back-btn svg {
+  width: 20px !important;
+  height: 20px !important;
+  stroke: #1B2B68 !important;
+  stroke-width: 2.2 !important;
+}
+
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky .top-bar-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
+  font-family: var(--font-family) !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .screen-scroll-body {
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 16px;
@@ -17560,25 +17602,27 @@ button.drv-doc-row.profile-menu-item {
   font-size: 16px;
   font-weight: 700;
   color: #0F172A;
-  margin: 0 0 10px 0;
+  margin: 0 0 12px 0;
   font-family: var(--font-family);
   letter-spacing: -0.2px;
 }
 
 .avail-type-grid {
   display: flex;
-  gap: 10px;
-  margin-bottom: 22px;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
+button.avail-type-btn,
 .avail-type-btn {
   flex: 1;
   min-height: 48px;
-  padding: 12px 14px;
+  height: 48px;
+  padding: 0 16px;
   border-radius: 12px;
   font-family: var(--font-family);
-  font-size: 13.5px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17588,9 +17632,14 @@ button.drv-doc-row.profile-menu-item {
   transition: all 0.2s ease;
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  color: #475569;
+  color: #64748B;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
+button.avail-type-btn i,
+button.avail-type-btn svg,
 .avail-type-btn i,
 .avail-type-btn svg {
   width: 16px;
@@ -17599,28 +17648,32 @@ button.drv-doc-row.profile-menu-item {
   stroke-width: 2.2;
 }
 
+button.avail-type-btn.active,
 .avail-type-btn.active {
-  background: var(--color-primary, #09122C);
-  border-color: var(--color-primary, #09122C);
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(9, 18, 44, 0.15);
+  background: #1B2B68 !important;
+  border-color: #1B2B68 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(27, 43, 104, 0.15);
 }
 
+button.avail-type-btn.active i,
+button.avail-type-btn.active svg,
 .avail-type-btn.active i,
 .avail-type-btn.active svg {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
 }
 
 .avail-days-row {
   display: flex;
-  gap: 6px;
-  margin-bottom: 22px;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
+button.avail-day-pill,
 .avail-day-pill {
   flex: 1;
   min-width: 0;
-  height: 42px;
+  height: 44px;
   border-radius: 10px;
   font-family: var(--font-family);
   font-size: 13px;
@@ -17633,24 +17686,28 @@ button.drv-doc-row.profile-menu-item {
   transition: all 0.15s ease;
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  color: #94A3B8;
+  color: #64748B;
   padding: 0;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
+button.avail-day-pill.active,
 .avail-day-pill.active {
-  background: var(--color-primary, #09122C);
-  border-color: var(--color-primary, #09122C);
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(9, 18, 44, 0.12);
+  background: #1B2B68 !important;
+  border-color: #1B2B68 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.15);
 }
 
 .avail-window-card {
   background: #FFFFFF;
   border: 1.5px solid #E2E8F0;
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 16px 18px;
   margin-bottom: 14px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
   box-sizing: border-box;
 }
 
@@ -17667,8 +17724,8 @@ button.drv-doc-row.profile-menu-item {
 }
 
 .avail-window-icon-badge {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
   background: #EFF6FF;
   color: #2563EB;
@@ -17701,6 +17758,7 @@ button.drv-doc-row.profile-menu-item {
   cursor: pointer;
   display: inline-block;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .avail-toggle-slider {
@@ -17709,9 +17767,9 @@ button.drv-doc-row.profile-menu-item {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #CBD5E1;
+  background: #E2E8F0;
   border-radius: 99px;
-  transition: 0.25s ease;
+  transition: 0.2s ease;
 }
 
 .avail-toggle-slider:before {
@@ -17723,12 +17781,12 @@ button.drv-doc-row.profile-menu-item {
   bottom: 3px;
   background: #FFFFFF;
   border-radius: 50%;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
-  transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .avail-toggle-slider.active {
-  background: var(--color-primary, #09122C);
+  background: #1B2B68 !important;
 }
 
 .avail-toggle-slider.active:before {
@@ -17755,6 +17813,7 @@ button.drv-doc-row.profile-menu-item {
   font-family: var(--font-family);
 }
 
+button.avail-time-btn,
 .avail-time-btn {
   display: flex;
   align-items: center;
@@ -17769,8 +17828,12 @@ button.drv-doc-row.profile-menu-item {
   box-sizing: border-box;
   font-family: var(--font-family);
   transition: border-color 0.2s ease, background 0.2s ease;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
+button.avail-time-btn:hover,
 .avail-time-btn:hover {
   border-color: #CBD5E1;
   background: #FFFFFF;
@@ -17784,6 +17847,8 @@ button.drv-doc-row.profile-menu-item {
   letter-spacing: -0.1px;
 }
 
+button.avail-time-btn i,
+button.avail-time-btn svg,
 .avail-time-btn i,
 .avail-time-btn svg {
   width: 16px;
@@ -17793,25 +17858,34 @@ button.drv-doc-row.profile-menu-item {
   stroke-width: 2;
 }
 
+button.avail-save-btn,
 .avail-save-btn {
   width: 100%;
-  height: 52px;
+  height: 50px;
   border-radius: 14px;
-  background: var(--color-primary, #09122C);
-  color: #FFFFFF;
-  font-size: 15.5px;
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
+  font-size: 16px;
   font-weight: 700;
   font-family: var(--font-family);
   border: none;
   cursor: pointer;
   margin-top: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 4px 14px rgba(9, 18, 44, 0.18);
+  box-shadow: 0 4px 14px rgba(27, 43, 104, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.15s ease, opacity 0.15s ease;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
+button.avail-save-btn:active,
 .avail-save-btn:active {
   transform: scale(0.99);
+  opacity: 0.95;
 }
 
 .drv-avail-card {
