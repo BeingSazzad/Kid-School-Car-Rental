@@ -4502,16 +4502,25 @@
     const photo = d.photo || '/assets/avatar_sadia.jpg';
     el.innerHTML = `
       <!-- User Profile Header Card -->
-      <div class="profile-user-card" style="margin-bottom: 12px;">
+      <div class="profile-user-card" style="margin-bottom: 12px;" onclick="openDriverProfileChild('driverOnboardProfile', event)">
         <div class="profile-user-avatar-wrap">
           <img src="${esc(photo)}" alt="Profile photo" class="profile-user-avatar" id="drvProfileHeaderPhoto" onerror="this.src='/assets/avatar_sadia.jpg'" />
-          <button type="button" class="profile-user-avatar-edit-btn" onclick="openDriverProfileChild('driverOnboardProfile', event)" aria-label="Change photo">
+          <button type="button" class="profile-user-avatar-edit-btn" onclick="event.stopPropagation(); openDriverProfileChild('driverOnboardProfile', event)" aria-label="Change photo">
             <i data-lucide="camera"></i>
           </button>
         </div>
         <div class="profile-user-info">
-          <div class="profile-user-name-row" onclick="openDriverProfileChild('driverOnboardProfile', event)">
-            <h3 class="profile-user-name">${esc(d.name || 'Sadia Driver')}</h3>
+          <div class="profile-user-name-row">
+            <div style="display:flex; align-items:center; gap:6px; min-width:0; overflow:hidden;">
+              <h3 class="profile-user-name">${esc(d.name || 'Tariq Ahmed')}</h3>
+              ${isApproved(d) ? `
+                <span class="profile-verified-badge-wrap" title="Verified Driver">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" style="vertical-align:middle;">
+                    <circle cx="12" cy="12" r="10" fill="#38BDF8"/>
+                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#09122C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>` : ''}
+            </div>
             <i data-lucide="chevron-right" class="profile-user-chevron"></i>
           </div>
           <p class="profile-user-role">School Driver · ★ ${Number(d.rating || 4.9).toFixed(1)} (142 trips)</p>
