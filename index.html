@@ -1017,7 +1017,7 @@
 }
 
 #screen-bookingDetails .bd-hero-main-title {
-  font-size: 20px !important;
+  font-size: 16px !important;
   font-weight: 800 !important;
   color: #FFFFFF !important;
   margin: 0 0 4px !important;
@@ -6916,9 +6916,7 @@
           <i data-lucide="chevron-left" style="width:20px;height:20px;"></i>
         </button>
         <h2 class="bd-clean-title">Trip Details</h2>
-        <button type="button" class="bd-clean-icon-btn" onclick="openSafetyPinModal()" aria-label="Trip Options">
-          <i data-lucide="more-vertical" style="width:20px;height:20px;"></i>
-        </button>
+        <span style="width:20px;"></span>
       </header>
 
       <div class="screen-scroll-body bd-scroll">
@@ -7012,20 +7010,6 @@
             </div>
           </div>
         </section>
-
-        <!-- 2.5 Safety Handover PIN Banner -->
-        <div class="bd-safety-pin-banner" onclick="openSafetyPinModal()">
-          <div class="bd-safety-pin-left">
-            <div class="bd-safety-pin-icon">
-              <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
-            </div>
-            <div>
-              <div class="bd-safety-pin-title">Child Handover PIN</div>
-              <div class="bd-safety-pin-code" id="detailSafetyPinBannerCode">PIN 4920</div>
-            </div>
-          </div>
-          <button type="button" class="bd-safety-pin-btn">Show Driver</button>
-        </div>
 
         <!-- 3. Driver & Vehicle Card -->
         <section class="bd-card-clean">
@@ -7680,11 +7664,7 @@
 
       <div class="top-bar-sticky">
         <h2 class="top-bar-title" style="margin-left: 4px;">My Profile</h2>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <button type="button" class="btn-icon-subtle" onclick="openNestedScreen('profileNotifications', event)" title="Notification Settings" aria-label="Notification Settings">
-            <i data-lucide="bell" style="width:18px;height:18px;color:#475569;"></i>
-          </button>
-        </div>
+        <span style="width:26px;"></span>
       </div>
 
       <div class="screen-scroll-body" style="padding: 12px 16px 88px; display: flex; flex-direction: column; gap: 14px;">
@@ -7708,23 +7688,8 @@
               <i data-lucide="chevron-right" class="profile-user-chevron"></i>
             </div>
             <p class="profile-user-role" style="font-size:12.5px; color:#BAE6FD; margin:4px 0 0 0; font-weight:500;">
-              Parent (Mother)
+              Parent (Mother) · ★ 5.0 (12 reviews)
             </p>
-          </div>
-        </div>
-
-        <!-- Quick Interactive Metric Badges: Kids & Reviews -->
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.02);">
-          <div role="button" tabindex="0" onclick="openNestedScreen('myChildren', event)" style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 8px; text-align: center; cursor: pointer; transition: all 0.15s;" onmouseover="this.style.background='#EFF6FF'" onmouseout="this.style.background='#F8FAFC'">
-            <div style="font-size: 16px; font-weight: 800; color: #1B2B68;">2</div>
-            <div style="font-size: 11px; font-weight: 600; color: #64748B; margin-top: 2px;">Kids</div>
-          </div>
-          <div role="button" tabindex="0" onclick="openNestedScreen('profileReviews', event)" style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px 8px; text-align: center; cursor: pointer; transition: all 0.15s;" onmouseover="this.style.background='#EFF6FF'" onmouseout="this.style.background='#F8FAFC'">
-            <div style="font-size: 16px; font-weight: 800; color: #D97706; display:flex; align-items:center; justify-content:center; gap:3px;">
-              <i data-lucide="star" style="width:13px;height:13px;fill:#F59E0B;stroke:#F59E0B;"></i>
-              <span>5.0</span>
-            </div>
-            <div style="font-size: 11px; font-weight: 600; color: #64748B; margin-top: 2px;">Reviews</div>
           </div>
         </div>
 
@@ -7804,16 +7769,6 @@
               <span class="menu-title-text">Notification Preferences</span>
             </div>
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
-          </div>
-
-          <div class="profile-menu-item" onclick="window.openSafetyPinModal()">
-            <div class="menu-item-left">
-              <div class="menu-icon-wrap">
-                <i data-lucide="shield-check"></i>
-              </div>
-              <span class="menu-title-text">Child Handover PIN</span>
-            </div>
-            <span style="background:#EFF6FF; color:#1D4ED8; font-size:11px; font-weight:800; padding:2px 8px; border-radius:6px; letter-spacing:0.5px;">PIN 4920</span>
           </div>
         </div>
 

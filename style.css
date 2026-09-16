@@ -17038,19 +17038,22 @@ button.drv-doc-row.profile-menu-item {
   line-height: var(--leading-tight);
 }
 
-[id^="screen-driver"] .screen-scroll-body {
+:is([id^="screen-driver"], [id^="screen-ws"]) .screen-scroll-body {
   gap: var(--section-gap);
   padding-top: var(--space-16);
 }
 
-[id^="screen-driver"] .form-label {
+:is([id^="screen-driver"], [id^="screen-ws"]) .form-label {
   font-size: 12px;
   font-weight: 600;
   color: var(--color-title);
+  display: block;
+  margin-bottom: 6px;
 }
 
-[id^="screen-driver"] .form-group > .form-input,
-[id^="screen-driver"] .form-group > input.form-input {
+:is([id^="screen-driver"], [id^="screen-ws"]) .form-group > .form-input,
+:is([id^="screen-driver"], [id^="screen-ws"]) .form-group > input.form-input,
+:is([id^="screen-driver"], [id^="screen-ws"]) .input-box-wrapper .form-input {
   height: var(--control-height);
   background: #FFFFFF;
   border: 1.5px solid var(--color-stroke);
@@ -17059,57 +17062,66 @@ button.drv-doc-row.profile-menu-item {
   font-size: var(--button-font-size);
   font-weight: 600;
   color: var(--color-title);
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-[id^="screen-driver"] .input-box-wrapper {
+:is([id^="screen-driver"], [id^="screen-ws"]) .form-group > .form-input:focus,
+:is([id^="screen-driver"], [id^="screen-ws"]) .input-box-wrapper .form-input:focus {
+  border-color: #2563EB;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+:is([id^="screen-driver"], [id^="screen-ws"]) .input-box-wrapper {
   width: 100%;
   height: var(--control-height);
 }
 
-[id^="screen-driver"] .input-box-wrapper .form-input {
-  font-size: var(--button-font-size);
-  font-weight: 600;
-}
-
-[id^="screen-driver"] .form-select {
+:is([id^="screen-driver"], [id^="screen-ws"]) .form-select {
   height: var(--control-height);
   font-size: var(--button-font-size);
   font-weight: 600;
   border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-stroke);
+  padding: 0 14px;
+  background: #FFFFFF;
+  color: var(--color-title);
 }
 
-[id^="screen-driver"] .btn-primary,
-[id^="screen-driver"] .btn-secondary-surface {
+:is([id^="screen-driver"], [id^="screen-ws"]) .btn-primary,
+:is([id^="screen-driver"], [id^="screen-ws"]) .btn-secondary-surface {
   height: var(--button-height);
   min-height: var(--button-height);
   font-size: var(--button-font-size);
   border-radius: var(--radius-md);
 }
 
-[id^="screen-driver"] .action-card.light .action-icon-circle,
-[id^="screen-driver"] .empty-trips-icon,
-[id^="screen-driver"] .menu-icon-wrap,
-[id^="screen-driver"] .drv-doc-icon {
+:is([id^="screen-driver"], [id^="screen-ws"]) .action-card.light .action-icon-circle,
+:is([id^="screen-driver"], [id^="screen-ws"]) .empty-trips-icon,
+:is([id^="screen-driver"], [id^="screen-ws"]) .menu-icon-wrap,
+:is([id^="screen-driver"], [id^="screen-ws"]) .drv-doc-icon {
   background: var(--color-fade);
   color: #1B2B68;
 }
 
-[id^="screen-driver"] .action-card.light .action-icon-circle i,
-[id^="screen-driver"] .action-card.light .action-icon-circle svg,
-[id^="screen-driver"] .empty-trips-icon i,
-[id^="screen-driver"] .empty-trips-icon svg,
-[id^="screen-driver"] .menu-icon-wrap i,
-[id^="screen-driver"] .menu-icon-wrap svg,
-[id^="screen-driver"] .drv-doc-icon i,
-[id^="screen-driver"] .drv-doc-icon svg {
+:is([id^="screen-driver"], [id^="screen-ws"]) .action-card.light .action-icon-circle i,
+:is([id^="screen-driver"], [id^="screen-ws"]) .action-card.light .action-icon-circle svg,
+:is([id^="screen-driver"], [id^="screen-ws"]) .empty-trips-icon i,
+:is([id^="screen-driver"], [id^="screen-ws"]) .empty-trips-icon svg,
+:is([id^="screen-driver"], [id^="screen-ws"]) .menu-icon-wrap i,
+:is([id^="screen-driver"], [id^="screen-ws"]) .menu-icon-wrap svg,
+:is([id^="screen-driver"], [id^="screen-ws"]) .drv-doc-icon i,
+:is([id^="screen-driver"], [id^="screen-ws"]) .drv-doc-icon svg {
   color: #1B2B68;
   stroke: currentColor;
   fill: none;
 }
 
-[id^="screen-driver"] .action-card.navy .action-icon-circle,
-[id^="screen-driver"] .action-card.navy .action-icon-circle i,
-[id^="screen-driver"] .action-card.navy .action-icon-circle svg {
+:is([id^="screen-driver"], [id^="screen-ws"]) .action-card.navy .action-icon-circle,
+:is([id^="screen-driver"], [id^="screen-ws"]) .action-card.navy .action-icon-circle i,
+:is([id^="screen-driver"], [id^="screen-ws"]) .action-card.navy .action-icon-circle svg {
   color: #FFFFFF;
   stroke: currentColor;
 }
@@ -21322,7 +21334,7 @@ label.drv-upload-tile {
 }
 
 #screen-bookingDetails .bd-hero-main-title {
-  font-size: 20px !important;
+  font-size: 16px !important;
   font-weight: 800 !important;
   color: #FFFFFF !important;
   margin: 0 0 4px !important;

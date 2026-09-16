@@ -4574,8 +4574,8 @@ function renderBookingDetails(bookingId) {
       dropoffStatusTag.textContent = 'Pending';
     }
     if (returnStatusTag) {
-      returnStatusTag.className = 'bd-rt-pill-tag is-grey';
-      returnStatusTag.textContent = 'Pending';
+      dropoffStatusTag.className = 'bd-rt-pill-tag is-grey';
+      dropoffStatusTag.textContent = 'Pending';
     }
   } else {
     // SCHEDULED / CONFIRMED BOOKING (Before trip starts)
@@ -4588,8 +4588,8 @@ function renderBookingDetails(bookingId) {
       dropoffStatusTag.textContent = 'School Drop';
     }
     if (returnStatusTag) {
-      returnStatusTag.className = 'bd-rt-pill-tag is-grey';
-      returnStatusTag.textContent = 'Return Leg';
+      dropoffStatusTag.className = 'bd-rt-pill-tag is-grey';
+      dropoffStatusTag.textContent = 'Return Leg';
     }
   }
 
@@ -4672,7 +4672,7 @@ function renderBookingDetails(bookingId) {
   const currentRate = isAgreed ? (booking.agreedRate || booking.amount || 120) : (booking.listedRate || booking.amount || 120);
 
   setText('detailPriceAmount', `$${currentRate}/${rateUnitText}`);
-  setText('detailPriceBillingCycle', isAgreed ? `Agreed rate · Paid directly to ${provider.name.split(' ')[0]}` : `Listed rate (Negotiable) · Pending confirmation`);
+  setText('detailPriceBillingCycle', isAgreed ? `Agreed rate · Paid directly to ${(provider.name || 'driver').split(' ')[0]}` : `Listed rate (Negotiable) · Pending confirmation`);
   setText('detailPaymentCardLabel', booking.preferredPayment || 'e-Transfer · Cash (Direct)');
 
   const payPill = document.getElementById('detailPaymentStatusPill');
@@ -4692,83 +4692,69 @@ function renderBookingDetails(bookingId) {
   }
 
   const payHandleWrap = document.getElementById('detailPaymentHandleWrap');
-  if (payHandleWrap) {
-    payHandleWrap.innerHTML = '';
-  }
+}
 
-  const specialNotesText = document.getElementById('detailSpecialNotesText');
-  if (specialNotesText) {
-    const kidNames = children.map(c => c.name ? c.name.split(' ')[0] : 'Child').join(' & ');
-    specialNotesText.textContent = booking.notes || `Gate 2 (Junior Wing Pickup) • ${kidNames || 'Child'} handover requires PIN verification. Driver will wait 5 mins at home gate.`;
-  }
+  // 7. Special Notes & Schedule Tiles
+  setText('detailSpecialNotesText', booking.notes || 'Gate 2 (Junior Wing Pickup) • Arman & Emma handover. Driver will wait 5 mins at home gate.');
+  setText('detailTileScheduleSub', isRecurring ? 'Repeats every Mon – Fri • Until Dec 31, 2026' : `${tripDate} • ${isBothWay ? 'Round Trip' : 'Single Ride'}`);
+  setText('detailTileFareSub', isAgreed ? `Rate agreed: $${currentRate}/${rateUnitText} · Direct payment` : 'Direct payment to provider');
 
-  // 7. Schedule & Manage Row Subtitles
-  setText('detailTileScheduleSub', isRecurring ? 'Repeats every Mon – Fri • Until Dec 31, 2026' : 'One-time Trip • Scheduled');
-  setText('detailTileFareSub', 'Change dates, stop address, or manage pass');
-
-  // 8. Contextual Bottom Actions
+  // 8. Bottom Sticky Contextual Actions
   const primaryTrackBtn = document.getElementById('btnTrackLivePrimary');
   const actionsWrap = document.getElementById('detailContextualActions');
+
   if (actionsWrap) {
-    const first = String(provider.name || 'Driver').split(' ')[0];
-    const id = booking.id;
     if (isLive) {
       if (primaryTrackBtn) {
         primaryTrackBtn.style.display = 'flex';
         primaryTrackBtn.innerHTML = '<i data-lucide="map-pin" style="width:18px;height:18px;"></i> <span>Track live vehicle</span>';
-        primaryTrackBtn.setAttribute('onclick', `openLiveTracking('${id}')`);
+        primaryTrackBtn.onclick = function () { openLiveTracking(booking.id); };
       }
-      actionsWrap.innerHTML =
-        '<div class="bd-actions-quiet">' +
-          '<button type="button" class="bd-link" onclick="openTripReport(\'' + id + '\')">Report issue</button>' +
-          '<button type="button" class="bd-link danger" onclick="openEmergencySOSModal()">SOS Emergency</button>' +
-        '</div>';
-    } else if (isConfirmed) {
-      if (primaryTrackBtn) {
-        primaryTrackBtn.style.display = 'flex';
-        primaryTrackBtn.innerHTML = '<i data-lucide="map-pin" style="width:18px;height:18px;"></i> <span>View route map</span>';
-        primaryTrackBtn.setAttribute('onclick', `openLiveTracking('${id}')`);
-      }
-      actionsWrap.innerHTML =
-        '<div class="bd-actions-row">' +
-          '<button type="button" class="btn-primary" onclick="openChatWith(\'' + (provider.id || 'tariq') + '\')"><i data-lucide="message-square" style="width:16px;height:16px;margin-right:6px;"></i>Message ' + first + '</button>' +
-          '<button type="button" class="bd-btn-outline danger" onclick="cancelBooking(\'' + id + '\')">Cancel booking</button>' +
-        '</div>';
+      actionsWrap.innerHTML = `
+        <button type="button" class="bd-btn-outline danger" onclick="openSosModal()" style="width:100%; justify-content:center;">
+          <i data-lucide="alert-triangle" style="width:16px;height:16px;"></i>
+          <span>Emergency / SOS Help</span>
+        </button>
+      `;
     } else if (isPending) {
       if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
-      actionsWrap.innerHTML =
-        '<div class="bd-actions-row">' +
-          '<button type="button" class="btn-primary" onclick="openChatWith(\'' + (provider.id || 'tariq') + '\')"><i data-lucide="message-square" style="width:16px;height:16px;margin-right:6px;"></i>Message ' + first + '</button>' +
-          '<button type="button" class="bd-btn-outline danger" onclick="cancelBooking(\'' + id + '\')">Cancel request</button>' +
-        '</div>';
-    } else if (isCompleted) {
-      if (primaryTrackBtn) {
-        primaryTrackBtn.style.display = 'flex';
-        primaryTrackBtn.innerHTML = '<i data-lucide="star" style="width:18px;height:18px;"></i> <span>Rate &amp; review ' + first + '</span>';
-        primaryTrackBtn.setAttribute('onclick', `openParentRateDriverModal('${provider.id}', '${id}')`);
-      }
-      actionsWrap.innerHTML =
-        '<div class="bd-actions-row">' +
-          '<button type="button" class="bd-btn-outline" onclick="window.rebookRide && window.rebookRide(\'' + id + '\')">Book again</button>' +
-          '<button type="button" class="bd-btn-outline" onclick="openTripReport(\'' + id + '\')">View receipt</button>' +
-        '</div>';
+      actionsWrap.innerHTML = `
+        <button type="button" class="bd-btn-outline danger" onclick="cancelBooking('${booking.id}')" style="width:100%; justify-content:center;">
+          <i data-lucide="x-circle" style="width:16px;height:16px;"></i>
+          <span>Cancel request</span>
+        </button>
+      `;
     } else if (isCancelled) {
+      if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
+      actionsWrap.innerHTML = `
+        <button type="button" class="bd-btn-outline" onclick="navigateToScreen('screen-browseCars')" style="width:100%; justify-content:center;">
+          <i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i>
+          <span>Book again</span>
+        </button>
+      `;
+    } else {
+      // Confirmed / Scheduled
       if (primaryTrackBtn) {
         primaryTrackBtn.style.display = 'flex';
-        primaryTrackBtn.innerHTML = '<i data-lucide="refresh-cw" style="width:18px;height:18px;"></i> <span>Re-book this route</span>';
-        primaryTrackBtn.setAttribute('onclick', `navigateTo('bookingTripSetup')`);
+        primaryTrackBtn.innerHTML = '<i data-lucide="map" style="width:18px;height:18px;"></i> <span>View route map</span>';
+        primaryTrackBtn.onclick = function () { openLiveTracking(booking.id); };
       }
-      actionsWrap.innerHTML = '';
-    } else {
-      if (primaryTrackBtn) primaryTrackBtn.style.display = 'flex';
-      actionsWrap.innerHTML = '';
+      actionsWrap.innerHTML = `
+        <button type="button" class="bd-btn-outline danger" onclick="cancelBooking('${booking.id}')" style="width:100%; justify-content:center;">
+          <i data-lucide="x-circle" style="width:16px;height:16px;"></i>
+          <span>Cancel booking</span>
+        </button>
+      `;
     }
   }
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
   }
-}
+  if (payHandleWrap) {
+    payHandleWrap.innerHTML = '';
+  }
+
 
 window.cancelBooking = function (bookingId) {
   if (confirm('Are you sure you want to cancel this school ride booking?')) {
