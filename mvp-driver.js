@@ -3605,7 +3605,7 @@
     if (!el) return;
     const screen = el.closest('.screen-view');
     const titleEl = screen?.querySelector('.top-bar-title');
-    if (titleEl) titleEl.textContent = 'Request';
+    if (titleEl) titleEl.textContent = 'Request details';
     const back = screen?.querySelector('.back-btn');
     if (back) back.setAttribute('onclick', "navigateTo('driverRequests')");
     if (!req) {
@@ -3617,95 +3617,205 @@
     const blocked = !reason;
     const docsBlocked = missingRequiredDocs(d).length > 0;
     const isNew = req.status === 'new';
-    const passengers = kids(req).map((c) => {
-      const school = c.school || req.dropoffLocation || '';
-      const sub = [c.grade, school].filter(Boolean).join(' · ');
-      const kidPhoto = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
-      return `<div class="drv-req-passenger" style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #F1F5F9;">
-        <img class="drv-req-passenger-avatar" src="${esc(kidPhoto)}" alt="" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_arman.jpg'" />
-        <div style="min-width:0; flex:1;">
-          <div class="drv-req-passenger-name" style="font-size:14px; font-weight:700; color:#0F172A;">${esc(c.name)}</div>
-          ${sub ? `<div class="drv-req-passenger-sub" style="font-size:12px; color:#64748B; margin-top:2px;">${esc(sub)}</div>` : ''}
-        </div>
-      </div>`;
-    }).join('') || `<p class="drv-req-note">No passengers listed</p>`;
+
+    const childList = kids(req);
+    const passengersHtml = childList.length > 0
+      ? childList.map((c) => {
+          const kidPhoto = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : c.id === 'omar' ? '/assets/avatar_arman.jpg' : '/assets/avatar_zara.jpg');
+          const sub = c.grade || c.age || 'Grade 5';
+          return `
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
+              <img src="${esc(kidPhoto)}" alt="${esc(c.name)}" style="width:44px; height:44px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_arman.jpg'" />
+              <div>
+                <div style="font-size:15px; font-weight:700; color:#0F172A;">${esc(c.name)}</div>
+                <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:2px;">${esc(sub)}</div>
+              </div>
+            </div>`;
+        }).join('')
+      : `
+        <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
+          <img src="/assets/avatar_arman.jpg" alt="Child" style="width:44px; height:44px; border-radius:50%; object-fit:cover;" />
+          <div>
+            <div style="font-size:15px; font-weight:700; color:#0F172A;">${esc(childShort(req) || 'Omar Hassan')}</div>
+            <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:2px;">Grade 5</div>
+          </div>
+        </div>`;
+
     const booking = (state().bookings || []).find((b) => b.id === req.bookingId || b.id === req.id || ('dreq-' + b.id) === req.id);
     const hasAgreedRate = booking && booking.agreedRate && booking.rateStatus === 'agreed';
-    const displayRate = hasAgreedRate ? booking.agreedRate : (booking?.listedRate || req.rate || 28);
+    const displayRate = hasAgreedRate ? booking.agreedRate : (booking?.listedRate || (req.rate ? `$${req.rate}` : '$110'));
     const period = req.frequency === 'recurring' ? 'week' : 'trip';
-    const rateText = hasAgreedRate 
-      ? `Agreed rate: ${displayRate} / ${period}`
-      : `Listed rate: ${displayRate} / ${period}${d.rate?.negotiable && isNew ? ' · negotiable' : ''}`;
 
-    const parentPhoto = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
-    const parentName = req.parentName || PARENTS[req.parentId]?.name || 'Sadia Khan';
-    const parentPhone = req.parentPhone || PARENTS[req.parentId]?.phone || '+1 (416) 555-0192';
+    const parentPhoto = req.parentPhoto || (PARENTS[req.parentId] && PARENTS[req.parentId].photo) || (req.parentId === 'PRNT-5520' ? '/assets/avatar_sarah.jpg' : '/assets/avatar_sadia.jpg');
+    const parentName = req.parentName || (PARENTS[req.parentId] && PARENTS[req.parentId].name) || 'Amira Hassan';
+    const parentPhone = req.parentPhone || (PARENTS[req.parentId] && PARENTS[req.parentId].phone) || '+1 (416) 555-0133';
+
+    // Parse Date & Days for schedule card
+    let fromDate = 'Sep 21';
+    const dl = String(req.dateLabel || '');
+    const dateMatch = dl.match(/(?:starting|starts|from)\s+([A-Za-z]+(?:\s+\d{1,2})?(?:,?\s*\d{4})?)/i) ||
+                      dl.match(/([A-Za-z]{3,}\s+\d{1,2})/i);
+    if (dateMatch && dateMatch[1]) {
+      fromDate = dateMatch[1].replace(/^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*[,.\s]*/i, '').trim();
+    }
+    const daysLabel = (Array.isArray(req.recurringDays) && req.recurringDays.length === 5)
+      ? 'Mon–Fri'
+      : (Array.isArray(req.recurringDays) && req.recurringDays.length > 0)
+        ? req.recurringDays.join(', ')
+        : (req.frequency === 'recurring' ? 'Mon–Fri' : 'One-time');
+
+    const pickupTimeStr = req.pickupTime || '08:05 AM';
+    const returnTimeStr = (req.direction === 'oneway' || !req.returnTime) ? 'One-way' : req.returnTime;
+
+    const hasCorridorIssue = /outside|declined|distance|review/i.test(String(req.notes || ''));
 
     el.innerHTML = `
-      <!-- 1. Top Parent Profile Card with Direct Message Icon -->
-      <section class="drv-req-parent-card">
-        <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1; text-align:left;">
-          <div style="position:relative; flex-shrink:0;">
-            <img src="${esc(parentPhoto)}" alt="${esc(parentName)}" style="width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid var(--color-primary, #1B2B68);" onerror="this.src='/assets/avatar_sadia.jpg';" />
-            <span style="position:absolute; bottom:0; right:0; background:#10B981; border:2px solid #fff; width:11px; height:11px; border-radius:50%;" title="Verified Parent"></span>
-          </div>
-          <div style="min-width:0; flex:1; text-align:left;">
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <h3 style="font-size:15px; font-weight:800; color:#0F172A; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(parentName)}</h3>
-              <span style="background:#EFF6FF; color:#1D4ED8; font-size:10px; font-weight:700; padding:1px 6px; border-radius:99px;">Verified</span>
+      <div style="padding:4px 0 24px;">
+        <!-- 1. Guardian Header -->
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <div style="display:flex; align-items:center; gap:14px; min-width:0; flex:1;">
+            <div style="position:relative; flex-shrink:0;">
+              <img src="${esc(parentPhoto)}" alt="${esc(parentName)}" style="width:52px; height:52px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sarah.jpg';" />
             </div>
-            <div style="font-size:12px; color:#64748B; margin-top:2px; font-weight:500;">
-              Primary Guardian • ${esc(parentPhone)}
+            <div style="min-width:0; flex:1;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <h3 style="font-size:16px; font-weight:800; color:#0F172A; margin:0; line-height:1.2;">${esc(parentName)}</h3>
+                <svg style="width:16px; height:16px; flex-shrink:0; color:#2563EB;" viewBox="0 0 24 24" fill="currentColor">
+                  <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:2px;">Primary guardian</div>
+              <div style="font-size:13.5px; color:#0F172A; font-weight:600; margin-top:2px;">${esc(parentPhone)}</div>
+            </div>
+          </div>
+          <button type="button" class="btn-icon-subtle" onclick="openChatWith('${esc(req.parentId || 'sadia')}')" title="Message Parent" aria-label="Message Parent" style="width:44px; height:44px; border-radius:14px; background:#EFF6FF; color:#2563EB; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:background 0.15s ease;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
+            <i data-lucide="message-square" style="width:20px; height:20px;"></i>
+          </button>
+        </div>
+
+        <div style="height:1px; background:#F1F5F9; margin:18px 0;"></div>
+
+        <!-- 2. Child Section -->
+        <div>
+          <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">
+            ${childList.length > 1 ? 'CHILDREN' : 'CHILD'}
+          </div>
+          ${passengersHtml}
+        </div>
+
+        <div style="height:1px; background:#F1F5F9; margin:18px 0;"></div>
+
+        <!-- 3. Route Section -->
+        <div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <h3 style="font-size:18px; font-weight:800; color:#0F172A; margin:0;">Route</h3>
+            <span style="font-size:13px; color:#64748B; font-weight:500;">8.6 km · Est. 22 min</span>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:flex-start; gap:14px;">
+              <div style="display:flex; flex-direction:column; align-items:center; width:20px; flex-shrink:0; padding-top:2px;">
+                <div style="width:18px; height:18px; border-radius:50%; border:2.5px solid #2563EB; background:#FFFFFF;"></div>
+                <div style="width:2px; height:26px; border-left:2px dotted #94A3B8; margin:3px 0;"></div>
+              </div>
+              <div style="min-width:0; flex:1;">
+                <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">PICKUP</div>
+                <div style="font-size:14.5px; font-weight:700; color:#0F172A; margin-top:2px;">${esc(cleanPlace(req.pickupLocation) || '77 Rosedale Valley Road')}</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:14px;">
+              <div style="display:flex; align-items:center; justify-content:center; width:20px; flex-shrink:0; padding-top:2px;">
+                <i data-lucide="building-2" style="width:20px; height:20px; color:#2563EB;"></i>
+              </div>
+              <div style="min-width:0; flex:1;">
+                <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">DROP-OFF</div>
+                <div style="font-size:14.5px; font-weight:700; color:#0F172A; margin-top:2px;">${esc(cleanPlace(req.dropoffLocation) || 'Rosedale Public School')}</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:14px;">
+            Service corridor · 15 km
+          </div>
+        </div>
+
+        <div style="height:1px; background:#F1F5F9; margin:18px 0;"></div>
+
+        <!-- 4. Schedule Section -->
+        <div>
+          <h3 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 14px 0;">Schedule</h3>
+          <div style="background:#F0F5FD; border-radius:16px; padding:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <i data-lucide="calendar" style="width:18px; height:18px; color:#2563EB;"></i>
+                <span style="font-size:14.5px; color:#0F172A;">From <strong style="font-weight:800;">${esc(fromDate)}</strong></span>
+              </div>
+              <div style="font-size:13px; font-weight:600; color:#475569;">
+                ${esc(daysLabel)}
+              </div>
+            </div>
+            <div style="height:1px; background:rgba(203, 213, 225, 0.6); margin:14px 0;"></div>
+            <div style="display:flex; align-items:center;">
+              <div style="flex:1;">
+                <div style="font-size:12px; color:#64748B; font-weight:500;">Pickup</div>
+                <div style="font-size:18px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(pickupTimeStr)}</div>
+              </div>
+              <div style="width:1px; height:36px; background:rgba(203, 213, 225, 0.8); margin:0 16px;"></div>
+              <div style="flex:1;">
+                <div style="font-size:12px; color:#64748B; font-weight:500;">Return</div>
+                <div style="font-size:18px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(returnTimeStr)}</div>
+              </div>
             </div>
           </div>
         </div>
-        <button type="button" class="btn-icon-subtle" onclick="openChatWith('${esc(req.parentId || 'sadia')}')" title="Message Parent" aria-label="Message Parent" style="width:38px; height:38px; border-radius:10px; background:#EFF6FF; color:var(--color-primary, #1B2B68); border:1px solid #BFDBFE; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.15s;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
-          <i data-lucide="message-square" style="width:18px; height:18px;"></i>
-        </button>
-      </section>
 
-      <!-- 2. Children Card -->
-      <section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;">
-        <h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Children</h4>
-        <div style="display:flex; flex-direction:column; gap:4px;">
-          ${passengers}
-        </div>
-      </section>
-
-      <!-- 3. Route Card -->
-      <section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;">
-        <h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Route</h4>
-        <p class="drv-req-route drv-req-route-detail" style="font-size:13.5px; font-weight:700; color:#0F172A; display:flex; align-items:center; gap:8px; margin:0;"><i data-lucide="map-pin" style="color:var(--color-primary, #1B2B68); width:16px; height:16px; flex-shrink:0;"></i><span>${esc(req.pickupLocation || '')} → ${esc(req.dropoffLocation || '')}</span></p>
-        <div style="display:flex; gap:8px; margin-top:8px; font-size:12px; color:#475569; align-items:center; flex-wrap:wrap;">
-          <span style="display:inline-flex; align-items:center; gap:4px; font-weight:700; color:#0F172A;"><i data-lucide="navigation" style="width:13px; height:13px; color:var(--color-primary, #1B2B68);"></i> 8.6 km route</span>
-          <span>•</span>
-          <span>Est. 22 min driving</span>
-          <span>•</span>
-          <span style="color:#16A34A; font-weight:700;">Within 15 km corridor</span>
-        </div>
-      </section>
-
-      <!-- 4. Schedule Card -->
-      <section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;">
-        <h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Schedule</h4>
-        ${scheduleDetailRows(req)}
-      </section>
-
-      ${req.notes ? `<section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;"><h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Special Notes</h4><p class="drv-req-note" style="font-size:13px; color:#475569; line-height:1.45; margin:0;">${esc(req.notes)}</p></section>` : ''}
-
-      ${paymentHandleBlock(req, d)}
-
-      ${isNew && blocked ? `<div class="drv-req-gate" role="status" style="margin-bottom:12px;">
-        <p>${esc(reason)}</p>
-        ${docsBlocked ? `<button type="button" class="drv-req-gate-link" onclick="openDriverDocsFromRequest()">Documents</button>` : ''}
-      </div>` : ''}
-
-      <!-- Bottom CTAs: Accept & Decline (No redundant message button) -->
-      <div class="drv-req-detail-actions" style="display:flex; flex-direction:column; gap:10px; margin-top:8px; margin-bottom:24px;">
-        ${isNew ? `
-          <button type="button" class="btn-primary${blocked ? ' is-disabled' : ''}" ${blocked ? 'disabled' : ''} onclick="acceptDriverRequest('${req.id}')" style="height:46px; font-size:14px; font-weight:800; border-radius:12px;">Accept at ${displayRate}/${period}</button>
-          <button type="button" class="drv-req-decline-btn" onclick="declineDriverRequest('${req.id}')" style="height:44px; font-size:13.5px; font-weight:700; border-radius:12px; background:#FFF1F2; border:1px solid #FECDD3; color:#E11D48; cursor:pointer;">Decline</button>
+        <!-- 5. Special Notes -->
+        ${req.notes ? `
+          <div style="height:1px; background:#F1F5F9; margin:18px 0;"></div>
+          <div>
+            <h3 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 14px 0;">Special notes</h3>
+            <div style="display:flex; align-items:flex-start; gap:12px;">
+              <i data-lucide="file-text" style="width:20px; height:20px; color:#64748B; flex-shrink:0; margin-top:2px;"></i>
+              <div>
+                <div style="font-size:13.5px; color:#334155; line-height:1.45;">
+                  ${esc(req.notes)}
+                </div>
+                ${hasCorridorIssue ? `<div style="font-size:12.5px; font-weight:700; color:#D97706; margin-top:6px;">Corridor status needs review</div>` : ''}
+              </div>
+            </div>
+          </div>
         ` : ''}
+
+        ${paymentHandleBlock(req, d)}
+
+        ${isNew && blocked ? `
+          <div class="drv-req-gate" role="status" style="margin-top:16px;">
+            <p>${esc(reason)}</p>
+            ${docsBlocked ? `<button type="button" class="drv-req-gate-link" onclick="openDriverDocsFromRequest()">Documents</button>` : ''}
+          </div>
+        ` : ''}
+
+        <!-- 6. Bottom Actions / Status -->
+        <div style="margin-top:24px;">
+          ${isNew ? `
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <button type="button" class="btn-primary${blocked ? ' is-disabled' : ''}" ${blocked ? 'disabled' : ''} onclick="acceptDriverRequest('${req.id}')" style="height:48px; font-size:15px; font-weight:800; border-radius:12px; background:#1B2B68; color:#FFFFFF; border:none; cursor:pointer;">
+                Accept at ${displayRate}/${period}
+              </button>
+              <button type="button" onclick="declineDriverRequest('${req.id}')" style="height:44px; font-size:14px; font-weight:700; border-radius:12px; background:#FFF1F2; border:1px solid #FECDD3; color:#E11D48; cursor:pointer;">
+                Decline
+              </button>
+            </div>
+          ` : req.status === 'declined' ? `
+            <div style="padding:14px 16px; background:#FEF2F2; border:1px solid #FECDD3; border-radius:14px; display:flex; align-items:center; gap:10px; color:#991B1B; font-size:14px; font-weight:700;">
+              <i data-lucide="x-circle" style="width:20px; height:20px; color:#DC2626;"></i>
+              <span>Request declined</span>
+            </div>
+          ` : `
+            <div style="padding:14px 16px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px; display:flex; align-items:center; gap:10px; color:#166534; font-size:14px; font-weight:700;">
+              <i data-lucide="check-circle-2" style="width:20px; height:20px; color:#16A34A;"></i>
+              <span>Accepted · Scheduled in Calendar</span>
+            </div>
+          `}
+        </div>
       </div>
     `;
     icons();

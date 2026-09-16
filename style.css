@@ -696,7 +696,7 @@ svg.lucide {
 .auth-hero-container {
   position: relative;
   width: 100%;
-  height: clamp(190px, 26vh, 235px);
+  height: clamp(320px, 46vh, 420px);
   overflow: hidden;
   flex-shrink: 0;
   background-color: #0F172A;
@@ -706,14 +706,14 @@ svg.lucide {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 36%;
+  object-position: center 40%;
   display: block;
 }
 
 .auth-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 0%, rgba(15, 23, 42, 0.35) 100%);
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 0%, rgba(15, 23, 42, 0.25) 100%);
   pointer-events: none;
 }
 
@@ -724,16 +724,31 @@ svg.lucide {
 .auth-content {
   position: relative;
   z-index: 10;
-  margin-top: -20px;
-  border-radius: 26px 26px 0 0;
+  margin-top: -24px;
+  border-radius: 28px 28px 0 0;
   background: #FFFFFF;
-  padding: 20px var(--screen-padding-h, 20px) calc(20px + env(safe-area-inset-bottom, 12px));
+  padding: 24px var(--screen-padding-h, 20px) calc(24px + env(safe-area-inset-bottom, 14px));
   display: flex;
   flex-direction: column;
   flex: 1;
   justify-content: space-between;
+  box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.08);
+}
+
+.welcome-main-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.welcome-bottom-group {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  box-shadow: 0 -6px 28px rgba(15, 23, 42, 0.08);
+  width: 100%;
+  margin-top: 16px;
 }
 
 .welcome-header-block {
@@ -741,29 +756,28 @@ svg.lucide {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 .welcome-badge-pill {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
-  background: rgba(27, 43, 104, 0.06);
-  border: 1px solid rgba(27, 43, 104, 0.1);
-  border-radius: 20px;
+  padding: 5px 12px;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  border-radius: 999px;
   color: #1B2B68;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.2px;
-  margin-bottom: 2px;
 }
 
 .welcome-heading {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--color-title, #0F172A);
-  line-height: 1.22;
+  line-height: 1.25;
   letter-spacing: -0.4px;
   margin: 0;
   text-align: center;
@@ -778,7 +792,6 @@ svg.lucide {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin: 6px 0 2px;
   flex-wrap: wrap;
 }
 
@@ -786,10 +799,10 @@ svg.lucide {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 13px;
+  padding: 6px 12px;
   background: #F8FAFC;
   border: 1px solid #E2E8F0;
-  border-radius: 20px;
+  border-radius: 999px;
   font-size: 11.5px;
   font-weight: 700;
   color: #1E293B;
@@ -807,15 +820,14 @@ svg.lucide {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 6px;
   width: 100%;
 }
 
 .welcome-btn-primary {
   width: 100%;
   height: 50px;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 15.5px;
+  font-weight: 800;
   border-radius: 14px;
   background: var(--color-primary-navy, #1B2B68);
   color: #FFFFFF;
@@ -842,7 +854,7 @@ svg.lucide {
   font-weight: 700;
   border-radius: 14px;
   background: #FFFFFF;
-  color: #1E293B;
+  color: #0F172A;
   border: 1.5px solid #E2E8F0;
   cursor: pointer;
   display: flex;
@@ -863,14 +875,15 @@ svg.lucide {
 }
 
 .welcome-footer-note {
-  font-size: 11px;
-  color: #94A3B8;
+  font-size: 11.5px;
+  color: #64748B;
   text-align: center;
   margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
+  font-weight: 500;
 }
 
 .brand-heart-icon {

@@ -13,14 +13,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="/style.css?v=20260916-v43" />
-  <link rel="stylesheet" href="/bookings-clean.css?v=20260916-v43" />
-  <link rel="stylesheet" href="/safety-clean.css?v=20260916-v43" />
-  <link rel="stylesheet" href="/sos-clean.css?v=20260916-v43" />
-  <link rel="stylesheet" href="/providers-clean.css?v=20260916-v43" />
-  <link rel="stylesheet" href="/details-clean.css?v=20260916-v43" />
-  <link rel="stylesheet" href="/flow-clean.css?v=20260916-v43" />
-  <link rel="stylesheet" href="/type-standard.css?v=20260916-v43" />
+  <link rel="stylesheet" href="/style.css?v=20260916-v44" />
+  <link rel="stylesheet" href="/bookings-clean.css?v=20260916-v44" />
+  <link rel="stylesheet" href="/safety-clean.css?v=20260916-v44" />
+  <link rel="stylesheet" href="/sos-clean.css?v=20260916-v44" />
+  <link rel="stylesheet" href="/providers-clean.css?v=20260916-v44" />
+  <link rel="stylesheet" href="/details-clean.css?v=20260916-v44" />
+  <link rel="stylesheet" href="/flow-clean.css?v=20260916-v44" />
+  <link rel="stylesheet" href="/type-standard.css?v=20260916-v44" />
 
   <!-- Critical UI Overrides for Time Picker & Modals -->
   <style>
@@ -4570,54 +4570,60 @@
 
       <!-- Structured Modern Sheet Content -->
       <div class="auth-content">
-        <!-- Brand & Heading Hierarchy -->
-        <div class="welcome-header-block">
-          <div class="welcome-badge-pill">
-            <i data-lucide="shield-check" style="width: 13px; height: 13px; color: #10B981;"></i>
-            <span>Verified School Transportation</span>
+        <!-- Main Top Content Group -->
+        <div class="welcome-main-info">
+          <!-- Brand & Heading Hierarchy -->
+          <div class="welcome-header-block">
+            <div class="welcome-badge-pill">
+              <i data-lucide="shield-check" style="width: 13px; height: 13px; color: #10B981;"></i>
+              <span>Verified School Transportation</span>
+            </div>
+            <h1 class="welcome-heading">
+              Welcome to <span class="brand-text">Home2School</span>
+            </h1>
+            <p class="welcome-subtext">
+              Safe school rides &amp; certified walking escorts for students, trusted by verified neighborhood families.
+            </p>
           </div>
-          <h1 class="welcome-heading">
-            Welcome to <span class="brand-text">Home2School</span>
-          </h1>
-          <p class="welcome-subtext">
-            Safe school rides &amp; certified walking escorts for students, trusted by verified neighborhood families.
+
+          <!-- Clean Micro-Pill Trust Bar -->
+          <div class="welcome-trust-pills">
+            <div class="welcome-trust-pill">
+              <i data-lucide="shield-check"></i>
+              <span>100% Vetted</span>
+            </div>
+            <div class="welcome-trust-pill">
+              <i data-lucide="map-pin"></i>
+              <span>Live GPS</span>
+            </div>
+            <div class="welcome-trust-pill">
+              <i data-lucide="key-round"></i>
+              <span>PIN Handover</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons & Safety Footer Group -->
+        <div class="welcome-bottom-group">
+          <!-- Action Buttons Hierarchy -->
+          <div class="welcome-actions-block">
+            <button type="button" class="welcome-btn-primary" onclick="navigateTo('authRoleSelect')">
+              <span>Create an Account</span>
+              <i data-lucide="arrow-right" style="width: 17px; height: 17px;"></i>
+            </button>
+            
+            <button type="button" class="welcome-btn-secondary" onclick="navigateTo('authLogin')">
+              <i data-lucide="phone" style="width: 16px; height: 16px; color: #1B2B68;"></i>
+              <span>Sign In with Phone</span>
+            </button>
+          </div>
+
+          <!-- Subtle Footer Trust Note -->
+          <p class="welcome-footer-note">
+            <i data-lucide="lock" style="width: 12px; height: 12px; color: #10B981;"></i>
+            <span>100% background-checked &amp; child safety compliant</span>
           </p>
         </div>
-
-        <!-- Clean Micro-Pill Trust Bar (Crisp, organized, no text clutter) -->
-        <div class="welcome-trust-pills">
-          <div class="welcome-trust-pill">
-            <i data-lucide="shield-check"></i>
-            <span>100% Vetted</span>
-          </div>
-          <div class="welcome-trust-pill">
-            <i data-lucide="map-pin"></i>
-            <span>Live GPS</span>
-          </div>
-          <div class="welcome-trust-pill">
-            <i data-lucide="key-round"></i>
-            <span>PIN Handover</span>
-          </div>
-        </div>
-
-        <!-- Action Buttons Hierarchy -->
-        <div class="welcome-actions-block">
-          <button type="button" class="welcome-btn-primary" onclick="navigateTo('authRoleSelect')">
-            <span>Create an Account</span>
-            <i data-lucide="arrow-right" style="width: 17px; height: 17px;"></i>
-          </button>
-          
-          <button type="button" class="welcome-btn-secondary" onclick="navigateTo('authLogin')">
-            <i data-lucide="phone" style="width: 16px; height: 16px; color: #1B2B68;"></i>
-            <span>Sign In with Phone</span>
-          </button>
-        </div>
-
-        <!-- Subtle Footer Trust Note -->
-        <p class="welcome-footer-note">
-          <i data-lucide="lock" style="width: 12px; height: 12px; color: #10B981;"></i>
-          <span>100% background-checked &amp; child safety compliant</span>
-        </p>
       </div>
 
       <div class="home-indicator"></div>
@@ -10200,7 +10206,7 @@
         <button type="button" class="back-btn" onclick="navigateTo('driverRequests')" aria-label="Go back">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Trip Request Details</h2>
+        <h2 class="top-bar-title">Request details</h2>
         <span style="width: 26px;"></span>
       </div>
 
@@ -10536,7 +10542,7 @@
         <button type="button" class="back-btn" onclick="navigateTo('wsRequests')" aria-label="Go back">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Walk Request Details</h2>
+        <h2 class="top-bar-title">Request details</h2>
         <span style="width: 26px;"></span>
       </div>
 
