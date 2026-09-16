@@ -17539,14 +17539,14 @@ button.drv-doc-row.profile-menu-item {
   margin: 0;
 }
 
-:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability, #screen-driverPayment, #screen-driverOnboardRate, #screen-wsPayment, #screen-wsOnboardRate) {
   --book-ride-row: 48px;
   --book-ride-pad-x: 14px;
   --book-ride-icon: 18px;
   background: #FFFFFF;
 }
 
-:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability, #screen-driverPayment, #screen-driverOnboardRate, #screen-wsPayment, #screen-wsOnboardRate) .top-bar-sticky {
   background: #FFFFFF !important;
   border-bottom: 1px solid #F1F5F9 !important;
   padding: 10px 20px !important;
@@ -17555,7 +17555,7 @@ button.drv-doc-row.profile-menu-item {
   justify-content: space-between !important;
 }
 
-:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky .back-btn {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability, #screen-driverPayment, #screen-driverOnboardRate, #screen-wsPayment, #screen-wsOnboardRate) .top-bar-sticky .back-btn {
   width: 40px !important;
   height: 40px !important;
   border-radius: 50% !important;
@@ -17571,15 +17571,15 @@ button.drv-doc-row.profile-menu-item {
   transition: background 0.15s ease !important;
 }
 
-:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky .back-btn i,
-:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky .back-btn svg {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability, #screen-driverPayment, #screen-driverOnboardRate, #screen-wsPayment, #screen-wsOnboardRate) .top-bar-sticky .back-btn i,
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability, #screen-driverPayment, #screen-driverOnboardRate, #screen-wsPayment, #screen-wsOnboardRate) .top-bar-sticky .back-btn svg {
   width: 20px !important;
   height: 20px !important;
   stroke: #1B2B68 !important;
   stroke-width: 2.2 !important;
 }
 
-:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .top-bar-sticky .top-bar-title {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability, #screen-driverPayment, #screen-driverOnboardRate, #screen-wsPayment, #screen-wsOnboardRate) .top-bar-sticky .top-bar-title {
   font-size: 18px !important;
   font-weight: 700 !important;
   color: #0F172A !important;
@@ -17588,7 +17588,7 @@ button.drv-doc-row.profile-menu-item {
   text-align: center !important;
 }
 
-:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .screen-scroll-body {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability, #screen-driverPayment, #screen-driverOnboardRate, #screen-wsPayment, #screen-wsOnboardRate) .screen-scroll-body {
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 16px;

@@ -1678,7 +1678,7 @@
       ['group', '2. Walking group', `${w.group.label} · ${w.group.capacity} kids`, 'wsOnboardGroup'],
       ['docs', '3. Documents', (w.documents.filter((d) => d.status === 'approved').length) + ' / ' + w.documents.length + ' approved', 'wsOnboardDocs'],
       ['availability', '4. Availability', availSummary(w.availability), 'wsOnboardAvailability'],
-      ['rate', '5. Posted rate', `$${w.rate.amount} / week · ${w.rate.negotiable ? 'negotiable' : 'fixed'}`, 'wsOnboardRate']
+      ['rate', '5. Payment & Rates', `$${w.rate.amount} / week · ${w.rate.paymentMethod || 'Interac'}`, 'wsOnboardRate']
     ];
     el.innerHTML = `
       <div class="trip-card">
@@ -1751,8 +1751,7 @@
         ${profileMenuRow('users', esc(w.group.label || 'Walking School Bus'), "openNestedScreen('wsOnboardGroup', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openNestedScreen('wsOnboardDocs', event)")}
         ${profileMenuRow('clock', 'Availability', "openNestedScreen('wsOnboardAvailability', event)")}
-        ${profileMenuRow('circle-dollar-sign', 'Posted rate', "openNestedScreen('wsOnboardRate', event)")}
-        ${profileMenuRow('wallet', 'Payment preference', "openNestedScreen('wsPayment', event)")}
+        ${profileMenuRow('wallet', 'Payment & Rates', "openNestedScreen('wsPayment', event)")}
       </div>
 
       <!-- Section 2: Subscription, FAQ, Support & Policies -->
@@ -2354,49 +2353,79 @@
     return true;
   };
 
-  function renderOnboardRate() {
+  function renderWalkSharePaymentRates(feedId, isEditing) {
     const w = ensureWalk();
     const r = w.rate || {};
-    const el = feed('wsOnboardRateFeed');
+    const el = feed(feedId);
     if (!el) return;
-    const editing = editingProfileChild();
-    bindChildTitle(el, editing ? 'Posted Escort Rate' : 'Posted Rate & Payment');
+    const editing = isEditing !== undefined ? isEditing : editingProfileChild();
+    bindChildTitle(el, editing ? 'Payment & Rates' : 'Posted Rate & Payment');
     bindChildBack(el, editing ? "backNested('wsProfile')" : "navigateTo('wsOnboardAvailability')");
 
     el.innerHTML = `
-      ${editing ? '' : `
+      ${editing ? `
+        <div class="p2p-payment-notice" style="display:flex; align-items:flex-start; gap:12px; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:14px; padding:14px; margin-bottom:16px;">
+          <div style="width:36px; height:36px; border-radius:10px; background:#EFF6FF; color:#2563EB; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <i data-lucide="shield-check" style="width:18px; height:18px;"></i>
+          </div>
+          <div>
+            <div style="font-size:13.5px; font-weight:700; color:#0F172A; margin-bottom:2px;">100% Direct Escort Payments</div>
+            <div style="font-size:12px; color:#64748B; line-height:1.4;">Peer-to-peer escort compensation. Home2School takes 0% commission on your walks.</div>
+          </div>
+        </div>
+      ` : `
         <div style="margin-bottom:16px;">
           <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#16A34A; background:#F0FDF4; padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 5 of 5 · Final Step</span>
-          <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Posted Escort Rate &amp; Walking Zone</h2>
-          <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Direct peer-to-peer escort compensation. Home2School never collects fees or holds escrow.</p>
+          <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Posted Rates & Payout Setup</h2>
+          <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Set your weekly escort rate, walking corridor, and payment method.</p>
         </div>
       `}
 
-      <div class="profile-form-section-card" style="margin-bottom: 16px;">
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Weekly posted rate ($ CAD / child)</label>
+      <!-- Escort Rates Card -->
+      <div class="profile-form-section-card" style="margin-bottom: 14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #F1F5F9;">
+          <i data-lucide="banknote" style="width:16px; height:16px; color:#1B2B68;"></i>
+          <span style="font-size:14px; font-weight:700; color:#0F172A;">Escort Pricing & Rates</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Weekly posted rate ($ CAD / child)</label>
           <div class="input-box-wrapper">
             <input class="form-input" type="number" id="wsRateAmount" value="${esc(r.amount || 75)}" placeholder="75" />
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Single walk rate (optional $ CAD)</label>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Single walk rate (optional $ CAD)</label>
           <div class="input-box-wrapper">
             <input class="form-input" type="number" id="wsDailyAmount" value="${esc(r.dailyAmount || 25)}" placeholder="25" />
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Open to rate discussion? (Negotiable)</label>
-          <div class="drv-toggle-row" style="display:flex; gap:8px;">
-            <button type="button" id="wsNegYes" class="${r.negotiable !== false ? 'active' : ''}" style="flex:1; padding:10px; border-radius:8px; font-weight:700; border:1.5px solid ${r.negotiable !== false ? '#16A34A' : '#CBD5E1'}; background:${r.negotiable !== false ? '#F0FDF4' : '#FFFFFF'}; color:${r.negotiable !== false ? '#16A34A' : '#64748B'}; cursor:pointer;" onclick="setWalkShareNegotiable(true)">Yes, negotiable</button>
-            <button type="button" id="wsNegNo" class="${r.negotiable === false ? 'active' : ''}" style="flex:1; padding:10px; border-radius:8px; font-weight:700; border:1.5px solid ${r.negotiable === false ? '#16A34A' : '#CBD5E1'}; background:${r.negotiable === false ? '#F0FDF4' : '#FFFFFF'}; color:${r.negotiable === false ? '#16A34A' : '#64748B'}; cursor:pointer;" onclick="setWalkShareNegotiable(false)">Fixed rate</button>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Rate Flexibility</label>
+          <div class="drv-toggle-row" style="display:flex; gap:8px; margin-top:4px;">
+            <button type="button" id="wsNegYes" class="avail-type-btn ${r.negotiable !== false ? 'active' : ''}" style="height:42px; font-size:13px; font-weight:700;" onclick="setWalkShareNegotiable(true)">
+              <i data-lucide="message-circle" style="width:14px; height:14px;"></i>
+              <span>Yes, negotiable</span>
+            </button>
+            <button type="button" id="wsNegNo" class="avail-type-btn ${r.negotiable === false ? 'active' : ''}" style="height:42px; font-size:13px; font-weight:700;" onclick="setWalkShareNegotiable(false)">
+              <i data-lucide="lock" style="width:14px; height:14px;"></i>
+              <span>Fixed rate</span>
+            </button>
           </div>
         </div>
+      </div>
 
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Preferred payment method</label>
+      <!-- Payment Collection & Payout Card -->
+      <div class="profile-form-section-card" style="margin-bottom: 14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #F1F5F9;">
+          <i data-lucide="wallet" style="width:16px; height:16px; color:#1B2B68;"></i>
+          <span style="font-size:14px; font-weight:700; color:#0F172A;">Payment Collection & Payout</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Preferred payment method</label>
           <div class="select-wrapper">
             <select class="form-select" id="wsPayMethod">
               ${['Interac e-Transfer · Cash', 'Interac e-Transfer', 'Cash'].map((m) => `<option ${(r.paymentMethod || 'Interac e-Transfer · Cash') === m ? 'selected' : ''}>${m}</option>`).join('')}
@@ -2405,34 +2434,76 @@
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Walking corridor / route</label>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Payment handle (e-Transfer email or phone)</label>
           <div class="input-box-wrapper">
-            <input class="form-input" type="text" id="wsServiceArea" value="${esc(w.serviceArea || 'Elm → Greenfield')}" placeholder="Elm → Greenfield" />
+            <input class="form-input" id="wsPayHandle" value="${esc(r.paymentHandle || w.email)}" placeholder="sarah@walkshare.ca" />
           </div>
         </div>
       </div>
 
-      <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveWalkShareRate()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px; background: #16A34A;">${editing ? 'Save Changes' : 'Complete Setup & Go to Dashboard'}</button>
+      <!-- Walking Zone & Route Card -->
+      <div class="profile-form-section-card" style="margin-bottom: 16px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #F1F5F9;">
+          <i data-lucide="map-pin" style="width:16px; height:16px; color:#1B2B68;"></i>
+          <span style="font-size:14px; font-weight:700; color:#0F172A;">Walking Corridor & Range</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Walking corridor / route</label>
+          <div class="input-box-wrapper">
+            <input class="form-input" type="text" id="wsServiceArea" value="${esc(w.serviceArea || 'Elm → Greenfield')}" placeholder="Elm → Greenfield" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:4px;">
+          <label class="form-label">Max walking distance (km)</label>
+          <div class="input-box-wrapper">
+            <input class="form-input" id="wsMaxDistance" type="number" value="${esc(w.maxDistanceKm || 3)}" placeholder="3" />
+          </div>
+        </div>
       </div>
+
+      <!-- Action Button -->
+      <button type="button" class="avail-save-btn" onclick="saveWalkSharePaymentAndRates()">
+        ${editing ? 'Save payment & rates' : 'Complete Setup & Go to Dashboard'}
+      </button>
     `;
     icons();
+  }
+
+  function renderOnboardRate() {
+    renderWalkSharePaymentRates('wsOnboardRateFeed', false);
+  }
+
+  function renderPayment() {
+    renderWalkSharePaymentRates('wsPaymentFeed', true);
   }
 
   window.setWalkShareNegotiable = function (yes) {
     const w = ensureWalk();
     w.rate = w.rate || {};
     w.rate.negotiable = yes;
-    renderOnboardRate();
+    const btnYes = document.getElementById('wsNegYes');
+    const btnNo = document.getElementById('wsNegNo');
+    if (btnYes && btnNo) {
+      if (yes) {
+        btnYes.classList.add('active');
+        btnNo.classList.remove('active');
+      } else {
+        btnYes.classList.remove('active');
+        btnNo.classList.add('active');
+      }
+    }
   };
 
-  window.saveWalkShareRate = function () {
+  window.saveWalkSharePaymentAndRates = function () {
     const w = ensureWalk();
     w.rate = w.rate || {};
     w.rate.amount = Number(document.getElementById('wsRateAmount')?.value || w.rate.amount || 75);
     w.rate.dailyAmount = Number(document.getElementById('wsDailyAmount')?.value || 25);
     w.rate.paymentMethod = document.getElementById('wsPayMethod')?.value || 'Interac e-Transfer · Cash';
+    w.rate.paymentHandle = document.getElementById('wsPayHandle')?.value || w.rate.paymentHandle || w.email;
     w.serviceArea = document.getElementById('wsServiceArea')?.value || w.serviceArea || 'Elm → Greenfield';
     w.maxDistanceKm = Number(document.getElementById('wsMaxDistance')?.value || 3);
     w.onboarding.rate = true;
@@ -2448,13 +2519,16 @@
     }
     persist();
     if (editingProfileChild()) {
-      toast('Rate preferences saved');
+      toast('Payment & rates updated');
       window.backNested('wsProfile');
     } else {
       toast('🎉 WalkShare Escort setup complete! Welcome to your dashboard.');
       window.navigateTo('wsHome');
     }
   };
+
+  window.saveWalkShareRate = window.saveWalkSharePaymentAndRates;
+  window.saveWalkSharePayment = window.saveWalkSharePaymentAndRates;
 
   function renderMyRatings() {
     const w = ensureWalk();
@@ -2502,46 +2576,6 @@
     `;
     icons();
   }
-
-  function renderPayment() {
-    const w = ensureWalk();
-    const el = feed('wsPaymentFeed');
-    if (!el) return;
-    bindChildTitle(el, 'Payment preference');
-    bindChildBack(el, "backNested('wsProfile')");
-    el.innerHTML = `
-      <div class="profile-form-section-card" style="margin-bottom: 16px;">
-        <div class="form-group">
-          <label class="form-label">Payment method</label>
-          <div class="select-wrapper">
-            <select class="form-select" id="wsPayMethod">
-              ${['Interac e-Transfer · Cash', 'Interac e-Transfer', 'Cash'].map((m) => `<option ${(w.rate.paymentMethod || 'Interac e-Transfer · Cash') === m ? 'selected' : ''}>${m}</option>`).join('')}
-            </select>
-            <i data-lucide="chevron-down" class="select-chevron" style="width:18px;height:18px;color:currentColor;"></i>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Payment handle (e-Transfer email or phone)</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" id="wsPayHandle" value="${esc(w.rate.paymentHandle || w.email)}" placeholder="sarah@walkshare.ca" />
-          </div>
-        </div>
-      </div>
-      <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveWalkSharePayment()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">Save Preference</button>
-      </div>
-    `;
-    icons();
-  }
-
-  window.saveWalkSharePayment = function () {
-    const w = ensureWalk();
-    w.rate.paymentMethod = document.getElementById('wsPayMethod')?.value || w.rate.paymentMethod;
-    w.rate.paymentHandle = document.getElementById('wsPayHandle')?.value || w.rate.paymentHandle;
-    persist();
-    toast('Payment preference saved');
-    window.backNested('wsProfile');
-  };
 
   function renderPending() {
     const w = ensureWalk();

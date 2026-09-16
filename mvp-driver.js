@@ -2503,83 +2503,172 @@
     return h * 60 + m;
   }
 
-  function renderOnboardRate() {
+  function renderDriverPaymentRates(feedId, isEditing) {
     const d = ensureDriver();
-    const r = d.rate;
-    const el = feed('driverOnboardRateFeed');
+    const r = d.rate || {};
+    const el = feed(feedId);
     if (!el) return;
-    const editing = editingProfileChild();
-    bindChildTitle(el, 'Posted rate');
-    bindChildBack(el, "navigateTo('driverOnboardAvailability')");
+    const editing = isEditing !== undefined ? isEditing : editingProfileChild();
+    bindChildTitle(el, editing ? 'Payment & Rates' : 'Posted Rate & Payment');
+    bindChildBack(el, editing ? "navigateTo('driverProfile')" : "navigateTo('driverOnboardAvailability')");
+
     el.innerHTML = `
-      ${editing ? '' : stepIntro(5, 5, 'Posted rate & service area', 'Info only — ride fees stay between you and the parent.')}
-      ${field('Weekly posted rate (CAD)', `<input class="form-input" id="drvRateAmt" type="number" value="${esc(r.amount || 120)}" placeholder="120" />`, 'banknote')}
-      ${field('Daily rate (optional CAD)', `<input class="form-input" id="drvDailyAmt" type="number" value="${esc(r.dailyAmount || 35)}" placeholder="35" />`, 'calendar')}
-      <div class="form-group"><label class="form-label">Open to rate discussion? (Negotiable)</label>
-        <div class="drv-toggle-row">
-          <button type="button" id="drvNegYes" class="${r.negotiable ? 'active' : ''}" onclick="setDriverNegotiable(true)">Yes</button>
-          <button type="button" id="drvNegNo" class="${!r.negotiable ? 'active' : ''}" onclick="setDriverNegotiable(false)">No</button>
+      ${editing ? `
+        <div class="p2p-payment-notice" style="display:flex; align-items:flex-start; gap:12px; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:14px; padding:14px; margin-bottom:16px;">
+          <div style="width:36px; height:36px; border-radius:10px; background:#EFF6FF; color:#2563EB; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <i data-lucide="shield-check" style="width:18px; height:18px;"></i>
+          </div>
+          <div>
+            <div style="font-size:13.5px; font-weight:700; color:#0F172A; margin-bottom:2px;">100% Direct Parent Payments</div>
+            <div style="font-size:12px; color:#64748B; line-height:1.4;">Ride fees stay directly between you and parents. Home2School takes 0% commission on your trips.</div>
+          </div>
+        </div>
+      ` : stepIntro(5, 5, 'Posted rates & payment setup', 'Set your ride rates, service corridor, and where you will receive direct payments from parents.')}
+
+      <!-- Ride Rates Card -->
+      <div class="profile-form-section-card" style="margin-bottom: 14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #F1F5F9;">
+          <i data-lucide="banknote" style="width:16px; height:16px; color:#1B2B68;"></i>
+          <span style="font-size:14px; font-weight:700; color:#0F172A;">Ride Pricing & Rates</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Weekly posted rate ($ CAD / child)</label>
+          <div class="input-box-wrapper">
+            <input class="form-input" id="drvRateAmt" type="number" value="${esc(r.amount || 120)}" placeholder="120" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Single ride / daily rate (optional $ CAD)</label>
+          <div class="input-box-wrapper">
+            <input class="form-input" id="drvDailyAmt" type="number" value="${esc(r.dailyAmount || 35)}" placeholder="35" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Rate Flexibility</label>
+          <div class="drv-toggle-row" style="display:flex; gap:8px; margin-top:4px;">
+            <button type="button" id="drvNegYes" class="avail-type-btn ${r.negotiable ? 'active' : ''}" style="height:42px; font-size:13px; font-weight:700;" onclick="setDriverNegotiable(true)">
+              <i data-lucide="message-circle" style="width:14px; height:14px;"></i>
+              <span>Yes, negotiable</span>
+            </button>
+            <button type="button" id="drvNegNo" class="avail-type-btn ${!r.negotiable ? 'active' : ''}" style="height:42px; font-size:13px; font-weight:700;" onclick="setDriverNegotiable(false)">
+              <i data-lucide="lock" style="width:14px; height:14px;"></i>
+              <span>Fixed rate</span>
+            </button>
+          </div>
         </div>
       </div>
-      ${selectField('Preferred payment method', `<select class="form-select" id="drvPayMethod">${['e-Transfer · Cash', 'Interac e-Transfer', 'Cash', 'Other'].map((m) => `<option ${(r.paymentMethod || 'e-Transfer · Cash') === m ? 'selected' : ''}>${m}</option>`).join('')}</select>`)}
-      ${field('Service area / corridor', `<input class="form-input" id="drvServiceArea" value="${esc(d.serviceArea || 'Midtown Toronto')}" placeholder="Midtown Toronto" />`, 'map-pin')}
-      ${field('Max service distance (km)', `<input class="form-input" id="drvMaxDistance" type="number" value="${esc(d.maxDistanceKm || 15)}" placeholder="15" />`, 'navigation')}
-      <p style="font-size:11.5px; color:#64748B; margin:-4px 0 16px 0; line-height:1.4;">
-        <i data-lucide="info" style="width:13px;height:13px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
-        Distance is used to match parents within your boundary, not to calculate prices automatically.
-      </p>
-      <div class="drv-actions-col"><button type="button" class="btn-primary" onclick="saveDriverRate()">${editing ? 'Save' : 'Submit for review'}</button></div>
+
+      <!-- Payment Collection & Payout Card -->
+      <div class="profile-form-section-card" style="margin-bottom: 14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #F1F5F9;">
+          <i data-lucide="wallet" style="width:16px; height:16px; color:#1B2B68;"></i>
+          <span style="font-size:14px; font-weight:700; color:#0F172A;">Payment Collection & Payout</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Preferred payment method</label>
+          <div class="select-wrapper">
+            <select class="form-select" id="drvPayMethod">
+              ${['Interac e-Transfer · Cash', 'Interac e-Transfer', 'Cash', 'Direct Deposit'].map((m) => `<option ${(r.paymentMethod || 'Interac e-Transfer · Cash') === m ? 'selected' : ''}>${m}</option>`).join('')}
+            </select>
+            <i data-lucide="chevron-down" class="select-chevron" style="width:18px;height:18px;color:currentColor;"></i>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Payment handle (e-Transfer email or phone)</label>
+          <div class="input-box-wrapper">
+            <input class="form-input" id="drvPayHandle" value="${esc(r.paymentHandle || d.email || '')}" placeholder="driver@email.com or (416) 555-0199" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Corridor & Distance Card -->
+      <div class="profile-form-section-card" style="margin-bottom: 16px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #F1F5F9;">
+          <i data-lucide="map-pin" style="width:16px; height:16px; color:#1B2B68;"></i>
+          <span style="font-size:14px; font-weight:700; color:#0F172A;">Service Area & Corridor</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Service corridor / route</label>
+          <div class="input-box-wrapper">
+            <input class="form-input" id="drvServiceArea" value="${esc(d.serviceArea || 'Midtown Toronto')}" placeholder="Midtown Toronto" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:4px;">
+          <label class="form-label">Max service distance (km)</label>
+          <div class="input-box-wrapper">
+            <input class="form-input" id="drvMaxDistance" type="number" value="${esc(d.maxDistanceKm || 15)}" placeholder="15" />
+          </div>
+        </div>
+        <p style="font-size:11.5px; color:#64748B; margin:6px 0 0 0; line-height:1.4;">
+          Distance is used to match parents along your route corridor.
+        </p>
+      </div>
+
+      <!-- Action Button -->
+      <button type="button" class="avail-save-btn" onclick="saveDriverPaymentAndRates()">
+        ${editing ? 'Save payment & rates' : 'Submit for review'}
+      </button>
     `;
     icons();
   }
 
+  function renderOnboardRate() {
+    renderDriverPaymentRates('driverOnboardRateFeed', false);
+  }
+
+  function renderPayment() {
+    renderDriverPaymentRates('driverPaymentFeed', true);
+  }
+
   window.setDriverNegotiable = function (yes) {
     ensureDriver().rate.negotiable = yes;
-    renderOnboardRate();
-    icons();
+    const btnYes = document.getElementById('drvNegYes');
+    const btnNo = document.getElementById('drvNegNo');
+    if (btnYes && btnNo) {
+      if (yes) {
+        btnYes.classList.add('active');
+        btnNo.classList.remove('active');
+      } else {
+        btnYes.classList.remove('active');
+        btnNo.classList.add('active');
+      }
+    }
   };
 
-  window.saveDriverRate = function () {
+  window.saveDriverPaymentAndRates = function () {
     const d = ensureDriver();
+    d.rate = d.rate || {};
     d.rate.amount = Number(val('drvRateAmt') || d.rate.amount || 120);
     d.rate.dailyAmount = Number(val('drvDailyAmt') || 35);
     const pay = val('drvPayMethod');
     if (pay) d.rate.paymentMethod = pay;
+    d.rate.paymentHandle = val('drvPayHandle') || d.rate.paymentHandle || d.email || '';
     d.serviceArea = val('drvServiceArea') || 'Midtown Toronto';
     d.maxDistanceKm = Number(val('drvMaxDistance') || 15);
     d.onboarding.rate = true;
     syncDriverToProviders();
     persist();
-    if (finishNestedOr()) return;
-    d.verificationStatus = 'pending';
-    syncDriverToProviders();
-    persist();
-    window.navigateTo('driverPending');
+    if (editingProfileChild()) {
+      toast('Payment & rates updated');
+      window.backNested('driverProfile');
+    } else {
+      if (finishNestedOr()) return;
+      d.verificationStatus = 'pending';
+      syncDriverToProviders();
+      persist();
+      window.navigateTo('driverPending');
+    }
   };
 
-  function renderPayment() {
-    const d = ensureDriver();
-    const r = d.rate;
-    const el = feed('driverPaymentFeed');
-    if (!el) return;
-    bindChildTitle(el, 'Payment preference');
-    bindChildBack(el, "navigateTo('driverProfile')");
-    el.innerHTML = `
-      <p class="page-subtitle" style="margin:0;text-align:left;">Ride fees stay between you and the parent.</p>
-      ${selectField('Preferred method', `<select class="form-select" id="drvPayMethod">${['Interac e-Transfer', 'Cash', 'Cheque'].map((m) => `<option ${r.paymentMethod === m ? 'selected' : ''}>${m}</option>`).join('')}</select>`)}
-      ${field('Interac handle or phone', `<input class="form-input" id="drvPayHandle" value="${esc(r.paymentHandle || d.email || '')}" placeholder="name@email.com" />`, 'at-sign')}
-      <div class="drv-actions-col"><button type="button" class="btn-primary" onclick="saveDriverPayment()">Save</button></div>
-    `;
-  }
-
-  window.saveDriverPayment = function () {
-    const d = ensureDriver();
-    d.rate.paymentMethod = val('drvPayMethod') || d.rate.paymentMethod;
-    d.rate.paymentHandle = val('drvPayHandle') || d.rate.paymentHandle;
-    persist();
-    if (finishNestedOr()) return;
-    window.navigateTo('driverProfile');
-  };
+  window.saveDriverRate = window.saveDriverPaymentAndRates;
+  window.saveDriverPayment = window.saveDriverPaymentAndRates;
 
   function renderPending() {
     const d = ensureDriver();
@@ -4266,7 +4355,7 @@
       ['vehicle', '2. Vehicle', `${d.vehicle.make} ${d.vehicle.model} · ${d.vehicle.capacity} seats`, 'driverOnboardVehicle'],
       ['docs', '3. Documents', d.documents.filter((doc) => doc.status === 'approved').length + ' / ' + d.documents.length + ' approved', 'driverOnboardDocs'],
       ['availability', '4. Availability', availSummary(d.availability), 'driverOnboardAvailability'],
-      ['rate', '5. Posted rate', `$${d.rate.amount} / week · ${d.rate.negotiable ? 'negotiable' : 'fixed'}`, 'driverOnboardRate']
+      ['rate', '5. Payment & Rates', `$${d.rate.amount} / week · ${d.rate.paymentMethod || 'Interac'}`, 'driverOnboardRate']
     ];
     const ready = onboardingDone(d);
     el.innerHTML = `
@@ -4307,26 +4396,22 @@
   function renderProfile() {
     const d = ensureDriver();
     state()._docsReturnTo = null;
-    const el = document.getElementById('driverProfileFeed');
+    const el = feed('driverProfileFeed');
     if (!el) return;
     bindChildTitle(el, 'Driver Profile');
-    const vehicleLabel = `${esc(d.vehicle.make)} ${esc(d.vehicle.model)} (${esc(d.vehicle.year)})`;
+    const photo = d.photo || '/assets/avatar_sadia.jpg';
     el.innerHTML = `
-      <!-- 1. Driver Profile Hero Card -->
-      <div class="profile-user-card" role="button" tabindex="0" onclick="openDriverProfileChild('driverOnboardProfile', event)" style="margin-bottom:12px;">
-        <img src="${esc(d.photo || '/assets/avatar_tariq.jpg')}" alt="${esc(d.name)}" class="profile-avatar-lg" onerror="this.src='/assets/avatar_tariq.jpg'" />
-        <div class="profile-user-meta">
-          <div class="profile-user-top">
-            <div class="profile-user-name-row">
-              <h3 class="profile-user-name">${esc(d.name)}</h3>
-              ${isApproved(d) ? `
-                <span class="profile-verified-badge-wrap" title="Verified Driver">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" style="vertical-align:middle;">
-                    <circle cx="12" cy="12" r="10" fill="#38BDF8"/>
-                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#09122C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>` : ''}
-            </div>
+      <!-- User Profile Header Card -->
+      <div class="profile-user-card" style="margin-bottom: 12px;">
+        <div class="profile-user-avatar-wrap">
+          <img src="${esc(photo)}" alt="Profile photo" class="profile-user-avatar" id="drvProfileHeaderPhoto" onerror="this.src='/assets/avatar_sadia.jpg'" />
+          <button type="button" class="profile-user-avatar-edit-btn" onclick="openDriverProfileChild('driverOnboardProfile', event)" aria-label="Change photo">
+            <i data-lucide="camera"></i>
+          </button>
+        </div>
+        <div class="profile-user-info">
+          <div class="profile-user-name-row" onclick="openDriverProfileChild('driverOnboardProfile', event)">
+            <h3 class="profile-user-name">${esc(d.name || 'Sadia Driver')}</h3>
             <i data-lucide="chevron-right" class="profile-user-chevron"></i>
           </div>
           <p class="profile-user-role">School Driver · ★ ${Number(d.rating || 4.9).toFixed(1)} (142 trips)</p>
@@ -4345,8 +4430,7 @@
         ${profileMenuRow('car', 'Vehicle info', "openDriverProfileChild('driverOnboardVehicle', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openDriverProfileChild('driverOnboardDocs', event)")}
         ${profileMenuRow('clock', 'Availability', "openDriverProfileChild('driverOnboardAvailability', event)")}
-        ${profileMenuRow('circle-dollar-sign', 'Posted rate', "openDriverProfileChild('driverOnboardRate', event)")}
-        ${profileMenuRow('wallet', 'Payment preference', "openDriverProfileChild('driverPayment', event)")}
+        ${profileMenuRow('wallet', 'Payment & Rates', "openDriverProfileChild('driverPayment', event)")}
       </div>
 
       <!-- Section 2: Subscription, FAQ, Support & Policies -->
