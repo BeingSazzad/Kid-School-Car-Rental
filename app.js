@@ -5852,23 +5852,6 @@ window.handleChangePasswordSubmit = function (e) {
   }
 };
 
-window.openDeleteAccountModal = function () {
-  const modal = document.getElementById('deleteAccountModal');
-  if (modal) modal.style.display = 'flex';
-  if (window.lucide) window.lucide.createIcons();
-};
-
-window.closeDeleteAccountModal = function () {
-  const modal = document.getElementById('deleteAccountModal');
-  if (modal) modal.style.display = 'none';
-};
-
-window.confirmDeleteAccountAndData = function () {
-  alert('Your Home2School account, children records, and all transit GPS data have been permanently erased pursuant to PIPEDA standards.');
-  window.closeDeleteAccountModal();
-  window.navigateTo('authWelcome');
-};
-
 window.openSubscriptionReceiptModal = function () {
   const modal = document.getElementById('subscriptionInvoiceModal');
   if (modal) modal.style.display = 'flex';
