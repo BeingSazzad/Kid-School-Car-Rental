@@ -853,39 +853,94 @@
     const name = req.parentName || 'Parent';
     const from = cleanPlace(req.pickupLocation) || 'Pickup';
     const to = cleanPlace(req.dropoffLocation) || 'School';
-    const actions = req.status === 'new' ? `
-      <div class="drv-req-card-actions" onclick="event.stopPropagation()">
-        <button type="button" class="drv-req-accept" onclick="acceptWalkShareRequest('${esc(req.id)}')" ${canAccept(ensureWalk()) ? '' : 'disabled'}>Accept</button>
-        <button type="button" class="drv-req-decline" onclick="declineWalkShareRequest('${esc(req.id)}')">Decline</button>
-      </div>` : '';
     const photo = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
-    return `<article class="drv-req-card" role="button" tabindex="0" onclick="openWalkShareRequest('${esc(req.id)}')">
-      <div class="drv-req-card-head">
-        <img class="drv-req-avatar" src="${esc(photo)}" alt="" onerror="this.src='/assets/avatar_sadia.jpg'" />
-        <div class="drv-req-head-copy">
-          <h3 class="drv-req-parent">${esc(name)}</h3>
-          <p class="drv-req-kids">${esc(childShort(req))}</p>
+
+    // Format Date & Times
+    const displayDate = req.frequency === 'recurring' 
+      ? (req.recurringDays && req.recurringDays.length ? 'Weekly (' + req.recurringDays.join(', ') + ')' : 'Mon – Fri Weekly')
+      : (dateShort(req.dateLabel) || 'Sep 17, 2026');
+    
+    const pickupT = req.pickupTime || '07:45 AM';
+    const returnT = req.returnTime || '';
+    const timesText = returnT ? pickupT + ' & ' + returnT : pickupT;
+    
+    const isBoth = req.direction === 'bothway' || (returnT && returnT.length > 0);
+    const dirPillHtml = `<span style="background:#F0FDFA; color:#0F766E; font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;">
+        <i data-lucide="footprints" style="width:12px; height:12px;"></i>
+        <span>${isBoth ? 'Round Walk' : 'Walking Bus'}</span>
+      </span>`;
+
+    // Parse price
+    const priceVal = String(req.rate || (req.rateLabel ? req.rateLabel.replace(/\D/g, '') : '25') || '25');
+
+    // Contextual actions
+    let actionHtml = '';
+    if (req.status === 'new') {
+      actionHtml = `
+        <div style="display:flex; align-items:center; gap:8px;" onclick="event.stopPropagation();">
+          <button type="button" onclick="declineWalkShareRequest('${esc(req.id)}')" style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; border-radius:99px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer;">
+            Decline
+          </button>
+          <button type="button" onclick="acceptWalkShareRequest('${esc(req.id)}')" style="background:#0F766E; color:#FFFFFF; border-radius:99px; padding:6px 16px; font-size:12px; font-weight:700; border:none; cursor:pointer;">
+            Accept
+          </button>
+        </div>`;
+    } else if (req.status === 'declined') {
+      actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:99px;">Declined</span>';
+    } else {
+      actionHtml = `
+        <div style="width:32px; height:32px; border-radius:50%; background:#F0FDFA; color:#0F766E; display:flex; align-items:center; justify-content:center;">
+          <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>
+        </div>`;
+    }
+
+    return `
+      <article class="h2s-booking-card" onclick="openWalkShareRequest('${esc(req.id)}')" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:22px; padding:18px 20px; margin-bottom:14px; box-shadow:0 4px 16px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.2s ease;">
+        <!-- Top Row: Date & Direction -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:42px; height:42px; border-radius:12px; background:#F0FDFA; color:#0D9488; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i data-lucide="footprints" style="width:20px; height:20px;"></i>
+            </div>
+            <div>
+              <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
+              <div style="font-size:12px; font-weight:600; color:#64748B; margin-top:2px;">${timesText}</div>
+            </div>
+          </div>
+          ${dirPillHtml}
         </div>
-        <div class="drv-req-head-end">
-          <span class="drv-req-price">${esc(req.rateLabel || '')}</span>
-          <i data-lucide="chevron-right" class="drv-req-chevron" aria-hidden="true"></i>
+
+        <!-- Middle Row: Route Rail & Payout -->
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px;">
+          <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; position:relative; padding-left:2px;">
+            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
+              <span style="width:9px; height:9px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
+              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
+            </div>
+            <div style="position:absolute; left:6px; top:8px; bottom:8px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
+            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
+              <span style="width:9px; height:9px; border-radius:50%; border:2px solid #0D9488; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
+              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:16px; flex-shrink:0; padding-left:16px; border-left:1px solid #F1F5F9;">
+            <div style="font-size:24px; font-weight:800; color:#0F172A; letter-spacing:-0.5px;">${priceVal}</div>
+          </div>
         </div>
-      </div>
-      <div class="drv-req-route-block">
-        <div class="drv-req-route-rail" aria-hidden="true">
-          <span class="drv-req-dot start"></span>
-          <span class="drv-req-rail-line"></span>
-          <span class="drv-req-dot end"><i data-lucide="map-pin"></i></span>
+
+        <!-- Footer Row: Parent & Kids Info & Actions -->
+        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${photo}" alt="" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
+            <div>
+              <div style="font-size:13.5px; font-weight:700; color:#0F172A; line-height:1.2;">${name}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${childShort(req)}</div>
+            </div>
+          </div>
+          ${actionHtml}
         </div>
-        <div class="drv-req-route-copy">
-          <p class="drv-req-stop">${esc(from)}</p>
-          <p class="drv-req-stop is-end">${esc(to)}</p>
-        </div>
-      </div>
-      <p class="drv-req-when"><i data-lucide="calendar" aria-hidden="true"></i><span>${esc(scheduleMetaLine(req))}</span></p>
-      <p class="drv-req-meta-line">${esc(cardMetaLine(req))}</p>
-      ${actions}
-    </article>`;
+      </article>`;
   }
 
   window.switchWalkShareRequestsTab = function (tab) {
@@ -1083,47 +1138,96 @@
   }
 
   function schedCard(item) {
-    const d = dateParts(item.when || item.dateLabel || 'Tue, Sep 9, 2026');
     const isReturn = item.leg === 'afternoon';
-    const badge = item.badge || (isReturn ? 'Return' : 'One way');
+    const badge = isReturn ? 'Return Walk' : 'Morning Walk';
     const open = !!item.isActionableNow || item.status === 'active';
-    const cta = open
-      ? `<button type="button" class="drv-sched-cta primary" onclick="event.stopPropagation(); startWalkShareWalk('${esc(item.id)}')"><i data-lucide="footprints"></i> Open walk</button>`
-      : (item.leg === 'morning'
-        ? `<button type="button" class="drv-sched-cta outline" onclick="event.stopPropagation(); startWalkShareWalk('${esc(item.id)}')"><i data-lucide="navigation"></i> I'm on the way</button>`
-        : '');
-    return `<article class="drv-sched-card" onclick="startWalkShareWalk('${esc(item.id)}')">
-      <div class="drv-sched-card-main">
-        <div class="drv-sched-date">
-          <span class="drv-sched-month">${esc(d.month)}</span>
-          <span class="drv-sched-day">${esc(d.day)}</span>
-          <span class="drv-sched-wd">${esc(d.weekday || '')}</span>
-        </div>
-        <div class="drv-sched-body">
-          <div class="drv-sched-top">
-            <span class="drv-sched-time">${esc(item.time)}</span>
-            <span class="drv-sched-badge${isReturn ? ' is-return' : ''}">${esc(badge)}</span>
-          </div>
-          <div class="drv-sched-route">
-            <div class="drv-sched-rail" aria-hidden="true">
-              <span class="drv-sched-dot start"></span>
-              <span class="drv-sched-line"></span>
-              <span class="drv-sched-dot end"><i data-lucide="map-pin"></i></span>
+    
+    // Format Date & Time
+    const displayDate = item.when || item.dateLabel || 'Tue, Sep 9, 2026';
+    const timeText = item.time || '07:45 AM';
+    
+    const from = cleanPlace(item.from || item.pickupLocation) || 'Pickup';
+    const to = cleanPlace(item.to || item.dropoffLocation || item.schoolLocation) || 'School';
+    const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
+    const parentName = item.parentName || 'Sadia Khan';
+    const kidsText = item.childNames || 'Children';
+    const cap = ensureWalk().group?.capacity || 3;
+
+    let ctaHtml = '';
+    if (open) {
+      ctaHtml = `
+        <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
+          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#0D9488; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+            <span class="live-dot-pulse" style="width:6px; height:6px; background:#fff;"></span>
+            <span>Live Walk</span>
+          </button>
+        </div>`;
+    } else if (item.leg === 'morning') {
+      ctaHtml = `
+        <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
+          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#0F766E; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+            <i data-lucide="navigation" style="width:12px; height:12px;"></i>
+            <span>Start</span>
+          </button>
+        </div>`;
+    } else {
+      ctaHtml = `
+        <div style="width:32px; height:32px; border-radius:50%; background:#F0FDFA; color:#0F766E; display:flex; align-items:center; justify-content:center;">
+          <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>
+        </div>`;
+    }
+
+    return `
+      <article class="h2s-booking-card" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:22px; padding:18px 20px; margin-bottom:14px; box-shadow:0 4px 16px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.2s ease;">
+        <!-- Top Row: Date & Direction -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:42px; height:42px; border-radius:12px; background:#F0FDFA; color:#0D9488; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i data-lucide="footprints" style="width:20px; height:20px;"></i>
             </div>
-            <div class="drv-sched-stops">
-              <p>${esc(cleanPlace(item.from) || item.from || '')}</p>
-              <p>${esc(cleanPlace(item.to) || item.to || '')}</p>
+            <div>
+              <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
+              <div style="font-size:12px; font-weight:600; color:#64748B; margin-top:2px;">${timeText}</div>
             </div>
           </div>
-          <div class="drv-sched-people">
-            <div class="drv-sched-avas">${passengerAvatars(item)}</div>
-            <span class="drv-sched-names">${esc(passengerLine(item))}</span>
+          <span style="background:${isReturn ? '#FFF7ED' : '#F0FDFA'}; color:${isReturn ? '#C2410C' : '#0F766E'}; font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;">
+            <i data-lucide="${isReturn ? 'corner-down-left' : 'corner-up-right'}" style="width:12px; height:12px;"></i>
+            <span>${badge}</span>
+          </span>
+        </div>
+
+        <!-- Middle Row: Route Rail & Squad Info -->
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px;">
+          <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; position:relative; padding-left:2px;">
+            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
+              <span style="width:9px; height:9px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
+              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
+            </div>
+            <div style="position:absolute; left:6px; top:8px; bottom:8px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
+            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
+              <span style="width:9px; height:9px; border-radius:50%; border:2px solid #0D9488; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
+              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; padding-left:16px; border-left:1px solid #F1F5F9; font-size:13px; font-weight:800; color:#0F172A;">
+            <i data-lucide="users" style="width:16px; height:16px; color:#64748B;"></i>
+            <span>${cap} kids max</span>
           </div>
         </div>
-        <i data-lucide="chevron-right" class="drv-sched-chevron"></i>
-      </div>
-      ${cta}
-    </article>`;
+
+        <!-- Footer Row: Parent & Kids Info & Action -->
+        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${parentPhoto}" alt="" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
+            <div>
+              <div style="font-size:13.5px; font-weight:700; color:#0F172A; line-height:1.2;">${parentName}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${kidsText}</div>
+            </div>
+          </div>
+          ${ctaHtml}
+        </div>
+      </article>`;
   }
 
   window.startWalkShareWalk = function (id) {
