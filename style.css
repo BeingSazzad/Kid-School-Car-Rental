@@ -773,52 +773,104 @@ svg.lucide {
   color: var(--color-primary-navy, #1B2B68);
 }
 
-.welcome-features-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 4px 0;
-}
-
-.welcome-feature-item {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 9px 12px;
-  background: #F8FAFC;
-  border: 1px solid #F1F5F9;
-  border-radius: 13px;
-}
-
-.welcome-feature-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+.welcome-trust-pills {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  gap: 8px;
+  margin: 6px 0 2px;
+  flex-wrap: wrap;
 }
 
-.welcome-feature-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.welcome-feature-title {
-  font-size: 12.5px;
+.welcome-trust-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  font-size: 11.5px;
   font-weight: 700;
-  color: #0F172A;
-  display: block;
-  line-height: 1.25;
+  color: #1E293B;
+  letter-spacing: 0.1px;
 }
 
-.welcome-feature-desc {
+.welcome-trust-pill i,
+.welcome-trust-pill svg {
+  width: 13px;
+  height: 13px;
+  color: var(--color-primary-navy, #1B2B68);
+}
+
+.welcome-actions-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+  width: 100%;
+}
+
+.welcome-btn-primary {
+  width: 100%;
+  height: 50px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 14px;
+  background: var(--color-primary-navy, #1B2B68);
+  color: #FFFFFF;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(27, 43, 104, 0.2);
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif);
+}
+
+.welcome-btn-primary:active {
+  transform: scale(0.985);
+  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.25);
+}
+
+.welcome-btn-secondary {
+  width: 100%;
+  height: 48px;
+  font-size: 14.5px;
+  font-weight: 700;
+  border-radius: 14px;
+  background: #FFFFFF;
+  color: #1E293B;
+  border: 1.5px solid #E2E8F0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif);
+}
+
+.welcome-btn-secondary:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+.welcome-btn-secondary:active {
+  background-color: #F1F5F9;
+}
+
+.welcome-footer-note {
   font-size: 11px;
-  color: #64748B;
-  display: block;
-  line-height: 1.3;
-  margin-top: 1px;
+  color: #94A3B8;
+  text-align: center;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 .brand-heart-icon {
@@ -16248,73 +16300,86 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   color: #FFFFFF;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-actions {
+.sub-actions,
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-actions,
+.sub-screen-body .sub-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 18px;
+  width: 100%;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-btn-primary {
+.sub-btn-primary,
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-btn-primary,
+.sub-screen-body .sub-btn-primary {
   width: 100%;
   height: 52px;
   border-radius: 14px;
-  background: var(--color-primary, #09122C);
-  color: #FFFFFF;
-  font-family: var(--font-family);
-  font-size: 15.5px;
+  background: var(--color-primary-navy, #1B2B68) !important;
+  color: #FFFFFF !important;
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif);
+  font-size: 15px;
   font-weight: 700;
-  border: none;
+  border: none !important;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(9, 18, 44, 0.16);
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  box-shadow: 0 4px 14px rgba(27, 43, 104, 0.2);
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-btn-primary:active {
-  transform: scale(0.99);
+.sub-btn-primary:active {
+  transform: scale(0.985);
+  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.25);
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-btn-secondary-link {
-  background: transparent;
-  border: none;
-  padding: 10px;
-  font-family: var(--font-family);
+.sub-btn-secondary-link,
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-btn-secondary-link,
+.sub-screen-body .sub-btn-secondary-link {
+  background: transparent !important;
+  border: none !important;
+  padding: 12px;
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif);
   font-size: 14px;
   font-weight: 600;
-  color: #64748B;
+  color: #64748B !important;
   cursor: pointer;
   text-align: center;
   transition: color 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  width: 100%;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-btn-secondary-link:hover {
-  color: var(--color-primary, #09122C);
+.sub-btn-secondary-link:hover {
+  color: var(--color-primary-navy, #1B2B68) !important;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-cancel-link {
-  background: none;
-  border: none;
-  padding: 6px;
+.sub-cancel-link,
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-cancel-link,
+.sub-screen-body .sub-cancel-link {
+  background: none !important;
+  border: none !important;
+  padding: 8px;
   margin: 4px auto 0;
   align-self: center;
-  font-family: var(--font-family);
-  font-size: 12.5px;
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif);
+  font-size: 13px;
   font-weight: 600;
-  color: #94A3B8;
+  color: #94A3B8 !important;
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
   transition: color 0.15s ease;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-cancel-link:hover {
-  color: #EF4444;
+.sub-cancel-link:hover {
+  color: #EF4444 !important;
 }
 
 :is(#screen-subscription, #screen-driverSubscription) .sub-history-card {

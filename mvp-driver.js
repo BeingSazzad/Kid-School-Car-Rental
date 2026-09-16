@@ -2655,21 +2655,21 @@
     let ctaSection = '';
     if (failed) {
       ctaSection = `
-        <button type="button" class="sub-btn-primary" onclick="recoverDriverPayment()">Retry payment</button>
+        <button type="button" class="btn-primary sub-btn-primary" onclick="recoverDriverPayment()">Retry payment</button>
       `;
     } else if (isActive) {
       ctaSection = `
-        <button type="button" class="sub-btn-primary" onclick="activateDriverSubscription()">Save ${planName} plan</button>
+        <button type="button" class="btn-primary sub-btn-primary" onclick="activateDriverSubscription()">Save ${planName} plan</button>
         <button type="button" class="sub-cancel-link" onclick="cancelDriverSubscription()">Cancel subscription</button>
       `;
     } else if (isTrial) {
       ctaSection = `
-        <button type="button" class="sub-btn-primary" onclick="activateDriverSubscription()">Activate ${planName} access (${planPrice})</button>
+        <button type="button" class="btn-primary sub-btn-primary" onclick="activateDriverSubscription()">Activate ${planName} access (${planPrice})</button>
         <button type="button" class="sub-btn-secondary-link" onclick="continueDriverTrial()">Keep free trial for now</button>
       `;
     } else {
       ctaSection = `
-        <button type="button" class="sub-btn-primary" onclick="activateDriverSubscription()">Start 14-day free trial</button>
+        <button type="button" class="btn-primary sub-btn-primary" onclick="activateDriverSubscription()">Start 14-day free trial</button>
       `;
     }
 

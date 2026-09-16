@@ -4580,60 +4580,40 @@
           </p>
         </div>
 
-        <!-- 3 Feature Pillars (Fills visual void with high trust & clarity) -->
-        <div class="welcome-features-list">
-          <div class="welcome-feature-item">
-            <div class="welcome-feature-icon" style="background: rgba(27,43,104,0.08); color: #1B2B68;">
-              <i data-lucide="shield-check" style="width: 17px; height: 17px;"></i>
-            </div>
-            <div class="welcome-feature-info">
-              <span class="welcome-feature-title">Verified Drivers &amp; Escorts</span>
-              <span class="welcome-feature-desc">100% background-checked, VSC cleared &amp; inspected</span>
-            </div>
+        <!-- Clean Micro-Pill Trust Bar (Crisp, organized, no text clutter) -->
+        <div class="welcome-trust-pills">
+          <div class="welcome-trust-pill">
+            <i data-lucide="shield-check"></i>
+            <span>100% Vetted</span>
           </div>
-
-          <div class="welcome-feature-item">
-            <div class="welcome-feature-icon" style="background: #EFF6FF; color: #2563EB;">
-              <i data-lucide="map-pin" style="width: 17px; height: 17px;"></i>
-            </div>
-            <div class="welcome-feature-info">
-              <span class="welcome-feature-title">Live GPS &amp; Handover PIN</span>
-              <span class="welcome-feature-desc">Real-time trip tracking with secure OTP child verification</span>
-            </div>
+          <div class="welcome-trust-pill">
+            <i data-lucide="map-pin"></i>
+            <span>Live GPS</span>
           </div>
-
-          <div class="welcome-feature-item">
-            <div class="welcome-feature-icon" style="background: #F0FDF4; color: #16A34A;">
-              <i data-lucide="footprints" style="width: 17px; height: 17px;"></i>
-            </div>
-            <div class="welcome-feature-info">
-              <span class="welcome-feature-title">Carpool Rides &amp; WalkShare</span>
-              <span class="welcome-feature-desc">Daily scheduled school commutes or walking groups</span>
-            </div>
+          <div class="welcome-trust-pill">
+            <i data-lucide="key-round"></i>
+            <span>PIN Handover</span>
           </div>
         </div>
 
         <!-- Action Buttons Hierarchy -->
         <div class="welcome-actions-block">
-          <button type="button" class="btn-primary" onclick="navigateTo('authRoleSelect')" style="width: 100%; height: 48px; font-size: 14.5px; font-weight: 700; border-radius: 13px; background: #1B2B68; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.2); cursor: pointer;">
+          <button type="button" class="welcome-btn-primary" onclick="navigateTo('authRoleSelect')">
             <span>Create an Account</span>
             <i data-lucide="arrow-right" style="width: 17px; height: 17px;"></i>
           </button>
           
-          <button type="button" onclick="navigateTo('authLogin')" style="width: 100%; height: 46px; font-size: 14px; font-weight: 700; border-radius: 13px; background: #FFFFFF; color: #1E293B; border: 1.5px solid #E2E8F0; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.15s ease;">
+          <button type="button" class="welcome-btn-secondary" onclick="navigateTo('authLogin')">
             <i data-lucide="phone" style="width: 16px; height: 16px; color: #1B2B68;"></i>
             <span>Sign In with Phone</span>
           </button>
         </div>
 
-        <!-- Trust & Compliance Bar -->
-        <div class="welcome-trust-row">
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="shield-check" style="width: 13px; height: 13px; color: #10B981;"></i> 100% Vetted</span>
-          <span style="color: #CBD5E1;">•</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="map-pin" style="width: 13px; height: 13px; color: #1B2B68;"></i> Live GPS</span>
-          <span style="color: #CBD5E1;">•</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="lock" style="width: 13px; height: 13px; color: #64748B;"></i> PIPEDA Law</span>
-        </div>
+        <!-- Subtle Footer Trust Note -->
+        <p class="welcome-footer-note">
+          <i data-lucide="lock" style="width: 12px; height: 12px; color: #10B981;"></i>
+          <span>100% background-checked &amp; child safety compliant</span>
+        </p>
       </div>
 
       <div class="home-indicator"></div>
