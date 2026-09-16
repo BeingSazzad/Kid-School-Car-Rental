@@ -13,7 +13,7 @@
   const DRIVER_ONLY = new Set([
     'driverHome', 'driverRequests', 'driverSchedule', 'driverActiveTrip', 'driverSetup', 'driverProfile',
     'driverOnboardProfile', 'driverOnboardVehicle', 'driverOnboardDocs', 'driverDocDetail', 'driverOnboardAvailability',
-    'driverOnboardRate', 'driverPayment', 'driverPending', 'driverSubscription', 'driverRequestDetail', 'driverTripPrep', 'driverRateParent'
+    'driverOnboardRate', 'driverPayment', 'driverPending', 'driverSubscription', 'driverRequestDetail', 'driverTripPrep', 'driverRateParent', 'driverRatings'
   ]);
   const PARENTS = {
     'PRNT-9042': { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Arman, Emma & Zara' },
@@ -120,6 +120,7 @@
         activeTrip: d.activeTrip,
         activeTripStage: d.activeTripStage,
         isOnline: d.isOnline,
+        skipDemoUnlock: !!d.skipDemoUnlock,
         homeScenario: d.homeScenario,
         notifications: d.notifications
       }));
@@ -273,7 +274,7 @@
       try {
         const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
         if (saved && typeof saved === 'object') {
-          ['name', 'phone', 'email', 'photo', 'serviceArea', 'verificationStatus', 'isOnline', 'homeScenario', 'activeTripStage'].forEach((key) => {
+          ['name', 'phone', 'email', 'photo', 'serviceArea', 'verificationStatus', 'isOnline', 'homeScenario', 'activeTripStage', 'skipDemoUnlock'].forEach((key) => {
             if (saved[key] !== undefined) d[key] = saved[key];
           });
           ['onboarding', 'vehicle', 'availability', 'rate', 'subscription', 'activeTrip'].forEach((key) => {
@@ -293,7 +294,7 @@
     const wasSeeded = !!d.docsIdentitySeeded;
     d.documents = normalizeDocuments(d.documents, { seeded: wasSeeded });
     d.docsIdentitySeeded = true;
-    const unlocked = unlockPartnerForDemo(d);
+    const unlocked = d.skipDemoUnlock ? false : unlockPartnerForDemo(d);
     if (!wasSeeded || unlocked) persist();
     normalizeAvailability(d);
     syncTariqProviderAvailability();
@@ -302,7 +303,7 @@
 
   /** Keep the demo driver accept-ready even if older localStorage had pending docs. */
   function unlockPartnerForDemo(d) {
-    if (!d || typeof d !== 'object') return false;
+    if (!d || typeof d !== 'object' || d.skipDemoUnlock) return false;
     let changed = false;
     (d.documents || []).forEach((doc) => {
       if (!doc) return;
@@ -757,6 +758,99 @@
     return d.verificationStatus === 'approved' || d.verificationStatus === 'verified';
   }
 
+  window.startDriverSignupFlow = function (name, email) {
+    if (!state().driver) state().driver = { onboarding: {}, documents: [], vehicle: {}, availability: {}, rate: {}, subscription: {} };
+    state().driver.skipDemoUnlock = true;
+    const d = ensureDriver();
+    d.name = name || d.name || 'New Driver';
+    d.email = email || d.email || '';
+    d.phone = d.phone || '';
+    d.verificationStatus = 'pending';
+    d.isOnline = false;
+    d.skipDemoUnlock = true;
+    d.onboarding = { profile: false, vehicle: false, docs: false, availability: false, rate: false };
+    d.documents = REQUIRED_DOCS.map((spec) => ({
+      id: spec.id,
+      title: spec.title,
+      status: 'not_submitted',
+      rejectReason: '',
+      number: '',
+      class: '',
+      province: 'Ontario',
+      expiry: '',
+      insurer: '',
+      policyNumber: '',
+      plate: '',
+      vin: '',
+      issuer: '',
+      issueDate: '',
+      fileFront: emptyUpload(),
+      fileBack: emptyUpload(),
+      fileDoc: emptyUpload()
+    }));
+    d.docsIdentitySeeded = true;
+    d.subscription = d.subscription || { status: 'trial', plan: 'monthly', priceMonthly: 29, priceAnnual: 279, trialDaysLeft: 14, history: [] };
+    d.subscription.status = 'trial';
+    persist();
+    return d;
+  };
+
+  function syncDriverOnlineUi(d) {
+    const online = !!d.isOnline && isApproved(d);
+    const chip = document.getElementById('driverOnlineChip');
+    const label = document.getElementById('driverOnlineLabel');
+    if (chip) {
+      chip.classList.toggle('is-online', online);
+      chip.classList.toggle('is-offline', !online);
+      chip.disabled = !isApproved(d);
+      chip.title = isApproved(d) ? (online ? 'Go offline' : 'Go online') : 'Finish verification first';
+    }
+    if (label) label.textContent = online ? 'Online' : 'Offline';
+    const toggle = document.getElementById('driverOnlineToggle');
+    if (toggle) {
+      toggle.checked = online;
+      toggle.disabled = !isApproved(d);
+    }
+    const sub = document.getElementById('driverOnlineSub');
+    if (sub) {
+      sub.textContent = !isApproved(d)
+        ? 'Available after verification'
+        : (online ? 'Accepting new requests' : 'Hidden from new requests');
+    }
+  }
+
+  window.setDriverOnlineStatus = function (on) {
+    const d = ensureDriver();
+    if (!isApproved(d)) {
+      toast('Finish verification before going online', 'error');
+      syncDriverOnlineUi(d);
+      return;
+    }
+    d.isOnline = !!on;
+    persist();
+    syncTariqProviderAvailability();
+    syncDriverOnlineUi(d);
+    toast(d.isOnline ? 'You are online' : 'You are offline');
+  };
+
+  window.toggleDriverOnline = function () {
+    const d = ensureDriver();
+    window.setDriverOnlineStatus(!d.isOnline);
+  };
+
+  function partnerOnlineRow(idPrefix, checked, disabled, onChangeFn) {
+    return `<div class="partner-status-row profile-menu-item" style="cursor:default;">
+      <div class="partner-status-copy">
+        <span class="partner-status-title">Online status</span>
+        <span class="partner-status-sub" id="${idPrefix}OnlineSub">${disabled ? 'Available after verification' : (checked ? 'Accepting new requests' : 'Hidden from new requests')}</span>
+      </div>
+      <label class="partner-status-switch" onclick="event.stopPropagation()">
+        <input type="checkbox" id="${idPrefix}OnlineToggle" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''} onchange="${onChangeFn}" />
+        <span class="partner-status-slider"></span>
+      </label>
+    </div>`;
+  }
+
   window.getDriverLanding = function () {
     const d = ensureDriver();
     if (!d.onboarding.profile) return 'driverOnboardProfile';
@@ -775,9 +869,30 @@
     return 'driverHome';
   };
 
+  function ensureDriverRole() {
+    state().activeRole = 'driver';
+    localStorage.setItem('h2s_active_role', 'driver');
+    document.body.setAttribute('data-role', 'driver');
+    const shell = document.getElementById('appShell');
+    if (shell) shell.setAttribute('data-role', 'driver');
+    if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI('driver');
+  }
+
+  function isDriverPartnerFlowScreen(name) {
+    return name === 'driverDocDetail'
+      || name === 'driverSetup'
+      || name === 'driverPending'
+      || String(name || '').indexOf('driverOnboard') === 0;
+  }
+
   function resolveScreen(name) {
     const role = state().activeRole || 'parent';
     if (AUTH.has(name)) return name;
+    // Never bounce signup/doc-detail to parent home when role lagged on parent.
+    if (isDriverPartnerFlowScreen(name)) {
+      if (role !== 'driver') ensureDriverRole();
+      return name;
+    }
     if (role === 'parent' && DRIVER_ONLY.has(name)) return 'home';
     if (role !== 'driver') return name;
     if (name === 'tracking') {
@@ -812,17 +927,18 @@
     if (!shell) return;
     const screens = [
       ['driverOnboardProfile', 'Your profile', "leaveDriverGate()"],
-      ['driverOnboardVehicle', 'Your vehicle', "backNested('driverProfile')"],
-      ['driverOnboardDocs', 'Documents', "backNested('driverProfile')"],
-      ['driverDocDetail', 'Document', "backNested('driverOnboardDocs')"],
-      ['driverOnboardAvailability', 'Availability', "backNested('driverProfile')"],
-      ['driverOnboardRate', 'Posted rate', "backNested('driverProfile')"],
+      ['driverOnboardVehicle', 'Your vehicle', "navigateTo('driverOnboardProfile')"],
+      ['driverOnboardDocs', 'Documents', "navigateTo('driverOnboardVehicle')"],
+      ['driverDocDetail', 'Document', "navigateTo('driverOnboardDocs')"],
+      ['driverOnboardAvailability', 'Availability', "navigateTo('driverOnboardDocs')"],
+      ['driverOnboardRate', 'Posted rate', "navigateTo('driverOnboardAvailability')"],
       ['driverPayment', 'Payment preference', "backNested('driverProfile')"],
       ['driverPending', 'Verification', "navigateTo('driverSetup')"],
       ['driverSubscription', 'Platform access', "backNested('driverProfile')"],
       ['driverRequestDetail', 'Request', "navigateTo('driverRequests')"],
       ['driverTripPrep', 'Next trip', "navigateTo('driverSchedule')"],
-      ['driverRateParent', 'Rate parent', "navigateTo('driverHome')"]
+      ['driverRateParent', 'Rate parent', "navigateTo('driverHome')"],
+      ['driverRatings', 'Your ratings', "backNested('driverProfile')"]
     ];
     screens.forEach(([id, title, back]) => {
       if (document.getElementById('screen-' + id)) return;
@@ -932,6 +1048,7 @@
     else if (name === 'driverRequestDetail') renderRequestDetail();
     else if (name === 'driverTripPrep') renderTripPrep();
     else if (name === 'driverRateParent') renderRateParent();
+    else if (name === 'driverRatings') renderMyRatings();
     else if (name === 'inbox') renderDriverInbox();
     else if (name === 'messages') renderDriverChatHeader();
     else if (name === 'notifications' && state().activeRole === 'driver') renderDriverNotifications();
@@ -1081,14 +1198,58 @@
   function readLocalFile(file, cb) {
     if (!file) return;
     const meta = { name: file.name, attached: true, preview: '' };
-    if (file.type && file.type.indexOf('image/') === 0 && file.size < 900000) {
-      const reader = new FileReader();
-      reader.onload = () => cb({ name: file.name, attached: true, preview: String(reader.result || '') });
-      reader.onerror = () => cb(meta);
-      reader.readAsDataURL(file);
+    const isImage = !!(file.type && file.type.indexOf('image/') === 0);
+    if (!isImage) {
+      cb(meta);
       return;
     }
-    cb(meta);
+    const maxBytes = 12 * 1024 * 1024;
+    if (file.size > maxBytes) {
+      toast('Choose a photo under 12 MB');
+      cb(meta);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result || '');
+      if (!dataUrl) {
+        cb(meta);
+        return;
+      }
+      if (file.size <= 1.5 * 1024 * 1024) {
+        cb({ name: file.name, attached: true, preview: dataUrl });
+        return;
+      }
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const maxEdge = 1280;
+          const scale = Math.min(1, maxEdge / Math.max(img.width, img.height));
+          const w = Math.max(1, Math.round(img.width * scale));
+          const h = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            cb({ name: file.name, attached: true, preview: dataUrl });
+            return;
+          }
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressed = canvas.toDataURL('image/jpeg', 0.82);
+          cb({ name: file.name, attached: true, preview: compressed || dataUrl });
+        } catch (err) {
+          cb({ name: file.name, attached: true, preview: dataUrl });
+        }
+      };
+      img.onerror = () => cb({ name: file.name, attached: true, preview: dataUrl });
+      img.src = dataUrl;
+    };
+    reader.onerror = () => {
+      toast('Could not read that photo');
+      cb(meta);
+    };
+    reader.readAsDataURL(file);
   }
 
   function renderOnboardProfile() {
@@ -1156,7 +1317,10 @@
     const editing = editingProfileChild();
     bindChildTitle(el, 'Your vehicle');
     bindChildBack(el, "navigateTo('driverOnboardProfile')");
-    const photoName = v.photoName || (v.photo ? 'Vehicle photo' : '');
+    const hasCustomPhoto = !!(v.photoName || (v.photo && String(v.photo).indexOf('data:') === 0));
+    const photoName = hasCustomPhoto ? (v.photoName || 'Vehicle photo') : 'Add vehicle photo';
+    const photoHint = hasCustomPhoto ? 'Tap to replace' : 'Tap to upload · JPG or PNG';
+    const thumb = hasCustomPhoto && v.photo ? v.photo : '';
     el.innerHTML = `
       ${editing ? '' : stepIntro(2, 5, 'One vehicle', 'Vehicle parents will see.')}
       ${selectField('Type', `<select class="form-select" id="drvVType">${['Minivan', 'SUV', 'Sedan', 'Wagon'].map((t) => `<option ${v.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>`)}
@@ -1173,33 +1337,42 @@
         ${field('Seats', `<input class="form-input" id="drvVSeats" type="number" min="1" max="8" value="${esc(v.capacity)}" placeholder="4" />`)}
       </div>
       <div class="form-group">
-        <label class="form-label">Vehicle photo</label>
-        <button type="button" class="drv-upload-tile" onclick="document.getElementById('drvVehicleFile').click()">
-          <img class="drv-upload-thumb" src="${esc(v.photo || '/assets/home_van_banner.jpg')}" alt="" onerror="this.src='/assets/home_van_banner.jpg'" />
+        <label class="form-label" for="drvVehicleFile">Vehicle photo</label>
+        <label class="drv-upload-tile" for="drvVehicleFile">
+          ${thumb
+            ? `<img class="drv-upload-thumb" src="${esc(thumb)}" alt="" />`
+            : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="upload"></i></span>`}
           <span class="drv-upload-copy">
-            <span class="drv-upload-name">${esc(photoName || 'Add vehicle photo')}</span>
-            <span class="drv-upload-hint">JPG or PNG</span>
+            <span class="drv-upload-name">${esc(photoName)}</span>
+            <span class="drv-upload-hint">${esc(photoHint)}</span>
           </span>
-        </button>
-        <input type="file" accept="image/*" id="drvVehicleFile" class="drv-file-input" onchange="onDriverVehiclePhoto(event)" />
+        </label>
+        <input type="file" accept="image/*" capture="environment" id="drvVehicleFile" class="drv-file-input" onchange="onDriverVehiclePhoto(event)" />
       </div>
       <div class="drv-actions-col">
         <button type="button" class="btn-primary" onclick="saveDriverVehicle()">${editing ? 'Save' : 'Continue'}</button>
       </div>
     `;
+    icons();
   }
 
   window.onDriverVehiclePhoto = function (event) {
-    const file = event.target.files && event.target.files[0];
+    const input = event.target;
+    const file = input.files && input.files[0];
     if (!file) return;
+    if (!(file.type && file.type.indexOf('image/') === 0)) {
+      toast('Choose a JPG or PNG photo');
+      input.value = '';
+      return;
+    }
     readLocalFile(file, (meta) => {
       const d = ensureDriver();
-      d.vehicle.photoName = meta.name;
+      d.vehicle.photoName = meta.name || 'Vehicle photo';
       if (meta.preview) d.vehicle.photo = meta.preview;
       persist();
+      input.value = '';
       renderOnboardVehicle();
-      icons();
-      toast('Vehicle photo attached');
+      toast(meta.preview ? 'Vehicle photo uploaded' : 'Photo name saved — try a smaller JPG/PNG');
     });
   };
 
@@ -1308,18 +1481,22 @@
 
   function uploadTile(file, key, label, hint, status) {
     const attached = hasUpload(file);
-    const name = attached ? (file.name || 'File attached') : 'No file yet';
+    const name = attached ? (file.name || 'File attached') : 'Tap to upload';
+    const inputId = `drvUpload_${key}`;
+    const thumb = attached && file.preview && String(file.preview).indexOf('data:') === 0
+      ? `<img class="drv-upload-thumb" src="${esc(file.preview)}" alt="" />`
+      : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="${attached ? 'file-check' : 'upload'}"></i></span>`;
     return `
       <div class="form-group">
-        <label class="form-label">${label}</label>
-        <button type="button" class="drv-upload-tile" onclick="document.getElementById('drvUpload_${key}').click()">
-          <div class="menu-icon-wrap drv-doc-icon"><i data-lucide="${attached ? 'file-check' : 'upload'}"></i></div>
+        <label class="form-label" for="${inputId}">${esc(label)}</label>
+        <label class="drv-upload-tile" for="${inputId}">
+          ${thumb}
           <span class="drv-upload-copy">
             <span class="drv-upload-name">${esc(name)}</span>
             <span class="drv-upload-hint">${esc(uploadHint(status, attached, hint))}</span>
           </span>
-        </button>
-        <input type="file" accept="image/*,.pdf,application/pdf" id="drvUpload_${key}" class="drv-file-input" onchange="onDriverDocFile(event, '${key}')" />
+        </label>
+        <input type="file" accept="image/*,.pdf,application/pdf" id="${inputId}" class="drv-file-input" onchange="onDriverDocFile(event, '${key}')" />
       </div>`;
   }
 
@@ -1350,18 +1527,24 @@
   function renderDocList(d, listScreen) {
     const screen = listScreen || 'driverOnboardDocs';
     const chevron = '<i data-lucide="chevron-right" style="width:16px;height:16px;color:#94A3B8;"></i>';
-    const rows = d.documents.map((doc) => `
-      <div class="profile-menu-item drv-doc-row" data-status="${esc(doc.status)}" role="button" tabindex="0" onclick="openDriverDoc('${doc.id}', '${screen}')">
+    const rows = d.documents.map((doc) => {
+      const needsUpload = doc.status === 'not_submitted' || doc.status === 'action_required' || doc.status === 'rejected';
+      const sub = needsUpload ? 'Tap to upload' : docLabel(doc.status);
+      return `
+      <button type="button" class="profile-menu-item drv-doc-row" data-status="${esc(doc.status)}" data-doc-id="${esc(doc.id)}" onclick="event.preventDefault();event.stopPropagation();window.openDriverDoc('${doc.id}', '${screen}')">
         <div class="menu-item-left">
           <div class="menu-icon-wrap drv-doc-icon"><i data-lucide="${docIcon(doc.id)}"></i></div>
-          <span class="menu-title-text">${esc(doc.title)}</span>
+          <div>
+            <span class="menu-title-text">${esc(doc.title)}</span>
+            ${needsUpload ? `<span class="menu-subtitle">${esc(sub)}</span>` : ''}
+          </div>
         </div>
         <span class="drv-doc-row-end">
           <span class="drv-doc-status ${esc(doc.status)}">${docLabel(doc.status)}</span>
           ${chevron}
         </span>
-      </div>
-    `).join('');
+      </button>`;
+    }).join('');
     return `<div class="profile-menu-section drv-doc-list">${rows}</div>`;
   }
 
@@ -1373,6 +1556,7 @@
 
   function renderOnboardDocs() {
     const d = ensureDriver();
+    ensureDriverRole();
     const el = feed('driverOnboardDocsFeed');
     if (!el) return;
     state()._docListScreen = 'driverOnboardDocs';
@@ -1386,7 +1570,7 @@
     bindChildBack(el, backFallback);
     el.innerHTML = `
       ${editing ? '' : stepHint(3, 5, 'Safety checks')}
-      <p class="drv-docs-meta">${editing ? `${approved} / ${d.documents.length} approved` : `${submitted} / ${d.documents.length} submitted`}</p>
+      <p class="drv-docs-meta">${editing ? `${approved} / ${d.documents.length} approved` : `${submitted} / ${d.documents.length} submitted`} · Licence, insurance, registration, CRC, VSC</p>
       ${renderDocList(d, 'driverOnboardDocs')}
       ${editing ? '' : '<div class="drv-actions-col"><button type="button" class="btn-primary" onclick="saveDriverDocs()">Continue</button></div>'}
     `;
@@ -1403,15 +1587,49 @@
     });
   }
 
+  function returnToDocList() {
+    const list = state()._docListScreen || 'driverOnboardDocs';
+    const stack = window.navReturnStack || [];
+    // Drop the docs→detail hop so Back from the list still returns to profile/setup.
+    while (stack.length) {
+      const top = stack[stack.length - 1];
+      if (!top) {
+        stack.pop();
+        continue;
+      }
+      if (top.screen === list || top.screen === 'driverDocDetail') {
+        stack.pop();
+        if (top.screen === list) break;
+        continue;
+      }
+      break;
+    }
+    window.navigateTo(list, true);
+  }
+
   window.openDriverDoc = function (id, listScreen) {
     const d = ensureDriver();
     const doc = d.documents.find((item) => item.id === id);
-    if (!doc) return;
-    if (listScreen) state()._docListScreen = listScreen;
+    if (!doc) {
+      toast('Document not found');
+      return;
+    }
+    ensureDriverRole();
+    state()._docListScreen = listScreen || state()._docListScreen || 'driverOnboardDocs';
     state()._activeDocId = id;
-    docDraft = JSON.parse(JSON.stringify(doc));
+    try {
+      docDraft = JSON.parse(JSON.stringify(doc));
+    } catch (err) {
+      docDraft = Object.assign({}, doc);
+    }
     docDraft._fileTouched = false;
-    window.openNestedScreen('driverDocDetail');
+    const current = window.currentScreen || '';
+    if (current && current !== 'driverDocDetail') {
+      window.navReturnStack = window.navReturnStack || [];
+      window.navReturnStack.push({ screen: current, role: 'driver' });
+    }
+    // Direct navigate (not openNestedScreen) so role/resolution cannot bounce to parent home.
+    window.navigateTo('driverDocDetail', true);
   };
 
   function renderDocDetail() {
@@ -1424,14 +1642,17 @@
       docDraft = stored ? JSON.parse(JSON.stringify(stored)) : null;
     }
     if (!docDraft) {
-      window.backNested(state()._docListScreen || 'driverOnboardDocs');
+      returnToDocList();
       return;
     }
     const spec = docFormSpec(docDraft.id);
-    const listScreen = state()._docListScreen || 'driverOnboardDocs';
     const rejected = docDraft.status === 'action_required' || docDraft.status === 'rejected';
     bindChildTitle(el, docDraft.title);
-    bindChildBack(el, `backNested('${listScreen}')`);
+    // Always return to the documents list — never skip to profile from detail Back.
+    const back = el?.closest('.screen-view')?.querySelector('.back-btn');
+    if (back) {
+      back.setAttribute('onclick', "event.preventDefault();event.stopPropagation();returnToDriverDocList()");
+    }
     el.innerHTML = `
       <div class="drv-doc-detail-head">
         <span class="drv-doc-status ${esc(docDraft.status)}">${docLabel(docDraft.status)}</span>
@@ -1444,13 +1665,27 @@
     icons();
   }
 
+  window.returnToDriverDocList = returnToDocList;
+
   window.onDriverDocFile = function (event, key) {
-    const file = event.target.files && event.target.files[0];
+    const input = event.target;
+    const file = input.files && input.files[0];
     if (!file || !docDraft) return;
     harvestDocDraft();
     readLocalFile(file, (meta) => {
-      docDraft[key] = meta;
+      if (!meta || !meta.name) {
+        toast('Could not read that file');
+        input.value = '';
+        return;
+      }
+      docDraft[key] = {
+        name: meta.name,
+        attached: true,
+        preview: meta.preview || ''
+      };
       docDraft._fileTouched = true;
+      input.value = '';
+      toast('File attached');
       if (docDraft.status === 'action_required' || docDraft.status === 'rejected') {
         window.saveDriverDoc();
         return;
@@ -1472,6 +1707,10 @@
       document.getElementById('drvUpload_' + spec.uploads[0].key)?.click();
       return;
     }
+    if (!docReadyToSubmit(docDraft) && prev === 'not_submitted') {
+      toast('Add required details and upload the file(s)');
+      return;
+    }
     const next = nextDocStatus(prev, docDraft, docDraft._fileTouched);
     const saved = JSON.parse(JSON.stringify(docDraft));
     delete saved._fileTouched;
@@ -1480,11 +1719,7 @@
     d.documents[idx] = Object.assign({}, d.documents[idx], saved);
     persist();
     toast(next === 'under_review' ? 'Submitted for review' : 'Document saved');
-    if (window.navReturnStack && window.navReturnStack.length) {
-      window.backNested();
-      return;
-    }
-    window.navigateTo(state()._docListScreen || 'driverOnboardDocs');
+    returnToDocList();
   };
 
   window.uploadDriverDoc = function (id) {
@@ -2303,6 +2538,7 @@
         ? `${d.vehicle?.make || ''} ${d.vehicle?.model || ''} • ${d.vehicle?.capacity || 0} seats`
         : 'Finish setup to accept school rides';
     }
+    syncDriverOnlineUi(d);
     if (avatar) {
       avatar.src = d.photo || '/assets/avatar_tariq.jpg';
       avatar.alt = d.name || 'Driver';
@@ -3441,29 +3677,85 @@
     const ctx = tripContext() || {};
     const el = feed('driverRateParentFeed');
     if (!el) return;
+    const screen = document.getElementById('screen-driverRateParent');
+    if (screen) screen.classList.add('rt-screen');
+    el.classList.add('rt-compose');
     el.innerHTML = `
-      <div style="align-items:center;justify-content:center;text-align:center;display:flex;flex-direction:column;gap:16px;padding-top:12px;">
-        <img src="${esc(PARENTS[ctx.parentId]?.photo || '/assets/avatar_sadia.jpg')}" alt="" class="provider-large-avatar" onerror="this.src='/assets/avatar_sadia.jpg'" />
-        <div>
-          <h2 style="font-size:20px;font-weight:800;color:var(--color-title);">Rate ${esc(ctx.parentName || 'this parent')}</h2>
-          <p class="page-subtitle" style="margin-top:4px;">Pickup contacts only.</p>
+      <div class="rt-hero">
+        <div class="rt-avatar-wrap">
+          <img src="${esc(PARENTS[ctx.parentId]?.photo || '/assets/avatar_sadia.jpg')}" alt="" class="rt-avatar" width="64" height="64" onerror="this.src='/assets/avatar_sadia.jpg'" />
         </div>
-        <div class="stars-row" id="driverRateStars">
-          ${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="star-btn" onclick="setDriverParentScore(${n})"><i data-lucide="star" style="width:28px;height:28px;fill:currentColor;"></i></button>`).join('')}
+        <div class="rt-hero-copy">
+          <h2 class="rt-title">Rate ${esc(ctx.parentName || 'parent')}</h2>
+          <p class="rt-sub">Trip complete</p>
         </div>
-        <div class="rating-tags-wrap">
-          <span class="rating-tag-pill active" onclick="this.classList.toggle('active')">Punctual pickup</span>
-          <span class="rating-tag-pill active" onclick="this.classList.toggle('active')">Clear communication</span>
-          <span class="rating-tag-pill" onclick="this.classList.toggle('active')">Children ready</span>
-          <span class="rating-tag-pill" onclick="this.classList.toggle('active')">Respectful</span>
+      </div>
+      <div class="rt-block">
+        <p class="rt-label">Your rating</p>
+        <div class="stars-row rt-stars" id="driverRateStars">
+          ${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="star-btn" onclick="setDriverParentScore(${n})" aria-label="${n} stars"><i data-lucide="star"></i></button>`).join('')}
         </div>
-        <div style="width:100%;text-align:left;">
-          <textarea class="rating-comment-box" id="driverRateNote" placeholder="Optional note"></textarea>
+      </div>
+      <div class="rt-block">
+        <p class="rt-label">What went well</p>
+        <div class="rating-tags-wrap rt-tags">
+          <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">On time</button>
+          <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">Clear chat</button>
+          <button type="button" class="rating-tag-pill" onclick="this.classList.toggle('active')">Kids ready</button>
+          <button type="button" class="rating-tag-pill" onclick="this.classList.toggle('active')">Respectful</button>
         </div>
-        <div class="drv-actions-col" style="width:100%;">
-          <button type="button" class="btn-primary" onclick="submitDriverParentRating()">Submit review</button>
-          <button type="button" class="btn-secondary-link" onclick="skipDriverParentRating()">Skip for now</button>
+      </div>
+      <div class="rt-block">
+        <p class="rt-label">Note <span class="rt-optional">optional</span></p>
+        <textarea class="rating-comment-box" id="driverRateNote" placeholder="Short private note"></textarea>
+      </div>
+      <div class="rt-actions">
+        <button type="button" class="btn-primary" onclick="submitDriverParentRating()">Submit</button>
+        <button type="button" class="btn-secondary-link" onclick="skipDriverParentRating()">Skip</button>
+      </div>
+    `;
+    icons();
+    if (typeof window.setDriverParentScore === 'function') window.setDriverParentScore(5);
+  }
+
+  function renderMyRatings() {
+    const d = ensureDriver();
+    const el = feed('driverRatingsFeed');
+    if (!el) return;
+    const provider = (state().providers || []).find((p) => p.id === 'tariq') || { rating: d.rating || 4.9, reviewsCount: d.reviewsCount || 128, name: d.name };
+    const reviews = typeof window.getProviderReviews === 'function' ? window.getProviderReviews(provider) : [];
+    const rating = Number(provider.rating || d.rating || 4.9);
+    const count = provider.reviewsCount || reviews.length;
+    const full = Math.round(rating);
+    el.innerHTML = `
+      <div class="partner-ratings-feed">
+        <div class="provider-reviews-summary">
+          <div class="provider-reviews-score">${rating.toFixed(1)}</div>
+          <div class="provider-reviews-score-meta">
+            <div class="profile-rating-stars-gold">${'★★★★★'.slice(0, full)}${'☆☆☆☆☆'.slice(0, 5 - full)}</div>
+            <div class="profile-rating-reviews-count">${count} parent reviews</div>
+          </div>
         </div>
+        ${reviews.map((r) => {
+          const stars = '★'.repeat(r.rating || 5);
+          const photo = typeof window.personAvatar === 'function' ? window.personAvatar(r.name, '/assets/avatar_sadia.jpg') : '/assets/avatar_sadia.jpg';
+          return `<article class="provider-review-card">
+            <div class="profile-review-top-row">
+              <div class="profile-reviewer-info">
+                <div class="provider-review-avatar"><img src="${esc(photo)}" alt="" onerror="this.src='/assets/avatar_sadia.jpg'" /></div>
+                <div>
+                  <div class="profile-reviewer-name">${esc(r.name)}</div>
+                  <div class="profile-reviewer-sub">Verified parent</div>
+                </div>
+              </div>
+              <div class="provider-review-meta">
+                <span class="profile-rating-stars-gold">${stars}</span>
+                <span class="profile-review-date">${esc(r.date || '')}</span>
+              </div>
+            </div>
+            <p class="profile-review-quote">${esc(r.text || '')}</p>
+          </article>`;
+        }).join('') || '<p class="drv-lede">No reviews yet.</p>'}
       </div>
     `;
     icons();
@@ -3497,8 +3789,8 @@
     const ready = onboardingDone(d);
     el.innerHTML = `
       <div class="trip-card">
-        <h3 class="section-heading" style="margin-bottom:0;">${isApproved(d) ? 'Verified driver' : ready ? 'Submitted for review' : 'Finish setup'}</h3>
-        <p class="drv-lede">${isApproved(d) ? 'You can accept bookings.' : 'Finish setup to accept bookings.'}</p>
+        <h3 class="section-heading" style="margin-bottom:0;">${isApproved(d) ? 'Verified driver' : ready ? 'Submitted for review' : 'Driver setup'}</h3>
+        <p class="drv-lede">${isApproved(d) ? 'You can go online and accept bookings.' : 'Profile, vehicle, docs, hours, then rate. Parents do not upload these.'}</p>
       </div>
       <div class="profile-menu-section">
       ${steps.map(([key, title, sub, screen]) => `
@@ -3556,9 +3848,14 @@
       </div>
 
       <div class="profile-menu-section">
+        ${partnerOnlineRow('driver', !!d.isOnline && isApproved(d), !isApproved(d), 'window.setDriverOnlineStatus(this.checked)')}
+        ${profileMenuRow('star', `Your ratings · ${Number(d.rating || 4.9).toFixed(1)}`, "openDriverProfileChild('driverRatings', event)")}
+      </div>
+
+      <div class="profile-menu-section">
         ${profileMenuRow('car', vehicleLabel, "openDriverProfileChild('driverOnboardVehicle', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openDriverProfileChild('driverOnboardDocs', event)")}
-        ${profileMenuRow('clock', 'Availability', "openDriverProfileChild('driverOnboardAvailability', event)")}
+        ${profileMenuRow('clock', 'Weekly hours', "openDriverProfileChild('driverOnboardAvailability', event)")}
         ${profileMenuRow('circle-dollar-sign', 'Posted rate', "openDriverProfileChild('driverOnboardRate', event)")}
         ${profileMenuRow('wallet', 'Payment preference', "openDriverProfileChild('driverPayment', event)")}
       </div>
@@ -3573,8 +3870,15 @@
         ${profileMenuRow('info', 'About Home2School', "openDriverProfileChild('about', event)")}
       </div>
 
-      <div class="profile-menu-section">
-        ${profileMenuRow('users', 'Switch to Parent', 'window.openRoleSwitcherModal()')}
+      <div class="profile-workspace-card" role="button" tabindex="0" onclick="window.openRoleSwitcherModal()">
+        <div class="pwc-left">
+          <div class="pwc-icon-wrap driver"><i data-lucide="layers"></i></div>
+          <div class="pwc-info">
+            <div class="pwc-title">Role: Driver</div>
+            <div class="pwc-subtitle">Switch role</div>
+          </div>
+        </div>
+        <button type="button" class="pwc-action-btn" onclick="event.stopPropagation(); window.openRoleSwitcherModal()">Switch</button>
       </div>
 
       <button type="button" class="profile-logout-btn" onclick="navigateTo('authWelcome')">
@@ -3582,6 +3886,7 @@
         Log out
       </button>
     `;
+    if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI('driver');
     icons();
   }
 

@@ -65,6 +65,7 @@ const screens = [
   'driverRequestDetail',
   'driverTripPrep',
   'driverRateParent',
+  'driverRatings',
   // WalkShare Role Screens
   'wsHome',
   'wsRequests',
@@ -83,6 +84,7 @@ const screens = [
   'wsRequestDetail',
   'wsWalkPrep',
   'wsActiveWalk',
+  'wsRatings',
   'profileNotifications',
   'adminPortal'
 ];
@@ -1322,14 +1324,26 @@ window.syncRoleCapsuleUI = function (role) {
   document.querySelectorAll('.profile-workspace-card').forEach((card) => {
     const titleEl = card.querySelector('.pwc-title');
     const subEl = card.querySelector('.pwc-subtitle');
+    const iconWrap = card.querySelector('.pwc-icon-wrap');
     if (titleEl) {
       titleEl.textContent = `Role: ${meta.label.replace(' Mode', '')}`;
     }
     if (subEl) {
       subEl.textContent = 'Switch role';
     }
+    if (iconWrap) {
+      iconWrap.classList.remove('parent', 'driver', 'walkshare');
+      iconWrap.classList.add(validRoleClass(role));
+      // Standard card glyph (matches role-switcher design)
+      iconWrap.innerHTML = '<i data-lucide="layers"></i>';
+    }
   });
+  if (window.lucide) window.lucide.createIcons();
 };
+
+function validRoleClass(role) {
+  return role === 'driver' || role === 'walkshare' ? role : 'parent';
+}
 
 window.coreSwitchRole = function (role) {
   if (role === 'admin') {
@@ -1471,6 +1485,39 @@ function coerceScreenToRole(screenName) {
   if (screenName === 'adminPortal') return roleDefaultScreen('home');
   const role = activeNavRole();
   const bucket = navScreenBucket(screenName);
+
+  // Partner signup/detail screens: adopt the owning role instead of bouncing to parent home/profile.
+  if (bucket === 'driver' && (
+    screenName === 'driverDocDetail'
+    || screenName === 'driverSetup'
+    || screenName === 'driverPending'
+    || String(screenName).indexOf('driverOnboard') === 0
+  )) {
+    if (role !== 'driver') {
+      window.appState.activeRole = 'driver';
+      localStorage.setItem('h2s_active_role', 'driver');
+      document.body.setAttribute('data-role', 'driver');
+      const shell = document.getElementById('appShell');
+      if (shell) shell.setAttribute('data-role', 'driver');
+    }
+    return screenName;
+  }
+  if (bucket === 'walkshare' && (
+    screenName === 'wsDocDetail'
+    || screenName === 'wsSetup'
+    || screenName === 'wsPending'
+    || String(screenName).indexOf('wsOnboard') === 0
+  )) {
+    if (role !== 'walkshare') {
+      window.appState.activeRole = 'walkshare';
+      localStorage.setItem('h2s_active_role', 'walkshare');
+      document.body.setAttribute('data-role', 'walkshare');
+      const shell = document.getElementById('appShell');
+      if (shell) shell.setAttribute('data-role', 'walkshare');
+    }
+    return screenName;
+  }
+
   if (role === 'driver' && bucket === 'parent') {
     if (screenName === 'home' || screenName === 'bookings' || screenName === 'tracking') return 'driverHome';
     if (screenName === 'profile' || screenName === 'profilePersonalInfo' || screenName === 'myChildren' || screenName === 'profileLocations' || screenName === 'profileEmergency' || screenName === 'profilePayments' || screenName === 'subscription') {
@@ -4637,6 +4684,34 @@ function simulateDriverReply() {
 }
 
 window.currentRatingScore = 5;
+window._ratingBookingId = null;
+
+window.openRatingModal = function (bookingId) {
+  const booking = (window.appState.bookings || []).find((b) => b.id === bookingId)
+    || (window.appState.bookings || []).find((b) => b.status === 'completed')
+    || null;
+  window._ratingBookingId = booking?.id || bookingId || null;
+  const provider = (window.appState.providers || []).find((p) => p.id === (booking?.providerId || 'tariq'))
+    || window.appState.providers?.[0];
+  const cleanName = String(provider?.name || 'Provider').replace(/\s*\(WalkShare\)/i, '');
+  const photo = document.getElementById('ratingProviderPhoto');
+  const nameEl = document.getElementById('ratingProviderName');
+  const tripEl = document.getElementById('ratingTripLine');
+  if (photo) {
+    photo.src = provider?.photo || '/assets/avatar_tariq.jpg';
+    photo.alt = cleanName;
+  }
+  if (nameEl) nameEl.textContent = cleanName;
+  if (tripEl) {
+    const school = String(booking?.schoolLocation || 'School').split(',')[0];
+    tripEl.textContent = school + ' · completed';
+  }
+  window.setRatingScore(5);
+  const comment = document.getElementById('ratingCommentText');
+  if (comment) comment.value = '';
+  if (window.lucide) window.lucide.createIcons();
+  window.navigateTo('rating');
+};
 
 window.setRatingScore = function (score) {
   window.currentRatingScore = score;
@@ -4654,16 +4729,18 @@ window.setRatingScore = function (score) {
 
   const flagNotice = document.getElementById('lowRatingAutoFlagNotice');
   if (flagNotice) {
-    flagNotice.style.display = score <= 3 ? 'block' : 'none';
+    if (score <= 3) flagNotice.removeAttribute('hidden');
+    else flagNotice.setAttribute('hidden', '');
   }
 };
 
 window.handleParentReviewSubmit = function () {
   const score = window.currentRatingScore || 5;
-  if (score <= 3) {
-    alert(`⚠️ Notice: Your ${score}-star review has been submitted. A platform administrator ticket has been auto-generated for child safety review.`);
-  } else {
-    alert(`Thank you for rating your provider ${score} stars! ⭐`);
+  if (typeof window.showToast === 'function') {
+    window.showToast(
+      score <= 3 ? `${score}★ submitted — safety team will review` : `Thanks — ${score}★ review saved`,
+      score <= 3 ? 'info' : 'success'
+    );
   }
   window.navigateTo('home');
 };
@@ -7000,6 +7077,7 @@ window.selectSignupRole = function (role) {
   const nameLabel = document.getElementById('authSignupNameLabel');
   const nameInput = document.getElementById('authSignupNameInput');
   const consent = document.getElementById('authSignupConsentLabel');
+  const hint = document.getElementById('authRoleHint');
   if (valid === 'driver') {
     if (nameLabel) nameLabel.textContent = 'Driver Full Name';
     if (nameInput) {
@@ -7009,15 +7087,17 @@ window.selectSignupRole = function (role) {
     if (consent) {
       consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Partner Terms &amp; Privacy</a>.';
     }
+    if (hint) hint.textContent = 'Licence, insurance, registration, CRC & VSC required.';
   } else if (valid === 'walkshare') {
     if (nameLabel) nameLabel.textContent = 'WalkShare Escort Name';
     if (nameInput) {
-      nameInput.placeholder = 'e.g. Farhana Begum';
-      if (!nameInput.dataset.touched) nameInput.value = 'Farhana Begum';
+      nameInput.placeholder = 'e.g. Sarah Jenkins';
+      if (!nameInput.dataset.touched) nameInput.value = 'Sarah Jenkins';
     }
     if (consent) {
       consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">WalkShare Terms &amp; Privacy</a>.';
     }
+    if (hint) hint.textContent = 'Photo ID, CRC, VSC & pediatric first-aid required.';
   } else {
     if (nameLabel) nameLabel.textContent = 'Parent Full Name';
     if (nameInput) {
@@ -7027,8 +7107,34 @@ window.selectSignupRole = function (role) {
     if (consent) {
       consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Terms &amp; Parent Consent</a>.';
     }
+    if (hint) hint.textContent = 'No verification docs — add a child after signup.';
   }
   if (window.lucide) window.lucide.createIcons();
+};
+
+/** Photo step branches: Parent → child; Driver/WalkShare → partner setup (docs). */
+window.continueAuthAfterPhoto = function () {
+  const role = window.appState._signupRole || window.appState.activeRole || 'parent';
+  window.appState.activeRole = role;
+  localStorage.setItem('h2s_active_role', role);
+  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(role);
+  if (role === 'driver') {
+    window.appState.driverEntryFromAuth = true;
+    if (typeof window.startDriverSignupFlow === 'function') {
+      window.startDriverSignupFlow(window.appState.user?.name, window.appState.user?.email);
+    }
+    window.navigateTo('driverOnboardProfile');
+    return;
+  }
+  if (role === 'walkshare') {
+    window.appState.walkshareEntryFromAuth = true;
+    if (typeof window.startWalkShareSignupFlow === 'function') {
+      window.startWalkShareSignupFlow(window.appState.user?.name, window.appState.user?.email);
+    }
+    window.navigateTo('wsOnboardProfile');
+    return;
+  }
+  window.navigateTo('authAddChild');
 };
 
 window.handleEmailSignIn = function () {
@@ -7061,12 +7167,14 @@ window.handleEmailSignUp = function () {
 
   if (role === 'driver') {
     window.appState.driverEntryFromAuth = true;
-    if (window.appState.driver) {
+    if (typeof window.startDriverSignupFlow === 'function') {
+      window.startDriverSignupFlow(name, email);
+    } else if (window.appState.driver) {
       window.appState.driver.name = name;
       window.appState.driver.email = email;
     }
     if (typeof window.showToast === 'function') {
-      window.showToast('✓ Driver account created — continue with partner setup.', 'success');
+      window.showToast('Driver account created — finish partner setup', 'success');
     }
     window.navigateTo('driverOnboardProfile');
     return;
@@ -7074,19 +7182,21 @@ window.handleEmailSignUp = function () {
 
   if (role === 'walkshare') {
     window.appState.walkshareEntryFromAuth = true;
-    if (window.appState.walkshare) {
+    if (typeof window.startWalkShareSignupFlow === 'function') {
+      window.startWalkShareSignupFlow(name, email);
+    } else if (window.appState.walkshare) {
       window.appState.walkshare.name = name;
       window.appState.walkshare.email = email;
     }
     if (typeof window.showToast === 'function') {
-      window.showToast('✓ WalkShare account created — set up your walking group.', 'success');
+      window.showToast('WalkShare account created — finish escort setup', 'success');
     }
     window.navigateTo('wsOnboardProfile');
     return;
   }
 
   if (typeof window.showToast === 'function') {
-    window.showToast('✓ Account created! Setting up your family profile.', 'success');
+    window.showToast('Account created — set up your family', 'success');
   }
   window.navigateTo('authProfile');
 };

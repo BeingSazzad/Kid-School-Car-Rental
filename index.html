@@ -13,14 +13,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="/style.css?v=20260916-v35" />
-  <link rel="stylesheet" href="/bookings-clean.css?v=20260916-v35" />
-  <link rel="stylesheet" href="/safety-clean.css?v=20260916-v35" />
-  <link rel="stylesheet" href="/sos-clean.css?v=20260916-v35" />
-  <link rel="stylesheet" href="/providers-clean.css?v=20260916-v35" />
-  <link rel="stylesheet" href="/details-clean.css?v=20260916-v35" />
-  <link rel="stylesheet" href="/flow-clean.css?v=20260916-v35" />
-  <link rel="stylesheet" href="/type-standard.css?v=20260916-v35" />
+  <link rel="stylesheet" href="/style.css?v=20260916-v38" />
+  <link rel="stylesheet" href="/bookings-clean.css?v=20260916-v38" />
+  <link rel="stylesheet" href="/safety-clean.css?v=20260916-v38" />
+  <link rel="stylesheet" href="/sos-clean.css?v=20260916-v38" />
+  <link rel="stylesheet" href="/providers-clean.css?v=20260916-v38" />
+  <link rel="stylesheet" href="/details-clean.css?v=20260916-v38" />
+  <link rel="stylesheet" href="/flow-clean.css?v=20260916-v38" />
+  <link rel="stylesheet" href="/type-standard.css?v=20260916-v38" />
 
   <!-- Critical UI Overrides for Time Picker & Modals -->
   <style>
@@ -431,9 +431,12 @@
   width: 100% !important;
   height: 100% !important;
   max-height: 100% !important;
-  display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
+}
+
+#screen-bookingDetails.active {
+  display: flex !important;
 }
 
 #screen-bookingDetails.screen-bd-flat {
@@ -1250,9 +1253,12 @@
       width: 100% !important;
       height: 100% !important;
       max-height: 100% !important;
-      display: flex !important;
       flex-direction: column !important;
       overflow: hidden !important;
+    }
+
+    #screen-bookings.active {
+      display: flex !important;
     }
 
     #screen-bookings .bk-topbar {
@@ -2838,6 +2844,7 @@
                     WalkShare
                   </button>
                 </div>
+                <p class="auth-role-hint" id="authRoleHint">No verification docs — add a child after signup.</p>
               </div>
 
               <div class="form-group" style="margin-bottom: 0;">
@@ -3087,8 +3094,8 @@
         <p class="change-later-note">You can change this later</p>
 
         <div class="bottom-action-wrap">
-          <button class="btn-primary" onclick="navigateTo('authAddChild')">Continue</button>
-          <button class="btn-secondary-link" onclick="navigateTo('authAddChild')">Skip for now</button>
+          <button class="btn-primary" onclick="continueAuthAfterPhoto()">Continue</button>
+          <button class="btn-secondary-link" onclick="continueAuthAfterPhoto()">Skip for now</button>
         </div>
       </div>
 
@@ -5715,17 +5722,17 @@
 
         <div style="margin-top: 8px;">
           <!-- Modern Role / Workspace Switcher Card -->
-          <div class="profile-workspace-card" onclick="window.openRoleSwitcherModal()">
+          <div class="profile-workspace-card" id="profileRoleSwitcherCard" role="button" tabindex="0" onclick="window.openRoleSwitcherModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.openRoleSwitcherModal();}">
             <div class="pwc-left">
-              <div class="pwc-icon-wrap parent">
-                <i data-lucide="layers" style="width:18px;height:18px;"></i>
+              <div class="pwc-icon-wrap parent" id="profileRoleSwitcherIcon">
+                <i data-lucide="layers"></i>
               </div>
               <div class="pwc-info">
-                <div class="pwc-title">Role: Parent</div>
+                <div class="pwc-title" id="profileRoleSwitcherTitle">Role: Parent</div>
                 <div class="pwc-subtitle">Switch role</div>
               </div>
             </div>
-            <button type="button" class="pwc-action-btn">Switch</button>
+            <button type="button" class="pwc-action-btn" onclick="event.stopPropagation(); window.openRoleSwitcherModal()">Switch</button>
           </div>
           <button id="logoutBtn"
             onclick="navigateTo('authWelcome')"
@@ -5783,75 +5790,71 @@
     </section>
 
 
-    <!-- ================= 24. TRIP COMPLETION & RATING MODAL ================= -->
-    <section class="screen-view" id="screen-rating" style="background-color: #FFFFFF;">
+    <!-- ================= 24. TRIP COMPLETION & RATING ================= -->
+    <section class="screen-view rt-screen" id="screen-rating" style="background-color: #FFFFFF;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
           <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
           <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
+            <path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" />
           </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
+          <div class="battery-icon"><div class="battery-level"></div></div>
         </div>
       </div>
 
-      <div class="screen-scroll-body"
-        style="align-items: center; justify-content: center; text-align: center; gap: 16px;">
-        <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="provider-large-avatar" style="margin-top: 30px;" />
+      <div class="top-bar-sticky">
+        <button type="button" class="back-btn" onclick="navigateTo('bookings')" aria-label="Back">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Rate trip</h2>
+        <span style="width: 26px;"></span>
+      </div>
 
-        <div>
-          <h2 style="font-size: 20px; font-weight: 800; color: var(--color-title);">Rate Tariq Ahmed</h2>
-          <p style="font-size: 14px; color: var(--color-body); margin-top: 4px;">Trip to Greenfield International
-            completed safely.</p>
+      <div class="screen-scroll-body rt-body rt-compose">
+        <div class="rt-hero">
+          <div class="rt-avatar-wrap">
+            <img src="/assets/avatar_tariq.jpg" alt="" class="rt-avatar" id="ratingProviderPhoto" width="64" height="64" onerror="this.src='/assets/avatar_tariq.jpg'" />
+          </div>
+          <div class="rt-hero-copy">
+            <h2 class="rt-title" id="ratingProviderName">Tariq Ahmed</h2>
+            <p class="rt-sub" id="ratingTripLine">Greenfield · completed</p>
+          </div>
         </div>
 
-        <!-- Interactive 5 Stars -->
-        <div class="stars-row" id="ratingStars">
-          <button class="star-btn active" onclick="setRatingScore(1)"><i data-lucide="star"
-              style="width:28px;height:28px;fill:currentColor;"></i></button>
-          <button class="star-btn active" onclick="setRatingScore(2)"><i data-lucide="star"
-              style="width:28px;height:28px;fill:currentColor;"></i></button>
-          <button class="star-btn active" onclick="setRatingScore(3)"><i data-lucide="star"
-              style="width:28px;height:28px;fill:currentColor;"></i></button>
-          <button class="star-btn active" onclick="setRatingScore(4)"><i data-lucide="star"
-              style="width:28px;height:28px;fill:currentColor;"></i></button>
-          <button class="star-btn active" onclick="setRatingScore(5)"><i data-lucide="star"
-              style="width:28px;height:28px;fill:currentColor;"></i></button>
+        <div class="rt-block">
+          <p class="rt-label">Your rating</p>
+          <div class="stars-row rt-stars" id="ratingStars">
+            <button type="button" class="star-btn active" onclick="setRatingScore(1)" aria-label="1 star"><i data-lucide="star"></i></button>
+            <button type="button" class="star-btn active" onclick="setRatingScore(2)" aria-label="2 stars"><i data-lucide="star"></i></button>
+            <button type="button" class="star-btn active" onclick="setRatingScore(3)" aria-label="3 stars"><i data-lucide="star"></i></button>
+            <button type="button" class="star-btn active" onclick="setRatingScore(4)" aria-label="4 stars"><i data-lucide="star"></i></button>
+            <button type="button" class="star-btn active" onclick="setRatingScore(5)" aria-label="5 stars"><i data-lucide="star"></i></button>
+          </div>
         </div>
 
-        <!-- Tags -->
-        <div class="rating-tags-wrap">
-          <span class="rating-tag-pill active" onclick="this.classList.toggle('active')">Safe Driving</span>
-          <span class="rating-tag-pill active" onclick="this.classList.toggle('active')">Punctual Pickup</span>
-          <span class="rating-tag-pill active" onclick="this.classList.toggle('active')">Friendly to Children</span>
-          <span class="rating-tag-pill" onclick="this.classList.toggle('active')">Clean Vehicle</span>
-          <span class="rating-tag-pill" onclick="this.classList.toggle('active')">Smooth Route</span>
+        <div class="rt-block">
+          <p class="rt-label">What went well</p>
+          <div class="rating-tags-wrap rt-tags" id="ratingTags">
+            <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">Safe driving</button>
+            <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">On time</button>
+            <button type="button" class="rating-tag-pill" onclick="this.classList.toggle('active')">Great with kids</button>
+            <button type="button" class="rating-tag-pill" onclick="this.classList.toggle('active')">Clean vehicle</button>
+          </div>
         </div>
 
-        <!-- Written review text -->
-        <div style="width: 100%; text-align: left;">
-          <textarea class="rating-comment-box" id="ratingCommentText"
-            placeholder="Leave an optional comment for other parents..."></textarea>
+        <div class="rt-block">
+          <p class="rt-label">Comment <span class="rt-optional">optional</span></p>
+          <textarea class="rating-comment-box" id="ratingCommentText" placeholder="Share a short note for other parents"></textarea>
         </div>
 
-        <!-- Low Rating Auto-Flag Banner (< 3.5 Stars per RFP Section 4.8) -->
-        <div id="lowRatingAutoFlagNotice" style="display: none; width: 100%; background: #FEF3C7; border: 1.5px solid #FCD34D; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #92400E; text-align: left; line-height: 1.4;">
-          <strong style="display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
-            <i data-lucide="alert-triangle" style="width:14px;height:14px;color:#D97706;"></i>
-            Administrator Safety Alert Triggered
-          </strong>
-          Ratings below 3.5 stars are automatically submitted to the Home2School Compliance Queue for safety investigation.
+        <div class="rt-flag" id="lowRatingAutoFlagNotice" hidden>
+          Ratings of 3★ or below are reviewed by Home2School for safety.
         </div>
 
-        <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-          <button class="btn-primary"
-            onclick="window.handleParentReviewSubmit()">Submit Review</button>
-          <button class="btn-secondary-link" onclick="navigateTo('home')">Skip for now</button>
+        <div class="rt-actions">
+          <button type="button" class="btn-primary" onclick="window.handleParentReviewSubmit()">Submit</button>
+          <button type="button" class="btn-secondary-link" onclick="navigateTo('home')">Skip</button>
         </div>
       </div>
 
@@ -7207,10 +7210,16 @@
               <p class="user-question" id="driverHomeMeta">Toyota Sienna • 4 seats</p>
             </div>
           </div>
-          <button type="button" class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
-            <i data-lucide="bell"></i>
-            <span class="unread-badge-dot"></span>
-          </button>
+          <div class="partner-home-actions">
+            <button type="button" class="partner-online-chip is-online" id="driverOnlineChip" onclick="event.stopPropagation(); toggleDriverOnline()">
+              <span class="partner-online-dot" aria-hidden="true"></span>
+              <span id="driverOnlineLabel">Online</span>
+            </button>
+            <button type="button" class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
+              <i data-lucide="bell"></i>
+              <span class="unread-badge-dot"></span>
+            </button>
+          </div>
         </div>
 
         <div id="driverHeroContainer"></div>
@@ -7535,10 +7544,16 @@
               <p class="user-question" id="wsHomeMeta">Walking School Bus Escort · 3 kids</p>
             </div>
           </div>
-          <button type="button" class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
-            <i data-lucide="bell"></i>
-            <span class="unread-badge-dot"></span>
-          </button>
+          <div class="partner-home-actions">
+            <button type="button" class="partner-online-chip is-online" id="wsOnlineChip" onclick="event.stopPropagation(); toggleWalkShareOnline()">
+              <span class="partner-online-dot" aria-hidden="true"></span>
+              <span id="wsOnlineLabel">Online</span>
+            </button>
+            <button type="button" class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')">
+              <i data-lucide="bell"></i>
+              <span class="unread-badge-dot"></span>
+            </button>
+          </div>
         </div>
         <div id="wsHeroContainer"></div>
         <div id="wsHomeFeed"></div>
@@ -8283,10 +8298,10 @@
     </div>
   </div>
 
-  <script type="module" src="/app.js"></script>
-  <script type="module" src="/mvp-parent.js"></script>
-  <script type="module" src="/mvp-driver.js"></script>
-  <script type="module" src="/mvp-walkshare.js"></script>
+  <script type="module" src="/app.js?v=20260916-docsroute1"></script>
+  <script type="module" src="/mvp-parent.js?v=20260916-docsroute1"></script>
+  <script type="module" src="/mvp-driver.js?v=20260916-docsroute1"></script>
+  <script type="module" src="/mvp-walkshare.js?v=20260916-docsroute1"></script>
 </body>
 
 </html>

@@ -13,12 +13,12 @@
   const DRIVER_ONLY = new Set([
     'driverHome', 'driverRequests', 'driverSchedule', 'driverActiveTrip', 'driverSetup', 'driverProfile',
     'driverOnboardProfile', 'driverOnboardVehicle', 'driverOnboardDocs', 'driverDocDetail', 'driverOnboardAvailability',
-    'driverOnboardRate', 'driverPayment', 'driverPending', 'driverSubscription', 'driverRequestDetail', 'driverTripPrep', 'driverRateParent'
+    'driverOnboardRate', 'driverPayment', 'driverPending', 'driverSubscription', 'driverRequestDetail', 'driverTripPrep', 'driverRateParent', 'driverRatings'
   ]);
   const WS_ONLY = new Set([
     'wsHome', 'wsRequests', 'wsSchedule', 'wsProfile', 'wsSetup',
     'wsOnboardProfile', 'wsOnboardGroup', 'wsOnboardDocs', 'wsDocDetail', 'wsOnboardAvailability',
-    'wsOnboardRate', 'wsPayment', 'wsPending', 'wsSubscription', 'wsRequestDetail', 'wsWalkPrep', 'wsActiveWalk'
+    'wsOnboardRate', 'wsPayment', 'wsPending', 'wsSubscription', 'wsRequestDetail', 'wsWalkPrep', 'wsActiveWalk', 'wsRatings'
   ]);
   const PARENTS = {
     'PRNT-9042': { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Arman, Emma & Zara' },
@@ -111,6 +111,7 @@
         subscription: w.subscription,
         requests: w.requests,
         isOnline: w.isOnline,
+        skipDemoUnlock: !!w.skipDemoUnlock,
         activeWalkStage: w.activeWalkStage,
         activeWalk: w.activeWalk,
         notifications: w.notifications
@@ -124,12 +125,29 @@
 
   function demoDocuments() {
     return [
-      { id: 'id', title: 'Government-Issued Photo ID', status: 'approved', file: demoUpload('sarah-passport.pdf'), number: 'ON-4819203' },
-      { id: 'proofAddress', title: 'Proof of Address (Utility Bill)', status: 'approved', file: demoUpload('utility-bill-sarah.pdf') },
-      { id: 'vulnerable', title: 'Vulnerable Sector Check (VSC)', status: 'approved', file: demoUpload('vsc-sarah.pdf') },
-      { id: 'references', title: 'Two Personal References', status: 'approved', ref1: 'Principal Miller (Greenfield School) · (416) 555-0144', ref2: 'Dr. Rebecca Vance · (416) 555-0189' },
-      { id: 'safetyAgreement', title: 'Signed Safety Agreement', status: 'approved', file: demoUpload('signed-safety-agreement.pdf') }
+      { id: 'id', title: 'Government ID', status: 'approved', file: demoUpload('sarah-passport.pdf'), number: 'ON-4819203' },
+      { id: 'criminal', title: 'Criminal Background Check', status: 'approved', file: demoUpload('crc-sarah.pdf'), issuer: 'Toronto Police Service' },
+      { id: 'vulnerable', title: 'Vulnerable Sector Check', status: 'approved', file: demoUpload('vsc-sarah.pdf'), issuer: 'Toronto Police Service' },
+      { id: 'firstaid', title: 'Pediatric First-Aid / CPR', status: 'approved', file: demoUpload('cpr-sarah.pdf'), issuer: 'Red Cross' }
     ];
+  }
+
+  function normalizeWalkDocs(docs, useDemo) {
+    const list = Array.isArray(docs) ? docs : [];
+    const demo = demoDocuments();
+    return REQUIRED_DOCS.map((spec) => {
+      const existing = list.find((d) => d.id === spec.id) || {};
+      const src = useDemo ? (demo.find((d) => d.id === spec.id) || {}) : existing;
+      return {
+        id: spec.id,
+        title: spec.title,
+        status: src.status || 'not_submitted',
+        number: src.number || '',
+        issuer: src.issuer || '',
+        file: src.file || { name: '', attached: false },
+        rejectReason: src.rejectReason || ''
+      };
+    });
   }
 
   function ensureWalk() {
@@ -160,7 +178,7 @@
       try {
         const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
         if (saved && typeof saved === 'object') {
-          ['name', 'phone', 'email', 'photo', 'serviceArea', 'verificationStatus', 'isOnline', 'activeWalkStage'].forEach((key) => {
+          ['name', 'phone', 'email', 'photo', 'serviceArea', 'verificationStatus', 'isOnline', 'activeWalkStage', 'skipDemoUnlock'].forEach((key) => {
             if (saved[key] !== undefined) w[key] = saved[key];
           });
           ['onboarding', 'group', 'availability', 'rate', 'subscription', 'activeWalk'].forEach((key) => {
@@ -171,6 +189,16 @@
           if (Array.isArray(saved.notifications)) w.notifications = saved.notifications;
         }
       } catch (err) { /* ignore */ }
+    }
+    if (w.skipDemoUnlock) {
+      w.documents = normalizeWalkDocs(w.documents, false);
+    } else {
+      w.documents = normalizeWalkDocs(w.documents, !w.documents || !w.documents.length);
+      if (w.verificationStatus !== 'approved' && w.verificationStatus !== 'verified') {
+        w.verificationStatus = 'approved';
+      }
+      if (!w.onboarding) w.onboarding = {};
+      ['profile', 'group', 'docs', 'availability', 'rate'].forEach((k) => { w.onboarding[k] = true; });
     }
     return w;
   }
@@ -266,6 +294,78 @@
 
   function isApproved(w) {
     return w.verificationStatus === 'approved' || w.verificationStatus === 'verified';
+  }
+
+  window.startWalkShareSignupFlow = function (name, email) {
+    if (!state().walkshare) state().walkshare = defaultWalkState();
+    state().walkshare.skipDemoUnlock = true;
+    const w = ensureWalk();
+    w.name = name || w.name || 'New Escort';
+    w.email = email || w.email || '';
+    w.phone = w.phone || '';
+    w.verificationStatus = 'pending';
+    w.isOnline = false;
+    w.skipDemoUnlock = true;
+    w.onboarding = { profile: false, group: false, docs: false, availability: false, rate: false };
+    w.documents = normalizeWalkDocs([], false);
+    w.subscription = w.subscription || { status: 'trial', plan: 'monthly', priceMonthly: 19, priceAnnual: 179, trialDaysLeft: 14, history: [] };
+    w.subscription.status = 'trial';
+    persist();
+    return w;
+  };
+
+  function syncWalkOnlineUi(w) {
+    const online = !!w.isOnline && isApproved(w);
+    const chip = document.getElementById('wsOnlineChip');
+    const label = document.getElementById('wsOnlineLabel');
+    if (chip) {
+      chip.classList.toggle('is-online', online);
+      chip.classList.toggle('is-offline', !online);
+      chip.disabled = !isApproved(w);
+      chip.title = isApproved(w) ? (online ? 'Go offline' : 'Go online') : 'Finish verification first';
+    }
+    if (label) label.textContent = online ? 'Online' : 'Offline';
+    const toggle = document.getElementById('wsOnlineToggle');
+    if (toggle) {
+      toggle.checked = online;
+      toggle.disabled = !isApproved(w);
+    }
+    const sub = document.getElementById('wsOnlineSub');
+    if (sub) {
+      sub.textContent = !isApproved(w)
+        ? 'Available after verification'
+        : (online ? 'Accepting new walks' : 'Hidden from new requests');
+    }
+  }
+
+  window.setWalkShareOnlineStatus = function (on) {
+    const w = ensureWalk();
+    if (!isApproved(w)) {
+      toast('Finish verification before going online', 'error');
+      syncWalkOnlineUi(w);
+      return;
+    }
+    w.isOnline = !!on;
+    persist();
+    syncWalkOnlineUi(w);
+    toast(w.isOnline ? 'You are online' : 'You are offline');
+  };
+
+  window.toggleWalkShareOnline = function () {
+    window.setWalkShareOnlineStatus(!ensureWalk().isOnline);
+  };
+
+  function partnerOnlineRow(checked, disabled) {
+    return `<div class="partner-status-row profile-menu-item" style="cursor:default;">
+      <div class="partner-status-copy">
+        <span class="partner-status-title">Online status</span>
+        <span class="partner-status-sub" id="wsOnlineSub">${disabled ? 'Available after verification' : (checked ? 'Accepting new walks' : 'Hidden from new requests')}</span>
+      </div>
+      <label class="partner-status-switch" onclick="event.stopPropagation()">
+        <input type="checkbox" id="wsOnlineToggle" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''} onchange="window.setWalkShareOnlineStatus(this.checked)" />
+        <span class="partner-status-slider"></span>
+      </label>
+    </div>`;
   }
 
   function hasAccess(w) {
@@ -501,9 +601,30 @@
     return 'wsHome';
   };
 
+  function ensureWalkRole() {
+    state().activeRole = 'walkshare';
+    localStorage.setItem('h2s_active_role', 'walkshare');
+    document.body.setAttribute('data-role', 'walkshare');
+    const shell = document.getElementById('appShell');
+    if (shell) shell.setAttribute('data-role', 'walkshare');
+    if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI('walkshare');
+  }
+
+  function isWalkPartnerFlowScreen(name) {
+    return name === 'wsDocDetail'
+      || name === 'wsSetup'
+      || name === 'wsPending'
+      || String(name || '').indexOf('wsOnboard') === 0;
+  }
+
   function resolveScreen(name) {
     const role = state().activeRole || 'parent';
     if (AUTH.has(name)) return name;
+    // Never bounce signup/doc-detail to parent home when role lagged.
+    if (isWalkPartnerFlowScreen(name)) {
+      if (role !== 'walkshare') ensureWalkRole();
+      return name;
+    }
     if (role === 'walkshare') {
       if (name === 'tracking') return ensureWalk().activeWalkStage > 0 ? 'wsActiveWalk' : window.getWalkShareLanding();
       if (name === 'profile' || name === 'profilePersonalInfo') return 'wsProfile';
@@ -541,17 +662,19 @@
     if (!shell) return;
     const screens = [
       ['wsOnboardProfile', 'Your profile', "leaveWalkShareGate()"],
-      ['wsOnboardGroup', 'Walking group', "backNested('wsProfile')"],
-      ['wsOnboardDocs', 'Documents', "backNested('wsProfile')"],
-      ['wsDocDetail', 'Document', "backNested('wsOnboardDocs')"],
-      ['wsOnboardAvailability', 'Availability', "backNested('wsProfile')"],
-      ['wsOnboardRate', 'Posted rate', "backNested('wsProfile')"],
+      ['wsOnboardGroup', 'Walking group', "navigateTo('wsOnboardProfile')"],
+      ['wsOnboardDocs', 'Documents', "navigateTo('wsOnboardGroup')"],
+      ['wsDocDetail', 'Document', "navigateTo('wsOnboardDocs')"],
+      ['wsOnboardAvailability', 'Availability', "navigateTo('wsOnboardDocs')"],
+      ['wsOnboardRate', 'Posted rate', "navigateTo('wsOnboardAvailability')"],
       ['wsPayment', 'Payment preference', "backNested('wsProfile')"],
       ['wsPending', 'Verification', "navigateTo('wsSetup')"],
       ['wsSubscription', 'Platform access', "backNested('wsProfile')"],
       ['wsRequestDetail', 'Request', "navigateTo('wsRequests')"],
       ['wsWalkPrep', 'Next walk', "navigateTo('wsSchedule')"],
-      ['wsSetup', 'WalkShare setup', "backNested('wsHome')"]
+      ['wsActiveWalk', 'Active walk', "navigateTo('wsHome')"],
+      ['wsSetup', 'WalkShare setup', "backNested('wsHome')"],
+      ['wsRatings', 'Your ratings', "backNested('wsProfile')"]
     ];
     screens.forEach(([id, title, back]) => {
       if (document.getElementById('screen-' + id)) return;
@@ -638,6 +761,7 @@
     else if (name === 'wsDocDetail') renderDocDetail();
     else if (name === 'wsOnboardAvailability') renderOnboardAvailability();
     else if (name === 'wsOnboardRate') renderOnboardRate();
+    else if (name === 'wsRatings') renderMyRatings();
     else if (name === 'wsPayment') renderPayment();
     else if (name === 'wsPending') renderPending();
     else if (name === 'wsSubscription') renderSubscription();
@@ -716,6 +840,7 @@
         ? `${w.group.label} · ${w.group.capacity} kids`
         : 'Finish setup to accept walking escorts';
     }
+    syncWalkOnlineUi(w);
     if (avatar) {
       avatar.src = w.photo || '/assets/avatar_sarah.jpg';
       avatar.alt = w.name || 'WalkShare';
@@ -1335,8 +1460,8 @@
     ];
     el.innerHTML = `
       <div class="trip-card">
-        <h3 class="section-heading" style="margin-bottom:0;">${isApproved(w) ? 'Verified WalkShare' : 'Finish setup'}</h3>
-        <p class="drv-lede">Complete setup to accept walks.</p>
+        <h3 class="section-heading" style="margin-bottom:0;">${isApproved(w) ? 'Verified WalkShare' : 'WalkShare setup'}</h3>
+        <p class="drv-lede">${isApproved(w) ? 'You can go online and accept walks.' : 'Profile, group, docs, hours, then rate. Parents do not upload these.'}</p>
       </div>
       <div class="profile-menu-section">
         ${steps.map(([key, title, sub, screen]) => `
@@ -1388,9 +1513,14 @@
       </div>
 
       <div class="profile-menu-section">
+        ${partnerOnlineRow(!!w.isOnline && isApproved(w), !isApproved(w))}
+        ${profileMenuRow('star', `Your ratings · ${Number(w.rating || 4.9).toFixed(1)}`, "openNestedScreen('wsRatings', event)")}
+      </div>
+
+      <div class="profile-menu-section">
         ${profileMenuRow('users', esc(w.group.label), "openNestedScreen('wsOnboardGroup', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openNestedScreen('wsOnboardDocs', event)")}
-        ${profileMenuRow('clock', 'Availability', "openNestedScreen('wsOnboardAvailability', event)")}
+        ${profileMenuRow('clock', 'Weekly hours', "openNestedScreen('wsOnboardAvailability', event)")}
         ${profileMenuRow('circle-dollar-sign', 'Posted rate', "openNestedScreen('wsOnboardRate', event)")}
         ${profileMenuRow('wallet', 'Payment preference', "openNestedScreen('wsPayment', event)")}
       </div>
@@ -1405,8 +1535,15 @@
         ${profileMenuRow('info', 'About Home2School', "openNestedScreen('about', event)")}
       </div>
 
-      <div class="profile-menu-section">
-        ${profileMenuRow('users', 'Switch to Parent', 'window.openRoleSwitcherModal()')}
+      <div class="profile-workspace-card" role="button" tabindex="0" onclick="window.openRoleSwitcherModal()">
+        <div class="pwc-left">
+          <div class="pwc-icon-wrap walkshare"><i data-lucide="layers"></i></div>
+          <div class="pwc-info">
+            <div class="pwc-title">Role: WalkShare</div>
+            <div class="pwc-subtitle">Switch role</div>
+          </div>
+        </div>
+        <button type="button" class="pwc-action-btn" onclick="event.stopPropagation(); window.openRoleSwitcherModal()">Switch</button>
       </div>
 
       <button type="button" class="profile-logout-btn" onclick="navigateTo('authWelcome')">
@@ -1414,6 +1551,7 @@
         Log out
       </button>
     `;
+    if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI('walkshare');
     icons();
   }
 
@@ -1481,55 +1619,173 @@
     window.navigateTo(onboardingDone(w) ? 'wsProfile' : 'wsOnboardDocs');
   };
 
+  function readLocalFile(file, cb) {
+    if (!file) return;
+    const meta = { name: file.name, attached: true, preview: '' };
+    const isImage = !!(file.type && file.type.indexOf('image/') === 0);
+    if (!isImage) {
+      cb(meta);
+      return;
+    }
+    if (file.size > 12 * 1024 * 1024) {
+      toast('Choose a photo under 12 MB');
+      cb(meta);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => cb({ name: file.name, attached: true, preview: String(reader.result || '') });
+    reader.onerror = () => cb(meta);
+    reader.readAsDataURL(file);
+  }
+
+  function wsDocReady(doc) {
+    if (!doc) return false;
+    const hasFile = !!(doc.file && (doc.file.attached || doc.file.name));
+    if (doc.id === 'id') return hasFile && !!String(doc.number || '').trim();
+    if (doc.id === 'firstaid') return hasFile && !!String(doc.issuer || '').trim();
+    return hasFile && !!String(doc.issuer || '').trim();
+  }
+
   function renderOnboardDocs() {
     const w = ensureWalk();
     const el = feed('wsOnboardDocsFeed');
     if (!el) return;
+    const submitted = w.documents.filter((doc) => doc.status !== 'not_submitted' && doc.status !== 'action_required' && doc.status !== 'rejected').length;
     el.innerHTML = `
-      <p class="drv-lede" style="margin-bottom:12px;">ID, address, VSC, references, agreement.</p>
-      <div class="profile-menu-section">
-        ${w.documents.map((doc) => `
-          <button type="button" class="profile-menu-item" onclick="openWalkShareDoc('${esc(doc.id)}')">
+      <p class="drv-docs-meta">${submitted} / ${w.documents.length} submitted · ID, CRC, VSC, first-aid</p>
+      <div class="profile-menu-section drv-doc-list">
+        ${w.documents.map((doc) => {
+          const needs = doc.status === 'not_submitted' || doc.status === 'action_required' || doc.status === 'rejected';
+          return `
+          <div class="profile-menu-item drv-doc-row" role="button" tabindex="0" onclick="openWalkShareDoc('${esc(doc.id)}')">
             <div class="menu-item-left">
-              <div class="menu-icon-wrap"><i data-lucide="file-check"></i></div>
+              <div class="menu-icon-wrap drv-doc-icon"><i data-lucide="upload"></i></div>
               <div>
-                <div class="menu-title-text">${esc(doc.title)}</div>
-                <div class="menu-subtitle">${esc(doc.status === 'approved' ? 'Approved' : doc.status || 'Under review')}</div>
+                <span class="menu-title-text">${esc(doc.title)}</span>
+                ${needs ? '<span class="menu-subtitle">Tap to upload</span>' : ''}
               </div>
             </div>
-            <i data-lucide="chevron-right" style="width:16px;height:16px;color:#94A3B8;"></i>
-          </button>
-        `).join('')}
+            <span class="drv-doc-row-end">
+              <span class="drv-doc-status ${esc(doc.status || 'not_submitted')}">${esc(doc.status === 'approved' ? 'Approved' : (doc.status === 'under_review' ? 'Under Review' : (doc.status === 'action_required' ? 'Action Required' : 'Not Submitted')))}</span>
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:#94A3B8;"></i>
+            </span>
+          </div>`;
+        }).join('')}
       </div>
-      <button type="button" class="btn-primary" onclick="saveWalkShareDocsDone()">Mark documents complete</button>
+      <button type="button" class="btn-primary" onclick="saveWalkShareDocsDone()">Continue</button>
     `;
     icons();
   }
 
   window.openWalkShareDoc = function (id) {
-    ensureWalk().selectedDocId = id;
-    window.navigateTo('wsDocDetail');
+    const w = ensureWalk();
+    ensureWalkRole();
+    w.selectedDocId = id;
+    const current = window.currentScreen || '';
+    if (current && current !== 'wsDocDetail') {
+      window.navReturnStack = window.navReturnStack || [];
+      window.navReturnStack.push({ screen: current, role: 'walkshare' });
+    }
+    window.navigateTo('wsDocDetail', true);
   };
 
   function renderDocDetail() {
     const w = ensureWalk();
     const doc = w.documents.find((d) => d.id === w.selectedDocId) || w.documents[0];
     const el = feed('wsDocDetailFeed');
-    if (!el || !doc) return;
+    if (!el || !doc) {
+      window.navigateTo('wsOnboardDocs', true);
+      return;
+    }
+    const attached = !!(doc.file && (doc.file.attached || doc.file.name));
+    const fileName = attached ? (doc.file.name || 'File attached') : 'Tap to upload';
+    const thumb = attached && doc.file.preview
+      ? `<img class="drv-upload-thumb" src="${esc(doc.file.preview)}" alt="" />`
+      : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="${attached ? 'file-check' : 'upload'}"></i></span>`;
+    const fieldHtml = doc.id === 'id'
+      ? `<div class="form-group"><label class="form-label" for="wsDocNumber">ID number</label><input class="form-input" id="wsDocNumber" value="${esc(doc.number || '')}" placeholder="ON-4819203" /></div>`
+      : `<div class="form-group"><label class="form-label" for="wsDocIssuer">Issuing body</label><input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="${doc.id === 'firstaid' ? 'Red Cross' : 'Toronto Police Service'}" /></div>`;
+    const back = el?.closest('.screen-view')?.querySelector('.back-btn');
+    if (back) {
+      back.setAttribute('onclick', "event.preventDefault();event.stopPropagation();navigateTo('wsOnboardDocs', true)");
+    }
+    const titleEl = el?.closest('.screen-view')?.querySelector('.top-bar-title');
+    if (titleEl) titleEl.textContent = doc.title;
     el.innerHTML = `
-      <div class="trip-card">
-        <h3 class="card-title-navy">${esc(doc.title)}</h3>
-        <p class="card-desc-muted">Status: ${esc(doc.status || 'Under review')}</p>
-        ${doc.number ? `<p class="card-desc-muted">ID: ${esc(doc.number)}</p>` : ''}
-        ${doc.ref1 ? `<div style="background:#F8FAFC; padding:10px; border-radius:8px; margin:8px 0; font-size:12px;"><strong>Ref 1:</strong> ${esc(doc.ref1)}<br><strong>Ref 2:</strong> ${esc(doc.ref2)}</div>` : ''}
-        <p class="card-desc-muted" style="margin-top:8px;">File: ${esc(doc.file?.name || 'Verified Record On File')}</p>
+      <div class="drv-doc-detail-head">
+        <span class="drv-doc-status ${esc(doc.status || 'not_submitted')}">${esc(doc.status === 'under_review' ? 'Under Review' : (doc.status === 'approved' ? 'Approved' : 'Not Submitted'))}</span>
       </div>
-      <button type="button" class="btn-primary" onclick="navigateTo('wsOnboardDocs')">Back to documents</button>
+      <h3 class="card-title-navy" style="margin:0 0 8px;">${esc(doc.title)}</h3>
+      ${fieldHtml}
+      <div class="form-group">
+        <label class="form-label" for="wsDocFile">Document file</label>
+        <label class="drv-upload-tile" for="wsDocFile">
+          ${thumb}
+          <span class="drv-upload-copy">
+            <span class="drv-upload-name">${esc(fileName)}</span>
+            <span class="drv-upload-hint">${attached ? 'Tap to replace · JPG, PNG, or PDF' : 'Tap to upload · JPG, PNG, or PDF'}</span>
+          </span>
+        </label>
+        <input type="file" accept="image/*,.pdf,application/pdf" id="wsDocFile" class="drv-file-input" onchange="onWalkShareDocFile(event)" />
+      </div>
+      <div class="drv-actions-col">
+        <button type="button" class="btn-primary" onclick="saveWalkShareDoc()">${doc.status === 'not_submitted' ? 'Submit' : 'Save'}</button>
+      </div>
     `;
+    icons();
   }
+
+  window.onWalkShareDocFile = function (event) {
+    const input = event.target;
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const w = ensureWalk();
+    const doc = w.documents.find((d) => d.id === w.selectedDocId);
+    if (!doc) return;
+    readLocalFile(file, (meta) => {
+      doc.file = { name: meta.name, attached: true, preview: meta.preview || '' };
+      doc._fileTouched = true;
+      persist();
+      input.value = '';
+      toast('File attached');
+      renderDocDetail();
+    });
+  };
+
+  window.saveWalkShareDoc = function () {
+    const w = ensureWalk();
+    const doc = w.documents.find((d) => d.id === w.selectedDocId);
+    if (!doc) return;
+    if (doc.id === 'id') doc.number = (document.getElementById('wsDocNumber')?.value || '').trim();
+    else doc.issuer = (document.getElementById('wsDocIssuer')?.value || '').trim();
+    if (!wsDocReady(doc)) {
+      toast('Add the required details and upload a file');
+      return;
+    }
+    doc.status = 'under_review';
+    delete doc._fileTouched;
+    persist();
+    toast('Submitted for review');
+    const stack = window.navReturnStack || [];
+    while (stack.length) {
+      const top = stack[stack.length - 1];
+      if (top && (top.screen === 'wsOnboardDocs' || top.screen === 'wsDocDetail')) {
+        stack.pop();
+        if (top.screen === 'wsOnboardDocs') break;
+        continue;
+      }
+      break;
+    }
+    window.navigateTo('wsOnboardDocs', true);
+  };
 
   window.saveWalkShareDocsDone = function () {
     const w = ensureWalk();
+    const blocked = w.documents.filter((doc) => doc.status === 'not_submitted' || doc.status === 'action_required');
+    if (blocked.length) {
+      toast('Open every document and upload the required file');
+      return;
+    }
     w.onboarding.docs = true;
     persist();
     toast('Documents saved');
@@ -1596,11 +1852,57 @@
   window.saveWalkShareRate = function () {
     const w = ensureWalk();
     w.rate.amount = Number(document.getElementById('wsRateAmount')?.value || w.rate.amount);
+    w.rate.negotiable = !!document.getElementById('wsRateNegotiable')?.checked;
     w.onboarding.rate = true;
     persist();
     toast('Posted rate saved');
-    window.navigateTo('wsProfile');
+    window.navigateTo(onboardingDone(w) ? 'wsProfile' : 'wsHome');
   };
+
+  function renderMyRatings() {
+    const w = ensureWalk();
+    const el = feed('wsRatingsFeed');
+    if (!el) return;
+    const provider = (state().providers || []).find((p) => p.id === 'sarah' || p.id === 'elena')
+      || { rating: w.rating || 4.9, reviewsCount: w.reviewsCount || 45, name: w.name, category: 'walkshare', quote: w.quote };
+    provider.category = 'walkshare';
+    const reviews = typeof window.getProviderReviews === 'function' ? window.getProviderReviews(provider) : [];
+    const rating = Number(provider.rating || w.rating || 4.9);
+    const count = provider.reviewsCount || reviews.length;
+    const full = Math.round(rating);
+    el.innerHTML = `
+      <div class="partner-ratings-feed">
+        <div class="provider-reviews-summary">
+          <div class="provider-reviews-score">${rating.toFixed(1)}</div>
+          <div class="provider-reviews-score-meta">
+            <div class="profile-rating-stars-gold">${'★★★★★'.slice(0, full)}${'☆☆☆☆☆'.slice(0, 5 - full)}</div>
+            <div class="profile-rating-reviews-count">${count} parent reviews</div>
+          </div>
+        </div>
+        ${reviews.map((r) => {
+          const stars = '★'.repeat(r.rating || 5);
+          const photo = typeof window.personAvatar === 'function' ? window.personAvatar(r.name, '/assets/avatar_sadia.jpg') : '/assets/avatar_sadia.jpg';
+          return `<article class="provider-review-card">
+            <div class="profile-review-top-row">
+              <div class="profile-reviewer-info">
+                <div class="provider-review-avatar"><img src="${esc(photo)}" alt="" onerror="this.src='/assets/avatar_sadia.jpg'" /></div>
+                <div>
+                  <div class="profile-reviewer-name">${esc(r.name)}</div>
+                  <div class="profile-reviewer-sub">Verified parent</div>
+                </div>
+              </div>
+              <div class="provider-review-meta">
+                <span class="profile-rating-stars-gold">${stars}</span>
+                <span class="profile-review-date">${esc(r.date || '')}</span>
+              </div>
+            </div>
+            <p class="profile-review-quote">${esc(r.text || '')}</p>
+          </article>`;
+        }).join('') || '<p class="drv-lede">No reviews yet.</p>'}
+      </div>
+    `;
+    icons();
+  }
 
   function renderPayment() {
     const w = ensureWalk();
