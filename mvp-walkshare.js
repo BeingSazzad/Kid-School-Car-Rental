@@ -212,7 +212,10 @@
     }
     const w = state().walkshare;
     if (!w.onboarding) w.onboarding = { profile: true, group: true, docs: true, availability: true, rate: true };
-    if (!w.group) w.group = { label: 'Walking School Bus', capacity: 3, route: 'Elm → Greenfield', safety: ['High-Vis Vests', 'Crossing Guard', 'Pediatric CPR'] };
+    if (!w.group) w.group = { label: 'Neighborhood Walking Group', capacity: 3, route: 'Elm → Greenfield', safety: ['High-Vis Vests', 'Crossing Guard', 'Pediatric CPR'] };
+    if (w.group && (w.group.label === 'Walking School Bus' || w.group.label === 'Greenfield Walking Bus')) {
+      w.group.label = 'Neighborhood Walking Group';
+    }
     if (!Array.isArray(w.documents) || !w.documents.length) w.documents = demoDocuments();
     if (!w.availability) {
       w.availability = {
@@ -273,7 +276,7 @@
       verificationStatus: 'approved',
       onboarding: { profile: true, group: true, docs: true, availability: true, rate: true },
       group: {
-        label: 'Walking School Bus',
+        label: 'Neighborhood Walking Group',
         capacity: 3,
         route: 'Elm → Greenfield',
         safety: ['High-Vis Vests', 'Crossing Guard', 'Pediatric CPR']
@@ -1698,7 +1701,7 @@
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
               <span class="status-chip in-progress" style="font-size:11px;padding:2px 8px;">
                 <span class="status-dot"></span>
-                <span>Walking Bus Group</span>
+                <span>Walking Escort Group</span>
               </span>
               <span class="card-desc-muted" style="font-weight:700;color:var(--color-title);font-size:13px;">${esc(item.time || '07:40 AM')}</span>
             </div>
@@ -1771,7 +1774,7 @@
 
     if (chip) chip.textContent = stage.chip;
     if (title) title.textContent = atDest ? (item.to || 'Greenfield Elementary') : (item.from || '12 Elm Street (Meetup)');
-    if (desc) desc.textContent = `${item.childNames || 'Arman + Emma'} · ${atDest ? 'School gate arrival' : 'Morning walking bus'}`;
+    if (desc) desc.textContent = `${item.childNames || 'Arman + Emma'} · ${atDest ? 'School gate arrival' : 'Morning walking escort'}`;
     if (eta) eta.textContent = item.time || '07:50 AM';
     if (btn) btn.textContent = stage.cta;
     if (note) {
@@ -2032,7 +2035,7 @@
 
       <!-- Section 1: Walking Group & Operations (3 links) -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
-        ${profileMenuRow('users', esc(w.group.label || 'Walking School Bus'), "openNestedScreen('wsOnboardGroup', event)")}
+        ${profileMenuRow('users', esc(w.group.label || 'Neighborhood Walking Group'), "openNestedScreen('wsOnboardGroup', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openNestedScreen('wsOnboardDocs', event)")}
         ${profileMenuRow('clock', 'Availability', "openNestedScreen('wsOnboardAvailability', event)")}
       </div>
@@ -2151,7 +2154,7 @@
 
         <div class="form-group">
           <label class="form-label">About / Bio (Shown to parents)</label>
-          <textarea class="form-textarea" id="wsProfileBio" rows="3" placeholder="Tell parents about your walking school bus, supervised escort care, and neighborhood route...">${esc(w.bio || w.about || 'Sarah leads a supervised walking school bus so neighborhood kids arrive together—active, visible, and safely escorted to the school gate.')}</textarea>
+          <textarea class="form-textarea" id="wsProfileBio" rows="3" placeholder="Tell parents about your neighborhood walking group, supervised sidewalk escort care, and morning route...">${esc(w.bio || w.about || 'Sarah leads a supervised neighborhood walking group so local children walk to school together safely on verified sidewalk corridors and crosswalks to the school gate.')}</textarea>
         </div>
       </div>
 
@@ -2221,7 +2224,7 @@
         <div style="margin-bottom: 16px;">
           <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#16A34A; background:#F0FDF4; padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 2 of 5</span>
           <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Walking Group & Route</h2>
-          <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Configure group capacity and your daily walking school bus route corridor.</p>
+          <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Configure group capacity and your daily sidewalk walking corridor.</p>
         </div>
       `}
 
@@ -2229,7 +2232,7 @@
         <div class="form-group">
           <label class="form-label">Walking Group Name</label>
           <div class="input-box-wrapper">
-            <input class="form-input" id="wsGroupLabel" value="${esc(w.group.label || 'Greenfield Walking Bus')}" placeholder="e.g. Greenfield Walking Bus" />
+            <input class="form-input" id="wsGroupLabel" value="${esc(w.group.label || 'Neighborhood Walking Group')}" placeholder="e.g. Neighborhood Walking Group" />
           </div>
         </div>
 

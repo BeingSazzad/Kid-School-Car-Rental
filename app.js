@@ -273,8 +273,8 @@ window.appState = {
       id: 'sarah',
       name: 'Sarah Jenkins',
       category: 'walkshare',
-      vehicle: 'Walking School Bus',
-      plate: 'VERIFIED-WALK',
+      vehicle: 'Neighborhood Walking Group',
+      plate: 'VERIFIED-ESCORT',
       rating: 4.9,
       reviewsCount: 45,
       seats: 3,
@@ -291,7 +291,7 @@ window.appState = {
       phone: '+1 (416) 555-0185',
       experience: '5+ Yrs',
       onTimeRate: '99.5%',
-      quote: '"Sarah\'s walking school bus is the healthiest and most enjoyable commute for our son. He walks safely with neighborhood kids every morning."',
+      quote: '"Sarah\'s neighborhood walking group is the healthiest and most enjoyable commute for our son. He walks safely with neighborhood kids every morning."',
       reviewer: '— Marcus Vance (Parent of 1)',
       availability: {
         weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
@@ -3569,7 +3569,7 @@ window.renderParentReviewsScreen = function () {
       providerPhoto: '/assets/avatar_sarah.jpg',
       rating: 5,
       date: 'Sep 10, 2026',
-      text: 'Supervised walking school bus was fantastic. Arman enjoyed walking with friends.',
+      text: 'Supervised neighborhood walking group was fantastic. Arman enjoyed walking with friends.',
       tags: ['👦 Great with Kids', '🚪 Curbside Care'],
       flaggedForAdmin: false
     }
@@ -3720,7 +3720,7 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
       : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C1.4 11.2 1 12 1 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>')
       + '<span id="detailsRoleChipText">' + (isWalk ? 'WalkShare Escort' : 'School Driver') + '</span>';
   }
-  if (serviceLabel) serviceLabel.textContent = isWalk ? 'Walking School Bus' : 'School commute';
+  if (serviceLabel) serviceLabel.textContent = isWalk ? 'Neighborhood Walking Group' : 'School commute';
   if (zoneEl) zoneEl.textContent = zone || (isWalk ? 'Elm → Greenfield' : 'School corridor');
   if (availEl) availEl.textContent = schedule;
 
@@ -3764,8 +3764,8 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
       iconBox.className = 'profile-service-icon-box walkshare';
       iconBox.innerHTML = '<i data-lucide="footprints" style="width: 22px; height: 22px;"></i>';
     }
-    if (vehTitle) vehTitle.textContent = provider.vehicle || 'Walking School Bus';
-    if (vehSubtitle) vehSubtitle.textContent = 'Supervised group walk to school';
+    if (vehTitle) vehTitle.textContent = provider.vehicle || 'Neighborhood Walking Group';
+    if (vehSubtitle) vehSubtitle.textContent = 'Supervised neighborhood group walk to school';
     if (specSeats) specSeats.textContent = (provider.seats || 3) + ' kids';
     if (plateLbl) plateLbl.textContent = 'Path';
     if (specPlate) specPlate.textContent = 'Sidewalks only';
@@ -3790,7 +3790,7 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (aboutLbl) aboutLbl.textContent = 'About ' + cleanFirstName;
   if (bioEl) {
     bioEl.textContent = provider.bio || provider.about || (isWalk
-      ? (cleanFirstName + ' leads a supervised walking school bus so neighborhood kids arrive together—active, visible, and safely escorted to the school gate.')
+      ? (cleanFirstName + ' leads a supervised neighborhood walking group so local children walk to school together safely on verified sidewalk corridors and crosswalks to the school gate.')
       : (cleanFirstName + ' provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.'));
   }
 

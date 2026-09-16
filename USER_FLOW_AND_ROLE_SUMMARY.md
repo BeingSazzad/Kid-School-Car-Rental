@@ -9,7 +9,7 @@
 
 1. **👨‍👩‍👧 Parent (Customer & Guardian)**: Manages child profiles, configures commute rules, selects service types (Driver or Walker), tracks trips live via GPS, and receives safe-delivery confirmations.
 2. **🚗 Driver (Vehicle Commute Provider)**: Fully vetted independent or fleet operators providing motorized car/van transportation for medium-to-long distance school commutes with seat management and multi-stop optimization.
-3. **🚶‍♂️ Walker / WalkShare (Escorted Walking Bus)**: Community-based, vetted chaperones who guide groups of neighborhood children on foot for short-distance school commutes using designated safe corridors and zebra crossings.
+3. **🚶‍♂️ Walker / WalkShare (Neighborhood Walking Escort)**: Community-based, vetted chaperones who guide groups of neighborhood children on foot for short-distance school commutes using designated safe corridors and zebra crossings.
 
 ---
 
