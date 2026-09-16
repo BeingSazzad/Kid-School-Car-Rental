@@ -7894,6 +7894,65 @@
             <path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" />
           </svg>
           <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button type="button" class="back-btn" onclick="backNested('home')" aria-label="Go back">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Rate Your Experience</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body rt-body rt-compose">
+        <div class="rt-hero">
+          <div class="rt-avatar-wrap">
+            <img src="/assets/avatar_tariq.jpg" alt="Provider" id="ratingProviderPhoto" class="rt-avatar" width="64" height="64" onerror="this.src='/assets/avatar_tariq.jpg'" />
+          </div>
+          <div class="rt-hero-copy">
+            <h2 class="rt-title" id="ratingProviderName">Tariq Ahmed</h2>
+            <p class="rt-sub" id="ratingTripLine">Greenfield International · Trip completed</p>
+          </div>
+        </div>
+
+        <div class="rt-block">
+          <p class="rt-label">How was the ride?</p>
+          <div class="stars-row rt-stars" id="ratingStars">
+            <button type="button" class="star-btn active" onclick="setRatingScore(1)" aria-label="1 star"><i data-lucide="star"></i></button>
+            <button type="button" class="star-btn active" onclick="setRatingScore(2)" aria-label="2 stars"><i data-lucide="star"></i></button>
+            <button type="button" class="star-btn active" onclick="setRatingScore(3)" aria-label="3 stars"><i data-lucide="star"></i></button>
+            <button type="button" class="star-btn active" onclick="setRatingScore(4)" aria-label="4 stars"><i data-lucide="star"></i></button>
+            <button type="button" class="star-btn active" onclick="setRatingScore(5)" aria-label="5 stars"><i data-lucide="star"></i></button>
+          </div>
+        </div>
+
+        <div class="rt-flag" id="lowRatingAutoFlagNotice" hidden>
+          <strong>Safety check:</strong> Ratings of 3 stars or lower are automatically reviewed by the Home2School safety team to ensure transport quality.
+        </div>
+
+        <div class="rt-block">
+          <p class="rt-label">What went well?</p>
+          <div class="rating-tags-wrap rt-tags">
+            <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">Safe Driving</button>
+            <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">On Time</button>
+            <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">Great Communication</button>
+            <button type="button" class="rating-tag-pill" onclick="this.classList.toggle('active')">Kids Loved It</button>
+          </div>
+        </div>
+
+        <div class="rt-block">
+          <p class="rt-label">Feedback <span class="rt-optional">optional</span></p>
+          <textarea class="form-textarea" id="ratingCommentText" rows="3" placeholder="Share any feedback about punctuality, driving comfort, or handoff care..."></textarea>
+        </div>
+
+        <div class="rt-actions">
+          <button type="button" class="btn-primary" onclick="handleParentReviewSubmit()">Submit Review</button>
+          <button type="button" class="btn-secondary-link" onclick="navigateTo('home')">Skip for now</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
     </section>
 
     <!-- ================= 25. NOTIFICATIONS SCREEN ================= -->

@@ -1518,7 +1518,7 @@ window.navReturnStack = window.navReturnStack || [];
 function navScreenBucket(name) {
   if (!name) return 'unknown';
   if (name === 'adminPortal') return 'admin';
-  if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'profileNotifications' || name === 'profileReviews' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'report' || name === 'rating') return 'shared';
+  if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'profileNotifications' || name === 'profileReviews' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'report' || name === 'rating' || name === 'bookingProviderDetails' || name === 'bookingProviderReviews') return 'shared';
   if (String(name).indexOf('driver') === 0) return 'driver';
   if (String(name).indexOf('ws') === 0) return 'walkshare';
   if (name === 'splash' || String(name).indexOf('onboarding') === 0 || String(name).indexOf('auth') === 0) return 'auth';
@@ -3596,8 +3596,11 @@ window.formatProviderSchedule = function (provider) {
 window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (returnScreen) {
     window.currentDriverProfileReturnScreen = returnScreen;
-  } else if (!window.currentDriverProfileReturnScreen) {
-    window.currentDriverProfileReturnScreen = window.currentScreen || 'home';
+  } else {
+    const cur = currentScreen || window.currentScreen;
+    window.currentDriverProfileReturnScreen = (cur && cur !== 'bookingProviderDetails' && cur !== 'bookingProviderReviews')
+      ? cur
+      : (activeNavRole() === 'driver' ? 'driverProfile' : activeNavRole() === 'walkshare' ? 'wsProfile' : 'home');
   }
 
   let provider = null;
@@ -3752,8 +3755,9 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (negBadgeEl) negBadgeEl.style.display = provider.negotiable !== false ? 'inline-block' : 'none';
   if (payPrefEl) payPrefEl.textContent = provider.preferredPayment || 'e-Transfer · Cash';
 
-  const isOwner = (window.appState.currentRole === 'walkshare' && (provider.id === 'sarah' || isWalk)) ||
-                  (window.appState.currentRole === 'driver' && (provider.id === 'tariq' || !isWalk));
+  const role = typeof activeNavRole === 'function' ? activeNavRole() : (window.appState?.activeRole || localStorage.getItem('h2s_active_role') || 'parent');
+  const isOwner = (role === 'walkshare' && (provider.id === 'sarah' || isWalk)) ||
+                  (role === 'driver' && (provider.id === 'tariq' || !isWalk));
 
   const actionsWrap = document.getElementById('detailsProviderActionsWrap');
   if (actionsWrap) {
@@ -3786,7 +3790,8 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
 };
 
 window.openDriverProfileEditWizard = function (providerId) {
-  const isWalk = providerId === 'sarah' || window.appState.currentRole === 'walkshare';
+  const role = typeof activeNavRole === 'function' ? activeNavRole() : (window.appState?.activeRole || 'driver');
+  const isWalk = providerId === 'sarah' || role === 'walkshare';
   if (isWalk) {
     if (typeof window.openNestedScreen === 'function') {
       window.navigateTo('wsProfile');
@@ -3805,8 +3810,8 @@ window.openDriverProfileEditWizard = function (providerId) {
 };
 
 window.handleProviderDetailsBack = function () {
-  const target = window.currentDriverProfileReturnScreen || 'home';
-  window.navigateTo(target);
+  const target = window.currentDriverProfileReturnScreen || (activeNavRole() === 'driver' ? 'driverProfile' : activeNavRole() === 'walkshare' ? 'wsProfile' : 'home');
+  window.navigateTo(target, true);
 };
 
 window.selectProviderAndReview = function (name) {
@@ -4167,48 +4172,6 @@ window.setDriverScenario = function (scenario) {
   if (typeof window.renderDriverHome === 'function') {
     window.renderDriverHome();
   }
-};
-
-window.openTripReport = function (bookingId) {
-  const booking = (window.appState.bookings || []).find(b => b.id === bookingId)
-    || (window.appState.bookings || [])[0];
-  if (!booking) {
-    window.navigateTo('report');
-    return;
-  }
-
-  const kids = (booking.childIds || [])
-    .map(id => (window.appState.children || []).find(ch => ch.id === id))
-    .filter(Boolean)
-    .map(ch => (ch.name || '').split(' ')[0])
-    .filter(Boolean);
-  const shortPlace = (loc) => {
-    if (!loc) return '';
-    if (/home/i.test(loc)) return 'Home';
-    if (/greenfield/i.test(loc)) return 'Greenfield';
-    if (/sunshine/i.test(loc)) return 'Sunshine';
-    return String(loc).replace(/\s*\([^)]*\)\s*/g, '').split(',')[0].trim().split(' ').slice(0, 2).join(' ');
-  };
-  const from = shortPlace(booking.pickupLocation) || 'Home';
-  const to = shortPlace(booking.schoolLocation) || 'School';
-  const idShort = String(booking.id || '').replace(/^H2S-?/i, '');
-
-  const setText = (id, value) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
-  };
-  const hidden = document.getElementById('reportTripSelect');
-  if (hidden) hidden.value = booking.id;
-
-  setText('tripReportTitle', kids.length ? kids.join(' & ') : 'Trip');
-  setText('tripReportRoute', `${from} → ${to}`);
-  setText('tripReportBookingBadge', idShort ? '#' + idShort : '');
-
-  window.navigateTo('report');
-};
-
-window.handleTripReportBack = function () {
-  window.navigateBack('bookingDetails');
 };
 
 /* --- Booking Details Modal Controllers --- */
@@ -6989,8 +6952,12 @@ window.openTripReport = function (bookingId) {
 };
 
 window.handleTripReportBack = function () {
-  const prev = window.tripReportPreviousScreen || 'profile';
-  window.navigateTo(prev);
+  if (window.navReturnStack && window.navReturnStack.length) {
+    window.backNested(window.tripReportPreviousScreen || 'profile');
+    return;
+  }
+  const prev = window.tripReportPreviousScreen || (activeNavRole() === 'driver' ? 'driverProfile' : activeNavRole() === 'walkshare' ? 'wsProfile' : 'profile');
+  window.navigateTo(prev, true);
 };
 
 window.onReportTripSelectChange = function (selectEl) {
