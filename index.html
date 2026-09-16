@@ -1900,6 +1900,370 @@
   text-overflow: ellipsis !important;
 }
 
+
+
+/* ==========================================================
+   Home Screen — Featured Today's Trip Card (1:1 Reference UI)
+   ========================================================== */
+.ph-todays-trip-card {
+  background: #FFFFFF !important;
+  border-radius: 20px !important;
+  padding: 16px 18px !important;
+  border: 1.5px solid #E2E8F0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  margin-bottom: 8px !important;
+}
+
+.ph-todays-trip-card:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08) !important;
+  transform: translateY(-1px) !important;
+}
+
+.ph-tt-top-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 6px !important;
+}
+
+.ph-tt-date {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #64748B !important;
+}
+
+.ph-tt-status-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 10px !important;
+  background: #ECFDF5 !important;
+  color: #059669 !important;
+  border-radius: 999px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+}
+
+.ph-tt-dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #059669 !important;
+}
+
+.ph-tt-title-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 14px !important;
+}
+
+.ph-tt-title {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  margin: 0 !important;
+  letter-spacing: -0.3px !important;
+}
+
+/* Timeline */
+.ph-tt-timeline {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  margin-bottom: 16px !important;
+  gap: 0 !important;
+}
+
+.ph-tt-stop {
+  display: flex !important;
+  align-items: center !important;
+  position: relative !important;
+  min-height: 28px !important;
+}
+
+.ph-tt-rail {
+  width: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  flex-shrink: 0 !important;
+  align-self: stretch !important;
+}
+
+.ph-tt-dot-solid {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: #0F172A !important;
+  z-index: 2 !important;
+  margin-top: 5px !important;
+}
+
+.ph-tt-dot-bullseye {
+  width: 12px !important;
+  height: 12px !important;
+  border-radius: 50% !important;
+  background: #2563EB !important;
+  border: 2.5px solid #BFDBFE !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+  margin-top: 5px !important;
+}
+
+.ph-tt-dashed-line {
+  position: absolute !important;
+  top: 14px !important;
+  bottom: 0 !important;
+  width: 2px !important;
+  border-left: 2px dashed #CBD5E1 !important;
+  z-index: 1 !important;
+}
+
+.ph-tt-stop-content {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-left: 8px !important;
+}
+
+.ph-tt-stop-name {
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: #475569 !important;
+}
+
+.ph-tt-stop-time {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+}
+
+/* Footer Row */
+.ph-tt-footer-row {
+  display: flex !important;
+  align-items: center !important;
+  padding-top: 14px !important;
+  border-top: 1px solid #F1F5F9 !important;
+  gap: 12px !important;
+}
+
+.ph-tt-driver-col {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+}
+
+.ph-tt-driver-avatar {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  flex-shrink: 0 !important;
+}
+
+.ph-tt-driver-name {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.ph-tt-driver-rating {
+  font-size: 12px !important;
+  color: #64748B !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  margin-top: 1px !important;
+}
+
+.ph-tt-divider {
+  width: 1px !important;
+  height: 28px !important;
+  background: #E2E8F0 !important;
+  flex-shrink: 0 !important;
+}
+
+.ph-tt-vehicle-col {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+}
+
+.ph-tt-vehicle-img {
+  width: 46px !important;
+  height: 30px !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
+}
+
+.ph-tt-vehicle-name {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.ph-tt-vehicle-plate {
+  font-size: 11.5px !important;
+  color: #64748B !important;
+  margin-top: 1px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+
+
+/* ==========================================================
+   Home2School — Minimal Role Switcher (Design System Aligned)
+   ========================================================== */
+.role-switcher-modal-box {
+  background: #FFFFFF !important;
+  width: 100% !important;
+  max-width: 440px !important;
+  border-radius: 28px 28px 0 0 !important;
+  padding: 16px 20px 24px !important;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2) !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+}
+
+@media (min-width: 640px) {
+  .role-switcher-modal-box {
+    border-radius: 24px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25) !important;
+  }
+}
+
+.role-switcher-sheet-handle {
+  width: 36px !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background: #E2E8F0 !important;
+  margin: 0 auto 14px !important;
+}
+
+.role-switcher-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 14px !important;
+  padding-bottom: 8px !important;
+  border-bottom: none !important;
+}
+
+.role-switcher-title {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  margin: 0 !important;
+  letter-spacing: -0.3px !important;
+}
+
+.role-switcher-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.role-persona-card {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: #F8FAFC !important;
+  border: 1.5px solid #E2E8F0 !important;
+  border-radius: 16px !important;
+  padding: 12px 14px !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+  gap: 12px !important;
+}
+
+.role-persona-card:hover {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  transform: translateY(-1px) !important;
+}
+
+.role-persona-card.active {
+  background: #EEF2FF !important;
+  border-color: #1B2B68 !important;
+  box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12) !important;
+}
+
+.role-persona-icon-box {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.role-persona-icon-box.parent {
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
+}
+
+.role-persona-icon-box.driver {
+  background: #F2600C !important;
+  color: #FFFFFF !important;
+}
+
+.role-persona-icon-box.walkshare {
+  background: #059669 !important;
+  color: #FFFFFF !important;
+}
+
+.role-persona-name {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  margin: 0 !important;
+  flex: 1 !important;
+}
+
+.role-persona-chip {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 4px 12px !important;
+  border-radius: 999px !important;
+  background: #F1F5F9 !important;
+  color: #64748B !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.role-persona-chip.active {
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
+  border-color: #1B2B68 !important;
+}
+
 </style>
 
   <!-- Lucide Icons Official Library -->
@@ -2821,36 +3185,68 @@
           </div>
         </div>
 
-        <!-- ================= STATE B: NEXT TRIP FEATURED ================= -->
+        <!-- ================= STATE B: NEXT TRIP FEATURED (1:1 REFERENCE UI) ================= -->
         <div id="homeNextTripBlock" class="ph-next-block" style="display: block;">
-          <div class="ph-next-head">
-            <h3 class="section-heading ph-next-title">Next trip</h3>
-            <span class="ph-round-badge"><i data-lucide="refresh-cw"></i> Round trip</span>
+          <div class="ph-todays-trip-card" onclick="openBookingDetails(window.appState.activeBookingId || 'H2S-84920')">
+            <!-- Top Meta Row -->
+            <div class="ph-tt-top-row">
+              <span class="ph-tt-date" id="homeTodayTripDate">Mon, Sep 1</span>
+              <span class="ph-tt-status-pill" id="homeTodayTripStatus">
+                <span class="ph-tt-dot"></span> Upcoming
+              </span>
+            </div>
+
+            <!-- Title & Chevron Row -->
+            <div class="ph-tt-title-row">
+              <h3 class="ph-tt-title" id="homeTodayTripTitle">Return to Home</h3>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;"></i>
+            </div>
+
+            <!-- Route Timeline -->
+            <div class="ph-tt-timeline">
+              <div class="ph-tt-stop">
+                <div class="ph-tt-rail">
+                  <span class="ph-tt-dot-solid"></span>
+                  <span class="ph-tt-dashed-line"></span>
+                </div>
+                <div class="ph-tt-stop-content">
+                  <span class="ph-tt-stop-name" id="homeTodayPickupLoc">Sunrise International School</span>
+                  <span class="ph-tt-stop-time" id="homeTodayPickupTime">3:15 PM</span>
+                </div>
+              </div>
+              <div class="ph-tt-stop">
+                <div class="ph-tt-rail">
+                  <span class="ph-tt-dot-bullseye"></span>
+                </div>
+                <div class="ph-tt-stop-content">
+                  <span class="ph-tt-stop-name" id="homeTodayDropLoc">Home</span>
+                  <span class="ph-tt-stop-time" id="homeTodayDropTime">3:45 PM</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Driver & Vehicle Footer Row -->
+            <div class="ph-tt-footer-row">
+              <div class="ph-tt-driver-col">
+                <img src="/assets/avatar_tariq.jpg" alt="Driver" id="homeTodayDriverPhoto" class="ph-tt-driver-avatar" />
+                <div style="min-width:0;">
+                  <div class="ph-tt-driver-name" id="homeTodayDriverName">Mohammad Rahim</div>
+                  <div class="ph-tt-driver-rating">
+                    <span style="color:#F59E0B;">★</span>
+                    <strong id="homeTodayDriverScore" style="color:#0F172A; font-weight:700;">4.8</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="ph-tt-divider"></div>
+              <div class="ph-tt-vehicle-col">
+                <img src="/assets/vehicle_hiace_white.jpg" alt="Vehicle" id="homeTodayVehiclePhoto" class="ph-tt-vehicle-img" />
+                <div style="min-width:0;">
+                  <div class="ph-tt-vehicle-name" id="homeTodayVehicleName">Toyota Hiace</div>
+                  <div class="ph-tt-vehicle-plate" id="homeTodayVehiclePlate">GA 15-6789</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <button type="button" class="ph-next-card" onclick="openBookingDetails('H2S-84920')">
-            <div class="ph-next-date">
-              <span class="ph-next-month">MAY</span>
-              <span class="ph-next-day">22</span>
-              <span class="ph-next-wd">Wed</span>
-            </div>
-            <div class="ph-next-body">
-              <div class="ph-next-times">
-                <div class="ph-next-time-col">
-                  <span class="ph-next-time-label">Departure</span>
-                  <span class="ph-next-time-val">07:30 AM</span>
-                </div>
-                <div class="ph-next-time-col">
-                  <span class="ph-next-time-label">Return</span>
-                  <span class="ph-next-time-val">01:00 PM</span>
-                </div>
-              </div>
-              <p class="ph-next-route">Home → Greenfield</p>
-              <div class="ph-next-meta">
-                <span class="ph-next-meta-item"><i data-lucide="users"></i> <span id="homeNextTripKids">Arman &amp; Emma</span></span>
-                <span class="ph-next-meta-item"><i data-lucide="car"></i> <span id="homeNextTripMeta">Tariq</span></span>
-              </div>
-            </div>
-          </button>
         </div>
 
         <!-- Primary CTA + Quick links (always) -->
@@ -7503,15 +7899,7 @@
     <div class="role-switcher-modal-box">
       <div class="role-switcher-sheet-handle"></div>
       <div class="role-switcher-header">
-        <div class="role-switcher-header-title-wrap">
-          <div class="role-switcher-header-icon">
-            <i data-lucide="layers" style="width:20px;height:20px;"></i>
-          </div>
-          <div>
-            <h3 class="role-switcher-title">Switch role</h3>
-            <p class="role-switcher-subtitle">Parent, Driver, or WalkShare</p>
-          </div>
-        </div>
+        <h3 class="role-switcher-title">Switch role</h3>
         <button type="button" class="btn-icon-close" onclick="window.closeRoleSwitcherModal()" aria-label="Close">
           <i data-lucide="x"></i>
         </button>
@@ -7521,18 +7909,10 @@
         <!-- Role 1: Parent -->
         <div class="role-persona-card active" id="roleCardParent" onclick="window.handleSelectRole('parent')">
           <div class="role-persona-icon-box parent">
-            <i data-lucide="user-check"></i>
+            <i data-lucide="user"></i>
           </div>
-          <div class="role-persona-info">
-            <div class="role-persona-top">
-              <h4 class="role-persona-name">Parent</h4>
-              <span class="role-persona-chip active" id="chipRoleParent">Active</span>
-            </div>
-            <p class="role-persona-desc">Book rides and track trips.</p>
-            <div class="role-persona-meta">
-              <span class="role-shortcut-tag">Alt + 1</span>
-            </div>
-          </div>
+          <div class="role-persona-name">Parent</div>
+          <span class="role-persona-chip active" id="chipRoleParent">Active</span>
         </div>
 
         <!-- Role 2: Driver -->
@@ -7540,16 +7920,8 @@
           <div class="role-persona-icon-box driver">
             <i data-lucide="car"></i>
           </div>
-          <div class="role-persona-info">
-            <div class="role-persona-top">
-              <h4 class="role-persona-name">Driver</h4>
-              <span class="role-persona-chip" id="chipRoleDriver">Switch</span>
-            </div>
-            <p class="role-persona-desc">Accept rides and run trips.</p>
-            <div class="role-persona-meta">
-              <span class="role-shortcut-tag">Alt + 2</span>
-            </div>
-          </div>
+          <div class="role-persona-name">Driver</div>
+          <span class="role-persona-chip" id="chipRoleDriver">Switch</span>
         </div>
 
         <!-- Role 3: WalkShare -->
@@ -7557,21 +7929,9 @@
           <div class="role-persona-icon-box walkshare">
             <i data-lucide="footprints"></i>
           </div>
-          <div class="role-persona-info">
-            <div class="role-persona-top">
-              <h4 class="role-persona-name">WalkShare</h4>
-              <span class="role-persona-chip" id="chipRoleWalkshare">Switch</span>
-            </div>
-            <p class="role-persona-desc">Lead walking school groups.</p>
-            <div class="role-persona-meta">
-              <span class="role-shortcut-tag">Alt + 3</span>
-            </div>
-          </div>
+          <div class="role-persona-name">WalkShare</div>
+          <span class="role-persona-chip" id="chipRoleWalkshare">Switch</span>
         </div>
-      </div>
-
-      <div class="role-switcher-footer">
-        <span class="role-switcher-tip">Tip: <kbd>Alt</kbd> + <kbd>1</kbd>–<kbd>3</kbd> to switch</span>
       </div>
     </div>
   </div>

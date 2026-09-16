@@ -2020,21 +2020,48 @@ function renderHome() {
 
     if (window.renderHomeUpcomingList) window.renderHomeUpcomingList();
 
-    // Populate next-trip card from active booking
+    // Populate featured Today's trip card (1:1 Reference UI)
     const activeBooking = window.appState.bookings.find(b => b.id === window.appState.activeBookingId) || window.appState.bookings[0];
     if (activeBooking) {
       const provider = window.appState.providers.find(p => p.id === activeBooking.providerId) || window.appState.providers[0];
-      const childNames = activeBooking.childIds.map(cid => {
-        const c = window.appState.children.find(ch => ch.id === cid);
-        return c ? c.name.split(' ')[0] : cid;
-      });
-      const kidsEl = document.getElementById('homeNextTripKids');
-      const metaEl = document.getElementById('homeNextTripMeta');
-      if (kidsEl) kidsEl.textContent = childNames.join(', ');
-      if (metaEl) {
-        const first = (provider.name || 'Driver').replace(/\s*\(WalkShare\)/i, '').split(' ')[0];
-        const isWalk = provider.category === 'walkshare';
-        metaEl.textContent = isWalk ? `${first} (WalkShare)` : `Driver ${first} A.`;
+      const setText = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      };
+
+      const isReturn = /return|pm/i.test(activeBooking.title || '') || /1:00|3:15|3:45/i.test(activeBooking.outboundTime || '');
+      const title = activeBooking.title || (isReturn ? 'Return to Home' : 'Morning to School');
+      const dateText = activeBooking.date || 'Mon, Sep 1';
+      const pickupName = isReturn ? 'Sunrise International School' : (activeBooking.pickupLocation || '12 Elm Street, Toronto');
+      const pickupTime = activeBooking.outboundTime || (isReturn ? '3:15 PM' : '7:15 AM');
+      const dropName = isReturn ? 'Home' : (activeBooking.schoolLocation || 'Sunrise International School');
+      const dropTime = activeBooking.schoolArriveTime || (isReturn ? '3:45 PM' : '7:45 AM');
+
+      setText('homeTodayTripDate', dateText);
+      setText('homeTodayTripTitle', title);
+      setText('homeTodayPickupLoc', pickupName);
+      setText('homeTodayPickupTime', pickupTime);
+      setText('homeTodayDropLoc', dropName);
+      setText('homeTodayDropTime', dropTime);
+
+      const driverName = String(provider.name || 'Mohammad Rahim').replace(/\s*\(WalkShare\)/i, '');
+      setText('homeTodayDriverName', driverName);
+      setText('homeTodayDriverScore', String(provider.rating != null ? provider.rating : '4.8'));
+
+      const dPhoto = document.getElementById('homeTodayDriverPhoto');
+      if (dPhoto) {
+        dPhoto.src = provider.photo || '/assets/avatar_tariq.jpg';
+        dPhoto.onerror = function() { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
+      }
+
+      const vehName = String(provider.vehicle || 'Toyota Hiace').replace(/\s*\(\d{4}\)\s*/g, '').trim();
+      setText('homeTodayVehicleName', vehName || 'Toyota Hiace');
+      setText('homeTodayVehiclePlate', provider.plate || 'GA 15-6789');
+
+      const vPhoto = document.getElementById('homeTodayVehiclePhoto');
+      if (vPhoto) {
+        vPhoto.src = '/assets/vehicle_hiace_white.jpg';
+        vPhoto.onerror = function() { this.onerror = null; this.src = '/assets/vehicle_hiace_white.jpg'; };
       }
     }
   } else if (state === 'C') {
