@@ -2027,7 +2027,11 @@
             </div>
             <i data-lucide="chevron-right" class="profile-user-chevron"></i>
           </div>
-          <p class="profile-user-role">WalkShare Escort · ★ ${Number(w.rating || 4.9).toFixed(1)} (38 walks)</p>
+          <p class="profile-user-role" style="margin:2px 0 0 0; font-size:12.5px; color:#93C5FD; font-weight:600;">WalkShare Escort</p>
+          <p class="profile-user-rating" style="margin:2px 0 0 0; font-size:12px; color:#FCD34D; font-weight:600; display:flex; align-items:center; gap:4px;">
+            <span>★ ${Number(w.rating || 4.9).toFixed(1)}</span>
+            <span style="color:rgba(255,255,255,0.75); font-weight:400;">(38 walks)</span>
+          </p>
         </div>
       </div>
 
