@@ -4095,13 +4095,14 @@ function renderBookingsList(tab) {
   const btnC = document.getElementById('tabCancelled');
   const wrap = document.getElementById('bookingsListWrap');
 
-  const upcomingList = window.appState.bookings.filter(b => ['confirmed', 'pending', 'in_progress'].includes(b.status));
-  const activeTrips = upcomingList.filter(b => b.status === 'in_progress');
-  const scheduledTrips = upcomingList.filter(b => b.status !== 'in_progress');
+  // Exact categories
+  const activeTrips = window.appState.bookings.filter(b => b.status === 'in_progress');
+  const scheduledTrips = window.appState.bookings.filter(b => ['confirmed', 'pending'].includes(b.status));
   const historyList = window.appState.bookings.filter(b => b.status === 'completed');
   const cancelledList = window.appState.bookings.filter(b => ['cancelled', 'declined'].includes(b.status));
 
-  if (btnU) btnU.textContent = `Upcoming (${upcomingList.length})`;
+  const totalUpcoming = activeTrips.length + scheduledTrips.length;
+  if (btnU) btnU.textContent = `Upcoming (${totalUpcoming})`;
   if (btnH) btnH.textContent = `History (${historyList.length})`;
   if (btnC) btnC.textContent = `Cancelled (${cancelledList.length})`;
   [btnU, btnH, btnC].forEach(b => b?.classList.remove('active'));
@@ -4123,9 +4124,6 @@ function renderBookingsList(tab) {
 
   const parseDateBadge = (b, index) => {
     const raw = b.date || b.tripDate || b.startDate || b.createdAt || '';
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
     let month = 'MAY';
     let day = '22';
     let weekday = 'Wed';
@@ -4139,7 +4137,6 @@ function renderBookingsList(tab) {
     const wMatch = raw.match(/(Sun|Mon|Tue|Wed|Thu|Fri|Sat)/i);
     if (wMatch) weekday = wMatch[1];
     else {
-      // Deterministic spread across calendar for sample items
       const sampleDays = ['22', '22', '24', '22', '24', '25', '28'];
       const sampleWks = ['Wed', 'Wed', 'Wed', 'Wed', 'Fri', 'Mon', 'Thu'];
       if (sampleDays[index]) day = sampleDays[index];
@@ -4161,13 +4158,13 @@ function renderBookingsList(tab) {
 
     let pillHtml = '';
     if (isLive) {
-      pillHtml = `<span class="mb-dir-pill is-live"><span class="live-pulse-dot" style="width:5px;height:5px;background:#059669;border-radius:50%;"></span> Live Now</span>`;
+      pillHtml = `<span class="mb-dir-pill is-live" style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#ECFDF5;color:#059669;border:1px solid #A7F3D0;"><span style="width:6px;height:6px;background:#059669;border-radius:50%;display:inline-block;"></span> Live Now</span>`;
     } else if (isCancelled) {
-      pillHtml = `<span class="mb-dir-pill is-cancelled">${b.status === 'declined' ? 'Declined' : 'Cancelled'}</span>`;
+      pillHtml = `<span class="mb-dir-pill is-cancelled" style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#FEF2F2;color:#DC2626;border:1px solid #FEE2E2;">${b.status === 'declined' ? 'Declined' : 'Cancelled'}</span>`;
     } else if (isBothWay) {
-      pillHtml = `<span class="mb-dir-pill is-round"><i data-lucide="refresh-cw" style="width:10px;height:10px;"></i> Round Trip</span>`;
+      pillHtml = `<span class="mb-dir-pill is-round" style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#EFF6FF;color:#2563EB;border:1px solid #DBEAFE;"><i data-lucide="refresh-cw" style="width:10px;height:10px;"></i> Round Trip</span>`;
     } else {
-      pillHtml = `<span class="mb-dir-pill is-oneway"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>`;
+      pillHtml = `<span class="mb-dir-pill is-oneway" style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#FFF7ED;color:#EA580C;border:1px solid #FFEDD5;"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>`;
     }
 
     const pickup = cleanLoc(b.pickupLocation);
@@ -4176,13 +4173,13 @@ function renderBookingsList(tab) {
     let actionRow = '';
     if (isHistoryTab) {
       actionRow = `
-        <div class="mb-history-actions-row" onclick="event.stopPropagation();">
+        <div class="mb-history-actions-row" onclick="event.stopPropagation();" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding-top:8px;border-top:1px dashed #F1F5F9;width:100%;">
           <span style="font-size:11px; font-weight:600; color:#94A3B8;">Completed</span>
           <div style="display:flex; gap:6px;">
-            <button type="button" class="mb-rate-btn" onclick="openRatingModal('${b.id}')">
+            <button type="button" class="mb-rate-btn" onclick="openRatingModal('${b.id}')" style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;background:#FFFBEB;color:#D97706;border:1px solid #FDE68A;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;">
               <span style="color:#F59E0B;">★</span> Rate
             </button>
-            <button type="button" class="mb-rebook-btn" onclick="rebookRide('${b.id}')">
+            <button type="button" class="mb-rebook-btn" onclick="rebookRide('${b.id}')" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#1B2B68;color:#FFFFFF;border-radius:99px;font-size:11.5px;font-weight:700;border:none;cursor:pointer;">
               <i data-lucide="rotate-ccw" style="width:11px;height:11px;"></i>
               <span>Book again</span>
             </button>
@@ -4190,9 +4187,9 @@ function renderBookingsList(tab) {
         </div>`;
     } else if (isCancelled) {
       actionRow = `
-        <div class="mb-history-actions-row" onclick="event.stopPropagation();">
+        <div class="mb-history-actions-row" onclick="event.stopPropagation();" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding-top:8px;border-top:1px dashed #F1F5F9;width:100%;">
           <span style="font-size:11px; font-weight:600; color:#EF4444;">Not completed</span>
-          <button type="button" class="mb-rebook-btn" onclick="rebookRide('${b.id}')">
+          <button type="button" class="mb-rebook-btn" onclick="rebookRide('${b.id}')" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#1B2B68;color:#FFFFFF;border-radius:99px;font-size:11.5px;font-weight:700;border:none;cursor:pointer;">
             <i data-lucide="rotate-ccw" style="width:11px;height:11px;"></i>
             <span>Book again</span>
           </button>
@@ -4200,28 +4197,35 @@ function renderBookingsList(tab) {
     }
 
     return `
-      <article class="mb-booking-card ${isLive ? 'is-live' : ''}" onclick="openBookingDetails('${b.id}')">
-        <div class="mb-date-box">
-          <span class="mb-date-month">${month}</span>
-          <span class="mb-date-day">${day}</span>
-          <span class="mb-date-weekday">${weekday}</span>
+      <article class="mb-booking-card ${isLive ? 'is-live' : ''}" onclick="openBookingDetails('${b.id}')" style="background:#FFFFFF;border:1.5px solid ${isLive ? '#A7F3D0' : '#E2E8F0'};border-radius:18px;padding:14px 16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(15,23,42,0.03);display:flex;flex-direction:row;align-items:center;gap:16px;cursor:pointer;text-align:left;box-sizing:border-box;width:100%;">
+        <!-- Left Date Box -->
+        <div class="mb-date-box" style="width:52px;height:58px;background:#F1F5F9;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;gap:1px;box-sizing:border-box;">
+          <span class="mb-date-month" style="font-size:10px;font-weight:800;color:#64748B;letter-spacing:0.5px;line-height:1;text-transform:uppercase;">${month}</span>
+          <span class="mb-date-day" style="font-size:18px;font-weight:800;color:#0F172A;line-height:1.1;">${day}</span>
+          <span class="mb-date-weekday" style="font-size:10px;font-weight:600;color:#94A3B8;line-height:1;">${weekday}</span>
         </div>
-        <div class="mb-card-main">
-          <div class="mb-card-top-row">
-            <span class="mb-trip-time">${timeText}</span>
+
+        <!-- Right Content Main Column -->
+        <div class="mb-card-main" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;">
+          <!-- Top Row: Time + Direction Badge -->
+          <div class="mb-card-top-row" style="display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;">
+            <span class="mb-trip-time" style="font-size:13.5px;font-weight:800;color:#0F172A;letter-spacing:-0.2px;white-space:nowrap;">${timeText}</span>
             ${pillHtml}
           </div>
-          <div class="mb-route-rail">
-            <div class="mb-rail-stop">
-              <span class="mb-rail-dot-solid"></span>
-              <span class="mb-rail-text">${pickup}</span>
+
+          <!-- Route Rail -->
+          <div class="mb-route-rail" style="display:flex;flex-direction:column;position:relative;gap:5px;padding-left:2px;">
+            <div class="mb-rail-stop" style="display:flex;align-items:center;gap:10px;position:relative;z-index:2;">
+              <span class="mb-rail-dot-solid" style="width:7px;height:7px;border-radius:50%;background:#1B2B68;flex-shrink:0;"></span>
+              <span class="mb-rail-text" style="font-size:12.5px;font-weight:500;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${pickup}</span>
             </div>
-            <div class="mb-rail-line"></div>
-            <div class="mb-rail-stop">
-              <span class="mb-rail-dot-ring"></span>
-              <span class="mb-rail-text">${school}</span>
+            <div class="mb-rail-line" style="position:absolute;left:5px;top:7px;bottom:7px;width:1.5px;background:#CBD5E1;z-index:1;"></div>
+            <div class="mb-rail-stop" style="display:flex;align-items:center;gap:10px;position:relative;z-index:2;">
+              <span class="mb-rail-dot-ring" style="width:7px;height:7px;border-radius:50%;border:1.5px solid #2563EB;background:#FFFFFF;flex-shrink:0;box-sizing:border-box;"></span>
+              <span class="mb-rail-text" style="font-size:12.5px;font-weight:500;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${school}</span>
             </div>
           </div>
+
           ${actionRow}
         </div>
       </article>`;
@@ -4229,7 +4233,7 @@ function renderBookingsList(tab) {
 
   if (normTab === 'upcoming') {
     btnU?.classList.add('active');
-    if (!upcomingList.length) {
+    if (!totalUpcoming) {
       wrap.innerHTML = `
         <div class="bookings-empty-state">
           <div class="bookings-empty-icon-box"><i data-lucide="calendar-x" style="width:24px;height:24px;"></i></div>
@@ -4241,15 +4245,15 @@ function renderBookingsList(tab) {
       let contentHtml = '';
       if (activeTrips.length) {
         contentHtml += `
-          <div class="mb-section-title">
-            <span class="mb-section-dot green"></span>
+          <div class="mb-section-title" style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#1E293B;text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 10px;padding:0 2px;">
+            <span class="mb-section-dot green" style="width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,0.2);"></span>
             <span>ACTIVE TRIP RIGHT NOW (${activeTrips.length})</span>
           </div>
           ${activeTrips.map((b, i) => renderCard(b, i, false)).join('')}`;
       }
       if (scheduledTrips.length) {
         contentHtml += `
-          <div class="mb-section-title">
+          <div class="mb-section-title" style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#1E293B;text-transform:uppercase;letter-spacing:0.5px;margin:18px 0 10px;padding:0 2px;">
             <i data-lucide="calendar" style="width:14px;height:14px;color:#64748B;"></i>
             <span>SCHEDULED COMMUTES (${scheduledTrips.length})</span>
           </div>
@@ -4269,7 +4273,7 @@ function renderBookingsList(tab) {
         </div>`;
     } else {
       wrap.innerHTML = `
-        <div class="mb-section-title">
+        <div class="mb-section-title" style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#1E293B;text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 10px;padding:0 2px;">
           <i data-lucide="check-circle" style="width:14px;height:14px;color:#10B981;"></i>
           <span>COMPLETED COMMUTES (${historyList.length})</span>
         </div>
@@ -4286,7 +4290,7 @@ function renderBookingsList(tab) {
         </div>`;
     } else {
       wrap.innerHTML = `
-        <div class="mb-section-title">
+        <div class="mb-section-title" style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#EF4444;text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 10px;padding:0 2px;">
           <i data-lucide="x-circle" style="width:14px;height:14px;color:#EF4444;"></i>
           <span>CANCELLED / DECLINED (${cancelledList.length})</span>
         </div>
