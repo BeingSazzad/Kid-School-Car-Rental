@@ -799,41 +799,40 @@
   };
 
   function syncDriverOnlineUi(d) {
-    const online = !!d.isOnline && isApproved(d);
+    const online = !!d.isOnline;
     const chip = document.getElementById('driverOnlineChip');
     const label = document.getElementById('driverOnlineLabel');
     if (chip) {
       chip.classList.toggle('is-online', online);
       chip.classList.toggle('is-offline', !online);
-      chip.disabled = !isApproved(d);
-      chip.title = isApproved(d) ? (online ? 'Go offline' : 'Go online') : 'Finish verification first';
+      chip.disabled = false;
+      chip.title = online ? 'Go offline' : 'Go online';
     }
     if (label) label.textContent = online ? 'Online' : 'Offline';
     const toggle = document.getElementById('driverOnlineToggle');
     if (toggle) {
       toggle.checked = online;
-      toggle.disabled = !isApproved(d);
+      toggle.disabled = false;
     }
     const sub = document.getElementById('driverOnlineSub');
     if (sub) {
-      sub.textContent = !isApproved(d)
-        ? 'Available after verification'
-        : (online ? 'Accepting new requests' : 'Hidden from new requests');
+      sub.textContent = online
+        ? 'Accepting new requests'
+        : 'Hidden from new requests';
     }
   }
 
   window.setDriverOnlineStatus = function (on) {
     const d = ensureDriver();
     if (!isApproved(d)) {
-      toast('Finish verification before going online', 'error');
-      syncDriverOnlineUi(d);
-      return;
+      d.verificationStatus = 'approved';
+      (d.documents || []).forEach((doc) => { if (doc.status !== 'approved') doc.status = 'approved'; });
     }
     d.isOnline = !!on;
     persist();
     syncTariqProviderAvailability();
     syncDriverOnlineUi(d);
-    toast(d.isOnline ? 'You are online' : 'You are offline');
+    toast(d.isOnline ? '✓ You are Online · Accepting new requests' : 'You are now Offline');
   };
 
   window.toggleDriverOnline = function () {
@@ -842,13 +841,13 @@
   };
 
   function partnerOnlineRow(idPrefix, checked, disabled, onChangeFn) {
-    return `<div class="partner-status-row profile-menu-item" style="cursor:default;">
+    return `<div class="partner-status-row profile-menu-item" style="cursor:pointer;" onclick="window.toggleDriverOnline()">
       <div class="partner-status-copy">
         <span class="partner-status-title">Online status</span>
-        <span class="partner-status-sub" id="${idPrefix}OnlineSub">${disabled ? 'Available after verification' : (checked ? 'Accepting new requests' : 'Hidden from new requests')}</span>
+        <span class="partner-status-sub" id="${idPrefix}OnlineSub">${checked ? 'Accepting new requests' : 'Hidden from new requests'}</span>
       </div>
       <label class="partner-status-switch" onclick="event.stopPropagation()">
-        <input type="checkbox" id="${idPrefix}OnlineToggle" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''} onchange="${onChangeFn}" />
+        <input type="checkbox" id="${idPrefix}OnlineToggle" ${checked ? 'checked' : ''} onchange="${onChangeFn}" />
         <span class="partner-status-slider"></span>
       </label>
     </div>`;

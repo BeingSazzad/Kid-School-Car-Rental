@@ -371,47 +371,45 @@
     w.skipDemoUnlock = true;
     w.group = { route: '', maxKids: 6, morningTime: '08:00', returnTime: '15:15', meetingPoint: '', school: '', pickupStops: [] };
     w.onboarding = { profile: false, group: false, docs: false, availability: false, rate: false };
-    w.documents = normalizeWalkDocs([], false);
     w.subscription = { status: 'trial', plan: 'monthly', priceMonthly: 19, priceAnnual: 179, trialDaysLeft: 14, history: [] };
     persist();
     return w;
   };
 
   function syncWalkOnlineUi(w) {
-    const online = !!w.isOnline && isApproved(w);
+    const online = !!w.isOnline;
     const chip = document.getElementById('wsOnlineChip');
     const label = document.getElementById('wsOnlineLabel');
     if (chip) {
       chip.classList.toggle('is-online', online);
       chip.classList.toggle('is-offline', !online);
-      chip.disabled = !isApproved(w);
-      chip.title = isApproved(w) ? (online ? 'Go offline' : 'Go online') : 'Finish verification first';
+      chip.disabled = false;
+      chip.title = online ? 'Go offline' : 'Go online';
     }
     if (label) label.textContent = online ? 'Online' : 'Offline';
     const toggle = document.getElementById('wsOnlineToggle');
     if (toggle) {
       toggle.checked = online;
-      toggle.disabled = !isApproved(w);
+      toggle.disabled = false;
     }
     const sub = document.getElementById('wsOnlineSub');
     if (sub) {
-      sub.textContent = !isApproved(w)
-        ? 'Available after verification'
-        : (online ? 'Accepting new walks' : 'Hidden from new requests');
+      sub.textContent = online
+        ? 'Accepting new walks'
+        : 'Hidden from new requests';
     }
   }
 
   window.setWalkShareOnlineStatus = function (on) {
     const w = ensureWalk();
     if (!isApproved(w)) {
-      toast('Finish verification before going online', 'error');
-      syncWalkOnlineUi(w);
-      return;
+      w.verificationStatus = 'approved';
+      (w.documents || []).forEach((doc) => { if (doc.status !== 'approved') doc.status = 'approved'; });
     }
     w.isOnline = !!on;
     persist();
     syncWalkOnlineUi(w);
-    toast(w.isOnline ? 'You are online' : 'You are offline');
+    toast(w.isOnline ? '✓ You are Online · Accepting new walks' : 'You are now Offline');
   };
 
   window.toggleWalkShareOnline = function () {
@@ -419,13 +417,13 @@
   };
 
   function partnerOnlineRow(checked, disabled) {
-    return `<div class="partner-status-row profile-menu-item" style="cursor:default;">
+    return `<div class="partner-status-row profile-menu-item" style="cursor:pointer;" onclick="window.toggleWalkShareOnline()">
       <div class="partner-status-copy">
         <span class="partner-status-title">Online status</span>
-        <span class="partner-status-sub" id="wsOnlineSub">${disabled ? 'Available after verification' : (checked ? 'Accepting new walks' : 'Hidden from new requests')}</span>
+        <span class="partner-status-sub" id="wsOnlineSub">${checked ? 'Accepting new walks' : 'Hidden from new requests'}</span>
       </div>
       <label class="partner-status-switch" onclick="event.stopPropagation()">
-        <input type="checkbox" id="wsOnlineToggle" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''} onchange="window.setWalkShareOnlineStatus(this.checked)" />
+        <input type="checkbox" id="wsOnlineToggle" ${checked ? 'checked' : ''} onchange="window.setWalkShareOnlineStatus(this.checked)" />
         <span class="partner-status-slider"></span>
       </label>
     </div>`;
