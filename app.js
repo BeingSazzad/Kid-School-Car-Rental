@@ -3767,47 +3767,74 @@ function renderBookingDetails(bookingId) {
     }
   }
 
-  // 3. Journey & Route Card
-  setText('detailOutboundTime', booking.outboundTime || '7:15 AM');
-  setText('detailSchoolTime', booking.schoolArriveTime || (isCompleted ? '7:45 AM' : '7:45 AM'));
-  setText('detailReturnTime', booking.returnTime || '1:00 PM');
+  // 3. Journey & Route Card (Audited for Scheduled, Live & Completed)
+  setText('detailOutboundTime', booking.outboundTime || '07:30 AM');
+  setText('detailSchoolTime', booking.schoolArriveTime || '07:45 AM');
+  setText('detailReturnTime', booking.returnTime || '01:00 PM');
   setText('detailPickupAddr', pickupStreet + ', Toronto, ON');
-  setText('detailReturnAddr', pickupStreet + ', Toronto, ON');
-  setText('detailSchoolName', shortSchool.includes('School') ? shortSchool : shortSchool + ' International School');
+  setText('detailSchoolName', shortSchool.includes('School') || shortSchool.includes('Pre-school') ? shortSchool : shortSchool + ' International School');
+  setText('detailReturnAddr', 'Drop-off at ' + pickupStreet + ', Toronto, ON');
 
   const pickupStatusTag = document.getElementById('detailPickupStatus');
   const dropoffStatusTag = document.getElementById('detailDropoffStatus');
   const returnStatusTag = document.getElementById('detailReturnStatus');
 
-  if (pickupStatusTag) {
-    if (isLive) {
+  if (isLive) {
+    // ACTIVE / IN-PROGRESS
+    if (pickupStatusTag) {
       pickupStatusTag.className = 'bd-rt-pill-tag is-green';
       pickupStatusTag.textContent = 'Picked up';
-    } else if (isCompleted) {
+    }
+    if (dropoffStatusTag) {
+      dropoffStatusTag.className = 'bd-rt-pill-tag is-blue';
+      dropoffStatusTag.textContent = 'In Transit';
+    }
+    if (returnStatusTag) {
+      returnStatusTag.className = 'bd-rt-pill-tag is-grey';
+      returnStatusTag.textContent = 'Scheduled';
+    }
+  } else if (isCompleted) {
+    // COMPLETED (History)
+    if (pickupStatusTag) {
       pickupStatusTag.className = 'bd-rt-pill-tag is-green';
-      pickupStatusTag.textContent = 'Completed';
-    } else {
+      pickupStatusTag.textContent = 'Completed (07:32 AM)';
+    }
+    if (dropoffStatusTag) {
+      dropoffStatusTag.className = 'bd-rt-pill-tag is-green';
+      dropoffStatusTag.textContent = 'Delivered (07:46 AM)';
+    }
+    if (returnStatusTag) {
+      returnStatusTag.className = 'bd-rt-pill-tag is-green';
+      returnStatusTag.textContent = 'Completed (01:04 PM)';
+    }
+  } else if (isPending) {
+    // PENDING REQUEST
+    if (pickupStatusTag) {
+      pickupStatusTag.className = 'bd-rt-pill-tag is-grey';
+      pickupStatusTag.textContent = 'Pending';
+    }
+    if (dropoffStatusTag) {
+      dropoffStatusTag.className = 'bd-rt-pill-tag is-grey';
+      dropoffStatusTag.textContent = 'Pending';
+    }
+    if (returnStatusTag) {
+      returnStatusTag.className = 'bd-rt-pill-tag is-grey';
+      returnStatusTag.textContent = 'Pending';
+    }
+  } else {
+    // SCHEDULED / CONFIRMED BOOKING (Before trip starts)
+    if (pickupStatusTag) {
       pickupStatusTag.className = 'bd-rt-pill-tag is-blue';
       pickupStatusTag.textContent = 'Scheduled';
     }
-  }
-
-  if (dropoffStatusTag) {
-    if (isLive) {
-      dropoffStatusTag.className = 'bd-rt-pill-tag is-blue';
-      dropoffStatusTag.textContent = 'Upcoming';
-    } else if (isCompleted) {
-      dropoffStatusTag.className = 'bd-rt-pill-tag is-green';
-      dropoffStatusTag.textContent = 'Dropped off';
-    } else {
+    if (dropoffStatusTag) {
       dropoffStatusTag.className = 'bd-rt-pill-tag is-grey';
-      dropoffStatusTag.textContent = 'Drop-off';
+      dropoffStatusTag.textContent = 'School Drop';
     }
-  }
-
-  if (returnStatusTag) {
-    returnStatusTag.className = isCompleted ? 'bd-rt-pill-tag is-green' : 'bd-rt-pill-tag is-grey';
-    returnStatusTag.textContent = isCompleted ? 'Completed' : 'Scheduled';
+    if (returnStatusTag) {
+      returnStatusTag.className = 'bd-rt-pill-tag is-grey';
+      returnStatusTag.textContent = 'Return Leg';
+    }
   }
 
   const retBox = document.getElementById('detailReturnLegBox');
