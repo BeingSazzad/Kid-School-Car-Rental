@@ -1064,11 +1064,20 @@
   };
 
   window.leaveDriverGate = function () {
+    if (window.appState && window.appState.driverEntryFromAuth) {
+      window.appState.driverEntryFromAuth = false;
+      window.navigateTo('authRoleSelect', true);
+      return;
+    }
     if (window.navReturnStack && window.navReturnStack.length) {
       window.backNested('driverProfile');
       return;
     }
-    window.navigateTo('driverProfile', true);
+    if (editingProfileChild()) {
+      window.navigateTo('driverProfile', true);
+    } else {
+      window.navigateTo('authRoleSelect', true);
+    }
   };
 
   function fromProfileEdit() {

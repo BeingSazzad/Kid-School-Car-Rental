@@ -1654,6 +1654,58 @@ window.backNested = function (fallback) {
   window.navigateTo(coerceScreenToRole(target), true);
 };
 
+window.selectSignupRoleDirect = function(role) {
+  const valid = role === 'driver' || role === 'walkshare' ? role : 'parent';
+  if (!window.appState) window.appState = {};
+  window.appState._signupRole = valid;
+  window.appState.activeRole = valid;
+  try { localStorage.setItem('h2s_active_role', valid); } catch (e) {}
+  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(valid);
+
+  document.querySelectorAll('.role-choice-card').forEach(card => {
+    const isSelected = card.getAttribute('data-role') === valid;
+    card.classList.toggle('active', isSelected);
+  });
+};
+
+window.proceedFromRoleSelect = function() {
+  const role = (window.appState && window.appState._signupRole) || 'parent';
+  if (!window.appState) window.appState = {};
+  window.appState.activeRole = role;
+  try { localStorage.setItem('h2s_active_role', role); } catch (e) {}
+  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(role);
+
+  if (role === 'driver') {
+    window.appState.driverEntryFromAuth = true;
+    if (typeof window.startDriverSignupFlow === 'function') {
+      window.startDriverSignupFlow(window.appState.user?.name || 'Tariq Ahmed', window.appState.user?.email || 'tariq.ahmed@example.com');
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('Setting up your Driver account...', 'info');
+    }
+    window.navigateTo('driverOnboardProfile');
+    return;
+  }
+
+  if (role === 'walkshare') {
+    window.appState.walkshareEntryFromAuth = true;
+    if (typeof window.startWalkShareSignupFlow === 'function') {
+      window.startWalkShareSignupFlow(window.appState.user?.name || 'Sarah Jenkins', window.appState.user?.email || 'sarah.jenkins@example.com');
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('Setting up your WalkShare Escort account...', 'info');
+    }
+    window.navigateTo('wsOnboardProfile');
+    return;
+  }
+
+  // Parent default
+  if (typeof window.showToast === 'function') {
+    window.showToast('Setting up your Family profile...', 'info');
+  }
+  window.navigateTo('authProfile');
+};
+
 window.navigateTo = function (screenName, isBack = false) {
   // Always stay inside the active role's screen set (never flip role here).
   screenName = coerceScreenToRole(screenName);
@@ -1814,6 +1866,9 @@ window.navigateTo = function (screenName, isBack = false) {
     triggerCelebrationConfetti();
   } else if (screenName === 'authOtp') {
     focusFirstEmptyOtp();
+  } else if (screenName === 'authRoleSelect') {
+    const r = window.appState._signupRole || window.appState.activeRole || 'parent';
+    window.selectSignupRoleDirect(r);
   }
 
   // Render official Lucide icons
@@ -8358,56 +8413,6 @@ window.handleEmailSignUp = function () {
 
   if (typeof window.showToast === 'function') {
     window.showToast('Account created — set up your family', 'success');
-  }
-  window.navigateTo('authProfile');
-};
-
-window.selectSignupRoleDirect = function(role) {
-  const valid = role === 'driver' || role === 'walkshare' ? role : 'parent';
-  window.appState._signupRole = valid;
-  window.appState.activeRole = valid;
-  localStorage.setItem('h2s_active_role', valid);
-  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(valid);
-
-  document.querySelectorAll('.role-choice-card').forEach(card => {
-    const isSelected = card.getAttribute('data-role') === valid;
-    card.classList.toggle('active', isSelected);
-  });
-};
-
-window.proceedFromRoleSelect = function() {
-  const role = window.appState._signupRole || 'parent';
-  window.appState.activeRole = role;
-  localStorage.setItem('h2s_active_role', role);
-  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(role);
-
-  if (role === 'driver') {
-    window.appState.driverEntryFromAuth = true;
-    if (typeof window.startDriverSignupFlow === 'function') {
-      window.startDriverSignupFlow(window.appState.user?.name || 'Tariq Ahmed', window.appState.user?.email || 'tariq.ahmed@example.com');
-    }
-    if (typeof window.showToast === 'function') {
-      window.showToast('Setting up your Driver account...', 'info');
-    }
-    window.navigateTo('driverOnboardProfile');
-    return;
-  }
-
-  if (role === 'walkshare') {
-    window.appState.walkshareEntryFromAuth = true;
-    if (typeof window.startWalkShareSignupFlow === 'function') {
-      window.startWalkShareSignupFlow(window.appState.user?.name || 'Sarah Jenkins', window.appState.user?.email || 'sarah.jenkins@example.com');
-    }
-    if (typeof window.showToast === 'function') {
-      window.showToast('Setting up your WalkShare Escort account...', 'info');
-    }
-    window.navigateTo('wsOnboardProfile');
-    return;
-  }
-
-  // Parent default
-  if (typeof window.showToast === 'function') {
-    window.showToast('Setting up your Family profile...', 'info');
   }
   window.navigateTo('authProfile');
 };
