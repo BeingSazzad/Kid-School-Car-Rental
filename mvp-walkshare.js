@@ -357,18 +357,22 @@
 
   window.startWalkShareSignupFlow = function (name, email) {
     if (!state().walkshare) state().walkshare = defaultWalkState();
-    state().walkshare.skipDemoUnlock = true;
-    const w = ensureWalk();
-    w.name = name || w.name || 'New Escort';
-    w.email = email || w.email || '';
-    w.phone = w.phone || '';
-    w.verificationStatus = 'pending';
+    const w = state().walkshare;
+    w.name = name || '';
+    w.email = email || '';
+    w.phone = '';
+    w.photo = '';
+    w.photoName = '';
+    w.serviceArea = '';
+    w.bio = '';
+    w.about = '';
+    w.verificationStatus = 'not_submitted';
     w.isOnline = false;
     w.skipDemoUnlock = true;
+    w.group = { route: '', maxKids: 6, morningTime: '08:00', returnTime: '15:15', meetingPoint: '', school: '', pickupStops: [] };
     w.onboarding = { profile: false, group: false, docs: false, availability: false, rate: false };
     w.documents = normalizeWalkDocs([], false);
-    w.subscription = w.subscription || { status: 'trial', plan: 'monthly', priceMonthly: 19, priceAnnual: 179, trialDaysLeft: 14, history: [] };
-    w.subscription.status = 'trial';
+    w.subscription = { status: 'trial', plan: 'monthly', priceMonthly: 19, priceAnnual: 179, trialDaysLeft: 14, history: [] };
     persist();
     return w;
   };
@@ -2099,8 +2103,10 @@
       <!-- Avatar Hero with Name & Verified Badge -->
       <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 16px;">
         <div style="position: relative;">
-          <div class="drv-photo-wrap" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12);">
-            <img src="${esc(w.photo || '/assets/avatar_sarah.jpg')}" alt="${esc(w.name)}" id="wsProfileImg" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='/assets/avatar_sarah.jpg';" />
+          <div class="drv-photo-wrap" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); background: #F1F5F9; display: flex; align-items: center; justify-content: center;">
+            ${w.photo
+              ? `<img src="${esc(w.photo)}" alt="${esc(w.name || 'Escort')}" id="wsProfileImg" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.parentNode.innerHTML='<div style=\\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94A3B8;background:#F8FAFC;\\\'><i data-lucide=\\\'user\\\' style=\\\'width:36px;height:36px;\\\'></i></div>';if(window.lucide)window.lucide.createIcons();" />`
+              : `<div id="wsProfileImgPlaceholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94A3B8;background:#F8FAFC;"><i data-lucide="user" style="width:36px;height:36px;"></i></div>`}
           </div>
           <button type="button" class="drv-photo-cam" onclick="document.getElementById('wsPhotoFile').click()" aria-label="Change photo" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-primary, #1B2B68); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
             <i data-lucide="camera" style="width:13px;height:13px;"></i>
@@ -2108,12 +2114,13 @@
           <input type="file" accept="image/*" id="wsPhotoFile" class="drv-file-input" onchange="onWalkShareProfilePhoto(event)" style="display:none;" />
         </div>
         <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;">
-          <span>${esc(w.name || 'Sarah Jenkins')}</span>
+          <span>${esc(w.name || (editing ? 'Your Profile' : 'New WalkShare Escort'))}</span>
+          ${isApproved(w) ? `
           <span class="fb-verified-badge" title="Verified Account">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="#1877F2">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
             </svg>
-          </span>
+          </span>` : ''}
         </div>
       </div>
 
@@ -2122,7 +2129,7 @@
         <div class="form-group">
           <label class="form-label">Full Legal Name</label>
           <div class="input-box-wrapper">
-            <input type="text" class="form-input" id="wsProfileName" value="${esc(w.name)}" placeholder="Sarah Jenkins" />
+            <input type="text" class="form-input" id="wsProfileName" value="${esc(w.name || '')}" placeholder="e.g. Sarah Jenkins" />
           </div>
         </div>
 
@@ -2134,27 +2141,27 @@
               <span style="font-size: 12px; font-weight: 700; color: #334155; letter-spacing: -0.2px;">+1</span>
               <i data-lucide="chevron-down" style="width:11px;height:11px;color:#94A3B8;flex-shrink:0;"></i>
             </div>
-            <input type="tel" class="form-input" id="wsProfilePhone" value="${esc(w.phone)}" placeholder="(416) 555-0199" style="border: none; border-radius: 0; padding: 0 12px; height: 100%; flex: 1; background: transparent;" />
+            <input type="tel" class="form-input" id="wsProfilePhone" value="${esc(w.phone || '')}" placeholder="(416) 555-0199" style="border: none; border-radius: 0; padding: 0 12px; height: 100%; flex: 1; background: transparent;" />
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">Email Address</label>
           <div class="input-box-wrapper">
-            <input type="email" class="form-input" id="wsProfileEmail" value="${esc(w.email)}" placeholder="sarah@walkshare.ca" />
+            <input type="email" class="form-input" id="wsProfileEmail" value="${esc(w.email || '')}" placeholder="e.g. escort@example.com" />
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">Service Area / Corridor</label>
           <div class="input-box-wrapper">
-            <input type="text" class="form-input" id="wsProfileArea" value="${esc(w.serviceArea || 'Elm → Greenfield')}" placeholder="e.g. Elm → Greenfield" />
+            <input type="text" class="form-input" id="wsProfileArea" value="${esc(w.serviceArea || '')}" placeholder="e.g. Elm → Greenfield" />
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">About / Bio (Shown to parents)</label>
-          <textarea class="form-textarea" id="wsProfileBio" rows="3" placeholder="Tell parents about your neighborhood walking group, supervised sidewalk escort care, and morning route...">${esc(w.bio || w.about || 'Sarah leads a supervised neighborhood walking group so local children walk to school together safely on verified sidewalk corridors and crosswalks to the school gate.')}</textarea>
+          <textarea class="form-textarea" id="wsProfileBio" rows="3" placeholder="Tell parents about your neighborhood walking group, supervised sidewalk escort care, and morning route...">${esc(w.bio || w.about || '')}</textarea>
         </div>
       </div>
 

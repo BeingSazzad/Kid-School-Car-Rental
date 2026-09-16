@@ -759,14 +759,19 @@
 
   window.startDriverSignupFlow = function (name, email) {
     if (!state().driver) state().driver = { onboarding: {}, documents: [], vehicle: {}, availability: {}, rate: {}, subscription: {} };
-    state().driver.skipDemoUnlock = true;
-    const d = ensureDriver();
-    d.name = name || d.name || 'New Driver';
-    d.email = email || d.email || '';
-    d.phone = d.phone || '';
-    d.verificationStatus = 'pending';
+    const d = state().driver;
+    d.name = name || '';
+    d.email = email || '';
+    d.phone = '';
+    d.photo = '';
+    d.photoName = '';
+    d.serviceArea = '';
+    d.bio = '';
+    d.about = '';
+    d.verificationStatus = 'not_submitted';
     d.isOnline = false;
     d.skipDemoUnlock = true;
+    d.vehicle = { type: 'Minivan', make: '', model: '', year: '', color: '', plate: '', capacity: 4, photo: '' };
     d.onboarding = { profile: false, vehicle: false, docs: false, availability: false, rate: false };
     d.documents = REQUIRED_DOCS.map((spec) => ({
       id: spec.id,
@@ -788,8 +793,7 @@
       fileDoc: emptyUpload()
     }));
     d.docsIdentitySeeded = true;
-    d.subscription = d.subscription || { status: 'trial', plan: 'monthly', priceMonthly: 29, priceAnnual: 279, trialDaysLeft: 14, history: [] };
-    d.subscription.status = 'trial';
+    d.subscription = { status: 'trial', plan: 'monthly', priceMonthly: 29, priceAnnual: 279, trialDaysLeft: 14, history: [] };
     persist();
     return d;
   };
@@ -1254,8 +1258,10 @@
       <!-- Avatar Hero with Name & Verified Badge -->
       <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 16px;">
         <div style="position: relative;">
-          <div class="drv-photo-wrap" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12);">
-            <img src="${esc(d.photo || '/assets/avatar_tariq.jpg')}" alt="${esc(d.name)}" id="drvProfileImg" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+          <div class="drv-photo-wrap" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); background: #F1F5F9; display: flex; align-items: center; justify-content: center;">
+            ${d.photo
+              ? `<img src="${esc(d.photo)}" alt="${esc(d.name || 'Driver')}" id="drvProfileImg" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.parentNode.innerHTML='<div style=\\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94A3B8;background:#F8FAFC;\\\'><i data-lucide=\\\'user\\\' style=\\\'width:36px;height:36px;\\\'></i></div>';if(window.lucide)window.lucide.createIcons();" />`
+              : `<div id="drvProfileImgPlaceholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94A3B8;background:#F8FAFC;"><i data-lucide="user" style="width:36px;height:36px;"></i></div>`}
           </div>
           <button type="button" class="drv-photo-cam" onclick="document.getElementById('drvPhotoFile').click()" aria-label="Change photo" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-primary, #1B2B68); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
             <i data-lucide="camera" style="width:13px;height:13px;"></i>
@@ -1263,12 +1269,13 @@
           <input type="file" accept="image/*" id="drvPhotoFile" class="drv-file-input" onchange="onDriverProfilePhoto(event)" style="display:none;" />
         </div>
         <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;">
-          <span>${esc(d.name || 'Ahmed Asik')}</span>
+          <span>${esc(d.name || (editing ? 'Your Profile' : 'New Driver Partner'))}</span>
+          ${isApproved(d) ? `
           <span class="fb-verified-badge" title="Verified Account">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="#1877F2">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
             </svg>
-          </span>
+          </span>` : ''}
         </div>
       </div>
 
@@ -1277,7 +1284,7 @@
         <div class="form-group">
           <label class="form-label">Full Legal Name</label>
           <div class="input-box-wrapper">
-            <input type="text" class="form-input" id="drvName" value="${esc(d.name)}" placeholder="Ahmed Asik" />
+            <input type="text" class="form-input" id="drvName" value="${esc(d.name || '')}" placeholder="e.g. Tariq Ahmed" />
           </div>
         </div>
 
@@ -1289,32 +1296,32 @@
               <span style="font-size: 12px; font-weight: 700; color: #334155; letter-spacing: -0.2px;">+1</span>
               <i data-lucide="chevron-down" style="width:11px;height:11px;color:#94A3B8;flex-shrink:0;"></i>
             </div>
-            <input type="tel" class="form-input" id="drvPhone" value="${esc(d.phone)}" placeholder="(416) 555-0192" style="border: none; border-radius: 0; padding: 0 12px; height: 100%; flex: 1; background: transparent;" />
+            <input type="tel" class="form-input" id="drvPhone" value="${esc(d.phone || '')}" placeholder="(416) 555-0192" style="border: none; border-radius: 0; padding: 0 12px; height: 100%; flex: 1; background: transparent;" />
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">Email Address</label>
           <div class="input-box-wrapper">
-            <input type="email" class="form-input" id="drvEmail" value="${esc(d.email)}" placeholder="sadia.khan@example.com" />
+            <input type="email" class="form-input" id="drvEmail" value="${esc(d.email || '')}" placeholder="e.g. driver@example.com" />
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">Service Area</label>
           <div class="input-box-wrapper">
-            <input type="text" class="form-input" id="drvArea" value="${esc(d.serviceArea || '12 Elm Street, Toronto, ON')}" placeholder="12 Elm Street, Toronto, ON" />
+            <input type="text" class="form-input" id="drvArea" value="${esc(d.serviceArea || '')}" placeholder="e.g. Greenfield / Midtown" />
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">About / Bio (Shown to parents)</label>
-          <textarea class="form-textarea" id="drvBio" rows="3" placeholder="Tell parents about your driving experience, focus on child safety, boosters, and calm school rides...">${esc(d.bio || d.about || 'Provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.')}</textarea>
+          <textarea class="form-textarea" id="drvBio" rows="3" placeholder="Tell parents about your driving experience, focus on child safety, boosters, and calm school rides...">${esc(d.bio || d.about || '')}</textarea>
         </div>
       </div>
 
       <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveDriverOnboardProfile()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">Save Changes</button>
+        <button type="button" class="btn-primary" onclick="saveDriverOnboardProfile()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Save Changes' : 'Save and Continue to Vehicle'}</button>
       </div>
     `;
     icons();
@@ -1329,34 +1336,37 @@
       if (meta.preview) d.photo = meta.preview;
       syncDriverToProviders();
       persist();
-      const img = document.getElementById('drvProfileImg');
-      if (img && meta.preview) img.src = meta.preview;
+      renderOnboardProfile();
       toast('Photo attached');
     });
   };
 
   window.saveDriverOnboardProfile = function () {
     const d = ensureDriver();
-    d.name = val('drvName') || d.name;
-    d.phone = val('drvPhone') || d.phone;
-    d.email = val('drvEmail') || d.email;
-    d.serviceArea = val('drvArea') || d.serviceArea;
-    d.bio = val('drvBio') || d.bio;
+    d.name = val('drvName') || d.name || '';
+    d.phone = val('drvPhone') || d.phone || '';
+    d.email = val('drvEmail') || d.email || '';
+    d.serviceArea = val('drvArea') || d.serviceArea || '';
+    d.bio = val('drvBio') || d.bio || '';
     d.about = d.bio;
     d.onboarding.profile = true;
     syncDriverToProviders();
     persist();
     toast('Profile saved');
-    if (window.navReturnStack && window.navReturnStack.length) {
-      window.backNested('driverProfile');
+    if (editingProfileChild()) {
+      if (window.navReturnStack && window.navReturnStack.length) {
+        window.backNested('driverProfile');
+      } else {
+        window.navigateTo('driverProfile', true);
+      }
     } else {
-      window.navigateTo('driverProfile', true);
+      window.navigateTo('driverOnboardVehicle');
     }
   };
 
   function renderOnboardVehicle() {
     const d = ensureDriver();
-    const v = d.vehicle;
+    const v = d.vehicle || {};
     const el = feed('driverOnboardVehicleFeed');
     if (!el) return;
     const editing = editingProfileChild();
@@ -1371,16 +1381,16 @@
       <div class="profile-form-section-card" style="margin-bottom: 16px;">
         ${selectField('Type', `<select class="form-select" id="drvVType">${['Minivan', 'SUV', 'Sedan', 'Wagon'].map((t) => `<option ${v.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>`)}
         <div class="drv-window-row">
-          ${field('Make', `<input class="form-input" id="drvVMake" value="${esc(v.make)}" placeholder="Toyota" />`)}
-          ${field('Model', `<input class="form-input" id="drvVModel" value="${esc(v.model)}" placeholder="Sienna" />`)}
+          ${field('Make', `<input class="form-input" id="drvVMake" value="${esc(v.make || '')}" placeholder="e.g. Toyota" />`)}
+          ${field('Model', `<input class="form-input" id="drvVModel" value="${esc(v.model || '')}" placeholder="e.g. Sienna" />`)}
         </div>
         <div class="drv-window-row">
-          ${field('Year', `<input class="form-input" id="drvVYear" value="${esc(v.year)}" placeholder="2023" />`)}
-          ${field('Colour', `<input class="form-input" id="drvVColor" value="${esc(v.color)}" placeholder="Celestial Silver" />`)}
+          ${field('Year', `<input class="form-input" id="drvVYear" value="${esc(v.year || '')}" placeholder="e.g. 2023" />`)}
+          ${field('Colour', `<input class="form-input" id="drvVColor" value="${esc(v.color || '')}" placeholder="e.g. Silver" />`)}
         </div>
         <div class="drv-window-row">
-          ${field('Plate', `<input class="form-input" id="drvVPlate" value="${esc(v.plate)}" placeholder="SCH-4091" />`)}
-          ${field('Seats', `<input class="form-input" id="drvVSeats" type="number" min="1" max="8" value="${esc(v.capacity)}" placeholder="4" />`)}
+          ${field('Plate', `<input class="form-input" id="drvVPlate" value="${esc(v.plate || '')}" placeholder="e.g. SCH-4091" />`)}
+          ${field('Seats', `<input class="form-input" id="drvVSeats" type="number" min="1" max="8" value="${esc(v.capacity || '')}" placeholder="4" />`)}
         </div>
         <div class="form-group">
           <label class="form-label" for="drvVehicleFile">Vehicle photo</label>
@@ -1397,7 +1407,7 @@
         </div>
       </div>
       <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveDriverVehicle()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Save Changes' : 'Continue'}</button>
+        <button type="button" class="btn-primary" onclick="saveDriverVehicle()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Save Changes' : 'Save and Continue to Documents'}</button>
       </div>
     `;
     icons();

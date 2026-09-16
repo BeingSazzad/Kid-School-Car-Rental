@@ -1678,7 +1678,7 @@ window.proceedFromRoleSelect = function() {
   if (role === 'driver') {
     window.appState.driverEntryFromAuth = true;
     if (typeof window.startDriverSignupFlow === 'function') {
-      window.startDriverSignupFlow(window.appState.user?.name || 'Tariq Ahmed', window.appState.user?.email || 'tariq.ahmed@example.com');
+      window.startDriverSignupFlow('', '');
     }
     if (typeof window.showToast === 'function') {
       window.showToast('Setting up your Driver account...', 'info');
@@ -1690,7 +1690,7 @@ window.proceedFromRoleSelect = function() {
   if (role === 'walkshare') {
     window.appState.walkshareEntryFromAuth = true;
     if (typeof window.startWalkShareSignupFlow === 'function') {
-      window.startWalkShareSignupFlow(window.appState.user?.name || 'Sarah Jenkins', window.appState.user?.email || 'sarah.jenkins@example.com');
+      window.startWalkShareSignupFlow('', '');
     }
     if (typeof window.showToast === 'function') {
       window.showToast('Setting up your WalkShare Escort account...', 'info');
@@ -8303,7 +8303,7 @@ window.continueAfterOtp = function () {
   if (role === 'driver') {
     window.appState.driverEntryFromAuth = true;
     if (typeof window.startDriverSignupFlow === 'function') {
-      window.startDriverSignupFlow(window.appState.user?.name || 'Tariq Ahmed', window.appState.user?.email || 'tariq.ahmed@example.com');
+      window.startDriverSignupFlow('', '');
     }
     if (typeof window.showToast === 'function') {
       window.showToast('Phone verified! Finish Driver partner onboarding', 'success');
@@ -8314,7 +8314,7 @@ window.continueAfterOtp = function () {
   if (role === 'walkshare') {
     window.appState.walkshareEntryFromAuth = true;
     if (typeof window.startWalkShareSignupFlow === 'function') {
-      window.startWalkShareSignupFlow(window.appState.user?.name || 'Sarah Jenkins', window.appState.user?.email || 'sarah.jenkins@example.com');
+      window.startWalkShareSignupFlow('', '');
     }
     if (typeof window.showToast === 'function') {
       window.showToast('Phone verified! Finish WalkShare chaperone setup', 'success');
