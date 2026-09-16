@@ -1788,11 +1788,6 @@
 
   window.saveDriverDocs = function () {
     const d = ensureDriver();
-    const blocked = d.documents.filter((doc) => doc.status === 'not_submitted' || doc.status === 'action_required');
-    if (blocked.length) {
-      toast('Open every document and add the required details, including any that need action.');
-      return;
-    }
     d.onboarding.docs = true;
     syncDriverToProviders();
     persist();
@@ -2228,6 +2223,30 @@
     if (!availDraft) resetAvailDraft();
     availDraft.exceptions = availDraft.exceptions.filter((item) => item !== iso);
     paintAvailability();
+  };
+
+  window.saveDriverAvailability = function () {
+    const d = ensureDriver();
+    if (!availDraft) resetAvailDraft();
+    d.availability = d.availability || {};
+    d.availability.weekly = (availDraft.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']).slice();
+    d.availability.scheduleType = availDraft.scheduleType || 'recurring';
+    d.availability.exceptions = (availDraft.exceptions || []).slice();
+    d.availability.windows = [
+      { id: 'w1', days: (availDraft.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']).slice(), start: availDraft.morningStart || '06:30', end: availDraft.morningEnd || '09:00', label: 'Morning', enabled: availDraft.morningOn !== false },
+      { id: 'w2', days: (availDraft.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']).slice(), start: availDraft.afternoonStart || '13:00', end: availDraft.afternoonEnd || '16:30', label: 'Afternoon', enabled: availDraft.afternoonOn !== false }
+    ];
+    d.onboarding.availability = true;
+    syncDriverToProviders();
+    syncTariqProviderAvailability();
+    persist();
+    if (editingProfileChild()) {
+      toast('Availability updated');
+      window.backNested('driverProfile');
+    } else {
+      if (finishNestedOr()) return;
+      window.navigateTo('driverOnboardRate');
+    }
   };
 
   function reflectDriverToDOM(d, provider) {
