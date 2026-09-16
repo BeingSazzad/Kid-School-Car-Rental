@@ -296,23 +296,30 @@
   color: #64748B !important;
 }
 
-/* 3-Column Stats Strip */
+/* 2-Column Stats Strip */
 #screen-bookingDetails .bd-stats-strip {
   display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr !important;
+  grid-template-columns: 1fr 1fr !important;
   background: #F8FAFC !important;
   border-radius: 14px !important;
-  padding: 10px 8px !important;
+  padding: 12px 8px !important;
   margin-top: 14px !important;
   border: 1px solid #E2E8F0 !important;
   align-items: center !important;
+  gap: 0 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
 }
 
 #screen-bookingDetails .bd-stat-box {
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
-  padding: 0 6px !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 2px 10px !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
 }
 
 #screen-bookingDetails .bd-stat-box:not(:last-child) {
@@ -320,28 +327,29 @@
 }
 
 #screen-bookingDetails .bd-stat-icon-wrap {
-  width: 28px !important;
-  height: 28px !important;
-  border-radius: 8px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 9px !important;
   background: #FFFFFF !important;
   border: 1px solid #E2E8F0 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  color: #64748B !important;
+  color: #1B2B68 !important;
   flex-shrink: 0 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
 }
 
 #screen-bookingDetails .bd-stat-val {
-  font-size: 12px !important;
+  font-size: 13px !important;
   font-weight: 800 !important;
   color: #0F172A !important;
-  line-height: 1.1 !important;
+  line-height: 1.2 !important;
   white-space: nowrap !important;
 }
 
 #screen-bookingDetails .bd-stat-lbl {
-  font-size: 10px !important;
+  font-size: 11px !important;
   font-weight: 600 !important;
   color: #64748B !important;
   white-space: nowrap !important;
@@ -493,6 +501,21 @@
   color: #1B2B68 !important;
 }
 
+#screen-bookingDetails .bd-driver-info-main {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  cursor: pointer !important;
+  transition: opacity 0.15s ease, transform 0.12s ease !important;
+}
+
+#screen-bookingDetails .bd-driver-info-main:hover {
+  opacity: 0.85 !important;
+  transform: translateX(2px) !important;
+}
+
 #screen-bookingDetails .bd-vehicle-row {
   display: flex !important;
   align-items: center !important;
@@ -500,6 +523,13 @@
   margin-top: 14px !important;
   padding-top: 14px !important;
   border-top: 1px solid #F1F5F9 !important;
+  cursor: pointer !important;
+  transition: opacity 0.15s ease, transform 0.12s ease !important;
+}
+
+#screen-bookingDetails .bd-vehicle-row:hover {
+  opacity: 0.85 !important;
+  transform: translateX(2px) !important;
 }
 
 #screen-bookingDetails .bd-vehicle-thumb {
@@ -669,20 +699,31 @@
   color: #10B981 !important;
 }
 
-#screen-bookingDetails .bd-pricing-action-btn {
+#screen-bookingDetails .bd-pricing-action-btn,
+#screen-bookingDetails .bd-pricing-inline-link {
   background: #F8FAFC !important;
   border: 1px solid #E2E8F0 !important;
-  border-radius: 12px !important;
+  border-radius: 999px !important;
   color: #2563EB !important;
-  font-size: 12px !important;
+  font-size: 11.5px !important;
   font-weight: 700 !important;
-  padding: 8px 12px !important;
+  padding: 6px 12px !important;
   text-align: center !important;
   cursor: pointer !important;
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px !important;
+  gap: 4px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s ease !important;
+}
+
+#screen-bookingDetails .bd-pricing-inline-link:hover {
+  background: #EFF6FF !important;
+  border-color: #BFDBFE !important;
+  color: #1D4ED8 !important;
+  transform: translateY(-1px) !important;
 }
 
 /* Card 7: Special Instructions & Notes Card */

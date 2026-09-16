@@ -68,10 +68,12 @@
     ]
   };
   const REQUIRED_DOCS = [
-    { id: 'id', title: 'Government ID' },
-    { id: 'criminal', title: 'Criminal Background Check' },
-    { id: 'vulnerable', title: 'Vulnerable Sector Check' },
-    { id: 'firstaid', title: 'Pediatric First-Aid / CPR' }
+    { id: 'licence', title: "Driver's License", subtitle: "Valid driver's license (Front & Back)" },
+    { id: 'residency_tax_tenancy', title: "Proof of Residency 1: Property Tax / Tenancy", subtitle: "Property tax statement or tenancy agreement" },
+    { id: 'residency_utility', title: "Proof of Residency 2: Utility Bill", subtitle: "Recent utility bill (Electricity, Gas, Water, Internet)" },
+    { id: 'criminal', title: 'Criminal Background Check', subtitle: 'Police records check clearance' },
+    { id: 'vulnerable', title: 'Vulnerable Sector Check', subtitle: 'Vulnerable sector screening certificate' },
+    { id: 'firstaid', title: 'Pediatric First-Aid / CPR', subtitle: 'Emergency care & CPR certification' }
   ];
 
   let restored = false;
@@ -125,10 +127,54 @@
 
   function demoDocuments() {
     return [
-      { id: 'id', title: 'Government ID', status: 'approved', file: demoUpload('sarah-passport.pdf'), number: 'ON-4819203' },
-      { id: 'criminal', title: 'Criminal Background Check', status: 'approved', file: demoUpload('crc-sarah.pdf'), issuer: 'Toronto Police Service' },
-      { id: 'vulnerable', title: 'Vulnerable Sector Check', status: 'approved', file: demoUpload('vsc-sarah.pdf'), issuer: 'Toronto Police Service' },
-      { id: 'firstaid', title: 'Pediatric First-Aid / CPR', status: 'approved', file: demoUpload('cpr-sarah.pdf'), issuer: 'Red Cross' }
+      {
+        id: 'licence',
+        title: "Driver's License",
+        status: 'approved',
+        file: demoUpload('sarah-drivers-license.pdf'),
+        number: 'D4819-20381-90412',
+        province: 'Ontario',
+        expiry: '2028-09-15'
+      },
+      {
+        id: 'residency_tax_tenancy',
+        title: "Proof of Residency 1: Property Tax / Tenancy",
+        status: 'approved',
+        file: demoUpload('sarah-property-tax-2026.pdf'),
+        residencyType: 'Property Tax Statement',
+        address: '124 Greenfield Ave, Toronto, ON M4B 1B3',
+        issuer: 'City of Toronto Revenue Services'
+      },
+      {
+        id: 'residency_utility',
+        title: "Proof of Residency 2: Utility Bill",
+        status: 'approved',
+        file: demoUpload('sarah-toronto-hydro-bill.pdf'),
+        issuer: 'Toronto Hydro',
+        address: '124 Greenfield Ave, Toronto, ON M4B 1B3',
+        billDate: '2026-08-10'
+      },
+      {
+        id: 'criminal',
+        title: 'Criminal Background Check',
+        status: 'approved',
+        file: demoUpload('crc-sarah.pdf'),
+        issuer: 'Toronto Police Service'
+      },
+      {
+        id: 'vulnerable',
+        title: 'Vulnerable Sector Check',
+        status: 'approved',
+        file: demoUpload('vsc-sarah.pdf'),
+        issuer: 'Toronto Police Service'
+      },
+      {
+        id: 'firstaid',
+        title: 'Pediatric First-Aid / CPR',
+        status: 'approved',
+        file: demoUpload('cpr-sarah.pdf'),
+        issuer: 'Red Cross'
+      }
     ];
   }
 
@@ -136,15 +182,25 @@
     const list = Array.isArray(docs) ? docs : [];
     const demo = demoDocuments();
     return REQUIRED_DOCS.map((spec) => {
-      const existing = list.find((d) => d.id === spec.id) || {};
-      const src = useDemo ? (demo.find((d) => d.id === spec.id) || {}) : existing;
+      let existing = list.find((d) => d.id === spec.id);
+      if (!existing && (spec.id === 'licence' || spec.id === 'id')) {
+        existing = list.find((d) => d.id === 'licence' || d.id === 'id');
+      }
+      const demoItem = demo.find((d) => d.id === spec.id) || {};
+      const src = useDemo ? demoItem : (existing || (demoItem.status === 'approved' && !list.length ? demoItem : {}));
       return {
         id: spec.id,
         title: spec.title,
-        status: src.status || 'not_submitted',
-        number: src.number || '',
-        issuer: src.issuer || '',
-        file: src.file || { name: '', attached: false },
+        subtitle: spec.subtitle || '',
+        status: src.status || (useDemo ? 'approved' : 'not_submitted'),
+        number: src.number || (spec.id === 'licence' ? (demoItem.number || '') : ''),
+        province: src.province || (spec.id === 'licence' ? 'Ontario' : ''),
+        expiry: src.expiry || (spec.id === 'licence' ? '2028-09-15' : ''),
+        residencyType: src.residencyType || (spec.id === 'residency_tax_tenancy' ? 'Property Tax Statement' : ''),
+        address: src.address || (spec.id.startsWith('residency') ? '124 Greenfield Ave, Toronto, ON M4B 1B3' : ''),
+        billDate: src.billDate || (spec.id === 'residency_utility' ? '2026-08-10' : ''),
+        issuer: src.issuer || demoItem.issuer || '',
+        file: src.file || (useDemo ? demoItem.file : { name: '', attached: false }),
         rejectReason: src.rejectReason || ''
       };
     });
@@ -585,13 +641,6 @@
 
   window.getWalkShareLanding = function () {
     const w = ensureWalk();
-    if (!w.onboarding.profile) return 'wsOnboardProfile';
-    if (!w.onboarding.group) return 'wsOnboardGroup';
-    if (!w.onboarding.docs) return 'wsOnboardDocs';
-    if (!w.onboarding.availability) return 'wsOnboardAvailability';
-    if (!w.onboarding.rate) return 'wsOnboardRate';
-    if (!isApproved(w)) return 'wsPending';
-    // Subscription stays inside Profile — never block signup/onboarding
     if (!hasAccess(w)) {
       w.subscription = w.subscription || {};
       w.subscription.status = 'trial';
@@ -626,21 +675,18 @@
       return name;
     }
     if (role === 'walkshare') {
-      if (name === 'tracking') return ensureWalk().activeWalkStage > 0 ? 'wsActiveWalk' : window.getWalkShareLanding();
+      if (name === 'tracking') return ensureWalk().activeWalkStage > 0 ? 'wsActiveWalk' : 'wsHome';
       if (name === 'profile' || name === 'profilePersonalInfo') return 'wsProfile';
       if (name === 'subscription' || name === 'profilePayments') return 'wsSubscription';
-      if (name === 'home' || name === 'bookings' || name === 'myChildren' || PARENT_ONLY.has(name) || String(name).indexOf('booking') === 0) {
-        return window.getWalkShareLanding();
+      if (name === 'home') return 'wsHome';
+      if (name === 'bookings') return 'wsSchedule';
+      if (DRIVER_ONLY.has(name)) {
+        if (name === 'driverHome') return 'wsHome';
+        if (name === 'driverRequests') return 'wsRequests';
+        if (name === 'driverSchedule') return 'wsSchedule';
+        if (name === 'driverProfile') return 'wsProfile';
+        return 'wsHome';
       }
-      if (DRIVER_ONLY.has(name)) return window.getWalkShareLanding();
-      if (WS_ONLY.has(name)) {
-        if (name === 'wsHome' || name === 'wsRequests' || name === 'wsSchedule' || name === 'wsActiveWalk' || name === 'wsWalkPrep') {
-          const land = window.getWalkShareLanding();
-          if (land !== 'wsHome') return land;
-        }
-        return name;
-      }
-      if (SHARED.has(name) || name === 'rating') return name;
       return name;
     }
     if (role !== 'walkshare' && WS_ONLY.has(name)) {
@@ -816,11 +862,7 @@
       window.backNested('wsProfile');
       return;
     }
-    if (onboardingDone(ensureWalk())) {
-      window.navigateTo('wsProfile', true);
-      return;
-    }
-    window.navigateTo(state().walkshareEntryFromAuth ? 'authWelcome' : 'wsSetup', true);
+    window.navigateTo('wsProfile', true);
   };
 
   function openWsChild(screen, evt) {
@@ -880,22 +922,21 @@
         <div class="drv-home-section">
           <h3 class="drv-home-heading">Quick actions</h3>
           <div class="drv-home-actions">
-            <button type="button" class="drv-home-action drv-qa-requests${incoming.length ? ' has-badge' : ''}" onclick="navigateTo('wsRequests')">
-              <span class="drv-home-action-ico"><i data-lucide="inbox"></i></span>
-              <span class="drv-home-action-label">Requests</span>
-              ${incoming.length ? `<span class="drv-home-action-badge">${incoming.length}</span>` : ''}
-            </button>
-            <button type="button" class="drv-home-action drv-qa-schedule" onclick="navigateTo('wsSchedule')">
-              <span class="drv-home-action-ico"><i data-lucide="calendar"></i></span>
-              <span class="drv-home-action-label">Schedule</span>
-            </button>
             <button type="button" class="drv-home-action drv-qa-availability" onclick="openNestedScreen('wsOnboardAvailability')">
               <span class="drv-home-action-ico"><i data-lucide="clock"></i></span>
               <span class="drv-home-action-label">Availability</span>
             </button>
-            <button type="button" class="drv-home-action drv-qa-messages" onclick="navigateTo('inbox')">
-              <span class="drv-home-action-ico"><i data-lucide="message-square"></i></span>
-              <span class="drv-home-action-label">Messages</span>
+            <button type="button" class="drv-home-action drv-qa-docs" onclick="openNestedScreen('wsOnboardDocs')">
+              <span class="drv-home-action-ico"><i data-lucide="shield-check"></i></span>
+              <span class="drv-home-action-label">Documents</span>
+            </button>
+            <button type="button" class="drv-home-action drv-qa-earnings" onclick="openNestedScreen('wsOnboardRate')">
+              <span class="drv-home-action-ico"><i data-lucide="credit-card"></i></span>
+              <span class="drv-home-action-label">Rates</span>
+            </button>
+            <button type="button" class="drv-home-action drv-qa-sos" onclick="window.openEmergencySOSModal()">
+              <span class="drv-home-action-ico"><i data-lucide="shield-alert"></i></span>
+              <span class="drv-home-action-label">Safety SOS</span>
             </button>
           </div>
         </div>
@@ -974,93 +1015,104 @@
     </button>`;
   }
 
-  function requestCard(req) {
-    const name = req.parentName || 'Parent';
-    const from = cleanPlace(req.pickupLocation) || 'Pickup';
-    const to = cleanPlace(req.dropoffLocation) || 'School';
-    const photo = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
+  function formatScheduleTitle(raw) {
+    if (!raw) return 'Mon, Sep 7, 2026';
+    let s = String(raw).trim();
+    if (/mon.*fri/i.test(s)) return 'Mon – Fri Weekly';
+    if (/mon.*wed/i.test(s)) return 'Mon – Wed Weekly';
+    if (/tue.*thu/i.test(s)) return 'Tue – Thu Weekly';
+    if (s.includes('•') || s.includes('|')) {
+      s = s.split('•')[0].split('|')[0].trim();
+    }
+    return s || 'Today';
+  }
 
+  function requestCard(req) {
+    const from = cleanPlace(req.pickupLocation) || 'Pickup';
+    const to = cleanPlace(req.dropoffLocation) || 'Drop-off';
+    const name = req.parentName || 'Parent';
+    const photo = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
+    
     // Format Date & Times
-    const displayDate = req.frequency === 'recurring' 
+    const displayDate = formatScheduleTitle(req.frequency === 'recurring'
       ? (req.recurringDays && req.recurringDays.length ? 'Weekly (' + req.recurringDays.join(', ') + ')' : 'Mon – Fri Weekly')
-      : (dateShort(req.dateLabel) || 'Sep 17, 2026');
+      : (dateShort(req.dateLabel) || 'Sep 17, 2026'));
     
     const pickupT = req.pickupTime || '07:45 AM';
     const returnT = req.returnTime || '';
     const timesText = returnT ? pickupT + ' & ' + returnT : pickupT;
     
     const isBoth = req.direction === 'bothway' || (returnT && returnT.length > 0);
-    const dirPillHtml = `<span style="background:#F0FDFA; color:#0F766E; font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;">
-        <i data-lucide="footprints" style="width:12px; height:12px;"></i>
-        <span>${isBoth ? 'Round Walk' : 'Walking Bus'}</span>
-      </span>`;
+    const dirPillHtml = isBoth
+      ? `<span style="background:rgba(27,43,104,0.08); color:#1B2B68; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="refresh-cw" style="width:11px; height:11px;"></i> Round Trip</span>`
+      : `<span style="background:#FFF7ED; color:#EA580C; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="arrow-right" style="width:11px; height:11px;"></i> One-way</span>`;
 
     // Parse price
-    const priceVal = String(req.rate || (req.rateLabel ? req.rateLabel.replace(/\D/g, '') : '25') || '25');
+    const priceVal = String(req.rate || (req.rateLabel ? req.rateLabel.replace(/\D/g, '') : '35') || '35');
 
     // Contextual actions
     let actionHtml = '';
     if (req.status === 'new') {
       actionHtml = `
-        <div style="display:flex; align-items:center; gap:8px;" onclick="event.stopPropagation();">
-          <button type="button" onclick="declineWalkShareRequest('${esc(req.id)}')" style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; border-radius:99px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer;">
+        <div style="display:flex; align-items:center; gap:6px;" onclick="event.stopPropagation();">
+          <button type="button" onclick="declineWalkShareRequest('${esc(req.id)}')" style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; border-radius:99px; padding:5px 12px; font-size:11.5px; font-weight:700; cursor:pointer;">
             Decline
           </button>
-          <button type="button" onclick="acceptWalkShareRequest('${esc(req.id)}')" style="background:#0F766E; color:#FFFFFF; border-radius:99px; padding:6px 16px; font-size:12px; font-weight:700; border:none; cursor:pointer;">
+          <button type="button" onclick="acceptWalkShareRequest('${esc(req.id)}')" style="background:#0D9488; color:#FFFFFF; border-radius:99px; padding:5px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; box-shadow:0 2px 6px rgba(13,148,136,0.2);">
             Accept
           </button>
         </div>`;
     } else if (req.status === 'declined') {
-      actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:99px;">Declined</span>';
+      actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px;">Declined</span>';
     } else {
       actionHtml = `
-        <div style="width:32px; height:32px; border-radius:50%; background:#F0FDFA; color:#0F766E; display:flex; align-items:center; justify-content:center;">
-          <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>
+        <div style="width:28px; height:28px; border-radius:50%; background:#F0FDFA; color:#0F766E; display:flex; align-items:center; justify-content:center;">
+          <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
         </div>`;
     }
 
     return `
-      <article class="h2s-booking-card" onclick="openWalkShareRequest('${esc(req.id)}')" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:22px; padding:18px 20px; margin-bottom:14px; box-shadow:0 4px 16px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.2s ease;">
+      <article class="h2s-booking-card" onclick="openWalkShareRequest('${esc(req.id)}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
         <!-- Top Row: Date & Direction -->
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#F0FDFA; color:#0D9488; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i data-lucide="footprints" style="width:20px; height:20px;"></i>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:#F0FDFA; color:#0D9488; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i data-lucide="footprints" style="width:17px; height:17px;"></i>
             </div>
             <div>
-              <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
-              <div style="font-size:12px; font-weight:600; color:#64748B; margin-top:2px;">${timesText}</div>
+              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:1px;">${timesText}</div>
             </div>
           </div>
           ${dirPillHtml}
         </div>
 
         <!-- Middle Row: Route Rail & Payout -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px;">
-          <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; position:relative; padding-left:2px;">
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;">
+          <div style="display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; position:relative; padding-left:2px;">
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
+              <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
             </div>
-            <div style="position:absolute; left:6px; top:8px; bottom:8px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; border:2px solid #0D9488; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
+            <div style="position:absolute; left:5px; top:6px; bottom:6px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #0D9488; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
+              <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
             </div>
           </div>
 
-          <div style="display:flex; align-items:center; gap:16px; flex-shrink:0; padding-left:16px; border-left:1px solid #F1F5F9;">
-            <div style="font-size:24px; font-weight:800; color:#0F172A; letter-spacing:-0.5px;">${priceVal}</div>
+          <div style="display:flex; align-items:center; gap:12px; flex-shrink:0; padding-left:12px; border-left:1px solid #F1F5F9;">
+            <div style="font-size:21px; font-weight:800; color:#0F172A; letter-spacing:-0.5px;">$${priceVal.replace(/^\$/, '')}</div>
           </div>
         </div>
 
         <!-- Footer Row: Parent & Kids Info & Actions -->
-        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:12px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${photo}" alt="" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
+        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:9px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img src="${photo}" alt="" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
             <div>
-              <div style="font-size:13.5px; font-weight:700; color:#0F172A; line-height:1.2;">${name}</div>
-              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${childShort(req)}</div>
+              <div style="font-size:12.5px; font-weight:700; color:#0F172A; line-height:1.2;">${name}</div>
+              <div style="font-size:11px; font-weight:600; color:#64748B; margin-top:1px;">${childShort(req)}</div>
             </div>
           </div>
           ${actionHtml}
@@ -1083,8 +1135,6 @@
         btn.setAttribute('aria-selected', key === tab ? 'true' : 'false');
       }
     });
-    const countEl = document.getElementById('wsReqSub');
-    if (countEl) countEl.textContent = tab === 'new' ? 'Incoming family requests' : tab === 'accepted' ? 'Accepted walks' : 'Declined requests';
     const wrap = document.getElementById('wsRequestsListWrap');
     if (!wrap) return;
     if (!list.length) {
@@ -1104,7 +1154,13 @@
     const bookings = state().bookings || [];
     const booking = bookings.find((b) => b.id === req.bookingId);
     if (!booking) return;
-    if (next === 'accepted') booking.status = 'confirmed';
+    if (next === 'accepted') {
+      booking.status = 'confirmed';
+      if (!booking.agreedRate) {
+        booking.agreedRate = booking.listedRate || req.rate || 75;
+        booking.rateStatus = 'agreed';
+      }
+    }
     if (next === 'declined') booking.status = 'declined';
   }
 
@@ -1141,22 +1197,115 @@
     if (document.getElementById('screen-wsRequestDetail')?.classList.contains('active')) renderRequestDetail();
   };
 
+  function walkPaymentHandleBlock(req, w, booking) {
+    const handleStatus = booking?.paymentHandleStatus || (req.status === 'accepted' ? 'shared' : 'not_requested');
+    const handleValue = booking?.paymentHandle || w.rate?.paymentHandle || 'sarah.jenkins@walkshare.ca';
+
+    if (handleStatus === 'requested') {
+      return `
+      <div style="background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:12px; padding:14px; margin-top:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <i data-lucide="shield-alert" style="width:18px; height:18px; color:#2563EB;"></i>
+          <h4 style="margin:0; font-size:13.5px; font-weight:700; color:#1E40AF;">Payment Details Requested</h4>
+        </div>
+        <p style="margin:0 0 12px 0; color:#334155; font-size:12.5px; line-height:1.4;">
+          Parent requested your Interac e-Transfer handle to send escort fees directly. Home2School never processes escort fees.
+        </p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn-primary" style="flex:1; min-width:140px; padding:9px 12px; font-size:12.5px;" onclick="window.consentPaymentDetails('${esc(booking ? booking.id : req.bookingId)}')">
+            Share e-Transfer (${esc(handleValue)})
+          </button>
+          <button type="button" class="btn-secondary" style="flex:1; min-width:110px; padding:9px 12px; font-size:12.5px;" onclick="window.chooseCashPayment('${esc(booking ? booking.id : req.bookingId)}')">
+            Agree on Cash
+          </button>
+        </div>
+      </div>`;
+    }
+
+    if (handleStatus === 'shared') {
+      return `
+      <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:12px; padding:14px; margin-top:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+          <i data-lucide="check-circle-2" style="width:18px; height:18px; color:#16A34A;"></i>
+          <h4 style="margin:0; font-size:13.5px; font-weight:700; color:#166534;">Payment Handle Shared</h4>
+        </div>
+        <p style="font-weight:700; color:#0F172A; margin:4px 0 2px 0; font-size:14px;">${esc(handleValue)}</p>
+        <p style="margin:0; font-size:12px; color:#475569;">Parent has your Interac handle. Escort fees stay 100% directly between you and the parent.</p>
+      </div>`;
+    }
+
+    if (handleStatus === 'cash') {
+      return `
+      <div style="background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:12px; padding:14px; margin-top:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+          <i data-lucide="banknote" style="width:18px; height:18px; color:#D97706;"></i>
+          <h4 style="margin:0; font-size:13.5px; font-weight:700; color:#92400E;">Cash Payment Confirmed</h4>
+        </div>
+        <p style="margin:0; font-size:12px; color:#475569;">Parent will pay escort fees directly in cash on the first morning walk.</p>
+      </div>`;
+    }
+
+    return '';
+  }
+
   function renderRequestDetail() {
     const w = ensureWalk();
     const req = w.requests.find((r) => r.id === w.selectedRequestId) || w.requests[0];
     const el = feed('wsRequestDetailFeed');
     if (!el || !req) return;
     const block = req.status === 'new' ? (canAccept(w) ? requestCapacityBlock(w, req) : (docsApproved(w) ? 'Start trial first' : 'Docs must be approved')) : '';
+
+    const booking = (state().bookings || []).find((b) => b.id === req.bookingId || b.id === req.id || ('wreq-' + b.id) === req.id);
+    const hasAgreedRate = booking && booking.agreedRate && booking.rateStatus === 'agreed';
+    const displayRate = hasAgreedRate ? booking.agreedRate : (booking?.listedRate || req.rate || 75);
+    const period = req.frequency === 'recurring' ? 'week' : 'walk';
+    const rateText = hasAgreedRate 
+      ? `Agreed rate: ${displayRate} / ${period}`
+      : `Listed rate: ${displayRate} / ${period}${w.rate?.negotiable && req.status === 'new' ? ' · negotiable' : ''}`;
+
+    const parentPhoto = req.parentPhoto || '/assets/avatar_sadia.jpg';
+    const parentName = req.parentName || 'Sadia Khan';
+    const parentPhone = req.parentPhone || '+1 (416) 555-0192';
+
     el.innerHTML = `
-      <div class="trip-card">
-        <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">
-          <img src="${esc(req.parentPhoto || '/assets/avatar_sadia.jpg')}" alt="" class="provider-large-avatar" style="width:56px;height:56px;" onerror="this.src='/assets/avatar_sadia.jpg'" />
-          <div>
-            <h3 class="card-title-navy" style="margin:0;">${esc(req.parentName)}</h3>
-            <p class="card-desc-muted" style="margin:2px 0 0;">${esc(childShort(req))} · ${esc(req.rateLabel || '')}</p>
+      <!-- 1. Top Parent Profile Card with Direct Message Icon -->
+      <section class="drv-req-parent-card">
+        <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1; text-align:left;">
+          <div style="position:relative; flex-shrink:0;">
+            <img src="${esc(parentPhoto)}" alt="${esc(parentName)}" style="width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid #059669;" onerror="this.src='/assets/avatar_sadia.jpg';" />
+            <span style="position:absolute; bottom:0; right:0; background:#10B981; border:2px solid #fff; width:11px; height:11px; border-radius:50%;" title="Verified Parent"></span>
+          </div>
+          <div style="min-width:0; flex:1; text-align:left;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <h3 style="font-size:15px; font-weight:800; color:#0F172A; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(parentName)}</h3>
+              <span style="background:#DCFCE7; color:#15803D; font-size:10px; font-weight:700; padding:1px 6px; border-radius:99px;">Verified</span>
+            </div>
+            <div style="font-size:12px; color:#64748B; margin-top:2px; font-weight:500;">
+              Primary Guardian • ${esc(parentPhone)}
+            </div>
           </div>
         </div>
-        <div class="drv-req-route-block" style="margin:12px 0;">
+        <button type="button" class="btn-icon-subtle" onclick="openChatWith('${esc(req.parentId || 'sadia')}')" title="Message Parent" aria-label="Message Parent" style="width:38px; height:38px; border-radius:10px; background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.15s;" onmouseover="this.style.background='#D1FAE5'" onmouseout="this.style.background='#ECFDF5'">
+          <i data-lucide="message-square" style="width:18px; height:18px;"></i>
+        </button>
+      </section>
+
+      <!-- 2. Children & Walking Group Card -->
+      <section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;">
+        <h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Children</h4>
+        <div style="display:flex; align-items:center; gap:10px; padding:6px 0;">
+          <img src="/assets/avatar_arman.jpg" alt="" style="width:38px; height:38px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_arman.jpg'" />
+          <div>
+            <div style="font-size:14px; font-weight:700; color:#0F172A;">${esc(childShort(req))}</div>
+            <div style="font-size:12px; color:#64748B; margin-top:2px;">Greenfield Sidewalk Walking Bus</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Corridor Route Card -->
+      <section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;">
+        <h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Walking Route Corridor</h4>
+        <div class="drv-req-route-block" style="margin:8px 0;">
           <div class="drv-req-route-rail" aria-hidden="true">
             <span class="drv-req-dot start"></span>
             <span class="drv-req-rail-line"></span>
@@ -1167,14 +1316,37 @@
             <p class="drv-req-stop is-end">${esc(cleanPlace(req.dropoffLocation))}</p>
           </div>
         </div>
-        <p class="card-desc-muted">${esc(dateLineCard(req))} · ${esc(timeLineCard(req))}</p>
-        ${req.notes ? `<p class="card-desc-muted" style="margin-top:8px;">${esc(req.notes)}</p>` : ''}
-        ${block ? `<p class="drv-home-gate" style="margin-top:10px;">${esc(block)}</p>` : ''}
+        <div style="display:flex; gap:8px; margin-top:8px; font-size:12px; color:#475569; align-items:center; flex-wrap:wrap;">
+          <span style="display:inline-flex; align-items:center; gap:4px; font-weight:700; color:#0F172A;"><i data-lucide="footprints" style="width:13px; height:13px; color:#10B981;"></i> 1.2 km walk</span>
+          <span>•</span>
+          <span>Est. 14 min walking</span>
+          <span>•</span>
+          <span style="color:#10B981; font-weight:700;">Sidewalks & Crossing Care</span>
+        </div>
+      </section>
+
+      <!-- 4. Schedule Card -->
+      <section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;">
+        <h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Schedule</h4>
+        <div style="display:flex; justify-content:space-between; font-size:13px; padding:4px 0;">
+          <span style="color:#64748B;">Date & Time</span>
+          <span style="font-weight:700; color:#0F172A;">${esc(dateLineCard(req))} · ${esc(timeLineCard(req))}</span>
+        </div>
+      </section>
+
+      ${req.notes ? `<section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;"><h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Special Notes</h4><p class="card-desc-muted" style="margin:0; font-size:13px; color:#475569; line-height:1.45;">${esc(req.notes)}</p></section>` : ''}
+
+      ${walkPaymentHandleBlock(req, w, booking)}
+
+      ${block ? `<p class="drv-home-gate" style="margin-top:10px; margin-bottom:12px;">${esc(block)}</p>` : ''}
+
+      <!-- Bottom CTAs: Accept & Decline -->
+      <div class="drv-actions-col" style="display:flex; flex-direction:column; gap:10px; margin-top:8px; margin-bottom:24px;">
+        ${req.status === 'new' ? `
+          <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" ${(!canAccept(w) || block) ? 'disabled' : ''} style="height:46px; font-size:14px; font-weight:800; border-radius:12px;">Accept at ${displayRate}/${period}</button>
+          <button type="button" class="drv-req-decline-btn" onclick="declineWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" style="height:44px; font-size:13.5px; font-weight:700; border-radius:12px; background:#FFF1F2; border:1px solid #FECDD3; color:#E11D48; cursor:pointer;">Decline</button>
+        ` : ''}
       </div>
-      ${req.status === 'new' ? `<div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" ${(!canAccept(w) || block) ? 'disabled' : ''}>Accept</button>
-        <button type="button" class="btn-secondary-link" onclick="declineWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')">Decline</button>
-      </div>` : `<button type="button" class="btn-primary" onclick="openChatWith('${esc(req.parentId)}')">Message</button>`}
     `;
     icons();
   }
@@ -1264,11 +1436,11 @@
 
   function schedCard(item) {
     const isReturn = item.leg === 'afternoon';
-    const badge = isReturn ? 'Return Walk' : 'Morning Walk';
     const open = !!item.isActionableNow || item.status === 'active';
     
-    // Format Date & Time
-    const displayDate = item.when || item.dateLabel || 'Tue, Sep 9, 2026';
+    // Format Date & Time cleanly
+    const rawDate = item.when || item.dateLabel || 'Mon, Sep 7, 2026';
+    const displayDate = formatScheduleTitle(rawDate);
     const timeText = item.time || '07:45 AM';
     
     const from = cleanPlace(item.from || item.pickupLocation) || 'Pickup';
@@ -1276,78 +1448,74 @@
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
     const parentName = item.parentName || 'Sadia Khan';
     const kidsText = item.childNames || 'Children';
-    const cap = ensureWalk().group?.capacity || 3;
 
     let ctaHtml = '';
     if (open) {
       ctaHtml = `
         <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#0D9488; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-            <span class="live-dot-pulse" style="width:6px; height:6px; background:#fff;"></span>
+          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#0D9488; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(13,148,136,0.25);">
+            <span class="live-dot-pulse" style="width:6px; height:6px; background:#fff; border-radius:50%;"></span>
             <span>Live Walk</span>
           </button>
         </div>`;
     } else if (item.leg === 'morning') {
       ctaHtml = `
         <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#0F766E; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-            <i data-lucide="navigation" style="width:12px; height:12px;"></i>
+          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#0F766E; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(15,118,110,0.2);">
+            <i data-lucide="navigation" style="width:11px; height:11px;"></i>
             <span>Start</span>
           </button>
         </div>`;
     } else {
       ctaHtml = `
-        <div style="width:32px; height:32px; border-radius:50%; background:#F0FDFA; color:#0F766E; display:flex; align-items:center; justify-content:center;">
-          <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>
+        <div style="width:28px; height:28px; border-radius:50%; background:#F0FDFA; color:#0F766E; display:flex; align-items:center; justify-content:center;">
+          <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
         </div>`;
     }
 
+    const isRound = item.badge === 'Round trip' || (item.returnTime != null) || (item.leg === 'afternoon');
+    const dirPillHtml = isRound
+      ? `<span style="background:rgba(13,148,136,0.1); color:#0F766E; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="repeat" style="width:11px; height:11px;"></i> Round Trip</span>`
+      : `<span style="background:#F1F5F9; color:#475569; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="arrow-right" style="width:11px; height:11px;"></i> 1-Way Trip</span>`;
+
     return `
-      <article class="h2s-booking-card" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:22px; padding:18px 20px; margin-bottom:14px; box-shadow:0 4px 16px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.2s ease;">
+      <article class="h2s-booking-card" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
         <!-- Top Row: Date & Direction -->
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#F0FDFA; color:#0D9488; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i data-lucide="footprints" style="width:20px; height:20px;"></i>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:#F0FDFA; color:#0D9488; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i data-lucide="footprints" style="width:17px; height:17px;"></i>
             </div>
             <div>
-              <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
-              <div style="font-size:12px; font-weight:600; color:#64748B; margin-top:2px;">${timeText}</div>
+              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${timeText}</div>
             </div>
           </div>
-          <span style="background:${isReturn ? '#FFF7ED' : '#F0FDFA'}; color:${isReturn ? '#C2410C' : '#0F766E'}; font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;">
-            <i data-lucide="${isReturn ? 'corner-down-left' : 'corner-up-right'}" style="width:12px; height:12px;"></i>
-            <span>${badge}</span>
-          </span>
+          ${dirPillHtml}
         </div>
 
-        <!-- Middle Row: Route Rail & Squad Info -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px;">
-          <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; position:relative; padding-left:2px;">
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
+        <!-- Middle Row: Route Rail (Full width clean route without redundant kids count) -->
+        <div style="margin-bottom:12px; background:#F8FAFC; border-radius:12px; padding:10px 12px; border:1px solid #F1F5F9;">
+          <div style="display:flex; flex-direction:column; gap:8px; position:relative; padding-left:2px;">
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
+              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
             </div>
-            <div style="position:absolute; left:6px; top:8px; bottom:8px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; border:2px solid #0D9488; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
+            <div style="position:absolute; left:5.5px; top:8px; bottom:8px; width:1px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #0D9488; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
+              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
             </div>
-          </div>
-
-          <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; padding-left:16px; border-left:1px solid #F1F5F9; font-size:13px; font-weight:800; color:#0F172A;">
-            <i data-lucide="users" style="width:16px; height:16px; color:#64748B;"></i>
-            <span>${cap} kids max</span>
           </div>
         </div>
 
         <!-- Footer Row: Parent & Kids Info & Action -->
-        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:10px;">
           <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${parentPhoto}" alt="" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
+            <img src="${parentPhoto}" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1.5px solid #E2E8F0;" onerror="this.src='/assets/avatar_sadia.jpg';" />
             <div>
-              <div style="font-size:13.5px; font-weight:700; color:#0F172A; line-height:1.2;">${parentName}</div>
-              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${kidsText}</div>
+              <div style="font-size:13px; font-weight:800; color:#0F172A; line-height:1.2;">${parentName}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:1px;">${kidsText}</div>
             </div>
           </div>
           ${ctaHtml}
@@ -1355,7 +1523,7 @@
       </article>`;
   }
 
-  window.startWalkShareWalk = function (id) {
+    window.startWalkShareWalk = function (id) {
     const w = ensureWalk();
     const item = deriveSchedule().find((x) => x.id === id) || deriveSchedule()[0];
     if (!item) {
@@ -1435,10 +1603,23 @@
     const w = ensureWalk();
     if (w.activeWalkStage >= WALK_STAGES.length - 1) {
       w.activeWalkStage = 0;
+      const completedMeta = {
+        bookingId: 'WS-88421',
+        parentName: 'Sadia Khan',
+        parentId: 'PRNT-9042',
+        parentPhoto: '/assets/avatar_sadia.jpg',
+        childNames: 'Arman (Gr 2) & Emma (JK)',
+        route: 'Annex Corridor → Sunshine Pre-school'
+      };
       w.activeWalk = null;
       persist();
       toast('Walk complete. Parent can see the drop-off update.');
       window.navigateTo('wsHome');
+      setTimeout(() => {
+        if (typeof window.openWalkShareRateParentModal === 'function') {
+          window.openWalkShareRateParentModal(completedMeta);
+        }
+      }, 500);
       return;
     }
     w.activeWalkStage += 1;
@@ -1495,58 +1676,69 @@
     const w = ensureWalk();
     const el = document.getElementById('wsProfileFeed');
     if (!el) return;
-    const idLabel = `ID: WS-${String(w.group?.capacity || 3).padStart(2, '0')}15-2201`;
     el.innerHTML = `
-      <div class="profile-user-card" role="button" tabindex="0" onclick="openNestedScreen('wsOnboardProfile', event)">
+      <!-- 1. Escort Profile Hero Card -->
+      <div class="profile-user-card" role="button" tabindex="0" onclick="openNestedScreen('wsOnboardProfile', event)" style="margin-bottom:12px;">
         <img src="${esc(w.photo || '/assets/avatar_sarah.jpg')}" alt="${esc(w.name)}" class="profile-avatar-lg" onerror="this.src='/assets/avatar_sarah.jpg'" />
         <div class="profile-user-meta">
           <div class="profile-user-top">
             <div class="profile-user-name-row">
               <h3 class="profile-user-name">${esc(w.name)}</h3>
-              ${isApproved(w) ? '<i data-lucide="badge-check" class="profile-verified-badge"></i>' : ''}
+              ${isApproved(w) ? `
+                <span class="profile-verified-badge-wrap" title="Verified Escort">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" style="vertical-align:middle;">
+                    <circle cx="12" cy="12" r="10" fill="#38BDF8"/>
+                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#09122C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>` : ''}
             </div>
             <i data-lucide="chevron-right" class="profile-user-chevron"></i>
           </div>
-          <p class="profile-user-phone">${esc(w.phone)}</p>
-          <span class="profile-id-pill">${esc(idLabel)}</span>
+          <p class="profile-user-role">WalkShare Escort · ★ ${Number(w.rating || 4.9).toFixed(1)} (38 walks)</p>
         </div>
       </div>
 
-      <div class="profile-menu-section">
+      <!-- Online Status & Public Preview -->
+      <div class="profile-menu-section" style="margin-bottom:12px;">
         ${partnerOnlineRow(!!w.isOnline && isApproved(w), !isApproved(w))}
-        ${profileMenuRow('star', `Your ratings · ${Number(w.rating || 4.9).toFixed(1)}`, "openNestedScreen('wsRatings', event)")}
+        ${profileMenuRow('eye', 'Preview Public Profile & Rates', "openDriverProfile('sarah', 'wsProfile')")}
+        ${profileMenuRow('star', `Escort Ratings & Reviews · ${Number(w.rating || 4.9).toFixed(1)} ★`, "openNestedScreen('wsRatings', event)")}
       </div>
 
-      <div class="profile-menu-section">
-        ${profileMenuRow('users', esc(w.group.label), "openNestedScreen('wsOnboardGroup', event)")}
+      <!-- Section 1: Walking Group & Operations -->
+      <div class="profile-menu-section" style="margin-bottom:12px;">
+        ${profileMenuRow('users', esc(w.group.label || 'Walking School Bus'), "openNestedScreen('wsOnboardGroup', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openNestedScreen('wsOnboardDocs', event)")}
-        ${profileMenuRow('clock', 'Weekly hours', "openNestedScreen('wsOnboardAvailability', event)")}
+        ${profileMenuRow('clock', 'Availability', "openNestedScreen('wsOnboardAvailability', event)")}
         ${profileMenuRow('circle-dollar-sign', 'Posted rate', "openNestedScreen('wsOnboardRate', event)")}
         ${profileMenuRow('wallet', 'Payment preference', "openNestedScreen('wsPayment', event)")}
       </div>
 
-      <div class="profile-menu-section">
-        ${profileMenuRow('credit-card', 'WalkShare subscription', "openNestedScreen('wsSubscription', event)")}
-        ${profileMenuRow('bell', 'Notifications', "openNestedScreen('profileNotifications', event)")}
+      <!-- Section 2: Subscription, FAQ, Support & Policies -->
+      <div class="profile-menu-section" style="margin-bottom:12px;">
+        ${profileMenuRow('sparkles', 'WalkShare subscription', "openNestedScreen('wsSubscription', event)")}
         ${profileMenuRow('help-circle', 'FAQ', "openNestedScreen('faq', event)")}
         ${profileMenuRow('headphones', 'Contact Support', "openNestedScreen('contactSupport', event)")}
+        ${profileMenuRow('alert-triangle', 'Safety Center', "openNestedScreen('report', event)")}
         ${profileMenuRow('shield', 'Privacy Policy', "openNestedScreen('privacy', event)")}
         ${profileMenuRow('file-text', 'Terms of Service', "openNestedScreen('legal', event)")}
         ${profileMenuRow('info', 'About Home2School', "openNestedScreen('about', event)")}
       </div>
 
-      <div class="profile-workspace-card" role="button" tabindex="0" onclick="window.openRoleSwitcherModal()">
+      <!-- Role Switcher Card -->
+      <div class="profile-workspace-card" role="button" tabindex="0" onclick="window.openRoleSwitcherModal()" style="margin-bottom:12px;">
         <div class="pwc-left">
           <div class="pwc-icon-wrap walkshare"><i data-lucide="layers"></i></div>
           <div class="pwc-info">
-            <div class="pwc-title">Role: WalkShare</div>
-            <div class="pwc-subtitle">Switch role</div>
+            <div class="pwc-title">Active Role: WalkShare Escort</div>
+            <div class="pwc-subtitle">Switch to Parent or Driver mode</div>
           </div>
         </div>
         <button type="button" class="pwc-action-btn" onclick="event.stopPropagation(); window.openRoleSwitcherModal()">Switch</button>
       </div>
 
-      <button type="button" class="profile-logout-btn" onclick="navigateTo('authWelcome')">
+      <!-- Log Out Button -->
+      <button type="button" class="profile-logout-btn" onclick="navigateTo('authWelcome')" style="margin-bottom:24px;">
         <i data-lucide="log-out"></i>
         Log out
       </button>
@@ -1560,15 +1752,89 @@
     const el = feed('wsOnboardProfileFeed');
     if (!el) return;
     el.innerHTML = `
-      <p class="drv-lede" style="margin-bottom:12px;">Name, photo, zone.</p>
-      <div class="form-group"><label class="form-label">Full name</label><input class="form-input" id="wsProfileName" value="${esc(w.name)}" /></div>
-      <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="wsProfilePhone" value="${esc(w.phone)}" /></div>
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="wsProfileEmail" value="${esc(w.email)}" /></div>
-      <div class="form-group"><label class="form-label">Service zone</label><input class="form-input" id="wsProfileArea" value="${esc(w.serviceArea)}" placeholder="e.g. Elm → Greenfield" /></div>
-      <button type="button" class="btn-primary" onclick="saveWalkShareProfile()">Save and continue</button>
+      <!-- Avatar Hero with Name & Verified Badge -->
+      <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 16px;">
+        <div style="position: relative;">
+          <div class="drv-photo-wrap" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12);">
+            <img src="${esc(w.photo || '/assets/avatar_sarah.jpg')}" alt="${esc(w.name)}" id="wsProfileImg" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='/assets/avatar_sarah.jpg';" />
+          </div>
+          <button type="button" class="drv-photo-cam" onclick="document.getElementById('wsPhotoFile').click()" aria-label="Change photo" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-primary, #1B2B68); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+            <i data-lucide="camera" style="width:13px;height:13px;"></i>
+          </button>
+          <input type="file" accept="image/*" id="wsPhotoFile" class="drv-file-input" onchange="onWalkShareProfilePhoto(event)" style="display:none;" />
+        </div>
+        <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;">
+          <span>${esc(w.name || 'Sarah Jenkins')}</span>
+          <span class="fb-verified-badge" title="Verified Account">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#1877F2">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- Unified WalkShare Profile Details Card -->
+      <div class="profile-form-section-card" style="margin-bottom: 16px;">
+        <div class="form-group">
+          <label class="form-label">Full Legal Name</label>
+          <div class="input-box-wrapper">
+            <input type="text" class="form-input" id="wsProfileName" value="${esc(w.name)}" placeholder="Sarah Jenkins" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <div class="phone-input-row" style="border: 1.5px solid #E2E8F0; border-radius: 10px; background: #fff; height: 44px; overflow: hidden; display: flex; align-items: center; padding: 0; gap: 0; transition: border-color 0.15s;" onfocusin="this.style.borderColor='var(--color-primary)'" onfocusout="this.style.borderColor='#E2E8F0'">
+            <div class="country-pill" style="cursor: pointer; border-right: 1.5px solid #E2E8F0; border-radius: 0; height: 100%; padding: 0 10px; background: #F8FAFC; display: flex; align-items: center; gap: 5px; flex-shrink: 0; min-width: 64px; justify-content: center;">
+              <span style="font-size: 16px; line-height: 1;">🇨🇦</span>
+              <span style="font-size: 12px; font-weight: 700; color: #334155; letter-spacing: -0.2px;">+1</span>
+              <i data-lucide="chevron-down" style="width:11px;height:11px;color:#94A3B8;flex-shrink:0;"></i>
+            </div>
+            <input type="tel" class="form-input" id="wsProfilePhone" value="${esc(w.phone)}" placeholder="(416) 555-0199" style="border: none; border-radius: 0; padding: 0 12px; height: 100%; flex: 1; background: transparent;" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="input-box-wrapper">
+            <input type="email" class="form-input" id="wsProfileEmail" value="${esc(w.email)}" placeholder="sarah@walkshare.ca" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Service Area</label>
+          <div class="input-box-wrapper">
+            <input type="text" class="form-input" id="wsProfileArea" value="${esc(w.serviceArea || 'Elm → Greenfield')}" placeholder="e.g. Elm → Greenfield" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">About / Bio (Shown to parents)</label>
+          <textarea class="form-textarea" id="wsProfileBio" rows="3" placeholder="Tell parents about your walking school bus, supervised escort care, and neighborhood route...">${esc(w.bio || w.about || 'Sarah leads a supervised walking school bus so neighborhood kids arrive together—active, visible, and safely escorted to the school gate.')}</textarea>
+        </div>
+      </div>
+
+      <div class="drv-actions-col">
+        <button type="button" class="btn-primary" onclick="saveWalkShareProfile()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">Save Changes</button>
+      </div>
     `;
     icons();
   }
+
+  window.onWalkShareProfilePhoto = function (event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const w = ensureWalk();
+      w.photo = e.target.result;
+      persist();
+      const img = document.getElementById('wsProfileImg');
+      if (img) img.src = w.photo;
+      toast('Photo attached');
+    };
+    reader.readAsDataURL(file);
+  };
 
   window.saveWalkShareProfile = function () {
     const w = ensureWalk();
@@ -1576,8 +1842,15 @@
     w.phone = document.getElementById('wsProfilePhone')?.value || w.phone;
     w.email = document.getElementById('wsProfileEmail')?.value || w.email;
     w.serviceArea = document.getElementById('wsProfileArea')?.value || w.serviceArea;
+    w.bio = document.getElementById('wsProfileBio')?.value || w.bio;
+    w.about = w.bio;
     const provider = (state().providers || []).find((p) => p.id === 'sarah');
     if (provider) {
+      provider.name = w.name;
+      provider.phone = w.phone;
+      provider.email = w.email;
+      provider.bio = w.bio;
+      provider.about = w.bio;
       provider.serviceArea = w.serviceArea;
       provider.zone = window.H2SZone
         ? window.H2SZone.clean(w.group?.route || w.serviceArea)
@@ -1586,7 +1859,11 @@
     w.onboarding.profile = true;
     persist();
     toast('Profile saved');
-    window.navigateTo(onboardingDone(w) ? 'wsProfile' : 'wsOnboardGroup');
+    if (window.navReturnStack && window.navReturnStack.length) {
+      window.backNested('wsProfile');
+    } else {
+      window.navigateTo('wsProfile', true);
+    }
   };
 
   function renderOnboardGroup() {
@@ -1641,7 +1918,15 @@
   function wsDocReady(doc) {
     if (!doc) return false;
     const hasFile = !!(doc.file && (doc.file.attached || doc.file.name));
-    if (doc.id === 'id') return hasFile && !!String(doc.number || '').trim();
+    if (doc.id === 'licence' || doc.id === 'id') {
+      return hasFile && !!String(doc.number || '').trim();
+    }
+    if (doc.id === 'residency_tax_tenancy') {
+      return hasFile && !!String(doc.address || '').trim();
+    }
+    if (doc.id === 'residency_utility') {
+      return hasFile && !!String(doc.issuer || '').trim();
+    }
     if (doc.id === 'firstaid') return hasFile && !!String(doc.issuer || '').trim();
     return hasFile && !!String(doc.issuer || '').trim();
   }
@@ -1652,17 +1937,18 @@
     if (!el) return;
     const submitted = w.documents.filter((doc) => doc.status !== 'not_submitted' && doc.status !== 'action_required' && doc.status !== 'rejected').length;
     el.innerHTML = `
-      <p class="drv-docs-meta">${submitted} / ${w.documents.length} submitted · ID, CRC, VSC, first-aid</p>
+      <p class="drv-docs-meta">${submitted} / ${w.documents.length} submitted · Driver's Licence, 2× Residency Proofs, Police Clearance</p>
       <div class="profile-menu-section drv-doc-list">
         ${w.documents.map((doc) => {
           const needs = doc.status === 'not_submitted' || doc.status === 'action_required' || doc.status === 'rejected';
           return `
           <div class="profile-menu-item drv-doc-row" role="button" tabindex="0" onclick="openWalkShareDoc('${esc(doc.id)}')">
             <div class="menu-item-left">
-              <div class="menu-icon-wrap drv-doc-icon"><i data-lucide="upload"></i></div>
+              <div class="menu-icon-wrap drv-doc-icon"><i data-lucide="${doc.id === 'licence' || doc.id === 'id' ? 'credit-card' : (doc.id.startsWith('residency') ? 'home' : (doc.id === 'firstaid' ? 'heart-pulse' : 'shield-check'))}"></i></div>
               <div>
                 <span class="menu-title-text">${esc(doc.title)}</span>
-                ${needs ? '<span class="menu-subtitle">Tap to upload</span>' : ''}
+                ${doc.subtitle ? `<span class="menu-subtitle" style="display:block;font-size:11px;color:#64748B;">${esc(doc.subtitle)}</span>` : ''}
+                ${needs ? '<span class="menu-subtitle" style="color:var(--color-primary);font-weight:700;">Tap to upload</span>' : ''}
               </div>
             </div>
             <span class="drv-doc-row-end">
@@ -1700,11 +1986,81 @@
     const attached = !!(doc.file && (doc.file.attached || doc.file.name));
     const fileName = attached ? (doc.file.name || 'File attached') : 'Tap to upload';
     const thumb = attached && doc.file.preview
-      ? `<img class="drv-upload-thumb" src="${esc(doc.file.preview)}" alt="" />`
+      ? `<img class="drv-upload-thumb" src="${esc(doc.file.preview)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
       : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="${attached ? 'file-check' : 'upload'}"></i></span>`;
-    const fieldHtml = doc.id === 'id'
-      ? `<div class="form-group"><label class="form-label" for="wsDocNumber">ID number</label><input class="form-input" id="wsDocNumber" value="${esc(doc.number || '')}" placeholder="ON-4819203" /></div>`
-      : `<div class="form-group"><label class="form-label" for="wsDocIssuer">Issuing body</label><input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="${doc.id === 'firstaid' ? 'Red Cross' : 'Toronto Police Service'}" /></div>`;
+    
+    let fieldHtml = '';
+    let helpNote = '';
+
+    if (doc.id === 'licence' || doc.id === 'id') {
+      helpNote = 'Upload a valid government driver\'s license (front & back). We verify identity and driving credentials.';
+      fieldHtml = `
+        <div class="form-group">
+          <label class="form-label" for="wsDocNumber">Driver's License Number</label>
+          <input class="form-input" id="wsDocNumber" value="${esc(doc.number || '')}" placeholder="e.g. D4819-20381-90412" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wsDocProvince">Issuing Province / State</label>
+          <input class="form-input" id="wsDocProvince" value="${esc(doc.province || 'Ontario')}" placeholder="Ontario" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wsDocExpiry">Expiry Date</label>
+          <input class="form-input" type="date" id="wsDocExpiry" value="${esc(doc.expiry || '2028-09-15')}" />
+        </div>
+      `;
+    } else if (doc.id === 'residency_tax_tenancy') {
+      helpNote = 'Proof of Residency #1: Submit your latest annual Property Tax Statement or active signed Residential Tenancy Agreement.';
+      fieldHtml = `
+        <div class="form-group">
+          <label class="form-label" for="wsDocResidencyType">Proof of Residency Type</label>
+          <select class="form-input" id="wsDocResidencyType">
+            <option value="Property Tax Statement" ${(doc.residencyType || '') === 'Property Tax Statement' ? 'selected' : ''}>Property Tax Statement</option>
+            <option value="Residential Tenancy Agreement" ${(doc.residencyType || '') === 'Residential Tenancy Agreement' ? 'selected' : ''}>Tenancy Agreement (Lease)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wsDocAddress">Residential Address on Document</label>
+          <input class="form-input" id="wsDocAddress" value="${esc(doc.address || '')}" placeholder="e.g. 124 Greenfield Ave, Toronto, ON M4B 1B3" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wsDocIssuer">Issuing Municipality / Landlord</label>
+          <input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="e.g. City of Toronto Revenue Services or Landlord" />
+        </div>
+      `;
+    } else if (doc.id === 'residency_utility') {
+      helpNote = 'Proof of Residency #2: Submit an official utility bill (electricity, natural gas, municipal water, or internet) issued within 90 days.';
+      fieldHtml = `
+        <div class="form-group">
+          <label class="form-label" for="wsDocIssuer">Utility Service Provider</label>
+          <input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="e.g. Toronto Hydro, Enbridge Gas, Rogers / Bell, City Water" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wsDocAddress">Service / Billing Address</label>
+          <input class="form-input" id="wsDocAddress" value="${esc(doc.address || '')}" placeholder="e.g. 124 Greenfield Ave, Toronto, ON M4B 1B3" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wsDocBillDate">Bill / Statement Date</label>
+          <input class="form-input" type="date" id="wsDocBillDate" value="${esc(doc.billDate || '2026-08-10')}" />
+        </div>
+      `;
+    } else if (doc.id === 'firstaid') {
+      helpNote = 'Certified pediatric emergency first-aid and CPR Level C certification.';
+      fieldHtml = `
+        <div class="form-group">
+          <label class="form-label" for="wsDocIssuer">Certification Body</label>
+          <input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="e.g. Red Cross / St. John Ambulance" />
+        </div>
+      `;
+    } else {
+      helpNote = 'Official police record clearance for escorting and supervising children.';
+      fieldHtml = `
+        <div class="form-group">
+          <label class="form-label" for="wsDocIssuer">Issuing Police Service</label>
+          <input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="e.g. Toronto Police Service" />
+        </div>
+      `;
+    }
+
     const back = el?.closest('.screen-view')?.querySelector('.back-btn');
     if (back) {
       back.setAttribute('onclick', "event.preventDefault();event.stopPropagation();navigateTo('wsOnboardDocs', true)");
@@ -1715,10 +2071,11 @@
       <div class="drv-doc-detail-head">
         <span class="drv-doc-status ${esc(doc.status || 'not_submitted')}">${esc(doc.status === 'under_review' ? 'Under Review' : (doc.status === 'approved' ? 'Approved' : 'Not Submitted'))}</span>
       </div>
-      <h3 class="card-title-navy" style="margin:0 0 8px;">${esc(doc.title)}</h3>
+      <h3 class="card-title-navy" style="margin:0 0 4px;">${esc(doc.title)}</h3>
+      ${helpNote ? `<p class="card-desc-muted" style="font-size:12px;margin:0 0 14px;line-height:1.4;">${esc(helpNote)}</p>` : ''}
       ${fieldHtml}
       <div class="form-group">
-        <label class="form-label" for="wsDocFile">Document file</label>
+        <label class="form-label" for="wsDocFile">Document File (PDF or Photo)</label>
         <label class="drv-upload-tile" for="wsDocFile">
           ${thumb}
           <span class="drv-upload-copy">
@@ -1729,7 +2086,7 @@
         <input type="file" accept="image/*,.pdf,application/pdf" id="wsDocFile" class="drv-file-input" onchange="onWalkShareDocFile(event)" />
       </div>
       <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveWalkShareDoc()">${doc.status === 'not_submitted' ? 'Submit' : 'Save'}</button>
+        <button type="button" class="btn-primary" onclick="saveWalkShareDoc()">${doc.status === 'not_submitted' ? 'Submit for review' : 'Save changes'}</button>
       </div>
     `;
     icons();
@@ -1756,8 +2113,21 @@
     const w = ensureWalk();
     const doc = w.documents.find((d) => d.id === w.selectedDocId);
     if (!doc) return;
-    if (doc.id === 'id') doc.number = (document.getElementById('wsDocNumber')?.value || '').trim();
-    else doc.issuer = (document.getElementById('wsDocIssuer')?.value || '').trim();
+    if (doc.id === 'licence' || doc.id === 'id') {
+      doc.number = (document.getElementById('wsDocNumber')?.value || '').trim();
+      doc.province = (document.getElementById('wsDocProvince')?.value || '').trim();
+      doc.expiry = (document.getElementById('wsDocExpiry')?.value || '').trim();
+    } else if (doc.id === 'residency_tax_tenancy') {
+      doc.residencyType = (document.getElementById('wsDocResidencyType')?.value || '').trim();
+      doc.address = (document.getElementById('wsDocAddress')?.value || '').trim();
+      doc.issuer = (document.getElementById('wsDocIssuer')?.value || '').trim();
+    } else if (doc.id === 'residency_utility') {
+      doc.issuer = (document.getElementById('wsDocIssuer')?.value || '').trim();
+      doc.address = (document.getElementById('wsDocAddress')?.value || '').trim();
+      doc.billDate = (document.getElementById('wsDocBillDate')?.value || '').trim();
+    } else {
+      doc.issuer = (document.getElementById('wsDocIssuer')?.value || '').trim();
+    }
     if (!wsDocReady(doc)) {
       toast('Add the required details and upload a file');
       return;
@@ -1840,22 +2210,85 @@
 
   function renderOnboardRate() {
     const w = ensureWalk();
+    const r = w.rate || {};
     const el = feed('wsOnboardRateFeed');
     if (!el) return;
     el.innerHTML = `
-      <p class="drv-lede" style="margin-bottom:12px;">Rate per child / week.</p>
-      <div class="form-group"><label class="form-label">Weekly rate ($ CAD / child)</label><input class="form-input" type="number" id="wsRateAmount" value="${esc(w.rate.amount)}" /></div>
-      <button type="button" class="btn-primary" onclick="saveWalkShareRate()">Save and continue</button>
+      <div style="margin-bottom:16px;">
+        <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#2563EB; background:#EFF6FF; padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 5 of 5</span>
+        <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Posted Escort Rate & Walking Zone</h2>
+        <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Direct peer-to-peer escort compensation. Home2School never collects fees or holds escrow.</p>
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Weekly posted rate ($ CAD / child)</label>
+        <input class="form-input" type="number" id="wsRateAmount" value="${esc(r.amount || 75)}" placeholder="75" />
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Single walk rate (optional $ CAD)</label>
+        <input class="form-input" type="number" id="wsDailyAmount" value="${esc(r.dailyAmount || 25)}" placeholder="25" />
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Open to rate discussion? (Negotiable)</label>
+        <div class="drv-toggle-row" style="display:flex; gap:8px;">
+          <button type="button" id="wsNegYes" class="${r.negotiable !== false ? 'active' : ''}" style="flex:1; padding:10px; border-radius:8px; font-weight:700; border:1px solid #CBD5E1; cursor:pointer;" onclick="setWalkShareNegotiable(true)">Yes</button>
+          <button type="button" id="wsNegNo" class="${r.negotiable === false ? 'active' : ''}" style="flex:1; padding:10px; border-radius:8px; font-weight:700; border:1px solid #CBD5E1; cursor:pointer;" onclick="setWalkShareNegotiable(false)">No</button>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Preferred payment method</label>
+        <select class="form-select" id="wsPayMethod">
+          ${['e-Transfer · Cash', 'Interac e-Transfer', 'Cash'].map((m) => `<option ${(r.paymentMethod || 'e-Transfer · Cash') === m ? 'selected' : ''}>${m}</option>`).join('')}
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Walking corridor / route</label>
+        <input class="form-input" type="text" id="wsServiceArea" value="${esc(w.serviceArea || 'Elm → Greenfield')}" placeholder="Elm → Greenfield" />
+      </div>
+
+      <div class="form-group" style="margin-bottom:8px;">
+        <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Max walking radius (km)</label>
+        <input class="form-input" type="number" id="wsMaxDistance" value="${esc(w.maxDistanceKm || 3)}" placeholder="3" />
+      </div>
+      <p style="font-size:11.5px; color:#64748B; margin:0 0 16px 0; line-height:1.4;">
+        <i data-lucide="info" style="width:13px;height:13px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
+        Walking radius matches parents along your neighborhood corridor, not to calculate rates automatically.
+      </p>
+
+      <button type="button" class="btn-primary" style="width:100%; margin-top:8px;" onclick="saveWalkShareRate()">Save and continue</button>
     `;
+    icons();
   }
+
+  window.setWalkShareNegotiable = function (yes) {
+    const w = ensureWalk();
+    w.rate.negotiable = yes;
+    renderOnboardRate();
+  };
 
   window.saveWalkShareRate = function () {
     const w = ensureWalk();
-    w.rate.amount = Number(document.getElementById('wsRateAmount')?.value || w.rate.amount);
-    w.rate.negotiable = !!document.getElementById('wsRateNegotiable')?.checked;
+    w.rate.amount = Number(document.getElementById('wsRateAmount')?.value || w.rate.amount || 75);
+    w.rate.dailyAmount = Number(document.getElementById('wsDailyAmount')?.value || 25);
+    w.rate.paymentMethod = document.getElementById('wsPayMethod')?.value || 'e-Transfer · Cash';
+    w.serviceArea = document.getElementById('wsServiceArea')?.value || w.serviceArea || 'Elm → Greenfield';
+    w.maxDistanceKm = Number(document.getElementById('wsMaxDistance')?.value || 3);
     w.onboarding.rate = true;
+    const prov = (state().providers || []).find((p) => p.id === 'sarah' || p.id === 'elena');
+    if (prov) {
+      prov.baseWeekly = w.rate.amount;
+      prov.listedRate = w.rate.amount;
+      prov.oneTimeRate = w.rate.dailyAmount;
+      prov.negotiable = w.rate.negotiable !== false;
+      prov.preferredPayment = w.rate.paymentMethod;
+      prov.serviceArea = w.serviceArea;
+    }
     persist();
-    toast('Posted rate saved');
+    toast('Posted escort rate saved');
     window.navigateTo(onboardingDone(w) ? 'wsProfile' : 'wsHome');
   };
 
@@ -1925,13 +2358,33 @@
   };
 
   function renderPending() {
+    const w = ensureWalk();
     const el = feed('wsPendingFeed');
     if (!el) return;
+    const approvedCount = (w.documents || []).filter((d) => d.status === 'approved').length;
+    const totalCount = (w.documents || []).length;
     el.innerHTML = `
       <div class="trip-card" style="text-align:center;">
         <div class="drv-home-empty-ico" style="margin:0 auto 12px;"><i data-lucide="shield-check"></i></div>
-        <h3 class="card-title-navy">Under review</h3>
-        <p class="card-desc-muted">Home2School is verifying your WalkShare documents. You cannot accept requests until approved.</p>
+        <h3 class="card-title-navy">${isApproved(w) ? 'Verification Approved' : 'Verification Under Review'}</h3>
+        <p class="card-desc-muted">${isApproved(w) ? 'All WalkShare documents are verified and approved. You are ready to accept walks!' : 'Home2School is verifying your Driver\'s License, Proofs of Residency, and Safety background check.'}</p>
+        <div style="margin-top:12px;display:inline-block;padding:4px 12px;background:#EFF6FF;border-radius:999px;font-size:12px;font-weight:700;color:#1D4ED8;">
+          ${approvedCount} of ${totalCount} documents approved
+        </div>
+      </div>
+      <div class="profile-menu-section drv-doc-list">
+        ${(w.documents || []).map((doc) => `
+          <div class="profile-menu-item drv-doc-row" role="button" tabindex="0" onclick="openWalkShareDoc('${esc(doc.id)}')">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap drv-doc-icon"><i data-lucide="${doc.id === 'licence' ? 'credit-card' : (doc.id.startsWith('residency') ? 'home' : (doc.id === 'firstaid' ? 'heart-pulse' : 'shield-check'))}"></i></div>
+              <div>
+                <span class="menu-title-text">${esc(doc.title)}</span>
+                ${doc.subtitle ? `<span class="menu-subtitle" style="display:block;font-size:11px;color:#64748B;">${esc(doc.subtitle)}</span>` : ''}
+              </div>
+            </div>
+            <span class="drv-doc-status ${esc(doc.status || 'not_submitted')}">${esc(doc.status === 'approved' ? 'Approved' : (doc.status === 'under_review' ? 'Under Review' : 'Pending'))}</span>
+          </div>
+        `).join('')}
       </div>
       <button type="button" class="btn-primary" onclick="navigateTo('wsSetup')">Back to setup</button>
     `;
@@ -1949,32 +2402,17 @@
         <p class="card-desc-muted">$${w.subscription.priceMonthly}/mo · $${w.subscription.priceAnnual}/yr</p>
       </div>
 
-      <!-- Promo / Discount Code Box for WalkShare -->
-      <div class="sub-promo-box" style="margin-top: 10px; margin-bottom: 12px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 10px 12px;">
-        <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
-          <span>Have a WalkShare Promo Code?</span>
-          <span id="wsPromoBadge" style="display:none; color:#16A34A; font-weight:800; font-size:10px;">✓ Applied 20% OFF</span>
-        </div>
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="inputWsPromoCode" placeholder="Enter code (e.g. WALK20)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 12px; font-weight: 600; text-transform: uppercase;" />
-          <button type="button" onclick="window.applyWalkSharePromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
-            Apply
-          </button>
-        </div>
-      </div>
-
       <!-- Supported Payment Methods -->
-      <div style="margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px;">
-        <span style="font-size: 10px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
-        <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 800; color: #1E293B;">
-          <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">💳 Cards</span>
-          <span style="background:#000; color:#fff; padding:2px 6px; border-radius:4px;"> Pay</span>
-          <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">G Pay</span>
+      <div style="margin-top: 14px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px;">
+        <span style="font-size: 11px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: #1E293B;">
+          <span style="background:#F1F5F9; padding:3px 8px; border-radius:6px;">💳 Cards</span>
+          <span style="background:#000; color:#fff; padding:3px 8px; border-radius:6px;"> Pay</span>
+          <span style="background:#F1F5F9; padding:3px 8px; border-radius:6px;">G Pay</span>
         </div>
       </div>
 
-      <button type="button" class="btn-primary" onclick="activateWalkShareTrial()">Save</button>
-      <button type="button" onclick="window.openSubscriptionReceiptModal()" style="margin-top:8px; background:none; border:none; color:var(--color-primary); font-size:12px; font-weight:700; cursor:pointer; text-decoration:underline;">View Receipt &amp; Billing History</button>
+      <button type="button" class="btn-primary" onclick="activateWalkShareTrial()">Start 14-Day Free Trial</button>
     `;
     icons();
   }
@@ -2070,8 +2508,16 @@
     // WalkShare chat: "provider" = parent message; "parent" = escort (me)
     const cls = item.type === 'provider' ? 'provider' : 'parent';
     return `<div class="chat-bubble ${cls}">
-      ${esc(item.text)}
-      <div class="chat-timestamp">${esc(item.time || '')}</div>
+      <div class="chat-bubble-text">${esc(item.text)}</div>
+      <div class="chat-timestamp">
+        ${esc(item.time || '')}
+        ${cls === 'parent' ? '<i data-lucide="check-check" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-left:2px;opacity:0.85;"></i>' : ''}
+      </div>
+      <div class="chat-bubble-actions">
+        <button type="button" class="bubble-act-btn" onclick="copyChatMessageText(this)" title="Copy message" aria-label="Copy"><i data-lucide="copy"></i></button>
+        <button type="button" class="bubble-act-btn danger" onclick="deleteIndividualChatMessage(this)" title="Delete message" aria-label="Delete"><i data-lucide="trash-2"></i></button>
+        <button type="button" class="bubble-act-btn" onclick="reactToChatMessage(this, '👍')" title="Thumbs up" aria-label="React"><span>👍</span></button>
+      </div>
     </div>`;
   }
 
@@ -2101,12 +2547,16 @@
     }
     if (nameEl) nameEl.textContent = party.name;
     if (subEl) {
-      subEl.textContent = '';
-      subEl.style.display = 'none';
+      subEl.textContent = 'Parent • WalkShare safe chat';
+      subEl.style.display = 'block';
     }
-    if (input) input.placeholder = 'Message…';
+    if (input) input.placeholder = `Message ${party.name.split(' ')[0]}…`;
     if (header) { header.onclick = null; header.style.cursor = 'default'; }
-    if (callBtn) callBtn.style.display = 'none';
+    if (callBtn) {
+      callBtn.style.display = 'flex';
+      callBtn.title = `Call ${party.name}`;
+      callBtn.onclick = function() { window.callCurrentChatParty(); };
+    }
     const quick = document.getElementById('chatQuickReplies');
     if (quick) {
       quick.innerHTML = [
@@ -2123,10 +2573,46 @@
   function appendMine(text) {
     const stream = document.getElementById('chatStream');
     if (!stream) return;
+    const empty = document.getElementById('chatEmptyState');
+    if (empty) empty.remove();
+
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble parent';
-    bubble.innerHTML = `${esc(text)}<div class="chat-timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
+    bubble.innerHTML = `
+      <div class="chat-bubble-text">${esc(text)}</div>
+      <div class="chat-timestamp">${timeStr} <i data-lucide="check-check" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-left:2px;opacity:0.85;"></i></div>
+      <div class="chat-bubble-actions">
+        <button type="button" class="bubble-act-btn" onclick="copyChatMessageText(this)" title="Copy message" aria-label="Copy"><i data-lucide="copy"></i></button>
+        <button type="button" class="bubble-act-btn danger" onclick="deleteIndividualChatMessage(this)" title="Delete message" aria-label="Delete"><i data-lucide="trash-2"></i></button>
+        <button type="button" class="bubble-act-btn" onclick="reactToChatMessage(this, '👍')" title="Thumbs up" aria-label="React"><span>👍</span></button>
+      </div>
+    `;
     stream.appendChild(bubble);
+    icons();
+    stream.scrollTop = stream.scrollHeight;
+  }
+
+  function appendTheirs(text) {
+    const stream = document.getElementById('chatStream');
+    if (!stream) return;
+    const empty = document.getElementById('chatEmptyState');
+    if (empty) empty.remove();
+
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble provider';
+    bubble.innerHTML = `
+      <div class="chat-bubble-text">${esc(text)}</div>
+      <div class="chat-timestamp">${timeStr}</div>
+      <div class="chat-bubble-actions">
+        <button type="button" class="bubble-act-btn" onclick="copyChatMessageText(this)" title="Copy message" aria-label="Copy"><i data-lucide="copy"></i></button>
+        <button type="button" class="bubble-act-btn danger" onclick="deleteIndividualChatMessage(this)" title="Delete message" aria-label="Delete"><i data-lucide="trash-2"></i></button>
+        <button type="button" class="bubble-act-btn" onclick="reactToChatMessage(this, '👍')" title="Thumbs up" aria-label="React"><span>👍</span></button>
+      </div>
+    `;
+    stream.appendChild(bubble);
+    icons();
     stream.scrollTop = stream.scrollHeight;
   }
 
@@ -2273,6 +2759,168 @@
     }
     persist();
   }
+
+  /* ==========================================================
+     Spec 4.8 Post-Walk Rating Prompt (WalkShare Rates Parent)
+     ========================================================== */
+  let wsParentStars = 5;
+  let wsParentTags = [];
+  let wsCurrentRateMeta = null;
+
+  window.openWalkShareRateParentModal = function (meta) {
+    wsCurrentRateMeta = meta || {
+      bookingId: 'WS-88421',
+      parentName: 'Sadia Khan',
+      parentId: 'PRNT-9042',
+      parentPhoto: '/assets/avatar_sadia.jpg',
+      childNames: 'Arman & Emma',
+      route: 'Annex Corridor → Greenfield Elementary'
+    };
+    wsParentStars = 5;
+    wsParentTags = [];
+
+    let modal = document.getElementById('modal-walkShareRateParent');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'modal-walkShareRateParent';
+      modal.className = 'safety-modal-overlay';
+      modal.style.cssText = 'position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:99999; display:flex; align-items:flex-end; justify-content:center; backdrop-filter:blur(4px);';
+      document.body.appendChild(modal);
+    }
+
+    const parentName = wsCurrentRateMeta.parentName || 'Sadia Khan';
+    const parentPhoto = wsCurrentRateMeta.parentPhoto || '/assets/avatar_sadia.jpg';
+    const children = wsCurrentRateMeta.childNames || 'Arman (Gr 2) & Emma (JK)';
+    const route = wsCurrentRateMeta.route || 'Annex Corridor → Greenfield Elementary';
+
+    modal.innerHTML = `
+      <div class="safety-pin-modal-card" style="max-width:430px; width:100%; margin:0 auto; background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 28px; box-sizing:border-box; animation:slideUp 0.25s cubic-bezier(0.16,1,0.3,1);">
+        <!-- Top bar with close button -->
+        <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+          <button type="button" onclick="closeWalkShareRateParentModal()" style="width:32px; height:32px; border-radius:50%; background:#F1F5F9; border:none; color:#64748B; display:flex; align-items:center; justify-content:center; cursor:pointer;" aria-label="Close">
+            <i data-lucide="x" style="width:18px;height:18px;"></i>
+          </button>
+        </div>
+
+        <!-- Clean Profile Hero -->
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px;">
+          <div style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); margin-bottom: 10px;">
+            <img src="${parentPhoto}" alt="${esc(parentName)}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />
+          </div>
+          <h2 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0 0 4px;">${esc(parentName)}</h2>
+          <p style="font-size: 13px; font-weight: 600; color: #64748B; margin: 0 0 2px;">Children: ${esc(children)}</p>
+          <p style="font-size: 12px; color: #94A3B8; margin: 0;">${esc(route)}</p>
+        </div>
+
+        <!-- 1. Star Rating -->
+        <div style="text-align: center; margin-bottom: 20px;">
+          <p style="font-size: 13px; font-weight: 700; color: #475569; margin: 0 0 10px;">How was the walk & handover? <span style="color:#EF4444;">*</span></p>
+          <div id="wsRateParentStarsRow" style="display: flex; justify-content: center; gap: 14px; font-size: 38px; cursor: pointer;">
+            <span class="rate-star" data-val="1" onclick="setWalkShareParentRatingStars(1)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+            <span class="rate-star" data-val="2" onclick="setWalkShareParentRatingStars(2)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+            <span class="rate-star" data-val="3" onclick="setWalkShareParentRatingStars(3)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+            <span class="rate-star" data-val="4" onclick="setWalkShareParentRatingStars(4)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+            <span class="rate-star" data-val="5" onclick="setWalkShareParentRatingStars(5)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+          </div>
+          <div id="wsRateParentSentiment" style="font-size: 13px; font-weight: 700; color: #1E293B; margin-top: 8px;">5.0 · Punctual & Cooperative Parent</div>
+        </div>
+
+        <!-- 2. Quick Highlights Tags -->
+        <div style="margin-bottom: 18px;">
+          <p style="font-size: 12.5px; font-weight: 700; color: #475569; margin: 0 0 8px;">What went well</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            ${['⏰ On Time', '🎒 High-Vis Ready', '🤝 Smooth Handover', '💬 Responsive', '🚪 School Gate Staff Alerted'].map(tag => `
+              <button type="button" class="review-tag-chip" onclick="toggleWsParentTag(this, '${tag}')" style="padding: 7px 14px; border-radius: 99px; font-size: 12px; font-weight: 700; border: 1px solid #CBD5E1; background: #FFFFFF; color: #475569; cursor: pointer; transition: all 0.15s;">
+                ${tag}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 3. Notes / Comments -->
+        <div style="margin-bottom: 22px;">
+          <label for="wsParentReviewComment" style="font-size: 12.5px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">
+            Comment <span style="font-weight: 400; color: #94A3B8;">(Optional)</span>
+          </label>
+          <textarea id="wsParentReviewComment" rows="3" placeholder="Any feedback about the curbside handover or walking group readiness..." style="width: 100%; border-radius: 12px; border: 1.5px solid #E2E8F0; padding: 10px 14px; font-size: 13.5px; font-family: inherit; resize: none; box-sizing: border-box;"></textarea>
+        </div>
+
+        <!-- Submit & Skip Actions -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button type="button" class="btn-primary" onclick="submitWsParentRating()" style="width: 100%; height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">Submit Rating</button>
+          <button type="button" class="btn-secondary-link" onclick="closeWalkShareRateParentModal()" style="width: 100%; text-align: center; font-size: 13px; color: #64748B; background: none; border: none; padding: 8px; cursor: pointer;">Skip for now</button>
+        </div>
+      </div>
+    `;
+    modal.style.display = 'flex';
+    icons();
+  };
+
+  window.closeWalkShareRateParentModal = function () {
+    const modal = document.getElementById('modal-walkShareRateParent');
+    if (modal) modal.style.display = 'none';
+  };
+
+  window.setWalkShareParentRatingStars = function (val) {
+    wsParentStars = Number(val);
+    const row = document.getElementById('wsRateParentStarsRow');
+    if (row) {
+      const stars = row.querySelectorAll('.rate-star');
+      stars.forEach((s) => {
+        const v = Number(s.getAttribute('data-val'));
+        s.textContent = v <= val ? '★' : '☆';
+        s.style.color = v <= val ? '#F59E0B' : '#CBD5E1';
+      });
+    }
+    const sentimentEl = document.getElementById('wsRateParentSentiment');
+    const sentiments = {
+      1: '1.0 · Major Delay / Handover Issue',
+      2: '2.0 · Needs Better Group Readiness',
+      3: '3.0 · Average Handover',
+      4: '4.0 · Good & Cooperative Parent',
+      5: '5.0 · Punctual & Cooperative Parent'
+    };
+    if (sentimentEl) sentimentEl.textContent = sentiments[val] || `${val}.0`;
+  };
+
+  window.toggleWsParentTag = function (btn, tag) {
+    btn.classList.toggle('selected');
+    if (btn.classList.contains('selected')) {
+      btn.style.background = '#EFF6FF';
+      btn.style.borderColor = '#1B2B68';
+      btn.style.color = '#1B2B68';
+      if (!wsParentTags.includes(tag)) wsParentTags.push(tag);
+    } else {
+      btn.style.background = '#FFFFFF';
+      btn.style.borderColor = '#CBD5E1';
+      btn.style.color = '#475569';
+      wsParentTags = wsParentTags.filter(t => t !== tag);
+    }
+  };
+
+  window.submitWsParentRating = function () {
+    const stars = Number(wsParentStars || 5);
+    const comment = (document.getElementById('wsParentReviewComment')?.value || '').trim();
+    const tags = wsParentTags.slice();
+    const meta = wsCurrentRateMeta || {};
+    const parentName = meta.parentName || 'Sadia Khan';
+    const parentId = meta.parentId || 'PRNT-9042';
+
+    if (!state().parentFeedback) state().parentFeedback = [];
+    state().parentFeedback.push({
+      id: 'ws-fb-' + Date.now(),
+      parentId: parentId,
+      parentName: parentName,
+      service: 'walkshare',
+      rating: stars,
+      date: 'Today',
+      comment: comment,
+      tags: tags
+    });
+    persist();
+    closeWalkShareRateParentModal();
+    toast(`★ ${stars}-star rating submitted for ${parentName}!`);
+  };
 
   window.ingestWalkShareBooking = ingestWalkShareBooking;
 

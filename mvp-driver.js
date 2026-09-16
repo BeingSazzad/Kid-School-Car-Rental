@@ -32,7 +32,6 @@
   ];
   const DEMO_CHATS = {
     'PRNT-9042': [
-      { type: 'system', text: 'In-app messages only · phone stays private' },
       { type: 'provider', text: 'Sadia here — Arman and Emma will be at the porch with backpacks.', time: '07:25 AM' },
       { type: 'parent', text: 'Thanks. I’m on the way in the Sienna — about 4 minutes out.', time: '07:26 AM' },
       { type: 'system', text: 'Driver arrived at Home (12 Elm Street) · 07:30 AM', tone: 'amber' },
@@ -853,13 +852,6 @@
 
   window.getDriverLanding = function () {
     const d = ensureDriver();
-    if (!d.onboarding.profile) return 'driverOnboardProfile';
-    if (!d.onboarding.vehicle) return 'driverOnboardVehicle';
-    if (!d.onboarding.docs) return 'driverOnboardDocs';
-    if (!d.onboarding.availability) return 'driverOnboardAvailability';
-    if (!d.onboarding.rate) return 'driverOnboardRate';
-    if (!isApproved(d)) return 'driverPending';
-    // Subscription stays inside Profile — never block signup/onboarding
     if (!hasAccess(d)) {
       d.subscription = d.subscription || {};
       d.subscription.status = 'trial';
@@ -896,21 +888,12 @@
     if (role === 'parent' && DRIVER_ONLY.has(name)) return 'home';
     if (role !== 'driver') return name;
     if (name === 'tracking') {
-      return ensureDriver().activeTripStage > 0 ? 'driverActiveTrip' : window.getDriverLanding();
+      return ensureDriver().activeTripStage > 0 ? 'driverActiveTrip' : 'driverHome';
     }
     if (name === 'profile' || name === 'profilePersonalInfo') return 'driverProfile';
     if (name === 'subscription' || name === 'profilePayments') return 'driverSubscription';
-    if (name === 'home' || name === 'bookings' || name === 'myChildren' || PARENT_ONLY.has(name) || String(name).indexOf('booking') === 0) {
-      return window.getDriverLanding();
-    }
-    if (DRIVER_ONLY.has(name)) {
-      if (name === 'driverHome' || name === 'driverRequests' || name === 'driverSchedule' || name === 'driverActiveTrip' || name === 'driverTripPrep') {
-        const land = window.getDriverLanding();
-        if (land !== 'driverHome') return land;
-      }
-      return name;
-    }
-    if (SHARED.has(name) || name === 'rating') return name;
+    if (name === 'home') return 'driverHome';
+    if (name === 'bookings') return 'driverSchedule';
     return name;
   }
 
@@ -1083,16 +1066,11 @@
   };
 
   window.leaveDriverGate = function () {
-    // Never switch to Parent. In-app Back stays inside the Driver shell.
     if (window.navReturnStack && window.navReturnStack.length) {
       window.backNested('driverProfile');
       return;
     }
-    if (fromProfileEdit() || onboardingDone(ensureDriver())) {
-      window.navigateTo('driverProfile', true);
-      return;
-    }
-    window.navigateTo(state().driverEntryFromAuth ? 'authWelcome' : 'driverSetup', true);
+    window.navigateTo('driverProfile', true);
   };
 
   function fromProfileEdit() {
@@ -1164,6 +1142,10 @@
   function field(label, control, icon) {
     const ic = icon ? `<i data-lucide="${icon}" class="input-box-icon"></i>` : '';
     return `<div class="form-group"><label class="form-label">${label}</label><div class="input-box-wrapper">${ic}${control}</div></div>`;
+  }
+
+  function textareaField(label, id, value, placeholder, rows = 3) {
+    return `<div class="form-group"><label class="form-label" for="${id}">${label}</label><textarea class="form-textarea" id="${id}" rows="${rows}" placeholder="${placeholder}">${value}</textarea></div>`;
   }
 
   function selectField(label, inner) {
@@ -1261,21 +1243,74 @@
     bindChildBack(el, "leaveDriverGate()");
     el.innerHTML = `
       ${editing ? '' : stepIntro(1, 5, 'Who you are', 'Name and service area parents will see.')}
-      <div class="drv-photo-hero">
-        <div class="drv-photo-wrap">
-          <img src="${esc(d.photo || '/assets/avatar_tariq.jpg')}" alt="${esc(d.name)}" id="drvProfileImg" onerror="this.src='/assets/avatar_tariq.jpg'" />
-          <button type="button" class="drv-photo-cam" onclick="document.getElementById('drvPhotoFile').click()" aria-label="Change photo">
-            <i data-lucide="camera"></i>
+      
+      <!-- Avatar Hero with Name & Verified Badge -->
+      <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 16px;">
+        <div style="position: relative;">
+          <div class="drv-photo-wrap" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12);">
+            <img src="${esc(d.photo || '/assets/avatar_tariq.jpg')}" alt="${esc(d.name)}" id="drvProfileImg" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+          </div>
+          <button type="button" class="drv-photo-cam" onclick="document.getElementById('drvPhotoFile').click()" aria-label="Change photo" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-primary, #1B2B68); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+            <i data-lucide="camera" style="width:13px;height:13px;"></i>
           </button>
-          <input type="file" accept="image/*" id="drvPhotoFile" class="drv-file-input" onchange="onDriverProfilePhoto(event)" />
+          <input type="file" accept="image/*" id="drvPhotoFile" class="drv-file-input" onchange="onDriverProfilePhoto(event)" style="display:none;" />
+        </div>
+        <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;">
+          <span>${esc(d.name || 'Ahmed Asik')}</span>
+          <span class="fb-verified-badge" title="Verified Account">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#1877F2">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
+            </svg>
+          </span>
         </div>
       </div>
-      ${field('Legal name', `<input class="form-input" id="drvName" value="${esc(d.name)}" placeholder="Tariq Ahmed" />`, 'user')}
-      ${field('Phone', `<input class="form-input" id="drvPhone" value="${esc(d.phone)}" placeholder="+1 (416) 555-0182" />`, 'phone')}
-      ${field('Email', `<input class="form-input" id="drvEmail" value="${esc(d.email)}" placeholder="name@email.com" />`, 'mail')}
-      ${field('Service area', `<input class="form-input" id="drvArea" value="${esc(d.serviceArea || '')}" placeholder="e.g. Greenfield / Midtown" />`, 'map-pin')}
-      <div class="drv-actions-col"><button type="button" class="btn-primary" onclick="saveDriverOnboardProfile()">${editing ? 'Save' : 'Continue'}</button></div>
+
+      <!-- Unified Driver Profile Details Card -->
+      <div class="profile-form-section-card" style="margin-bottom: 16px;">
+        <div class="form-group">
+          <label class="form-label">Full Legal Name</label>
+          <div class="input-box-wrapper">
+            <input type="text" class="form-input" id="drvName" value="${esc(d.name)}" placeholder="Ahmed Asik" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <div class="phone-input-row" style="border: 1.5px solid #E2E8F0; border-radius: 10px; background: #fff; height: 44px; overflow: hidden; display: flex; align-items: center; padding: 0; gap: 0; transition: border-color 0.15s;" onfocusin="this.style.borderColor='var(--color-primary)'" onfocusout="this.style.borderColor='#E2E8F0'">
+            <div class="country-pill" style="cursor: pointer; border-right: 1.5px solid #E2E8F0; border-radius: 0; height: 100%; padding: 0 10px; background: #F8FAFC; display: flex; align-items: center; gap: 5px; flex-shrink: 0; min-width: 64px; justify-content: center;">
+              <span style="font-size: 16px; line-height: 1;">🇨🇦</span>
+              <span style="font-size: 12px; font-weight: 700; color: #334155; letter-spacing: -0.2px;">+1</span>
+              <i data-lucide="chevron-down" style="width:11px;height:11px;color:#94A3B8;flex-shrink:0;"></i>
+            </div>
+            <input type="tel" class="form-input" id="drvPhone" value="${esc(d.phone)}" placeholder="(416) 555-0192" style="border: none; border-radius: 0; padding: 0 12px; height: 100%; flex: 1; background: transparent;" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="input-box-wrapper">
+            <input type="email" class="form-input" id="drvEmail" value="${esc(d.email)}" placeholder="sadia.khan@example.com" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Service Area</label>
+          <div class="input-box-wrapper">
+            <input type="text" class="form-input" id="drvArea" value="${esc(d.serviceArea || '12 Elm Street, Toronto, ON')}" placeholder="12 Elm Street, Toronto, ON" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">About / Bio (Shown to parents)</label>
+          <textarea class="form-textarea" id="drvBio" rows="3" placeholder="Tell parents about your driving experience, focus on child safety, boosters, and calm school rides...">${esc(d.bio || d.about || 'Provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.')}</textarea>
+        </div>
+      </div>
+
+      <div class="drv-actions-col">
+        <button type="button" class="btn-primary" onclick="saveDriverOnboardProfile()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">Save Changes</button>
+      </div>
     `;
+    icons();
   }
 
   window.onDriverProfilePhoto = function (event) {
@@ -1285,6 +1320,7 @@
       const d = ensureDriver();
       d.photoName = meta.name;
       if (meta.preview) d.photo = meta.preview;
+      syncDriverToProviders();
       persist();
       const img = document.getElementById('drvProfileImg');
       if (img && meta.preview) img.src = meta.preview;
@@ -1298,15 +1334,17 @@
     d.phone = val('drvPhone') || d.phone;
     d.email = val('drvEmail') || d.email;
     d.serviceArea = val('drvArea') || d.serviceArea;
-    const provider = (state().providers || []).find((p) => p.id === 'tariq');
-    if (provider) {
-      provider.zone = window.H2SZone ? window.H2SZone.clean(d.serviceArea) : d.serviceArea;
-      provider.serviceArea = d.serviceArea;
-    }
+    d.bio = val('drvBio') || d.bio;
+    d.about = d.bio;
     d.onboarding.profile = true;
+    syncDriverToProviders();
     persist();
-    if (finishNestedOr()) return;
-    window.navigateTo(editingProfileChild() ? 'driverProfile' : 'driverOnboardVehicle');
+    toast('Profile saved');
+    if (window.navReturnStack && window.navReturnStack.length) {
+      window.backNested('driverProfile');
+    } else {
+      window.navigateTo('driverProfile', true);
+    }
   };
 
   function renderOnboardVehicle() {
@@ -1323,34 +1361,36 @@
     const thumb = hasCustomPhoto && v.photo ? v.photo : '';
     el.innerHTML = `
       ${editing ? '' : stepIntro(2, 5, 'One vehicle', 'Vehicle parents will see.')}
-      ${selectField('Type', `<select class="form-select" id="drvVType">${['Minivan', 'SUV', 'Sedan', 'Wagon'].map((t) => `<option ${v.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>`)}
-      <div class="drv-window-row">
-        ${field('Make', `<input class="form-input" id="drvVMake" value="${esc(v.make)}" placeholder="Toyota" />`)}
-        ${field('Model', `<input class="form-input" id="drvVModel" value="${esc(v.model)}" placeholder="Sienna" />`)}
-      </div>
-      <div class="drv-window-row">
-        ${field('Year', `<input class="form-input" id="drvVYear" value="${esc(v.year)}" placeholder="2023" />`)}
-        ${field('Colour', `<input class="form-input" id="drvVColor" value="${esc(v.color)}" placeholder="Celestial Silver" />`)}
-      </div>
-      <div class="drv-window-row">
-        ${field('Plate', `<input class="form-input" id="drvVPlate" value="${esc(v.plate)}" placeholder="SCH-4091" />`)}
-        ${field('Seats', `<input class="form-input" id="drvVSeats" type="number" min="1" max="8" value="${esc(v.capacity)}" placeholder="4" />`)}
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="drvVehicleFile">Vehicle photo</label>
-        <label class="drv-upload-tile" for="drvVehicleFile">
-          ${thumb
-            ? `<img class="drv-upload-thumb" src="${esc(thumb)}" alt="" />`
-            : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="upload"></i></span>`}
-          <span class="drv-upload-copy">
-            <span class="drv-upload-name">${esc(photoName)}</span>
-            <span class="drv-upload-hint">${esc(photoHint)}</span>
-          </span>
-        </label>
-        <input type="file" accept="image/*" capture="environment" id="drvVehicleFile" class="drv-file-input" onchange="onDriverVehiclePhoto(event)" />
+      <div class="profile-form-section-card" style="margin-bottom: 16px;">
+        ${selectField('Type', `<select class="form-select" id="drvVType">${['Minivan', 'SUV', 'Sedan', 'Wagon'].map((t) => `<option ${v.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>`)}
+        <div class="drv-window-row">
+          ${field('Make', `<input class="form-input" id="drvVMake" value="${esc(v.make)}" placeholder="Toyota" />`)}
+          ${field('Model', `<input class="form-input" id="drvVModel" value="${esc(v.model)}" placeholder="Sienna" />`)}
+        </div>
+        <div class="drv-window-row">
+          ${field('Year', `<input class="form-input" id="drvVYear" value="${esc(v.year)}" placeholder="2023" />`)}
+          ${field('Colour', `<input class="form-input" id="drvVColor" value="${esc(v.color)}" placeholder="Celestial Silver" />`)}
+        </div>
+        <div class="drv-window-row">
+          ${field('Plate', `<input class="form-input" id="drvVPlate" value="${esc(v.plate)}" placeholder="SCH-4091" />`)}
+          ${field('Seats', `<input class="form-input" id="drvVSeats" type="number" min="1" max="8" value="${esc(v.capacity)}" placeholder="4" />`)}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="drvVehicleFile">Vehicle photo</label>
+          <label class="drv-upload-tile" for="drvVehicleFile">
+            ${thumb
+              ? `<img class="drv-upload-thumb" src="${esc(thumb)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
+              : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="upload"></i></span>`}
+            <span class="drv-upload-copy">
+              <span class="drv-upload-name">${esc(photoName)}</span>
+              <span class="drv-upload-hint">${esc(photoHint)}</span>
+            </span>
+          </label>
+          <input type="file" accept="image/*" capture="environment" id="drvVehicleFile" class="drv-file-input" onchange="onDriverVehiclePhoto(event)" />
+        </div>
       </div>
       <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveDriverVehicle()">${editing ? 'Save' : 'Continue'}</button>
+        <button type="button" class="btn-primary" onclick="saveDriverVehicle()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Save Changes' : 'Continue'}</button>
       </div>
     `;
     icons();
@@ -1369,6 +1409,7 @@
       const d = ensureDriver();
       d.vehicle.photoName = meta.name || 'Vehicle photo';
       if (meta.preview) d.vehicle.photo = meta.preview;
+      syncDriverToProviders();
       persist();
       input.value = '';
       renderOnboardVehicle();
@@ -1392,6 +1433,7 @@
     const reg = d.documents.find((doc) => doc.id === 'registration');
     if (reg && (!reg.plate || reg.plate === prevPlate)) reg.plate = d.vehicle.plate;
     d.onboarding.vehicle = true;
+    syncDriverToProviders();
     persist();
     if (finishNestedOr()) return;
     window.navigateTo(editingProfileChild() ? 'driverProfile' : 'driverOnboardDocs');
@@ -1484,7 +1526,7 @@
     const name = attached ? (file.name || 'File attached') : 'Tap to upload';
     const inputId = `drvUpload_${key}`;
     const thumb = attached && file.preview && String(file.preview).indexOf('data:') === 0
-      ? `<img class="drv-upload-thumb" src="${esc(file.preview)}" alt="" />`
+      ? `<img class="drv-upload-thumb" src="${esc(file.preview)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
       : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="${attached ? 'file-check' : 'upload'}"></i></span>`;
     return `
       <div class="form-group">
@@ -1717,6 +1759,7 @@
     saved.status = next;
     if (next !== 'action_required' && next !== 'rejected') saved.rejectReason = '';
     d.documents[idx] = Object.assign({}, d.documents[idx], saved);
+    syncDriverToProviders();
     persist();
     toast(next === 'under_review' ? 'Submitted for review' : 'Document saved');
     returnToDocList();
@@ -1734,6 +1777,7 @@
       return;
     }
     d.onboarding.docs = true;
+    syncDriverToProviders();
     persist();
     if (finishNestedOr()) return;
     window.navigateTo('driverOnboardAvailability');
@@ -1754,18 +1798,57 @@
 
   function resetAvailDraft() {
     const d = ensureDriver();
-    const w = d.availability.windows;
+    const w = d.availability && d.availability.windows ? d.availability.windows : defaultAvailWindows();
     availDraft = {
-      morningOn: w[0].enabled !== false,
-      afternoonOn: w[1].enabled !== false,
-      morningStart: w[0].start,
-      morningEnd: w[0].end,
-      afternoonStart: w[1].start,
-      afternoonEnd: w[1].end,
-      exceptions: (d.availability.exceptions || []).slice(),
+      days: (d.availability && d.availability.weekly && d.availability.weekly.length ? d.availability.weekly : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']).slice(),
+      morningOn: w[0] ? w[0].enabled !== false : true,
+      afternoonOn: w[1] ? w[1].enabled !== false : true,
+      morningStart: w[0] ? w[0].start : '06:30',
+      morningEnd: w[0] ? w[0].end : '09:00',
+      afternoonStart: w[1] ? w[1].start : '13:00',
+      afternoonEnd: w[1] ? w[1].end : '16:30',
+      scheduleType: (d.availability && d.availability.scheduleType) || 'recurring',
+      exceptions: (d.availability && d.availability.exceptions ? d.availability.exceptions : []).slice(),
       pendingDate: ''
     };
   }
+
+  window.toggleDriverAvailDay = function (day) {
+    if (!availDraft) resetAvailDraft();
+    const idx = availDraft.days.indexOf(day);
+    if (idx !== -1) {
+      if (availDraft.days.length > 1) {
+        availDraft.days.splice(idx, 1);
+      } else {
+        toast('At least one active service day is required', 'warning');
+        return;
+      }
+    } else {
+      availDraft.days.push(day);
+    }
+    paintAvailability();
+  };
+
+  window.toggleDriverShift = function (shift) {
+    if (!availDraft) resetAvailDraft();
+    if (shift === 'morning') {
+      availDraft.morningOn = !availDraft.morningOn;
+    } else if (shift === 'afternoon') {
+      availDraft.afternoonOn = !availDraft.afternoonOn;
+    }
+    if (!availDraft.morningOn && !availDraft.afternoonOn) {
+      if (shift === 'morning') availDraft.afternoonOn = true;
+      else availDraft.morningOn = true;
+      toast('At least one shift must remain active', 'warning');
+    }
+    paintAvailability();
+  };
+
+  window.setDriverScheduleType = function (type) {
+    if (!availDraft) resetAvailDraft();
+    availDraft.scheduleType = type;
+    paintAvailability();
+  };
 
   function isoToMdY(iso) {
     const parts = String(iso || '').split('-');
@@ -1774,8 +1857,8 @@
   }
 
   function availTimeField(key) {
-    return `<button type="button" class="drv-time-field" onclick="openDriverAvailTime('${key}')">
-      <span class="drv-time-field-value">${esc(toLabel(availDraft[key]))}</span>
+    return `<button type="button" class="avail-time-btn" onclick="openDriverAvailTime('${key}')">
+      <span class="avail-time-val">${esc(toLabel(availDraft[key]))}</span>
       <i data-lucide="clock"></i>
     </button>`;
   }
@@ -1797,12 +1880,12 @@
 
   function exceptionChips() {
     const list = availDraft.exceptions || [];
-    if (!list.length) return '<p class="drv-lede" id="drvExceptionList">No exceptions yet</p>';
-    return `<div class="drv-exception-list" id="drvExceptionList">${list.map((iso) => `
-      <span class="drv-exception-chip">
+    if (!list.length) return '<p class="drv-lede" id="drvExceptionList" style="font-size:12px; color:#94A3B8; margin:4px 0;">No date exceptions set</p>';
+    return `<div class="drv-exception-list" id="drvExceptionList" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">${list.map((iso) => `
+      <span class="drv-exception-chip" style="display:inline-flex; align-items:center; gap:6px; background:#F1F5F9; border:1px solid #E2E8F0; padding:4px 10px; border-radius:99px; font-size:12px; font-weight:700; color:#334155;">
         <span>${esc(isoToMdY(iso))}</span>
-        <button type="button" class="drv-exception-remove" onclick="removeDriverException('${esc(iso)}')" aria-label="Remove exception">
-          <i data-lucide="x"></i>
+        <button type="button" class="drv-exception-remove" onclick="removeDriverException('${esc(iso)}')" aria-label="Remove exception" style="border:none; background:none; cursor:pointer; display:flex; align-items:center; color:#94A3B8; padding:0;">
+          <i data-lucide="x" style="width:12px; height:12px;"></i>
         </button>
       </span>`).join('')}</div>`;
   }
@@ -1896,27 +1979,110 @@
     const el = feed('driverOnboardAvailabilityFeed');
     if (!el) return;
     ensureAvailSheets();
-    bindChildTitle(el, 'Availability');
-    bindChildBack(el, "navigateTo('driverOnboardDocs')");
     const editing = editingProfileChild();
-    if (editing) {
-      bindChildBack(el, "navigateTo('driverProfile')");
-    }
+    bindChildTitle(el, editing ? 'Edit availability' : 'Availability');
+    bindChildBack(el, editing ? "navigateTo('driverProfile')" : "navigateTo('driverOnboardDocs')");
+
+    const ALL_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const activeDays = availDraft.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+
     el.innerHTML = `
-      <div class="drv-avail-card">
-        <div class="drv-avail-row">
-          <span>Active Service Days</span>
-          <strong>${(availDraft.days || []).join(', ') || 'Mon-Fri'}</strong>
-        </div>
-        <div class="drv-avail-row">
-          <span>Morning Shift</span>
-          <strong>${availDraft.morningStart || '07:00'} - ${availDraft.morningEnd || '09:00'}</strong>
-        </div>
-        <div class="drv-avail-row">
-          <span>Afternoon Shift</span>
-          <strong>${availDraft.afternoonStart || '14:30'} - ${availDraft.afternoonEnd || '17:00'}</strong>
-        </div>
+      ${editing ? '' : stepIntro(4, 5, 'Driving schedule', 'Set your active days, shift windows, and school term availability.')}
+      
+      <!-- Schedule Type (Recurring vs One-time) -->
+      <h3 class="avail-section-heading">Schedule type</h3>
+      <div class="avail-type-grid">
+        <button type="button" class="avail-type-btn ${availDraft.scheduleType !== 'onetime' ? 'active' : ''}" onclick="setDriverScheduleType('recurring')">
+          <i data-lucide="repeat"></i>
+          <span>Recurring</span>
+        </button>
+        <button type="button" class="avail-type-btn ${availDraft.scheduleType === 'onetime' ? 'active' : ''}" onclick="setDriverScheduleType('onetime')">
+          <i data-lucide="calendar"></i>
+          <span>One-time / Flexible</span>
+        </button>
       </div>
+
+      <!-- Service Days -->
+      <h3 class="avail-section-heading">Service days</h3>
+      <div class="avail-days-row">
+        ${ALL_DAYS.map((d) => {
+          const active = activeDays.includes(d);
+          return `<button type="button" class="avail-day-pill ${active ? 'active' : ''}" onclick="toggleDriverAvailDay('${d}')">${d}</button>`;
+        }).join('')}
+      </div>
+
+      <!-- Time Windows -->
+      <h3 class="avail-section-heading">Time windows</h3>
+      
+      <!-- Morning Drop-off Card -->
+      <div class="avail-window-card">
+        <div class="avail-window-head">
+          <div class="avail-window-title-wrap">
+            <div class="avail-window-icon-badge">
+              <i data-lucide="sunrise"></i>
+            </div>
+            <span class="avail-window-title">Morning drop-off</span>
+          </div>
+          <div class="avail-toggle-switch" onclick="event.preventDefault(); toggleDriverShift('morning');">
+            <span class="avail-toggle-slider ${availDraft.morningOn ? 'active' : ''}"></span>
+          </div>
+        </div>
+        ${availDraft.morningOn ? `
+          <div class="avail-time-inputs-grid">
+            <div class="avail-time-col">
+              <span class="avail-time-label">From</span>
+              <button type="button" class="avail-time-btn" onclick="openDriverAvailTime('morningStart')">
+                <span class="avail-time-val">${esc(toLabel(availDraft.morningStart))}</span>
+                <i data-lucide="clock"></i>
+              </button>
+            </div>
+            <div class="avail-time-col">
+              <span class="avail-time-label">To</span>
+              <button type="button" class="avail-time-btn" onclick="openDriverAvailTime('morningEnd')">
+                <span class="avail-time-val">${esc(toLabel(availDraft.morningEnd))}</span>
+                <i data-lucide="clock"></i>
+              </button>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- Afternoon Pickup Card -->
+      <div class="avail-window-card">
+        <div class="avail-window-head">
+          <div class="avail-window-title-wrap">
+            <div class="avail-window-icon-badge">
+              <i data-lucide="sun"></i>
+            </div>
+            <span class="avail-window-title">Afternoon pickup</span>
+          </div>
+          <div class="avail-toggle-switch" onclick="event.preventDefault(); toggleDriverShift('afternoon');">
+            <span class="avail-toggle-slider ${availDraft.afternoonOn ? 'active' : ''}"></span>
+          </div>
+        </div>
+        ${availDraft.afternoonOn ? `
+          <div class="avail-time-inputs-grid">
+            <div class="avail-time-col">
+              <span class="avail-time-label">From</span>
+              <button type="button" class="avail-time-btn" onclick="openDriverAvailTime('afternoonStart')">
+                <span class="avail-time-val">${esc(toLabel(availDraft.afternoonStart))}</span>
+                <i data-lucide="clock"></i>
+              </button>
+            </div>
+            <div class="avail-time-col">
+              <span class="avail-time-label">To</span>
+              <button type="button" class="avail-time-btn" onclick="openDriverAvailTime('afternoonEnd')">
+                <span class="avail-time-val">${esc(toLabel(availDraft.afternoonEnd))}</span>
+                <i data-lucide="clock"></i>
+              </button>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+
+      <button type="button" class="avail-save-btn" onclick="saveDriverAvailability()">
+        ${editing ? 'Save availability' : 'Continue to Rates'}
+      </button>
     `;
     icons();
   }
@@ -2047,35 +2213,247 @@
     paintAvailability();
   };
 
-  function syncTariqProviderAvailability() {
-    const d = state().driver;
-    if (!d || !d.availability) return;
-    const provider = (state().providers || []).find((p) => p.id === 'tariq');
-    if (provider) provider.availability = d.availability;
+  function reflectDriverToDOM(d, provider) {
+    if (typeof document === 'undefined') return;
+
+    // A. Provider Search Card (Parent Search Results List)
+    const card = document.querySelector(`.provider-result-card[data-provider-id="${provider.id || 'tariq'}"]`);
+    if (card) {
+      const img = card.querySelector('.provider-card-avatar, .pcm-avatar');
+      if (img && provider.photo) {
+        img.src = provider.photo;
+        img.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
+      }
+      const nameEl = card.querySelector('.pcm-name, .provider-name-verified span');
+      if (nameEl) nameEl.textContent = provider.name;
+
+      const verifiedIcon = card.querySelector('.pcm-verified-badge, .pcs-verified-icon');
+      if (verifiedIcon) {
+        verifiedIcon.style.display = provider.verified ? 'inline-flex' : 'none';
+      }
+
+      const ratingEl = card.querySelector('.pcm-rating-val, .rating-badge');
+      if (ratingEl) {
+        ratingEl.innerHTML = `<span class="pcm-star pcs-star" aria-hidden="true">★</span> ${Number(provider.rating || 4.9).toFixed(1)}`;
+      }
+
+      const zoneEl = card.querySelector('.pcm-zone-name, .pcs-zone');
+      if (zoneEl) zoneEl.textContent = (provider.serviceArea || provider.zone || 'Greenfield').split('/')[0].trim();
+
+      const vNameEl = card.querySelector('.pcm-vehicle-name');
+      if (vNameEl) {
+        const vMake = d.vehicle?.make || 'Toyota';
+        const vModel = d.vehicle?.model || 'Sienna';
+        vNameEl.textContent = `${vMake} ${vModel}`;
+      }
+    }
+
+    // B. Provider Details Page (if open or viewing Tariq)
+    if (window.currentDriverProfileId === provider.id || window.currentDriverProfileId === 'tariq') {
+      const pImg = document.getElementById('detailsProviderImg');
+      if (pImg && provider.photo) {
+        pImg.src = provider.photo;
+        pImg.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
+      }
+      const pName = document.getElementById('detailsProviderName');
+      if (pName) pName.textContent = provider.name;
+
+      const pRating = document.getElementById('detailsProviderRatingVal');
+      if (pRating) pRating.textContent = '★ ' + Number(provider.rating || 4.9).toFixed(1);
+
+      const pZone = document.getElementById('detailsZoneText');
+      if (pZone) pZone.textContent = provider.serviceArea || provider.zone || 'School corridor';
+
+      const vTitle = document.getElementById('detailsProviderVehTitle');
+      if (vTitle) vTitle.textContent = provider.vehicle;
+
+      const vSub = document.getElementById('detailsProviderVehSubtitle');
+      if (vSub) vSub.textContent = `${provider.seats} seats · Plate ${provider.plate || '—'}`;
+
+      const sSeats = document.getElementById('specSeatsText');
+      if (sSeats) sSeats.textContent = `${provider.seats} seats`;
+
+      const sPlate = document.getElementById('specPlateText');
+      if (sPlate) sPlate.textContent = provider.plate || '—';
+
+      const sAvail = document.getElementById('detailsAvailText');
+      if (sAvail && typeof window.formatProviderSchedule === 'function') {
+        sAvail.textContent = window.formatProviderSchedule(provider);
+      }
+
+      const pAbout = document.getElementById('detailsAboutLabel');
+      const firstName = (provider.name || 'Tariq').split(' ')[0];
+      if (pAbout) pAbout.textContent = `About ${firstName}`;
+
+      const pBio = document.getElementById('detailsProviderBio');
+      if (pBio) {
+        pBio.textContent = `${firstName} provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.`;
+      }
+
+      const pBook = document.getElementById('btnBookWithProvider');
+      if (pBook) pBook.textContent = `Request ${firstName} →`;
+    }
+
+    // C. Parent Home Screen (Upcoming / Today's Trip card)
+    const homeDriverName = document.getElementById('homeTodayDriverName');
+    if (homeDriverName) homeDriverName.textContent = provider.name;
+
+    const homeDriverPhoto = document.getElementById('homeTodayDriverPhoto');
+    if (homeDriverPhoto && provider.photo) {
+      homeDriverPhoto.src = provider.photo;
+      homeDriverPhoto.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
+    }
+
+    const homeDriverScore = document.getElementById('homeTodayDriverScore');
+    if (homeDriverScore) homeDriverScore.textContent = String(provider.rating != null ? provider.rating : '4.9');
+
+    const homeMiniName = document.querySelector('.driver-mini-info .driver-mini-name span');
+    if (homeMiniName) homeMiniName.textContent = provider.name;
+
+    const homeMiniAvatar = document.querySelector('.driver-mini-info .driver-mini-avatar');
+    if (homeMiniAvatar && provider.photo) {
+      homeMiniAvatar.src = provider.photo;
+      homeMiniAvatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
+    }
+
+    const homeMiniSub = document.querySelector('.driver-mini-info .driver-mini-sub span:first-child');
+    if (homeMiniSub && d.vehicle) {
+      homeMiniSub.textContent = `${d.vehicle.make || 'Toyota'} ${d.vehicle.model || 'Sienna'}`;
+    }
+
+    // D. Chat / Messaging Header
+    const chatPeerName = document.querySelector('#screen-chat .chat-header-peer-name');
+    if (chatPeerName && (!window.activeChatProviderId || window.activeChatProviderId === 'tariq')) {
+      chatPeerName.textContent = provider.name;
+    }
+    const chatPeerAvatar = document.querySelector('#screen-chat .chat-peer-avatar');
+    if (chatPeerAvatar && provider.photo && (!window.activeChatProviderId || window.activeChatProviderId === 'tariq')) {
+      chatPeerAvatar.src = provider.photo;
+      chatPeerAvatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
+    }
+
+    // E. Live Tracking Screen Driver Info
+    const trackDriverName = document.querySelector('#trackingDriverProfileBtn .driver-mini-name span');
+    if (trackDriverName) trackDriverName.textContent = provider.name;
+
+    const trackDriverAvatar = document.querySelector('#trackingDriverProfileBtn .driver-mini-avatar');
+    if (trackDriverAvatar && provider.photo) {
+      trackDriverAvatar.src = provider.photo;
+      trackDriverAvatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
+    }
+
+    const trackDriverVeh = document.querySelector('#trackingDriverProfileBtn .driver-mini-sub span:first-child');
+    if (trackDriverVeh && d.vehicle) {
+      trackDriverVeh.textContent = `${d.vehicle.make || 'Toyota'} ${d.vehicle.model || 'Sienna'}`;
+    }
+
+    // F. Booking Summary
+    const summaryVeh = document.getElementById('summaryVehicleText');
+    if (summaryVeh && state().bookingDraft?.providerId === provider.id) {
+      summaryVeh.textContent = [provider.vehicle, provider.plate].filter(Boolean).join(' · ');
+    }
+    const summaryAvatar = document.getElementById('summaryProviderAvatar');
+    if (summaryAvatar && provider.photo && state().bookingDraft?.providerId === provider.id) {
+      summaryAvatar.src = provider.photo;
+      summaryAvatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
+    }
   }
+
+  function syncDriverToProviders() {
+    const d = state().driver;
+    if (!d) return;
+    const providers = state().providers || [];
+    let provider = providers.find((p) => p.id === (d.id || 'tariq'));
+    if (!provider) {
+      provider = { id: d.id || 'tariq' };
+      providers.push(provider);
+      state().providers = providers;
+    }
+
+    // 1. Core Profile Sync
+    provider.name = d.name || provider.name || 'Tariq Ahmed';
+    provider.phone = d.phone || provider.phone || '+1 (416) 555-0182';
+    provider.email = d.email || provider.email || 'tariq.ahmed@torontoschoolrides.ca';
+    if (d.photo) provider.photo = d.photo;
+    provider.zone = d.serviceArea || provider.zone || 'Greenfield / Midtown';
+    provider.serviceArea = d.serviceArea || provider.serviceArea || 'Greenfield / Midtown';
+    provider.bio = d.bio || d.about || provider.bio || 'Provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.';
+    provider.about = provider.bio;
+    provider.rating = d.rating != null ? d.rating : (provider.rating || 4.9);
+    provider.reviewsCount = d.reviewsCount != null ? d.reviewsCount : (provider.reviewsCount || 128);
+
+    // 2. Vehicle Sync
+    if (d.vehicle) {
+      const v = d.vehicle;
+      const vehName = [v.make, v.model].filter(Boolean).join(' ');
+      const yearStr = v.year ? ` (${v.year})` : '';
+      provider.vehicle = (vehName ? `${vehName}${yearStr}` : provider.vehicle) || 'Toyota Sienna (2023)';
+      provider.vehicleMake = v.make;
+      provider.vehicleModel = v.model;
+      provider.vehicleYear = v.year;
+      provider.vehicleColor = v.color;
+      provider.plate = v.plate || provider.plate || 'SCH-4091';
+      provider.seats = Number(v.capacity || v.seats || provider.seats || 4);
+      if (v.photo) provider.vehiclePhoto = v.photo;
+    }
+
+    // 3. Availability Sync
+    if (d.availability) {
+      provider.availability = d.availability;
+    }
+
+    // 4. Rate & Pricing Sync
+    if (d.rate) {
+      provider.baseWeekly = d.rate.amount || d.rate.recurringWeekly || provider.baseWeekly || 120;
+      provider.listedRate = provider.baseWeekly;
+      provider.negotiable = d.rate.negotiable !== false;
+      provider.preferredPayment = d.rate.paymentMethod || provider.preferredPayment || 'e-Transfer · Cash';
+      provider.rate = d.rate;
+    }
+
+    // 5. Verification & Documents (Section 4.6)
+    if (d.documents) {
+      provider.documents = d.documents;
+    }
+    const allApproved = d.verificationStatus === 'approved' || (d.documents && d.documents.length >= 5 && d.documents.every(doc => doc.status === 'approved'));
+    provider.verified = allApproved;
+    provider.verificationStatus = d.verificationStatus || (allApproved ? 'approved' : 'pending');
+
+    // 6. Real-Time DOM Updates Across All Active Views
+    reflectDriverToDOM(d, provider);
+  }
+
+  function syncTariqProviderAvailability() {
+    syncDriverToProviders();
+  }
+
+  window.syncDriverToProviders = syncDriverToProviders;
 
   window.saveDriverAvailability = function () {
     if (!availDraft) resetAvailDraft();
-    if (toMinutes(availDraft.morningEnd) <= toMinutes(availDraft.morningStart)) {
-      toast('First window: To must be after From', 'error');
+    if (availDraft.morningOn && toMinutes(availDraft.morningEnd) <= toMinutes(availDraft.morningStart)) {
+      toast('Morning window: To must be after From', 'error');
       return;
     }
-    if (toMinutes(availDraft.afternoonEnd) <= toMinutes(availDraft.afternoonStart)) {
-      toast('Second window: To must be after From', 'error');
+    if (availDraft.afternoonOn && toMinutes(availDraft.afternoonEnd) <= toMinutes(availDraft.afternoonStart)) {
+      toast('Afternoon window: To must be after From', 'error');
       return;
     }
     const d = ensureDriver();
+    const days = availDraft.days && availDraft.days.length ? availDraft.days : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
     d.availability.windows = [
-      { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: availDraft.morningStart, end: availDraft.morningEnd, label: 'Morning', enabled: true },
-      { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: availDraft.afternoonStart, end: availDraft.afternoonEnd, label: 'Afternoon', enabled: true }
+      { id: 'w1', days: days, start: availDraft.morningStart, end: availDraft.morningEnd, label: 'Morning', enabled: availDraft.morningOn },
+      { id: 'w2', days: days, start: availDraft.afternoonStart, end: availDraft.afternoonEnd, label: 'Afternoon', enabled: availDraft.afternoonOn }
     ];
-    d.availability.weekly = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-    d.availability.exceptions = availDraft.exceptions.slice();
-    d.availability.morningSlot = formatWindow(d.availability.windows[0]);
-    d.availability.afternoonSlot = formatWindow(d.availability.windows[1]);
+    d.availability.weekly = days;
+    d.availability.scheduleType = availDraft.scheduleType || 'recurring';
+    d.availability.exceptions = (availDraft.exceptions || []).slice();
+    d.availability.morningSlot = availDraft.morningOn ? formatWindow(d.availability.windows[0]) : 'Off';
+    d.availability.afternoonSlot = availDraft.afternoonOn ? formatWindow(d.availability.windows[1]) : 'Off';
     d.onboarding.availability = true;
     syncTariqProviderAvailability();
     persist();
+    toast('Availability saved');
     if (finishNestedOr()) return;
     window.navigateTo(d.onboarding.rate ? 'driverProfile' : 'driverOnboardRate');
   };
@@ -2126,24 +2504,33 @@
   }
 
   function renderOnboardRate() {
-    const r = ensureDriver().rate;
+    const d = ensureDriver();
+    const r = d.rate;
     const el = feed('driverOnboardRateFeed');
     if (!el) return;
     const editing = editingProfileChild();
     bindChildTitle(el, 'Posted rate');
     bindChildBack(el, "navigateTo('driverOnboardAvailability')");
     el.innerHTML = `
-      ${editing ? '' : stepIntro(5, 5, 'Posted rate', 'Info only — ride fees stay between you and the parent.')}
-      ${field('Weekly posted rate (CAD)', `<input class="form-input" id="drvRateAmt" type="number" value="${esc(r.amount)}" />`, 'banknote')}
-      <div class="form-group"><label class="form-label">Negotiable</label>
+      ${editing ? '' : stepIntro(5, 5, 'Posted rate & service area', 'Info only — ride fees stay between you and the parent.')}
+      ${field('Weekly posted rate (CAD)', `<input class="form-input" id="drvRateAmt" type="number" value="${esc(r.amount || 120)}" placeholder="120" />`, 'banknote')}
+      ${field('Daily rate (optional CAD)', `<input class="form-input" id="drvDailyAmt" type="number" value="${esc(r.dailyAmount || 35)}" placeholder="35" />`, 'calendar')}
+      <div class="form-group"><label class="form-label">Open to rate discussion? (Negotiable)</label>
         <div class="drv-toggle-row">
           <button type="button" id="drvNegYes" class="${r.negotiable ? 'active' : ''}" onclick="setDriverNegotiable(true)">Yes</button>
           <button type="button" id="drvNegNo" class="${!r.negotiable ? 'active' : ''}" onclick="setDriverNegotiable(false)">No</button>
         </div>
       </div>
-      ${editing ? '' : selectField('Preferred payment method', `<select class="form-select" id="drvPayMethod">${['Interac e-Transfer', 'Cash', 'Cheque'].map((m) => `<option ${r.paymentMethod === m ? 'selected' : ''}>${m}</option>`).join('')}</select>`)}
+      ${selectField('Preferred payment method', `<select class="form-select" id="drvPayMethod">${['e-Transfer · Cash', 'Interac e-Transfer', 'Cash', 'Other'].map((m) => `<option ${(r.paymentMethod || 'e-Transfer · Cash') === m ? 'selected' : ''}>${m}</option>`).join('')}</select>`)}
+      ${field('Service area / corridor', `<input class="form-input" id="drvServiceArea" value="${esc(d.serviceArea || 'Midtown Toronto')}" placeholder="Midtown Toronto" />`, 'map-pin')}
+      ${field('Max service distance (km)', `<input class="form-input" id="drvMaxDistance" type="number" value="${esc(d.maxDistanceKm || 15)}" placeholder="15" />`, 'navigation')}
+      <p style="font-size:11.5px; color:#64748B; margin:-4px 0 16px 0; line-height:1.4;">
+        <i data-lucide="info" style="width:13px;height:13px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
+        Distance is used to match parents within your boundary, not to calculate prices automatically.
+      </p>
       <div class="drv-actions-col"><button type="button" class="btn-primary" onclick="saveDriverRate()">${editing ? 'Save' : 'Submit for review'}</button></div>
     `;
+    icons();
   }
 
   window.setDriverNegotiable = function (yes) {
@@ -2154,13 +2541,18 @@
 
   window.saveDriverRate = function () {
     const d = ensureDriver();
-    d.rate.amount = Number(val('drvRateAmt') || d.rate.amount);
+    d.rate.amount = Number(val('drvRateAmt') || d.rate.amount || 120);
+    d.rate.dailyAmount = Number(val('drvDailyAmt') || 35);
     const pay = val('drvPayMethod');
     if (pay) d.rate.paymentMethod = pay;
+    d.serviceArea = val('drvServiceArea') || 'Midtown Toronto';
+    d.maxDistanceKm = Number(val('drvMaxDistance') || 15);
     d.onboarding.rate = true;
+    syncDriverToProviders();
     persist();
     if (finishNestedOr()) return;
     d.verificationStatus = 'pending';
+    syncDriverToProviders();
     persist();
     window.navigateTo('driverPending');
   };
@@ -2247,22 +2639,40 @@
     if (titleEl) titleEl.textContent = 'Platform access';
     el.classList.add('sub-screen-body');
     const failed = sub.status === 'failed';
-    const kicker = sub.status === 'trial' ? 'Free trial' : sub.status === 'active' ? 'Active' : sub.status === 'failed' ? 'Payment failed' : 'Not started';
-    const title = sub.status === 'trial'
+    const isTrial = sub.status === 'trial';
+    const isActive = sub.status === 'active';
+    const kicker = isTrial ? 'Free trial' : isActive ? 'Active' : failed ? 'Payment failed' : 'Not started';
+    const title = isTrial
       ? `${sub.trialDaysLeft} days remaining`
-      : sub.status === 'active'
+      : isActive
         ? (sub.plan === 'annual' ? '$279 / year' : '$29 / month')
         : 'Manage platform access';
     const subtitle = sub.status === 'none' ? 'Monthly or annual platform access' : `Renews ${sub.renewal || 'Oct 8, 2026'}`;
-    const history = (sub.history || []).map((row) => `
-      <div class="sub-history-row">
-        <div class="sub-history-icon"><i data-lucide="receipt"></i></div>
-        <div class="sub-history-copy">
-          <div class="sub-history-label">${esc(row.label)}</div>
-          <div class="sub-history-meta">${esc(row.date)} · ${esc(row.amount)}</div>
-        </div>
-      </div>
-    `).join('') || `<p class="drv-lede">No billing events yet.</p>`;
+    
+    const planName = sub.plan === 'annual' ? 'annual' : 'monthly';
+    const planPrice = sub.plan === 'annual' ? '$279/yr' : '$29/mo';
+    
+    let ctaSection = '';
+    if (failed) {
+      ctaSection = `
+        <button type="button" class="sub-btn-primary" onclick="recoverDriverPayment()">Retry payment</button>
+      `;
+    } else if (isActive) {
+      ctaSection = `
+        <button type="button" class="sub-btn-primary" onclick="activateDriverSubscription()">Save ${planName} plan</button>
+        <button type="button" class="sub-cancel-link" onclick="cancelDriverSubscription()">Cancel subscription</button>
+      `;
+    } else if (isTrial) {
+      ctaSection = `
+        <button type="button" class="sub-btn-primary" onclick="activateDriverSubscription()">Activate ${planName} access (${planPrice})</button>
+        <button type="button" class="sub-btn-secondary-link" onclick="continueDriverTrial()">Keep free trial for now</button>
+      `;
+    } else {
+      ctaSection = `
+        <button type="button" class="sub-btn-primary" onclick="activateDriverSubscription()">Start 14-day free trial</button>
+      `;
+    }
+
     el.innerHTML = `
       <div class="sub-simple-intro">
         <h3 class="sub-screen-lede">Choose your plan</h3>
@@ -2297,44 +2707,22 @@
           </span>
         </button>
       </div>
-      ${failed ? `<div class="drv-failed-pay"><div class="drv-section-label">Last payment failed</div><button type="button" class="btn-primary" style="margin-top:10px;" onclick="recoverDriverPayment()">Retry payment</button></div>` : ''}
       
-      <!-- Promo / Discount Code Box for Drivers -->
-      <div class="sub-promo-box" style="margin-top: 12px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 10px 12px;">
-        <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
-          <span>Have a Promo Code?</span>
-          <span id="driverPromoBadge" style="display:none; color:#16A34A; font-weight:800; font-size:10px;">✓ Applied 20% OFF</span>
-        </div>
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="inputDriverPromoCode" placeholder="Enter code (e.g. PRO2026)" style="flex: 1; height: 38px; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 0 10px; font-size: 12px; font-weight: 600; text-transform: uppercase;" />
-          <button type="button" onclick="window.applyDriverPromoCode()" style="height: 38px; padding: 0 14px; background: var(--color-primary); color: #FFFFFF; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
-            Apply
-          </button>
-        </div>
-      </div>
-
       <!-- Supported Payment Methods -->
-      <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px;">
-        <span style="font-size: 10px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
-        <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 800; color: #1E293B;">
-          <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">💳 Cards</span>
-          <span style="background:#000; color:#fff; padding:2px 6px; border-radius:4px;"> Pay</span>
-          <span style="background:#F1F5F9; padding:2px 6px; border-radius:4px;">G Pay</span>
+      <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px;">
+        <span style="font-size: 11px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: #1E293B;">
+          <span style="background:#F1F5F9; padding:3px 8px; border-radius:6px;">💳 Cards</span>
+          <span style="background:#000; color:#fff; padding:3px 8px; border-radius:6px;"> Pay</span>
+          <span style="background:#F1F5F9; padding:3px 8px; border-radius:6px;">G Pay</span>
         </div>
       </div>
 
-      <div class="sub-actions" style="margin-top: 14px;">
-        <button type="button" class="btn-primary" onclick="continueDriverTrial()">Keep free trial</button>
-        <button type="button" class="btn-primary" onclick="activateDriverSubscription()">Activate ${sub.plan === 'annual' ? 'annual' : 'monthly'} access</button>
-      </div>
-      <div class="sub-history-card">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-          <h3 class="sub-section-title" style="margin:0;">Billing history</h3>
-          <button type="button" onclick="window.openSubscriptionReceiptModal()" style="background:none; border:none; color:var(--color-primary); font-size:12px; font-weight:700; cursor:pointer; text-decoration:underline;">View Receipt</button>
-        </div>
-        ${history}
+      <div class="sub-actions">
+        ${ctaSection}
       </div>
     `;
+    icons();
   }
 
   window.selectDriverPlan = function (plan) {
@@ -2347,9 +2735,9 @@
     const d = ensureDriver();
     d.subscription.status = 'trial';
     d.subscription.history = d.subscription.history || [];
-    d.subscription.history.unshift({ id: 'dsub-' + Date.now(), label: '14-day driver trial started', date: 'Sep 8, 2026', amount: '$0.00' });
+    d.subscription.history.unshift({ id: 'dsub-' + Date.now(), label: '14-day driver trial continued', date: 'Sep 8, 2026', amount: '$0.00' });
     persist();
-    toast('Trial started. You can accept bookings.');
+    toast('Free trial active. 14 days remaining.');
     if (typeof window.backNested === 'function') window.backNested('driverProfile');
     else window.navigateTo('driverProfile');
   };
@@ -2357,16 +2745,45 @@
   window.activateDriverSubscription = function () {
     const d = ensureDriver();
     d.subscription.status = 'active';
+    d.subscription.history = d.subscription.history || [];
+    d.subscription.history.unshift({
+      id: 'dsub-' + Date.now(),
+      label: d.subscription.plan === 'annual' ? 'Annual plan activated' : 'Monthly plan activated',
+      date: 'Sep 8, 2026',
+      amount: d.subscription.plan === 'annual' ? '$279.00' : '$29.00'
+    });
     persist();
     toast('Platform access activated');
     if (typeof window.backNested === 'function') window.backNested('driverProfile');
     else window.navigateTo('driverProfile');
   };
 
+  window.cancelDriverSubscription = function () {
+    const d = ensureDriver();
+    d.subscription.status = 'cancelled';
+    d.subscription.history = d.subscription.history || [];
+    d.subscription.history.unshift({
+      id: 'dsub-' + Date.now(),
+      label: 'Automatic renewal cancelled',
+      date: 'Sep 8, 2026',
+      amount: '$0.00'
+    });
+    persist();
+    renderSubscription();
+    toast('Renewal cancelled. Access continues until period ends.');
+  };
+
   window.recoverDriverPayment = function () {
     const d = ensureDriver();
     if (d.subscription.status !== 'failed') return;
     d.subscription.status = 'active';
+    d.subscription.history = d.subscription.history || [];
+    d.subscription.history.unshift({
+      id: 'dsub-' + Date.now(),
+      label: 'Failed payment recovered',
+      date: 'Sep 8, 2026',
+      amount: d.subscription.plan === 'annual' ? '$279.00' : '$29.00'
+    });
     persist();
     renderSubscription();
     toast('Payment recovered');
@@ -2547,7 +2964,6 @@
     const view = homeMode();
     const hero = document.getElementById('driverHeroContainer');
     const feedEl = document.getElementById('driverHomeFeed');
-    const newCount = view.incoming.length;
     if (hero) hero.innerHTML = renderHero(view, d);
     const rest = view.schedule.filter((item) => !view.next || item.id !== view.next.id);
     if (feedEl) {
@@ -2555,22 +2971,21 @@
         <div class="drv-home-section">
           <h3 class="drv-home-heading">Quick actions</h3>
           <div class="drv-home-actions">
-            <button type="button" class="drv-home-action drv-qa-requests${newCount ? ' has-badge' : ''}" onclick="navigateTo('driverRequests')">
-              <span class="drv-home-action-ico"><i data-lucide="inbox"></i></span>
-              <span class="drv-home-action-label">Requests</span>
-              ${newCount ? `<span class="drv-home-action-badge">${newCount > 9 ? '9+' : newCount}</span>` : ''}
-            </button>
-            <button type="button" class="drv-home-action drv-qa-schedule" onclick="navigateTo('driverSchedule')">
-              <span class="drv-home-action-ico"><i data-lucide="calendar"></i></span>
-              <span class="drv-home-action-label">Schedule</span>
-            </button>
             <button type="button" class="drv-home-action drv-qa-availability" onclick="openNestedScreen('driverOnboardAvailability')">
               <span class="drv-home-action-ico"><i data-lucide="clock"></i></span>
               <span class="drv-home-action-label">Availability</span>
             </button>
-            <button type="button" class="drv-home-action drv-qa-messages" onclick="navigateTo('inbox')">
-              <span class="drv-home-action-ico"><i data-lucide="message-square"></i></span>
-              <span class="drv-home-action-label">Messages</span>
+            <button type="button" class="drv-home-action drv-qa-docs" onclick="openNestedScreen('driverOnboardDocs')">
+              <span class="drv-home-action-ico"><i data-lucide="shield-check"></i></span>
+              <span class="drv-home-action-label">Documents</span>
+            </button>
+            <button type="button" class="drv-home-action drv-qa-earnings" onclick="openNestedScreen('driverPayment')">
+              <span class="drv-home-action-ico"><i data-lucide="credit-card"></i></span>
+              <span class="drv-home-action-label">Earnings</span>
+            </button>
+            <button type="button" class="drv-home-action drv-qa-sos" onclick="window.openEmergencySOSModal()">
+              <span class="drv-home-action-ico"><i data-lucide="shield-alert"></i></span>
+              <span class="drv-home-action-label">Safety SOS</span>
             </button>
           </div>
         </div>
@@ -2774,18 +3189,8 @@
         <button type="button" class="back-btn" onclick="navigateTo('driverHome')" aria-label="Back"><i data-lucide="chevron-left"></i></button>
         <div class="drv-req-heading">
           <h2 class="top-bar-title">Requests</h2>
-          <p class="drv-req-sub">New ride requests from families</p>
         </div>
         <span class="drv-req-top-spacer" aria-hidden="true"></span>`;
-    }
-    const sub = bar.querySelector('.drv-req-sub');
-    const tab = state()._driverReqTab || 'new';
-    if (sub) {
-      sub.textContent = tab === 'accepted'
-        ? 'Accepted commute requests'
-        : tab === 'declined'
-          ? 'Declined commute requests'
-          : 'New ride requests from families';
     }
     let tabs = screen.querySelector('.drv-req-tabs') || screen.querySelector('.segmented-control');
     if (!tabs) {
@@ -2837,16 +3242,29 @@
     return '';
   }
 
-  function requestCard(req, tab) {
+  function formatScheduleTitle(raw) {
+    if (!raw) return 'Mon, Sep 7, 2026';
+    let s = String(raw).trim();
+    if (/mon.*fri/i.test(s)) return 'Mon – Fri Weekly';
+    if (/mon.*wed/i.test(s)) return 'Mon – Wed Weekly';
+    if (/tue.*thu/i.test(s)) return 'Tue – Thu Weekly';
+    if (s.includes('•') || s.includes('|')) {
+      s = s.split('•')[0].split('|')[0].trim();
+    }
+    return s || 'Today';
+  }
+
+  function requestCard(req, tabArg) {
+    const tab = tabArg || state()._driverReqTab || 'new';
     const name = req.parentName || 'Parent';
     const from = cleanPlace(req.pickupLocation) || 'Pickup';
     const to = cleanPlace(req.dropoffLocation) || 'Drop-off';
     const photo = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
     
     // Format Date & Times
-    const displayDate = req.frequency === 'recurring' 
+    const displayDate = formatScheduleTitle(req.frequency === 'recurring' 
       ? (req.recurringDays && req.recurringDays.length ? 'Weekly (' + req.recurringDays.join(', ') + ')' : 'Mon – Fri Weekly')
-      : (dateShort(req.dateLabel) || 'Sep 17, 2026');
+      : (dateShort(req.dateLabel) || 'Sep 17, 2026'));
     
     const pickupT = req.pickupTime || '07:30 AM';
     const returnT = req.returnTime || '';
@@ -2854,8 +3272,8 @@
     
     const isBoth = req.direction === 'bothway' || (returnT && returnT.length > 0);
     const dirPillHtml = isBoth
-      ? '<span style="background:#EFF6FF; color:#1D4ED8; font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;"><i data-lucide="repeat" style="width:12px; height:12px;"></i><span>Round Trip</span></span>'
-      : '<span style="background:#F1F5F9; color:#475569; font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;"><i data-lucide="arrow-right" style="width:12px; height:12px;"></i><span>One-way</span></span>';
+      ? `<span style="background:rgba(27,43,104,0.08); color:#1B2B68; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="refresh-cw" style="width:11px; height:11px;"></i> Round Trip</span>`
+      : `<span style="background:#FFF7ED; color:#EA580C; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="arrow-right" style="width:11px; height:11px;"></i> One-way</span>`;
 
     // Parse price
     const priceVal = String(req.rate || (req.rateLabel ? req.rateLabel.replace(/\D/g, '') : '45') || '45');
@@ -2864,65 +3282,65 @@
     let actionHtml = '';
     if (tab === 'new') {
       actionHtml = `
-        <div style="display:flex; align-items:center; gap:8px;" onclick="event.stopPropagation();">
-          <button type="button" onclick="declineDriverRequest('${req.id}')" style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; border-radius:99px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer;">
+        <div style="display:flex; align-items:center; gap:6px;" onclick="event.stopPropagation();">
+          <button type="button" onclick="declineDriverRequest('${req.id}')" style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; border-radius:99px; padding:5px 12px; font-size:11.5px; font-weight:700; cursor:pointer;">
             Decline
           </button>
-          <button type="button" onclick="acceptDriverRequest('${req.id}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:6px 16px; font-size:12px; font-weight:700; border:none; cursor:pointer;">
+          <button type="button" onclick="acceptDriverRequest('${req.id}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:5px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; box-shadow:0 2px 6px rgba(27,43,104,0.2);">
             Accept
           </button>
         </div>`;
     } else if (req.status === 'declined') {
-      actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:99px;">Declined</span>';
+      actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px;">Declined</span>';
     } else {
       actionHtml = `
-        <div style="width:32px; height:32px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
-          <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>
+        <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
+          <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
         </div>`;
     }
 
     return `
-      <article class="h2s-booking-card" onclick="openDriverRequest('${req.id}')" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:22px; padding:18px 20px; margin-bottom:14px; box-shadow:0 4px 16px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.2s ease;">
+      <article class="h2s-booking-card" onclick="openDriverRequest('${req.id}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
         <!-- Top Row: Date & Direction -->
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; color:#2563EB; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i data-lucide="calendar" style="width:20px; height:20px;"></i>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i data-lucide="calendar" style="width:17px; height:17px;"></i>
             </div>
             <div>
-              <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
-              <div style="font-size:12px; font-weight:600; color:#64748B; margin-top:2px;">${timesText}</div>
+              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:1px;">${timesText}</div>
             </div>
           </div>
           ${dirPillHtml}
         </div>
 
         <!-- Middle Row: Route Rail & Payout -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px;">
-          <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; position:relative; padding-left:2px;">
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; background:#2563EB; flex-shrink:0;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;">
+          <div style="display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; position:relative; padding-left:2px;">
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; background:#1B2B68; flex-shrink:0;"></span>
+              <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
             </div>
-            <div style="position:absolute; left:6px; top:8px; bottom:8px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; border:2px solid #2563EB; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
+            <div style="position:absolute; left:5px; top:6px; bottom:6px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #1B2B68; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
+              <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
             </div>
           </div>
 
-          <div style="display:flex; align-items:center; gap:16px; flex-shrink:0; padding-left:16px; border-left:1px solid #F1F5F9;">
-            <div style="font-size:24px; font-weight:800; color:#0F172A; letter-spacing:-0.5px;">${priceVal}</div>
+          <div style="display:flex; align-items:center; gap:12px; flex-shrink:0; padding-left:12px; border-left:1px solid #F1F5F9;">
+            <div style="font-size:21px; font-weight:800; color:#0F172A; letter-spacing:-0.5px;">$${priceVal.replace(/^\$/, '')}</div>
           </div>
         </div>
 
         <!-- Footer Row: Parent & Kids Info & Actions -->
-        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:12px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${photo}" alt="" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
+        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:9px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img src="${photo}" alt="" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
             <div>
-              <div style="font-size:13.5px; font-weight:700; color:#0F172A; line-height:1.2;">${name}</div>
-              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${childShort(req)}</div>
+              <div style="font-size:12.5px; font-weight:700; color:#0F172A; line-height:1.2;">${name}</div>
+              <div style="font-size:11px; font-weight:600; color:#64748B; margin-top:1px;">${childShort(req)}</div>
             </div>
           </div>
           ${actionHtml}
@@ -2945,6 +3363,7 @@
       renderRequestDetail();
     }
   }
+  window.refreshDriverRequests = refreshRequestViews;
 
   function ingestBookingAsRequest(booking) {
     const d = ensureDriver();
@@ -2984,22 +3403,62 @@
   }
 
   function paymentHandleBlock(req, d) {
-    const handle = state().paymentHandle || {};
-    const user = state().user || {};
-    const sameParent = req.parentId === user.id || req.parentName === user.name;
-    if (sameParent && handle.status === 'revealed' && handle.handle) {
-      return `<section class="drv-req-block">
-        <h4 class="drv-req-label">Payment handle</h4>
-        <p class="drv-req-value">${esc(handle.handle)}</p>
-        <p class="drv-req-note">Parent shared this Interac handle. Home2School does not collect the ride fee.</p>
+    const booking = (state().bookings || []).find((b) => b.id === req.bookingId || b.id === req.id || ('dreq-' + b.id) === req.id);
+    const handleStatus = booking?.paymentHandleStatus || (req.status === 'accepted' ? 'shared' : 'not_requested');
+    const handleValue = booking?.paymentHandle || d.rate?.paymentHandle || d.paymentHandle || 'tariq.ahmed@interac.ca';
+
+    if (handleStatus === 'requested') {
+      return `
+      <section class="drv-req-block" style="background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:12px; padding:14px; margin-top:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <i data-lucide="shield-alert" style="width:18px; height:18px; color:#2563EB;"></i>
+          <h4 class="drv-req-label" style="margin:0; font-size:13.5px; font-weight:700; color:#1E40AF;">Payment Details Requested</h4>
+        </div>
+        <p class="drv-req-note" style="margin:0 0 12px 0; color:#334155; font-size:12.5px; line-height:1.4;">
+          Parent requested your Interac e-Transfer handle to send ride payments directly. Home2School never collects ride fees or processes escrow.
+        </p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn-primary" style="flex:1; min-width:140px; padding:9px 12px; font-size:12.5px;" onclick="window.consentPaymentDetails('${esc(booking ? booking.id : req.bookingId)}')">
+            Share e-Transfer (${esc(handleValue)})
+          </button>
+          <button type="button" class="btn-secondary" style="flex:1; min-width:110px; padding:9px 12px; font-size:12.5px;" onclick="window.chooseCashPayment('${esc(booking ? booking.id : req.bookingId)}')">
+            Agree on Cash
+          </button>
+        </div>
       </section>`;
     }
+
+    if (handleStatus === 'shared') {
+      return `
+      <section class="drv-req-block" style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:12px; padding:14px; margin-top:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+          <i data-lucide="check-circle-2" style="width:18px; height:18px; color:#16A34A;"></i>
+          <h4 class="drv-req-label" style="margin:0; font-size:13.5px; font-weight:700; color:#166534;">Payment Handle Shared</h4>
+        </div>
+        <p class="drv-req-value" style="font-weight:700; color:#0F172A; margin:4px 0 2px 0; font-size:14px;">${esc(handleValue)}</p>
+        <p class="drv-req-note" style="margin:0; font-size:12px; color:#475569;">Parent has direct access to send payment via Interac e-Transfer. 100% of ride fees stay with you.</p>
+      </section>`;
+    }
+
+    if (handleStatus === 'cash') {
+      return `
+      <section class="drv-req-block" style="background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:12px; padding:14px; margin-top:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+          <i data-lucide="banknote" style="width:18px; height:18px; color:#D97706;"></i>
+          <h4 class="drv-req-label" style="margin:0; font-size:13.5px; font-weight:700; color:#92400E;">Cash Payment Confirmed</h4>
+        </div>
+        <p class="drv-req-note" style="margin:0; font-size:12px; color:#475569;">Parent will pay in cash directly to you on the first day of the schedule.</p>
+      </section>`;
+    }
+
     if (req.status === 'accepted') {
-      return `<section class="drv-req-block">
+      return `
+      <section class="drv-req-block">
         <h4 class="drv-req-label">Payment</h4>
-        <p class="drv-req-note">${esc(d.rate?.paymentMethod || 'Interac e-Transfer')}. Home2School does not collect the ride fee.</p>
+        <p class="drv-req-note">${esc(d.rate?.paymentMethod || 'e-Transfer · Cash')}. Home2School does not collect the ride fee.</p>
       </section>`;
     }
+
     return '';
   }
 
@@ -3076,61 +3535,98 @@
       return;
     }
     const reason = acceptBlockReason(d) || requestCapacityBlock(d, req);
-    const blocked = !!reason;
+    const blocked = !reason;
     const docsBlocked = missingRequiredDocs(d).length > 0;
     const isNew = req.status === 'new';
     const passengers = kids(req).map((c) => {
       const school = c.school || req.dropoffLocation || '';
       const sub = [c.grade, school].filter(Boolean).join(' · ');
-      const kidPhoto = c.photo || '/assets/avatar_arman.jpg';
-      return `<div class="drv-req-passenger">
-        <img class="drv-req-passenger-avatar" src="${esc(kidPhoto)}" alt="" onerror="this.src='/assets/avatar_arman.jpg'" />
-        <div>
-          <div class="drv-req-passenger-name">${esc(c.name)}</div>
-          ${sub ? `<div class="drv-req-passenger-sub">${esc(sub)}</div>` : ''}
+      const kidPhoto = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
+      return `<div class="drv-req-passenger" style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #F1F5F9;">
+        <img class="drv-req-passenger-avatar" src="${esc(kidPhoto)}" alt="" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_arman.jpg'" />
+        <div style="min-width:0; flex:1;">
+          <div class="drv-req-passenger-name" style="font-size:14px; font-weight:700; color:#0F172A;">${esc(c.name)}</div>
+          ${sub ? `<div class="drv-req-passenger-sub" style="font-size:12px; color:#64748B; margin-top:2px;">${esc(sub)}</div>` : ''}
         </div>
       </div>`;
     }).join('') || `<p class="drv-req-note">No passengers listed</p>`;
+    const booking = (state().bookings || []).find((b) => b.id === req.bookingId || b.id === req.id || ('dreq-' + b.id) === req.id);
+    const hasAgreedRate = booking && booking.agreedRate && booking.rateStatus === 'agreed';
+    const displayRate = hasAgreedRate ? booking.agreedRate : (booking?.listedRate || req.rate || 28);
+    const period = req.frequency === 'recurring' ? 'week' : 'trip';
+    const rateText = hasAgreedRate 
+      ? `Agreed rate: ${displayRate} / ${period}`
+      : `Listed rate: ${displayRate} / ${period}${d.rate?.negotiable && isNew ? ' · negotiable' : ''}`;
+
     const parentPhoto = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
+    const parentName = req.parentName || PARENTS[req.parentId]?.name || 'Sadia Khan';
+    const parentPhone = req.parentPhone || PARENTS[req.parentId]?.phone || '+1 (416) 555-0192';
+
     el.innerHTML = `
-      <header class="drv-req-hero">
-        <div class="drv-req-hero-row">
-          <img class="drv-req-hero-avatar" src="${esc(parentPhoto)}" alt="" onerror="this.src='/assets/avatar_sadia.jpg'" />
-          <div class="drv-req-hero-copy">
-            <h3 class="drv-req-hero-name">${esc(req.parentName || 'Parent')}</h3>
-            ${requestStatusChip(req.status)}
+      <!-- 1. Top Parent Profile Card with Direct Message Icon -->
+      <section class="drv-req-parent-card">
+        <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1; text-align:left;">
+          <div style="position:relative; flex-shrink:0;">
+            <img src="${esc(parentPhoto)}" alt="${esc(parentName)}" style="width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid var(--color-primary, #1B2B68);" onerror="this.src='/assets/avatar_sadia.jpg';" />
+            <span style="position:absolute; bottom:0; right:0; background:#10B981; border:2px solid #fff; width:11px; height:11px; border-radius:50%;" title="Verified Parent"></span>
+          </div>
+          <div style="min-width:0; flex:1; text-align:left;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <h3 style="font-size:15px; font-weight:800; color:#0F172A; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(parentName)}</h3>
+              <span style="background:#EFF6FF; color:#1D4ED8; font-size:10px; font-weight:700; padding:1px 6px; border-radius:99px;">Verified</span>
+            </div>
+            <div style="font-size:12px; color:#64748B; margin-top:2px; font-weight:500;">
+              Primary Guardian • ${esc(parentPhone)}
+            </div>
           </div>
         </div>
-        <p class="drv-req-hero-price">${esc(req.rateLabel || '')}${d.rate?.negotiable && isNew ? ' · negotiable' : ''}</p>
-        <div class="drv-req-chips">
-          <span class="drv-req-chip">${esc(seatsLabel(req.seatsNeeded))}</span>
-          <span class="drv-req-chip">${esc(tripKindLabel(req))}</span>
+        <button type="button" class="btn-icon-subtle" onclick="openChatWith('${esc(req.parentId || 'sadia')}')" title="Message Parent" aria-label="Message Parent" style="width:38px; height:38px; border-radius:10px; background:#EFF6FF; color:var(--color-primary, #1B2B68); border:1px solid #BFDBFE; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.15s;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
+          <i data-lucide="message-square" style="width:18px; height:18px;"></i>
+        </button>
+      </section>
+
+      <!-- 2. Children Card -->
+      <section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;">
+        <h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Children</h4>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          ${passengers}
         </div>
-      </header>
-      <section class="drv-req-block">
-        <h4 class="drv-req-label">Children</h4>
-        ${passengers}
       </section>
-      <section class="drv-req-block">
-        <h4 class="drv-req-label">Route</h4>
-        <p class="drv-req-route drv-req-route-detail"><i data-lucide="map-pin"></i><span>${esc(req.pickupLocation || '')} → ${esc(req.dropoffLocation || '')}</span></p>
+
+      <!-- 3. Route Card -->
+      <section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;">
+        <h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Route</h4>
+        <p class="drv-req-route drv-req-route-detail" style="font-size:13.5px; font-weight:700; color:#0F172A; display:flex; align-items:center; gap:8px; margin:0;"><i data-lucide="map-pin" style="color:var(--color-primary, #1B2B68); width:16px; height:16px; flex-shrink:0;"></i><span>${esc(req.pickupLocation || '')} → ${esc(req.dropoffLocation || '')}</span></p>
+        <div style="display:flex; gap:8px; margin-top:8px; font-size:12px; color:#475569; align-items:center; flex-wrap:wrap;">
+          <span style="display:inline-flex; align-items:center; gap:4px; font-weight:700; color:#0F172A;"><i data-lucide="navigation" style="width:13px; height:13px; color:var(--color-primary, #1B2B68);"></i> 8.6 km route</span>
+          <span>•</span>
+          <span>Est. 22 min driving</span>
+          <span>•</span>
+          <span style="color:#16A34A; font-weight:700;">Within 15 km corridor</span>
+        </div>
       </section>
-      <section class="drv-req-block">
-        <h4 class="drv-req-label">Schedule</h4>
+
+      <!-- 4. Schedule Card -->
+      <section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;">
+        <h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Schedule</h4>
         ${scheduleDetailRows(req)}
       </section>
-      ${req.notes ? `<section class="drv-req-block"><h4 class="drv-req-label">Notes</h4><p class="drv-req-note">${esc(req.notes)}</p></section>` : ''}
+
+      ${req.notes ? `<section class="drv-req-block" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px;"><h4 class="drv-req-label" style="font-size:11px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">Special Notes</h4><p class="drv-req-note" style="font-size:13px; color:#475569; line-height:1.45; margin:0;">${esc(req.notes)}</p></section>` : ''}
+
       ${paymentHandleBlock(req, d)}
-      ${isNew && blocked ? `<div class="drv-req-gate" role="status">
+
+      ${isNew && blocked ? `<div class="drv-req-gate" role="status" style="margin-bottom:12px;">
         <p>${esc(reason)}</p>
         ${docsBlocked ? `<button type="button" class="drv-req-gate-link" onclick="openDriverDocsFromRequest()">Documents</button>` : ''}
       </div>` : ''}
-      <div class="drv-req-detail-actions">
+
+      <!-- Bottom CTAs: Accept & Decline (No redundant message button) -->
+      <div class="drv-req-detail-actions" style="display:flex; flex-direction:column; gap:10px; margin-top:8px; margin-bottom:24px;">
         ${isNew ? `
-          <button type="button" class="btn-primary${blocked ? ' is-disabled' : ''}" ${blocked ? 'disabled' : ''} onclick="acceptDriverRequest('${req.id}')">Accept</button>
-          <button type="button" class="drv-req-decline-btn" onclick="declineDriverRequest('${req.id}')">Decline</button>
+          <button type="button" class="btn-primary${blocked ? ' is-disabled' : ''}" ${blocked ? 'disabled' : ''} onclick="acceptDriverRequest('${req.id}')" style="height:46px; font-size:14px; font-weight:800; border-radius:12px;">Accept at ${displayRate}/${period}</button>
+          <button type="button" class="drv-req-decline-btn" onclick="declineDriverRequest('${req.id}')" style="height:44px; font-size:13.5px; font-weight:700; border-radius:12px; background:#FFF1F2; border:1px solid #FECDD3; color:#E11D48; cursor:pointer;">Decline</button>
         ` : ''}
-        <button type="button" class="drv-req-text-link" onclick="openChatWith('${req.parentId}')">Message parent</button>
       </div>
     `;
     icons();
@@ -3229,18 +3725,6 @@
       btnU.classList.toggle('active', listMode === 'upcoming');
     }
 
-    function section(title, items) {
-      if (!items.length) return '';
-      const dateLabel = dateShort(items[0].when || items[0].dateLabel) || 'Tue, Sep 9';
-      return `<div class="drv-sched-section">
-        <div class="drv-sched-section-head">
-          <h3 class="drv-sched-section-title">${title}</h3>
-          <span class="drv-sched-section-date">${esc(dateLabel)}</span>
-        </div>
-        <div class="drv-sched-list">${items.map((item) => scheduleCard(item)).join('')}</div>
-      </div>`;
-    }
-
     if (listMode === 'upcoming') {
       const pool = upcoming.length ? upcoming : all;
       if (!pool.length) {
@@ -3248,7 +3732,7 @@
         icons();
         return;
       }
-      wrap.innerHTML = `<div class="drv-sched-list">${pool.map((item) => scheduleCard(item)).join('')}</div>`;
+      wrap.innerHTML = `<div class="drv-sched-list" style="display:flex; flex-direction:column; gap:12px;">${pool.map((item) => scheduleCard(item)).join('')}</div>`;
       icons();
       return;
     }
@@ -3258,7 +3742,8 @@
       icons();
       return;
     }
-    wrap.innerHTML = `${section('Morning trips', morning)}${section('Return trips', returns)}`;
+    const todayAll = [...morning, ...returns];
+    wrap.innerHTML = `<div class="drv-sched-list" style="display:flex; flex-direction:column; gap:12px;">${todayAll.map((item) => scheduleCard(item)).join('')}</div>`;
     icons();
   }
 
@@ -3286,13 +3771,12 @@
   }
 
   function scheduleCard(item) {
-    const isReturn = item.leg === 'afternoon';
-    const badge = isReturn ? 'Return Trip' : 'Morning Trip';
     const actionable = !!item.isActionableNow;
     const open = item.status === 'active';
     
-    // Format Date & Time
-    const displayDate = item.when || item.dateLabel || 'Tue, Sep 9, 2026';
+    // Format Date & Time cleanly
+    const rawDate = item.when || item.dateLabel || 'Mon, Sep 7, 2026';
+    const displayDate = formatScheduleTitle(rawDate);
     const timeText = item.time || '07:30 AM';
     
     const from = cleanPlace(item.from || item.pickupLocation) || 'Pickup';
@@ -3300,78 +3784,76 @@
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
     const parentName = item.parentName || 'Sadia Khan';
     const kidsText = item.childNames || 'Children';
-    const seats = item.seats || 1;
 
     let ctaHtml = '';
     if (open) {
       ctaHtml = `
         <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startDriverTrip('${item.id}', 'active')" style="background:#059669; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-            <span class="live-dot-pulse" style="width:6px; height:6px; background:#fff;"></span>
+          <button type="button" onclick="startDriverTrip('${item.id}', 'active')" style="background:var(--color-primary, #1B2B68); color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(27,43,104,0.25);">
+            <span class="live-dot-pulse" style="width:6px; height:6px; background:#60A5FA; border-radius:50%;"></span>
             <span>Live Trip</span>
           </button>
         </div>`;
     } else if (actionable) {
       ctaHtml = `
         <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startDriverTrip('${item.id}', 'soon')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-            <i data-lucide="send" style="width:12px; height:12px;"></i>
+          <button type="button" onclick="startDriverTrip('${item.id}', 'soon')" style="background:var(--color-primary, #1B2B68); color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(27,43,104,0.2);">
+            <i data-lucide="send" style="width:11px; height:11px;"></i>
             <span>Start</span>
           </button>
         </div>`;
     } else {
       ctaHtml = `
-        <div style="width:32px; height:32px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
-          <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>
+        <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
+          <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
         </div>`;
     }
 
+    // Determine Round Trip vs 1-Way Trip
+    const booking = (state().bookings || []).find((b) => b.id === item.bookingId);
+    const isRound = item.isRoundTrip || (item.returnTime != null) || (item.leg === 'afternoon') || (booking && booking.direction === 'bothway') || (item.frequency === 'recurring');
+    const tripTypePill = isRound
+      ? `<span style="background:rgba(27,43,104,0.08); color:#1B2B68; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="repeat" style="width:11px; height:11px;"></i> Round Trip</span>`
+      : `<span style="background:#F1F5F9; color:#475569; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="arrow-right" style="width:11px; height:11px;"></i> 1-Way Trip</span>`;
+
     return `
-      <article class="h2s-booking-card" onclick="startDriverTrip('${item.id}', '${open ? 'active' : (actionable ? 'soon' : 'prep')}')" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:22px; padding:18px 20px; margin-bottom:14px; box-shadow:0 4px 16px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.2s ease;">
-        <!-- Top Row: Date & Direction -->
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; color:#2563EB; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i data-lucide="calendar" style="width:20px; height:20px;"></i>
+      <article class="h2s-booking-card" onclick="startDriverTrip('${item.id}', '${open ? 'active' : (actionable ? 'soon' : 'prep')}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
+        <!-- Top Row: Date & Trip Type Pill -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i data-lucide="calendar" style="width:17px; height:17px;"></i>
             </div>
             <div>
-              <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
-              <div style="font-size:12px; font-weight:600; color:#64748B; margin-top:2px;">${timeText}</div>
+              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${timeText}</div>
             </div>
           </div>
-          <span style="background:${isReturn ? '#FFF7ED' : '#EFF6FF'}; color:${isReturn ? '#C2410C' : '#1D4ED8'}; font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;">
-            <i data-lucide="${isReturn ? 'corner-down-left' : 'corner-up-right'}" style="width:12px; height:12px;"></i>
-            <span>${badge}</span>
-          </span>
+          ${tripTypePill}
         </div>
 
-        <!-- Middle Row: Route Rail & Seats -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px;">
-          <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; position:relative; padding-left:2px;">
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; background:#2563EB; flex-shrink:0;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
+        <!-- Middle Row: Route Rail (Clean, full width without redundant seats count) -->
+        <div style="margin-bottom:12px; background:#F8FAFC; border-radius:12px; padding:10px 12px; border:1px solid #F1F5F9;">
+          <div style="display:flex; flex-direction:column; gap:8px; position:relative; padding-left:2px;">
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; background:#1B2B68; flex-shrink:0;"></span>
+              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
             </div>
-            <div style="position:absolute; left:6px; top:8px; bottom:8px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; border:2px solid #2563EB; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
+            <div style="position:absolute; left:5.5px; top:8px; bottom:8px; width:1px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #1B2B68; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
+              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
             </div>
-          </div>
-
-          <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; padding-left:16px; border-left:1px solid #F1F5F9; font-size:13px; font-weight:800; color:#0F172A;">
-            <i data-lucide="users" style="width:16px; height:16px; color:#64748B;"></i>
-            <span>${seats} seat${seats > 1 ? 's' : ''}</span>
           </div>
         </div>
 
         <!-- Footer Row: Parent & Kids Info & Action -->
-        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:10px;">
           <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${parentPhoto}" alt="" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
+            <img src="${parentPhoto}" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1.5px solid #E2E8F0;" onerror="this.src='/assets/avatar_sadia.jpg';" />
             <div>
-              <div style="font-size:13.5px; font-weight:700; color:#0F172A; line-height:1.2;">${parentName}</div>
-              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${kidsText}</div>
+              <div style="font-size:13px; font-weight:800; color:#0F172A; line-height:1.2;">${parentName}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:1px;">${kidsText}</div>
             </div>
           </div>
           ${ctaHtml}
@@ -3383,7 +3865,7 @@
     return deriveSchedule().find((item) => item.id === id) || deriveSchedule()[0];
   }
 
-  window.startDriverTrip = function (legId, mode) {
+    window.startDriverTrip = function (legId, mode) {
     const d = ensureDriver();
     const leg = findLeg(legId);
     if (!leg) return;
@@ -3516,8 +3998,8 @@
         const src = esc(c.photo || '/assets/avatar_arman.jpg');
         return `<img src="${src}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" onerror="this.src='/assets/avatar_arman.jpg'" />`;
       }).join('') || `
-        <img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" />
-        <img src="/assets/avatar_emma.jpg" alt="" class="avatar-img-circle overlap" />`;
+        <img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" onerror="this.onerror=null;this.src='/assets/avatar_arman.jpg';" />
+        <img src="/assets/avatar_emma.jpg" alt="" class="avatar-img-circle overlap" onerror="this.onerror=null;this.src='/assets/avatar_arman.jpg';" />`;
     }
     if (noteChip) {
       const note = tripNote(ctx);
@@ -3828,60 +4310,70 @@
     const el = document.getElementById('driverProfileFeed');
     if (!el) return;
     bindChildTitle(el, 'Driver Profile');
-    const partnerId = String(d.vehicle?.plate || 'SCH-4091').replace(/[^0-9]/g, '') || '4091';
-    const idLabel = `ID: ${partnerId.length >= 8 ? partnerId : `3514-${partnerId.padStart(4, '0')}`}`;
     const vehicleLabel = `${esc(d.vehicle.make)} ${esc(d.vehicle.model)} (${esc(d.vehicle.year)})`;
     el.innerHTML = `
-      <div class="profile-user-card" role="button" tabindex="0" onclick="openDriverProfileChild('driverOnboardProfile', event)">
+      <!-- 1. Driver Profile Hero Card -->
+      <div class="profile-user-card" role="button" tabindex="0" onclick="openDriverProfileChild('driverOnboardProfile', event)" style="margin-bottom:12px;">
         <img src="${esc(d.photo || '/assets/avatar_tariq.jpg')}" alt="${esc(d.name)}" class="profile-avatar-lg" onerror="this.src='/assets/avatar_tariq.jpg'" />
         <div class="profile-user-meta">
           <div class="profile-user-top">
             <div class="profile-user-name-row">
               <h3 class="profile-user-name">${esc(d.name)}</h3>
-              ${isApproved(d) ? '<i data-lucide="badge-check" class="profile-verified-badge"></i>' : ''}
+              ${isApproved(d) ? `
+                <span class="profile-verified-badge-wrap" title="Verified Driver">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" style="vertical-align:middle;">
+                    <circle cx="12" cy="12" r="10" fill="#38BDF8"/>
+                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#09122C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>` : ''}
             </div>
             <i data-lucide="chevron-right" class="profile-user-chevron"></i>
           </div>
-          <p class="profile-user-phone">${esc(d.phone)}</p>
-          <span class="profile-id-pill">${esc(idLabel)}</span>
+          <p class="profile-user-role">School Driver · ★ ${Number(d.rating || 4.9).toFixed(1)} (142 trips)</p>
         </div>
       </div>
 
-      <div class="profile-menu-section">
+      <!-- Online Status & Public Preview -->
+      <div class="profile-menu-section" style="margin-bottom:12px;">
         ${partnerOnlineRow('driver', !!d.isOnline && isApproved(d), !isApproved(d), 'window.setDriverOnlineStatus(this.checked)')}
-        ${profileMenuRow('star', `Your ratings · ${Number(d.rating || 4.9).toFixed(1)}`, "openDriverProfileChild('driverRatings', event)")}
+        ${profileMenuRow('eye', 'Preview Public Profile & Rates', "openDriverProfile('tariq', 'driverProfile')")}
+        ${profileMenuRow('star', `Driver Ratings & Reviews · ${Number(d.rating || 4.9).toFixed(1)} ★`, "openDriverProfileChild('driverRatings', event)")}
       </div>
 
-      <div class="profile-menu-section">
+      <!-- Section 1: Operations & Vehicle -->
+      <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('car', vehicleLabel, "openDriverProfileChild('driverOnboardVehicle', event)")}
         ${profileMenuRow('file-check', 'Verification documents', "openDriverProfileChild('driverOnboardDocs', event)")}
-        ${profileMenuRow('clock', 'Weekly hours', "openDriverProfileChild('driverOnboardAvailability', event)")}
+        ${profileMenuRow('clock', 'Availability', "openDriverProfileChild('driverOnboardAvailability', event)")}
         ${profileMenuRow('circle-dollar-sign', 'Posted rate', "openDriverProfileChild('driverOnboardRate', event)")}
         ${profileMenuRow('wallet', 'Payment preference', "openDriverProfileChild('driverPayment', event)")}
       </div>
 
-      <div class="profile-menu-section">
-        ${profileMenuRow('credit-card', 'Driver subscription', "openDriverProfileChild('driverSubscription', event)")}
-        ${profileMenuRow('bell', 'Notifications', "openDriverProfileChild('profileNotifications', event)")}
+      <!-- Section 2: Subscription, FAQ, Support & Policies -->
+      <div class="profile-menu-section" style="margin-bottom:12px;">
+        ${profileMenuRow('sparkles', 'Driver subscription', "openDriverProfileChild('driverSubscription', event)")}
         ${profileMenuRow('help-circle', 'FAQ', "openDriverProfileChild('faq', event)")}
-        ${profileMenuRow('headphones', 'Contact support', "openDriverProfileChild('contactSupport', event)")}
+        ${profileMenuRow('headphones', 'Contact Support', "openDriverProfileChild('contactSupport', event)")}
+        ${profileMenuRow('alert-triangle', 'Safety Center', "openDriverProfileChild('report', event)")}
         ${profileMenuRow('shield', 'Privacy Policy', "openDriverProfileChild('privacy', event)")}
         ${profileMenuRow('file-text', 'Terms of Service', "openDriverProfileChild('legal', event)")}
         ${profileMenuRow('info', 'About Home2School', "openDriverProfileChild('about', event)")}
       </div>
 
-      <div class="profile-workspace-card" role="button" tabindex="0" onclick="window.openRoleSwitcherModal()">
+      <!-- Role Switcher Card -->
+      <div class="profile-workspace-card" role="button" tabindex="0" onclick="window.openRoleSwitcherModal()" style="margin-bottom:12px;">
         <div class="pwc-left">
           <div class="pwc-icon-wrap driver"><i data-lucide="layers"></i></div>
           <div class="pwc-info">
-            <div class="pwc-title">Role: Driver</div>
-            <div class="pwc-subtitle">Switch role</div>
+            <div class="pwc-title">Active Role: Driver</div>
+            <div class="pwc-subtitle">Switch to Parent or WalkShare mode</div>
           </div>
         </div>
         <button type="button" class="pwc-action-btn" onclick="event.stopPropagation(); window.openRoleSwitcherModal()">Switch</button>
       </div>
 
-      <button type="button" class="profile-logout-btn" onclick="navigateTo('authWelcome')">
+      <!-- Log Out Button -->
+      <button type="button" class="profile-logout-btn" onclick="navigateTo('authWelcome')" style="margin-bottom:24px;">
         <i data-lucide="log-out"></i>
         Log out
       </button>
@@ -3972,8 +4464,22 @@
     // In driver chat, "provider" bubble = parent message; "parent" bubble = driver (me)
     const cls = item.type === 'provider' ? 'provider' : 'parent';
     return `<div class="chat-bubble ${cls}">
-      ${esc(item.text)}
-      <div class="chat-timestamp">${esc(item.time || '')}</div>
+      <div class="chat-bubble-text">${esc(item.text)}</div>
+      <div class="chat-timestamp">
+        ${esc(item.time || '')}
+        ${cls === 'parent' ? '<i data-lucide="check-check" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-left:2px;opacity:0.85;"></i>' : ''}
+      </div>
+      <div class="chat-bubble-actions">
+        <button type="button" class="bubble-act-btn" onclick="copyChatMessageText(this)" title="Copy message" aria-label="Copy">
+          <i data-lucide="copy"></i>
+        </button>
+        <button type="button" class="bubble-act-btn danger" onclick="deleteIndividualChatMessage(this)" title="Delete message" aria-label="Delete">
+          <i data-lucide="trash-2"></i>
+        </button>
+        <button type="button" class="bubble-act-btn" onclick="reactToChatMessage(this, '👍')" title="Thumbs up" aria-label="React">
+          <span>👍</span>
+        </button>
+      </div>
     </div>`;
   }
 
@@ -4004,12 +4510,16 @@
     }
     if (nameEl) nameEl.textContent = party.name;
     if (subEl) {
-      subEl.textContent = '';
-      subEl.style.display = 'none';
+      subEl.textContent = 'Parent • Safe in-app chat';
+      subEl.style.display = 'block';
     }
-    if (input) input.placeholder = 'Message…';
+    if (input) input.placeholder = `Message ${party.name.split(' ')[0]}…`;
     if (header) { header.onclick = null; header.style.cursor = 'default'; }
-    if (callBtn) callBtn.style.display = 'none';
+    if (callBtn) {
+      callBtn.style.display = 'flex';
+      callBtn.title = `Call ${party.name}`;
+      callBtn.onclick = function() { window.callCurrentChatParty(); };
+    }
     const quick = document.getElementById('chatQuickReplies');
     if (quick) {
       quick.innerHTML = [
@@ -4050,20 +4560,46 @@
   function appendMine(text) {
     const stream = document.getElementById('chatStream');
     if (!stream) return;
+    const empty = document.getElementById('chatEmptyState');
+    if (empty) empty.remove();
+
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble parent';
-    bubble.innerHTML = `${esc(text)}<div class="chat-timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
+    bubble.innerHTML = `
+      <div class="chat-bubble-text">${esc(text)}</div>
+      <div class="chat-timestamp">${timeStr} <i data-lucide="check-check" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-left:2px;opacity:0.85;"></i></div>
+      <div class="chat-bubble-actions">
+        <button type="button" class="bubble-act-btn" onclick="copyChatMessageText(this)" title="Copy message" aria-label="Copy"><i data-lucide="copy"></i></button>
+        <button type="button" class="bubble-act-btn danger" onclick="deleteIndividualChatMessage(this)" title="Delete message" aria-label="Delete"><i data-lucide="trash-2"></i></button>
+        <button type="button" class="bubble-act-btn" onclick="reactToChatMessage(this, '👍')" title="Thumbs up" aria-label="React"><span>👍</span></button>
+      </div>
+    `;
     stream.appendChild(bubble);
+    icons();
     stream.scrollTop = stream.scrollHeight;
   }
 
   function appendTheirs(text) {
     const stream = document.getElementById('chatStream');
     if (!stream) return;
+    const empty = document.getElementById('chatEmptyState');
+    if (empty) empty.remove();
+
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble provider';
-    bubble.innerHTML = `${esc(text)}<div class="chat-timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
+    bubble.innerHTML = `
+      <div class="chat-bubble-text">${esc(text)}</div>
+      <div class="chat-timestamp">${timeStr}</div>
+      <div class="chat-bubble-actions">
+        <button type="button" class="bubble-act-btn" onclick="copyChatMessageText(this)" title="Copy message" aria-label="Copy"><i data-lucide="copy"></i></button>
+        <button type="button" class="bubble-act-btn danger" onclick="deleteIndividualChatMessage(this)" title="Delete message" aria-label="Delete"><i data-lucide="trash-2"></i></button>
+        <button type="button" class="bubble-act-btn" onclick="reactToChatMessage(this, '👍')" title="Thumbs up" aria-label="React"><span>👍</span></button>
+      </div>
+    `;
     stream.appendChild(bubble);
+    icons();
     stream.scrollTop = stream.scrollHeight;
   }
 
@@ -4095,14 +4631,126 @@
     renderRequests(tab);
   };
 
-  window.switchDriverScheduleTab = function (tab) {
-    renderSchedule(tab);
+  let driverParentStars = 5;
+  let driverParentTags = [];
+
+  function renderRateParent() {
+    const el = feed('driverRateParentFeed') || document.getElementById('driverRateParentFeed');
+    if (!el) return;
+    bindChildTitle(el, 'Rate Parent & Trip');
+    bindChildBack(el, "navigateTo('driverHome')");
+
+    const parentName = 'Sadia Khan';
+    const parentPhoto = '/assets/avatar_sadia.jpg';
+    const children = 'Arman (Gr 2) & Emma (JK)';
+    const route = 'Home (12 Elm St) → Greenfield Int.';
+
+    el.innerHTML = `
+      <!-- Clean Hero Profile Header (No unnecessary heavy boxes) -->
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin: 8px 0 20px;">
+        <div style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); margin-bottom: 10px;">
+          <img src="${parentPhoto}" alt="${parentName}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />
+        </div>
+        <h2 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0 0 4px;">${parentName}</h2>
+        <p style="font-size: 13px; font-weight: 600; color: #64748B; margin: 0 0 2px;">Passengers: ${children}</p>
+        <p style="font-size: 12px; color: #94A3B8; margin: 0;">${route}</p>
+      </div>
+
+      <!-- 1. Star Rating (1-5) -->
+      <div style="text-align: center; margin-bottom: 22px;">
+        <p style="font-size: 13px; font-weight: 700; color: #475569; margin: 0 0 10px;">How was your trip experience? <span style="color:#EF4444;">*</span></p>
+        <div id="driverRateParentStarsRow" style="display: flex; justify-content: center; gap: 14px; font-size: 38px; cursor: pointer;">
+          <span class="rate-star" data-val="1" onclick="setDriverParentRatingStars(1)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+          <span class="rate-star" data-val="2" onclick="setDriverParentRatingStars(2)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+          <span class="rate-star" data-val="3" onclick="setDriverParentRatingStars(3)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+          <span class="rate-star" data-val="4" onclick="setDriverParentRatingStars(4)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+          <span class="rate-star" data-val="5" onclick="setDriverParentRatingStars(5)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+        </div>
+        <div id="driverRateParentSentiment" style="font-size: 13px; font-weight: 700; color: #1E293B; margin-top: 8px;">5.0 · Punctual & Respectful Parent</div>
+      </div>
+
+      <!-- 2. Experience Highlights / Quick Tags -->
+      <div style="margin-bottom: 20px;">
+        <p style="font-size: 12.5px; font-weight: 700; color: #475569; margin: 0 0 8px;">What went well</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          ${['⏰ On Time', '🎒 Kids Ready', '🤝 Polite & Respectful', '💬 Responsive on Chat', '🚗 Smooth Handover'].map(tag => `
+            <button type="button" class="review-tag-chip" onclick="toggleDriverParentTag(this, '${tag}')" style="padding: 7px 14px; border-radius: 99px; font-size: 12px; font-weight: 700; border: 1px solid #CBD5E1; background: #FFFFFF; color: #475569; cursor: pointer; transition: all 0.15s;">
+              ${tag}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- 3. Notes / Comments -->
+      <div style="margin-bottom: 24px;">
+        <label for="driverParentComment" style="font-size: 12.5px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px;">
+          Comment <span style="font-weight: 400; color: #94A3B8;">(Optional)</span>
+        </label>
+        <textarea id="driverParentComment" rows="3" class="form-input" placeholder="Share a short note about this trip experience..." style="width: 100%; border-radius: 12px; border: 1.5px solid #E2E8F0; padding: 10px 14px; font-size: 13.5px; font-family: inherit; resize: none; box-sizing: border-box;"></textarea>
+      </div>
+
+      <div class="drv-actions-col" style="display: flex; flex-direction: column; gap: 10px;">
+        <button type="button" class="btn-primary" onclick="submitDriverParentRating()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">Submit Rating</button>
+        <button type="button" class="btn-secondary-link" onclick="navigateTo('driverHome')" style="text-align: center; font-size: 13px; color: #64748B; background: none; border: none; padding: 8px; cursor: pointer;">Skip for now</button>
+      </div>
+    `;
+    icons();
+  }
+
+  window.setDriverParentRatingStars = function (val) {
+    driverParentStars = Number(val);
+    const row = document.getElementById('driverRateParentStarsRow');
+    if (row) {
+      const stars = row.querySelectorAll('.rate-star');
+      stars.forEach((s) => {
+        const v = Number(s.getAttribute('data-val'));
+        s.textContent = v <= val ? '★' : '☆';
+        s.style.color = v <= val ? '#F59E0B' : '#CBD5E1';
+      });
+    }
+    const sentimentEl = document.getElementById('driverRateParentSentiment');
+    const sentiments = {
+      1: '1.0 · Major Issues / Late Handover',
+      2: '2.0 · Needs Better Communication',
+      3: '3.0 · Average Handover',
+      4: '4.0 · Good & Cooperative Parent',
+      5: '5.0 · Punctual & Respectful Parent'
+    };
+    if (sentimentEl) sentimentEl.textContent = sentiments[val] || `${val}.0`;
   };
 
-  window.setDriverScenario = function (scenario) {
-    ensureDriver().homeScenario = scenario;
+  window.toggleDriverParentTag = function (btn, tag) {
+    btn.classList.toggle('selected');
+    if (btn.classList.contains('selected')) {
+      btn.style.background = '#EFF6FF';
+      btn.style.borderColor = '#1B2B68';
+      btn.style.color = '#1B2B68';
+      if (!driverParentTags.includes(tag)) driverParentTags.push(tag);
+    } else {
+      btn.style.background = '#FFFFFF';
+      btn.style.borderColor = '#CBD5E1';
+      btn.style.color = '#475569';
+      driverParentTags = driverParentTags.filter(t => t !== tag);
+    }
+  };
+
+  window.submitDriverParentRating = function () {
+    const stars = Number(driverParentStars || 5);
+    const comment = (document.getElementById('driverParentComment')?.value || '').trim();
+    const tags = driverParentTags.slice();
+    if (!state().parentFeedback) state().parentFeedback = [];
+    state().parentFeedback.push({
+      id: 'fb-' + Date.now(),
+      parentId: 'PRNT-9042',
+      parentName: 'Sadia Khan',
+      rating: stars,
+      date: 'Today',
+      comment: comment,
+      tags: tags
+    });
     persist();
-    renderHome();
+    toast(`★ ${stars}-star rating submitted for Sadia Khan!`);
+    window.navigateTo('driverHome');
   };
 
   window.renderDriverHome = renderHome;
@@ -4123,6 +4771,15 @@
   window.renderDriverRequestDetail = renderRequestDetail;
   window.renderDriverTripPrep = renderTripPrep;
   window.renderDriverRateParent = renderRateParent;
+  window.setDriverScenario = function (sc) {
+    const d = ensureDriver();
+    d.homeScenario = sc;
+    persist();
+    ['A', 'B', 'C'].forEach((s) => {
+      document.getElementById('dchipScenario' + s)?.classList.toggle('active', s === sc);
+    });
+    renderHome();
+  };
 
   function applyTariqAvailabilityToSearch() {
     if (window.H2SAvailability) {

@@ -1,12 +1,15 @@
-/* Parent search — flat list standard (no card stack) */
+/* ==========================================================================
+   Transport Providers & Driver Cards — Modern Clean Standard
+   Matches the user's reference design (clean rounded cards, rich typography,
+   verified badge, rating + location, vehicle row, price + Request Booking CTA)
+   ========================================================================== */
 
 #screen-bookingSearchProviders {
-  background: #FFFFFF !important;
+  background: #F8FAFC !important;
 }
 
 #screen-bookingSearchProviders .status-bar,
-#screen-bookingSearchProviders .top-bar-sticky,
-#screen-bookingSearchProviders .screen-scroll-body {
+#screen-bookingSearchProviders .top-bar-sticky {
   background: #FFFFFF !important;
 }
 
@@ -14,195 +17,381 @@
   border-bottom: 1px solid #ECECF0;
 }
 
-/* List | Map — text tabs, no segment box */
+#screen-bookingSearchProviders .screen-scroll-body {
+  background: #F8FAFC !important;
+  padding: 12px 16px 36px !important;
+}
+
+/* Section Header */
+.providers-header-block {
+  margin: 8px 0 16px;
+  padding: 0 2px;
+}
+
+.providers-header-title {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.03em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* List | Map View Toggle */
 #screen-bookingSearchProviders .mvp-search-toolbar {
+  display: flex;
   justify-content: flex-start;
-  margin: 0 0 4px;
+  margin: 0 0 10px;
   padding: 0;
 }
 
 #screen-bookingSearchProviders .provider-view-toggle {
   display: inline-flex;
-  width: auto;
-  max-width: none;
-  background: transparent;
-  border-radius: 0;
-  padding: 0;
-  gap: 16px;
-  border-bottom: 1px solid #ECECF0;
   width: 100%;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid #E2E8F0;
+  box-sizing: border-box;
 }
 
 #screen-bookingSearchProviders .provider-view-btn {
-  height: 36px;
-  padding: 0 2px 10px;
-  border-radius: 0;
+  flex: 1;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 8px;
   background: transparent !important;
-  color: #6B7280;
-  font-size: 14px;
+  color: #64748B;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: 13.5px;
   font-weight: 600;
-  box-shadow: none !important;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #screen-bookingSearchProviders .provider-view-btn.active {
-  background: transparent !important;
-  color: #1A1D24;
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
   font-weight: 700;
-  box-shadow: none !important;
-  border-bottom-color: #1B2B68;
+  box-shadow: 0 2px 4px rgba(27, 43, 104, 0.15) !important;
 }
 
-/* Filters — soft text chips, not bordered boxes */
+/* Filter Chips Row */
 #screen-bookingSearchProviders .mvp-filter-row {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   overflow-x: auto;
-  margin: 12px 0 4px;
-  padding: 0;
+  margin: 0 0 16px;
+  padding: 2px 0 6px;
+  scrollbar-width: none;
+}
+
+#screen-bookingSearchProviders .mvp-filter-row::-webkit-scrollbar {
+  display: none;
 }
 
 #screen-bookingSearchProviders .mvp-filter-chip {
   flex: 0 0 auto;
-  height: 28px;
-  padding: 0 12px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: 999px;
-  border: none;
-  background: transparent;
-  color: #4B5563;
-  font-size: 12px;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #475569;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: 12.5px;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+#screen-bookingSearchProviders .mvp-filter-chip:hover {
+  border-color: #CBD5E1;
+  background: #F8FAFC;
 }
 
 #screen-bookingSearchProviders .mvp-filter-chip.active {
-  background: #1B2B68;
-  color: #FFFFFF;
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
+  border-color: #1B2B68 !important;
   font-weight: 700;
+  box-shadow: 0 2px 6px rgba(27, 43, 104, 0.18) !important;
 }
 
-#screen-bookingSearchProviders .mvp-filter-chip:not(.active) {
-  background: #F3F4F6;
-}
-
-/* Provider rows — divider list, zero card chrome */
+/* ==========================================================================
+   Provider Result Card — Reference Design 1:1
+   ========================================================================== */
 .providers-result-list {
-  gap: 0 !important;
-  margin-top: 4px;
-  background: #FFFFFF;
-}
-
-.provider-card-slim,
-#screen-bookingSearchProviders .provider-result-card {
-  padding: 14px 0 !important;
-  gap: 0 !important;
-  border: none !important;
-  border-bottom: 1px solid #ECECF0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.provider-card-slim:hover,
-#screen-bookingSearchProviders .provider-result-card:hover {
-  border-color: transparent !important;
-  border-bottom-color: #ECECF0 !important;
-  transform: none !important;
-  box-shadow: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin-top: 0 !important;
   background: transparent !important;
 }
 
-.providers-result-list .provider-card-slim:last-child {
-  border-bottom: none !important;
+.provider-result-card,
+.provider-card-slim {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 14px !important;
+  padding: 11px 13px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  margin-bottom: 0 !important;
 }
 
-.pcs-main {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
+.provider-result-card:hover,
+.provider-card-slim:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05) !important;
+  transform: translateY(-1px) !important;
 }
 
+/* Top Section: Avatar, Info Column, Chevron */
+.pcm-top-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  position: relative !important;
+}
+
+.pcm-avatar,
 .provider-card-slim .provider-card-avatar {
   width: 44px !important;
   height: 44px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  flex-shrink: 0 !important;
+  background: #F1F5F9 !important;
   border: none !important;
   box-shadow: none !important;
 }
 
-.provider-card-slim .provider-name-block {
-  flex: 1;
-  min-width: 0;
+.pcm-info-col {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.5px !important;
+}
+
+/* Row 1: Name + Verified Badge */
+.pcm-name-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.pcm-name {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+  font-size: 14.5px !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.pcm-verified-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.pcm-verified-badge svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+/* Row 2: Star Rating • Location */
+.pcm-meta-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 12px !important;
+  color: #4B5563 !important;
+  line-height: 1.15 !important;
+  font-family: 'Manrope', system-ui, sans-serif !important;
+}
+
+.pcm-rating-val {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  font-weight: 700 !important;
+  color: #1F2937 !important;
+  font-size: 12px !important;
+}
+
+.pcm-star {
+  color: #F59E0B !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.pcm-dot {
+  color: #9CA3AF !important;
+  font-size: 10px !important;
+}
+
+.pcm-location {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  font-weight: 500 !important;
+  color: #4B5563 !important;
+  font-size: 12px !important;
+}
+
+.pcm-icon {
+  color: #6B7280 !important;
+  flex-shrink: 0 !important;
+  vertical-align: middle !important;
+}
+
+/* Row 3: Vehicle / Ride Mode */
+.pcm-vehicle-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #4B5563 !important;
+  line-height: 1.15 !important;
+  font-family: 'Manrope', system-ui, sans-serif !important;
+}
+
+.pcm-vehicle-name {
+  color: #4B5563 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Chevron Right */
+.pcm-chevron {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #9CA3AF !important;
+  flex-shrink: 0 !important;
+  padding: 2px !important;
+  transition: transform 0.15s ease, color 0.15s ease !important;
+}
+
+.pcm-chevron svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.pcm-top-row:hover .pcm-chevron {
+  color: #4B5563 !important;
+  transform: translateX(2px) !important;
+}
+
+/* Divider Line */
+.pcm-divider {
+  height: 1px !important;
+  width: 100% !important;
+  background: #F1F5F9 !important;
+  margin: 8px 0 !important;
+  border: none !important;
+}
+
+/* Bottom Section: Price + Request Booking Button */
+.pcm-bottom-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  gap: 8px !important;
+}
+
+.pcm-price-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+.pcm-price-line {
+  display: flex !important;
+  align-items: baseline !important;
   gap: 2px !important;
 }
 
-.provider-card-slim .provider-name-verified {
-  font-size: 14px !important;
+.pcm-price-val {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  line-height: 1 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.pcm-price-unit {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+}
+
+.pcm-price-status {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+  line-height: 1.1 !important;
+  margin-top: 1px !important;
+}
+
+/* Request Booking CTA Button */
+.btn-request-booking {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
+  font-size: 12.5px !important;
   font-weight: 700 !important;
-  color: #1A1D24 !important;
-}
-
-.provider-card-slim .provider-meta-row {
-  font-size: 12px !important;
-  color: #6B7280 !important;
-  font-weight: 500 !important;
-}
-
-.provider-card-slim .rating-badge {
-  background: transparent !important;
-  padding: 0 !important;
+  padding: 6px 14px !important;
+  height: 33px !important;
+  min-height: 33px !important;
+  border-radius: 8px !important;
   border: none !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  color: #B45309 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  box-shadow: 0 2px 4px rgba(27, 43, 104, 0.15) !important;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease !important;
+  line-height: 1.2 !important;
 }
 
-.pcs-sub {
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  color: #6B7280 !important;
+.btn-request-booking:hover {
+  background: #142152 !important;
+  box-shadow: 0 4px 10px rgba(27, 43, 104, 0.22) !important;
 }
 
-/* Book = text action, not a box button */
-.pcs-book {
-  flex-shrink: 0;
-  align-self: center;
-  height: auto;
-  min-width: 0;
-  padding: 6px 0 6px 8px;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  color: #1B2B68;
-  font-family: Manrope, system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  line-height: 1.2;
-  box-shadow: none;
+.btn-request-booking:active {
+  transform: scale(0.97) !important;
 }
 
-.pcs-book:active {
-  opacity: 0.7;
-}
-
+/* Hide any legacy duplicate action rows if present */
+.pcs-actions-row,
 .mvp-card-actions--slim {
   display: none !important;
-}
-
-.pcs-verified-icon {
-  width: 14px !important;
-  height: 14px !important;
-}
-
-#screen-bookingSearchProviders .mvp-adv-filter-chips .mvp-filter-chip {
-  height: 28px;
-  border: none;
-  background: #F3F4F6;
-  border-radius: 999px;
-}
-
-#screen-bookingSearchProviders .mvp-adv-filter-chips .mvp-filter-chip.active {
-  background: #1B2B68;
-  color: #FFFFFF;
 }

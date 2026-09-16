@@ -11,6 +11,8 @@ const screens = [
   'onboarding2',
   'onboarding3',
   'authWelcome',
+  'authLogin',
+  'authRoleSelect',
   'authOtp',
   'authProfile',
   'authPhoto',
@@ -86,6 +88,7 @@ const screens = [
   'wsActiveWalk',
   'wsRatings',
   'profileNotifications',
+  'profileReviews',
   'adminPortal'
 ];
 
@@ -170,6 +173,14 @@ window.appState = {
       reviewsCount: 128,
       seats: 4,
       baseWeekly: 120,
+      listedRate: 120,
+      ratePeriod: 'week',
+      oneTimeRate: 35,
+      negotiable: true,
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandle: 'tariq.ahmed@interac.ca',
+      maxServiceDistanceKm: 15,
+      serviceArea: 'Midtown Toronto',
       photo: '/assets/avatar_tariq.jpg',
       phone: '+1 (416) 555-0182',
       experience: '4+ Yrs',
@@ -197,6 +208,14 @@ window.appState = {
       reviewsCount: 94,
       seats: 5,
       baseWeekly: 135,
+      listedRate: 135,
+      ratePeriod: 'week',
+      oneTimeRate: 40,
+      negotiable: true,
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandle: 'farhana.yasmin@interac.ca',
+      maxServiceDistanceKm: 15,
+      serviceArea: 'Annex / Midtown',
       photo: '/assets/avatar_farhana.jpg',
       phone: '+1 (416) 555-0183',
       experience: '6+ Yrs',
@@ -224,6 +243,14 @@ window.appState = {
       reviewsCount: 62,
       seats: 4,
       baseWeekly: 110,
+      listedRate: 110,
+      ratePeriod: 'week',
+      oneTimeRate: 30,
+      negotiable: false,
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandle: 'kabir.hossain@interac.ca',
+      maxServiceDistanceKm: 15,
+      serviceArea: 'East York',
       photo: '/assets/avatar_kabir.jpg',
       phone: '+1 (416) 555-0184',
       experience: '3+ Yrs',
@@ -252,6 +279,14 @@ window.appState = {
       reviewsCount: 45,
       seats: 3,
       baseWeekly: 75,
+      listedRate: 75,
+      ratePeriod: 'week',
+      oneTimeRate: 25,
+      negotiable: true,
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandle: 'sarah.jenkins@interac.ca',
+      maxServiceDistanceKm: 5,
+      serviceArea: 'Elm → Greenfield',
       photo: '/assets/avatar_sarah.jpg',
       phone: '+1 (416) 555-0185',
       experience: '5+ Yrs',
@@ -280,6 +315,14 @@ window.appState = {
       reviewsCount: 38,
       seats: 2,
       baseWeekly: 70,
+      listedRate: 70,
+      ratePeriod: 'week',
+      oneTimeRate: 25,
+      negotiable: true,
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandle: 'elena.rostova@interac.ca',
+      maxServiceDistanceKm: 5,
+      serviceArea: 'West-gate / Greenfield',
       photo: '/assets/avatar_rehana.jpg',
       phone: '+1 (416) 555-0186',
       experience: '4+ Yrs',
@@ -389,8 +432,15 @@ window.appState = {
       outboundTime: '07:30 AM',
       returnTime: '01:00 PM',
       providerId: 'tariq',
-      amount: 120,
-      paymentMethod: 'Visa •••• 4242',
+      amount: 135,
+      listedRate: 120,
+      agreedRate: 135,
+      rateStatus: 'agreed',
+      ratePeriod: 'week',
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandleStatus: 'shared',
+      paymentHandle: 'tariq.ahmed@interac.ca',
+      paymentMethod: 'Interac e-Transfer (Direct to Driver)',
       createdAt: 'May 20, 2026'
     },
     // 2. One-Way + Recurring (Confirmed)
@@ -412,8 +462,15 @@ window.appState = {
       outboundTime: '07:45 AM',
       returnTime: '',
       providerId: 'farhana',
-      amount: 65,
-      paymentMethod: 'Apple Pay',
+      amount: 135,
+      listedRate: 135,
+      agreedRate: 135,
+      rateStatus: 'agreed',
+      ratePeriod: 'week',
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandleStatus: 'shared',
+      paymentHandle: 'farhana.yasmin@interac.ca',
+      paymentMethod: 'Interac e-Transfer (Direct to Driver)',
       createdAt: 'May 22, 2026'
     },
     // 3. Two-Way + One-Time (Confirmed)
@@ -436,7 +493,14 @@ window.appState = {
       returnTime: '02:30 PM',
       providerId: 'kabir',
       amount: 55,
-      paymentMethod: 'Mastercard •••• 8821',
+      listedRate: 110,
+      agreedRate: 55,
+      rateStatus: 'agreed',
+      ratePeriod: 'trip',
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandleStatus: 'shared',
+      paymentHandle: 'kabir.hossain@interac.ca',
+      paymentMethod: 'Cash at pickup',
       createdAt: 'May 23, 2026'
     },
     // 4. One-Way + One-Time (Pending)
@@ -453,8 +517,15 @@ window.appState = {
       outboundTime: '08:15 AM',
       returnTime: '',
       providerId: 'sarah',
-      amount: 35,
-      paymentMethod: 'Visa •••• 4242',
+      amount: 25,
+      listedRate: 75,
+      agreedRate: null,
+      rateStatus: 'listed',
+      ratePeriod: 'trip',
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandleStatus: 'not_requested',
+      paymentHandle: 'sarah.jenkins@interac.ca',
+      paymentMethod: 'Direct to Escort',
       createdAt: 'May 21, 2026'
     },
     {
@@ -474,8 +545,15 @@ window.appState = {
       outboundTime: '08:15 AM',
       returnTime: '01:30 PM',
       providerId: 'tariq',
-      amount: 45,
-      paymentMethod: 'Interac e-Transfer',
+      amount: 35,
+      listedRate: 120,
+      agreedRate: null,
+      rateStatus: 'listed',
+      ratePeriod: 'trip',
+      preferredPayment: 'e-Transfer · Cash',
+      paymentHandleStatus: 'not_requested',
+      paymentHandle: 'tariq.ahmed@interac.ca',
+      paymentMethod: 'Direct to Driver',
       createdAt: 'Sep 9, 2026'
     },
 
@@ -1440,7 +1518,7 @@ window.navReturnStack = window.navReturnStack || [];
 function navScreenBucket(name) {
   if (!name) return 'unknown';
   if (name === 'adminPortal') return 'admin';
-  if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'report' || name === 'rating') return 'shared';
+  if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'profileNotifications' || name === 'profileReviews' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'report' || name === 'rating') return 'shared';
   if (String(name).indexOf('driver') === 0) return 'driver';
   if (String(name).indexOf('ws') === 0) return 'walkshare';
   if (name === 'splash' || String(name).indexOf('onboarding') === 0 || String(name).indexOf('auth') === 0) return 'auth';
@@ -1623,6 +1701,22 @@ window.navigateTo = function (screenName, isBack = false) {
     roleModal.classList.remove('active');
     roleModal.style.display = 'none';
   }
+  const sosModal = document.getElementById('emergencySOSModal');
+  if (sosModal) {
+    sosModal.classList.remove('active');
+    sosModal.style.setProperty('display', 'none', 'important');
+  }
+  const pinModal = document.getElementById('dynamicSafetyPinModal') || document.getElementById('safetyPinModal');
+  if (pinModal) {
+    pinModal.classList.remove('active');
+    pinModal.style.setProperty('display', 'none', 'important');
+  }
+  const fareModal = document.getElementById('dynamicFareModal');
+  if (fareModal) {
+    fareModal.classList.remove('active');
+    fareModal.style.setProperty('display', 'none', 'important');
+  }
+
   document.querySelectorAll('.book-ride-sheet.visible, .clean-modal-overlay[style*="display: flex"], .custom-modal-overlay.active').forEach((sheet) => {
     sheet.classList.remove('visible', 'active');
     if (sheet.classList.contains('custom-modal-overlay') || sheet.classList.contains('clean-modal-overlay')) {
@@ -1714,6 +1808,8 @@ window.navigateTo = function (screenName, isBack = false) {
     window.renderDriverTripPrep();
   } else if (screenName === 'driverRateParent' && window.renderDriverRateParent) {
     window.renderDriverRateParent();
+  } else if (screenName === 'profileReviews' && window.renderParentReviewsScreen) {
+    window.renderParentReviewsScreen();
   } else if (screenName === 'tracking') {
     if (window.renderTrackingScreen) window.renderTrackingScreen();
   }
@@ -1771,20 +1867,23 @@ function updateBottomTabHighlights(screenName) {
     bookingDetails: 1,
     bookingRequestSent: 1,
     bookingConfirmed: 1,
-    tracking: 2,
-    messages: 3,
-    inbox: 3,
-    profile: 4,
-    myChildren: 4,
-    profilePersonalInfo: 4,
-    profileEmergency: 4,
-    profileLocations: 4,
-    profilePayments: 4,
-    subscription: 4,
-    faq: 4,
-    legal: 4,
-    about: 4,
-    contactSupport: 4
+    tracking: 1,
+    messages: 2,
+    inbox: 2,
+    profile: 3,
+    myChildren: 3,
+    profilePersonalInfo: 3,
+    profileEmergency: 3,
+    profileLocations: 3,
+    profilePayments: 3,
+    profileReviews: 3,
+    profileNotifications: 3,
+    privacy: 3,
+    subscription: 3,
+    faq: 3,
+    legal: 3,
+    about: 3,
+    contactSupport: 3
   };
 
   const driverTabMap = {
@@ -2182,46 +2281,73 @@ window.toggleChildSelection = function (childId) {
 /* ==========================================================
    Booking Wizard: Step 2 Trip Direction & Frequency
    ========================================================== */
-window.setTripDirection = function (dir) {
+window.setTripType = function (type) {
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
-  const next = dir === 'oneway' ? 'oneway' : 'bothway';
-  window.appState.bookingDraft.direction = next;
-  const btnOne = document.getElementById('btnDirOneWay');
+  window.appState.bookingDraft.tripType = type; // 'morning' | 'afternoon' | 'bothway'
+
+  const btnMorning = document.getElementById('btnDirMorning');
+  const btnAfternoon = document.getElementById('btnDirAfternoon');
   const btnBoth = document.getElementById('btnDirBothWay');
-  const returnBlock = document.getElementById('returnScheduleBlock') || document.getElementById('returnTimePickerBox');
   const morningBlock = document.getElementById('morningScheduleBlock');
+  const returnBlock = document.getElementById('returnScheduleBlock');
   const timesGrid = document.querySelector('#screen-bookingTripSetup .book-ride-times')
     || document.querySelector('.clean-sched-times-grid');
-  const badge = document.getElementById('tripTypeHelpBadge');
-  const shiftRow = document.getElementById('oneWayShiftRow');
 
-  btnOne?.classList.toggle('active', next === 'oneway');
-  btnBoth?.classList.toggle('active', next === 'bothway');
-  if (btnOne) btnOne.setAttribute('aria-pressed', next === 'oneway' ? 'true' : 'false');
-  if (btnBoth) btnBoth.setAttribute('aria-pressed', next === 'bothway' ? 'true' : 'false');
+  btnMorning?.classList.toggle('active', type === 'morning');
+  btnAfternoon?.classList.toggle('active', type === 'afternoon');
+  btnBoth?.classList.toggle('active', type === 'bothway');
+  if (btnMorning) btnMorning.setAttribute('aria-pressed', type === 'morning' ? 'true' : 'false');
+  if (btnAfternoon) btnAfternoon.setAttribute('aria-pressed', type === 'afternoon' ? 'true' : 'false');
+  if (btnBoth) btnBoth.setAttribute('aria-pressed', type === 'bothway' ? 'true' : 'false');
 
-  if (next === 'oneway') {
-    if (badge) {
-      badge.textContent = 'Single Ride';
-      badge.style.background = '#FEF3C7';
-      badge.style.color = '#92400E';
-    }
-    if (shiftRow) shiftRow.style.display = 'none';
+  if (type === 'morning') {
+    window.appState.bookingDraft.direction = 'oneway';
+    window.appState.bookingDraft.oneWayShift = 'morning';
     if (morningBlock) morningBlock.style.display = 'flex';
     if (returnBlock) returnBlock.style.display = 'none';
     if (timesGrid) timesGrid.classList.add('is-oneway');
+  } else if (type === 'afternoon') {
+    window.appState.bookingDraft.direction = 'oneway';
+    window.appState.bookingDraft.oneWayShift = 'afternoon';
+    if (morningBlock) morningBlock.style.display = 'none';
+    if (returnBlock) returnBlock.style.display = 'flex';
+    if (timesGrid) timesGrid.classList.add('is-oneway');
   } else {
-    if (badge) {
-      badge.textContent = 'Morning & Afternoon';
-      badge.style.background = '#DBEAFE';
-      badge.style.color = '#1E40AF';
-    }
-    if (shiftRow) shiftRow.style.display = 'none';
+    window.appState.bookingDraft.direction = 'bothway';
+    window.appState.bookingDraft.oneWayShift = null;
     if (morningBlock) morningBlock.style.display = 'flex';
     if (returnBlock) returnBlock.style.display = 'flex';
     if (timesGrid) timesGrid.classList.remove('is-oneway');
   }
+
   if (typeof window.updateBookingSearchCta === 'function') window.updateBookingSearchCta();
+};
+
+window.setTripDirection = function (dir) {
+  if (dir === 'oneway') {
+    window.setTripType('morning');
+  } else {
+    window.setTripType('bothway');
+  }
+};
+
+window.setBookingZone = function (zone, btn) {
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.zone = zone === 'all' ? '' : zone;
+
+  const badge = document.getElementById('setupSelectedZoneBadge');
+  if (badge) {
+    badge.textContent = zone === 'all' ? 'All Zones' : zone.charAt(0).toUpperCase() + zone.slice(1);
+  }
+
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.sf-chip').forEach((c) => c.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  if (typeof window.filterBookingProviders === 'function') {
+    window.filterBookingProviders(window.appState.bookingDraft.serviceType || 'all');
+  }
 };
 
 window.setOneWayShift = function (shift) {
@@ -2971,36 +3097,44 @@ window.triggerChildSafetySOS = function () {
 window.currentDriverProfileReturnScreen = 'home';
 window.currentDriverProfileId = 'tariq';
 
+/* ==========================================================
+   Section 4.8: Ratings & Reviews Engine (Two-Way, Verified)
+   ========================================================== */
+window.currentDriverProfileReturnScreen = 'home';
+window.currentDriverProfileId = 'tariq';
+window.activeRatingStars = 5;
+window.selectedReviewTags = [];
+
 window.getProviderReviews = function (provider) {
   if (!provider) return [];
-  if (Array.isArray(provider.reviews) && provider.reviews.length) return provider.reviews;
+  if (!provider.reviewsList || !Array.isArray(provider.reviewsList)) {
+    const mainQuote = String(provider.quote || '').replace(/^"|"$/g, '').trim()
+      || 'Reliable and great with kids.';
+    const mainName = String(provider.reviewer || 'Parent')
+      .replace(/^—\s*/, '')
+      .replace(/\s*\(.*\)$/, '')
+      .trim() || 'Parent';
+    const shortName = mainName.split(' ').map((p, i) => (i === 0 ? p : (p[0] ? p[0] + '.' : ''))).join(' ').trim();
 
-  const mainQuote = String(provider.quote || '').replace(/^"|"$/g, '').trim()
-    || 'Reliable and great with kids.';
-  const mainName = String(provider.reviewer || 'Parent')
-    .replace(/^—\s*/, '')
-    .replace(/\s*\(.*\)$/, '')
-    .trim() || 'Parent';
-  const shortName = mainName.split(' ').map((p, i) => (i === 0 ? p : (p[0] ? p[0] + '.' : ''))).join(' ').trim();
-
-  const extras = provider.category === 'walkshare'
-    ? [
-        { name: shortName, rating: 5, date: '3 wk ago', text: mainQuote },
-        { name: 'Priya S.', rating: 5, date: '1 mo ago', text: 'Kids love the morning walk. Clear updates every day.' },
-        { name: 'Omar H.', rating: 5, date: '2 mo ago', text: 'Safe crossings and friendly group. Highly recommend.' },
-        { name: 'Lisa M.', rating: 4, date: '3 mo ago', text: 'Punctual and calm. Would book again.' }
-      ]
-    : [
-        { name: shortName, rating: 5, date: '2 wk ago', text: mainQuote },
-        { name: 'David M.', rating: 5, date: '1 mo ago', text: 'Always on time. Kids feel safe in the car.' },
-        { name: 'Sumaiya A.', rating: 5, date: '6 wk ago', text: 'Clear chat updates and careful driving.' },
-        { name: 'James K.', rating: 4, date: '2 mo ago', text: 'Professional and friendly. Easy booking.' }
-      ];
-  return extras;
+    provider.reviewsList = provider.category === 'walkshare'
+      ? [
+          { id: 'rev-seed-1', name: shortName, rating: 5, date: '3 wk ago', text: mainQuote, tags: ['Safe Crossings', 'Friendly'], flaggedForAdmin: false, hidden: false },
+          { id: 'rev-seed-2', name: 'Priya S.', rating: 5, date: '1 mo ago', text: 'Kids love the morning walk. Clear updates every day.', tags: ['Punctual', 'Clear Updates'], flaggedForAdmin: false, hidden: false },
+          { id: 'rev-seed-3', name: 'Omar H.', rating: 5, date: '2 mo ago', text: 'Safe crossings and friendly group. Highly recommend.', tags: ['Safe Crossings'], flaggedForAdmin: false, hidden: false },
+          { id: 'rev-seed-4', name: 'Lisa M.', rating: 4, date: '3 mo ago', text: 'Punctual and calm. Would book again.', tags: ['Punctual'], flaggedForAdmin: false, hidden: false }
+        ]
+      : [
+          { id: 'rev-seed-1', name: shortName, rating: 5, date: '2 wk ago', text: mainQuote, tags: ['Punctual', 'Careful Driver'], flaggedForAdmin: false, hidden: false },
+          { id: 'rev-seed-2', name: 'David M.', rating: 5, date: '1 mo ago', text: 'Always on time. Kids feel safe in the car.', tags: ['Punctual', 'Clean Vehicle'], flaggedForAdmin: false, hidden: false },
+          { id: 'rev-seed-3', name: 'Sumaiya A.', rating: 5, date: '6 wk ago', text: 'Clear chat updates and careful driving.', tags: ['Clear Updates', 'Careful Driver'], flaggedForAdmin: false, hidden: false },
+          { id: 'rev-seed-4', name: 'James K.', rating: 4, date: '2 mo ago', text: 'Professional and friendly. Easy booking.', tags: ['Polite & Friendly'], flaggedForAdmin: false, hidden: false }
+        ];
+  }
+  return provider.reviewsList.filter(r => !r.hidden);
 };
 
-window.openProviderReviews = function () {
-  const id = window.currentDriverProfileId;
+window.openProviderReviews = function (filterTab = 'all') {
+  const id = window.currentDriverProfileId || 'tariq';
   const provider = (window.appState.providers || []).find((p) => p.id === id) || window.appState.providers[0];
   if (!provider) return;
 
@@ -3011,46 +3145,448 @@ window.openProviderReviews = function () {
   const scoreEl = document.getElementById('providerReviewsScore');
   const starsEl = document.getElementById('providerReviewsStars');
   const countEl = document.getElementById('providerReviewsCountLabel');
-  const rating = Number(provider.rating) || 4.9;
-  const reviews = window.getProviderReviews(provider);
-  const count = provider.reviewsCount || reviews.length;
-  if (scoreEl) scoreEl.textContent = rating.toFixed(1);
+  
+  const allReviews = window.getProviderReviews(provider);
+  const visibleReviews = allReviews.filter(r => !r.hidden);
+  
+  // Calculate average rating
+  let totalScore = 0;
+  visibleReviews.forEach(r => { totalScore += Number(r.rating || 5); });
+  const avgRating = visibleReviews.length ? (totalScore / visibleReviews.length) : 4.9;
+  provider.rating = Math.round(avgRating * 10) / 10;
+  provider.reviewsCount = visibleReviews.length;
+
+  if (scoreEl) scoreEl.textContent = provider.rating.toFixed(1);
   if (starsEl) {
-    const full = Math.round(rating);
+    const full = Math.round(provider.rating);
     starsEl.textContent = '★★★★★'.slice(0, full) + '☆☆☆☆☆'.slice(0, 5 - full);
   }
-  if (countEl) countEl.textContent = count + ' reviews';
+  if (countEl) countEl.textContent = provider.reviewsCount + ' reviews';
+
+  // Render Top Action Bar (+ Write Review & Filter Chips)
+  const summaryEl = document.getElementById('providerReviewsSummary');
+  if (summaryEl) {
+    let actionsWrap = document.getElementById('providerReviewsActionsRow');
+    if (!actionsWrap) {
+      actionsWrap = document.createElement('div');
+      actionsWrap.id = 'providerReviewsActionsRow';
+      actionsWrap.style.marginTop = '14px';
+      summaryEl.appendChild(actionsWrap);
+    }
+    actionsWrap.innerHTML = `
+      <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+        <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px;">
+          <button type="button" class="mvp-filter-chip ${filterTab === 'all' ? 'active' : ''}" onclick="openProviderReviews('all')">All (${visibleReviews.length})</button>
+          <button type="button" class="mvp-filter-chip ${filterTab === '5' ? 'active' : ''}" onclick="openProviderReviews('5')">5 ★</button>
+          <button type="button" class="mvp-filter-chip ${filterTab === '4' ? 'active' : ''}" onclick="openProviderReviews('4')">4 ★</button>
+          <button type="button" class="mvp-filter-chip ${filterTab === 'critical' ? 'active' : ''}" onclick="openProviderReviews('critical')">Under 3.5 ★</button>
+        </div>
+        <button type="button" class="btn-primary" onclick="openParentRateDriverModal('${provider.id}')" style="padding: 6px 12px; font-size: 12px; font-weight: 700; border-radius: 99px; height: auto;">
+          + Write Review
+        </button>
+      </div>
+    `;
+  }
+
+  // Filter reviews
+  let filtered = visibleReviews;
+  if (filterTab === '5') filtered = visibleReviews.filter(r => r.rating === 5);
+  else if (filterTab === '4') filtered = visibleReviews.filter(r => r.rating === 4);
+  else if (filterTab === 'critical') filtered = visibleReviews.filter(r => r.rating < 3.5 || r.flaggedForAdmin);
 
   const list = document.getElementById('providerReviewsList');
   if (list) {
-    list.innerHTML = reviews.map((r) => {
-      const stars = '★'.repeat(r.rating || 5);
-      const photo = window.personAvatar(r.name, '/assets/avatar_sadia.jpg');
-      return (
-        '<article class="provider-review-card">' +
-          '<div class="profile-review-top-row">' +
-            '<div class="profile-reviewer-info">' +
-              '<div class="provider-review-avatar"><img src="' + photo + '" alt="" onerror="this.src=\'/assets/avatar_sadia.jpg\'" /></div>' +
-              '<div>' +
-                '<div class="profile-reviewer-name">' + r.name + '</div>' +
-                '<div class="profile-reviewer-sub">Verified parent</div>' +
+    if (!filtered.length) {
+      list.innerHTML = `
+        <div style="text-align: center; padding: 32px 16px; color: #64748B;">
+          <i data-lucide="message-square-dashed" style="width: 36px; height: 36px; stroke-width: 1.5; margin-bottom: 8px; color: #94A3B8;"></i>
+          <p style="font-size: 13.5px; font-weight: 600; margin: 0;">No reviews matching this filter.</p>
+        </div>
+      `;
+    } else {
+      list.innerHTML = filtered.map((r) => {
+        const stars = '★'.repeat(Math.min(5, Math.max(1, Math.round(r.rating || 5))));
+        const photo = window.personAvatar(r.name, '/assets/avatar_sadia.jpg');
+        const isFlagged = !!r.flaggedForAdmin;
+        const tagsHtml = (r.tags && r.tags.length)
+          ? `<div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:6px;">${r.tags.map(t => `<span style="background:#F1F5F9; color:#475569; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:6px;">${t}</span>`).join('')}</div>`
+          : '';
+
+        const flagBanner = isFlagged
+          ? `<div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; padding:6px 10px; margin-top:8px; display:flex; align-items:flex-start; gap:6px;">
+              <span style="font-size:12px;">⚠️</span>
+              <div style="font-size:11px; color:#B45309; line-height:1.35;">
+                <strong>Flagged for Administrator Review (Section 4.8)</strong>: Low rating threshold alert. Safety team notified.
+              </div>
+            </div>`
+          : '';
+
+        const adminActions = `
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px; border-top:1px solid #F1F5F9; padding-top:6px;">
+            <button type="button" onclick="moderateProviderReview('${provider.id}', '${r.id}', 'hide')" style="background:none; border:none; font-size:11px; color:#64748B; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:3px;">
+              <i data-lucide="eye-off" style="width:12px;height:12px;"></i> Hide
+            </button>
+            <button type="button" onclick="moderateProviderReview('${provider.id}', '${r.id}', 'delete')" style="background:none; border:none; font-size:11px; color:#DC2626; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:3px;">
+              <i data-lucide="trash-2" style="width:12px;height:12px;"></i> Delete
+            </button>
+          </div>
+        `;
+
+        return (
+          '<article class="provider-review-card" style="position:relative;">' +
+            '<div class="profile-review-top-row">' +
+              '<div class="profile-reviewer-info">' +
+                '<div class="provider-review-avatar"><img src="' + photo + '" alt="" onerror="this.src=\'/assets/avatar_sadia.jpg\'" /></div>' +
+                '<div>' +
+                  '<div class="profile-reviewer-name">' + r.name + '</div>' +
+                  '<div class="profile-reviewer-sub">Verified parent</div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="provider-review-meta">' +
+                '<span class="profile-rating-stars-gold">' + stars + '</span>' +
+                '<span class="profile-review-date">' + (r.date || 'Recent') + '</span>' +
               '</div>' +
             '</div>' +
-            '<div class="provider-review-meta">' +
-              '<span class="profile-rating-stars-gold">' + stars + '</span>' +
-              '<span class="profile-review-date">' + (r.date || '') + '</span>' +
-            '</div>' +
-          '</div>' +
-          '<p class="profile-review-quote">' + r.text + '</p>' +
-        '</article>'
-      );
-    }).join('');
+            (r.text ? '<p class="profile-review-quote" style="margin-top:8px;">' + r.text + '</p>' : '') +
+            tagsHtml +
+            flagBanner +
+            adminActions +
+          '</article>'
+        );
+      }).join('');
+    }
   }
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
   }
   window.navigateTo('bookingProviderReviews');
+};
+
+window.openParentRateDriverModal = function (providerId, bookingId) {
+  const pId = providerId || window.currentDriverProfileId || 'tariq';
+  const provider = (window.appState.providers || []).find((p) => p.id === pId) || window.appState.providers[0];
+  const driverName = provider ? provider.name.replace(/\s*\(WalkShare\)/i, '') : 'Driver';
+  const driverPhoto = provider ? (provider.photo || '/assets/avatar_tariq.jpg') : '/assets/avatar_tariq.jpg';
+  const vehTitle = provider ? (provider.vehicle || 'Toyota Sienna') : 'Vehicle';
+
+  window.activeRatingStars = 5;
+  window.selectedReviewTags = [];
+
+  let modal = document.getElementById('modal-parentRateDriver');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'modal-parentRateDriver';
+    modal.className = 'safety-modal-overlay';
+    modal.style.cssText = 'position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:99999; display:flex; align-items:flex-end; justify-content:center; backdrop-filter:blur(4px);';
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div class="safety-pin-modal-card" style="max-width:430px; width:100%; margin:0 auto; background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px; box-sizing:border-box; animation:slideUp 0.25s cubic-bezier(0.16,1,0.3,1);">
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <div>
+          <span style="font-size:11px; font-weight:700; color:#F59E0B; text-transform:uppercase; letter-spacing:0.5px;">Trip Completed</span>
+          <h3 style="font-size:19px; font-weight:800; color:#0F172A; margin:2px 0 0;">Rate Your Experience</h3>
+        </div>
+        <button type="button" onclick="closeParentRateDriverModal()" style="width:32px; height:32px; border-radius:50%; background:#F1F5F9; border:none; color:#64748B; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          <i data-lucide="x" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <!-- Provider Mini Row -->
+      <div style="display:flex; align-items:center; gap:12px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:10px 14px; margin-bottom:16px;">
+        <img src="${driverPhoto}" alt="" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid #E2E8F0;" onerror="this.src='/assets/avatar_tariq.jpg'" />
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:14.5px; font-weight:800; color:#0F172A;">${driverName}</div>
+          <div style="font-size:12px; color:#64748B;">${vehTitle} · School Commute</div>
+        </div>
+      </div>
+
+      <!-- 1. Star Rating (Required 1-5) -->
+      <div style="text-align:center; margin-bottom:16px;">
+        <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:6px;">Star Rating <span style="color:#EF4444;">* (Required)</span></label>
+        <div id="parentRatingStarsRow" style="display:flex; justify-content:center; gap:10px; font-size:32px; cursor:pointer;">
+          <span class="rate-star" data-val="1" onclick="setParentRatingStars(1)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+          <span class="rate-star" data-val="2" onclick="setParentRatingStars(2)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+          <span class="rate-star" data-val="3" onclick="setParentRatingStars(3)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+          <span class="rate-star" data-val="4" onclick="setParentRatingStars(4)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+          <span class="rate-star" data-val="5" onclick="setParentRatingStars(5)" style="color:#F59E0B; transition:transform 0.15s;">★</span>
+        </div>
+        <div id="parentRatingSentimentLabel" style="font-size:13px; font-weight:700; color:#0F172A; margin-top:4px;">5.0 · Excellent &amp; Safe</div>
+      </div>
+
+      <!-- Section 4.8 Low Rating Admin Flag Notice -->
+      <div id="parentRatingAdminFlagAlert" style="display:none; background:#FFFBEB; border:1px solid #FDE68A; border-radius:10px; padding:10px 12px; margin-bottom:14px; text-align:left;">
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <span style="font-size:14px;">⚠️</span>
+          <div style="font-size:11.5px; color:#92400E; line-height:1.4;">
+            <strong>Administrator Review (Section 4.8 Rule)</strong>: Ratings below 3.5 stars are automatically flagged for admin quality review to maintain child safety standards.
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Feedback Tags -->
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:6px;">Highlights</label>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          ${['⏰ Punctual', '🛡️ Safe Driving', '👦 Great with Kids', '🚗 Clean Car', '💬 Clear Chat', '🚪 Curbside Care'].map(tag => `
+            <button type="button" class="review-tag-chip" onclick="toggleReviewTag(this, '${tag}')" style="padding:6px 10px; border-radius:99px; font-size:11.5px; font-weight:700; border:1px solid #CBD5E1; background:#FFFFFF; color:#475569; cursor:pointer;">
+              ${tag}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- 2. Written Review (Optional) -->
+      <div style="margin-bottom:18px;">
+        <label for="parentReviewComment" style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:6px;">
+          Written Review <span style="font-weight:400; color:#94A3B8;">(Optional)</span>
+        </label>
+        <textarea id="parentReviewComment" rows="3" class="form-input" placeholder="Share specific details about this trip to help other parents..." style="width:100%; border-radius:12px; border:1px solid #CBD5E1; padding:10px 12px; font-size:13px; font-family:inherit; resize:none; box-sizing:border-box;"></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div style="display:flex; gap:10px;">
+        <button type="button" onclick="closeParentRateDriverModal()" class="btn-secondary" style="flex:1; padding:13px; border-radius:14px; font-weight:700; font-size:13.5px;">Cancel</button>
+        <button type="button" onclick="submitParentDriverRating('${pId}', '${bookingId || 'H2S-84920'}')" class="btn-primary" style="flex:2; padding:13px; border-radius:14px; font-weight:800; font-size:14px; background:linear-gradient(135deg, #1B2B68 0%, #2A3F8E 100%);">
+          Submit Review →
+        </button>
+      </div>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.closeParentRateDriverModal = function () {
+  const modal = document.getElementById('modal-parentRateDriver');
+  if (modal) modal.style.display = 'none';
+};
+
+window.setParentRatingStars = function (val) {
+  window.activeRatingStars = Number(val);
+  const row = document.getElementById('parentRatingStarsRow');
+  if (row) {
+    const stars = row.querySelectorAll('.rate-star');
+    stars.forEach((s) => {
+      const v = Number(s.getAttribute('data-val'));
+      s.textContent = v <= val ? '★' : '☆';
+      s.style.color = v <= val ? '#F59E0B' : '#CBD5E1';
+    });
+  }
+
+  const sentimentEl = document.getElementById('parentRatingSentimentLabel');
+  const sentiments = {
+    1: '1.0 · Poor Experience',
+    2: '2.0 · Needs Improvement',
+    3: '3.0 · Average',
+    4: '4.0 · Very Good & Reliable',
+    5: '5.0 · Excellent & Safe'
+  };
+  if (sentimentEl) sentimentEl.textContent = sentiments[val] || `${val}.0`;
+
+  const flagAlert = document.getElementById('parentRatingAdminFlagAlert');
+  if (flagAlert) {
+    flagAlert.style.display = val < 3.5 ? 'block' : 'none';
+  }
+};
+
+window.toggleReviewTag = function (btn, tag) {
+  btn.classList.toggle('selected');
+  if (btn.classList.contains('selected')) {
+    btn.style.background = '#EFF6FF';
+    btn.style.borderColor = '#1B2B68';
+    btn.style.color = '#1B2B68';
+    if (!window.selectedReviewTags.includes(tag)) window.selectedReviewTags.push(tag);
+  } else {
+    btn.style.background = '#FFFFFF';
+    btn.style.borderColor = '#CBD5E1';
+    btn.style.color = '#475569';
+    window.selectedReviewTags = window.selectedReviewTags.filter(t => t !== tag);
+  }
+};
+
+window.submitParentDriverRating = function (providerId, bookingId) {
+  const stars = Number(window.activeRatingStars || 5);
+  if (stars < 1 || stars > 5) {
+    alert('Please select a star rating (1 to 5 stars).');
+    return;
+  }
+
+  const comment = (document.getElementById('parentReviewComment')?.value || '').trim();
+  const tags = (window.selectedReviewTags || []).slice();
+  const provider = (window.appState.providers || []).find((p) => p.id === providerId) || window.appState.providers[0];
+  if (!provider) return;
+
+  const isFlagged = stars < 3.5;
+  const parentName = (window.appState.user?.name || 'Sadia Khan');
+  const shortName = parentName.split(' ').map((p, i) => (i === 0 ? p : (p[0] ? p[0] + '.' : ''))).join(' ').trim();
+
+  const newReview = {
+    id: 'rev-' + Date.now(),
+    name: shortName,
+    fullName: parentName,
+    providerId: provider.id,
+    bookingId: bookingId || 'H2S-84920',
+    rating: stars,
+    date: 'Today',
+    text: comment || (stars >= 4 ? 'Great school commute, gentle driving and punctual arrival.' : 'Trip completed.'),
+    tags: tags,
+    flaggedForAdmin: isFlagged,
+    flagReason: isFlagged ? `Low rating (${stars}/5 stars) automatically flagged for admin review.` : '',
+    hidden: false
+  };
+
+  // Add to provider's review list
+  const existing = window.getProviderReviews(provider);
+  provider.reviewsList = [newReview, ...existing];
+
+  // Store in parent's submitted reviews state
+  if (!window.appState.parentReviews) window.appState.parentReviews = [];
+  window.appState.parentReviews.unshift(newReview);
+
+  // Recalculate provider score
+  const visible = provider.reviewsList.filter(r => !r.hidden);
+  let sum = 0;
+  visible.forEach(r => { sum += Number(r.rating || 5); });
+  provider.rating = Math.round((sum / visible.length) * 10) / 10;
+  provider.reviewsCount = visible.length;
+
+  // Sync to driver state if Tariq
+  if (provider.id === 'tariq' && window.syncDriverToProviders) {
+    if (window.appState.driver) {
+      window.appState.driver.rating = provider.rating;
+      window.appState.driver.reviewsCount = provider.reviewsCount;
+    }
+    window.syncDriverToProviders();
+  }
+
+  window.closeParentRateDriverModal();
+
+  if (isFlagged) {
+    alert(`⚠️ Review Submitted (★ ${stars}/5):\n\nYour feedback has been saved. Per Section 4.8 system rules, ratings below 3.5 stars are automatically flagged for administrator quality review.`);
+  } else {
+    alert(`🎉 Thank You!\n\nYour ${stars}-star review for ${provider.name.replace(/\s*\(WalkShare\)/i, '')} has been published.`);
+  }
+
+  // Refresh active screen
+  if (window.currentScreen === 'bookingProviderReviews') {
+    window.openProviderReviews();
+  } else if (window.currentScreen === 'profileReviews') {
+    window.renderParentReviewsScreen();
+  } else if (window.currentScreen === 'bookingProviderDetails') {
+    window.openDriverProfile(provider.id);
+  }
+};
+
+window.moderateProviderReview = function (providerId, reviewId, action) {
+  const provider = (window.appState.providers || []).find((p) => p.id === providerId) || window.appState.providers[0];
+  if (!provider || !provider.reviewsList) return;
+
+  const idx = provider.reviewsList.findIndex(r => r.id === reviewId);
+  if (idx < 0) return;
+
+  if (action === 'delete') {
+    if (confirm('Admin Action: Are you sure you want to permanently remove this review?')) {
+      provider.reviewsList.splice(idx, 1);
+    }
+  } else if (action === 'hide') {
+    provider.reviewsList[idx].hidden = true;
+    alert('Review has been hidden from public view.');
+  }
+
+  window.openProviderReviews();
+};
+
+window.renderParentReviewsScreen = function () {
+  const unratedWrap = document.getElementById('parentUnratedRidesContainer');
+  const listWrap = document.getElementById('parentSubmittedReviewsList');
+  const countBadge = document.getElementById('parentGivenReviewsCount');
+  const totalBadge = document.getElementById('parentReviewsTotalBadge');
+
+  const reviews = window.appState.parentReviews || [
+    {
+      id: 'rev-prnt-1',
+      providerId: 'tariq',
+      providerName: 'Tariq Ahmed',
+      providerPhoto: '/assets/avatar_tariq.jpg',
+      rating: 5,
+      date: 'Sep 15, 2026',
+      text: 'Tariq is extremely punctual and always ensures Emma and Arman are buckled safely before driving.',
+      tags: ['⏰ Punctual', '🛡️ Safe Driving'],
+      flaggedForAdmin: false
+    },
+    {
+      id: 'rev-prnt-2',
+      providerId: 'sarah',
+      providerName: 'Sarah Jenkins (WalkShare)',
+      providerPhoto: '/assets/avatar_sarah.jpg',
+      rating: 5,
+      date: 'Sep 10, 2026',
+      text: 'Supervised walking school bus was fantastic. Arman enjoyed walking with friends.',
+      tags: ['👦 Great with Kids', '🚪 Curbside Care'],
+      flaggedForAdmin: false
+    }
+  ];
+  window.appState.parentReviews = reviews;
+
+  if (countBadge) countBadge.textContent = `${reviews.length} Submitted`;
+  if (totalBadge) totalBadge.textContent = `${reviews.length} reviews`;
+
+  // Render Unrated Trip Prompt (e.g. recent completed trip)
+  if (unratedWrap) {
+    unratedWrap.innerHTML = `
+      <div style="background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:14px; padding:14px 16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:11px; font-weight:800; color:#D97706; text-transform:uppercase; letter-spacing:0.5px;">Pending Feedback</span>
+          <span style="font-size:11px; color:#92400E; font-weight:600;">Today's Completed Run</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+          <img src="/assets/avatar_tariq.jpg" alt="" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #FDE68A;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+          <div>
+            <div style="font-size:14px; font-weight:800; color:#0F172A;">Tariq Ahmed</div>
+            <div style="font-size:12px; color:#78350F;">Toyota Sienna · Greenfield Int. Drop-off</div>
+          </div>
+        </div>
+        <button type="button" onclick="openParentRateDriverModal('tariq', 'H2S-84920')" class="btn-primary" style="width:100%; padding:10px; font-size:13px; font-weight:800; border-radius:10px; background:#F59E0B; color:#0F172A; border:none; display:flex; align-items:center; justify-content:center; gap:6px;">
+          <span>★</span> Rate Tariq Ahmed
+        </button>
+      </div>
+    `;
+  }
+
+  // Render Submitted Reviews
+  if (listWrap) {
+    listWrap.innerHTML = reviews.map(r => {
+      const stars = '★'.repeat(r.rating || 5);
+      const isFlagged = !!r.flaggedForAdmin;
+      const photo = r.providerPhoto || '/assets/avatar_tariq.jpg';
+      const pName = r.providerName || 'Provider';
+
+      return `
+        <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:14px; padding:14px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <img src="${photo}" alt="" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_tariq.jpg'" />
+              <div>
+                <div style="font-size:13.5px; font-weight:800; color:#0F172A;">${pName}</div>
+                <div style="font-size:11px; color:#64748B;">${r.date || 'Recent'}</div>
+              </div>
+            </div>
+            <span style="color:#F59E0B; font-size:14px; font-weight:700;">${stars}</span>
+          </div>
+          <p style="font-size:12.5px; color:#334155; line-height:1.45; margin:0 0 8px;">${r.text}</p>
+          ${r.tags && r.tags.length ? `<div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:6px;">${r.tags.map(t => `<span style="background:#F1F5F9; color:#475569; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:6px;">${t}</span>`).join('')}</div>` : ''}
+          ${isFlagged ? `<div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:6px; padding:4px 8px; font-size:11px; color:#B45309; font-weight:600;">⚠️ Under Administrative Quality Review (Score < 3.5★)</div>` : `<div style="font-size:11px; color:#10B981; font-weight:600;">✓ Published on Provider Profile</div>`}
+        </div>
+      `;
+    }).join('');
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 };
 
 window.formatProviderSchedule = function (provider) {
@@ -3128,27 +3664,32 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (trustTitle) trustTitle.textContent = 'Home2School verified';
   if (trustEl) {
     trustEl.textContent = isWalk
-      ? 'Background, vulnerable sector & safety agreement checked'
+      ? "Driver's license, 2× proof of residency, background & vulnerable sector checked"
       : 'Licence, insurance, background & vulnerable sector checked';
   }
-  if (roleChip) roleChip.className = isWalk ? 'pp-role-chip walkshare' : 'pp-role-chip';
-  if (roleChipText) roleChipText.textContent = isWalk ? 'WalkShare escort' : 'School Driver';
   if (roleChip) {
+    roleChip.className = isWalk ? 'pp-role-chip walkshare' : 'pp-role-chip';
     roleChip.innerHTML = (isWalk
-      ? '<i data-lucide="footprints" style="width: 12px; height: 12px;"></i>'
-      : '<i data-lucide="car" style="width: 12px; height: 12px;"></i>')
-      + '<span id="detailsRoleChipText">' + (isWalk ? 'WalkShare escort' : 'School Driver') + '</span>';
+      ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.5v2"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.5v2"/></svg>'
+      : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C1.4 11.2 1 12 1 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>')
+      + '<span id="detailsRoleChipText">' + (isWalk ? 'WalkShare Escort' : 'School Driver') + '</span>';
   }
-  if (serviceLabel) serviceLabel.textContent = isWalk ? 'Walking school bus' : 'School commute';
-  if (zoneEl) zoneEl.textContent = zone || (isWalk ? 'Local sidewalks' : 'School corridor');
+  if (serviceLabel) serviceLabel.textContent = isWalk ? 'Walking School Bus' : 'School commute';
+  if (zoneEl) zoneEl.textContent = zone || (isWalk ? 'Elm → Greenfield' : 'School corridor');
   if (availEl) availEl.textContent = schedule;
 
   if (safetyList) {
     const checks = isWalk
-      ? ['ID verification', 'Background check', 'Vulnerable sector check', 'Signed safety agreement']
-      : ["Driver's licence", 'Vehicle insurance', 'Background check', 'Vulnerable sector check'];
+      ? [
+          "Driver's licence verified",
+          'Proof of residency: Property Tax / Tenancy',
+          'Proof of residency: Utility Bill',
+          'Criminal background check',
+          'Vulnerable sector check'
+        ]
+      : ["Driver's licence verified", 'Vehicle insurance on file', 'Criminal background check', 'Vulnerable sector check'];
     safetyList.innerHTML = checks.map((label) =>
-      '<li><i data-lucide="check" style="width:14px;height:14px;"></i><span>' + label + '</span></li>'
+      `<li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg><span>${label}</span></li>`
     ).join('');
   }
 
@@ -3202,9 +3743,9 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   const bioEl = document.getElementById('detailsProviderBio');
   if (aboutLbl) aboutLbl.textContent = 'About ' + cleanFirstName;
   if (bioEl) {
-    bioEl.textContent = isWalk
+    bioEl.textContent = provider.bio || provider.about || (isWalk
       ? (cleanFirstName + ' leads a supervised walking school bus so neighborhood kids arrive together—active, visible, and safely escorted to the school gate.')
-      : (cleanFirstName + ' provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.');
+      : (cleanFirstName + ' provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.'));
   }
 
   const stickyPrice = document.getElementById('detailsStickyPrice');
@@ -3212,20 +3753,67 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   const stickyBlock = document.querySelector('.profile-sticky-price-block');
   if (stickyBlock) stickyBlock.style.display = 'none';
 
-  const bookBtnEl = document.getElementById('btnBookWithProvider');
-  if (bookBtnEl) {
-    bookBtnEl.textContent = 'Request ' + cleanFirstName + ' →';
-    bookBtnEl.onclick = function () {
-      window.appState.bookingDraft.providerId = provider.id;
-      navigateTo('bookingSummary');
-    };
-  }
+  // Typical / Posted Rate and Preferred Payment
+  const postedRateEl = document.getElementById('detailsPostedRateText');
+  const negBadgeEl = document.getElementById('detailsRateNegotiableBadge');
+  const payPrefEl = document.getElementById('detailsPreferredPaymentText');
+  const rateUnit = provider.ratePeriod || 'week';
+  const rateVal = provider.listedRate || provider.baseWeekly || (isWalk ? 75 : 120);
 
-  if (window.lucide && typeof window.lucide.createIcons === 'function') {
-    window.lucide.createIcons();
+  if (postedRateEl) postedRateEl.textContent = `$${rateVal}/${rateUnit}`;
+  if (negBadgeEl) negBadgeEl.style.display = provider.negotiable !== false ? 'inline-block' : 'none';
+  if (payPrefEl) payPrefEl.textContent = provider.preferredPayment || 'e-Transfer · Cash';
+
+  const isOwner = (window.appState.currentRole === 'walkshare' && (provider.id === 'sarah' || isWalk)) ||
+                  (window.appState.currentRole === 'driver' && (provider.id === 'tariq' || !isWalk));
+
+  const actionsWrap = document.getElementById('detailsProviderActionsWrap');
+  if (actionsWrap) {
+    if (isOwner) {
+      actionsWrap.innerHTML = `
+        <div class="profile-sticky-footer-inner" style="display:flex; gap:10px; width:100%;">
+          <button type="button" class="btn-primary" style="width:100%; height:48px; border-radius:12px; font-weight:800; font-size:14px; background:var(--color-primary-navy, #1B2B68); color:#FFFFFF; border:none; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="openDriverProfileEditWizard('${provider.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <span>Edit Profile Info &amp; Rates</span>
+          </button>
+        </div>
+      `;
+    } else {
+      actionsWrap.innerHTML = `
+        <div class="profile-sticky-footer-inner pp-footer-dual">
+          <button type="button" class="pp-btn-outline" onclick="openChatWith('${provider.id || 'tariq'}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+            <span>Message</span>
+          </button>
+          <button class="btn-primary" id="btnBookWithProvider" onclick="startBookingReview('${provider.id || 'tariq'}')">
+            <span>Request Booking</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      `;
+    }
   }
 
   window.navigateTo('bookingProviderDetails');
+};
+
+window.openDriverProfileEditWizard = function (providerId) {
+  const isWalk = providerId === 'sarah' || window.appState.currentRole === 'walkshare';
+  if (isWalk) {
+    if (typeof window.openNestedScreen === 'function') {
+      window.navigateTo('wsProfile');
+      window.openNestedScreen('wsOnboardProfile');
+    } else {
+      window.navigateTo('wsOnboardProfile');
+    }
+  } else {
+    if (typeof window.openDriverProfileChild === 'function') {
+      window.navigateTo('driverProfile');
+      window.openDriverProfileChild('driverOnboardProfile');
+    } else {
+      window.navigateTo('driverOnboardProfile');
+    }
+  }
 };
 
 window.handleProviderDetailsBack = function () {
@@ -3394,13 +3982,26 @@ window.submitBookingRequest = function () {
     outboundTime: draft.outboundTime,
     returnTime: draft.direction === 'bothway' ? draft.returnTime : '',
     providerId: provider.id,
-    amount: null,
-    paymentMethod: 'Arrange with provider',
+    listedRate: draft.frequency === 'recurring' ? (provider.listedRate || provider.baseWeekly || 120) : (provider.oneTimeRate || 35),
+    ratePeriod: draft.frequency === 'recurring' ? 'week' : 'trip',
+    agreedRate: null,
+    rateStatus: 'listed',
+    negotiable: provider.negotiable !== false,
+    amount: draft.frequency === 'recurring' ? (provider.listedRate || 120) : (provider.oneTimeRate || 35),
+    preferredPayment: provider.preferredPayment || 'e-Transfer · Cash',
+    paymentHandleStatus: 'not_requested',
+    paymentHandle: provider.paymentHandle || (provider.id + '@interac.ca'),
+    paymentMethod: 'Direct to provider',
     createdAt: 'Just now'
   };
 
   window.appState.bookings.unshift(newBooking);
   window.appState.activeBookingId = newBooking.id;
+
+  // Also sync into driver's / walkshare requests if active
+  if (window.syncNewBookingToDriver) {
+    window.syncNewBookingToDriver(newBooking);
+  }
 
   // Update Request Sent Screen text
   const reqDesc = document.getElementById('requestSentDesc');
@@ -3418,6 +4019,10 @@ window.simulateProviderAcceptance = function () {
   const active = window.appState.bookings.find(b => b.id === window.appState.activeBookingId);
   if (active) {
     active.status = 'confirmed';
+    if (!active.agreedRate) {
+      active.agreedRate = active.listedRate || 120;
+      active.rateStatus = 'agreed';
+    }
   }
   window.appState.homeScenario = 'B';
 
@@ -3425,6 +4030,69 @@ window.simulateProviderAcceptance = function () {
   setTimeout(() => {
     window.navigateTo('bookingConfirmed');
   }, 400);
+};
+
+/* Peer-to-Peer Payment & Rate Handshake APIs */
+window.requestPaymentDetails = function (bookingId) {
+  const id = bookingId || window.appState.activeBookingId;
+  const b = (window.appState.bookings || []).find(x => x.id === id) || window.appState.bookings[0];
+  if (!b) return;
+  b.paymentHandleStatus = 'requested';
+  if (window.showToast) window.showToast('Payment details requested from provider', 'info');
+  if (window.renderBookingDetails) window.renderBookingDetails(b.id);
+  // Re-paint if driver screens are open
+  if (window.refreshDriverRequests) window.refreshDriverRequests();
+};
+
+window.consentPaymentDetails = function (bookingId) {
+  const id = bookingId || window.appState.activeBookingId;
+  const b = (window.appState.bookings || []).find(x => x.id === id) || window.appState.bookings[0];
+  if (!b) return;
+  b.paymentHandleStatus = 'shared';
+  if (!b.paymentHandle) {
+    const prov = (window.appState.providers || []).find(p => p.id === b.providerId) || window.appState.providers[0];
+    b.paymentHandle = prov.paymentHandle || `${prov.id}.ahmed@interac.ca`;
+  }
+  if (window.showToast) window.showToast('e-Transfer details shared with parent', 'success');
+  if (window.renderBookingDetails) window.renderBookingDetails(b.id);
+  if (window.refreshDriverRequests) window.refreshDriverRequests();
+};
+
+window.chooseCashPayment = function (bookingId) {
+  const id = bookingId || window.appState.activeBookingId;
+  const b = (window.appState.bookings || []).find(x => x.id === id) || window.appState.bookings[0];
+  if (!b) return;
+  b.paymentHandleStatus = 'cash';
+  if (window.showToast) window.showToast('Cash at pickup confirmed', 'success');
+  if (window.renderBookingDetails) window.renderBookingDetails(b.id);
+  if (window.refreshDriverRequests) window.refreshDriverRequests();
+};
+
+window.copyPaymentHandle = function (handle) {
+  const text = handle || 'tariq.ahmed@interac.ca';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      if (window.showToast) window.showToast('Copied: ' + text, 'success');
+    }).catch(() => {
+      if (window.showToast) window.showToast('Copied: ' + text, 'success');
+    });
+  } else {
+    if (window.showToast) window.showToast('Copied: ' + text, 'success');
+  }
+};
+
+window.acceptRateProposal = function (bookingId, newRate) {
+  const id = bookingId || window.appState.activeBookingId;
+  const b = (window.appState.bookings || []).find(x => x.id === id) || window.appState.bookings[0];
+  if (!b) return;
+  b.agreedRate = Number(newRate);
+  b.amount = Number(newRate);
+  b.rateStatus = 'agreed';
+  b.status = 'confirmed';
+  if (window.showToast) window.showToast(`Rate agreed: $${newRate}/${b.ratePeriod || 'week'}!`, 'success');
+  if (window.renderBookingDetails) window.renderBookingDetails(b.id);
+  if (window.paintParentChat) window.paintParentChat(b.providerId || 'tariq');
+  if (window.refreshDriverRequests) window.refreshDriverRequests();
 };
 
 function renderBookingConfirmation() {
@@ -3458,9 +4126,59 @@ function renderBookingConfirmation() {
 /* ==========================================================
    Dedicated Booking Details Screen (#bookingDetails)
    ========================================================== */
-window.openBookingDetails = function (bookingId) {
+window.openBookingDetails = function (bookingId, returnScreen) {
   window.appState.activeBookingId = bookingId;
+  window._bookingDetailsReturnScreen = returnScreen || (window.currentScreen !== 'bookingDetails' ? window.currentScreen : 'bookings');
   window.navigateTo('bookingDetails');
+};
+
+window.handleBookingDetailsBack = function () {
+  const from = window._bookingDetailsReturnScreen;
+  window._bookingDetailsReturnScreen = null;
+  if (from && screens.includes(from) && from !== 'bookingDetails') {
+    window.navigateTo(from, true);
+    return;
+  }
+  window.navigateTo('bookings', true);
+};
+
+window.handleNotificationsBack = function () {
+  const role = typeof window.activeNavRole === 'function' ? window.activeNavRole() : (window.appState?.activeRole || 'parent');
+  if (role === 'driver') {
+    window.navigateTo('driverHome', true);
+  } else if (role === 'walkshare') {
+    window.navigateTo('wsHome', true);
+  } else {
+    window.navigateTo('home', true);
+  }
+};
+
+window.handleInboxBack = function () {
+  const role = typeof window.activeNavRole === 'function' ? window.activeNavRole() : (window.appState?.activeRole || 'parent');
+  if (role === 'driver') {
+    window.navigateTo('driverHome', true);
+  } else if (role === 'walkshare') {
+    window.navigateTo('wsHome', true);
+  } else {
+    window.navigateTo('home', true);
+  }
+};
+
+window.setDriverScenario = function (scenario) {
+  if (typeof window.ensureDriverState === 'function') {
+    const d = window.ensureDriverState();
+    if (d) d.homeScenario = scenario;
+    if (typeof window.persistDriverState === 'function') window.persistDriverState();
+  }
+  if (window.appState && window.appState.driver) {
+    window.appState.driver.homeScenario = scenario;
+  }
+  ['A', 'B', 'C'].forEach((sc) => {
+    document.getElementById('dchipScenario' + sc)?.classList.toggle('active', sc === scenario);
+  });
+  if (typeof window.renderDriverHome === 'function') {
+    window.renderDriverHome();
+  }
 };
 
 window.openTripReport = function (bookingId) {
@@ -3515,11 +4233,12 @@ window.openSafetyPinModal = function () {
     modal = document.createElement('div');
     modal.id = 'dynamicSafetyPinModal';
     modal.className = 'safety-pin-modal-backdrop';
+    modal.onclick = function (e) { if (e.target === modal) modal.style.display = 'none'; };
     document.body.appendChild(modal);
   }
   
   modal.innerHTML = `
-    <div class="safety-pin-sheet" style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:480px; margin:0 auto; box-shadow:0 -10px 40px rgba(0,0,0,0.2);">
+    <div class="safety-pin-sheet" style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:430px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
       <div style="width:40px; height:4px; background:#E2E8F0; border-radius:999px; margin:0 auto 16px;"></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <h3 style="font-size:17px; font-weight:800; color:#0F172A; margin:0;">Child Handover PIN</h3>
@@ -3539,6 +4258,7 @@ window.openSafetyPinModal = function () {
   modal.style.background = 'rgba(15, 23, 42, 0.6)';
   modal.style.zIndex = '9999';
   modal.style.alignItems = 'flex-end';
+  modal.style.justifyContent = 'center';
 };
 
 window.openFareBreakdownModal = function () {
@@ -3553,11 +4273,12 @@ window.openFareBreakdownModal = function () {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'dynamicFareModal';
+    modal.onclick = function (e) { if (e.target === modal) modal.style.display = 'none'; };
     document.body.appendChild(modal);
   }
 
   modal.innerHTML = `
-    <div style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:480px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
+    <div style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:430px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
       <div style="width:40px; height:4px; background:#E2E8F0; border-radius:999px; margin:0 auto 16px;"></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <h3 style="font-size:17px; font-weight:800; color:#0F172A; margin:0;">Fare Breakdown &amp; Receipt</h3>
@@ -3595,6 +4316,7 @@ window.openFareBreakdownModal = function () {
   modal.style.background = 'rgba(15, 23, 42, 0.6)';
   modal.style.zIndex = '9999';
   modal.style.alignItems = 'flex-end';
+  modal.style.justifyContent = 'center';
 };
 
 window.openScheduleDetailsModal = function () {
@@ -3603,11 +4325,12 @@ window.openScheduleDetailsModal = function () {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'dynamicScheduleModal';
+    modal.onclick = function (e) { if (e.target === modal) modal.style.display = 'none'; };
     document.body.appendChild(modal);
   }
 
   modal.innerHTML = `
-    <div style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:480px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
+    <div style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:430px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
       <div style="width:40px; height:4px; background:#E2E8F0; border-radius:999px; margin:0 auto 16px;"></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <h3 style="font-size:17px; font-weight:800; color:#0F172A; margin:0;">Active Schedule Rules</h3>
@@ -3640,6 +4363,7 @@ window.openScheduleDetailsModal = function () {
   modal.style.background = 'rgba(15, 23, 42, 0.6)';
   modal.style.zIndex = '9999';
   modal.style.alignItems = 'flex-end';
+  modal.style.justifyContent = 'center';
 };
 
 window.openManageBookingModal = function () {
@@ -3650,11 +4374,12 @@ window.openManageBookingModal = function () {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'dynamicManageModal';
+    modal.onclick = function (e) { if (e.target === modal) modal.style.display = 'none'; };
     document.body.appendChild(modal);
   }
 
   modal.innerHTML = `
-    <div style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:480px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
+    <div style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:430px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
       <div style="width:40px; height:4px; background:#E2E8F0; border-radius:999px; margin:0 auto 16px;"></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <h3 style="font-size:17px; font-weight:800; color:#0F172A; margin:0;">Manage Subscription &amp; Route</h3>
@@ -3692,6 +4417,7 @@ window.openManageBookingModal = function () {
   modal.style.background = 'rgba(15, 23, 42, 0.6)';
   modal.style.zIndex = '9999';
   modal.style.alignItems = 'flex-end';
+  modal.style.justifyContent = 'center';
 };
 
 function renderBookingDetails(bookingId) {
@@ -3899,8 +4625,18 @@ function renderBookingDetails(bookingId) {
 
   const vPhoto = document.getElementById('detailVehicleImage');
   if (vPhoto) {
-    vPhoto.src = '/assets/vehicle_hiace_white.jpg';
+    vPhoto.src = isWalk ? '/assets/vehicle_walkshare.png' : '/assets/vehicle_hiace_white.jpg';
     vPhoto.onerror = function () { this.onerror = null; this.src = '/assets/vehicle_hiace_white.jpg'; };
+  }
+
+  const driverInfoClickable = document.getElementById('detailDriverInfoClickable');
+  if (driverInfoClickable) {
+    driverInfoClickable.setAttribute('onclick', `openDriverProfile('${provider.id || 'tariq'}', 'bookingDetails')`);
+  }
+
+  const vehicleRowClickable = document.getElementById('detailVehicleRowClickable');
+  if (vehicleRowClickable) {
+    vehicleRowClickable.setAttribute('onclick', `openDriverProfile('${provider.id || 'tariq'}', 'bookingDetails')`);
   }
 
   // 5. Children (2) Card
@@ -3930,11 +4666,15 @@ function renderBookingDetails(bookingId) {
 
   // 6. Safety PIN Banner, Pricing Card & Special Instructions
   setText('detailSafetyPinBannerCode', 'PIN ' + pin);
-  const fareVal = booking.amount != null ? Number(booking.amount) : 120;
-  setText('detailPriceAmount', `$${fareVal}.00`);
-  setText('detailPriceBillingCycle', isRecurring ? 'Weekly recurring subscription (Auto-billed)' : 'One-time trip fare');
-  setText('detailPaymentCardLabel', booking.paymentMethod || 'Visa •••• 4242');
-  
+  const ratePeriod = booking.ratePeriod || (isRecurring ? 'week' : 'trip');
+  const rateUnitText = ratePeriod === 'week' ? 'week' : 'trip';
+  const isAgreed = booking.rateStatus === 'agreed' || (booking.status !== 'pending' && booking.agreedRate != null);
+  const currentRate = isAgreed ? (booking.agreedRate || booking.amount || 120) : (booking.listedRate || booking.amount || 120);
+
+  setText('detailPriceAmount', `$${currentRate}/${rateUnitText}`);
+  setText('detailPriceBillingCycle', isAgreed ? `Agreed rate · Paid directly to ${provider.name.split(' ')[0]}` : `Listed rate (Negotiable) · Pending confirmation`);
+  setText('detailPaymentCardLabel', booking.preferredPayment || 'e-Transfer · Cash (Direct)');
+
   const payPill = document.getElementById('detailPaymentStatusPill');
   const payPillText = document.getElementById('detailPaymentStatusText');
   if (payPill && payPillText) {
@@ -3942,13 +4682,18 @@ function renderBookingDetails(bookingId) {
       payPill.style.background = '#FEF3C7';
       payPill.style.color = '#D97706';
       payPill.style.borderColor = '#FDE68A';
-      payPillText.textContent = 'Pending';
+      payPillText.textContent = 'Rate: Pending';
     } else {
       payPill.style.background = '#ECFDF5';
       payPill.style.color = '#059669';
       payPill.style.borderColor = '#A7F3D0';
-      payPillText.textContent = 'Paid';
+      payPillText.textContent = isAgreed ? 'Rate Agreed' : 'Confirmed';
     }
+  }
+
+  const payHandleWrap = document.getElementById('detailPaymentHandleWrap');
+  if (payHandleWrap) {
+    payHandleWrap.innerHTML = '';
   }
 
   const specialNotesText = document.getElementById('detailSpecialNotesText');
@@ -3986,19 +4731,21 @@ function renderBookingDetails(bookingId) {
       }
       actionsWrap.innerHTML =
         '<div class="bd-actions-row">' +
-          '<button type="button" class="bd-btn-outline" data-mvp-modify="1" onclick="window.modifyBooking && window.modifyBooking(\'' + id + '\')">Edit booking</button>' +
+          '<button type="button" class="btn-primary" onclick="openChatWith(\'' + (provider.id || 'tariq') + '\')"><i data-lucide="message-square" style="width:16px;height:16px;margin-right:6px;"></i>Message ' + first + '</button>' +
           '<button type="button" class="bd-btn-outline danger" onclick="cancelBooking(\'' + id + '\')">Cancel booking</button>' +
         '</div>';
     } else if (isPending) {
       if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
       actionsWrap.innerHTML =
-        '<p class="bd-wait" style="text-align:center; font-size:13px; color:#64748B; margin:4px 0;">Waiting for driver to confirm schedule</p>' +
-        '<button type="button" class="bd-btn-outline danger" style="width:100%;" onclick="cancelBooking(\'' + id + '\')">Withdraw request</button>';
+        '<div class="bd-actions-row">' +
+          '<button type="button" class="btn-primary" onclick="openChatWith(\'' + (provider.id || 'tariq') + '\')"><i data-lucide="message-square" style="width:16px;height:16px;margin-right:6px;"></i>Message ' + first + '</button>' +
+          '<button type="button" class="bd-btn-outline danger" onclick="cancelBooking(\'' + id + '\')">Cancel request</button>' +
+        '</div>';
     } else if (isCompleted) {
       if (primaryTrackBtn) {
         primaryTrackBtn.style.display = 'flex';
         primaryTrackBtn.innerHTML = '<i data-lucide="star" style="width:18px;height:18px;"></i> <span>Rate &amp; review ' + first + '</span>';
-        primaryTrackBtn.setAttribute('onclick', `navigateTo('rating')`);
+        primaryTrackBtn.setAttribute('onclick', `openParentRateDriverModal('${provider.id}', '${id}')`);
       }
       actionsWrap.innerHTML =
         '<div class="bd-actions-row">' +
@@ -4176,22 +4923,22 @@ function renderBookingsList(tab) {
 
     const priceVal = b.amount != null ? b.amount : 120;
 
-    // 1. Direction Badge
+    // 1. Direction Badge — Matching Brand Primary Dark Navy Blue
     const dirPillHtml = isBothWay
-      ? `<span style="background:#EFF6FF; color:#2563EB; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="refresh-cw" style="width:12px; height:12px;"></i> Round Trip</span>`
-      : `<span style="background:#FFF7ED; color:#EA580C; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="arrow-right" style="width:12px; height:12px;"></i> One-way</span>`;
+      ? `<span style="background:rgba(27,43,104,0.08); color:#1B2B68; border-radius:99px; padding:4px 11px; font-size:11.5px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="refresh-cw" style="width:11px; height:11px;"></i> Round Trip</span>`
+      : `<span style="background:#FFF7ED; color:#EA580C; border-radius:99px; padding:4px 11px; font-size:11.5px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="arrow-right" style="width:11px; height:11px;"></i> One-way</span>`;
 
     // 2. Driver Info
     const driverName = String(provider.name || 'Mohammad Rahim').replace(/\s*\(WalkShare\)/i, '');
     const driverRating = String(provider.rating != null ? provider.rating : '4.9');
     const driverPhoto = provider.photo || '/assets/avatar_tariq.jpg';
 
-    // 3. Right Action in Footer
+    // 3. Right Action in Footer — Proper Brand Primary Color
     let actionColHtml = '';
     if (isLive) {
       actionColHtml = `
         <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="openLiveTracking('${b.id}')" style="background:#059669; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 8px rgba(5,150,105,0.25);">
+          <button type="button" onclick="openLiveTracking('${b.id}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(27,43,104,0.2);">
             <i data-lucide="map-pin" style="width:13px; height:13px;"></i>
             <span>Track</span>
           </button>
@@ -4199,71 +4946,71 @@ function renderBookingsList(tab) {
     } else if (isHistory) {
       actionColHtml = `
         <div style="display:flex; align-items:center; gap:6px;" onclick="event.stopPropagation();">
-          <button type="button" onclick="openRatingModal('${b.id}')" style="background:#FFFBEB; color:#D97706; border:1px solid #FDE68A; border-radius:99px; padding:5px 9px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:3px;">
+          <button type="button" onclick="openRatingModal('${b.id}')" style="background:#FFFBEB; color:#D97706; border:1px solid #FDE68A; border-radius:99px; padding:4px 8px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:3px;">
             <span style="color:#F59E0B;">★</span> Rate
           </button>
-          <button type="button" onclick="rebookRide('${b.id}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:5px 12px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-            <i data-lucide="rotate-ccw" style="width:12px; height:12px;"></i>
+          <button type="button" onclick="rebookRide('${b.id}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:3px;">
+            <i data-lucide="rotate-ccw" style="width:11px; height:11px;"></i>
             <span>Book again</span>
           </button>
         </div>`;
     } else if (isCancelled) {
       actionColHtml = `
         <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="rebookRide('${b.id}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:5px 12px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-            <i data-lucide="rotate-ccw" style="width:12px; height:12px;"></i>
+          <button type="button" onclick="rebookRide('${b.id}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:3px;">
+            <i data-lucide="rotate-ccw" style="width:11px; height:11px;"></i>
             <span>Book again</span>
           </button>
         </div>`;
     } else {
       actionColHtml = `
-        <div style="width:32px; height:32px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
-          <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>
+        <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
+          <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
         </div>`;
     }
 
     return `
-      <article class="h2s-booking-card" onclick="openBookingDetails('${b.id}')" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:22px; padding:18px 20px; margin-bottom:14px; box-shadow:0 4px 16px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.2s ease;">
+      <article class="h2s-booking-card" onclick="openBookingDetails('${b.id}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
         <!-- Top Row: Date & Direction -->
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; color:#2563EB; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i data-lucide="calendar" style="width:20px; height:20px;"></i>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i data-lucide="calendar" style="width:17px; height:17px;"></i>
             </div>
             <div>
-              <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
-              <div style="font-size:12px; font-weight:600; color:#64748B; margin-top:2px;">${timesText}</div>
+              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:1px;">${timesText}</div>
             </div>
           </div>
           ${dirPillHtml}
         </div>
 
         <!-- Middle Row: Route Rail & Price Block -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px;">
-          <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; position:relative; padding-left:2px;">
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; background:#2563EB; flex-shrink:0;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${pickupLoc}</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;">
+          <div style="display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; position:relative; padding-left:2px;">
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; background:#1B2B68; flex-shrink:0;"></span>
+              <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${pickupLoc}</span>
             </div>
-            <div style="position:absolute; left:6px; top:8px; bottom:8px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
-            <div style="display:flex; align-items:center; gap:10px; position:relative; z-index:2;">
-              <span style="width:9px; height:9px; border-radius:50%; border:2px solid #2563EB; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
-              <span style="font-size:13.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${schoolLoc}</span>
+            <div style="position:absolute; left:5px; top:6px; bottom:6px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
+            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
+              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #1B2B68; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
+              <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${schoolLoc}</span>
             </div>
           </div>
 
-          <div style="display:flex; align-items:center; gap:16px; flex-shrink:0; padding-left:16px; border-left:1px solid #F1F5F9;">
-            <div style="font-size:24px; font-weight:800; color:#0F172A; letter-spacing:-0.5px;">$${priceVal}</div>
+          <div style="display:flex; align-items:center; gap:12px; flex-shrink:0; padding-left:12px; border-left:1px solid #F1F5F9;">
+            <div style="font-size:21px; font-weight:800; color:#0F172A; letter-spacing:-0.5px;">$${priceVal}</div>
           </div>
         </div>
 
         <!-- Footer Row: Driver Info & Contextual Action -->
-        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:12px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${driverPhoto}" alt="" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_tariq.jpg';" />
+        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:9px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img src="${driverPhoto}" alt="" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_tariq.jpg';" />
             <div>
-              <div style="font-size:13.5px; font-weight:700; color:#0F172A; line-height:1.2;">${driverName}</div>
-              <div style="font-size:11.5px; font-weight:700; color:#0F172A; display:flex; align-items:center; gap:3px; margin-top:2px;">
+              <div style="font-size:12.5px; font-weight:700; color:#0F172A; line-height:1.2;">${driverName}</div>
+              <div style="font-size:11px; font-weight:700; color:#0F172A; display:flex; align-items:center; gap:2px; margin-top:1px;">
                 <span style="color:#F59E0B;">★</span>
                 <span>${driverRating}</span>
               </div>
@@ -4592,16 +5339,22 @@ window.advanceTrackingStage = function () {
     }
   });
 
-  if (window.lucide && typeof window.lucide.createIcons === 'function') {
-    window.lucide.createIcons();
-  }
+  const rateBtn = document.getElementById('trackingRateTripBtn');
+  const safetyStatus = document.getElementById('trackingLiveSafetyStatus');
 
   if (idx >= 4) {
+    if (rateBtn) rateBtn.style.display = 'inline-flex';
+    if (safetyStatus) safetyStatus.style.display = 'none';
     setTimeout(() => {
-      if (confirm('🎉 Drop-off completed safely! Would you like to rate Tariq Ahmed now?')) {
+      if (typeof window.openParentRateDriverModal === 'function') {
+        window.openParentRateDriverModal('tariq', 'H2S-84920');
+      } else {
         window.navigateTo('rating');
       }
     }, 600);
+  } else {
+    if (rateBtn) rateBtn.style.display = 'none';
+    if (safetyStatus) safetyStatus.style.display = 'flex';
   }
 };
 
@@ -4630,9 +5383,251 @@ window.openChatWith = function (providerId) {
   window.navigateTo('messages');
 };
 
-window.callCurrentDriver = function () {
-  const provider = window.appState.providers.find(p => p.id === window.activeChatProviderId) || window.appState.providers[0];
-  alert(`Calling ${provider.name}: ${provider.phone || '+1 (416) 555-0182'}`);
+window.callCurrentChatParty = function () {
+  let partyName = 'Tariq Ahmed';
+  let partyPhone = '+1 (416) 555-0182';
+
+  if (window.appState && window.appState.activeRole === 'driver') {
+    partyName = document.getElementById('chatDriverName')?.textContent || 'Sadia Khan';
+    partyPhone = '+1 (416) 555-0199';
+  } else if (window.activeChatProviderId) {
+    const provider = (window.appState?.providers || []).find(p => p.id === window.activeChatProviderId);
+    if (provider) {
+      partyName = provider.name;
+      partyPhone = provider.phone || partyPhone;
+    }
+  }
+
+  if (window.showToast) {
+    window.showToast(`📞 Connecting masked call to ${partyName}...`, 'info');
+  } else {
+    alert(`Calling ${partyName}: ${partyPhone}`);
+  }
+};
+
+window.callCurrentDriver = window.callCurrentChatParty;
+
+window.toggleChatOptionsMenu = function (event) {
+  if (event) event.stopPropagation();
+  const menu = document.getElementById('chatDropdownMenu');
+  if (!menu) return;
+  const isHidden = menu.style.display === 'none' || !menu.style.display;
+  if (isHidden) {
+    menu.style.display = 'flex';
+    menu.style.flexDirection = 'column';
+    const onOutsideClick = function (e) {
+      if (!menu.contains(e.target) && e.target.id !== 'chatMoreMenuBtn' && !e.target.closest('#chatMoreMenuBtn')) {
+        menu.style.display = 'none';
+        document.removeEventListener('click', onOutsideClick);
+      }
+    };
+    setTimeout(() => document.addEventListener('click', onOutsideClick), 10);
+  } else {
+    menu.style.display = 'none';
+  }
+};
+
+window.closeChatOptionsMenu = function () {
+  const menu = document.getElementById('chatDropdownMenu');
+  if (menu) menu.style.display = 'none';
+};
+
+window.openClearChatConfirmModal = function () {
+  window.closeChatOptionsMenu();
+  const nameEl = document.getElementById('chatDriverName');
+  const modalName = document.getElementById('clearChatPartyName');
+  if (modalName && nameEl) {
+    modalName.textContent = nameEl.textContent || 'this contact';
+  }
+  const modal = document.getElementById('clearChatConfirmModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.closeClearChatConfirmModal = function (event) {
+  if (event && event.target && 
+      event.target.id !== 'clearChatConfirmModal' && 
+      !event.target.classList.contains('emergency-sos-modal-overlay') && 
+      !event.target.closest('.btn-clear-chat-cancel') && 
+      !event.target.closest('.btn-close-modal')) {
+    return;
+  }
+  const modal = document.getElementById('clearChatConfirmModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+};
+
+window.confirmClearChatHistory = function () {
+  const stream = document.getElementById('chatStream');
+  if (stream) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    stream.innerHTML = `
+      <div class="system-status-bubble" style="background:#F1F5F9;border-color:#E2E8F0;color:#64748B;">
+        <i data-lucide="info" style="width:14px;height:14px;"></i>
+        <span>Chat history was cleared by you • ${timeStr}</span>
+      </div>
+      <div class="chat-empty-state-card" id="chatEmptyState">
+        <div class="chat-empty-icon-wrap">
+          <i data-lucide="message-square" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="chat-empty-title">Conversation Cleared</div>
+        <div class="chat-empty-desc">Send a new message or tap a quick reply below to coordinate child transit.</div>
+      </div>
+    `;
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+
+  const modal = document.getElementById('clearChatConfirmModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+
+  if (window.showToast) {
+    window.showToast('✓ Conversation history cleared from view', 'success');
+  }
+};
+
+window.deleteIndividualChatMessage = function (btnEl) {
+  const bubble = btnEl.closest('.chat-bubble') || btnEl.closest('.system-status-bubble');
+  if (!bubble) return;
+
+  bubble.style.transition = 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)';
+  bubble.style.opacity = '0';
+  bubble.style.transform = 'scale(0.92) translateY(-6px)';
+  bubble.style.maxHeight = '0px';
+  bubble.style.padding = '0px 14px';
+  bubble.style.margin = '0px';
+  bubble.style.overflow = 'hidden';
+
+  setTimeout(() => {
+    bubble.remove();
+    const stream = document.getElementById('chatStream');
+    if (stream && stream.querySelectorAll('.chat-bubble').length === 0 && !document.getElementById('chatEmptyState')) {
+      const empty = document.createElement('div');
+      empty.className = 'chat-empty-state-card';
+      empty.id = 'chatEmptyState';
+      empty.innerHTML = `
+        <div class="chat-empty-icon-wrap">
+          <i data-lucide="message-square" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="chat-empty-title">No Messages</div>
+        <div class="chat-empty-desc">Send a message to coordinate school commute.</div>
+      `;
+      stream.appendChild(empty);
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+    }
+  }, 260);
+
+  if (window.showToast) {
+    window.showToast('✓ Message removed from view', 'info');
+  }
+};
+
+window.copyChatMessageText = function (btnEl) {
+  const bubble = btnEl.closest('.chat-bubble');
+  if (!bubble) return;
+  const textEl = bubble.querySelector('.chat-bubble-text') || bubble;
+  const rawText = textEl.childNodes[0]?.nodeValue?.trim() || textEl.innerText?.split('\n')[0] || '';
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(rawText).then(() => {
+      if (window.showToast) window.showToast('✓ Copied to clipboard', 'success');
+    }).catch(() => {
+      if (window.showToast) window.showToast('Copied text: ' + rawText, 'info');
+    });
+  } else {
+    if (window.showToast) window.showToast('✓ Copied: ' + rawText, 'info');
+  }
+};
+
+window.reactToChatMessage = function (btnEl, emoji) {
+  const bubble = btnEl.closest('.chat-bubble');
+  if (!bubble) return;
+  let reactionPill = bubble.querySelector('.chat-reaction-pill');
+  if (reactionPill) {
+    if (reactionPill.textContent === emoji) {
+      reactionPill.remove();
+      return;
+    }
+    reactionPill.textContent = emoji;
+  } else {
+    reactionPill = document.createElement('span');
+    reactionPill.className = 'chat-reaction-pill';
+    reactionPill.textContent = emoji;
+    bubble.appendChild(reactionPill);
+  }
+};
+
+window.shareCurrentTripLocationInChat = function () {
+  window.closeChatOptionsMenu();
+  const stream = document.getElementById('chatStream');
+  if (!stream) return;
+
+  const empty = document.getElementById('chatEmptyState');
+  if (empty) empty.remove();
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble parent chat-bubble-location-share';
+  bubble.innerHTML = `
+    <div class="chat-location-card">
+      <div class="chat-location-header">
+        <i data-lucide="map-pin" style="width:16px;height:16px;color:#38BDF8;"></i>
+        <strong>Live Route &amp; ETA Shared</strong>
+      </div>
+      <div class="chat-location-body">
+        <span>📍 Near Bloor St W &amp; Bay St</span>
+        <span class="chat-location-eta">ETA: 4 mins to pickup</span>
+      </div>
+    </div>
+    <div class="chat-timestamp">${timeStr} <i data-lucide="check-check" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-left:2px;"></i></div>
+    <div class="chat-bubble-actions">
+      <button type="button" class="bubble-act-btn" onclick="copyChatMessageText(this)" title="Copy" aria-label="Copy"><i data-lucide="copy"></i></button>
+      <button type="button" class="bubble-act-btn danger" onclick="deleteIndividualChatMessage(this)" title="Delete" aria-label="Delete"><i data-lucide="trash-2"></i></button>
+      <button type="button" class="bubble-act-btn" onclick="reactToChatMessage(this, '👍')" title="Thumbs up"><span>👍</span></button>
+    </div>
+  `;
+  stream.appendChild(bubble);
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+  stream.scrollTop = stream.scrollHeight;
+
+  if (window.showToast) {
+    window.showToast('✓ Live location pin shared in chat', 'success');
+  }
+};
+
+window.toggleMuteChatNotifications = function () {
+  window.closeChatOptionsMenu();
+  window._isChatMuted = !window._isChatMuted;
+  const label = document.getElementById('chatMuteMenuLabel');
+  if (label) {
+    label.textContent = window._isChatMuted ? 'Unmute' : 'Mute notifications';
+  }
+  if (window.showToast) {
+    window.showToast(window._isChatMuted ? '🔕 Notifications muted for this chat' : '🔔 Notifications enabled', 'info');
+  }
+};
+
+window.reportSafetyIssueFromChat = function () {
+  window.closeChatOptionsMenu();
+  if (window.showToast) {
+    window.showToast('🛡️ Safety incident report logged with Trust & Safety Desk', 'info');
+  }
 };
 
 window.sendQuickReply = function (text) {
@@ -4656,6 +5651,9 @@ function appendChatMessage(text, sender) {
   const stream = document.getElementById('chatStream');
   if (!stream) return;
 
+  const empty = document.getElementById('chatEmptyState');
+  if (empty) empty.remove();
+
   const bubble = document.createElement('div');
   bubble.className = `chat-bubble ${sender}`;
 
@@ -4663,18 +5661,35 @@ function appendChatMessage(text, sender) {
   const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   bubble.innerHTML = `
-    ${text}
-    <div class="chat-timestamp">${timeStr}</div>
+    <div class="chat-bubble-text">${text}</div>
+    <div class="chat-timestamp">
+      ${timeStr}
+      ${sender === 'parent' ? '<i data-lucide="check-check" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-left:2px;opacity:0.85;"></i>' : ''}
+    </div>
+    <div class="chat-bubble-actions">
+      <button type="button" class="bubble-act-btn" onclick="copyChatMessageText(this)" title="Copy message" aria-label="Copy">
+        <i data-lucide="copy"></i>
+      </button>
+      <button type="button" class="bubble-act-btn danger" onclick="deleteIndividualChatMessage(this)" title="Delete message" aria-label="Delete">
+        <i data-lucide="trash-2"></i>
+      </button>
+      <button type="button" class="bubble-act-btn" onclick="reactToChatMessage(this, '👍')" title="Thumbs up" aria-label="React">
+        <span>👍</span>
+      </button>
+    </div>
   `;
 
   stream.appendChild(bubble);
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
   stream.scrollTop = stream.scrollHeight;
 }
 
 function simulateDriverReply() {
   setTimeout(() => {
     const replies = [
-      "Thank you, Sadia! Rest assured your children are safe with me.",
+      "Thank you! Rest assured your children are safe with me.",
       "Understood! Driving carefully and following the verified school route.",
       "Just arrived at the school drop-off loop. All good!"
     ];
@@ -4736,6 +5751,32 @@ window.setRatingScore = function (score) {
 
 window.handleParentReviewSubmit = function () {
   const score = window.currentRatingScore || 5;
+  const comment = (document.getElementById('ratingCommentText')?.value || '').trim();
+  const provider = (window.appState.providers || []).find((p) => p.id === (window._ratingBookingId || 'tariq')) || window.appState.providers?.[0];
+
+  if (provider) {
+    const parentName = window.appState.user?.name || 'Sadia Khan';
+    const shortName = parentName.split(' ').map((p, i) => (i === 0 ? p : (p[0] ? p[0] + '.' : ''))).join(' ').trim();
+    const newReview = {
+      id: 'rev-' + Date.now(),
+      name: shortName,
+      fullName: parentName,
+      providerId: provider.id,
+      rating: score,
+      date: 'Today',
+      text: comment || (score >= 4 ? 'Great school commute, gentle driving and punctual arrival.' : 'Trip completed.'),
+      flaggedForAdmin: score < 3.5,
+      flagReason: score < 3.5 ? `Low rating (${score}/5 stars) automatically flagged for admin review.` : '',
+      hidden: false
+    };
+    if (typeof window.getProviderReviews === 'function') {
+      const existing = window.getProviderReviews(provider);
+      provider.reviewsList = [newReview, ...existing];
+    }
+    if (!window.appState.parentReviews) window.appState.parentReviews = [];
+    window.appState.parentReviews.unshift(newReview);
+  }
+
   if (typeof window.showToast === 'function') {
     window.showToast(
       score <= 3 ? `${score}★ submitted — safety team will review` : `Thanks — ${score}★ review saved`,
@@ -4781,6 +5822,48 @@ window.handleSendPasswordReset = function (e) {
   const email = document.getElementById('forgotPasswordEmailInput')?.value || 'your email';
   alert(`✓ Password reset email sent to: ${email}\nPlease check your inbox to complete verification.`);
   window.closeForgotPasswordModal();
+};
+
+window.openChangePasswordModal = function () {
+  const modal = document.getElementById('changePasswordModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    const cur = document.getElementById('changePassCurrent');
+    if (cur) cur.value = '';
+    const nw = document.getElementById('changePassNew');
+    if (nw) nw.value = '';
+    const cf = document.getElementById('changePassConfirm');
+    if (cf) cf.value = '';
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+window.openChangePassword = window.openChangePasswordModal;
+
+window.closeChangePasswordModal = function () {
+  const modal = document.getElementById('changePasswordModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.handleChangePasswordSubmit = function (e) {
+  if (e && typeof e.preventDefault === 'function') e.preventDefault();
+  const nw = document.getElementById('changePassNew')?.value || '';
+  const cf = document.getElementById('changePassConfirm')?.value || '';
+  if (nw.length < 8) {
+    if (typeof window.toast === 'function') window.toast('Password must be at least 8 characters.');
+    else alert('Password must be at least 8 characters.');
+    return;
+  }
+  if (nw !== cf) {
+    if (typeof window.toast === 'function') window.toast('New passwords do not match. Please try again.');
+    else alert('New passwords do not match.');
+    return;
+  }
+  window.closeChangePasswordModal();
+  if (typeof window.toast === 'function') {
+    window.toast('✓ Password updated successfully!');
+  } else {
+    alert('✓ Password updated successfully!');
+  }
 };
 
 window.openDeleteAccountModal = function () {
@@ -4894,7 +5977,7 @@ window.handlePhotoUpload = function (event) {
     const url = URL.createObjectURL(file);
     const container = document.getElementById('avatarPreviewContainer');
     if (container) {
-      container.innerHTML = `<img src="${url}" alt="Uploaded Avatar" style="width:100%;height:100%;object-fit:cover;" />`;
+      container.innerHTML = `<img src="${url}" alt="Uploaded Avatar" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`;
     }
   }
 };
@@ -5016,10 +6099,15 @@ window.renderEmergencyContactsList = function () {
         const relLabel = c.rel;
         return `
           <a href="tel:${cleanPhone}" class="sos-family-row">
-            <img class="sos-family-avatar" src="${photo}" alt="" onerror="this.src='/assets/avatar_sadia.jpg'" />
-            <span class="sos-family-name">${c.name}</span>
-            <span class="sos-family-rel">${relLabel}</span>
-            <span class="sos-family-call" aria-hidden="true"><i data-lucide="phone" style="width:14px;height:14px;"></i></span>
+            <div class="sos-family-avatar-wrap">
+              <img class="sos-family-avatar" src="${photo}" alt="${c.name}" onerror="this.src='/assets/avatar_sadia.jpg'" />
+              <span class="sos-avatar-online"></span>
+            </div>
+            <div class="sos-family-info">
+              <span class="sos-family-name">${c.name}</span>
+              <span class="sos-family-rel">${relLabel}</span>
+            </div>
+            <span class="sos-family-call" aria-label="Call ${c.name}"><i data-lucide="phone" style="width:16px;height:16px;"></i></span>
           </a>
         `;
       }).join('');
@@ -5037,14 +6125,23 @@ window.toggleContactMenu = function (contactId, forceOpen = false) {
 
   if (!window.figmaHoldMode) {
     allMenus.forEach(m => {
-      if (m !== targetMenu) m.style.display = 'none';
+      if (m !== targetMenu) {
+        m.style.display = 'none';
+        const parentRow = m.closest('.emergency-contact-row, .grouped-row-item');
+        if (parentRow) parentRow.style.zIndex = '';
+      }
     });
   }
 
   if (targetMenu) {
     const isVisible = targetMenu.style.display === 'flex';
-    targetMenu.style.display = forceOpen ? 'flex' : (isVisible ? 'none' : 'flex');
-    if (targetMenu.style.display === 'flex' && window.lucide && typeof window.lucide.createIcons === 'function') {
+    const willOpen = forceOpen ? true : !isVisible;
+    targetMenu.style.display = willOpen ? 'flex' : 'none';
+    const parentRow = targetMenu.closest('.emergency-contact-row, .grouped-row-item');
+    if (parentRow) {
+      parentRow.style.zIndex = willOpen ? '35' : '';
+    }
+    if (willOpen && window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
     }
   }
@@ -5054,6 +6151,8 @@ window.closeContactActionMenus = function (force = false) {
   if (window.figmaHoldMode && !force) return;
   document.querySelectorAll('.contact-dropdown-menu').forEach(m => {
     m.style.display = 'none';
+    const parentRow = m.closest('.emergency-contact-row, .grouped-row-item');
+    if (parentRow) parentRow.style.zIndex = '';
   });
 };
 
@@ -5112,6 +6211,7 @@ window.openAddEmergencyContactModal = function (contactId = null) {
   }
 
   modal.style.display = 'flex';
+  modal.classList.add('active');
   if (nameInput) {
     setTimeout(() => nameInput.focus(), 100);
   }
@@ -5129,7 +6229,10 @@ window.closeEmergencyContactModal = function (event) {
     return;
   }
   const modal = document.getElementById('addEmergencyContactModal');
-  if (modal) modal.style.display = 'none';
+  if (modal) {
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
 };
 
 window.setContactRel = function (rel) {
@@ -5313,14 +6416,23 @@ window.toggleLocationMenu = function (locId, forceOpen = false) {
 
   if (!window.figmaHoldMode) {
     allMenus.forEach(m => {
-      if (m !== targetMenu) m.style.display = 'none';
+      if (m !== targetMenu) {
+        m.style.display = 'none';
+        const parentRow = m.closest('.grouped-row-item');
+        if (parentRow) parentRow.style.zIndex = '';
+      }
     });
   }
 
   if (targetMenu) {
     const isVisible = targetMenu.style.display === 'flex';
-    targetMenu.style.display = forceOpen ? 'flex' : (isVisible ? 'none' : 'flex');
-    if (targetMenu.style.display === 'flex' && window.lucide && typeof window.lucide.createIcons === 'function') {
+    const willOpen = forceOpen ? true : !isVisible;
+    targetMenu.style.display = willOpen ? 'flex' : 'none';
+    const parentRow = targetMenu.closest('.grouped-row-item');
+    if (parentRow) {
+      parentRow.style.zIndex = willOpen ? '35' : '';
+    }
+    if (willOpen && window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
     }
   }
@@ -5330,6 +6442,8 @@ window.closeLocationActionMenus = function (force = false) {
   if (window.figmaHoldMode && !force) return;
   document.querySelectorAll('[id^="locMenu-"]').forEach(m => {
     m.style.display = 'none';
+    const parentRow = m.closest('.grouped-row-item');
+    if (parentRow) parentRow.style.zIndex = '';
   });
 };
 
@@ -6117,14 +7231,23 @@ window.toggleChildMenu = function (childId, forceOpen = false) {
 
   if (!window.figmaHoldMode) {
     allMenus.forEach(m => {
-      if (m !== targetMenu) m.style.display = 'none';
+      if (m !== targetMenu) {
+        m.style.display = 'none';
+        const parentRow = m.closest('.grouped-row-item');
+        if (parentRow) parentRow.style.zIndex = '';
+      }
     });
   }
 
   if (targetMenu) {
     const isVisible = targetMenu.style.display === 'flex';
-    targetMenu.style.display = forceOpen ? 'flex' : (isVisible ? 'none' : 'flex');
-    if (targetMenu.style.display === 'flex' && window.lucide && typeof window.lucide.createIcons === 'function') {
+    const willOpen = forceOpen ? true : !isVisible;
+    targetMenu.style.display = willOpen ? 'flex' : 'none';
+    const parentRow = targetMenu.closest('.grouped-row-item');
+    if (parentRow) {
+      parentRow.style.zIndex = willOpen ? '35' : '';
+    }
+    if (willOpen && window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
     }
   }
@@ -6134,6 +7257,8 @@ window.closeChildActionMenus = function (force = false) {
   if (window.figmaHoldMode && !force) return;
   document.querySelectorAll('.child-dropdown-menu').forEach(m => {
     m.style.display = 'none';
+    const parentRow = m.closest('.grouped-row-item');
+    if (parentRow) parentRow.style.zIndex = '';
   });
 };
 
@@ -6204,7 +7329,7 @@ window.openEditChildModal = function (childId) {
   const photoSrc = child.photo || (child.id === 'arman' ? '/assets/avatar_arman.jpg' : child.id === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_zara.jpg');
   const monogramEl = document.getElementById('childFormMonogram');
   if (monogramEl) {
-    monogramEl.innerHTML = `<img src="${photoSrc}" alt="${child.name}" style="width:100%;height:100%;object-fit:cover;" />`;
+    monogramEl.innerHTML = `<img src="${photoSrc}" alt="${child.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='/assets/avatar_arman.jpg';" />`;
     monogramEl.style.background = 'transparent';
   }
 
@@ -6276,26 +7401,40 @@ window.renderMyChildrenList();
 window.openEmergencySOSModal = function () {
   const modal = document.getElementById('emergencySOSModal');
   if (modal) {
-    modal.style.display = 'flex';
+    modal.classList.add('active');
+    modal.style.setProperty('display', 'flex', 'important');
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
     }
   }
 };
 
-window.closeEmergencySOSModal = function (event) {
-  if (event && event.target && 
-      event.target.id !== 'emergencySOSModal' && 
-      !event.target.classList.contains('emergency-sos-modal-overlay') && 
-      !event.target.closest('.btn-sos-cancel') && 
-      !event.target.closest('.btn-close-modal')) {
-    return;
-  }
+window.closeEmergencySOSModal = function () {
   const modal = document.getElementById('emergencySOSModal');
   if (modal) {
-    modal.style.display = 'none';
+    modal.classList.remove('active');
+    modal.style.setProperty('display', 'none', 'important');
   }
 };
+
+
+// Global escape key listener to close active overlays
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' || e.key === 'Esc') {
+    const sosModal = document.getElementById('emergencySOSModal');
+    if (sosModal && sosModal.style.display === 'flex') {
+      sosModal.style.display = 'none';
+    }
+    const pinModal = document.getElementById('dynamicSafetyPinModal') || document.getElementById('safetyPinModal');
+    if (pinModal && pinModal.style.display === 'flex') {
+      pinModal.style.display = 'none';
+    }
+    const fareModal = document.getElementById('dynamicFareModal');
+    if (fareModal && fareModal.style.display === 'flex') {
+      fareModal.style.display = 'none';
+    }
+  }
+});
 
 /* ==========================================================
    Child Boarding Safety PIN Pass Modal (Unique Concept)
@@ -6604,11 +7743,19 @@ window.confirmProfileAddress = function () {
 
 window.profileUseCurrentLocation = function () {
   const btn = document.getElementById('profileUseLocationBtn');
-  if (btn) { btn.textContent = 'Locating…'; btn.disabled = true; }
+  if (btn) {
+    btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width:16px;height:16px;color:#fff;"></i>';
+    btn.disabled = true;
+    if (window.lucide) window.lucide.createIcons();
+  }
 
   if (!navigator.geolocation) {
     if (window.showToast) window.showToast('Geolocation not supported on this device', 'error');
-    if (btn) { btn.innerHTML = '<i data-lucide="locate" style="width:11px;height:11px;"></i> Use Current'; btn.disabled = false; if (window.lucide) window.lucide.createIcons(); }
+    if (btn) {
+      btn.innerHTML = '<i data-lucide="locate" style="width:16px;height:16px;color:#fff;"></i>';
+      btn.disabled = false;
+      if (window.lucide) window.lucide.createIcons();
+    }
     return;
   }
 
@@ -6628,13 +7775,21 @@ window.profileUseCurrentLocation = function () {
       if (addrLabel) addrLabel.textContent = street;
 
       if (window.showToast) window.showToast(`Location found: ${street.split(',')[0]}`, 'success');
-      if (btn) { btn.innerHTML = '<i data-lucide="locate" style="width:11px;height:11px;"></i> Use Current'; btn.disabled = false; if (window.lucide) window.lucide.createIcons(); }
+      if (btn) {
+        btn.innerHTML = '<i data-lucide="locate" style="width:16px;height:16px;color:#fff;"></i>';
+        btn.disabled = false;
+        if (window.lucide) window.lucide.createIcons();
+      }
     },
     (err) => {
       // Fallback — show map so user can pick manually
       if (window.showToast) window.showToast('Could not get location. Pin it on the map.', 'error');
       window.toggleProfileMapPicker();
-      if (btn) { btn.innerHTML = '<i data-lucide="locate" style="width:11px;height:11px;"></i> Use Current'; btn.disabled = false; if (window.lucide) window.lucide.createIcons(); }
+      if (btn) {
+        btn.innerHTML = '<i data-lucide="locate" style="width:16px;height:16px;color:#fff;"></i>';
+        btn.disabled = false;
+        if (window.lucide) window.lucide.createIcons();
+      }
     },
     { timeout: 8000, enableHighAccuracy: true }
   );
@@ -6795,11 +7950,19 @@ if (document.readyState === 'loading') {
    against appState.driver only. Do not paint parent household chrome here. */
 
 window.openDriverAttendanceModal = function () {
-  document.getElementById('driverAttendanceModal')?.classList.add('active');
+  const m = document.getElementById('driverAttendanceModal');
+  if (m) {
+    m.style.display = 'flex';
+    m.classList.add('active');
+  }
 };
 
 window.closeDriverAttendanceModal = function () {
-  document.getElementById('driverAttendanceModal')?.classList.remove('active');
+  const m = document.getElementById('driverAttendanceModal');
+  if (m) {
+    m.style.display = 'none';
+    m.classList.remove('active');
+  }
 };
 
 if (typeof document !== 'undefined') {
@@ -6920,6 +8083,20 @@ window.setModalServiceType = function (type, btn) {
   window.updateLiveFilterCount();
 };
 
+window.setModalZone = function (zone, btn) {
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.sf-chip').forEach((c) => c.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.zone = zone === 'all' ? '' : zone;
+  const label = document.getElementById('modalSelectedZoneLabel');
+  if (label) {
+    label.textContent = zone === 'all' ? 'All' : zone.charAt(0).toUpperCase() + zone.slice(1);
+  }
+  window.updateLiveFilterCount();
+};
+
 window.updateLiveFilterCount = function () {
   const cards = Array.from(document.querySelectorAll('#providersResultList .provider-result-card'));
   if (!cards.length) return;
@@ -6928,8 +8105,11 @@ window.updateLiveFilterCount = function () {
   const radiusKm = Number(draft.searchRadiusKm);
   const hasRadius = Number.isFinite(radiusKm) && radiusKm > 0;
   const service = draft.serviceType || 'all';
+  const selectedZone = (draft.zone || '').toLowerCase().trim();
   const verifiedOnly = document.getElementById('modalFilterVerifiedCheck')?.checked;
   const topRatedOnly = document.getElementById('modalFilterTopRatedCheck')?.checked;
+
+  const providers = (window.appState && window.appState.providers) || [];
 
   let count = 0;
   cards.forEach((card) => {
@@ -6937,12 +8117,18 @@ window.updateLiveFilterCount = function () {
     const rating = parseFloat(card.getAttribute('data-rating') || '0');
     const verified = card.getAttribute('data-verified') === 'true';
     const distance = parseFloat(card.getAttribute('data-distance') || '99');
+    const providerId = (card.getAttribute('data-provider-id') || '').toLowerCase();
+    const provider = providers.find((p) => p.id === providerId);
 
     let match = true;
     if (service !== 'all' && cat !== service) match = false;
     if (hasRadius && distance > radiusKm) match = false;
     if (verifiedOnly && !verified) match = false;
     if (topRatedOnly && rating < 4.8) match = false;
+    if (selectedZone && selectedZone !== 'all') {
+      const pZone = ((provider && (provider.zone || provider.serviceArea)) || '').toLowerCase();
+      if (!pZone.includes(selectedZone)) match = false;
+    }
 
     if (match) count++;
   });
@@ -7069,47 +8255,98 @@ window.toggleAuthViewMode = function (mode) {
 window.selectSignupRole = function (role) {
   const valid = role === 'driver' || role === 'walkshare' ? role : 'parent';
   window.appState._signupRole = valid;
-  document.querySelectorAll('.auth-role-chip').forEach((btn) => {
+  
+  // Sync tiles, chips, and cards
+  document.querySelectorAll('.auth-role-tile, .auth-role-chip, .auth-role-card').forEach((btn) => {
     const on = btn.getAttribute('data-role') === valid;
     btn.classList.toggle('active', on);
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-checked', on ? 'true' : 'false');
   });
-  const nameLabel = document.getElementById('authSignupNameLabel');
-  const nameInput = document.getElementById('authSignupNameInput');
-  const consent = document.getElementById('authSignupConsentLabel');
+
+  const consent = document.getElementById('authPhoneConsentLabel');
   const hint = document.getElementById('authRoleHint');
+  const submitLabel = document.getElementById('authPhoneSubmitLabel');
+
   if (valid === 'driver') {
-    if (nameLabel) nameLabel.textContent = 'Driver Full Name';
-    if (nameInput) {
-      nameInput.placeholder = 'e.g. Tariq Ahmed';
-      if (!nameInput.dataset.touched) nameInput.value = 'Tariq Ahmed';
-    }
     if (consent) {
-      consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Partner Terms &amp; Privacy</a>.';
+      consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Driver Partner Terms &amp; Safety Policies</a>.';
     }
-    if (hint) hint.textContent = 'Licence, insurance, registration, CRC & VSC required.';
+    if (hint) hint.textContent = 'Partner KYC required — Driver\'s Licence, vehicle inspection, commercial insurance, CRC & VSC.';
+    if (submitLabel) submitLabel.textContent = 'Continue as Driver Partner';
   } else if (valid === 'walkshare') {
-    if (nameLabel) nameLabel.textContent = 'WalkShare Escort Name';
-    if (nameInput) {
-      nameInput.placeholder = 'e.g. Sarah Jenkins';
-      if (!nameInput.dataset.touched) nameInput.value = 'Sarah Jenkins';
-    }
     if (consent) {
-      consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">WalkShare Terms &amp; Privacy</a>.';
+      consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">WalkShare Chaperone Terms &amp; Privacy</a>.';
     }
-    if (hint) hint.textContent = 'Photo ID, CRC, VSC & pediatric first-aid required.';
+    if (hint) hint.textContent = 'Escort KYC required — Driver\'s Licence, 2 residency proofs (Tax/Tenancy + Utility), CRC, VSC & CPR.';
+    if (submitLabel) submitLabel.textContent = 'Continue as WalkShare Escort';
   } else {
-    if (nameLabel) nameLabel.textContent = 'Parent Full Name';
-    if (nameInput) {
-      nameInput.placeholder = 'e.g. Sadia Khan';
-      if (!nameInput.dataset.touched) nameInput.value = 'Sadia Khan';
-    }
     if (consent) {
-      consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Terms &amp; Parent Consent</a>.';
+      consent.innerHTML = 'I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Terms, Privacy &amp; PIPEDA Consent</a>.';
     }
-    if (hint) hint.textContent = 'No verification docs — add a child after signup.';
+    if (hint) hint.textContent = 'No upfront verification docs needed — add your children and book rides right away.';
+    if (submitLabel) submitLabel.textContent = 'Continue as Parent / Family';
   }
   if (window.lucide) window.lucide.createIcons();
+};
+
+/** Single Normal Phone Authentication Submission */
+window.handlePhoneAuthSubmit = function () {
+  const phone = document.getElementById('authPhoneNumberInput')?.value?.trim() || '(416) 555-0192';
+  const role = window.appState._signupRole || 'parent';
+  const pipedaChecked = document.getElementById('authPhonePipedaCheck')?.checked;
+
+  if (!pipedaChecked) {
+    if (typeof window.showToast === 'function') {
+      window.showToast('Please accept the Terms & Privacy to continue', 'error');
+    }
+    return;
+  }
+
+  window.appState.user.phone = phone;
+  window.appState.activeRole = role;
+  localStorage.setItem('h2s_active_role', role);
+  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(role);
+
+  if (typeof window.showToast === 'function') {
+    window.showToast(`✓ Sending SMS code to ${phone}...`, 'info');
+  }
+  window.navigateTo('authOtp');
+};
+
+/** OTP verification step routing based on chosen role */
+window.continueAfterOtp = function () {
+  const role = window.appState._signupRole || window.appState.activeRole || 'parent';
+  window.appState.activeRole = role;
+  localStorage.setItem('h2s_active_role', role);
+  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(role);
+
+  if (role === 'driver') {
+    window.appState.driverEntryFromAuth = true;
+    if (typeof window.startDriverSignupFlow === 'function') {
+      window.startDriverSignupFlow(window.appState.user?.name || 'Tariq Ahmed', window.appState.user?.email || 'tariq.ahmed@example.com');
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('Phone verified! Finish Driver partner onboarding', 'success');
+    }
+    window.navigateTo('driverOnboardProfile');
+    return;
+  }
+  if (role === 'walkshare') {
+    window.appState.walkshareEntryFromAuth = true;
+    if (typeof window.startWalkShareSignupFlow === 'function') {
+      window.startWalkShareSignupFlow(window.appState.user?.name || 'Sarah Jenkins', window.appState.user?.email || 'sarah.jenkins@example.com');
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('Phone verified! Finish WalkShare chaperone setup', 'success');
+    }
+    window.navigateTo('wsOnboardProfile');
+    return;
+  }
+  if (typeof window.showToast === 'function') {
+    window.showToast('Phone verified! Set up your family profile', 'success');
+  }
+  window.navigateTo('authProfile');
 };
 
 /** Photo step branches: Parent → child; Driver/WalkShare → partner setup (docs). */
@@ -7201,7 +8438,233 @@ window.handleEmailSignUp = function () {
   window.navigateTo('authProfile');
 };
 
+window.selectSignupRoleDirect = function(role) {
+  window.appState._signupRole = role;
+  document.querySelectorAll('.role-choice-card').forEach(card => {
+    if (card.getAttribute('data-role') === role) {
+      card.classList.add('active');
+      card.style.borderColor = '#1B2B68';
+      card.style.borderWidth = '2px';
+      card.style.background = '#F8FAFC';
+    } else {
+      card.classList.remove('active');
+      card.style.borderColor = '#E2E8F0';
+      card.style.borderWidth = '1px';
+      card.style.background = '#FFFFFF';
+    }
+  });
+};
+
+window.proceedFromRoleSelect = function() {
+  const role = window.appState._signupRole || 'parent';
+  window.appState.activeRole = role;
+  localStorage.setItem('h2s_active_role', role);
+  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(role);
+
+  if (role === 'driver') {
+    window.appState.driverEntryFromAuth = true;
+    if (typeof window.startDriverSignupFlow === 'function') {
+      window.startDriverSignupFlow(window.appState.user?.name || 'Tariq Ahmed', window.appState.user?.email || 'tariq.ahmed@example.com');
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('Setting up your Driver account...', 'info');
+    }
+    window.navigateTo('driverOnboardProfile');
+    return;
+  }
+
+  if (role === 'walkshare') {
+    window.appState.walkshareEntryFromAuth = true;
+    if (typeof window.startWalkShareSignupFlow === 'function') {
+      window.startWalkShareSignupFlow(window.appState.user?.name || 'Sarah Jenkins', window.appState.user?.email || 'sarah.jenkins@example.com');
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('Setting up your WalkShare Escort account...', 'info');
+    }
+    window.navigateTo('wsOnboardProfile');
+    return;
+  }
+
+  // Parent default
+  if (typeof window.showToast === 'function') {
+    window.showToast('Setting up your Family profile...', 'info');
+  }
+  window.navigateTo('authProfile');
+};
+
+window.handleSendLoginOtp = function() {
+  const phoneInput = document.getElementById('loginPhoneInput');
+  let phone = (phoneInput && phoneInput.value.trim()) || '(416) 555-0192';
+  if (!phone.startsWith('+1') && !phone.startsWith('+')) {
+    phone = '+1 ' + phone;
+  }
+  
+  window.appState.loginPhone = phone;
+  window.appState.isLoginFlow = true;
+  window.appState.authPrevScreen = 'authLogin';
+
+  // Match demo accounts
+  if (phone.includes('0182') || phone.toLowerCase().includes('tariq')) {
+    window.appState.activeRole = 'driver';
+  } else if (phone.includes('0185') || phone.toLowerCase().includes('sarah')) {
+    window.appState.activeRole = 'walkshare';
+  }
+
+  // Update target phone text on OTP screen
+  const targetPhoneEls = document.querySelectorAll('.target-phone-text, #otpTargetPhoneDisplay');
+  targetPhoneEls.forEach(el => {
+    el.textContent = phone;
+  });
+
+  if (typeof window.showToast === 'function') {
+    window.showToast(`✓ 4-digit code sent to ${phone}`, 'success');
+  } else if (typeof window.toast === 'function') {
+    window.toast(`4-digit code sent to ${phone}`);
+  }
+
+  window.navigateTo('authOtp');
+};
+
+window.handleOtpInput = function(el, ev, idx) {
+  if (el.value.length >= 1) {
+    el.classList.add('active');
+    const inputs = document.querySelectorAll('#screen-authOtp .otp-box');
+    if (inputs[idx + 1]) {
+      inputs[idx + 1].focus();
+    }
+  } else {
+    el.classList.remove('active');
+  }
+};
+
+window.handleOtpKeydown = function(el, ev, idx) {
+  if (ev.key === 'Backspace' && !el.value) {
+    const inputs = document.querySelectorAll('#screen-authOtp .otp-box');
+    if (inputs[idx - 1]) {
+      inputs[idx - 1].focus();
+    }
+  } else if (ev.key === 'Enter') {
+    window.continueAfterOtp();
+  }
+};
+
+window.resendOtpCode = function() {
+  const phone = window.appState.loginPhone || '+1 (416) 555-0192';
+  if (typeof window.showToast === 'function') {
+    window.showToast(`✓ New code sent to ${phone}`, 'info');
+  } else if (typeof window.toast === 'function') {
+    window.toast(`New code sent to ${phone}`);
+  }
+};
+
+window.continueAfterOtp = function() {
+  if (window.appState.isLoginFlow) {
+    const role = window.appState.activeRole || localStorage.getItem('h2s_active_role') || 'parent';
+    localStorage.setItem('h2s_active_role', role);
+    if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(role);
+
+    if (typeof window.showToast === 'function') {
+      window.showToast('✓ Phone verified! Welcome back.', 'success');
+    }
+
+    if (role === 'driver') {
+      window.navigateTo('driverHome');
+    } else if (role === 'walkshare') {
+      window.navigateTo('wsHome');
+    } else {
+      window.navigateTo('home');
+    }
+    return;
+  }
+
+  // Signup flow
+  const role = window.appState._signupRole || window.appState.activeRole || 'parent';
+  if (role === 'driver') {
+    window.navigateTo('driverOnboardProfile');
+  } else if (role === 'walkshare') {
+    window.navigateTo('wsOnboardProfile');
+  } else {
+    window.navigateTo('authProfile');
+  }
+};
+
+window.handleUserLogin = function() {
+  window.handleSendLoginOtp();
+};
+
+window.saveNotificationPreferences = function() {
+  if (typeof window.showToast === 'function') {
+    window.showToast('✓ Notification preferences saved', 'success');
+  } else if (typeof window.toast === 'function') {
+    window.toast('Notification preferences saved');
+  }
+  if (typeof window.backNested === 'function') {
+    window.backNested('profile');
+  } else if (typeof window.navigateTo === 'function') {
+    window.navigateTo('profile');
+  }
+};
 
 
 
 
+
+/* ==========================================================
+   Payment Methods & Billing Modal Handlers
+   ========================================================== */
+window.openAddPaymentMethodModal = function () {
+  const modal = document.getElementById('modal-addPaymentMethod');
+  if (modal) {
+    modal.classList.add('active');
+    modal.style.setProperty('display', 'flex', 'important');
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.closeAddPaymentMethodModal = function () {
+  const modal = document.getElementById('modal-addPaymentMethod');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.setProperty('display', 'none', 'important');
+  }
+};
+
+window.saveNewPaymentMethod = function (e) {
+  if (e) e.preventDefault();
+  const name = document.getElementById('newCardName')?.value || 'Cardholder';
+  const num = document.getElementById('newCardNumber')?.value || '4242';
+  const last4 = num.replace(/\s/g, '').slice(-4) || '1234';
+  const exp = document.getElementById('newCardExpiry')?.value || '12/28';
+
+  const isMastercard = num.startsWith('5');
+  const brand = isMastercard ? 'Mastercard' : 'Visa';
+
+  if (!window.appState.savedCards) {
+    window.appState.savedCards = [];
+  }
+  window.appState.savedCards.push({
+    id: 'card_' + Date.now(),
+    brand: brand,
+    last4: last4,
+    exp: exp,
+    name: name,
+    isDefault: false
+  });
+
+  window.closeAddPaymentMethodModal();
+  if (window.showToast) {
+    window.showToast(`✓ ${brand} •••• ${last4} added to your payment methods!`, 'success');
+  } else {
+    alert(`✓ ${brand} •••• ${last4} added successfully.`);
+  }
+};
+
+window.setDefaultPaymentMethod = function (last4) {
+  if (window.showToast) {
+    window.showToast(`✓ Card ending in ${last4} set as default for platform billing.`, 'success');
+  } else {
+    alert(`✓ Card ending in ${last4} set as default.`);
+  }
+};

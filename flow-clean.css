@@ -1,202 +1,405 @@
-/* Booking flow — flat profile + review (ref-aligned, no card stack) */
+/* ==========================================================================
+   Provider & WalkShare Profile Screen — Premium Modern Visual Styling
+   ========================================================================== */
 
-/* Provider profile */
 #screen-bookingProviderDetails {
-  background: #FFFFFF !important;
+  background: #F8FAFC !important;
+}
+
+#screen-bookingProviderDetails .top-bar-sticky {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid #F1F5F9 !important;
+  padding: 8px 16px !important;
+  height: 54px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+#screen-bookingProviderDetails .top-bar-title {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  letter-spacing: -0.02em !important;
+}
+
+#screen-bookingProviderDetails .clean-fav-btn {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #64748B !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+#screen-bookingProviderDetails .clean-fav-btn.active,
+#screen-bookingProviderDetails .clean-fav-btn:hover {
+  background: #FEE2E2 !important;
+  color: #EF4444 !important;
+  border-color: #FECACA !important;
+}
+
+#screen-bookingProviderDetails .clean-fav-btn.active svg,
+#screen-bookingProviderDetails .clean-fav-btn.active i {
+  fill: #EF4444 !important;
 }
 
 #screen-bookingProviderDetails .profile-details-scroll {
-  background: #FFFFFF;
-  gap: 0 !important;
-  padding-bottom: 100px;
+  background: #F8FAFC !important;
+  padding: 14px 16px 120px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
 }
 
+/* 1. Hero Card */
 #screen-bookingProviderDetails .pp-hero {
-  text-align: center;
-  padding: 8px 0 16px;
-  border-bottom: 1px solid #ECECF0;
+  background: #FFFFFF !important;
+  border-radius: 20px !important;
+  padding: 20px 16px 16px !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04) !important;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+}
+
+#screen-bookingProviderDetails .profile-avatar-wrap {
+  position: relative !important;
+  display: inline-block !important;
+  margin-bottom: 8px !important;
 }
 
 #screen-bookingProviderDetails .profile-hero-avatar {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
+  width: 84px !important;
+  height: 84px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 3.5px solid #FFFFFF !important;
+  box-shadow: 0 8px 20px -4px rgba(27, 43, 104, 0.16) !important;
 }
 
 #screen-bookingProviderDetails .profile-hero-name {
-  margin: 10px 0 4px;
-  font-size: 20px;
-  font-weight: 800;
-  color: #1A1D24;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  justify-content: center;
+  margin: 4px 0 4px !important;
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+  font-size: 21px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  letter-spacing: -0.025em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  justify-content: center !important;
 }
 
 #screen-bookingProviderDetails .profile-rating-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  background: transparent;
-  padding: 0;
-  margin-top: 4px;
-  cursor: pointer;
-  font-family: inherit;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #FFFBEB !important;
+  border: 1px solid #FDE68A !important;
+  border-radius: 999px !important;
+  padding: 3px 12px !important;
+  margin: 2px 0 6px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  transition: transform 0.15s ease !important;
+}
+
+#screen-bookingProviderDetails .profile-rating-link:hover {
+  transform: scale(1.02) !important;
+  background: #FEF3C7 !important;
 }
 
 #screen-bookingProviderDetails .profile-rating-pill {
-  background: transparent;
-  padding: 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: #B45309;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #B45309 !important;
 }
 
 #screen-bookingProviderDetails .profile-rating-count {
-  font-size: 12px;
-  color: #6B7280;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #92400E !important;
 }
 
 #screen-bookingProviderDetails .profile-hero-sub {
-  margin: 6px 0 0;
-  font-size: 12px;
-  color: #6B7280;
+  margin: 0 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: #F1F5F9 !important;
+  padding: 3px 10px !important;
+  border-radius: 999px !important;
 }
 
+#screen-bookingProviderDetails .pp-role-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  margin-top: 6px !important;
+  background: #EFF6FF !important;
+  color: #1D4ED8 !important;
+  border: 1px solid #BFDBFE !important;
+}
+
+#screen-bookingProviderDetails .pp-role-chip.walkshare {
+  background: #ECFDF5 !important;
+  color: #047857 !important;
+  border: 1px solid #A7F3D0 !important;
+}
+
+/* 2. Micro Stats Strip */
+#screen-bookingProviderDetails .profile-stats-strip {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+  width: 100% !important;
+  padding-top: 12px !important;
+  border-top: 1px solid #F1F5F9 !important;
+}
+
+#screen-bookingProviderDetails .pp-stat-box {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  padding: 8px 6px !important;
+  text-align: center !important;
+}
+
+#screen-bookingProviderDetails .pp-stat-val {
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  display: block !important;
+}
+
+#screen-bookingProviderDetails .pp-stat-lbl {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: #64748B !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  display: block !important;
+  margin-top: 1px !important;
+}
+
+/* 3. Section Cards */
 #screen-bookingProviderDetails .pp-section {
-  padding: 16px 0;
-  border-bottom: 1px solid #ECECF0;
-}
-
-#screen-bookingProviderDetails .pp-label,
-#screen-bookingProviderDetails .profile-section-label {
-  margin: 0 0 10px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #6B7280;
-}
-
-#screen-bookingProviderDetails .pp-card,
-#screen-bookingProviderDetails .profile-section-block {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
+  background: #FFFFFF !important;
+  border-radius: 20px !important;
+  padding: 16px 16px 18px !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03) !important;
   margin: 0 !important;
 }
 
+#screen-bookingProviderDetails .pp-label {
+  margin: 0 0 12px !important;
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  letter-spacing: -0.01em !important;
+}
+
+#screen-bookingProviderDetails .pp-vehicle-line {
+  margin-bottom: 12px !important;
+}
+
 #screen-bookingProviderDetails .profile-service-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #1A1D24;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
 }
 
 #screen-bookingProviderDetails .profile-service-subtitle {
-  font-size: 12px;
-  color: #6B7280;
-  margin-top: 2px;
+  font-size: 12px !important;
+  color: #64748B !important;
+  font-weight: 500 !important;
+  margin-top: 2px !important;
 }
 
+/* 2x2 Bento Grid */
 #screen-bookingProviderDetails .pp-info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 16px;
-  margin-top: 12px;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-top: 10px !important;
+}
+
+#screen-bookingProviderDetails .pp-info-item {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  padding: 9px 12px !important;
+  box-sizing: border-box !important;
 }
 
 #screen-bookingProviderDetails .pp-info-lbl {
-  display: block;
-  font-size: 12px;
-  color: #6B7280;
-  font-weight: 500;
+  display: block !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  color: #64748B !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin-bottom: 2px !important;
 }
 
 #screen-bookingProviderDetails .pp-info-item strong {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1A1D24;
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  display: block !important;
 }
 
+/* Feature Badges */
 #screen-bookingProviderDetails .profile-spec-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
 }
 
 #screen-bookingProviderDetails .profile-spec-chip {
-  background: #F3F4F6;
-  border: none;
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #4B5563;
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 999px !important;
+  padding: 5px 12px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
 }
 
+/* Safety Checklist */
 #screen-bookingProviderDetails .pp-safety-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
 }
 
 #screen-bookingProviderDetails .pp-safety-list li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #1A1D24;
-  font-weight: 500;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 12.5px !important;
+  color: #1E293B !important;
+  font-weight: 600 !important;
+  background: #F8FAFC !important;
+  border: 1px solid #F1F5F9 !important;
+  padding: 9px 12px !important;
+  border-radius: 10px !important;
 }
 
 #screen-bookingProviderDetails .pp-safety-list li i,
 #screen-bookingProviderDetails .pp-safety-list li svg {
-  color: #059669;
+  color: #10B981 !important;
+  stroke: #10B981 !important;
+  flex-shrink: 0 !important;
 }
 
+/* Rates Card */
+#screen-bookingProviderDetails .pp-rate-card {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 14px !important;
+  padding: 14px 16px !important;
+}
+
+/* About Text */
 #screen-bookingProviderDetails .profile-about-text {
-  margin: 0;
-  font-size: 14px;
-  color: #6B7280;
-  line-height: 1.5;
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  color: #334155 !important;
+  line-height: 1.55 !important;
 }
 
+/* Sticky Bottom Actions */
 #screen-bookingProviderDetails .booking-flow-sticky-footer {
-  border-top: 1px solid #ECECF0;
-  background: #FFFFFF;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-top: 1px solid #E2E8F0 !important;
+  padding: 12px 16px 24px !important;
+  box-sizing: border-box !important;
+  z-index: 50 !important;
 }
 
 #screen-bookingProviderDetails .pp-footer-dual {
-  display: flex;
-  gap: 10px;
-  width: 100%;
+  display: flex !important;
+  gap: 10px !important;
+  width: 100% !important;
 }
 
 #screen-bookingProviderDetails .pp-btn-outline {
-  flex: 1;
-  height: 48px;
-  border-radius: 12px;
-  border: 1.5px solid #1B2B68;
-  background: #FFFFFF;
-  color: #1B2B68;
-  font-size: 14px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
+  flex: 1 !important;
+  height: 48px !important;
+  border-radius: 12px !important;
+  border: 1.5px solid #CBD5E1 !important;
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: all 0.15s ease !important;
+}
+
+#screen-bookingProviderDetails .pp-btn-outline:hover {
+  background: #F8FAFC !important;
+  border-color: #94A3B8 !important;
 }
 
 #screen-bookingProviderDetails .pp-footer-dual .btn-primary {
-  flex: 1;
-  width: auto;
-  height: 48px;
-  border-radius: 12px;
-  font-size: 14px;
+  flex: 1.6 !important;
+  width: auto !important;
+  height: 48px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  background: var(--color-primary-navy, #1B2B68) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 14px rgba(27, 43, 104, 0.25) !important;
 }
 
 /* Review booking */

@@ -754,13 +754,28 @@
     const kids = bookingChildIds();
     const draft = state().bookingDraft;
     const service = draft.serviceType;
-    const isRoundTrip = draft.direction !== 'oneway';
-    const returnOk = !isRoundTrip || !!returnTime;
+    
+    // Auto-detect direction from selected times:
+    const hasPickup = !!pickupTime;
+    const hasReturn = !!returnTime;
+    const timeOk = hasPickup || hasReturn;
+    
+    if (hasPickup && hasReturn) {
+      draft.direction = 'bothway';
+      draft.oneWayShift = null;
+    } else if (hasPickup) {
+      draft.direction = 'oneway';
+      draft.oneWayShift = 'morning';
+    } else if (hasReturn) {
+      draft.direction = 'oneway';
+      draft.oneWayShift = 'afternoon';
+    }
+
     const daysOk = draft.frequency !== 'recurring' || (draft.selectedDays || []).length > 0;
     const endsOk = draft.frequency !== 'recurring'
       || !!draft.untilCancelled
       || !!(draft.untilDate || draft.recurrenceEndDate);
-    return kids.length > 0 && pickup && dropoff && dateIso && pickupTime && returnOk && daysOk && endsOk && (service === 'drivers' || service === 'walkshare');
+    return kids.length > 0 && pickup && dropoff && dateIso && timeOk && daysOk && endsOk && (service === 'drivers' || service === 'walkshare');
   };
 
   window.updateBookingSearchCta = function () {
@@ -972,12 +987,19 @@
       const providerId = (card.getAttribute('data-provider-id') || '').toLowerCase();
       const provider = (state().providers || []).find((p) => p.id === providerId);
       if (provider && Number(provider.seats) > 0 && provider.seats < seatsNeeded) show = false;
+
+      const selectedZone = (state().bookingDraft?.zone || '').toLowerCase().trim();
+      if (selectedZone && selectedZone !== 'all') {
+        const pZone = ((provider && (provider.zone || provider.serviceArea)) || card.querySelector('.pcs-zone')?.textContent || '').toLowerCase();
+        if (!pZone.includes(selectedZone)) show = false;
+      }
+
       card.style.display = show ? 'flex' : 'none';
       if (show) card.removeAttribute('data-hide-reason');
       else card.setAttribute('data-hide-reason', 'compact');
     });
 
-    if (filter === 'distance' || filter === 'all') {
+    if (filter === 'distance') {
       const wrap = document.getElementById('providersResultList');
       const visible = cards.filter((c) => c.style.display !== 'none');
       visible.sort((a, b) => (parseFloat(a.getAttribute('data-distance') || '99') - parseFloat(b.getAttribute('data-distance') || '99')));
@@ -997,13 +1019,17 @@
       card.classList.add('mvp-compact', 'provider-card-slim');
       const id = card.getAttribute('data-provider-id') || 'tariq';
       card.onclick = function (e) {
-        if (e.target.closest('.mvp-card-actions, button, a')) return;
+        if (e.target.closest('.pcm-bottom-row, .btn-request-booking, .pcs-actions-row, .mvp-card-actions, button, a')) return;
         openDriverProfile(id, 'bookingSearchProviders');
       };
-      if (!card.querySelector('.mvp-card-actions')) {
+      if (!card.querySelector('.pcm-bottom-row') && !card.querySelector('.btn-request-booking') && !card.querySelector('.pcs-actions-row') && !card.querySelector('.mvp-card-actions')) {
         const actions = document.createElement('div');
-        actions.className = 'mvp-card-actions mvp-card-actions--slim';
-        actions.innerHTML = `<button type="button" class="btn-primary" onclick="event.stopPropagation(); startBookingReview('${id}')">Book</button>`;
+        actions.className = 'pcs-actions-row';
+        actions.style.cssText = 'display:flex; gap:8px; margin-top:10px; padding-top:10px; border-top:1px solid #F1F5F9;';
+        actions.innerHTML = `
+          <button type="button" class="btn-secondary-surface" style="flex:1; padding:8px 10px; font-size:12px; border-radius:10px; font-weight:700;" onclick="event.stopPropagation(); openDriverProfile('${id}', 'bookingSearchProviders')">View Profile</button>
+          <button type="button" class="btn-primary" style="flex:1; padding:8px 10px; font-size:12px; border-radius:10px; font-weight:700;" onclick="event.stopPropagation(); startBookingReview('${id}')">Request Booking</button>
+        `;
         card.appendChild(actions);
       }
     });
@@ -1063,9 +1089,21 @@
     const cleanName = String(provider?.name || '').replace(/\s*\(WalkShare\)/i, '');
     setText('summaryProviderText', cleanName || 'Provider');
     setText('summaryVehicleText', [provider?.vehicle, provider?.plate].filter(Boolean).join(' · ') || 'Vehicle');
+
+    const isWalk = provider?.category === 'walkshare' || provider?.id === 'sarah' || provider?.id === 'elena';
+    const rateUnit = draft.frequency === 'recurring' ? 'week' : 'trip';
+    const rateVal = draft.frequency === 'recurring'
+      ? (provider?.listedRate || provider?.baseWeekly || (isWalk ? 75 : 120))
+      : (provider?.oneTimeRate || (isWalk ? 25 : 35));
+    setText('summaryListedRateVal', `$${rateVal}/${rateUnit}`);
+    const negBadge = document.getElementById('summaryNegotiableBadge');
+    if (negBadge) {
+      negBadge.style.display = provider?.negotiable !== false ? 'inline-block' : 'none';
+    }
+
     const rateEl = document.getElementById('summaryPostedRateText');
     if (rateEl) {
-      rateEl.textContent = '';
+      rateEl.textContent = `$${rateVal}/${rateUnit}`;
       rateEl.style.display = 'none';
     }
 
@@ -1091,9 +1129,9 @@
     setText('summaryWhenText', `${dateLabel} · ${tripType}`);
     setText('summaryProviderText', cleanName || 'Provider');
     setText('summaryVehicleText', [provider?.vehicle, provider?.plate].filter(Boolean).join(' · ') || 'Vehicle');
-    if (rateEl) {
-      rateEl.textContent = '';
-      rateEl.style.display = 'none';
+    setText('summaryListedRateVal', `$${rateVal}/${rateUnit}`);
+    if (negBadge) {
+      negBadge.style.display = provider?.negotiable !== false ? 'inline-block' : 'none';
     }
     if (returnRow) returnRow.style.display = draft.direction === 'oneway' ? 'none' : 'flex';
 
@@ -1300,8 +1338,30 @@
     const stream = document.getElementById('chatStream');
     if (!stream) return;
     const key = providerId || 'tariq';
-    const script = PARENT_DEMO_CHATS[key] || PARENT_DEMO_CHATS.tariq;
+    let script = PARENT_DEMO_CHATS[key] || PARENT_DEMO_CHATS.tariq;
     stream.dataset.parentParty = key;
+
+    // Check if there is a pending or confirmed booking for rate discussion
+    const bookingWithProvider = (state().bookings || []).find((b) => b.providerId === key) || (state().bookings || [])[0];
+    if (bookingWithProvider && key === 'tariq') {
+      const isRateAgreed = bookingWithProvider.rateStatus === 'agreed' || (bookingWithProvider.agreedRate != null && bookingWithProvider.status !== 'pending');
+      const agreedVal = bookingWithProvider.agreedRate || 135;
+      if (!isRateAgreed) {
+        script = [
+          ...PARENT_DEMO_CHATS.tariq,
+          { type: 'provider', text: 'Hi Sadia, I received your request for 12 Elm Street → Greenfield (8.6 km). With morning loop congestion, I can do this route for $135/week.', time: 'Just now' },
+          { type: 'rate_proposal', amount: 135, period: 'week', bookingId: bookingWithProvider.id }
+        ];
+      } else {
+        script = [
+          ...PARENT_DEMO_CHATS.tariq,
+          { type: 'provider', text: `Hi Sadia, I reviewed the route (8.6 km). I can do this route for $${agreedVal}/week.`, time: '07:28 AM' },
+          { type: 'parent', text: 'Sounds fair, let’s do it!', time: '07:29 AM' },
+          { type: 'system', text: `✓ Agreed rate: $${agreedVal}/week confirmed by both parties.`, tone: 'blue' }
+        ];
+      }
+    }
+
     stream.innerHTML = script.map((item) => {
       if (item.type === 'system') {
         const tone = item.tone === 'amber'
@@ -1312,6 +1372,14 @@
         return `<div class="system-status-bubble" style="${tone}display:flex;align-items:center;justify-content:flex-start;gap:6px;">
           <i data-lucide="clock" style="width:14px;height:14px;"></i>
           <span>${item.text}</span>
+        </div>`;
+      }
+      if (item.type === 'rate_proposal') {
+        return `<div class="rate-proposal-card" style="background:#F0FDF4; border:1.5px solid #86EFAC; border-radius:12px; padding:12px 14px; margin:8px 0;">
+          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#166534; letter-spacing:0.5px;">Driver Rate Adjustment</div>
+          <div style="font-size:18px; font-weight:800; color:#0F172A; margin:4px 0;">$${item.amount}/${item.period}</div>
+          <div style="font-size:12px; color:#166534; margin-bottom:10px;">Tariq proposed $${item.amount}/${item.period} based on the 8.6 km route and morning schedule.</div>
+          <button type="button" class="btn-primary" style="width:100%; padding:8px 12px; font-size:12.5px; border-radius:8px;" onclick="window.acceptRateProposal('${item.bookingId}', ${item.amount})">Accept $${item.amount}/${item.period} Proposal</button>
         </div>`;
       }
       return `<div class="chat-bubble ${item.type}">
@@ -1402,6 +1470,16 @@
     if (chatBtn) chatBtn.setAttribute('onclick', `openChatWith('${provider?.id || 'tariq'}')`);
     const reportBtn = document.getElementById('trackingReportBtn');
     if (reportBtn) reportBtn.setAttribute('onclick', `openTripReport('${booking.id}')`);
+    const rateBtn = document.getElementById('trackingRateTripBtn');
+    const safetyStatus = document.getElementById('trackingLiveSafetyStatus');
+    const isDone = booking.status === 'completed' || (window.appState && window.appState.trackingStageIndex >= 4);
+    if (rateBtn) {
+      rateBtn.style.display = isDone ? 'inline-flex' : 'none';
+      rateBtn.setAttribute('onclick', `openParentRateDriverModal('${provider?.id || 'tariq'}', '${booking.id}')`);
+    }
+    if (safetyStatus) {
+      safetyStatus.style.display = isDone ? 'none' : 'flex';
+    }
     document.querySelectorAll('.map-pin-label').forEach((el, i) => {
       if (i === 1) el.textContent = schoolShort(booking);
     });

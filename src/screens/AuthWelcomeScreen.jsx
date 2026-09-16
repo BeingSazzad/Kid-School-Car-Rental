@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import StatusBar from '../components/StatusBar';
-import { Info, ShieldCheck, ChevronDown } from 'lucide-react';
+import { Info, ShieldCheck, ChevronDown, Users, Car, Footprints, Check } from 'lucide-react';
 
 export default function AuthWelcomeScreen({ onContinue }) {
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [selectedRole, setSelectedRole] = useState('parent');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onContinue(phoneNumber || '(416) 555-0192');
+    onContinue(phoneNumber || '(416) 555-0192', selectedRole);
   };
 
   return (
@@ -26,7 +27,7 @@ export default function AuthWelcomeScreen({ onContinue }) {
       <div style={{
         position: 'relative',
         width: '100%',
-        height: '320px',
+        height: '260px',
         overflow: 'hidden',
         flexShrink: 0
       }}>
@@ -67,7 +68,7 @@ export default function AuthWelcomeScreen({ onContinue }) {
           {/* Header */}
           <div style={{ marginBottom: '8px' }}>
             <h1 style={{
-              fontSize: '26px',
+              fontSize: '24px',
               fontWeight: 800,
               color: 'var(--color-title)',
               lineHeight: '1.25',
@@ -83,14 +84,154 @@ export default function AuthWelcomeScreen({ onContinue }) {
           </div>
 
           <p style={{
-            fontSize: '14px',
+            fontSize: '13px',
             color: 'var(--color-body)',
             fontWeight: 400,
-            marginBottom: '28px',
+            marginBottom: '16px',
             lineHeight: '1.4'
           }}>
-            Sign in or create your account using your mobile number.
+            Select your account role and sign in or create an account.
           </p>
+
+          {/* Role Selection 3-Tile Grid */}
+          <div style={{ marginBottom: '14px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '11px', fontWeight: 800, color: '#0F172A' }}>I want to join as</span>
+              <span style={{ fontSize: '10px', fontWeight: 700, color: '#1B2B68', background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '2px 8px', borderRadius: '99px' }}>3 Roles</span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+              {/* Parent */}
+              <div 
+                onClick={() => setSelectedRole('parent')}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '10px 4px',
+                  background: selectedRole === 'parent' ? '#1B2B68' : '#FFFFFF',
+                  border: `1.5px solid ${selectedRole === 'parent' ? '#1B2B68' : '#E2E8F0'}`,
+                  borderRadius: '14px',
+                  cursor: 'pointer',
+                  boxShadow: selectedRole === 'parent' ? '0 6px 16px rgba(27, 43, 104, 0.22)' : 'none',
+                  transition: 'all 0.2s ease',
+                  minHeight: '76px',
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '9px',
+                  background: selectedRole === 'parent' ? 'rgba(255,255,255,0.2)' : '#EEF2FF',
+                  color: selectedRole === 'parent' ? '#FFFFFF' : '#4F46E5',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '4px'
+                }}>
+                  <Users size={16} />
+                </div>
+                <strong style={{ fontSize: '12px', color: selectedRole === 'parent' ? '#FFFFFF' : '#0F172A', lineHeight: 1.2 }}>Parent</strong>
+                <span style={{ fontSize: '9px', fontWeight: 600, color: selectedRole === 'parent' ? '#93C5FD' : '#64748B', marginTop: '1px' }}>Book Rides</span>
+              </div>
+
+              {/* Driver */}
+              <div 
+                onClick={() => setSelectedRole('driver')}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '10px 4px',
+                  background: selectedRole === 'driver' ? '#1B2B68' : '#FFFFFF',
+                  border: `1.5px solid ${selectedRole === 'driver' ? '#1B2B68' : '#E2E8F0'}`,
+                  borderRadius: '14px',
+                  cursor: 'pointer',
+                  boxShadow: selectedRole === 'driver' ? '0 6px 16px rgba(27, 43, 104, 0.22)' : 'none',
+                  transition: 'all 0.2s ease',
+                  minHeight: '76px',
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '9px',
+                  background: selectedRole === 'driver' ? 'rgba(255,255,255,0.2)' : '#EFF6FF',
+                  color: selectedRole === 'driver' ? '#FFFFFF' : '#0284C7',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '4px'
+                }}>
+                  <Car size={16} />
+                </div>
+                <strong style={{ fontSize: '12px', color: selectedRole === 'driver' ? '#FFFFFF' : '#0F172A', lineHeight: 1.2 }}>Driver</strong>
+                <span style={{ fontSize: '9px', fontWeight: 600, color: selectedRole === 'driver' ? '#93C5FD' : '#64748B', marginTop: '1px' }}>Drive &amp; Earn</span>
+              </div>
+
+              {/* WalkShare */}
+              <div 
+                onClick={() => setSelectedRole('walkshare')}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '10px 4px',
+                  background: selectedRole === 'walkshare' ? '#1B2B68' : '#FFFFFF',
+                  border: `1.5px solid ${selectedRole === 'walkshare' ? '#1B2B68' : '#E2E8F0'}`,
+                  borderRadius: '14px',
+                  cursor: 'pointer',
+                  boxShadow: selectedRole === 'walkshare' ? '0 6px 16px rgba(27, 43, 104, 0.22)' : 'none',
+                  transition: 'all 0.2s ease',
+                  minHeight: '76px',
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '9px',
+                  background: selectedRole === 'walkshare' ? 'rgba(255,255,255,0.2)' : '#ECFDF5',
+                  color: selectedRole === 'walkshare' ? '#FFFFFF' : '#059669',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '4px'
+                }}>
+                  <Footprints size={16} />
+                </div>
+                <strong style={{ fontSize: '12px', color: selectedRole === 'walkshare' ? '#FFFFFF' : '#0F172A', lineHeight: 1.2 }}>WalkShare</strong>
+                <span style={{ fontSize: '9px', fontWeight: 600, color: selectedRole === 'walkshare' ? '#93C5FD' : '#64748B', marginTop: '1px' }}>Walk Escort</span>
+              </div>
+            </div>
+
+            {/* Dynamic Role Summary Pill */}
+            <div style={{
+              marginTop: '8px',
+              padding: '7px 10px',
+              background: '#F8FAFC',
+              border: '1px solid #E2E8F0',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '7px',
+              fontSize: '11px',
+              color: '#334155',
+              lineHeight: '1.35'
+            }}>
+              <ShieldCheck size={14} color="#10B981" style={{ flexShrink: 0 }} />
+              <span>
+                {selectedRole === 'driver' && 'Partner KYC — Driver licence, vehicle inspection & safety check.'}
+                {selectedRole === 'walkshare' && 'Escort KYC — Residency proofs, CPR & chaperone verification.'}
+                {selectedRole === 'parent' && 'No upfront docs needed — add children & book instantly.'}
+              </span>
+            </div>
+          </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -148,7 +289,7 @@ export default function AuthWelcomeScreen({ onContinue }) {
               className="btn-primary"
               style={{ marginTop: '4px' }}
             >
-              Continue
+              {selectedRole === 'driver' ? 'Continue as Driver' : selectedRole === 'walkshare' ? 'Continue as WalkShare' : 'Continue as Parent'}
             </button>
 
             {/* Info hint */}
