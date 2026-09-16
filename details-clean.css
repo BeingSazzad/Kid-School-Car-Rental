@@ -338,6 +338,27 @@
   margin-top: 2px !important;
 }
 
+#screen-bookingDetails .bd-tl-status-tag {
+  display: inline-block !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #64748B !important;
+  background: #F1F5F9 !important;
+  padding: 2px 8px !important;
+  border-radius: 6px !important;
+  margin-top: 4px !important;
+}
+
+#screen-bookingDetails .bd-tl-status-tag.is-done {
+  color: #059669 !important;
+  background: #ECFDF5 !important;
+}
+
+#screen-bookingDetails .bd-tl-status-tag.active {
+  color: #D97706 !important;
+  background: #FEF3C7 !important;
+}
+
 /* ================= 3. Driver Card ================= */
 #screen-bookingDetails .bd-driver-main-row {
   display: flex !important;

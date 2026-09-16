@@ -3781,10 +3781,13 @@
           </div>
         </header>
 
-        <!-- 2. Route Card -->
+        <!-- 2. Route & Timeline Card -->
         <section class="bd-card bd-section">
-          <h4 class="bd-label">Route</h4>
-          <div class="bd-timeline">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <h4 class="bd-label" style="margin: 0;">Route &amp; Timeline</h4>
+            <span id="detailTripLiveStatusPill" style="font-size: 11px; font-weight: 700; color: #059669; background: #ECFDF5; padding: 2px 8px; border-radius: 999px;">Live</span>
+          </div>
+          <div class="bd-timeline" id="detailTimelineWrap">
             <div class="bd-tl-row">
               <div class="bd-tl-time" id="detailOutboundTime">07:30 AM</div>
               <div class="bd-tl-rail">
@@ -3792,8 +3795,9 @@
                 <span class="bd-tl-line"></span>
               </div>
               <div class="bd-tl-body">
-                <div class="bd-tl-name">Home</div>
+                <div class="bd-tl-name">Home Pickup</div>
                 <div class="bd-tl-sub" id="detailPickupAddr">12 Elm Street</div>
+                <div class="bd-tl-status-tag" id="detailPickupStatus">✓ Departed 7:32 AM</div>
               </div>
             </div>
             <div class="bd-tl-row">
@@ -3803,8 +3807,9 @@
                 <span class="bd-tl-line" id="detailReturnRailLine"></span>
               </div>
               <div class="bd-tl-body">
-                <div class="bd-tl-name" id="detailSchoolName">Greenfield</div>
-                <div class="bd-tl-sub" id="detailSchoolAddr">Gate drop-off</div>
+                <div class="bd-tl-name" id="detailSchoolName">Greenfield School</div>
+                <div class="bd-tl-sub" id="detailSchoolAddr">Gate 2 Drop-off</div>
+                <div class="bd-tl-status-tag active" id="detailDropoffStatus">🟡 En route (ETA 3 mins)</div>
               </div>
             </div>
             <div class="bd-tl-row" id="detailReturnLegBox">
@@ -3813,8 +3818,9 @@
                 <span class="bd-tl-dot is-return"></span>
               </div>
               <div class="bd-tl-body">
-                <div class="bd-tl-name">Return home</div>
+                <div class="bd-tl-name">Afternoon Return</div>
                 <div class="bd-tl-sub" id="detailReturnAddr">12 Elm Street</div>
+                <div class="bd-tl-status-tag" id="detailReturnStatus">Scheduled</div>
               </div>
             </div>
           </div>
@@ -3822,7 +3828,7 @@
 
         <!-- 3. Driver Card -->
         <section class="bd-card bd-section">
-          <h4 class="bd-label">Driver</h4>
+          <h4 class="bd-label">Driver &amp; Vehicle</h4>
           <div class="bd-driver-main-row">
             <button type="button" class="bd-driver-info-wrap" onclick="openDriverProfile(window.currentBookingProviderId || 'tariq', 'bookingDetails')">
               <img src="/assets/avatar_tariq.jpg" alt="" id="detailDriverPhoto" class="bd-driver-avatar" />
@@ -3841,28 +3847,29 @@
             </button>
           </div>
           <div class="bd-vehicle-block" id="detailVehicleRow">
-            <div class="bd-vehicle-name" id="detailVehicleName">Toyota Sienna</div>
-            <div class="bd-vehicle-meta" id="detailProviderVehicle">SCH-4091 · 4 seats</div>
+            <div class="bd-vehicle-name" id="detailVehicleName">Toyota Sienna (Silver)</div>
+            <div class="bd-vehicle-meta" id="detailProviderVehicle">SCH-4091 · 4 seats · Booster equipped</div>
           </div>
         </section>
 
-        <!-- 4. Students Card -->
+        <!-- 4. Children Traveling Card (Real-world Child Logistics) -->
         <section class="bd-card bd-section">
-          <h4 class="bd-label">Students</h4>
+          <h4 class="bd-label" id="detailChildrenHeaderLabel">Children Traveling (2)</h4>
           <div id="detailPassengersWrap" class="bd-students-grid"></div>
         </section>
 
-        <!-- 5. Fee & Payment Combined Card -->
+        <!-- 5. Fare & Payment Card (Modern Fintech Standard) -->
         <section class="bd-card bd-section bd-pay-card">
+          <h4 class="bd-label" style="margin-bottom: 12px;">Fare &amp; Payment</h4>
           <div class="bd-fee-item">
             <div class="bd-fee-icon-circle">
-              <i data-lucide="coins" style="width:18px;height:18px;"></i>
+              <i data-lucide="receipt" style="width:18px;height:18px;"></i>
             </div>
             <div class="bd-fee-content">
-              <div class="bd-fee-title">Ride fee</div>
-              <div class="bd-fee-sub" id="detailFarePeriod">Arrange with provider</div>
+              <div class="bd-fee-title" id="detailFareTitle">Weekly School Pass</div>
+              <div class="bd-fee-sub" id="detailFarePeriod">Mon–Fri recurring • Auto-billed</div>
             </div>
-            <div class="bd-fare-amt" id="detailFareAmount" style="display:none;">—</div>
+            <div class="bd-fare-amt" id="detailFareAmount" style="font-size: 15px; font-weight: 800; color: #0F172A;">$120.00</div>
           </div>
           <div class="bd-card-divider"></div>
           <div class="bd-fee-item" id="paymentHandleCard">
@@ -3870,18 +3877,30 @@
               <i data-lucide="credit-card" style="width:18px;height:18px;"></i>
             </div>
             <div class="bd-fee-content">
-              <div class="bd-fee-title" id="paymentHandleStatusLabel">Payment</div>
-              <div class="bd-fee-sub" id="paymentHandleCopy">Pay the driver directly.</div>
-              <div id="paymentHandleValue" class="bd-pay-value" style="display:none; font-size:12px; color:#2563EB; font-weight:700; margin-top:2px;"></div>
+              <div class="bd-fee-title" id="paymentHandleStatusLabel">Payment Method</div>
+              <div class="bd-fee-sub" id="paymentHandleCopy">Visa •••• 4242</div>
             </div>
-            <button type="button" class="bd-pay-action-link" id="btnPaymentHandlePrimary" onclick="advancePaymentHandle()">Request handle</button>
-            <button type="button" class="bd-pay-revoke" id="btnPaymentHandleSecondary" onclick="revokePaymentHandle()" style="display:none;">Revoke</button>
+            <span class="bd-pay-status-pill" id="paymentVerifiedBadge" style="font-size: 11px; font-weight: 700; color: #059669; background: #ECFDF5; padding: 4px 8px; border-radius: 999px;">✓ Auto-paid</span>
           </div>
         </section>
 
-        <!-- 6. Optional Notes Card -->
+        <!-- 6. Drop-off Safety & Hand-off Protocol Card -->
+        <section class="bd-card bd-section" id="detailHandoffCard">
+          <h4 class="bd-label">Drop-off &amp; Hand-off Protocol</h4>
+          <div class="bd-handoff-row" style="display: flex; align-items: flex-start; gap: 10px;">
+            <div class="bd-fee-icon-circle" style="background: #EFF6FF; color: #2563EB;">
+              <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 13.5px; font-weight: 700; color: #0F172A;" id="detailHandoffPerson">School Staff Hand-off</div>
+              <div style="font-size: 12px; font-weight: 500; color: #64748B; margin-top: 2px;" id="detailHandoffNotes">Driver verifies safe entry at Gate 2 reception desk.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. Optional Parent Notes Card -->
         <section class="bd-card bd-section" id="detailNotesCard" style="display:none;">
-          <h4 class="bd-label">Notes</h4>
+          <h4 class="bd-label">Parent Notes</h4>
           <p class="bd-fee-sub" id="detailNotesText" style="margin:0;"></p>
         </section>
 

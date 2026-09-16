@@ -3426,6 +3426,13 @@ function renderBookingDetails(bookingId) {
     .replace(/\)$/, '')
     .trim() || '12 Elm Street';
 
+  const isCompleted = booking.status === 'completed';
+  const isLive = booking.status === 'in_progress';
+  const isPending = booking.status === 'pending';
+  const isCancelled = booking.status === 'cancelled';
+  const isConfirmed = booking.status === 'confirmed';
+
+  // 1. Hero Summary Titles & Date
   const tripTitle = booking.direction === 'bothway'
     ? 'Round trip'
     : (/pm|p\.m/i.test(booking.outboundTime || '') ? 'From school' : 'To school');
@@ -3434,9 +3441,9 @@ function renderBookingDetails(bookingId) {
     ? `Home → ${shortSchool}`
     : (/pm|p\.m/i.test(booking.outboundTime || '') ? `${shortSchool} → Home` : `Home → ${shortSchool}`);
 
-  const scheduleLabel = booking.frequency === 'recurring'
-    ? 'Mon–Fri'
-    : (booking.createdAt || booking.completedAt || 'One-time');
+  const scheduleLabel = isCompleted
+    ? (booking.completedAt ? `Completed: ${booking.completedAt}` : 'Completed ride')
+    : (booking.frequency === 'recurring' ? 'Mon–Fri Recurring' : (booking.scheduleText || booking.createdAt || 'One-time'));
 
   const idShort = String(booking.id || '').replace(/^H2S-?/i, '');
   setText('detailRefId', idShort ? '#' + idShort : '');
@@ -3453,50 +3460,103 @@ function renderBookingDetails(bookingId) {
   if (modalSubEl) modalSubEl.textContent = children.map(c => c.name.split(' ')[0]).join(' + ') || 'Children';
   if (modalVehEl) modalVehEl.textContent = (provider.vehicle || '') + (provider.plate ? ' · ' + provider.plate : '');
 
+  // 2. Status Badge in Hero
   const statusEl = document.getElementById('detailStatusBadge');
   if (statusEl) {
     const map = {
-      in_progress: { cls: 'bd-status in-progress', html: '<span class="live-pulse-dot"></span><span>Live</span>' },
+      in_progress: { cls: 'bd-status in-progress', html: '<span class="live-pulse-dot"></span><span>Live Trip</span>' },
       confirmed: { cls: 'bd-status confirmed', html: '<i data-lucide="calendar" style="width:12px;height:12px;"></i><span>Scheduled</span>' },
-      pending: { cls: 'bd-status pending', html: '<span>Pending</span>' },
-      completed: { cls: 'bd-status completed', html: '<span>Completed</span>' },
-      cancelled: { cls: 'bd-status cancelled', html: '<span>Cancelled</span>' }
+      pending: { cls: 'bd-status pending', html: '<i data-lucide="clock" style="width:12px;height:12px;"></i><span>Pending Approval</span>' },
+      completed: { cls: 'bd-status completed', html: '<i data-lucide="check-circle" style="width:12px;height:12px;"></i><span>Completed</span>' },
+      cancelled: { cls: 'bd-status cancelled', html: '<i data-lucide="x-circle" style="width:12px;height:12px;"></i><span>Cancelled</span>' }
     };
     const s = map[booking.status] || { cls: 'bd-status', html: '<span>' + (booking.status || '') + '</span>' };
     statusEl.className = s.cls;
     statusEl.innerHTML = s.html;
   }
 
-  const passWrap = document.getElementById('detailPassengersWrap');
-  if (passWrap) {
-    passWrap.innerHTML = children.map((c) => {
-      const first = (c.name || 'Student').split(' ')[0];
-      const photoSrc = c.photo || (first.toLowerCase() === 'emma' ? '/assets/avatar_emma.jpg' : '/assets/avatar_arman.jpg');
-      const grade = c.grade ? (c.grade.toLowerCase().includes('grade') ? c.grade : `Grade ${c.grade}`) : (c.age ? `${c.age} yrs` : 'Grade 4');
-      return (
-        '<div class="bd-student-chip">' +
-          '<img src="' + photoSrc + '" alt="" class="bd-student-avatar" onerror="this.src=\'/assets/avatar_arman.jpg\';" />' +
-          '<div style="min-width: 0;">' +
-            '<div class="bd-student-name">' + first + '</div>' +
-            '<div class="bd-student-meta">' + grade + '</div>' +
-          '</div>' +
-        '</div>'
-      );
-    }).join('') || '<div class="bd-student-meta">Add a child to this booking</div>';
+  // 3. Route & Timeline State Updates
+  const tripPill = document.getElementById('detailTripLiveStatusPill');
+  if (tripPill) {
+    if (isLive) {
+      tripPill.style.display = 'inline-block';
+      tripPill.textContent = 'Live • En Route';
+      tripPill.style.color = '#059669';
+      tripPill.style.background = '#ECFDF5';
+    } else if (isCompleted) {
+      tripPill.style.display = 'inline-block';
+      tripPill.textContent = '✓ Completed';
+      tripPill.style.color = '#475569';
+      tripPill.style.background = '#F1F5F9';
+    } else if (isPending) {
+      tripPill.style.display = 'inline-block';
+      tripPill.textContent = 'Pending';
+      tripPill.style.color = '#D97706';
+      tripPill.style.background = '#FEF3C7';
+    } else {
+      tripPill.style.display = 'inline-block';
+      tripPill.textContent = 'Scheduled';
+      tripPill.style.color = '#2563EB';
+      tripPill.style.background = '#EFF6FF';
+    }
   }
 
   setText('detailOutboundTime', booking.outboundTime || '07:30 AM');
   setText('detailReturnTime', booking.returnTime || '01:00 PM');
   setText('detailPickupAddr', pickupStreet);
   setText('detailReturnAddr', pickupStreet);
-  setText('detailSchoolName', shortSchool);
+  setText('detailSchoolName', shortSchool + ' School');
   const schoolSub = /greenfield/i.test(booking.schoolLocation || '')
-    ? 'Gate drop-off'
+    ? 'Gate 2 Drop-off'
     : /sunshine/i.test(booking.schoolLocation || '')
-      ? 'Pre-school gate'
-      : (shortSchool !== 'School' ? shortSchool + ' gate' : 'School gate');
+      ? 'Pre-school Front Reception'
+      : (shortSchool !== 'School' ? shortSchool + ' Main Gate' : 'School Gate');
   setText('detailSchoolAddr', schoolSub);
-  setText('detailSchoolTime', booking.schoolArriveTime || '07:45 AM');
+  setText('detailSchoolTime', booking.schoolArriveTime || (isCompleted ? '07:46 AM' : '07:45 AM'));
+
+  // Step Status Tags
+  const pickupTag = document.getElementById('detailPickupStatus');
+  const dropoffTag = document.getElementById('detailDropoffStatus');
+  const returnTag = document.getElementById('detailReturnStatus');
+
+  if (pickupTag) {
+    if (isLive) {
+      pickupTag.className = 'bd-tl-status-tag is-done';
+      pickupTag.textContent = '✓ Departed 7:32 AM';
+    } else if (isCompleted) {
+      pickupTag.className = 'bd-tl-status-tag is-done';
+      pickupTag.textContent = '✓ Picked up on time';
+    } else {
+      pickupTag.className = 'bd-tl-status-tag';
+      pickupTag.textContent = 'Pickup at Home';
+    }
+  }
+
+  if (dropoffTag) {
+    if (isLive) {
+      dropoffTag.className = 'bd-tl-status-tag active';
+      dropoffTag.textContent = '🟡 En route (ETA 3 mins)';
+    } else if (isCompleted) {
+      dropoffTag.className = 'bd-tl-status-tag is-done';
+      dropoffTag.textContent = '✓ Handed to school staff (07:46 AM)';
+    } else {
+      dropoffTag.className = 'bd-tl-status-tag';
+      dropoffTag.textContent = 'Drop-off & Hand-off';
+    }
+  }
+
+  if (returnTag) {
+    if (isCompleted) {
+      returnTag.className = 'bd-tl-status-tag is-done';
+      returnTag.textContent = '✓ Returned home safely';
+    } else if (isLive) {
+      returnTag.className = 'bd-tl-status-tag';
+      returnTag.textContent = 'Afternoon ride (01:00 PM)';
+    } else {
+      returnTag.className = 'bd-tl-status-tag';
+      returnTag.textContent = 'Return ride';
+    }
+  }
 
   const retBox = document.getElementById('detailReturnLegBox');
   const retLine = document.getElementById('detailReturnRailLine');
@@ -3504,17 +3564,18 @@ function renderBookingDetails(bookingId) {
   if (retBox) retBox.style.display = both ? 'flex' : 'none';
   if (retLine) retLine.style.display = both ? 'block' : 'none';
 
+  // 4. Driver & Vehicle
   setText('detailProviderName', String(provider.name || '').replace(/\s*\(WalkShare\)/i, ''));
   setText('detailProviderRating', String(provider.rating != null ? provider.rating : '4.9'));
-  setText('detailProviderReviews', provider.reviewsCount != null ? '(' + provider.reviewsCount + ')' : '(128)');
+  setText('detailProviderReviews', provider.reviewsCount != null ? '(' + provider.reviewsCount + ' rides)' : '(128 rides)');
 
   const vehName = String(provider.vehicle || '').replace(/\s*\(\d{4}\)\s*/g, '').trim();
-  setText('detailVehicleName', isWalk ? 'Walking escort' : (vehName || 'Toyota Sienna'));
+  setText('detailVehicleName', isWalk ? 'Walking Escort Group' : (vehName || 'Toyota Sienna (Silver)'));
   setText(
     'detailProviderVehicle',
     isWalk
-      ? ([provider.zone || provider.serviceArea, provider.seats ? provider.seats + ' kids' : ''].filter(Boolean).join(' · ') || 'WalkShare')
-      : [provider.plate || 'SCH-4091', provider.seats ? provider.seats + ' seats' : '4 seats'].filter(Boolean).join(' · ')
+      ? ([provider.zone || provider.serviceArea, provider.seats ? provider.seats + ' kids capacity' : 'Verified Escort'].filter(Boolean).join(' · '))
+      : [provider.plate || 'SCH-4091', provider.seats ? provider.seats + ' seats' : '4 seats', 'Booster equipped'].filter(Boolean).join(' · ')
   );
 
   const pPhoto = document.getElementById('detailDriverPhoto');
@@ -3523,36 +3584,95 @@ function renderBookingDetails(bookingId) {
     pPhoto.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
   }
 
-  setText('detailFarePeriod', 'Arrange with provider');
-  setText('detailFareAmount', '—');
+  // 5. Children Traveling Card
+  const childrenHeader = document.getElementById('detailChildrenHeaderLabel');
+  if (childrenHeader) {
+    childrenHeader.textContent = `Children Traveling (${children.length})`;
+  }
 
+  const passWrap = document.getElementById('detailPassengersWrap');
+  if (passWrap) {
+    passWrap.innerHTML = children.map((c) => {
+      const first = (c.name || 'Child').split(' ')[0];
+      const photoSrc = c.photo || (first.toLowerCase() === 'emma' ? '/assets/avatar_emma.jpg' : (first.toLowerCase() === 'zara' ? '/assets/avatar_zara.jpg' : '/assets/avatar_arman.jpg'));
+      const ageText = c.age ? c.age : '8 yrs';
+      const gradeText = c.grade ? (c.grade.toLowerCase().includes('grade') || c.grade.toLowerCase().includes('pre') ? c.grade : `Grade ${c.grade}`) : 'Grade 4';
+      const meta = `${gradeText} • ${ageText}`;
+      const safetyPill = /booster/i.test(c.notes || '') || /arman/i.test(first)
+        ? '<span style="display:inline-flex; align-items:center; gap:3px; font-size:10px; font-weight:700; color:#2563EB; background:#EFF6FF; padding:2px 6px; border-radius:6px; margin-top:3px;"><i data-lucide="shield" style="width:10px;height:10px;"></i> Booster Seat</span>'
+        : '<span style="display:inline-flex; align-items:center; gap:3px; font-size:10px; font-weight:700; color:#059669; background:#ECFDF5; padding:2px 6px; border-radius:6px; margin-top:3px;"><i data-lucide="check" style="width:10px;height:10px;"></i> Seatbelt</span>';
+
+      return (
+        '<div class="bd-student-chip" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:10px 12px; display:flex; align-items:center; gap:10px;">' +
+          '<img src="' + photoSrc + '" alt="" class="bd-student-avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" onerror="this.src=\'/assets/avatar_arman.jpg\';" />' +
+          '<div style="min-width: 0; flex: 1;">' +
+            '<div class="bd-student-name" style="font-size:14px; font-weight:700; color:#0F172A;">' + (c.name || first) + '</div>' +
+            '<div class="bd-student-meta" style="font-size:11.5px; font-weight:500; color:#64748B;">' + meta + '</div>' +
+            safetyPill +
+          '</div>' +
+        '</div>'
+      );
+    }).join('') || '<div class="bd-student-meta">No children added</div>';
+  }
+
+  // 6. Fare & Payment
+  const fareAmt = booking.amount ? `$${booking.amount}.00` : (provider.baseWeekly ? `$${provider.baseWeekly}.00` : '$120.00');
+  const isRecurring = booking.frequency === 'recurring';
+  setText('detailFareTitle', isRecurring ? 'Weekly Plan Fare' : 'Single Ride Fare');
+  setText('detailFarePeriod', isRecurring ? 'Mon–Fri recurring • Auto-billed' : 'One-time trip fare');
+  setText('detailFareAmount', fareAmt);
+
+  setText('paymentHandleStatusLabel', 'Payment Method');
+  setText('paymentHandleCopy', booking.paymentMethod || 'Visa •••• 4242');
+  const payBadge = document.getElementById('paymentVerifiedBadge');
+  if (payBadge) {
+    payBadge.textContent = isCompleted ? '✓ Paid in Full' : (isPending ? 'Pending Charge' : '✓ Auto-pay Active');
+  }
+
+  // 7. Hand-off Protocol Card
+  const handoffNotesEl = document.getElementById('detailHandoffNotes');
+  const handoffPersonEl = document.getElementById('detailHandoffPerson');
+  if (handoffPersonEl && handoffNotesEl) {
+    if (/sunshine/i.test(booking.schoolLocation || '')) {
+      handoffPersonEl.textContent = 'Sunshine Pre-school Front Reception';
+      handoffNotesEl.textContent = 'Driver escorts child inside to teacher Ms. Clara.';
+    } else {
+      handoffPersonEl.textContent = 'Greenfield Gate 2 Staff Hand-off';
+      handoffNotesEl.textContent = booking.dropoffNote || 'Driver verifies safe hand-off with school security staff before departing.';
+    }
+  }
+
+  // 8. Parent Notes Card
   const notesCard = document.getElementById('detailNotesCard');
   const notesText = document.getElementById('detailNotesText');
-  const note = booking.notes || booking.pickupNote || booking.dropoffNote || '';
+  const note = booking.notes || booking.pickupNote || '';
   if (notesCard) {
     notesCard.style.display = note ? 'flex' : 'none';
     notesCard.classList.toggle('is-hidden', !note);
   }
   if (notesText && note) notesText.textContent = note;
 
+  // 9. Contextual Bottom Actions
   const primaryTrackBtn = document.getElementById('btnTrackLivePrimary');
   const actionsWrap = document.getElementById('detailContextualActions');
   if (actionsWrap) {
     const first = String(provider.name || 'Driver').split(' ')[0];
     const id = booking.id;
-    if (booking.status === 'in_progress') {
+    if (isLive) {
       if (primaryTrackBtn) {
         primaryTrackBtn.style.display = 'flex';
+        primaryTrackBtn.innerHTML = '<i data-lucide="map-pin" style="width:18px;height:18px;"></i> <span>Track live vehicle</span>';
         primaryTrackBtn.setAttribute('onclick', `openLiveTracking('${id}')`);
       }
       actionsWrap.innerHTML =
         '<div class="bd-actions-quiet">' +
-          '<button type="button" class="bd-link" onclick="openTripReport(\'' + id + '\')">Report</button>' +
-          '<button type="button" class="bd-link danger" onclick="openEmergencySOSModal()">SOS</button>' +
+          '<button type="button" class="bd-link" onclick="openTripReport(\'' + id + '\')">Report issue</button>' +
+          '<button type="button" class="bd-link danger" onclick="openEmergencySOSModal()">SOS Emergency</button>' +
         '</div>';
-    } else if (booking.status === 'confirmed') {
+    } else if (isConfirmed) {
       if (primaryTrackBtn) {
         primaryTrackBtn.style.display = 'flex';
+        primaryTrackBtn.innerHTML = '<i data-lucide="map-pin" style="width:18px;height:18px;"></i> <span>View route map</span>';
         primaryTrackBtn.setAttribute('onclick', `openLiveTracking('${id}')`);
       }
       actionsWrap.innerHTML =
@@ -3560,23 +3680,29 @@ function renderBookingDetails(bookingId) {
           '<button type="button" class="bd-btn-outline" data-mvp-modify="1" onclick="window.modifyBooking && window.modifyBooking(\'' + id + '\')">Edit booking</button>' +
           '<button type="button" class="bd-btn-outline danger" onclick="cancelBooking(\'' + id + '\')">Cancel booking</button>' +
         '</div>';
-    } else if (booking.status === 'pending') {
+    } else if (isPending) {
       if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
       actionsWrap.innerHTML =
-        '<p class="bd-wait" style="text-align:center; font-size:13px; color:#64748B; margin:4px 0;">Waiting for driver to confirm</p>' +
-        '<button type="button" class="bd-link danger" style="text-align:center; display:block; margin:0 auto;" onclick="cancelBooking(\'' + id + '\')">Withdraw request</button>';
-    } else if (booking.status === 'completed') {
-      if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
+        '<p class="bd-wait" style="text-align:center; font-size:13px; color:#64748B; margin:4px 0;">Waiting for driver to confirm schedule</p>' +
+        '<button type="button" class="bd-btn-outline danger" style="width:100%;" onclick="cancelBooking(\'' + id + '\')">Withdraw request</button>';
+    } else if (isCompleted) {
+      if (primaryTrackBtn) {
+        primaryTrackBtn.style.display = 'flex';
+        primaryTrackBtn.innerHTML = '<i data-lucide="star" style="width:18px;height:18px;"></i> <span>Rate &amp; review ' + first + '</span>';
+        primaryTrackBtn.setAttribute('onclick', `navigateTo('rating')`);
+      }
       actionsWrap.innerHTML =
-        '<button type="button" class="bd-btn-track-live" onclick="navigateTo(\'rating\')">Rate ' + first + '</button>' +
-        '<div class="bd-actions-quiet">' +
-          '<button type="button" class="bd-link" onclick="window.rebookRide && window.rebookRide(\'' + id + '\')">Book again</button>' +
-          '<button type="button" class="bd-link" onclick="openTripReport(\'' + id + '\')">Report</button>' +
+        '<div class="bd-actions-row">' +
+          '<button type="button" class="bd-btn-outline" onclick="window.rebookRide && window.rebookRide(\'' + id + '\')">Book again</button>' +
+          '<button type="button" class="bd-btn-outline" onclick="openTripReport(\'' + id + '\')">View receipt / report</button>' +
         '</div>';
-    } else if (booking.status === 'cancelled') {
-      if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
-      actionsWrap.innerHTML =
-        '<button class="bd-btn-track-live" onclick="navigateTo(\'bookingTripSetup\')">Book again</button>';
+    } else if (isCancelled) {
+      if (primaryTrackBtn) {
+        primaryTrackBtn.style.display = 'flex';
+        primaryTrackBtn.innerHTML = '<i data-lucide="refresh-cw" style="width:18px;height:18px;"></i> <span>Re-book this route</span>';
+        primaryTrackBtn.setAttribute('onclick', `navigateTo('bookingTripSetup')`);
+      }
+      actionsWrap.innerHTML = '';
     } else {
       if (primaryTrackBtn) primaryTrackBtn.style.display = 'flex';
       actionsWrap.innerHTML = '';
