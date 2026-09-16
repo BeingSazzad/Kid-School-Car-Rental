@@ -2594,6 +2594,10 @@ svg.lucide {
   scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
 }
 
+.screen-scroll-body > * {
+  flex-shrink: 0;
+}
+
 .screen-scroll-body::-webkit-scrollbar {
   width: 4px;
 }
@@ -6885,6 +6889,10 @@ svg.lucide {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+  flex: 0 0 auto;
+  height: auto;
+  max-height: none;
 }
 
 .profile-menu-item {
@@ -6896,6 +6904,12 @@ svg.lucide {
   border-bottom: 1px solid var(--color-stroke);
   cursor: pointer;
   transition: background-color 0.15s ease;
+  flex-shrink: 0;
+  flex: 0 0 auto;
+  min-height: 52px;
+  height: auto;
+  max-height: none;
+  box-sizing: border-box;
 }
 
 .profile-menu-section > .profile-menu-item:last-child,
@@ -17161,6 +17175,11 @@ button.drv-doc-row.profile-menu-item {
   -webkit-overflow-scrolling: touch;
 }
 
+:is(#screen-profile, #screen-driverProfile, #screen-wsProfile) .screen-scroll-body > * {
+  flex-shrink: 0 !important;
+  flex: 0 0 auto !important;
+}
+
 :is(#screen-driverProfile, #screen-wsProfile) .screen-scroll-body {
   background: #F7F8FB;
 }
@@ -17171,23 +17190,29 @@ button.drv-doc-row.profile-menu-item {
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: none;
-  height: auto;
-  max-height: none;
+  height: auto !important;
+  max-height: none !important;
+  flex-shrink: 0 !important;
+  flex: 0 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 :is(#screen-profile, #screen-driverProfile, #screen-wsProfile) .profile-menu-item {
-  min-height: 52px;
-  height: auto;
-  max-height: none;
-  padding: 12px 16px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: none;
-  border-bottom: 1px solid var(--color-stroke);
-  cursor: pointer;
-  background: #FFFFFF;
+  min-height: 52px !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 12px 16px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border: none !important;
+  border-bottom: 1px solid var(--color-stroke) !important;
+  cursor: pointer !important;
+  background: #FFFFFF !important;
+  flex-shrink: 0 !important;
+  flex: 0 0 auto !important;
 }
 
 :is(#screen-profile, #screen-driverProfile, #screen-wsProfile) button.profile-menu-item {
@@ -17200,6 +17225,8 @@ button.drv-doc-row.profile-menu-item {
   font: inherit;
   text-align: left;
   color: inherit;
+  flex-shrink: 0 !important;
+  flex: 0 0 auto !important;
 }
 
 :is(#screen-profile, #screen-driverProfile, #screen-wsProfile) .profile-menu-section > .profile-menu-item:last-child,
