@@ -1907,87 +1907,82 @@ window.setHomeState = function (state) {
   renderHome();
 };
 
-/** Soft upcoming trip cards on parent Home (State B). */
+/** Soft upcoming trip cards on parent Home (State B) - 1:1 Reference UI */
 window.HOME_UPCOMING_TRIPS = [
   {
     id: 'H2S-84920',
     month: 'MAY',
     day: '22',
     weekday: 'Wed',
-    direction: 'bothway',
-    frequency: 'recurring',
-    repeats: 'Mon–Fri',
-    legs: [
-      { type: 'drop', label: 'Drop-off', time: '07:30 AM', route: 'Home → Greenfield' },
-      { type: 'pick', label: 'Pick-up', time: '01:00 PM', route: 'Greenfield → Home' }
-    ]
+    time: '07:30 AM',
+    type: 'oneway',
+    pickup: '9 Harbourview Lane',
+    dropoff: 'Greenfield International'
   },
   {
     id: 'H2S-73190',
     month: 'MAY',
-    day: '23',
-    weekday: 'Thu',
-    direction: 'oneway',
-    frequency: 'onetime',
-    repeats: 'One-time',
-    legs: [
-      { type: 'drop', label: 'Drop-off', time: '08:15 AM', route: 'Home → Sunshine' }
-    ]
+    day: '22',
+    weekday: 'Wed',
+    time: '07:30 AM & 01:00 PM',
+    type: 'roundtrip',
+    pickup: '9 Harbourview Lane',
+    dropoff: 'Greenfield International'
+  },
+  {
+    id: 'H2S-66211',
+    month: 'MAY',
+    day: '24',
+    weekday: 'Wed',
+    time: '07:30 AM & 01:00 PM',
+    type: 'roundtrip',
+    pickup: '9 Harbourview Lane',
+    dropoff: 'Greenfield International'
   }
 ];
 
-window.buildPhUpcomingLegHtml = function (leg) {
-  const kind = leg.type === 'pick' ? 'pick' : 'drop';
-  return `<div class="ph-up-leg ph-up-leg--${kind}">
-      <span class="ph-up-dot" aria-hidden="true"></span>
-      <div class="ph-up-leg-main">
-        <div class="ph-up-leg-top">
-          <span class="ph-up-leg-label">${leg.label || (kind === 'pick' ? 'Pick-up' : 'Drop-off')}</span>
-          <span class="ph-up-leg-time">${leg.time || ''}</span>
-        </div>
-        <div class="ph-up-leg-route">${leg.route || ''}</div>
-      </div>
-    </div>`;
-};
-
 window.buildPhUpcomingRowHtml = function (trip) {
   const id = String(trip.id || '').replace(/'/g, '');
-  const both = trip.direction === 'bothway' || (Array.isArray(trip.legs) && trip.legs.length > 1);
-  const chip = trip.chip || (both ? 'Both-way' : 'One-way');
-  const repeats = trip.repeats
-    || (trip.frequency === 'recurring' ? 'Repeats: Mon–Fri' : 'One-time');
-  const repeatsLabel = /^Repeats:|^One-time/i.test(repeats)
-    ? repeats
-    : (trip.frequency === 'recurring' ? `Repeats: ${repeats}` : repeats);
-  let legs = Array.isArray(trip.legs) ? trip.legs.slice() : [];
-  if (!legs.length) {
-    if (trip.time || trip.route) {
-      const isReturn = /→\s*Home/i.test(trip.route || '') && !/Home\s*→/i.test(trip.route || '');
-      legs.push({
-        type: isReturn ? 'pick' : 'drop',
-        label: isReturn ? 'Pick-up' : 'Drop-off',
-        time: trip.time || '',
-        route: trip.route || ''
-      });
-    }
+  const isRound = trip.type === 'roundtrip' || trip.direction === 'bothway' || /&|both/i.test(trip.time || '') || (Array.isArray(trip.legs) && trip.legs.length > 1);
+  const timeText = trip.time || (isRound ? '07:30 AM & 01:00 PM' : '07:30 AM');
+  
+  let pickupAddr = trip.pickup || '9 Harbourview Lane';
+  let dropoffAddr = trip.dropoff || 'Greenfield International';
+  if (Array.isArray(trip.legs) && trip.legs.length) {
+    pickupAddr = trip.legs[0].route ? trip.legs[0].route.split('→')[0].trim() : pickupAddr;
+    dropoffAddr = trip.legs[0].route ? trip.legs[0].route.split('→')[1].trim() : dropoffAddr;
   }
-  if (!both && legs.length > 1) legs = [legs[0]];
-  const timelineClass = legs.length > 1 ? 'ph-up-timeline' : 'ph-up-timeline ph-up-timeline--single';
-  const legsHtml = legs.map(window.buildPhUpcomingLegHtml).join('');
-  return `<button type="button" class="ph-upcoming-row" onclick="openBookingDetails('${id}')">
-    <div class="ph-up-date" aria-hidden="true">
-      <span class="ph-up-month">${trip.month || ''}</span>
-      <span class="ph-up-day">${trip.day || ''}</span>
-      <span class="ph-up-wd">${trip.weekday || ''}</span>
-    </div>
-    <div class="ph-up-body">
-      <div class="${timelineClass}">${legsHtml}</div>
-      <div class="ph-up-footer">
-        <span class="ph-up-repeats">${repeatsLabel}</span>
-        <span class="ph-up-chip">${chip}</span>
+
+  const tagHtml = isRound
+    ? `<span class="ph-up-type-pill is-round"><i data-lucide="repeat" style="width:12px;height:12px;"></i> Round Trip</span>`
+    : `<span class="ph-up-type-pill is-oneway"><i data-lucide="arrow-right" style="width:12px;height:12px;"></i> One-way</span>`;
+
+  return `
+    <button type="button" class="ph-upcoming-card-ref" onclick="openBookingDetails('${id}')">
+      <div class="ph-up-date-badge">
+        <span class="ph-up-month">${trip.month || 'MAY'}</span>
+        <span class="ph-up-day">${trip.day || '22'}</span>
+        <span class="ph-up-wd">${trip.weekday || 'Wed'}</span>
       </div>
-    </div>
-  </button>`;
+      <div class="ph-up-body-ref">
+        <div class="ph-up-head-row">
+          <div class="ph-up-time-text">${timeText}</div>
+          ${tagHtml}
+        </div>
+        <div class="ph-up-route-rail">
+          <div class="ph-up-route-stop">
+            <span class="ph-up-dot-solid"></span>
+            <span class="ph-up-addr-text">${pickupAddr}</span>
+          </div>
+          <div class="ph-up-rail-line"></div>
+          <div class="ph-up-route-stop">
+            <span class="ph-up-dot-ring"></span>
+            <span class="ph-up-addr-text">${dropoffAddr}</span>
+          </div>
+        </div>
+      </div>
+    </button>
+  `;
 };
 
 window.renderHomeUpcomingList = function (trips) {
