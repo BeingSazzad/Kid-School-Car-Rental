@@ -418,599 +418,7 @@
       }
     }
 
-    /* 4. Booking Details Screen Styles (1:1 with Reference UI) */
-    #screen-bookingDetails {
-      background: #F8FAFC !important;
-      position: absolute !important;
-      inset: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      max-height: 100% !important;
-      display: flex !important;
-      flex-direction: column !important;
-      overflow: hidden !important;
-    }
-
-    #screen-bookingDetails .bd-topbar {
-      background: #FFFFFF !important;
-      border-bottom: 1px solid #F1F5F9 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      padding: 10px 16px !important;
-      height: 52px !important;
-      flex-shrink: 0 !important;
-      box-sizing: border-box !important;
-      position: relative !important;
-      z-index: 40 !important;
-    }
-
-    #screen-bookingDetails .bd-topbar .back-btn {
-      width: 36px !important;
-      height: 36px !important;
-      border-radius: 50% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      border: none !important;
-      background: transparent !important;
-      color: #0F172A !important;
-      cursor: pointer !important;
-      padding: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-topbar .top-bar-title {
-      font-size: 17px !important;
-      font-weight: 700 !important;
-      color: #0F172A !important;
-      margin: 0 !important;
-      text-align: center !important;
-      flex: 1 !important;
-      letter-spacing: -0.2px !important;
-    }
-
-    #screen-bookingDetails .bd-scroll {
-      background: #F8FAFC !important;
-      padding: 14px 16px calc(24px + env(safe-area-inset-bottom, 10px)) !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 12px !important;
-      flex: 1 1 0% !important;
-      min-height: 0 !important;
-      height: auto !important;
-      overflow-y: auto !important;
-      overflow-x: hidden !important;
-      -webkit-overflow-scrolling: touch !important;
-      overscroll-behavior-y: contain !important;
-      scrollbar-width: thin !important;
-    }
-
-    #screen-bookingDetails .bd-card,
-    #screen-bookingDetails .bd-hero,
-    #screen-bookingDetails .bd-section {
-      background: #FFFFFF !important;
-      border-radius: 18px !important;
-      border: 1px solid #F1F5F9 !important;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03) !important;
-      padding: 16px 18px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      box-sizing: border-box !important;
-      margin: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-hero-top {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      margin-bottom: 10px !important;
-    }
-
-    #screen-bookingDetails .bd-status {
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      padding: 4px 10px !important;
-      border-radius: 999px !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-    }
-
-    #screen-bookingDetails .bd-status.in-progress {
-      background: #ECFDF5 !important;
-      color: #059669 !important;
-    }
-
-    #screen-bookingDetails .bd-status.in-progress .live-pulse-dot {
-      width: 7px !important;
-      height: 7px !important;
-      background: #10B981 !important;
-      border-radius: 50% !important;
-      display: inline-block !important;
-    }
-
-    #screen-bookingDetails .bd-status.confirmed {
-      background: #EFF6FF !important;
-      color: #2563EB !important;
-    }
-
-    #screen-bookingDetails .bd-date {
-      font-size: 13px !important;
-      font-weight: 500 !important;
-      color: #64748B !important;
-    }
-
-    #screen-bookingDetails .bd-trip-title {
-      font-size: 22px !important;
-      font-weight: 800 !important;
-      color: #0F172A !important;
-      letter-spacing: -0.4px !important;
-      margin: 0 0 2px !important;
-      line-height: 1.25 !important;
-    }
-
-    #screen-bookingDetails .bd-trip-route {
-      font-size: 14px !important;
-      font-weight: 500 !important;
-      color: #64748B !important;
-      margin: 0 0 14px !important;
-    }
-
-    #screen-bookingDetails .bd-hero-meta {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      padding-top: 14px !important;
-      border-top: 1px solid #F1F5F9 !important;
-      margin: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-pin-box {
-      display: flex !important;
-      align-items: baseline !important;
-      gap: 6px !important;
-      font-size: 13px !important;
-      font-weight: 700 !important;
-      color: #64748B !important;
-      border: none !important;
-      background: transparent !important;
-      cursor: pointer !important;
-      padding: 0 !important;
-      font-family: inherit !important;
-    }
-
-    #screen-bookingDetails .bd-pin-box strong {
-      font-size: 17px !important;
-      font-weight: 800 !important;
-      color: #0F172A !important;
-      letter-spacing: 0.5px !important;
-    }
-
-    #screen-bookingDetails .bd-meta-divider {
-      width: 1px !important;
-      height: 24px !important;
-      background: #E2E8F0 !important;
-    }
-
-    #screen-bookingDetails .bd-ref-box {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: flex-end !important;
-    }
-
-    #screen-bookingDetails .bd-ref-num {
-      font-size: 15px !important;
-      font-weight: 800 !important;
-      color: #0F172A !important;
-      line-height: 1.2 !important;
-    }
-
-    #screen-bookingDetails .bd-ref-label {
-      font-size: 11px !important;
-      font-weight: 500 !important;
-      color: #64748B !important;
-      margin-top: 1px !important;
-    }
-
-    #screen-bookingDetails .bd-label {
-      font-size: 15px !important;
-      font-weight: 700 !important;
-      color: #0F172A !important;
-      margin: 0 0 14px !important;
-      letter-spacing: -0.2px !important;
-    }
-
-    #screen-bookingDetails .bd-timeline {
-      display: flex !important;
-      flex-direction: column !important;
-      position: relative !important;
-    }
-
-    #screen-bookingDetails .bd-tl-row {
-      display: flex !important;
-      align-items: flex-start !important;
-      position: relative !important;
-      min-height: 52px !important;
-    }
-
-    #screen-bookingDetails .bd-tl-row:last-child {
-      min-height: auto !important;
-    }
-
-    #screen-bookingDetails .bd-tl-time {
-      width: 74px !important;
-      flex-shrink: 0 !important;
-      font-size: 13px !important;
-      font-weight: 700 !important;
-      color: #0F172A !important;
-      padding-top: 1px !important;
-    }
-
-    #screen-bookingDetails .bd-tl-rail {
-      width: 24px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      position: relative !important;
-      flex-shrink: 0 !important;
-      align-self: stretch !important;
-    }
-
-    #screen-bookingDetails .bd-tl-dot {
-      width: 10px !important;
-      height: 10px !important;
-      border-radius: 50% !important;
-      flex-shrink: 0 !important;
-      margin-top: 5px !important;
-      z-index: 2 !important;
-    }
-
-    #screen-bookingDetails .bd-tl-dot.is-home {
-      background: #1B2B68 !important;
-    }
-
-    #screen-bookingDetails .bd-tl-dot.is-school {
-      background: #FFFFFF !important;
-      border: 2.5px solid #2563EB !important;
-      box-sizing: border-box !important;
-    }
-
-    #screen-bookingDetails .bd-tl-dot.is-return {
-      background: #F97316 !important;
-    }
-
-    #screen-bookingDetails .bd-tl-line {
-      position: absolute !important;
-      top: 15px !important;
-      bottom: -4px !important;
-      left: 11px !important;
-      width: 0 !important;
-      border-left: 2px dashed #93C5FD !important;
-      z-index: 1 !important;
-    }
-
-    #screen-bookingDetails .bd-tl-body {
-      flex: 1 !important;
-      padding-left: 10px !important;
-      padding-bottom: 14px !important;
-    }
-
-    #screen-bookingDetails .bd-tl-row:last-child .bd-tl-body {
-      padding-bottom: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-tl-name {
-      font-size: 14px !important;
-      font-weight: 700 !important;
-      color: #0F172A !important;
-      line-height: 1.3 !important;
-    }
-
-    #screen-bookingDetails .bd-tl-sub {
-      font-size: 12px !important;
-      font-weight: 500 !important;
-      color: #64748B !important;
-      margin-top: 2px !important;
-    }
-
-    #screen-bookingDetails .bd-driver-main-row {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 12px !important;
-    }
-
-    #screen-bookingDetails .bd-driver-info-wrap {
-      display: flex !important;
-      align-items: center !important;
-      gap: 12px !important;
-      flex: 1 !important;
-      min-width: 0 !important;
-      cursor: pointer !important;
-      background: transparent !important;
-      border: none !important;
-      padding: 0 !important;
-      text-align: left !important;
-      font-family: inherit !important;
-    }
-
-    #screen-bookingDetails .bd-driver-avatar {
-      width: 44px !important;
-      height: 44px !important;
-      min-width: 44px !important;
-      border-radius: 50% !important;
-      object-fit: cover !important;
-      flex-shrink: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-driver-name {
-      font-size: 15px !important;
-      font-weight: 700 !important;
-      color: #0F172A !important;
-      line-height: 1.25 !important;
-    }
-
-    #screen-bookingDetails .bd-driver-rating {
-      display: flex !important;
-      align-items: center !important;
-      gap: 4px !important;
-      font-size: 13px !important;
-      font-weight: 500 !important;
-      color: #64748B !important;
-      margin-top: 2px !important;
-    }
-
-    #screen-bookingDetails .bd-star {
-      color: #F59E0B !important;
-      font-size: 13px !important;
-    }
-
-    #screen-bookingDetails .bd-driver-rating strong {
-      color: #0F172A !important;
-      font-weight: 700 !important;
-    }
-
-    #screen-bookingDetails .bd-msg-pill-btn {
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      background: #EFF6FF !important;
-      color: #2563EB !important;
-      border: none !important;
-      border-radius: 999px !important;
-      padding: 8px 16px !important;
-      font-size: 13px !important;
-      font-weight: 700 !important;
-      cursor: pointer !important;
-      font-family: inherit !important;
-      transition: all 0.2s ease !important;
-      flex-shrink: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-msg-pill-btn:hover {
-      background: #DBEAFE !important;
-    }
-
-    #screen-bookingDetails .bd-vehicle-block {
-      margin-top: 12px !important;
-      padding-top: 12px !important;
-      border-top: 1px solid #F8FAFC !important;
-    }
-
-    #screen-bookingDetails .bd-vehicle-name {
-      font-size: 14px !important;
-      font-weight: 700 !important;
-      color: #0F172A !important;
-    }
-
-    #screen-bookingDetails .bd-vehicle-meta {
-      font-size: 12px !important;
-      font-weight: 500 !important;
-      color: #64748B !important;
-      margin-top: 2px !important;
-    }
-
-    #screen-bookingDetails .bd-students-grid {
-      display: flex !important;
-      gap: 10px !important;
-      flex-wrap: nowrap !important;
-    }
-
-    #screen-bookingDetails .bd-student-chip {
-      flex: 1 !important;
-      min-width: 0 !important;
-      background: #F8FAFC !important;
-      border: 1px solid #F1F5F9 !important;
-      border-radius: 14px !important;
-      padding: 8px 12px !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 10px !important;
-      box-sizing: border-box !important;
-    }
-
-    #screen-bookingDetails .bd-student-avatar {
-      width: 38px !important;
-      height: 38px !important;
-      min-width: 38px !important;
-      max-width: 38px !important;
-      max-height: 38px !important;
-      border-radius: 50% !important;
-      object-fit: cover !important;
-      flex-shrink: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-student-name {
-      font-size: 14px !important;
-      font-weight: 700 !important;
-      color: #0F172A !important;
-      line-height: 1.2 !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-    }
-
-    #screen-bookingDetails .bd-student-meta {
-      font-size: 12px !important;
-      font-weight: 500 !important;
-      color: #64748B !important;
-      margin-top: 2px !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-    }
-
-    #screen-bookingDetails .bd-pay-card {
-      padding: 14px 18px !important;
-    }
-
-    #screen-bookingDetails .bd-fee-item {
-      display: flex !important;
-      align-items: center !important;
-      gap: 12px !important;
-    }
-
-    #screen-bookingDetails .bd-fee-icon-circle {
-      width: 36px !important;
-      height: 36px !important;
-      min-width: 36px !important;
-      border-radius: 50% !important;
-      background: #F1F5F9 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      color: #1E293B !important;
-      flex-shrink: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-fee-content {
-      flex: 1 !important;
-      min-width: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-fee-title {
-      font-size: 14px !important;
-      font-weight: 700 !important;
-      color: #0F172A !important;
-    }
-
-    #screen-bookingDetails .bd-fee-sub {
-      font-size: 12px !important;
-      font-weight: 500 !important;
-      color: #64748B !important;
-      margin-top: 1px !important;
-    }
-
-    #screen-bookingDetails .bd-card-divider {
-      height: 1px !important;
-      background: #F1F5F9 !important;
-      margin: 12px 0 !important;
-      width: 100% !important;
-    }
-
-    #screen-bookingDetails .bd-pay-action-link {
-      color: #2563EB !important;
-      font-size: 13px !important;
-      font-weight: 700 !important;
-      border: none !important;
-      background: transparent !important;
-      cursor: pointer !important;
-      padding: 0 !important;
-      font-family: inherit !important;
-      flex-shrink: 0 !important;
-    }
-
-    #screen-bookingDetails .bd-pay-action-link:hover {
-      text-decoration: underline !important;
-    }
-
-    #screen-bookingDetails .bd-bottom-bar {
-      position: relative !important;
-      flex-shrink: 0 !important;
-      width: 100% !important;
-      background: #FFFFFF !important;
-      padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 6px)) !important;
-      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04) !important;
-      border-top: 1px solid #F1F5F9 !important;
-      box-sizing: border-box !important;
-      z-index: 50 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 8px !important;
-      margin-top: auto !important;
-    }
-
-    #screen-bookingDetails .bd-btn-track-live {
-      background: #1B2B68 !important;
-      color: #FFFFFF !important;
-      border: none !important;
-      border-radius: 14px !important;
-      padding: 14px 20px !important;
-      font-size: 15px !important;
-      font-weight: 700 !important;
-      width: 100% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 8px !important;
-      cursor: pointer !important;
-      box-shadow: 0 4px 12px rgba(27, 43, 104, 0.2) !important;
-      transition: all 0.2s ease !important;
-      font-family: inherit !important;
-    }
-
-    #screen-bookingDetails .bd-btn-track-live:hover {
-      background: #142050 !important;
-    }
-
-    #screen-bookingDetails .bd-actions-row {
-      display: flex !important;
-      gap: 10px !important;
-      width: 100% !important;
-    }
-
-    #screen-bookingDetails .bd-btn-outline {
-      flex: 1 !important;
-      border: 1px solid #E2E8F0 !important;
-      background: #FFFFFF !important;
-      color: #1E293B !important;
-      padding: 12px 14px !important;
-      border-radius: 12px !important;
-      font-size: 14px !important;
-      font-weight: 700 !important;
-      cursor: pointer !important;
-      text-align: center !important;
-      font-family: inherit !important;
-    }
-
-    #screen-bookingDetails .bd-btn-outline.danger {
-      color: #DC2626 !important;
-      border-color: #FEE2E2 !important;
-    }
-
-    #screen-bookingDetails .bd-actions-quiet {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 16px !important;
-      padding-top: 4px !important;
-    }
-
-    #screen-bookingDetails .bd-link {
-      border: none !important;
-      background: transparent !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      color: #64748B !important;
-      cursor: pointer !important;
-      padding: 0 !important;
-      font-family: inherit !important;
-    }
-
-    #screen-bookingDetails #detailNotesCard[style*="none"],
-    #screen-bookingDetails #detailNotesCard.is-hidden {
-      display: none !important;
-    }
+    /* 4. Booking Details: Styled in details-clean.css */
 
     /* 5. Bookings List Screen (Rich Cards Design) */
     #screen-bookings {
@@ -3733,185 +3141,216 @@
     </section>
 
 
-    <!-- ================= 19B. BOOKING DETAILS ================= -->
+    <!-- ================= 19B. BOOKING & TRIP DETAILS (1:1 REFERENCE UI) ================= -->
     <section class="screen-view screen-bd-flat" id="screen-bookingDetails">
-      <div class="status-bar dark" style="background: #FFFFFF;">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="top-bar-sticky bd-topbar">
-        <button class="back-btn" onclick="navigateTo('bookings', true)" aria-label="Back">
-          <i data-lucide="chevron-left"></i>
-        </button>
-        <h2 class="top-bar-title">Booking</h2>
-        <span style="width: 36px;"></span>
-      </div>
-
       <div class="screen-scroll-body bd-scroll">
-        <!-- 1. Top Summary Hero Card -->
-        <header class="bd-card bd-hero">
-          <div class="bd-hero-top">
-            <span class="bd-status in-progress" id="detailStatusBadge">
-              <span class="live-pulse-dot"></span><span>Live</span>
-            </span>
-            <span class="bd-date" id="detailScheduleDate">Mon–Fri</span>
-          </div>
-          <h3 class="bd-trip-title" id="detailHeaderTitle">Round trip</h3>
-          <p class="bd-trip-route" id="detailHeaderSubtitle">Home → Greenfield</p>
-          <div class="bd-hero-meta">
-            <button type="button" class="bd-pin-box" onclick="openSafetyPinModal()">
-              PIN <strong id="detailSafetyPin">4920</strong>
-            </button>
-            <div class="bd-meta-divider"></div>
-            <div class="bd-ref-box">
-              <span class="bd-ref-num" id="detailRefId">#84920</span>
-              <span class="bd-ref-label">Booking ID</span>
+        <!-- 1. Deep Navy Hero Area -->
+        <header class="bd-navy-hero">
+          <div class="status-bar light" style="height: 38px; padding: 0;">
+            <span class="sb-time">9:41</span>
+            <div class="sb-icons">
+              <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+              <svg class="icon-wifi" viewBox="0 0 24 24">
+                <path
+                  d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
+                  fill="currentColor" />
+              </svg>
+              <div class="battery-icon">
+                <div class="battery-level"></div>
+              </div>
             </div>
           </div>
+
+          <div class="bd-navy-topbar">
+            <button type="button" class="bd-btn-white-icon" onclick="navigateTo('bookings', true)" aria-label="Back">
+              <i data-lucide="chevron-left" style="width:22px;height:22px;"></i>
+            </button>
+            <h2 class="bd-navy-title">Trip Details</h2>
+            <button type="button" class="bd-btn-white-icon" onclick="openSafetyPinModal()" aria-label="Trip Options">
+              <i data-lucide="more-vertical" style="width:20px;height:20px;"></i>
+            </button>
+          </div>
+
+          <div class="bd-hero-meta-row">
+            <span class="bd-hero-status-pill" id="detailHeroStatusPill">
+              <i data-lucide="check-circle" style="width:13px;height:13px;"></i>
+              <span id="detailHeroStatusText">Active Trip</span>
+            </span>
+            <span class="bd-hero-date-text" id="detailHeroDateText">
+              <i data-lucide="calendar" style="width:13px;height:13px;"></i>
+              <span id="detailScheduleDate">Mon, Sep 1, 2026</span>
+            </span>
+          </div>
+
+          <h3 class="bd-hero-main-title" id="detailHeaderTitle">Morning to School</h3>
+          <p class="bd-hero-sub-text" id="detailHeaderSubtitle">Regular Trip • Weekdays (Mon – Fri)</p>
         </header>
 
-        <!-- 2. Route & Timeline Card -->
-        <section class="bd-card bd-section">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-            <h4 class="bd-label" style="margin: 0;">Route &amp; Timeline</h4>
-            <span id="detailTripLiveStatusPill" style="font-size: 11px; font-weight: 700; color: #059669; background: #ECFDF5; padding: 2px 8px; border-radius: 999px;">Live</span>
-          </div>
-          <div class="bd-timeline" id="detailTimelineWrap">
-            <div class="bd-tl-row">
-              <div class="bd-tl-time" id="detailOutboundTime">07:30 AM</div>
-              <div class="bd-tl-rail">
-                <span class="bd-tl-dot is-home"></span>
-                <span class="bd-tl-line"></span>
+        <!-- 2. Floating Journey & Route Card -->
+        <section class="bd-route-floating-card">
+          <div class="bd-route-timeline">
+            <!-- Pickup Stop -->
+            <div class="bd-rt-stop">
+              <div class="bd-rt-rail">
+                <span class="bd-rt-dot-ring"></span>
+                <span class="bd-rt-dashed-line"></span>
               </div>
-              <div class="bd-tl-body">
-                <div class="bd-tl-name">Home Pickup</div>
-                <div class="bd-tl-sub" id="detailPickupAddr">12 Elm Street</div>
-                <div class="bd-tl-status-tag" id="detailPickupStatus">✓ Departed 7:32 AM</div>
-              </div>
-            </div>
-            <div class="bd-tl-row">
-              <div class="bd-tl-time" id="detailSchoolTime">07:45 AM</div>
-              <div class="bd-tl-rail">
-                <span class="bd-tl-dot is-school"></span>
-                <span class="bd-tl-line" id="detailReturnRailLine"></span>
-              </div>
-              <div class="bd-tl-body">
-                <div class="bd-tl-name" id="detailSchoolName">Greenfield School</div>
-                <div class="bd-tl-sub" id="detailSchoolAddr">Gate 2 Drop-off</div>
-                <div class="bd-tl-status-tag active" id="detailDropoffStatus">🟡 En route (ETA 3 mins)</div>
-              </div>
-            </div>
-            <div class="bd-tl-row" id="detailReturnLegBox">
-              <div class="bd-tl-time" id="detailReturnTime">01:00 PM</div>
-              <div class="bd-tl-rail">
-                <span class="bd-tl-dot is-return"></span>
-              </div>
-              <div class="bd-tl-body">
-                <div class="bd-tl-name">Afternoon Return</div>
-                <div class="bd-tl-sub" id="detailReturnAddr">12 Elm Street</div>
-                <div class="bd-tl-status-tag" id="detailReturnStatus">Scheduled</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- 3. Driver Card -->
-        <section class="bd-card bd-section">
-          <h4 class="bd-label">Driver &amp; Vehicle</h4>
-          <div class="bd-driver-main-row">
-            <button type="button" class="bd-driver-info-wrap" onclick="openDriverProfile(window.currentBookingProviderId || 'tariq', 'bookingDetails')">
-              <img src="/assets/avatar_tariq.jpg" alt="" id="detailDriverPhoto" class="bd-driver-avatar" />
-              <div class="bd-driver-text">
-                <div class="bd-driver-name" id="detailProviderName">Tariq Ahmed</div>
-                <div class="bd-driver-rating" id="detailProviderRatingRow">
-                  <span class="bd-star">★</span>
-                  <strong id="detailProviderRating">4.9</strong>
-                  <span class="bd-driver-reviews" id="detailProviderReviews">(128)</span>
+              <div class="bd-rt-content">
+                <div class="bd-rt-head-row">
+                  <div class="bd-rt-time" id="detailOutboundTime">7:15 AM</div>
+                  <span class="bd-rt-pill-tag is-green" id="detailPickupStatus">Picked up</span>
                 </div>
+                <div class="bd-rt-title">Pickup from Home</div>
+                <div class="bd-rt-address" id="detailPickupAddr">12 Elm Street, Toronto, ON</div>
               </div>
-            </button>
-            <button type="button" class="bd-msg-pill-btn" onclick="openChatWith(window.currentBookingProviderId || 'tariq')">
-              <i data-lucide="message-square" style="width:14px;height:14px;"></i>
-              <span>Message</span>
-            </button>
+            </div>
+
+            <!-- Drop-off Stop -->
+            <div class="bd-rt-stop">
+              <div class="bd-rt-rail">
+                <span class="bd-rt-dot-bullseye"></span>
+                <span class="bd-rt-dashed-line" id="detailReturnRailLine" style="display:none;"></span>
+              </div>
+              <div class="bd-rt-content">
+                <div class="bd-rt-head-row">
+                  <div class="bd-rt-time" id="detailSchoolTime">7:45 AM</div>
+                  <span class="bd-rt-pill-tag is-blue" id="detailDropoffStatus">Upcoming</span>
+                </div>
+                <div class="bd-rt-title" id="detailSchoolTitle">Drop at School</div>
+                <div class="bd-rt-address" id="detailSchoolName">Greenfield International School</div>
+              </div>
+            </div>
+
+            <!-- Return Stop (Optional) -->
+            <div class="bd-rt-stop" id="detailReturnLegBox" style="display:none;">
+              <div class="bd-rt-rail">
+                <span class="bd-rt-dot-bullseye" style="border-color:#F97316; box-shadow: inset 0 0 0 2px #F97316;"></span>
+              </div>
+              <div class="bd-rt-content">
+                <div class="bd-rt-head-row">
+                  <div class="bd-rt-time" id="detailReturnTime">1:00 PM</div>
+                  <span class="bd-rt-pill-tag is-grey" id="detailReturnStatus">Scheduled</span>
+                </div>
+                <div class="bd-rt-title">Return Home Pickup</div>
+                <div class="bd-rt-address" id="detailReturnAddr">12 Elm Street, Toronto, ON</div>
+              </div>
+            </div>
           </div>
-          <div class="bd-vehicle-block" id="detailVehicleRow">
-            <div class="bd-vehicle-name" id="detailVehicleName">Toyota Sienna (Silver)</div>
-            <div class="bd-vehicle-meta" id="detailProviderVehicle">SCH-4091 · 4 seats · Booster equipped</div>
+
+          <!-- Trip Stats 3-Column Strip -->
+          <div class="bd-stats-strip">
+            <div class="bd-stat-box">
+              <div class="bd-stat-icon-wrap">
+                <i data-lucide="car" style="width:16px;height:16px;"></i>
+              </div>
+              <div>
+                <div class="bd-stat-val" id="detailStatDistance">12.5 km</div>
+                <div class="bd-stat-lbl">Est. distance</div>
+              </div>
+            </div>
+            <div class="bd-stat-box">
+              <div class="bd-stat-icon-wrap">
+                <i data-lucide="clock" style="width:16px;height:16px;"></i>
+              </div>
+              <div>
+                <div class="bd-stat-val" id="detailStatDuration">30 min</div>
+                <div class="bd-stat-lbl">Est. duration</div>
+              </div>
+            </div>
+            <div class="bd-stat-box" style="cursor:pointer;" onclick="openLiveTracking(window.appState.activeBookingId || 'H2S-84920')">
+              <div class="bd-stat-icon-wrap" style="color:#2563EB; background:#EFF6FF;">
+                <i data-lucide="map" style="width:16px;height:16px;"></i>
+              </div>
+              <div>
+                <div class="bd-stat-val" style="color:#2563EB;">Main Route</div>
+                <div class="bd-stat-lbl" style="color:#2563EB; font-weight:700;">View on map</div>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- 4. Children Traveling Card (Real-world Child Logistics) -->
-        <section class="bd-card bd-section">
-          <h4 class="bd-label" id="detailChildrenHeaderLabel">Children Traveling (2)</h4>
-          <div id="detailPassengersWrap" class="bd-students-grid"></div>
-        </section>
-
-        <!-- 5. Fare & Payment Card (Modern Fintech Standard) -->
-        <section class="bd-card bd-section bd-pay-card">
-          <h4 class="bd-label" style="margin-bottom: 12px;">Fare &amp; Payment</h4>
-          <div class="bd-fee-item">
-            <div class="bd-fee-icon-circle">
-              <i data-lucide="receipt" style="width:18px;height:18px;"></i>
+        <!-- 3. Driver & Vehicle Card -->
+        <section class="bd-card-clean">
+          <div class="bd-driver-head-row">
+            <div class="bd-driver-avatar-wrap">
+              <img src="/assets/avatar_tariq.jpg" alt="" id="detailDriverPhoto" class="bd-driver-avatar-img" />
+              <span class="bd-driver-online-dot"></span>
             </div>
-            <div class="bd-fee-content">
-              <div class="bd-fee-title" id="detailFareTitle">Weekly School Pass</div>
-              <div class="bd-fee-sub" id="detailFarePeriod">Mon–Fri recurring • Auto-billed</div>
+            <div style="min-width: 0;">
+              <div class="bd-driver-name-title" id="detailProviderName">Mohammad Rahim</div>
+              <div class="bd-driver-trips-sub" id="detailProviderRatingRow">
+                <span style="color:#F59E0B;">★</span>
+                <strong id="detailProviderRating" style="color:#0F172A;">4.8</strong>
+                <span id="detailProviderReviews">(120 trips)</span>
+              </div>
             </div>
-            <div class="bd-fare-amt" id="detailFareAmount" style="font-size: 15px; font-weight: 800; color: #0F172A;">$120.00</div>
+            <div class="bd-driver-actions-row">
+              <button type="button" class="bd-action-circle-btn" onclick="window.location.href='tel:+14165550182'" aria-label="Call Driver">
+                <i data-lucide="phone" style="width:17px;height:17px;"></i>
+              </button>
+              <button type="button" class="bd-action-circle-btn" onclick="openChatWith(window.currentBookingProviderId || 'tariq')" aria-label="Message Driver">
+                <i data-lucide="message-square" style="width:17px;height:17px;"></i>
+              </button>
+            </div>
           </div>
-          <div class="bd-card-divider"></div>
-          <div class="bd-fee-item" id="paymentHandleCard">
-            <div class="bd-fee-icon-circle">
-              <i data-lucide="credit-card" style="width:18px;height:18px;"></i>
-            </div>
-            <div class="bd-fee-content">
-              <div class="bd-fee-title" id="paymentHandleStatusLabel">Payment Method</div>
-              <div class="bd-fee-sub" id="paymentHandleCopy">Visa •••• 4242</div>
-            </div>
-            <span class="bd-pay-status-pill" id="paymentVerifiedBadge" style="font-size: 11px; font-weight: 700; color: #059669; background: #ECFDF5; padding: 4px 8px; border-radius: 999px;">✓ Auto-paid</span>
-          </div>
-        </section>
 
-        <!-- 6. Drop-off Safety & Hand-off Protocol Card -->
-        <section class="bd-card bd-section" id="detailHandoffCard">
-          <h4 class="bd-label">Drop-off &amp; Hand-off Protocol</h4>
-          <div class="bd-handoff-row" style="display: flex; align-items: flex-start; gap: 10px;">
-            <div class="bd-fee-icon-circle" style="background: #EFF6FF; color: #2563EB;">
-              <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-              <div style="font-size: 13.5px; font-weight: 700; color: #0F172A;" id="detailHandoffPerson">School Staff Hand-off</div>
-              <div style="font-size: 12px; font-weight: 500; color: #64748B; margin-top: 2px;" id="detailHandoffNotes">Driver verifies safe entry at Gate 2 reception desk.</div>
+          <div class="bd-vehicle-row">
+            <img src="/assets/vehicle_hiace_white.jpg" alt="Vehicle" id="detailVehicleImage" class="bd-vehicle-thumb" />
+            <div style="min-width: 0; flex: 1;">
+              <div class="bd-vehicle-title" id="detailVehicleName">Toyota Hiace</div>
+              <div class="bd-vehicle-desc" id="detailVehiclePlate">SCH-4091 • White • 12 Seater</div>
             </div>
           </div>
         </section>
 
-        <!-- 7. Optional Parent Notes Card -->
-        <section class="bd-card bd-section" id="detailNotesCard" style="display:none;">
-          <h4 class="bd-label">Parent Notes</h4>
-          <p class="bd-fee-sub" id="detailNotesText" style="margin:0;"></p>
+        <!-- 4. Children (2) Card -->
+        <section class="bd-card-clean">
+          <div class="bd-card-section-head">
+            <h4 class="bd-card-section-title" id="detailChildrenHeaderLabel">Children (2)</h4>
+            <button type="button" class="bd-card-link-action" onclick="navigateTo('myChildren')">View All</button>
+          </div>
+          <div id="detailPassengersWrap" class="bd-children-stacked-list"></div>
         </section>
 
-        <span id="detailParentRefText" style="display:none;"></span>
+        <!-- 5. Schedule Action Row Card -->
+        <div class="bd-action-tile-card" onclick="openScheduleDetailsModal()">
+          <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+            <div class="bd-tile-icon-box is-calendar">
+              <i data-lucide="calendar" style="width:20px;height:20px;"></i>
+            </div>
+            <div>
+              <div class="bd-tile-title">Schedule</div>
+              <div class="bd-tile-sub" id="detailTileScheduleSub">Repeats every Mon – Fri • Until Dec 31, 2026</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;"></i>
+        </div>
+
+        <!-- 6. Manage Booking Action Row Card -->
+        <div class="bd-action-tile-card is-muted" onclick="openManageBookingModal()">
+          <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+            <div class="bd-tile-icon-box is-manage">
+              <i data-lucide="edit-3" style="width:18px;height:18px;"></i>
+            </div>
+            <div>
+              <div class="bd-tile-title">Manage Booking</div>
+              <div class="bd-tile-sub" id="detailTileFareSub">Weekly School Pass • $120.00 / week</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;"></i>
+        </div>
+
+        <span id="detailRefId" style="display:none;"></span>
+        <span id="detailSafetyPin" style="display:none;"></span>
+        <span id="detailSchoolAddr" style="display:none;"></span>
+        <span id="detailProviderVehicle" style="display:none;"></span>
       </div>
 
       <!-- Bottom Sticky Action Bar -->
       <div class="bd-bottom-bar">
         <button type="button" class="bd-btn-track-live" id="btnTrackLivePrimary" onclick="openLiveTracking(window.appState.activeBookingId || 'H2S-84920')">
           <i data-lucide="map-pin" style="width:18px;height:18px;"></i>
-          <span>Track live</span>
+          <span>Track live vehicle</span>
         </button>
         <div id="detailContextualActions" style="display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
