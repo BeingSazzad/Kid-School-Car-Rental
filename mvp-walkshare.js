@@ -1098,7 +1098,7 @@
           <button type="button" onclick="declineWalkShareRequest('${esc(req.id)}')" style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; border-radius:99px; padding:5px 12px; font-size:11.5px; font-weight:700; cursor:pointer;">
             Decline
           </button>
-          <button type="button" onclick="acceptWalkShareRequest('${esc(req.id)}')" style="background:#0D9488; color:#FFFFFF; border-radius:99px; padding:5px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; box-shadow:0 2px 6px rgba(13,148,136,0.2);">
+          <button type="button" onclick="acceptWalkShareRequest('${esc(req.id)}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:5px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; box-shadow:0 2px 6px rgba(27,43,104,0.2);">
             Accept
           </button>
         </div>`;
@@ -1106,7 +1106,7 @@
       actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px;">Declined</span>';
     } else {
       actionHtml = `
-        <div style="width:28px; height:28px; border-radius:50%; background:#F0FDFA; color:#0F766E; display:flex; align-items:center; justify-content:center;">
+        <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
           <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
         </div>`;
     }
@@ -1116,7 +1116,7 @@
         <!-- Top Row: Date & Direction -->
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:36px; height:36px; border-radius:10px; background:#F0FDFA; color:#0D9488; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
               <i data-lucide="footprints" style="width:17px; height:17px;"></i>
             </div>
             <div>
@@ -1131,12 +1131,12 @@
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;">
           <div style="display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; position:relative; padding-left:2px;">
             <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
-              <span style="width:8px; height:8px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
+              <span style="width:8px; height:8px; border-radius:50%; background:#1B2B68; flex-shrink:0;"></span>
               <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
             </div>
             <div style="position:absolute; left:5px; top:6px; bottom:6px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
             <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
-              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #0D9488; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
+              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #1B2B68; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
               <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
             </div>
           </div>
@@ -1600,7 +1600,7 @@
     if (open) {
       ctaHtml = `
         <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#0D9488; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(13,148,136,0.25);">
+          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(27,43,104,0.2);">
             <span class="live-dot-pulse" style="width:6px; height:6px; background:#fff; border-radius:50%;"></span>
             <span>Live Walk</span>
           </button>
@@ -1608,29 +1608,29 @@
     } else if (item.leg === 'morning') {
       ctaHtml = `
         <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#0F766E; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(15,118,110,0.2);">
+          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(27,43,104,0.2);">
             <i data-lucide="navigation" style="width:11px; height:11px;"></i>
             <span>Start</span>
           </button>
         </div>`;
     } else {
       ctaHtml = `
-        <div style="width:28px; height:28px; border-radius:50%; background:#F0FDFA; color:#0F766E; display:flex; align-items:center; justify-content:center;">
+        <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
           <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
         </div>`;
     }
 
     const isRound = item.badge === 'Round trip' || (item.returnTime != null) || (item.leg === 'afternoon');
     const dirPillHtml = isRound
-      ? `<span style="background:rgba(13,148,136,0.1); color:#0F766E; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="repeat" style="width:11px; height:11px;"></i> Round Trip</span>`
-      : `<span style="background:#F1F5F9; color:#475569; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="arrow-right" style="width:11px; height:11px;"></i> 1-Way Trip</span>`;
+      ? `<span style="background:rgba(27,43,104,0.08); color:#1B2B68; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="refresh-cw" style="width:11px; height:11px;"></i> Round Trip</span>`
+      : `<span style="background:#FFF7ED; color:#EA580C; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="arrow-right" style="width:11px; height:11px;"></i> 1-Way Trip</span>`;
 
     return `
       <article class="h2s-booking-card" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
         <!-- Top Row: Date & Direction -->
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
           <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:36px; height:36px; border-radius:10px; background:#F0FDFA; color:#0D9488; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
               <i data-lucide="footprints" style="width:17px; height:17px;"></i>
             </div>
             <div>
@@ -1645,12 +1645,12 @@
         <div style="margin-bottom:12px; background:#F8FAFC; border-radius:12px; padding:10px 12px; border:1px solid #F1F5F9;">
           <div style="display:flex; flex-direction:column; gap:8px; position:relative; padding-left:2px;">
             <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
-              <span style="width:8px; height:8px; border-radius:50%; background:#0D9488; flex-shrink:0;"></span>
+              <span style="width:8px; height:8px; border-radius:50%; background:#1B2B68; flex-shrink:0;"></span>
               <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
             </div>
             <div style="position:absolute; left:5.5px; top:8px; bottom:8px; width:1px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
             <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
-              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #0D9488; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
+              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #1B2B68; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
               <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
             </div>
           </div>
@@ -1670,7 +1670,7 @@
       </article>`;
   }
 
-    window.startWalkShareWalk = function (id) {
+  window.startWalkShareWalk = function (id) {
     const w = ensureWalk();
     const item = deriveSchedule().find((x) => x.id === id) || deriveSchedule()[0];
     if (!item) {
@@ -1715,23 +1715,23 @@
       <!-- Safety & Readiness Checklist -->
       <div class="trip-card" style="margin-top:12px;">
         <h4 style="font-size:13px;font-weight:800;color:var(--color-title);margin:0 0 10px;display:flex;align-items:center;gap:6px;">
-          <i data-lucide="shield-check" style="width:16px;height:16px;color:#0D9488;"></i> Escort Safety Checklist
+          <i data-lucide="shield-check" style="width:16px;height:16px;color:#1B2B68;"></i> Escort Safety Checklist
         </h4>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--color-title);">
-            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#0D9488;flex-shrink:0;"></i>
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#1B2B68;flex-shrink:0;"></i>
             <span>High-vis safety vest & escort lanyard on</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--color-title);">
-            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#0D9488;flex-shrink:0;"></i>
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#1B2B68;flex-shrink:0;"></i>
             <span>Backpack reflective bands & walking ropes ready</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--color-title);">
-            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#0D9488;flex-shrink:0;"></i>
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#1B2B68;flex-shrink:0;"></i>
             <span>Pedestrian signal crosswalk route confirmed</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--color-title);">
-            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#0D9488;flex-shrink:0;"></i>
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#1B2B68;flex-shrink:0;"></i>
             <span>Live parent GPS tracking active</span>
           </div>
         </div>
