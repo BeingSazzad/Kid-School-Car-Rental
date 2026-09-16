@@ -2049,35 +2049,18 @@ function renderHome() {
         }
       }
 
-      // 2. Title & Date
-      const title = activeBooking.title || (isBothWay ? 'Round Trip to School' : (isReturn ? 'Return to Home' : 'Morning to School'));
+      // 2. Exact 2-Stop Times: Morning Home Pickup & Afternoon School Return Pickup
       const dateText = activeBooking.date || 'Mon, Sep 1';
-      const pickupName = isReturn ? (activeBooking.schoolLocation || 'Greenfield International School') : (activeBooking.pickupLocation || 'Home (12 Elm Street)');
-      const pickupTime = activeBooking.outboundTime || (isReturn ? '01:00 PM' : '07:30 AM');
-      const dropName = isReturn ? (activeBooking.pickupLocation || 'Home (12 Elm Street)') : (activeBooking.schoolLocation || 'Greenfield International School');
-      const dropTime = activeBooking.schoolArriveTime || (isReturn ? '01:30 PM' : '7:45 AM');
+      const pickupName = activeBooking.pickupLocation || 'Home (12 Elm Street)';
+      const schoolName = activeBooking.schoolLocation || 'Greenfield International School';
+      const pickupTime = activeBooking.outboundTime || '07:30 AM';
+      const schoolReturnTime = isBothWay ? (activeBooking.returnTime || '01:00 PM') : 'Drop-off';
 
       setText('homeTodayTripDate', dateText);
-      setText('homeTodayTripTitle', title);
       setText('homeTodayPickupLoc', pickupName);
       setText('homeTodayPickupTime', pickupTime);
-      setText('homeTodayDropLoc', dropName);
-      setText('homeTodayDropTime', dropTime);
-
-      // 3. Return Leg handling for Round Trips
-      const returnStop = document.getElementById('homeTodayReturnStop');
-      const returnRail = document.getElementById('homeTodayReturnRailLine');
-      const returnTimeVal = activeBooking.returnTime || '01:00 PM';
-
-      if (isBothWay && returnTimeVal) {
-        if (returnStop) returnStop.style.display = 'flex';
-        if (returnRail) returnRail.style.display = 'block';
-        setText('homeTodayReturnLoc', 'Return: Back Home');
-        setText('homeTodayReturnTime', returnTimeVal);
-      } else {
-        if (returnStop) returnStop.style.display = 'none';
-        if (returnRail) returnRail.style.display = 'none';
-      }
+      setText('homeTodayDropLoc', schoolName);
+      setText('homeTodayDropTime', schoolReturnTime);
 
       const driverName = String(provider.name || 'Mohammad Rahim').replace(/\s*\(WalkShare\)/i, '');
       setText('homeTodayDriverName', driverName);
@@ -4162,22 +4145,8 @@ function renderBookingsList(tab) {
       statusPillHtml = `<span class="ph-tt-status-pill"><span class="ph-tt-dot"></span> Upcoming</span>`;
     }
 
-    // 3. Return Leg (if Round Trip)
-    let returnLineHtml = '';
-    let returnStopHtml = '';
-    if (isBothWay) {
-      returnLineHtml = `<span class="ph-tt-dashed-line" style="display:block;"></span>`;
-      returnStopHtml = `
-        <div class="ph-tt-stop" style="margin-top: 4px;">
-          <div class="ph-tt-rail">
-            <span class="ph-tt-dot-bullseye" style="border-color:#F97316; background:#F97316;"></span>
-          </div>
-          <div class="ph-tt-stop-content">
-            <span class="ph-tt-stop-name">Return: Back Home</span>
-            <span class="ph-tt-stop-time" style="color:#EA580C;">${returnTime}</span>
-          </div>
-        </div>`;
-    }
+    // 3. Exact 2-Stop Logic: Home Morning Pickup & School Afternoon Return Pickup
+    const secondStopTime = isBothWay ? returnTime : 'Drop-off';
 
     // 4. Driver & Vehicle Info
     const driverName = String(provider.name || 'Mohammad Rahim').replace(/\s*\(WalkShare\)/i, '');
@@ -4231,9 +4200,9 @@ function renderBookingsList(tab) {
           ${statusPillHtml}
         </div>
 
-        <!-- Route Timeline (No redundant title!) -->
+        <!-- Route Timeline: Morning Home Pickup & Afternoon School Return Pickup -->
         <div class="ph-tt-timeline" style="margin-top:10px; margin-bottom:14px;">
-          <!-- Pickup Stop -->
+          <!-- Stop 1: Pickup from Home -->
           <div class="ph-tt-stop">
             <div class="ph-tt-rail">
               <span class="ph-tt-dot-solid"></span>
@@ -4244,18 +4213,16 @@ function renderBookingsList(tab) {
               <span class="ph-tt-stop-time">${pickupTime}</span>
             </div>
           </div>
-          <!-- Drop-off Stop -->
+          <!-- Stop 2: School (Return pickup time if 2-way, or Drop-off if 1-way) -->
           <div class="ph-tt-stop">
             <div class="ph-tt-rail">
               <span class="ph-tt-dot-bullseye"></span>
-              ${returnLineHtml}
             </div>
             <div class="ph-tt-stop-content">
               <span class="ph-tt-stop-name">${schoolLoc}</span>
-              <span class="ph-tt-stop-time">${dropTime}</span>
+              <span class="ph-tt-stop-time" style="${isBothWay ? 'color:#0F172A; font-weight:800;' : 'color:#64748B; font-weight:600; font-size:12px;'}">${secondStopTime}</span>
             </div>
           </div>
-          ${returnStopHtml}
         </div>
 
         <!-- Driver Footer Row -->
