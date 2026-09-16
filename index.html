@@ -418,7 +418,828 @@
       }
     }
 
-    /* 4. Booking Details: Styled in details-clean.css */
+    /* 4. Booking Details Screen Styles (1:1 Reference UI) */
+/* ==========================================================
+   Home2School — Modern Booking & Trip Details Screen (1:1 Reference UI)
+   ========================================================== */
+
+#screen-bookingDetails {
+  background: #F8FAFC !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+#screen-bookingDetails.screen-bd-flat {
+  background: #F8FAFC !important;
+}
+
+#screen-bookingDetails .bd-scroll {
+  background: #F8FAFC !important;
+  padding: 0 0 calc(80px + env(safe-area-inset-bottom, 16px)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: contain !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent !important;
+}
+
+#screen-bookingDetails .bd-scroll::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+#screen-bookingDetails .bd-scroll::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35) !important;
+  border-radius: 999px !important;
+}
+
+/* 1. Deep Navy Hero Area */
+#screen-bookingDetails .bd-navy-hero {
+  background: #112255 !important;
+  background: linear-gradient(180deg, #0F1D46 0%, #172B6B 100%) !important;
+  border-radius: 0 0 28px 28px !important;
+  padding: 12px 20px 38px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-navy-topbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 48px !important;
+  margin-bottom: 8px !important;
+}
+
+#screen-bookingDetails .bd-btn-white-icon {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  background: transparent !important;
+  color: #FFFFFF !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  transition: background 0.15s ease !important;
+}
+
+#screen-bookingDetails .bd-btn-white-icon:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+#screen-bookingDetails .bd-navy-title {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  margin: 0 !important;
+  text-align: center !important;
+  flex: 1 !important;
+  letter-spacing: -0.2px !important;
+}
+
+#screen-bookingDetails .bd-hero-meta-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 12px !important;
+}
+
+#screen-bookingDetails .bd-hero-status-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  background: #059669 !important;
+  color: #FFFFFF !important;
+  letter-spacing: 0.1px !important;
+}
+
+#screen-bookingDetails .bd-hero-status-pill.is-scheduled {
+  background: #2563EB !important;
+}
+
+#screen-bookingDetails .bd-hero-status-pill.is-completed {
+  background: #059669 !important;
+}
+
+#screen-bookingDetails .bd-hero-status-pill.is-pending {
+  background: #D97706 !important;
+}
+
+#screen-bookingDetails .bd-hero-date-text {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #E2E8F0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+#screen-bookingDetails .bd-hero-main-title {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  margin: 0 0 4px !important;
+  letter-spacing: -0.4px !important;
+  line-height: 1.2 !important;
+}
+
+#screen-bookingDetails .bd-hero-sub-text {
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: #94A3B8 !important;
+  margin: 0 !important;
+  letter-spacing: -0.1px !important;
+}
+
+/* 2. Floating Journey & Route Card */
+#screen-bookingDetails .bd-route-floating-card {
+  background: #FFFFFF !important;
+  border-radius: 20px !important;
+  padding: 18px 16px 14px !important;
+  margin: -24px 16px 0 !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
+  border: 1px solid #F1F5F9 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+#screen-bookingDetails .bd-route-timeline {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+}
+
+#screen-bookingDetails .bd-rt-stop {
+  display: flex !important;
+  align-items: flex-start !important;
+  position: relative !important;
+  min-height: 56px !important;
+}
+
+#screen-bookingDetails .bd-rt-stop:last-child {
+  min-height: auto !important;
+}
+
+#screen-bookingDetails .bd-rt-rail {
+  width: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  flex-shrink: 0 !important;
+  align-self: stretch !important;
+}
+
+#screen-bookingDetails .bd-rt-dot-ring {
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 3px solid #10B981 !important;
+  box-shadow: inset 0 0 0 2px #10B981 !important;
+  flex-shrink: 0 !important;
+  margin-top: 2px !important;
+  z-index: 2 !important;
+  box-sizing: border-box !important;
+}
+
+#screen-bookingDetails .bd-rt-dot-bullseye {
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 3px solid #2563EB !important;
+  box-shadow: inset 0 0 0 2px #2563EB !important;
+  flex-shrink: 0 !important;
+  margin-top: 2px !important;
+  z-index: 2 !important;
+  box-sizing: border-box !important;
+}
+
+#screen-bookingDetails .bd-rt-dashed-line {
+  position: absolute !important;
+  top: 18px !important;
+  bottom: -2px !important;
+  left: 11px !important;
+  width: 0 !important;
+  border-left: 2px dashed #93C5FD !important;
+  z-index: 1 !important;
+}
+
+#screen-bookingDetails .bd-rt-content {
+  flex: 1 !important;
+  padding-left: 8px !important;
+  min-width: 0 !important;
+}
+
+#screen-bookingDetails .bd-rt-head-row {
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+#screen-bookingDetails .bd-rt-time {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+}
+
+#screen-bookingDetails .bd-rt-title {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
+  line-height: 1.25 !important;
+  margin-top: 1px !important;
+}
+
+#screen-bookingDetails .bd-rt-address {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+  margin-top: 2px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+#screen-bookingDetails .bd-rt-pill-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 3px 8px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-rt-pill-tag.is-green {
+  background: #ECFDF5 !important;
+  color: #059669 !important;
+}
+
+#screen-bookingDetails .bd-rt-pill-tag.is-blue {
+  background: #EFF6FF !important;
+  color: #2563EB !important;
+}
+
+#screen-bookingDetails .bd-rt-pill-tag.is-grey {
+  background: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+#screen-bookingDetails .bd-stats-strip {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-top: 1px solid #F1F5F9 !important;
+  margin-top: 14px !important;
+  padding-top: 12px !important;
+}
+
+#screen-bookingDetails .bd-stat-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 1 !important;
+}
+
+#screen-bookingDetails .bd-stat-box:not(:last-child) {
+  border-right: 1px solid #F1F5F9 !important;
+  margin-right: 8px !important;
+  padding-right: 8px !important;
+}
+
+#screen-bookingDetails .bd-stat-icon-wrap {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  background: #F8FAFC !important;
+  border: 1px solid #F1F5F9 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #1E293B !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-stat-val {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+}
+
+#screen-bookingDetails .bd-stat-lbl {
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+  margin-top: 1px !important;
+  white-space: nowrap !important;
+}
+
+/* 3. Base Clean Card */
+#screen-bookingDetails .bd-card-clean {
+  background: #FFFFFF !important;
+  border-radius: 20px !important;
+  padding: 16px 18px !important;
+  margin: 0 16px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03) !important;
+  border: 1px solid #F1F5F9 !important;
+  box-sizing: border-box !important;
+}
+
+/* Driver & Vehicle Card */
+#screen-bookingDetails .bd-driver-head-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+#screen-bookingDetails .bd-driver-avatar-wrap {
+  position: relative !important;
+  width: 48px !important;
+  height: 48px !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-driver-avatar-img {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+#screen-bookingDetails .bd-driver-online-dot {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 12px !important;
+  height: 12px !important;
+  border-radius: 50% !important;
+  background: #10B981 !important;
+  border: 2px solid #FFFFFF !important;
+}
+
+#screen-bookingDetails .bd-driver-name-title {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  line-height: 1.2 !important;
+}
+
+#screen-bookingDetails .bd-driver-trips-sub {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #64748B !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-top: 3px !important;
+}
+
+#screen-bookingDetails .bd-driver-actions-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-left: auto !important;
+}
+
+#screen-bookingDetails .bd-action-circle-btn {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #0F172A !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-action-circle-btn:hover {
+  background: #EFF6FF !important;
+  color: #2563EB !important;
+  border-color: #BFDBFE !important;
+}
+
+#screen-bookingDetails .bd-vehicle-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  border-top: 1px solid #F1F5F9 !important;
+  margin-top: 14px !important;
+  padding-top: 14px !important;
+}
+
+#screen-bookingDetails .bd-vehicle-thumb {
+  width: 76px !important;
+  height: 46px !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-vehicle-title {
+  font-size: 14.5px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+}
+
+#screen-bookingDetails .bd-vehicle-desc {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+  margin-top: 2px !important;
+}
+
+/* Children Card */
+#screen-bookingDetails .bd-card-section-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 12px !important;
+}
+
+#screen-bookingDetails .bd-card-section-title {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  margin: 0 !important;
+}
+
+#screen-bookingDetails .bd-card-link-action {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #2563EB !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+}
+
+#screen-bookingDetails .bd-children-stacked-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+#screen-bookingDetails .bd-child-item-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 10px !important;
+  border-radius: 14px !important;
+  background: #F8FAFC !important;
+  border: 1px solid #F1F5F9 !important;
+}
+
+#screen-bookingDetails .bd-child-item-avatar {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-child-item-name {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
+}
+
+#screen-bookingDetails .bd-grade-pill {
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  padding: 3px 10px !important;
+  border-radius: 8px !important;
+}
+
+/* Schedule & Manage Row Cards */
+#screen-bookingDetails .bd-action-tile-card {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: #FFFFFF !important;
+  border-radius: 18px !important;
+  padding: 14px 16px !important;
+  margin: 0 16px !important;
+  border: 1px solid #F1F5F9 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+#screen-bookingDetails .bd-action-tile-card:hover {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+
+#screen-bookingDetails .bd-action-tile-card.is-muted {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+#screen-bookingDetails .bd-tile-icon-box {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-tile-icon-box.is-calendar {
+  background: #EFF6FF !important;
+  color: #2563EB !important;
+}
+
+#screen-bookingDetails .bd-tile-icon-box.is-manage {
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+#screen-bookingDetails .bd-tile-title {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  line-height: 1.2 !important;
+}
+
+#screen-bookingDetails .bd-tile-sub {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+  margin-top: 2px !important;
+}
+
+/* Bottom Bar */
+#screen-bookingDetails .bd-bottom-bar {
+  position: relative !important;
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  background: #FFFFFF !important;
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 6px)) !important;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05) !important;
+  border-top: 1px solid #F1F5F9 !important;
+  box-sizing: border-box !important;
+  z-index: 50 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  margin-top: auto !important;
+}
+
+#screen-bookingDetails .bd-btn-track-live {
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 14px !important;
+  padding: 14px 20px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 12px rgba(27, 43, 104, 0.2) !important;
+  transition: all 0.2s ease !important;
+  font-family: inherit !important;
+}
+
+#screen-bookingDetails .bd-btn-track-live:hover {
+  background: #142050 !important;
+}
+
+/* 7. Safety Handover PIN Banner */
+#screen-bookingDetails .bd-safety-pin-banner {
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%) !important;
+  border: 1px solid #FDE68A !important;
+  border-radius: 16px !important;
+  padding: 12px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 0 16px !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+}
+
+#screen-bookingDetails .bd-safety-pin-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+#screen-bookingDetails .bd-safety-pin-icon {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 10px !important;
+  background: #F59E0B !important;
+  color: #FFFFFF !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-safety-pin-title {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  color: #92400E !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+#screen-bookingDetails .bd-safety-pin-code {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: #78350F !important;
+  letter-spacing: 2px !important;
+  font-family: monospace, system-ui !important;
+}
+
+#screen-bookingDetails .bd-safety-pin-btn {
+  background: #FFFFFF !important;
+  color: #92400E !important;
+  border: 1px solid #FCD34D !important;
+  border-radius: 999px !important;
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+
+/* 8. Pricing & Payment Details Card */
+#screen-bookingDetails .bd-pricing-card {
+  background: #FFFFFF !important;
+  border-radius: 20px !important;
+  padding: 16px !important;
+  border: 1px solid #F1F5F9 !important;
+  margin: 0 16px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+#screen-bookingDetails .bd-pricing-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+#screen-bookingDetails .bd-pricing-title {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+}
+
+#screen-bookingDetails .bd-pricing-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: #ECFDF5 !important;
+  color: #059669 !important;
+  border: 1px solid #A7F3D0 !important;
+  padding: 3px 8px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+#screen-bookingDetails .bd-pricing-amount-row {
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: space-between !important;
+  padding-bottom: 8px !important;
+  border-bottom: 1px dashed #E2E8F0 !important;
+}
+
+#screen-bookingDetails .bd-pricing-amount {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  letter-spacing: -0.5px !important;
+}
+
+#screen-bookingDetails .bd-pricing-method {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #64748B !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+#screen-bookingDetails .bd-pricing-features {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+}
+
+#screen-bookingDetails .bd-pricing-feat-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+#screen-bookingDetails .bd-pricing-feat-item i {
+  color: #10B981 !important;
+}
+
+#screen-bookingDetails .bd-pricing-action-btn {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  color: #2563EB !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 8px 12px !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+/* 9. Special Instructions & Notes Card */
+#screen-bookingDetails .bd-notes-card {
+  background: #FFFFFF !important;
+  border-radius: 20px !important;
+  padding: 14px 16px !important;
+  border: 1px solid #F1F5F9 !important;
+  margin: 0 16px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+}
+
+#screen-bookingDetails .bd-notes-icon {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+  background: #EEF2FF !important;
+  color: #4F46E5 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+#screen-bookingDetails .bd-notes-title {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
+  margin-bottom: 2px !important;
+}
+
+#screen-bookingDetails .bd-notes-text {
+  font-size: 12px !important;
+  color: #64748B !important;
+  line-height: 1.4 !important;
+}
+
 
     /* 5. Bookings List Screen (Rich Cards Design) */
     #screen-bookings {
@@ -3269,6 +4090,20 @@
           </div>
         </section>
 
+        <!-- 2.5 Safety Handover PIN Banner -->
+        <div class="bd-safety-pin-banner" onclick="openSafetyPinModal()">
+          <div class="bd-safety-pin-left">
+            <div class="bd-safety-pin-icon">
+              <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
+            </div>
+            <div>
+              <div class="bd-safety-pin-title">Child Handover PIN</div>
+              <div class="bd-safety-pin-code" id="detailSafetyPinBannerCode">PIN 4920</div>
+            </div>
+          </div>
+          <button type="button" class="bd-safety-pin-btn">Show Driver</button>
+        </div>
+
         <!-- 3. Driver & Vehicle Card -->
         <section class="bd-card-clean">
           <div class="bd-driver-head-row">
@@ -3312,7 +4147,53 @@
           <div id="detailPassengersWrap" class="bd-children-stacked-list"></div>
         </section>
 
-        <!-- 5. Schedule Action Row Card -->
+        <!-- 5. Dedicated Payment & Pricing Card -->
+        <section class="bd-pricing-card">
+          <div class="bd-pricing-head">
+            <div class="bd-pricing-title">Payment &amp; Pricing</div>
+            <span class="bd-pricing-pill" id="detailPaymentStatusPill">
+              <i data-lucide="check" style="width:12px;height:12px;"></i>
+              <span id="detailPaymentStatusText">Paid</span>
+            </span>
+          </div>
+          <div class="bd-pricing-amount-row">
+            <div>
+              <div class="bd-pricing-amount" id="detailPriceAmount">$120.00</div>
+              <div style="font-size:11px; color:#64748B; font-weight:600;" id="detailPriceBillingCycle">Weekly recurring billing</div>
+            </div>
+            <div class="bd-pricing-method" id="detailPriceMethod">
+              <i data-lucide="credit-card" style="width:15px;height:15px;color:#2563EB;"></i>
+              <span id="detailPaymentCardLabel">Visa •••• 4242</span>
+            </div>
+          </div>
+          <div class="bd-pricing-features">
+            <div class="bd-pricing-feat-item">
+              <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
+              <span>Child transit insurance</span>
+            </div>
+            <div class="bd-pricing-feat-item">
+              <i data-lucide="navigation" style="width:14px;height:14px;"></i>
+              <span>Live GPS &amp; Handover</span>
+            </div>
+          </div>
+          <button type="button" class="bd-pricing-action-btn" onclick="openFareBreakdownModal()">
+            <i data-lucide="receipt" style="width:14px;height:14px;"></i>
+            <span>View fare breakdown &amp; receipt</span>
+          </button>
+        </section>
+
+        <!-- 6. Special Instructions & Care Card -->
+        <section class="bd-notes-card" id="detailSpecialNotesCard">
+          <div class="bd-notes-icon">
+            <i data-lucide="info" style="width:16px;height:16px;"></i>
+          </div>
+          <div style="flex:1;">
+            <div class="bd-notes-title">Special Care &amp; Gate Instructions</div>
+            <div class="bd-notes-text" id="detailSpecialNotesText">Gate 2 (Junior Wing Pickup) • Emma has a booster seat requirement. Driver will wait 5 mins at home gate.</div>
+          </div>
+        </section>
+
+        <!-- 7. Schedule Action Row Card -->
         <div class="bd-action-tile-card" onclick="openScheduleDetailsModal()">
           <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
             <div class="bd-tile-icon-box is-calendar">
@@ -3326,7 +4207,7 @@
           <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;"></i>
         </div>
 
-        <!-- 6. Manage Booking Action Row Card -->
+        <!-- 8. Manage Booking Action Row Card -->
         <div class="bd-action-tile-card is-muted" onclick="openManageBookingModal()">
           <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
             <div class="bd-tile-icon-box is-manage">
@@ -3334,7 +4215,7 @@
             </div>
             <div>
               <div class="bd-tile-title">Manage Booking</div>
-              <div class="bd-tile-sub" id="detailTileFareSub">Weekly School Pass • $120.00 / week</div>
+              <div class="bd-tile-sub" id="detailTileFareSub">Change dates, route, or cancel subscription</div>
             </div>
           </div>
           <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;"></i>

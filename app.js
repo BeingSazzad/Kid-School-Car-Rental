@@ -3395,6 +3395,195 @@ window.handleTripReportBack = function () {
   window.navigateBack('bookingDetails');
 };
 
+/* --- Booking Details Modal Controllers --- */
+window.openSafetyPinModal = function () {
+  const booking = window.appState.bookings.find(b => b.id === window.appState.activeBookingId) || window.appState.bookings[0];
+  const pin = booking ? (String(booking.id || '').replace(/\D/g, '').slice(-4) || '4920') : '4920';
+  
+  let modal = document.getElementById('dynamicSafetyPinModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'dynamicSafetyPinModal';
+    modal.className = 'safety-pin-modal-backdrop';
+    document.body.appendChild(modal);
+  }
+  
+  modal.innerHTML = `
+    <div class="safety-pin-sheet" style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:480px; margin:0 auto; box-shadow:0 -10px 40px rgba(0,0,0,0.2);">
+      <div style="width:40px; height:4px; background:#E2E8F0; border-radius:999px; margin:0 auto 16px;"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:17px; font-weight:800; color:#0F172A; margin:0;">Child Handover PIN</h3>
+        <button type="button" onclick="document.getElementById('dynamicSafetyPinModal').style.display='none'" style="background:#F1F5F9; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; color:#64748B;">✕</button>
+      </div>
+      <p style="font-size:13px; color:#64748B; margin:0 0 16px; line-height:1.4;">Provide this 4-digit code to the verified driver or school attendant to authorize child pickup and drop-off.</p>
+      <div style="background:linear-gradient(135deg, #1B2B68 0%, #2563EB 100%); border-radius:18px; padding:20px; text-align:center; color:#FFFFFF; margin-bottom:16px;">
+        <div style="font-size:12px; font-weight:700; opacity:0.8; letter-spacing:1px; margin-bottom:6px;">SECURITY VERIFICATION CODE</div>
+        <div style="font-size:36px; font-weight:800; letter-spacing:8px; font-family:monospace;">${pin}</div>
+      </div>
+      <button type="button" class="btn-primary" onclick="navigator.clipboard && navigator.clipboard.writeText('${pin}'); showToast('PIN copied to clipboard!'); document.getElementById('dynamicSafetyPinModal').style.display='none';" style="width:100%; border-radius:14px; padding:14px; font-weight:700;">Copy PIN &amp; Close</button>
+    </div>
+  `;
+  modal.style.display = 'flex';
+  modal.style.position = 'fixed';
+  modal.style.inset = '0';
+  modal.style.background = 'rgba(15, 23, 42, 0.6)';
+  modal.style.zIndex = '9999';
+  modal.style.alignItems = 'flex-end';
+};
+
+window.openFareBreakdownModal = function () {
+  const booking = window.appState.bookings.find(b => b.id === window.appState.activeBookingId) || window.appState.bookings[0];
+  const total = booking && booking.amount ? Number(booking.amount) : 120;
+  const isRec = booking && booking.frequency === 'recurring';
+  const base = total > 30 ? (total - 20) : (total - 4);
+  const service = total > 30 ? 15 : 3;
+  const tax = total > 30 ? 5 : 1;
+
+  let modal = document.getElementById('dynamicFareModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'dynamicFareModal';
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:480px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
+      <div style="width:40px; height:4px; background:#E2E8F0; border-radius:999px; margin:0 auto 16px;"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size:17px; font-weight:800; color:#0F172A; margin:0;">Fare Breakdown &amp; Receipt</h3>
+        <button type="button" onclick="document.getElementById('dynamicFareModal').style.display='none'" style="background:#F1F5F9; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; color:#64748B;">✕</button>
+      </div>
+      <div style="background:#F8FAFC; border-radius:16px; padding:16px; border:1px solid #E2E8F0; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px; color:#64748B;">
+          <span>${isRec ? 'Weekly Base Pass (5 Days)' : 'Single Trip Base Fare'}</span>
+          <span style="font-weight:700; color:#0F172A;">$${base}.00</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px; color:#64748B;">
+          <span>Child Safety &amp; GPS Telematics</span>
+          <span style="font-weight:700; color:#0F172A;">$${service}.00</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:13px; color:#64748B;">
+          <span>GST / Provincial HST</span>
+          <span style="font-weight:700; color:#0F172A;">$${tax}.00</span>
+        </div>
+        <div style="height:1px; background:#E2E8F0; margin-bottom:12px;"></div>
+        <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:800; color:#0F172A;">
+          <span>Total Paid</span>
+          <span>$${total}.00</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#64748B; margin-bottom:18px;">
+        <span style="background:#ECFDF5; color:#059669; padding:3px 8px; border-radius:999px; font-weight:700;">✓ Paid</span>
+        <span>Charged to ${booking && booking.paymentMethod ? booking.paymentMethod : 'Visa •••• 4242'}</span>
+      </div>
+      <button type="button" class="btn-primary" onclick="showToast('Tax invoice PDF downloaded!'); document.getElementById('dynamicFareModal').style.display='none';" style="width:100%; border-radius:14px; padding:14px; font-weight:700;">Download Official Tax Invoice</button>
+    </div>
+  `;
+  modal.style.display = 'flex';
+  modal.style.position = 'fixed';
+  modal.style.inset = '0';
+  modal.style.background = 'rgba(15, 23, 42, 0.6)';
+  modal.style.zIndex = '9999';
+  modal.style.alignItems = 'flex-end';
+};
+
+window.openScheduleDetailsModal = function () {
+  const booking = window.appState.bookings.find(b => b.id === window.appState.activeBookingId) || window.appState.bookings[0];
+  let modal = document.getElementById('dynamicScheduleModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'dynamicScheduleModal';
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:480px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
+      <div style="width:40px; height:4px; background:#E2E8F0; border-radius:999px; margin:0 auto 16px;"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size:17px; font-weight:800; color:#0F172A; margin:0;">Active Schedule Rules</h3>
+        <button type="button" onclick="document.getElementById('dynamicScheduleModal').style.display='none'" style="background:#F1F5F9; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; color:#64748B;">✕</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+        <div style="background:#F8FAFC; border-radius:14px; padding:12px 14px; border:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; font-weight:600; color:#475569;">Active Days</span>
+          <strong style="font-size:13px; color:#0F172A;">Monday – Friday</strong>
+        </div>
+        <div style="background:#F8FAFC; border-radius:14px; padding:12px 14px; border:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; font-weight:600; color:#475569;">Morning Pickup</span>
+          <strong style="font-size:13px; color:#0F172A;">${booking && booking.outboundTime ? booking.outboundTime : '7:15 AM'} (Window: ±5 min)</strong>
+        </div>
+        <div style="background:#F8FAFC; border-radius:14px; padding:12px 14px; border:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; font-weight:600; color:#475569;">School Drop-off</span>
+          <strong style="font-size:13px; color:#0F172A;">${booking && booking.schoolArriveTime ? booking.schoolArriveTime : '7:45 AM'}</strong>
+        </div>
+        <div style="background:#F8FAFC; border-radius:14px; padding:12px 14px; border:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:13px; font-weight:600; color:#475569;">Term Expiry</span>
+          <strong style="font-size:13px; color:#0F172A;">Dec 31, 2026</strong>
+        </div>
+      </div>
+      <button type="button" class="btn-primary" onclick="document.getElementById('dynamicScheduleModal').style.display='none'" style="width:100%; border-radius:14px; padding:14px; font-weight:700;">Got It</button>
+    </div>
+  `;
+  modal.style.display = 'flex';
+  modal.style.position = 'fixed';
+  modal.style.inset = '0';
+  modal.style.background = 'rgba(15, 23, 42, 0.6)';
+  modal.style.zIndex = '9999';
+  modal.style.alignItems = 'flex-end';
+};
+
+window.openManageBookingModal = function () {
+  const booking = window.appState.bookings.find(b => b.id === window.appState.activeBookingId) || window.appState.bookings[0];
+  const id = booking ? booking.id : 'H2S-84920';
+
+  let modal = document.getElementById('dynamicManageModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'dynamicManageModal';
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div style="background:#FFFFFF; border-radius:24px 24px 0 0; padding:24px 20px 32px; max-width:480px; margin:0 auto; width:100%; box-shadow:0 -10px 40px rgba(0,0,0,0.2); box-sizing:border-box;">
+      <div style="width:40px; height:4px; background:#E2E8F0; border-radius:999px; margin:0 auto 16px;"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size:17px; font-weight:800; color:#0F172A; margin:0;">Manage Subscription &amp; Route</h3>
+        <button type="button" onclick="document.getElementById('dynamicManageModal').style.display='none'" style="background:#F1F5F9; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; color:#64748B;">✕</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+        <button type="button" onclick="document.getElementById('dynamicManageModal').style.display='none'; window.modifyBooking && window.modifyBooking('${id}');" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:14px; text-align:left; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:14px; font-weight:700; color:#0F172A;">Edit Route or Stop Times</div>
+            <div style="font-size:12px; color:#64748B;">Change home stop, school gate, or timings</div>
+          </div>
+          <span style="color:#64748B;">›</span>
+        </button>
+        <button type="button" onclick="document.getElementById('dynamicManageModal').style.display='none'; showToast('Absence requested for tomorrow.');" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:14px; text-align:left; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:14px; font-weight:700; color:#0F172A;">Report Student Absence (Skip Day)</div>
+            <div style="font-size:12px; color:#64748B;">Notify driver if child is staying home</div>
+          </div>
+          <span style="color:#64748B;">›</span>
+        </button>
+        <button type="button" onclick="document.getElementById('dynamicManageModal').style.display='none'; cancelBooking('${id}');" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:14px; padding:14px; text-align:left; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:14px; font-weight:700; color:#DC2626;">Cancel Subscription / Ride</div>
+            <div style="font-size:12px; color:#DC2626; opacity:0.8;">Full refund available within 24 hours</div>
+          </div>
+          <span style="color:#DC2626;">›</span>
+        </button>
+      </div>
+      <button type="button" class="btn-primary" onclick="document.getElementById('dynamicManageModal').style.display='none'" style="width:100%; border-radius:14px; padding:14px; font-weight:700;">Close</button>
+    </div>
+  `;
+  modal.style.display = 'flex';
+  modal.style.position = 'fixed';
+  modal.style.inset = '0';
+  modal.style.background = 'rgba(15, 23, 42, 0.6)';
+  modal.style.zIndex = '9999';
+  modal.style.alignItems = 'flex-end';
+};
+
 function renderBookingDetails(bookingId) {
   const booking = window.appState.bookings.find(b => b.id === bookingId) || window.appState.bookings[0];
   if (!booking) return;
@@ -3584,12 +3773,40 @@ function renderBookingDetails(bookingId) {
     }).join('') || '<div class="bd-student-meta">No children added</div>';
   }
 
-  // 6. Schedule & Manage Row Subtitles
-  setText('detailTileScheduleSub', isRecurring ? 'Repeats every Mon – Fri • Until Dec 31, 2026' : 'One-time Trip • Scheduled');
-  const fareAmt = booking.amount ? `$${booking.amount}.00` : '$120.00';
-  setText('detailTileFareSub', (isRecurring ? 'Weekly School Pass • ' : 'Single Ride • ') + fareAmt + (booking.paymentMethod ? ' (' + booking.paymentMethod + ')' : ''));
+  // 6. Safety PIN Banner, Pricing Card & Special Instructions
+  setText('detailSafetyPinBannerCode', 'PIN ' + pin);
+  const fareVal = booking.amount != null ? Number(booking.amount) : 120;
+  setText('detailPriceAmount', `$${fareVal}.00`);
+  setText('detailPriceBillingCycle', isRecurring ? 'Weekly recurring subscription (Auto-billed)' : 'One-time trip fare');
+  setText('detailPaymentCardLabel', booking.paymentMethod || 'Visa •••• 4242');
+  
+  const payPill = document.getElementById('detailPaymentStatusPill');
+  const payPillText = document.getElementById('detailPaymentStatusText');
+  if (payPill && payPillText) {
+    if (isPending) {
+      payPill.style.background = '#FEF3C7';
+      payPill.style.color = '#D97706';
+      payPill.style.borderColor = '#FDE68A';
+      payPillText.textContent = 'Pending';
+    } else {
+      payPill.style.background = '#ECFDF5';
+      payPill.style.color = '#059669';
+      payPill.style.borderColor = '#A7F3D0';
+      payPillText.textContent = 'Paid';
+    }
+  }
 
-  // 7. Contextual Bottom Actions
+  const specialNotesText = document.getElementById('detailSpecialNotesText');
+  if (specialNotesText) {
+    const kidNames = children.map(c => c.name ? c.name.split(' ')[0] : 'Child').join(' & ');
+    specialNotesText.textContent = booking.notes || `Gate 2 (Junior Wing Pickup) • ${kidNames || 'Child'} handover requires PIN verification. Driver will wait 5 mins at home gate.`;
+  }
+
+  // 7. Schedule & Manage Row Subtitles
+  setText('detailTileScheduleSub', isRecurring ? 'Repeats every Mon – Fri • Until Dec 31, 2026' : 'One-time Trip • Scheduled');
+  setText('detailTileFareSub', 'Change dates, stop address, or manage pass');
+
+  // 8. Contextual Bottom Actions
   const primaryTrackBtn = document.getElementById('btnTrackLivePrimary');
   const actionsWrap = document.getElementById('detailContextualActions');
   if (actionsWrap) {
