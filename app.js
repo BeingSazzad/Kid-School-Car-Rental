@@ -1317,7 +1317,7 @@ window.ROLE_METADATA = {
     label: 'WalkShare',
     badge: 'Escort',
     icon: 'footprints',
-    color: '#059669',
+    color: '#1B2B68',
     toast: 'WalkShare mode'
   },
   admin: {

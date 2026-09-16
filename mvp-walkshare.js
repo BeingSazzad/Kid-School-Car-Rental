@@ -2090,7 +2090,7 @@
     el.innerHTML = `
       ${editing ? '' : `
         <div style="margin-bottom: 16px;">
-          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#16A34A; background:#F0FDF4; padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 1 of 5</span>
+          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1B2B68; background:rgba(27,43,104,0.08); padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 1 of 5</span>
           <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Escort Profile Details</h2>
           <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Enter your legal name, contact details, and parent-facing bio.</p>
         </div>
@@ -2222,7 +2222,7 @@
     el.innerHTML = `
       ${editing ? '' : `
         <div style="margin-bottom: 16px;">
-          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#16A34A; background:#F0FDF4; padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 2 of 5</span>
+          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1B2B68; background:rgba(27,43,104,0.08); padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 2 of 5</span>
           <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Walking Group & Route</h2>
           <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Configure group capacity and your daily sidewalk walking corridor.</p>
         </div>
@@ -2326,7 +2326,7 @@
     el.innerHTML = `
       ${editing ? '' : `
         <div style="margin-bottom: 16px;">
-          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#16A34A; background:#F0FDF4; padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 3 of 5</span>
+          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1B2B68; background:rgba(27,43,104,0.08); padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 3 of 5</span>
           <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Verification Documents</h2>
           <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Submit your photo ID, proof of residency, and police record checks.</p>
         </div>
@@ -2573,7 +2573,7 @@
     el.innerHTML = `
       ${editing ? '' : `
         <div style="margin-bottom: 16px;">
-          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#16A34A; background:#F0FDF4; padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 4 of 5</span>
+          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1B2B68; background:rgba(27,43,104,0.08); padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 4 of 5</span>
           <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Weekly Walking Schedule</h2>
           <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Set morning and afternoon escort time windows (Mon–Fri).</p>
         </div>
@@ -2667,7 +2667,7 @@
         </div>
       ` : `
         <div style="margin-bottom:16px;">
-          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#16A34A; background:#F0FDF4; padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 5 of 5 · Final Step</span>
+          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1B2B68; background:rgba(27,43,104,0.08); padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 5 of 5 · Final Step</span>
           <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Posted Rates & Payout Setup</h2>
           <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Set your weekly escort rate, walking corridor, and payment method.</p>
         </div>
