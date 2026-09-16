@@ -667,13 +667,12 @@
   }
 
   function resolveScreen(name) {
-    const role = state().activeRole || 'parent';
     if (AUTH.has(name)) return name;
-    // Never bounce signup/doc-detail to parent home when role lagged.
-    if (isWalkPartnerFlowScreen(name)) {
-      if (role !== 'walkshare') ensureWalkRole();
+    if (WS_ONLY.has(name) || isWalkPartnerFlowScreen(name) || String(name || '').indexOf('ws') === 0) {
+      if (state().activeRole !== 'walkshare') ensureWalkRole();
       return name;
     }
+    const role = state().activeRole || 'parent';
     if (role === 'walkshare') {
       if (name === 'tracking') return ensureWalk().activeWalkStage > 0 ? 'wsActiveWalk' : 'wsHome';
       if (name === 'profile' || name === 'profilePersonalInfo') return 'wsProfile';
@@ -688,9 +687,6 @@
         return 'wsHome';
       }
       return name;
-    }
-    if (role !== 'walkshare' && WS_ONLY.has(name)) {
-      return role === 'driver' ? (typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverHome') : 'home';
     }
     return name;
   }

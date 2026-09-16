@@ -878,14 +878,12 @@
   }
 
   function resolveScreen(name) {
-    const role = state().activeRole || 'parent';
     if (AUTH.has(name)) return name;
-    // Never bounce signup/doc-detail to parent home when role lagged on parent.
-    if (isDriverPartnerFlowScreen(name)) {
-      if (role !== 'driver') ensureDriverRole();
+    if (DRIVER_ONLY.has(name) || isDriverPartnerFlowScreen(name) || String(name || '').indexOf('driver') === 0) {
+      if (state().activeRole !== 'driver') ensureDriverRole();
       return name;
     }
-    if (role === 'parent' && DRIVER_ONLY.has(name)) return 'home';
+    const role = state().activeRole || 'parent';
     if (role !== 'driver') return name;
     if (name === 'tracking') {
       return ensureDriver().activeTripStage > 0 ? 'driverActiveTrip' : 'driverHome';

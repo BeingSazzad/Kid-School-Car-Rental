@@ -1564,62 +1564,50 @@ function coerceScreenToRole(screenName) {
   const role = activeNavRole();
   const bucket = navScreenBucket(screenName);
 
-  // Partner signup/detail screens: adopt the owning role instead of bouncing to parent home/profile.
-  if (bucket === 'driver' && (
-    screenName === 'driverDocDetail'
-    || screenName === 'driverSetup'
-    || screenName === 'driverPending'
-    || String(screenName).indexOf('driverOnboard') === 0
-  )) {
+  // Driver screens: automatically adopt driver role and sync UI
+  if (bucket === 'driver') {
     if (role !== 'driver') {
       window.appState.activeRole = 'driver';
       localStorage.setItem('h2s_active_role', 'driver');
       document.body.setAttribute('data-role', 'driver');
       const shell = document.getElementById('appShell');
       if (shell) shell.setAttribute('data-role', 'driver');
+      if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI('driver');
     }
     return screenName;
   }
-  if (bucket === 'walkshare' && (
-    screenName === 'wsDocDetail'
-    || screenName === 'wsSetup'
-    || screenName === 'wsPending'
-    || String(screenName).indexOf('wsOnboard') === 0
-  )) {
+
+  // WalkShare screens: automatically adopt walkshare role and sync UI
+  if (bucket === 'walkshare') {
     if (role !== 'walkshare') {
       window.appState.activeRole = 'walkshare';
       localStorage.setItem('h2s_active_role', 'walkshare');
       document.body.setAttribute('data-role', 'walkshare');
       const shell = document.getElementById('appShell');
       if (shell) shell.setAttribute('data-role', 'walkshare');
+      if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI('walkshare');
     }
     return screenName;
   }
 
-  if (role === 'driver' && bucket === 'parent') {
-    if (screenName === 'home' || screenName === 'bookings' || screenName === 'tracking') return 'driverHome';
-    if (screenName === 'profile' || screenName === 'profilePersonalInfo' || screenName === 'myChildren' || screenName === 'profileLocations' || screenName === 'profileEmergency' || screenName === 'profilePayments' || screenName === 'subscription') {
-      return screenName === 'subscription' || screenName === 'profilePayments' ? 'driverSubscription' : 'driverProfile';
-    }
-    return 'driverProfile';
+  // Shared and auth screens: stay as-is
+  if (bucket === 'shared' || bucket === 'auth') {
+    return screenName;
   }
-  if (role === 'driver' && bucket === 'walkshare') return 'driverHome';
-  if (role === 'walkshare' && bucket === 'parent') {
-    if (screenName === 'home' || screenName === 'bookings' || screenName === 'tracking') return 'wsHome';
-    if (screenName === 'profile' || screenName === 'profilePersonalInfo' || screenName === 'myChildren' || screenName === 'profileLocations' || screenName === 'profileEmergency' || screenName === 'profilePayments' || screenName === 'subscription') {
-      return screenName === 'subscription' || screenName === 'profilePayments' ? 'wsSubscription' : 'wsProfile';
-    }
-    return 'wsProfile';
+
+  // Parent specific screens: if navigating directly, adopt parent role if requested
+  if (bucket === 'parent') {
+    if (screenName === 'home' && role === 'driver') return 'driverHome';
+    if (screenName === 'home' && role === 'walkshare') return 'wsHome';
+    if (screenName === 'bookings' && role === 'driver') return 'driverSchedule';
+    if (screenName === 'bookings' && role === 'walkshare') return 'wsSchedule';
+    if (screenName === 'profile' && role === 'driver') return 'driverProfile';
+    if (screenName === 'profile' && role === 'walkshare') return 'wsProfile';
+    if (screenName === 'subscription' && role === 'driver') return 'driverSubscription';
+    if (screenName === 'subscription' && role === 'walkshare') return 'wsSubscription';
+    return screenName;
   }
-  if (role === 'walkshare' && bucket === 'driver') return 'wsHome';
-  if (role === 'parent' && bucket === 'driver') {
-    if (screenName === 'driverHome' || screenName === 'driverRequests' || screenName === 'driverSchedule' || screenName === 'driverActiveTrip') return 'home';
-    return 'profile';
-  }
-  if (role === 'parent' && bucket === 'walkshare') {
-    if (screenName === 'wsHome' || screenName === 'wsRequests' || screenName === 'wsSchedule' || screenName === 'wsActiveWalk') return 'home';
-    return 'profile';
-  }
+
   return screenName;
 }
 
@@ -8408,19 +8396,15 @@ window.handleEmailSignUp = function () {
 };
 
 window.selectSignupRoleDirect = function(role) {
-  window.appState._signupRole = role;
+  const valid = role === 'driver' || role === 'walkshare' ? role : 'parent';
+  window.appState._signupRole = valid;
+  window.appState.activeRole = valid;
+  localStorage.setItem('h2s_active_role', valid);
+  if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(valid);
+
   document.querySelectorAll('.role-choice-card').forEach(card => {
-    if (card.getAttribute('data-role') === role) {
-      card.classList.add('active');
-      card.style.borderColor = '#1B2B68';
-      card.style.borderWidth = '2px';
-      card.style.background = '#F8FAFC';
-    } else {
-      card.classList.remove('active');
-      card.style.borderColor = '#E2E8F0';
-      card.style.borderWidth = '1px';
-      card.style.background = '#FFFFFF';
-    }
+    const isSelected = card.getAttribute('data-role') === valid;
+    card.classList.toggle('active', isSelected);
   });
 };
 

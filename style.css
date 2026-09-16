@@ -6823,7 +6823,33 @@ svg.lucide {
   line-height: 1.4;
 }
 
-/* 15. Profile Screen Components */
+.role-choice-card {
+  border: 1.5px solid #E2E8F0 !important;
+  background: #FFFFFF !important;
+  border-radius: 16px !important;
+  padding: 15px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+  user-select: none !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.role-choice-card:hover {
+  border-color: #CBD5E1 !important;
+  background: #F8FAFC !important;
+}
+
+.role-choice-card.active {
+  border-color: #1B2B68 !important;
+  border-width: 2px !important;
+  background: #F8FAFC !important;
+  box-shadow: 0 4px 14px rgba(27, 43, 104, 0.08) !important;
+}
+
 .profile-user-card {
   background: linear-gradient(135deg, #09122C 0%, #172554 60%, #1E3A8A 100%);
   border: 1px solid rgba(255, 255, 255, 0.14);
