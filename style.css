@@ -12419,8 +12419,10 @@ body.is-auth-flow .role-capsule-island {
   z-index: 4;
 }
 
-.ws-live-chip {
-  background: rgba(15, 118, 110, 0.94) !important;
+.ws-live-chip,
+.ws-live-badge {
+  background: rgba(15, 23, 42, 0.90) !important;
+  color: #FFFFFF !important;
 }
 
 /* legacy path helpers kept harmless */
@@ -16806,19 +16808,22 @@ button.sub-cancel-link,
   opacity: 1;
 }
 
-.drv-live-badge {
+.drv-live-badge,
+.ws-live-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: var(--radius-pill);
-  background: rgba(15, 23, 42, 0.88);
-  color: #FFFFFF;
+  background: rgba(15, 23, 42, 0.90) !important;
+  color: #FFFFFF !important;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  border: none;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .drv-live-badge .live-dot-pulse {
@@ -16826,7 +16831,13 @@ button.sub-cancel-link,
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.28);
 }
 
-.drv-trip-panel {
+.ws-live-badge .live-dot-pulse {
+  background-color: #14B8A6;
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.35);
+}
+
+.drv-trip-panel,
+.ws-trip-panel {
   flex: 0 0 auto;
   gap: 16px;
   padding: 16px var(--screen-padding-h) 24px;

@@ -1684,12 +1684,59 @@
     const item = ensureWalk().activeWalk || deriveSchedule()[0];
     const el = feed('wsWalkPrepFeed');
     if (!el || !item) return;
+    const d = dateParts(item.when || 'Tue, Sep 9, 2026');
+
     el.innerHTML = `
       <div class="trip-card">
-        <h3 class="card-title-navy">${esc(item.childNames)}</h3>
-        <p class="card-desc-muted">${esc(item.time)} · ${esc(item.from)} → ${esc(item.to)}</p>
+        <div class="trip-card-top">
+          <div class="date-badge-box">
+            <span class="db-month">${esc(d.month)}</span>
+            <span class="db-day">${esc(d.day)}</span>
+            <span class="db-weekday">${esc(d.weekday || 'Wed')}</span>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+              <span class="status-chip in-progress" style="font-size:11px;padding:2px 8px;">
+                <span class="status-dot"></span>
+                <span>Walking Bus Group</span>
+              </span>
+              <span class="card-desc-muted" style="font-weight:700;color:var(--color-title);font-size:13px;">${esc(item.time || '07:40 AM')}</span>
+            </div>
+            <h3 class="card-title-navy" style="font-size:16px;margin:0 0 4px;">${esc(item.childNames || 'Arman + Emma')}</h3>
+            <p class="card-desc-muted" style="margin:0 0 2px;">${esc(item.from || '12 Elm Street')} → ${esc(item.to || 'Greenfield Elementary')}</p>
+            <p class="card-desc-muted" style="margin:0;font-size:12px;">Parent: <strong style="color:var(--color-title);">${esc(item.parentName || 'Sadia Khan')}</strong></p>
+          </div>
+        </div>
       </div>
-      <button type="button" class="btn-primary" onclick="startWalkShareWalk('${esc(item.id)}')">I'm on the way</button>
+
+      <!-- Safety & Readiness Checklist -->
+      <div class="trip-card" style="margin-top:12px;">
+        <h4 style="font-size:13px;font-weight:800;color:var(--color-title);margin:0 0 10px;display:flex;align-items:center;gap:6px;">
+          <i data-lucide="shield-check" style="width:16px;height:16px;color:#0D9488;"></i> Escort Safety Checklist
+        </h4>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--color-title);">
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#0D9488;flex-shrink:0;"></i>
+            <span>High-vis safety vest & escort lanyard on</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--color-title);">
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#0D9488;flex-shrink:0;"></i>
+            <span>Backpack reflective bands & walking ropes ready</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--color-title);">
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#0D9488;flex-shrink:0;"></i>
+            <span>Pedestrian signal crosswalk route confirmed</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--color-title);">
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#0D9488;flex-shrink:0;"></i>
+            <span>Live parent GPS tracking active</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="drv-actions-col" style="margin-top:16px;">
+        <button type="button" class="btn-primary drv-trip-cta" onclick="startWalkShareWalk('${esc(item.id)}')">I'm on the way</button>
+      </div>
     `;
     icons();
   }
@@ -1697,7 +1744,7 @@
   const WALK_STAGES = [
     { key: 0, chip: 'Confirmed', cta: "I'm on the way", progress: 8, pin: { left: '19%', top: '74%' } },
     { key: 1, chip: 'On the way', cta: 'Arrived at meetup', progress: 22, pin: { left: '19%', top: '58%' } },
-    { key: 2, chip: 'At meetup', cta: 'Confirm children with me', progress: 34, pin: { left: '19%', top: '36%' } },
+    { key: 2, chip: 'At meetup', cta: 'Confirm children with me', attendance: true, progress: 34, pin: { left: '19%', top: '36%' } },
     { key: 3, chip: 'Walking', cta: 'Arrived at school gate', progress: 58, pin: { left: '48%', top: '24%' } },
     { key: 4, chip: 'At school gate', cta: 'Confirm handoff', progress: 78, pin: { left: '78%', top: '28%' } },
     { key: 5, chip: 'Handoff', cta: 'Complete walk', progress: 92, pin: { left: '80%', top: '48%' } }
@@ -1713,18 +1760,37 @@
     const desc = document.getElementById('wsActiveTargetDesc');
     const eta = document.getElementById('wsActiveWalkTimeLeft');
     const btn = document.getElementById('btnWsMilestoneText');
+    const btnWrap = document.getElementById('btnWsMilestoneAction');
+    const slideWrap = document.getElementById('wsSlideConfirm');
     const note = document.getElementById('wsActiveWalkNote');
     const pin = document.getElementById('wsCockpitPin');
     const progressPath = document.getElementById('wsRouteProgress');
+    const avatars = document.getElementById('wsActiveKidsAvatars');
+    const kidsList = Array.isArray(item.children) ? item.children.filter(Boolean) : [];
+    const useSlide = /arrived/i.test(stage.cta || '') && !stage.attendance;
+
     if (chip) chip.textContent = stage.chip;
-    if (title) title.textContent = atDest ? (item.to || 'School gate') : (item.from || 'Meetup');
-    if (desc) desc.textContent = `${item.childNames || 'Children'} · sidewalk escort`;
+    if (title) title.textContent = atDest ? (item.to || 'Greenfield Elementary') : (item.from || '12 Elm Street (Meetup)');
+    if (desc) desc.textContent = `${item.childNames || 'Arman + Emma'} · ${atDest ? 'School gate arrival' : 'Morning walking bus'}`;
     if (eta) eta.textContent = item.time || '07:50 AM';
     if (btn) btn.textContent = stage.cta;
     if (note) {
       note.textContent = atDest
-        ? 'Stay on verified sidewalks. Hand children only to authorized school staff.'
-        : 'High-vis vest on. Parent sees live WalkShare status.';
+        ? 'Hand children only to authorized school staff at the gate.'
+        : 'High-vis vests on. Parent sees live WalkShare status.';
+    }
+    if (avatars) {
+      avatars.innerHTML = kidsList.slice(0, 3).map((c, i) => {
+        const src = esc(c.photo || '/assets/avatar_arman.jpg');
+        return `<img src="${src}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" onerror="this.src='/assets/avatar_arman.jpg'" />`;
+      }).join('') || `
+        <img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" onerror="this.onerror=null;this.src='/assets/avatar_arman.jpg';" />
+        <img src="/assets/avatar_emma.jpg" alt="" class="avatar-img-circle overlap" onerror="this.onerror=null;this.src='/assets/avatar_arman.jpg';" />`;
+    }
+    if (btnWrap) btnWrap.hidden = !!useSlide;
+    if (slideWrap) {
+      slideWrap.hidden = !useSlide;
+      if (useSlide) resetWalkShareSlide(stage.cta);
     }
     if (pin && stage.pin) {
       pin.style.left = stage.pin.left;
@@ -1736,15 +1802,85 @@
     }
     const msg = document.getElementById('wsWalkMessageBtn');
     if (msg) msg.setAttribute('onclick', `openChatWith('${item.parentId || 'PRNT-9042'}')`);
-    const el = feed('wsActiveWalkFeed');
-    if (el && !document.getElementById('wsMilestoneText')) {
-      el.innerHTML = `<div class="trip-card"><span class="status-chip in-progress"><span class="status-dot"></span><span>${esc(stage.chip)}</span></span><h3 class="card-title-navy" style="margin-top:12px;">${esc(atDest ? item.to : item.from)}</h3><p class="card-desc-muted">${esc(item.childNames)} · sidewalk escort</p></div><button type="button" class="btn-primary" onclick="advanceWalkShareWalk()">${esc(stage.cta)}</button>`;
-    }
     icons();
+  }
+
+  function resetWalkShareSlide(cta) {
+    const track = document.getElementById('wsSlideTrack');
+    const thumb = document.getElementById('wsSlideThumb');
+    const label = document.getElementById('wsSlideLabel');
+    if (!track || !thumb) return;
+    track.classList.remove('is-done');
+    thumb.style.transform = 'translateX(0)';
+    if (label) label.textContent = 'Slide to confirm arrival';
+    bindWalkShareSlide();
+  }
+
+  let wsSlideBound = false;
+  function bindWalkShareSlide() {
+    const track = document.getElementById('wsSlideTrack');
+    const thumb = document.getElementById('wsSlideThumb');
+    if (!track || !thumb || wsSlideBound) return;
+    wsSlideBound = true;
+    let dragging = false;
+    let startX = 0;
+    let startLeft = 0;
+
+    const maxTravel = () => Math.max(0, track.clientWidth - thumb.offsetWidth - 8);
+
+    const setX = (x) => {
+      const max = maxTravel();
+      const next = Math.max(0, Math.min(max, x));
+      thumb.style.transform = `translateX(${next}px)`;
+      return next;
+    };
+
+    const onStart = (clientX) => {
+      if (track.classList.contains('is-done')) return;
+      dragging = true;
+      startX = clientX;
+      const match = /translateX\(([-\d.]+)px\)/.exec(thumb.style.transform || '');
+      startLeft = match ? parseFloat(match[1]) : 0;
+    };
+
+    const onMove = (clientX) => {
+      if (!dragging) return;
+      setX(startLeft + (clientX - startX));
+    };
+
+    const onEnd = () => {
+      if (!dragging) return;
+      dragging = false;
+      const match = /translateX\(([-\d.]+)px\)/.exec(thumb.style.transform || '');
+      const cur = match ? parseFloat(match[1]) : 0;
+      const max = maxTravel();
+      if (cur >= max * 0.88) {
+        setX(max);
+        track.classList.add('is-done');
+        const label = document.getElementById('wsSlideLabel');
+        if (label) label.textContent = 'Confirmed';
+        setTimeout(() => window.advanceWalkShareWalk(), 180);
+      } else {
+        setX(0);
+      }
+    };
+
+    thumb.addEventListener('pointerdown', (e) => {
+      thumb.setPointerCapture?.(e.pointerId);
+      onStart(e.clientX);
+    });
+    thumb.addEventListener('pointermove', (e) => onMove(e.clientX));
+    thumb.addEventListener('pointerup', onEnd);
+    thumb.addEventListener('pointercancel', onEnd);
   }
 
   window.advanceWalkShareWalk = function () {
     const w = ensureWalk();
+    const stage = WALK_STAGES[Math.min(w.activeWalkStage || 1, WALK_STAGES.length - 1)] || WALK_STAGES[1];
+    if (stage.attendance) {
+      openWalkShareAttendance();
+      return;
+    }
     if (w.activeWalkStage >= WALK_STAGES.length - 1) {
       w.activeWalkStage = 0;
       const completedMeta = {
@@ -1770,6 +1906,52 @@
     persist();
     renderActiveWalk();
     toast(WALK_STAGES[w.activeWalkStage].chip);
+  };
+
+  function openWalkShareAttendance() {
+    const w = ensureWalk();
+    const item = w.activeWalk || deriveSchedule()[0] || {};
+    const list = document.getElementById('wsAttendanceList');
+    if (list) {
+      const children = item.children || [
+        { id: 'arman', name: 'Arman Khan', grade: 'Grade 4 · High-vis vest', photo: '/assets/avatar_arman.jpg' },
+        { id: 'emma', name: 'Emma Khan', grade: 'Grade 2 · Reflective band', photo: '/assets/avatar_emma.jpg' }
+      ];
+      list.innerHTML = children.map((c) => {
+        const key = c.id || c.name;
+        const on = w.activeWalkChildState?.[key] !== 'not_walking';
+        return `<div class="attendance-child-card ${on ? 'selected' : ''}" onclick="toggleWalkShareChild('${esc(key)}')">
+          <div class="drv-child-mini">
+            <img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" onerror="this.src='/assets/avatar_arman.jpg'" />
+            <div><div class="menu-title-text">${esc(c.name)}</div><div class="menu-subtitle">${esc(c.grade || c.notes || '')}</div></div>
+          </div>
+          <span class="${on ? 'both-way-badge' : 'one-way-badge'}">${on ? 'Walking' : 'Not walking'}</span>
+        </div>`;
+      }).join('');
+    }
+    document.getElementById('wsAttendanceModal')?.classList.add('active');
+    icons();
+  }
+
+  window.toggleWalkShareChild = function (key) {
+    const w = ensureWalk();
+    if (!w.activeWalkChildState) w.activeWalkChildState = {};
+    w.activeWalkChildState[key] = w.activeWalkChildState[key] === 'not_walking' ? 'walking' : 'not_walking';
+    persist();
+    openWalkShareAttendance();
+  };
+
+  window.closeWalkShareAttendanceModal = function () {
+    document.getElementById('wsAttendanceModal')?.classList.remove('active');
+  };
+
+  window.confirmWalkShareAttendance = function () {
+    document.getElementById('wsAttendanceModal')?.classList.remove('active');
+    const w = ensureWalk();
+    w.activeWalkStage = 3;
+    persist();
+    renderActiveWalk();
+    toast('Walking group confirmed. Parents see live sidewalk progress.');
   };
 
   function renderSetup() {

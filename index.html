@@ -9909,8 +9909,8 @@
         </div>
       </div>
 
-      <div class="top-bar-sticky">
-        <button type="button" class="back-btn" onclick="navigateTo('wsHome')"><i data-lucide="chevron-left"></i></button>
+      <div class="top-bar-sticky drv-trip-topbar">
+        <button type="button" class="back-btn" onclick="navigateTo('wsHome')" aria-label="Back"><i data-lucide="chevron-left"></i></button>
         <h2 class="top-bar-title">Active walk</h2>
         <button type="button" class="drv-sos-quiet" onclick="triggerEmergencyAlert()" aria-label="Emergency SOS">SOS</button>
       </div>
@@ -9930,67 +9930,62 @@
             </defs>
             <!-- base dashed corridor with high-contrast drop shadow -->
             <path id="wsRouteBasePath" class="ws-route-base"
-              d="M 70 168
-                 L 70 62
-                 Q 70 42 90 42
-                 L 270 42
-                 Q 290 42 290 62
-                 L 290 158
-                 Q 290 178 270 178
-                 L 90 178
-                 Q 70 178 70 168" />
+              d="M 70 168 L 70 62 Q 70 42 90 42 L 270 42 Q 290 42 290 62 L 290 158 Q 290 178 270 178 L 90 178 Q 70 178 70 168" />
             <!-- walked progress -->
             <path id="wsRouteProgress" class="ws-route-progress"
               pathLength="100"
               filter="url(#wsRouteGlow)"
-              d="M 70 168
-                 L 70 62
-                 Q 70 42 90 42
-                 L 270 42
-                 Q 290 42 290 62
-                 L 290 158
-                 Q 290 178 270 178
-                 L 90 178
-                 Q 70 178 70 168" />
+              d="M 70 168 L 70 62 Q 70 42 90 42 L 270 42 Q 290 42 290 62 L 290 158 Q 290 178 270 178 L 90 178 Q 70 178 70 168" />
           </svg>
 
-          <div class="ws-map-node start" aria-hidden="true">
+          <div class="ws-map-node start" aria-hidden="true" title="Meetup Pickup Point">
             <i data-lucide="home"></i>
           </div>
-          <div class="ws-map-node end" aria-hidden="true">
+          <div class="ws-map-node end" aria-hidden="true" title="School Destination">
             <i data-lucide="school"></i>
           </div>
-          <div class="cockpit-driver-pin ws-cockpit-pin" id="wsCockpitPin">
+          <div class="cockpit-driver-pin ws-cockpit-pin" id="wsCockpitPin" title="Live Walk Location">
+            <span class="pin-radar-ring"></span>
             <i data-lucide="footprints" style="width:18px;height:18px;"></i>
           </div>
-          <span class="live-pill-tag driver-live-chip ws-live-chip">
+          <span class="drv-live-badge driver-live-chip ws-live-badge">
             <span class="live-dot-pulse"></span>
-            <span>Live tracking</span>
+            <span>Live Walking Bus</span>
           </span>
         </div>
 
-        <div class="screen-scroll-body" style="padding-bottom:24px;flex:1;">
-          <div class="section-header-row" style="margin-bottom:0;">
-            <span class="status-chip in-progress" id="wsMilestoneBadge">
-              <span class="status-dot"></span>
-              <span id="wsMilestoneText">On the way</span>
-            </span>
-            <span class="card-desc-muted" id="wsActiveWalkTimeLeft">07:40 AM</span>
-          </div>
-
-          <div class="trip-card">
-            <h3 class="section-heading" style="margin-bottom:0;">Current stop</h3>
-            <div>
-              <h3 class="card-title-navy" id="wsActiveTargetTitle">Home (12 Elm Street)</h3>
-              <p class="card-desc-muted" id="wsActiveTargetDesc">Children · sidewalk escort</p>
+        <div class="screen-scroll-body drv-trip-panel ws-trip-panel">
+          <article class="drv-stop-card" aria-label="Current stop">
+            <div class="drv-stop-head">
+              <span class="status-chip in-progress" id="wsMilestoneBadge">
+                <span class="status-dot"></span>
+                <span id="wsMilestoneText">At meetup</span>
+              </span>
+              <time class="drv-stop-time" id="wsActiveWalkTimeLeft">07:50 AM</time>
             </div>
-            <span class="both-way-badge" id="wsActiveWalkNote">High-vis vest on. Parent sees live WalkShare status.</span>
-          </div>
+            <h3 class="drv-stop-title" id="wsActiveTargetTitle">12 Elm Street (Meetup Point)</h3>
+            <div class="drv-stop-kids" id="wsActiveKidsRow">
+              <div class="child-avatar-cluster" id="wsActiveKidsAvatars">
+                <img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" onerror="this.src='/assets/avatar_arman.jpg'" />
+                <img src="/assets/avatar_emma.jpg" alt="" class="avatar-img-circle overlap" onerror="this.src='/assets/avatar_emma.jpg'" />
+              </div>
+              <p class="drv-stop-meta" id="wsActiveTargetDesc">Arman + Emma · Morning walking bus</p>
+            </div>
+            <span class="drv-note-chip" id="wsActiveWalkNote">High-vis vests on · Sidewalk escort</span>
+          </article>
 
           <div class="drv-actions-col">
-            <button type="button" class="btn-primary" id="btnWsMilestoneAction" onclick="advanceWalkShareWalk()">
+            <button type="button" class="btn-primary drv-trip-cta" id="btnWsMilestoneAction" onclick="advanceWalkShareWalk()">
               <span id="btnWsMilestoneText">Arrived at meetup</span>
             </button>
+            <div class="drv-slide-confirm" id="wsSlideConfirm" hidden>
+              <div class="drv-slide-track" id="wsSlideTrack">
+                <span class="drv-slide-label" id="wsSlideLabel">Slide to confirm arrival</span>
+                <button type="button" class="drv-slide-thumb" id="wsSlideThumb" aria-label="Slide to confirm arrival">
+                  <i data-lucide="chevron-right"></i>
+                </button>
+              </div>
+            </div>
             <button type="button" class="btn-secondary-surface" id="wsWalkMessageBtn" onclick="openChatWith('PRNT-9042')">Message parent</button>
           </div>
         </div>
@@ -9998,6 +9993,25 @@
 
       <div class="home-indicator"></div>
     </section>
+
+    <!-- WalkShare Multi-Child Attendance Modal Backdrop -->
+    <div class="attendance-modal-backdrop" id="wsAttendanceModal" style="display: none;">
+      <div class="attendance-modal-sheet">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <h3 class="top-bar-title" style="margin:0;">Confirm children assembled</h3>
+          <button type="button" class="btn-text-link" onclick="closeWalkShareAttendanceModal()">Close</button>
+        </div>
+        <p class="page-subtitle" style="margin:0;text-align:left;">Mark who joined the walking bus group today.</p>
+
+        <div id="wsAttendanceList" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+        <p class="drv-lede">Uncheck anyone not walking today.</p>
+
+        <button type="button" class="btn-primary" id="btnConfirmWsAttendance" onclick="confirmWalkShareAttendance()">
+          <span>Confirm walking group</span>
+        </button>
+      </div>
+    </div>
 
     <!-- ================= WALKSHARE PROFILE ================= -->
     <section class="screen-view" id="screen-wsProfile" style="background-color: #FFFFFF;">
