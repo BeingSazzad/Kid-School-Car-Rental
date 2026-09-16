@@ -21021,3 +21021,26 @@ img.drv-req-avatar {
   color: #FFFFFF !important;
   border-color: #1B2B68 !important;
 }
+
+.ph-tt-dir-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 2.5px 8px !important;
+  border-radius: 6px !important;
+  line-height: 1.2 !important;
+}
+
+.ph-tt-dir-badge.is-round {
+  background: #EFF6FF !important;
+  color: #1D4ED8 !important;
+  border: 1px solid #BFDBFE !important;
+}
+
+.ph-tt-dir-badge.is-oneway {
+  background: #F8FAFC !important;
+  color: #475569 !important;
+  border: 1px solid #E2E8F0 !important;
+}

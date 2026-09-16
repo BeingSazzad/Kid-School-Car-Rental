@@ -331,6 +331,7 @@ window.appState = {
   ],
   selectedChildIds: [],
   bookingDraft: {
+    notes: '',
     direction: 'bothway',
     frequency: 'onetime',
     serviceType: 'drivers',
@@ -370,6 +371,7 @@ window.appState = {
     {
       id: 'H2S-84920',
       status: 'in_progress',
+      notes: 'Gate 2 (Junior Wing Pickup) • Arman & Emma handover requires PIN verification. Driver will wait 5 mins at home gate.',
       activeNow: true,
       parentId: 'PRNT-9042',
       parentName: 'Sadia Khan',
@@ -393,6 +395,7 @@ window.appState = {
     {
       id: 'H2S-91042',
       status: 'confirmed',
+      notes: 'Front gate drop-off. Arman walks to homeroom with morning monitor.',
       parentId: 'PRNT-9042',
       parentName: 'Sadia Khan',
       parentPhone: '+1 (416) 555-0192',
@@ -415,6 +418,7 @@ window.appState = {
     {
       id: 'H2S-82194',
       status: 'confirmed',
+      notes: 'Emma & Zara: Booster seats required. Handover to classroom teacher Ms. Jenkins at Kindergarten entrance.',
       parentId: 'PRNT-9042',
       parentName: 'Sadia Khan',
       parentPhone: '+1 (416) 555-0192',
@@ -437,6 +441,7 @@ window.appState = {
     {
       id: 'H2S-73190',
       status: 'pending',
+      notes: 'Please wait with Zara until teacher receives her at the playground gate.',
       childIds: ['zara'],
       direction: 'oneway',
       frequency: 'onetime',
@@ -2029,13 +2034,28 @@ function renderHome() {
         if (el) el.textContent = val;
       };
 
-      const isReturn = /return|pm/i.test(activeBooking.title || '') || /1:00|3:15|3:45/i.test(activeBooking.outboundTime || '');
-      const title = activeBooking.title || (isReturn ? 'Return to Home' : 'Morning to School');
+      const isBothWay = activeBooking.direction === 'bothway' || /bothway|round/i.test(activeBooking.direction || '');
+      const isReturn = /return|pm/i.test(activeBooking.title || '') || (!isBothWay && /1:00|3:15|3:45/i.test(activeBooking.outboundTime || ''));
+      
+      // 1. Direction badge
+      const dirBadge = document.getElementById('homeTodayTripDirBadge');
+      if (dirBadge) {
+        if (isBothWay) {
+          dirBadge.textContent = '⇄ Round Trip';
+          dirBadge.className = 'ph-tt-dir-badge is-round';
+        } else {
+          dirBadge.textContent = '→ One-Way';
+          dirBadge.className = 'ph-tt-dir-badge is-oneway';
+        }
+      }
+
+      // 2. Title & Date
+      const title = activeBooking.title || (isBothWay ? 'Round Trip to School' : (isReturn ? 'Return to Home' : 'Morning to School'));
       const dateText = activeBooking.date || 'Mon, Sep 1';
-      const pickupName = isReturn ? 'Sunrise International School' : (activeBooking.pickupLocation || '12 Elm Street, Toronto');
-      const pickupTime = activeBooking.outboundTime || (isReturn ? '3:15 PM' : '7:15 AM');
-      const dropName = isReturn ? 'Home' : (activeBooking.schoolLocation || 'Sunrise International School');
-      const dropTime = activeBooking.schoolArriveTime || (isReturn ? '3:45 PM' : '7:45 AM');
+      const pickupName = isReturn ? (activeBooking.schoolLocation || 'Greenfield International School') : (activeBooking.pickupLocation || 'Home (12 Elm Street)');
+      const pickupTime = activeBooking.outboundTime || (isReturn ? '01:00 PM' : '07:30 AM');
+      const dropName = isReturn ? (activeBooking.pickupLocation || 'Home (12 Elm Street)') : (activeBooking.schoolLocation || 'Greenfield International School');
+      const dropTime = activeBooking.schoolArriveTime || (isReturn ? '01:30 PM' : '7:45 AM');
 
       setText('homeTodayTripDate', dateText);
       setText('homeTodayTripTitle', title);
@@ -2043,6 +2063,21 @@ function renderHome() {
       setText('homeTodayPickupTime', pickupTime);
       setText('homeTodayDropLoc', dropName);
       setText('homeTodayDropTime', dropTime);
+
+      // 3. Return Leg handling for Round Trips
+      const returnStop = document.getElementById('homeTodayReturnStop');
+      const returnRail = document.getElementById('homeTodayReturnRailLine');
+      const returnTimeVal = activeBooking.returnTime || '01:00 PM';
+
+      if (isBothWay && returnTimeVal) {
+        if (returnStop) returnStop.style.display = 'flex';
+        if (returnRail) returnRail.style.display = 'block';
+        setText('homeTodayReturnLoc', 'Return: Back Home');
+        setText('homeTodayReturnTime', returnTimeVal);
+      } else {
+        if (returnStop) returnStop.style.display = 'none';
+        if (returnRail) returnRail.style.display = 'none';
+      }
 
       const driverName = String(provider.name || 'Mohammad Rahim').replace(/\s*\(WalkShare\)/i, '');
       setText('homeTodayDriverName', driverName);
@@ -2721,7 +2756,18 @@ window.setServiceType = function (serviceType) {
   if (btnWalk) btnWalk.classList.toggle('active', serviceType === 'walkshare');
 };
 
+window.initBookingSetupPage = function () {
+  const notesInput = document.getElementById('setupBookingNotesInput');
+  if (notesInput && window.appState && window.appState.bookingDraft) {
+    notesInput.value = window.appState.bookingDraft.notes || '';
+  }
+};
+
 window.proceedFromTripSetup = function () {
+  const notesEl = document.getElementById('setupBookingNotesInput');
+  if (notesEl && window.appState.bookingDraft) {
+    window.appState.bookingDraft.notes = notesEl.value.trim();
+  }
   const inputPickupEl = document.getElementById('setupPickupLocationInput');
   const inputSchoolEl = document.getElementById('setupSchoolLocationInput');
   const pickupEl = document.getElementById('setupPickupLocation');
@@ -3242,6 +3288,17 @@ function renderBookingSummary() {
       ? 'Recurring (Mon – Fri Commute)'
       : `One-Time Ride (${draft.tripDate || 'Single Day Pass'})`;
   }
+
+  const notesRow = document.getElementById('summaryNotesRow');
+  const notesVal = document.getElementById('summaryNotesText');
+  if (notesRow && notesVal) {
+    if (draft.notes && draft.notes.trim()) {
+      notesRow.style.display = 'flex';
+      notesVal.textContent = draft.notes.trim();
+    } else {
+      notesRow.style.display = 'none';
+    }
+  }
   const cleanFullName = provider.name.replace(/\s*\(WalkShare\)/i, '');
   if (providerEl) {
     providerEl.textContent = isWalk
@@ -3303,6 +3360,7 @@ window.submitBookingRequest = function () {
           : `${draft.tripDate || 'Single Day'} • ${draft.outboundTime}`),
     pickupLocation: draft.pickupLocation,
     schoolLocation: draft.schoolLocation,
+    notes: draft.notes || '',
     outboundTime: draft.outboundTime,
     returnTime: draft.direction === 'bothway' ? draft.returnTime : '',
     providerId: provider.id,

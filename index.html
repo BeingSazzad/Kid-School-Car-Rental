@@ -3190,7 +3190,10 @@
           <div class="ph-todays-trip-card" onclick="openBookingDetails(window.appState.activeBookingId || 'H2S-84920')">
             <!-- Top Meta Row -->
             <div class="ph-tt-top-row">
-              <span class="ph-tt-date" id="homeTodayTripDate">Mon, Sep 1</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="ph-tt-date" id="homeTodayTripDate">Mon, Sep 1</span>
+                <span class="ph-tt-dir-badge is-round" id="homeTodayTripDirBadge">⇄ Round Trip</span>
+              </div>
               <span class="ph-tt-status-pill" id="homeTodayTripStatus">
                 <span class="ph-tt-dot"></span> Upcoming
               </span>
@@ -3198,7 +3201,7 @@
 
             <!-- Title & Chevron Row -->
             <div class="ph-tt-title-row">
-              <h3 class="ph-tt-title" id="homeTodayTripTitle">Return to Home</h3>
+              <h3 class="ph-tt-title" id="homeTodayTripTitle">Morning to School</h3>
               <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;"></i>
             </div>
 
@@ -3210,17 +3213,28 @@
                   <span class="ph-tt-dashed-line"></span>
                 </div>
                 <div class="ph-tt-stop-content">
-                  <span class="ph-tt-stop-name" id="homeTodayPickupLoc">Sunrise International School</span>
-                  <span class="ph-tt-stop-time" id="homeTodayPickupTime">3:15 PM</span>
+                  <span class="ph-tt-stop-name" id="homeTodayPickupLoc">Home (12 Elm Street)</span>
+                  <span class="ph-tt-stop-time" id="homeTodayPickupTime">07:30 AM</span>
                 </div>
               </div>
               <div class="ph-tt-stop">
                 <div class="ph-tt-rail">
                   <span class="ph-tt-dot-bullseye"></span>
+                  <span class="ph-tt-dashed-line" id="homeTodayReturnRailLine" style="display:none;"></span>
                 </div>
                 <div class="ph-tt-stop-content">
-                  <span class="ph-tt-stop-name" id="homeTodayDropLoc">Home</span>
-                  <span class="ph-tt-stop-time" id="homeTodayDropTime">3:45 PM</span>
+                  <span class="ph-tt-stop-name" id="homeTodayDropLoc">Greenfield International School</span>
+                  <span class="ph-tt-stop-time" id="homeTodayDropTime">7:45 AM</span>
+                </div>
+              </div>
+              <!-- Return Leg (Round Trip) -->
+              <div class="ph-tt-stop" id="homeTodayReturnStop" style="display: none; margin-top: 4px;">
+                <div class="ph-tt-rail">
+                  <span class="ph-tt-dot-bullseye" style="border-color:#F97316; box-shadow: inset 0 0 0 2px #F97316;"></span>
+                </div>
+                <div class="ph-tt-stop-content">
+                  <span class="ph-tt-stop-name" id="homeTodayReturnLoc">Return: Back Home</span>
+                  <span class="ph-tt-stop-time" id="homeTodayReturnTime" style="color: #EA580C; font-weight: 700;">01:00 PM</span>
                 </div>
               </div>
             </div>
@@ -3800,6 +3814,16 @@
               <span class="book-ride-service-name">WalkShare</span>
               <i data-lucide="circle-check" class="book-ride-service-check"></i>
             </button>
+          </div>
+        </div>
+
+        <div class="book-ride-section" style="margin-top: 14px;">
+          <div class="book-ride-section-head">
+            <i data-lucide="file-text"></i>
+            <div class="book-ride-section-title">Additional Notes</div>
+          </div>
+          <div style="margin-top: 8px;">
+            <textarea id="setupBookingNotesInput" class="form-textarea" placeholder="e.g. Gate 2 pickup, booster seat required, handover PIN instructions..." style="width: 100%; border-radius: 14px; border: 1.5px solid #E2E8F0; padding: 10px 12px; font-size: 13px; font-family: inherit; min-height: 64px; resize: none; box-sizing: border-box; outline: none; background: #FFFFFF; color: #0F172A; line-height: 1.45; transition: border-color 0.2s;" onfocus="this.style.borderColor='#1B2B68'" onblur="this.style.borderColor='#E2E8F0'"></textarea>
           </div>
         </div>
       </div>
@@ -4420,6 +4444,10 @@
               <span class="rs-meta-lbl">Repeat</span>
               <span class="rs-meta-val" id="summaryFreqText">One-time</span>
             </div>
+            <div class="rs-meta-row" id="summaryNotesRow" style="display:none; align-items: flex-start;">
+              <span class="rs-meta-lbl">Notes</span>
+              <span class="rs-meta-val" id="summaryNotesText" style="text-align: right; max-width: 65%; font-weight: 500; color: #334155; word-break: break-word;"></span>
+            </div>
           </div>
         </section>
 
@@ -4774,14 +4802,14 @@
           </button>
         </section>
 
-        <!-- 6. Special Instructions & Care Card -->
+        <!-- 6. Additional Notes Card -->
         <section class="bd-notes-card" id="detailSpecialNotesCard">
           <div class="bd-notes-icon">
             <i data-lucide="info" style="width:16px;height:16px;"></i>
           </div>
           <div style="flex:1;">
-            <div class="bd-notes-title">Special Care &amp; Gate Instructions</div>
-            <div class="bd-notes-text" id="detailSpecialNotesText">Gate 2 (Junior Wing Pickup) • Emma has a booster seat requirement. Driver will wait 5 mins at home gate.</div>
+            <div class="bd-notes-title">Additional Notes</div>
+            <div class="bd-notes-text" id="detailSpecialNotesText">Gate 2 (Junior Wing Pickup) • Arman &amp; Emma handover requires PIN verification. Driver will wait 5 mins at home gate.</div>
           </div>
         </section>
 
