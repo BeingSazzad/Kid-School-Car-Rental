@@ -9175,6 +9175,18 @@ button.rating-tag-pill.active {
   outline: none;
 }
 
+.input-box-wrapper .form-input,
+.input-box-wrapper input {
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .form-input::placeholder {
   color: var(--color-body);
   font-weight: 400;
@@ -17098,8 +17110,7 @@ button.drv-doc-row.profile-menu-item {
 }
 
 :is([id^="screen-driver"], [id^="screen-ws"]) .form-group > .form-input,
-:is([id^="screen-driver"], [id^="screen-ws"]) .form-group > input.form-input,
-:is([id^="screen-driver"], [id^="screen-ws"]) .input-box-wrapper .form-input {
+:is([id^="screen-driver"], [id^="screen-ws"]) .form-group > input.form-input {
   height: var(--control-height);
   background: #FFFFFF;
   border: 1.5px solid var(--color-stroke);
@@ -17114,7 +17125,7 @@ button.drv-doc-row.profile-menu-item {
 }
 
 :is([id^="screen-driver"], [id^="screen-ws"]) .form-group > .form-input:focus,
-:is([id^="screen-driver"], [id^="screen-ws"]) .input-box-wrapper .form-input:focus {
+:is([id^="screen-driver"], [id^="screen-ws"]) .form-group > input.form-input:focus {
   border-color: #2563EB;
   outline: none;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
@@ -17123,6 +17134,35 @@ button.drv-doc-row.profile-menu-item {
 :is([id^="screen-driver"], [id^="screen-ws"]) .input-box-wrapper {
   width: 100%;
   height: var(--control-height);
+  background: #FFFFFF;
+  border: 1.5px solid var(--color-stroke);
+  border-radius: var(--radius-md);
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+:is([id^="screen-driver"], [id^="screen-ws"]) .input-box-wrapper:focus-within {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+:is([id^="screen-driver"], [id^="screen-ws"]) .input-box-wrapper .form-input,
+:is([id^="screen-driver"], [id^="screen-ws"]) .input-box-wrapper input {
+  height: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  font-size: var(--button-font-size);
+  font-weight: 600;
+  color: var(--color-title);
+  width: 100% !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 :is([id^="screen-driver"], [id^="screen-ws"]) .form-select {
