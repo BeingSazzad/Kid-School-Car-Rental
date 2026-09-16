@@ -4050,173 +4050,209 @@ function renderBookingsList(tab) {
   const btnC = document.getElementById('tabCancelled');
   const wrap = document.getElementById('bookingsListWrap');
 
-  const countU = window.appState.bookings.filter(b => ['confirmed', 'pending', 'in_progress', 'declined'].includes(b.status)).length;
-  const countH = window.appState.bookings.filter(b => b.status === 'completed').length;
-  const countC = window.appState.bookings.filter(b => b.status === 'cancelled').length;
-  if (btnU) btnU.textContent = `Upcoming (${countU})`;
-  if (btnH) btnH.textContent = `Past (${countH})`;
-  if (btnC) btnC.textContent = `Cancelled (${countC})`;
-  [btnU, btnH, btnC].forEach(b => b?.classList.remove('active'));
+  const upcomingList = window.appState.bookings.filter(b => ['confirmed', 'pending', 'in_progress'].includes(b.status));
+  const activeTrips = upcomingList.filter(b => b.status === 'in_progress');
+  const scheduledTrips = upcomingList.filter(b => b.status !== 'in_progress');
+  const historyList = window.appState.bookings.filter(b => b.status === 'completed');
+  const cancelledList = window.appState.bookings.filter(b => ['cancelled', 'declined'].includes(b.status));
 
-  let filtered = [];
-  if (normTab === 'upcoming') {
-    btnU?.classList.add('active');
-    filtered = window.appState.bookings.filter(b => ['confirmed', 'pending', 'in_progress', 'declined'].includes(b.status));
-    const rank = { in_progress: 0, declined: 1, pending: 2, confirmed: 3 };
-    filtered.sort((a, b) => (rank[a.status] ?? 9) - (rank[b.status] ?? 9));
-  } else if (normTab === 'history') {
-    btnH?.classList.add('active');
-    filtered = window.appState.bookings.filter(b => b.status === 'completed');
-  } else if (normTab === 'cancelled') {
-    btnC?.classList.add('active');
-    filtered = window.appState.bookings.filter(b => b.status === 'cancelled');
-  }
+  if (btnU) btnU.textContent = `Upcoming (${upcomingList.length})`;
+  if (btnH) btnH.textContent = `History (${historyList.length})`;
+  if (btnC) btnC.textContent = `Cancelled (${cancelledList.length})`;
+  [btnU, btnH, btnC].forEach(b => b?.classList.remove('active'));
 
   if (!wrap) return;
 
-  const shortSchool = (loc) => {
-    if (!loc) return 'School';
-    if (/greenfield/i.test(loc)) return 'Greenfield';
-    if (/sunshine/i.test(loc)) return 'Sunshine';
-    return String(loc).split(',')[0].replace(/\s+International.*$/i, '').trim();
+  const cleanLoc = (loc) => {
+    if (!loc) return '9 Harbourview Lane';
+    if (/home/i.test(loc)) return '9 Harbourview Lane';
+    return String(loc).replace(/\s*\([^)]*\)/g, '').split(',')[0].trim();
   };
 
-  const kidNames = (b) => {
-    const names = (b.childIds || []).map(id => {
-      const c = window.appState.children.find(ch => ch.id === id);
-      return c ? (c.name || '').split(' ')[0] : '';
-    }).filter(Boolean);
-    return names.length ? names.join(' & ') : 'Trip';
+  const cleanSchool = (loc) => {
+    if (!loc) return 'Greenfield International';
+    if (/greenfield/i.test(loc)) return 'Greenfield International';
+    if (/sunshine/i.test(loc)) return 'Sunshine Pre-school';
+    return String(loc).replace(/\s*\([^)]*\)/g, '').split(',')[0].trim();
   };
 
-  const statusLabel = (b) => {
-    if (b.status === 'in_progress') return 'Live';
-    if (b.status === 'pending') return 'Pending';
-    if (b.status === 'confirmed') return 'Confirmed';
-    if (b.status === 'completed') return 'Completed';
-    if (b.status === 'cancelled') return 'Cancelled';
-    if (b.status === 'declined') return 'Declined';
-    return b.status;
+  const parseDateBadge = (b, index) => {
+    const raw = b.date || b.tripDate || b.startDate || b.createdAt || '';
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    let month = 'MAY';
+    let day = '22';
+    let weekday = 'Wed';
+
+    const mMatch = raw.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/i);
+    if (mMatch) month = mMatch[1].toUpperCase();
+
+    const dMatch = raw.match(/\b([0-2]?[0-9]|3[01])\b/);
+    if (dMatch) day = dMatch[1].padStart(2, '0');
+
+    const wMatch = raw.match(/(Sun|Mon|Tue|Wed|Thu|Fri|Sat)/i);
+    if (wMatch) weekday = wMatch[1];
+    else {
+      // Deterministic spread across calendar for sample items
+      const sampleDays = ['22', '22', '24', '22', '24', '25', '28'];
+      const sampleWks = ['Wed', 'Wed', 'Wed', 'Wed', 'Fri', 'Mon', 'Thu'];
+      if (sampleDays[index]) day = sampleDays[index];
+      if (sampleWks[index]) weekday = sampleWks[index];
+    }
+
+    return { month, day, weekday };
   };
 
-  const statusClass = (b) => {
-    if (b.status === 'in_progress') return 'in-progress';
-    if (b.status === 'pending') return 'pending';
-    if (b.status === 'completed') return 'completed';
-    if (b.status === 'cancelled' || b.status === 'declined') return 'cancelled';
-    return 'confirmed';
+  const renderCard = (b, index, isHistoryTab) => {
+    const { month, day, weekday } = parseDateBadge(b, index);
+    const isBothWay = b.direction === 'bothway' || /bothway|round/i.test(b.direction || '');
+    const timeText = isBothWay
+      ? `${b.outboundTime || '07:30 AM'} & ${b.returnTime || '01:00 PM'}`
+      : (b.outboundTime || '07:30 AM');
+
+    const isLive = b.status === 'in_progress';
+    const isCancelled = b.status === 'cancelled' || b.status === 'declined';
+
+    let pillHtml = '';
+    if (isLive) {
+      pillHtml = `<span class="mb-dir-pill is-live"><span class="live-pulse-dot" style="width:5px;height:5px;background:#059669;border-radius:50%;"></span> Live Now</span>`;
+    } else if (isCancelled) {
+      pillHtml = `<span class="mb-dir-pill is-cancelled">${b.status === 'declined' ? 'Declined' : 'Cancelled'}</span>`;
+    } else if (isBothWay) {
+      pillHtml = `<span class="mb-dir-pill is-round"><i data-lucide="refresh-cw" style="width:10px;height:10px;"></i> Round Trip</span>`;
+    } else {
+      pillHtml = `<span class="mb-dir-pill is-oneway"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>`;
+    }
+
+    const pickup = cleanLoc(b.pickupLocation);
+    const school = cleanSchool(b.schoolLocation);
+
+    let actionRow = '';
+    if (isHistoryTab) {
+      actionRow = `
+        <div class="mb-history-actions-row" onclick="event.stopPropagation();">
+          <span style="font-size:11px; font-weight:600; color:#94A3B8;">Completed</span>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="mb-rate-btn" onclick="openRatingModal('${b.id}')">
+              <span style="color:#F59E0B;">★</span> Rate
+            </button>
+            <button type="button" class="mb-rebook-btn" onclick="rebookRide('${b.id}')">
+              <i data-lucide="rotate-ccw" style="width:11px;height:11px;"></i>
+              <span>Book again</span>
+            </button>
+          </div>
+        </div>`;
+    } else if (isCancelled) {
+      actionRow = `
+        <div class="mb-history-actions-row" onclick="event.stopPropagation();">
+          <span style="font-size:11px; font-weight:600; color:#EF4444;">Not completed</span>
+          <button type="button" class="mb-rebook-btn" onclick="rebookRide('${b.id}')">
+            <i data-lucide="rotate-ccw" style="width:11px;height:11px;"></i>
+            <span>Book again</span>
+          </button>
+        </div>`;
+    }
+
+    return `
+      <article class="mb-booking-card ${isLive ? 'is-live' : ''}" onclick="openBookingDetails('${b.id}')">
+        <div class="mb-date-box">
+          <span class="mb-date-month">${month}</span>
+          <span class="mb-date-day">${day}</span>
+          <span class="mb-date-weekday">${weekday}</span>
+        </div>
+        <div class="mb-card-main">
+          <div class="mb-card-top-row">
+            <span class="mb-trip-time">${timeText}</span>
+            ${pillHtml}
+          </div>
+          <div class="mb-route-rail">
+            <div class="mb-rail-stop">
+              <span class="mb-rail-dot-solid"></span>
+              <span class="mb-rail-text">${pickup}</span>
+            </div>
+            <div class="mb-rail-line"></div>
+            <div class="mb-rail-stop">
+              <span class="mb-rail-dot-ring"></span>
+              <span class="mb-rail-text">${school}</span>
+            </div>
+          </div>
+          ${actionRow}
+        </div>
+      </article>`;
   };
 
-  if (filtered.length === 0) {
-    wrap.innerHTML = `
-      <div class="bookings-empty-state">
-        <div class="bookings-empty-icon-box"><i data-lucide="calendar-x" style="width:24px;height:24px;"></i></div>
-        <div class="bookings-empty-title">No ${normTab === 'history' ? 'past' : normTab} bookings</div>
-        <p class="bookings-empty-sub">Book a school ride to see it here.</p>
-        <button class="btn-primary" style="margin-top:14px;max-width:200px;height:44px;" onclick="navigateTo('bookingTripSetup')">Book a ride</button>
-      </div>`;
-  } else {
-    wrap.innerHTML = filtered.map((b) => {
-      const provider = window.appState.providers.find(p => p.id === b.providerId) || window.appState.providers[0];
-      const kids = kidNames(b);
-      const school = shortSchool(b.schoolLocation);
-      const time = b.outboundTime || '07:30 AM';
-      const schedule = b.frequency === 'recurring' ? 'Mon–Fri' : (b.createdAt || 'One-time');
-      const driverName = provider?.name || 'Driver';
-      const driverRating = provider?.rating != null ? provider.rating : '4.9';
-      const driverPhoto = provider?.photo || '/assets/avatar_tariq.jpg';
-      const vehicle = provider?.vehicle || 'Toyota Sienna';
-      const isWalk = provider?.category === 'walkshare' || /walk/i.test(provider?.name || '');
-      const pin = String(b.id || '').replace(/\D/g, '').slice(-4) || '4920';
-      const idShort = String(b.id || '').replace(/^H2S-?/i, '#');
-      
-      const childObjects = (b.childIds || []).map(id => (window.appState.children || []).find(c => c.id === id)).filter(Boolean);
-      const childAvatars = childObjects.length ? childObjects.map((c, i) => {
-        const photo = c.photo || (c.name.toLowerCase().includes('emma') ? '/assets/avatar_emma.jpg' : '/assets/avatar_arman.jpg');
-        return `<img src="${photo}" alt="" class="bk-kid-avatar" style="margin-left: ${i > 0 ? '-12px' : '0'}; z-index: ${5 - i};" onerror="this.src='/assets/avatar_arman.jpg';" />`;
-      }).join('') : `<img src="/assets/avatar_arman.jpg" alt="" class="bk-kid-avatar" />`;
-
-      const live = b.status === 'in_progress';
-      const pending = b.status === 'pending';
-      const declined = b.status === 'declined';
-      const done = b.status === 'completed';
-      const confirmed = b.status === 'confirmed';
-
-      let statusBadge = '';
-      if (live) {
-        statusBadge = `<span class="bk-card-status is-live"><span class="live-pulse-dot"></span><span>Live</span></span>`;
-      } else if (confirmed) {
-        statusBadge = `<span class="bk-card-status is-confirmed"><i data-lucide="calendar" style="width:12px;height:12px;"></i><span>Confirmed</span></span>`;
-      } else if (pending) {
-        statusBadge = `<span class="bk-card-status is-pending"><i data-lucide="clock" style="width:12px;height:12px;"></i><span>Pending</span></span>`;
-      } else if (declined) {
-        statusBadge = `<span class="bk-card-status is-declined"><span class="bk-declined-dot"></span><span>Declined</span></span>`;
-      } else if (done) {
-        statusBadge = `<span class="bk-card-status is-completed"><i data-lucide="check-circle" style="width:12px;height:12px;"></i><span>Completed</span></span>`;
-      } else {
-        statusBadge = `<span class="bk-card-status is-cancelled"><span>Cancelled</span></span>`;
+  if (normTab === 'upcoming') {
+    btnU?.classList.add('active');
+    if (!upcomingList.length) {
+      wrap.innerHTML = `
+        <div class="bookings-empty-state">
+          <div class="bookings-empty-icon-box"><i data-lucide="calendar-x" style="width:24px;height:24px;"></i></div>
+          <div class="bookings-empty-title">No upcoming bookings</div>
+          <p class="bookings-empty-sub">Book a school ride to see it here.</p>
+          <button class="btn-primary" style="margin-top:14px;max-width:200px;height:44px;" onclick="navigateTo('bookingTripSetup')">Book a ride</button>
+        </div>`;
+    } else {
+      let contentHtml = '';
+      if (activeTrips.length) {
+        contentHtml += `
+          <div class="mb-section-title">
+            <span class="mb-section-dot green"></span>
+            <span>ACTIVE TRIP RIGHT NOW (${activeTrips.length})</span>
+          </div>
+          ${activeTrips.map((b, i) => renderCard(b, i, false)).join('')}`;
       }
-
-      let ctaBtn = '';
-      if (live) {
-        ctaBtn = `<button type="button" class="bk-card-btn is-track" onclick="event.stopPropagation(); openLiveTracking('${b.id}')"><i data-lucide="map-pin" style="width:13px;height:13px;"></i><span>Track</span></button>`;
-      } else if (pending) {
-        ctaBtn = `<button type="button" class="bk-card-btn is-withdraw" onclick="event.stopPropagation(); withdrawBookingRequest('${b.id}')">Withdraw</button>`;
-      } else if (declined) {
-        ctaBtn = `<button type="button" class="bk-card-btn is-rebook" onclick="event.stopPropagation(); navigateTo('bookingTripSetup')">Book again</button>`;
-      } else if (done) {
-        ctaBtn = `<button type="button" class="bk-card-btn is-rebook" onclick="event.stopPropagation(); rebookRide('${b.id}')">Book again</button>`;
-      } else {
-        ctaBtn = `<span class="bk-card-arrow">View <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>`;
+      if (scheduledTrips.length) {
+        contentHtml += `
+          <div class="mb-section-title">
+            <i data-lucide="calendar" style="width:14px;height:14px;color:#64748B;"></i>
+            <span>SCHEDULED COMMUTES (${scheduledTrips.length})</span>
+          </div>
+          ${scheduledTrips.map((b, i) => renderCard(b, i + (activeTrips.length || 0), false)).join('')}`;
       }
-
-      return `
-        <article class="bk-booking-card ${live ? 'is-live-card' : ''}" onclick="openBookingDetails('${b.id}')">
-          <div class="bk-card-head">
-            ${statusBadge}
-            <span class="bk-card-recurrence"><i data-lucide="calendar" style="width:12px;height:12px;"></i> ${schedule}</span>
-          </div>
-          <div class="bk-card-body">
-            <div class="bk-avatar-stack">
-              ${childAvatars}
-            </div>
-            <div class="bk-info-col">
-              <h3 class="bk-card-title">${declined ? `${school} Ride` : kids}</h3>
-              <div class="bk-card-route">
-                <i data-lucide="map-pin" class="bk-ico-pin"></i>
-                <span>${declined ? `${driverName} didn’t accept` : school}</span>
-              </div>
-              <div class="bk-card-time-row">
-                <i data-lucide="clock" class="bk-ico-clock"></i>
-                <span>${time}</span>
-                <span class="bk-dot-sep">•</span>
-                <span>${b.direction === 'bothway' ? 'Round trip' : 'One-way'}</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="bk-driver-strip">
-            <div class="bk-driver-left">
-              <img src="${driverPhoto}" alt="" class="bk-driver-mini-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
-              <span class="bk-driver-mini-name">${driverName}</span>
-              <span class="bk-driver-mini-rating"><span class="bk-star">★</span> ${driverRating}</span>
-            </div>
-            <span class="bk-driver-mini-veh">${isWalk ? 'WalkShare' : (vehicle.split(' ')[0] || 'Car')}</span>
-          </div>
-
-          <div class="bk-card-foot">
-            <span class="bk-ref-pill">${idShort}</span>
-            ${ctaBtn}
-          </div>
-        </article>`;
-    }).join('');
+      wrap.innerHTML = contentHtml;
+    }
+  } else if (normTab === 'history') {
+    btnH?.classList.add('active');
+    if (!historyList.length) {
+      wrap.innerHTML = `
+        <div class="bookings-empty-state">
+          <div class="bookings-empty-icon-box"><i data-lucide="clock" style="width:24px;height:24px;"></i></div>
+          <div class="bookings-empty-title">No past bookings</div>
+          <p class="bookings-empty-sub">Completed rides will appear here.</p>
+          <button class="btn-primary" style="margin-top:14px;max-width:200px;height:44px;" onclick="navigateTo('bookingTripSetup')">Book a ride</button>
+        </div>`;
+    } else {
+      wrap.innerHTML = `
+        <div class="mb-section-title">
+          <i data-lucide="check-circle" style="width:14px;height:14px;color:#10B981;"></i>
+          <span>COMPLETED COMMUTES (${historyList.length})</span>
+        </div>
+        ${historyList.map((b, i) => renderCard(b, i, true)).join('')}`;
+    }
+  } else if (normTab === 'cancelled') {
+    btnC?.classList.add('active');
+    if (!cancelledList.length) {
+      wrap.innerHTML = `
+        <div class="bookings-empty-state">
+          <div class="bookings-empty-icon-box"><i data-lucide="calendar-check" style="width:24px;height:24px;"></i></div>
+          <div class="bookings-empty-title">No cancelled bookings</div>
+          <p class="bookings-empty-sub">Cancelled requests will appear here.</p>
+        </div>`;
+    } else {
+      wrap.innerHTML = `
+        <div class="mb-section-title">
+          <i data-lucide="x-circle" style="width:14px;height:14px;color:#EF4444;"></i>
+          <span>CANCELLED / DECLINED (${cancelledList.length})</span>
+        </div>
+        ${cancelledList.map((b, i) => renderCard(b, i, false)).join('')}`;
+    }
   }
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
   }
 }
-
 
 /* ==========================================================
    Live Tracking: Realistic Leaflet Map Engine & Lifecycle

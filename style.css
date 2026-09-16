@@ -21044,3 +21044,248 @@ img.drv-req-avatar {
   color: #475569 !important;
   border: 1px solid #E2E8F0 !important;
 }
+
+/* ==========================================================
+   My Bookings — 1:1 Reference Card Redesign & Sections
+   ========================================================== */
+.mb-section-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  color: #1E293B !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.4px !important;
+  margin: 18px 0 10px !important;
+}
+
+.mb-section-title:first-child {
+  margin-top: 4px !important;
+}
+
+.mb-section-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+}
+
+.mb-section-dot.green {
+  background: #10B981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+}
+
+.mb-booking-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid #E2E8F0 !important;
+  border-radius: 18px !important;
+  padding: 14px 16px !important;
+  margin-bottom: 12px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+.mb-booking-card:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+  transform: translateY(-1px) !important;
+}
+
+.mb-booking-card.is-live {
+  border-color: #A7F3D0 !important;
+}
+
+.mb-date-box {
+  width: 54px !important;
+  height: 60px !important;
+  background: #F1F5F9 !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  gap: 1px !important;
+}
+
+.mb-date-month {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  color: #64748B !important;
+  letter-spacing: 0.5px !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+}
+
+.mb-date-day {
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  line-height: 1.1 !important;
+}
+
+.mb-date-weekday {
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  color: #94A3B8 !important;
+  line-height: 1 !important;
+}
+
+.mb-card-main {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.mb-card-top-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+.mb-trip-time {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  letter-spacing: -0.2px !important;
+}
+
+.mb-dir-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 3px 9px !important;
+  border-radius: 99px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+.mb-dir-pill.is-oneway {
+  background: #FFF7ED !important;
+  color: #EA580C !important;
+  border: 1px solid #FFEDD5 !important;
+}
+
+.mb-dir-pill.is-round {
+  background: #EFF6FF !important;
+  color: #2563EB !important;
+  border: 1px solid #DBEAFE !important;
+}
+
+.mb-dir-pill.is-live {
+  background: #ECFDF5 !important;
+  color: #059669 !important;
+  border: 1px solid #A7F3D0 !important;
+}
+
+.mb-dir-pill.is-cancelled, .mb-dir-pill.is-declined {
+  background: #FEF2F2 !important;
+  color: #DC2626 !important;
+  border: 1px solid #FEE2E2 !important;
+}
+
+.mb-route-rail {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  gap: 4px !important;
+  padding-left: 2px !important;
+}
+
+.mb-rail-stop {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  position: relative !important;
+}
+
+.mb-rail-dot-solid {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  background: #1B2B68 !important;
+  flex-shrink: 0 !important;
+}
+
+.mb-rail-dot-ring {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  border: 1.5px solid #2563EB !important;
+  background: #FFFFFF !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.mb-rail-line {
+  position: absolute !important;
+  left: 5px !important;
+  top: 7px !important;
+  bottom: 7px !important;
+  width: 1.5px !important;
+  background: #CBD5E1 !important;
+}
+
+.mb-rail-text {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.mb-history-actions-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin-top: 4px !important;
+  padding-top: 6px !important;
+  border-top: 1px dashed #F1F5F9 !important;
+}
+
+.mb-rebook-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 4px 10px !important;
+  background: #1B2B68 !important;
+  color: #FFFFFF !important;
+  border-radius: 99px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.mb-rebook-btn:hover {
+  background: #0F172A !important;
+}
+
+.mb-rate-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 4px 8px !important;
+  background: #FFFBEB !important;
+  color: #D97706 !important;
+  border: 1px solid #FDE68A !important;
+  border-radius: 99px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+}
