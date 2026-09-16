@@ -2683,16 +2683,6 @@
           </span>
         </button>
       </div>
-      
-      <!-- Supported Payment Methods -->
-      <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px;">
-        <span style="font-size: 11px; font-weight: 700; color: #64748B;">Supported via Stripe:</span>
-        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: #1E293B;">
-          <span style="background:#F1F5F9; padding:3px 8px; border-radius:6px;">💳 Cards</span>
-          <span style="background:#000; color:#fff; padding:3px 8px; border-radius:6px;"> Pay</span>
-          <span style="background:#F1F5F9; padding:3px 8px; border-radius:6px;">G Pay</span>
-        </div>
-      </div>
 
       <div class="sub-actions">
         ${ctaSection}

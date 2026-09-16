@@ -16117,21 +16117,21 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
 }
 
 /* ==========================================================
-   Subscription visual (:is(#screen-subscription, #screen-driverSubscription) only)
+   Subscription visual (:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription))
    Simple plan picker ? Parent content + design-system colors
    ========================================================== */
-:is(#screen-subscription, #screen-driverSubscription) .sub-screen-body {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-screen-body {
   gap: 20px;
   padding: 8px 20px 28px;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-simple-intro {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-simple-intro {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-screen-lede {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-screen-lede {
   font-size: 20px;
   font-weight: 800;
   color: var(--color-title);
@@ -16140,7 +16140,7 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   margin: 0;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-screen-note {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-screen-note {
   font-size: 12px;
   font-weight: 500;
   color: var(--color-body);
@@ -16148,7 +16148,7 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   margin: 0;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-status-strip {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-status-strip {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -16157,15 +16157,15 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   border-radius: 12px;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-status-strip[data-status="failed"] {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-status-strip[data-status="failed"] {
   background: var(--color-accent-orange-light);
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-status-strip[data-status="cancelled"] {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-status-strip[data-status="cancelled"] {
   background: var(--color-fade);
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-status-kicker {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-status-kicker {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -16173,35 +16173,35 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   color: var(--color-primary);
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-status-strip[data-status="failed"] .sub-status-kicker {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-status-strip[data-status="failed"] .sub-status-kicker {
   color: var(--color-secondary);
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-status-strip[data-status="cancelled"] .sub-status-kicker {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-status-strip[data-status="cancelled"] .sub-status-kicker {
   color: var(--color-body);
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-status-title {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-status-title {
   font-size: 16px;
   font-weight: 800;
   color: var(--color-title);
   line-height: 1.25;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-status-sub {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-status-sub {
   font-size: 12px;
   font-weight: 500;
   color: var(--color-body);
   line-height: 1.4;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-block {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-block {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-section-title {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-section-title {
   font-size: 14px;
   font-weight: 800;
   color: var(--color-title);
@@ -16209,7 +16209,7 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   margin: 0;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-card {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-card {
   position: relative;
   display: flex;
   align-items: center;
@@ -16224,12 +16224,12 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   font-family: var(--font-family);
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-card.active {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-card.active {
   border-color: var(--color-primary);
   background: #FFFFFF;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-radio {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-radio {
   width: 22px;
   height: 22px;
   border-radius: 50%;
@@ -16242,22 +16242,22 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   color: #FFFFFF;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-card.active .sub-plan-radio {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-card.active .sub-plan-radio {
   background: var(--color-primary);
   border-color: var(--color-primary);
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-radio i {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-radio i {
   width: 12px;
   height: 12px;
   display: none;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-card.active .sub-plan-radio i {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-card.active .sub-plan-radio i {
   display: block;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-copy {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-copy {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -16265,20 +16265,20 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   min-width: 0;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-name {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-name {
   font-size: 14px;
   font-weight: 800;
   color: var(--color-title);
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-desc {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-desc {
   font-size: 12px;
   font-weight: 500;
   color: var(--color-body);
   line-height: 1.35;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-pricing {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-pricing {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -16286,14 +16286,14 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   flex-shrink: 0;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-price {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-price {
   font-size: 14px;
   font-weight: 800;
   color: var(--color-title);
   white-space: nowrap;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-compare {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-compare {
   font-size: 10px;
   font-weight: 500;
   color: var(--color-body);
@@ -16301,7 +16301,7 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   white-space: nowrap;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-plan-badge-save {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-plan-badge-save {
   position: absolute;
   top: -8px;
   right: 12px;
@@ -16324,6 +16324,7 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   width: 100%;
 }
 
+button.sub-btn-primary,
 .sub-btn-primary,
 :is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-btn-primary,
 .sub-screen-body .sub-btn-primary {
@@ -16336,6 +16337,9 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   font-size: 15px;
   font-weight: 700;
   border: none !important;
+  outline: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(27, 43, 104, 0.2);
   transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
@@ -16350,35 +16354,49 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   box-shadow: 0 2px 8px rgba(27, 43, 104, 0.25);
 }
 
+button.sub-btn-secondary-link,
 .sub-btn-secondary-link,
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) button.sub-btn-secondary-link,
 :is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-btn-secondary-link,
+.sub-screen-body button.sub-btn-secondary-link,
 .sub-screen-body .sub-btn-secondary-link {
   background: transparent !important;
+  background-color: transparent !important;
   border: none !important;
-  padding: 12px;
-  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif);
-  font-size: 14px;
-  font-weight: 600;
+  outline: none !important;
+  box-shadow: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  padding: 12px 16px !important;
+  margin: 4px 0 0 0 !important;
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
   color: #64748B !important;
-  cursor: pointer;
-  text-align: center;
-  transition: color 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  width: 100%;
+  cursor: pointer !important;
+  text-align: center !important;
+  transition: color 0.15s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  width: 100% !important;
 }
 
+button.sub-btn-secondary-link:hover,
 .sub-btn-secondary-link:hover {
   color: var(--color-primary-navy, #1B2B68) !important;
 }
 
+button.sub-cancel-link,
 .sub-cancel-link,
 :is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-cancel-link,
 .sub-screen-body .sub-cancel-link {
   background: none !important;
   border: none !important;
+  outline: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
   padding: 8px;
   margin: 4px auto 0;
   align-self: center;
@@ -16396,7 +16414,7 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   color: #EF4444 !important;
 }
 
-:is(#screen-subscription, #screen-driverSubscription) .sub-history-card {
+:is(#screen-subscription, #screen-driverSubscription, #screen-wsSubscription) .sub-history-card {
   background: #FFFFFF;
   border: 1.5px solid var(--color-stroke);
   border-radius: 16px;
