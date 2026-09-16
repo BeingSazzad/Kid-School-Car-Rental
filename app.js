@@ -4110,123 +4110,175 @@ function renderBookingsList(tab) {
   if (!wrap) return;
 
   const cleanLoc = (loc) => {
-    if (!loc) return '9 Harbourview Lane';
-    if (/home/i.test(loc)) return '9 Harbourview Lane';
-    return String(loc).replace(/\s*\([^)]*\)/g, '').split(',')[0].trim();
+    if (!loc) return 'Home (12 Elm Street)';
+    return String(loc).split(',')[0].trim();
   };
 
   const cleanSchool = (loc) => {
-    if (!loc) return 'Greenfield International';
-    if (/greenfield/i.test(loc)) return 'Greenfield International';
-    if (/sunshine/i.test(loc)) return 'Sunshine Pre-school';
-    return String(loc).replace(/\s*\([^)]*\)/g, '').split(',')[0].trim();
+    if (!loc) return 'Greenfield International School';
+    return String(loc).split(',')[0].trim();
   };
 
-  const parseDateBadge = (b, index) => {
-    const raw = b.date || b.tripDate || b.startDate || b.createdAt || '';
-    let month = 'MAY';
-    let day = '22';
-    let weekday = 'Wed';
-
-    const mMatch = raw.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/i);
-    if (mMatch) month = mMatch[1].toUpperCase();
-
-    const dMatch = raw.match(/\b([0-2]?[0-9]|3[01])\b/);
-    if (dMatch) day = dMatch[1].padStart(2, '0');
-
-    const wMatch = raw.match(/(Sun|Mon|Tue|Wed|Thu|Fri|Sat)/i);
-    if (wMatch) weekday = wMatch[1];
-    else {
-      const sampleDays = ['22', '22', '24', '22', '24', '25', '28'];
-      const sampleWks = ['Wed', 'Wed', 'Wed', 'Wed', 'Fri', 'Mon', 'Thu'];
-      if (sampleDays[index]) day = sampleDays[index];
-      if (sampleWks[index]) weekday = sampleWks[index];
-    }
-
-    return { month, day, weekday };
+  const parseDisplayDate = (b, index) => {
+    if (b.date) return b.date;
+    if (b.tripDate) return b.tripDate;
+    const raw = b.startDate || b.createdAt || '';
+    if (raw && !raw.includes('Just now')) return raw;
+    
+    // Spread sample dates cleanly
+    const sampleDates = ['Mon, Sep 1', 'Wed, May 22', 'Fri, May 24', 'Mon, May 27', 'Thu, May 30'];
+    return sampleDates[index % sampleDates.length];
   };
 
-  const renderCard = (b, index, isHistoryTab) => {
-    const { month, day, weekday } = parseDateBadge(b, index);
+  const renderReferenceCard = (b, index, cardType) => {
+    const provider = window.appState.providers.find(p => p.id === b.providerId) || window.appState.providers[0];
     const isBothWay = b.direction === 'bothway' || /bothway|round/i.test(b.direction || '');
-    const timeText = isBothWay
-      ? `${b.outboundTime || '07:30 AM'} & ${b.returnTime || '01:00 PM'}`
-      : (b.outboundTime || '07:30 AM');
+    const dateText = parseDisplayDate(b, index);
+    
+    const pickupLoc = cleanLoc(b.pickupLocation);
+    const schoolLoc = cleanSchool(b.schoolLocation);
+    const pickupTime = b.outboundTime || '07:30 AM';
+    const dropTime = b.schoolArriveTime || '7:45 AM';
+    const returnTime = b.returnTime || '01:00 PM';
 
     const isLive = b.status === 'in_progress';
-    const isCancelled = b.status === 'cancelled' || b.status === 'declined';
+    const isCancelled = cardType === 'cancelled' || b.status === 'cancelled' || b.status === 'declined';
+    const isHistory = cardType === 'history';
 
-    let pillHtml = '';
+    // 1. Direction Badge
+    const dirBadgeHtml = isBothWay
+      ? `<span class="ph-tt-dir-badge is-round">⇄ Round Trip</span>`
+      : `<span class="ph-tt-dir-badge is-oneway">→ One-way</span>`;
+
+    // 2. Status Pill
+    let statusPillHtml = '';
     if (isLive) {
-      pillHtml = `<span class="mb-dir-pill is-live" style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#ECFDF5;color:#059669;border:1px solid #A7F3D0;"><span style="width:6px;height:6px;background:#059669;border-radius:50%;display:inline-block;"></span> Live Now</span>`;
+      statusPillHtml = `<span class="ph-tt-status-pill" style="background:#ECFDF5; color:#059669;"><span class="ph-tt-dot" style="background:#059669; box-shadow:0 0 0 3px rgba(16,185,129,0.2);"></span> Live</span>`;
     } else if (isCancelled) {
-      pillHtml = `<span class="mb-dir-pill is-cancelled" style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#FEF2F2;color:#DC2626;border:1px solid #FEE2E2;">${b.status === 'declined' ? 'Declined' : 'Cancelled'}</span>`;
-    } else if (isBothWay) {
-      pillHtml = `<span class="mb-dir-pill is-round" style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#EFF6FF;color:#2563EB;border:1px solid #DBEAFE;"><i data-lucide="refresh-cw" style="width:10px;height:10px;"></i> Round Trip</span>`;
+      statusPillHtml = `<span class="ph-tt-status-pill" style="background:#FEF2F2; color:#DC2626;"><span class="ph-tt-dot" style="background:#DC2626;"></span> Cancelled</span>`;
+    } else if (isHistory) {
+      statusPillHtml = `<span class="ph-tt-status-pill" style="background:#F1F5F9; color:#475569;"><i data-lucide="check-circle" style="width:12px;height:12px;color:#10B981;"></i> Completed</span>`;
     } else {
-      pillHtml = `<span class="mb-dir-pill is-oneway" style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#FFF7ED;color:#EA580C;border:1px solid #FFEDD5;"><i data-lucide="arrow-right" style="width:11px;height:11px;"></i> One-way</span>`;
+      statusPillHtml = `<span class="ph-tt-status-pill"><span class="ph-tt-dot"></span> Upcoming</span>`;
     }
 
-    const pickup = cleanLoc(b.pickupLocation);
-    const school = cleanSchool(b.schoolLocation);
-
-    let actionRow = '';
-    if (isHistoryTab) {
-      actionRow = `
-        <div class="mb-history-actions-row" onclick="event.stopPropagation();" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding-top:8px;border-top:1px dashed #F1F5F9;width:100%;">
-          <span style="font-size:11px; font-weight:600; color:#94A3B8;">Completed</span>
-          <div style="display:flex; gap:6px;">
-            <button type="button" class="mb-rate-btn" onclick="openRatingModal('${b.id}')" style="display:inline-flex;align-items:center;gap:4px;padding:4px 9px;background:#FFFBEB;color:#D97706;border:1px solid #FDE68A;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;">
-              <span style="color:#F59E0B;">★</span> Rate
-            </button>
-            <button type="button" class="mb-rebook-btn" onclick="rebookRide('${b.id}')" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#1B2B68;color:#FFFFFF;border-radius:99px;font-size:11.5px;font-weight:700;border:none;cursor:pointer;">
-              <i data-lucide="rotate-ccw" style="width:11px;height:11px;"></i>
-              <span>Book again</span>
-            </button>
+    // 3. Return Leg (if Round Trip)
+    let returnLineHtml = '';
+    let returnStopHtml = '';
+    if (isBothWay) {
+      returnLineHtml = `<span class="ph-tt-dashed-line" style="display:block;"></span>`;
+      returnStopHtml = `
+        <div class="ph-tt-stop" style="margin-top: 4px;">
+          <div class="ph-tt-rail">
+            <span class="ph-tt-dot-bullseye" style="border-color:#F97316; background:#F97316;"></span>
+          </div>
+          <div class="ph-tt-stop-content">
+            <span class="ph-tt-stop-name">Return: Back Home</span>
+            <span class="ph-tt-stop-time" style="color:#EA580C;">${returnTime}</span>
           </div>
         </div>`;
-    } else if (isCancelled) {
-      actionRow = `
-        <div class="mb-history-actions-row" onclick="event.stopPropagation();" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding-top:8px;border-top:1px dashed #F1F5F9;width:100%;">
-          <span style="font-size:11px; font-weight:600; color:#EF4444;">Not completed</span>
-          <button type="button" class="mb-rebook-btn" onclick="rebookRide('${b.id}')" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#1B2B68;color:#FFFFFF;border-radius:99px;font-size:11.5px;font-weight:700;border:none;cursor:pointer;">
-            <i data-lucide="rotate-ccw" style="width:11px;height:11px;"></i>
+    }
+
+    // 4. Driver & Vehicle Info
+    const driverName = String(provider.name || 'Mohammad Rahim').replace(/\s*\(WalkShare\)/i, '');
+    const driverRating = String(provider.rating != null ? provider.rating : '4.8');
+    const driverPhoto = provider.photo || '/assets/avatar_tariq.jpg';
+    const vehName = String(provider.vehicle || 'Toyota Hiace').replace(/\s*\(\d{4}\)\s*/g, '').trim();
+    const vehPlate = provider.plate || 'GA 15-6789';
+    const vehPhoto = '/assets/vehicle_hiace_white.jpg';
+
+    // 5. Contextual Action Buttons in Footer
+    let actionColHtml = '';
+    if (isLive) {
+      actionColHtml = `
+        <div style="margin-left:auto; display:flex; align-items:center;" onclick="event.stopPropagation();">
+          <button type="button" class="btn-track-mini" onclick="openLiveTracking('${b.id}')" style="background:#059669; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 8px rgba(5,150,105,0.25);">
+            <i data-lucide="map-pin" style="width:13px;height:13px;"></i>
+            <span>Track</span>
+          </button>
+        </div>`;
+    } else if (isHistory) {
+      actionColHtml = `
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px;" onclick="event.stopPropagation();">
+          <button type="button" onclick="openRatingModal('${b.id}')" style="background:#FFFBEB; color:#D97706; border:1px solid #FDE68A; border-radius:99px; padding:5px 9px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:3px;">
+            <span style="color:#F59E0B;">★</span> Rate
+          </button>
+          <button type="button" onclick="rebookRide('${b.id}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:5px 12px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+            <i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i>
             <span>Book again</span>
           </button>
         </div>`;
+    } else if (isCancelled) {
+      actionColHtml = `
+        <div style="margin-left:auto; display:flex; align-items:center;" onclick="event.stopPropagation();">
+          <button type="button" onclick="rebookRide('${b.id}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:5px 12px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+            <i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i>
+            <span>Book again</span>
+          </button>
+        </div>`;
+    } else {
+      actionColHtml = `<i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;margin-left:auto;"></i>`;
     }
 
     return `
-      <article class="mb-booking-card ${isLive ? 'is-live' : ''}" onclick="openBookingDetails('${b.id}')" style="background:#FFFFFF;border:1.5px solid ${isLive ? '#A7F3D0' : '#E2E8F0'};border-radius:18px;padding:14px 16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(15,23,42,0.03);display:flex;flex-direction:row;align-items:center;gap:16px;cursor:pointer;text-align:left;box-sizing:border-box;width:100%;">
-        <!-- Left Date Box -->
-        <div class="mb-date-box" style="width:52px;height:58px;background:#F1F5F9;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;gap:1px;box-sizing:border-box;">
-          <span class="mb-date-month" style="font-size:10px;font-weight:800;color:#64748B;letter-spacing:0.5px;line-height:1;text-transform:uppercase;">${month}</span>
-          <span class="mb-date-day" style="font-size:18px;font-weight:800;color:#0F172A;line-height:1.1;">${day}</span>
-          <span class="mb-date-weekday" style="font-size:10px;font-weight:600;color:#94A3B8;line-height:1;">${weekday}</span>
+      <article class="ph-todays-trip-card" onclick="openBookingDetails('${b.id}')" style="margin-bottom:12px;">
+        <!-- Top Meta Row -->
+        <div class="ph-tt-top-row">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="ph-tt-date">${dateText}</span>
+            ${dirBadgeHtml}
+          </div>
+          ${statusPillHtml}
         </div>
 
-        <!-- Right Content Main Column -->
-        <div class="mb-card-main" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;">
-          <!-- Top Row: Time + Direction Badge -->
-          <div class="mb-card-top-row" style="display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;">
-            <span class="mb-trip-time" style="font-size:13.5px;font-weight:800;color:#0F172A;letter-spacing:-0.2px;white-space:nowrap;">${timeText}</span>
-            ${pillHtml}
-          </div>
-
-          <!-- Route Rail -->
-          <div class="mb-route-rail" style="display:flex;flex-direction:column;position:relative;gap:5px;padding-left:2px;">
-            <div class="mb-rail-stop" style="display:flex;align-items:center;gap:10px;position:relative;z-index:2;">
-              <span class="mb-rail-dot-solid" style="width:7px;height:7px;border-radius:50%;background:#1B2B68;flex-shrink:0;"></span>
-              <span class="mb-rail-text" style="font-size:12.5px;font-weight:500;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${pickup}</span>
+        <!-- Route Timeline (No redundant title!) -->
+        <div class="ph-tt-timeline" style="margin-top:10px; margin-bottom:14px;">
+          <!-- Pickup Stop -->
+          <div class="ph-tt-stop">
+            <div class="ph-tt-rail">
+              <span class="ph-tt-dot-solid"></span>
+              <span class="ph-tt-dashed-line"></span>
             </div>
-            <div class="mb-rail-line" style="position:absolute;left:5px;top:7px;bottom:7px;width:1.5px;background:#CBD5E1;z-index:1;"></div>
-            <div class="mb-rail-stop" style="display:flex;align-items:center;gap:10px;position:relative;z-index:2;">
-              <span class="mb-rail-dot-ring" style="width:7px;height:7px;border-radius:50%;border:1.5px solid #2563EB;background:#FFFFFF;flex-shrink:0;box-sizing:border-box;"></span>
-              <span class="mb-rail-text" style="font-size:12.5px;font-weight:500;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${school}</span>
+            <div class="ph-tt-stop-content">
+              <span class="ph-tt-stop-name">${pickupLoc}</span>
+              <span class="ph-tt-stop-time">${pickupTime}</span>
             </div>
           </div>
+          <!-- Drop-off Stop -->
+          <div class="ph-tt-stop">
+            <div class="ph-tt-rail">
+              <span class="ph-tt-dot-bullseye"></span>
+              ${returnLineHtml}
+            </div>
+            <div class="ph-tt-stop-content">
+              <span class="ph-tt-stop-name">${schoolLoc}</span>
+              <span class="ph-tt-stop-time">${dropTime}</span>
+            </div>
+          </div>
+          ${returnStopHtml}
+        </div>
 
-          ${actionRow}
+        <!-- Driver & Vehicle Footer Row -->
+        <div class="ph-tt-footer-row">
+          <div class="ph-tt-driver-col">
+            <img src="${driverPhoto}" alt="Driver" class="ph-tt-driver-avatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
+            <div style="min-width:0;">
+              <div class="ph-tt-driver-name">${driverName}</div>
+              <div class="ph-tt-driver-rating">
+                <span style="color:#F59E0B;">★</span>
+                <strong style="color:#0F172A; font-weight:700;">${driverRating}</strong>
+              </div>
+            </div>
+          </div>
+          <div class="ph-tt-divider"></div>
+          <div class="ph-tt-vehicle-col">
+            <img src="${vehPhoto}" alt="Vehicle" class="ph-tt-vehicle-img" onerror="this.src='/assets/vehicle_hiace_white.jpg';" />
+            <div style="min-width:0;">
+              <div class="ph-tt-vehicle-name">${vehName}</div>
+              <div class="ph-tt-vehicle-plate">${vehPlate}</div>
+            </div>
+          </div>
+          ${actionColHtml}
         </div>
       </article>`;
   };
@@ -4249,7 +4301,7 @@ function renderBookingsList(tab) {
             <span class="mb-section-dot green" style="width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,0.2);"></span>
             <span>ACTIVE TRIP RIGHT NOW (${activeTrips.length})</span>
           </div>
-          ${activeTrips.map((b, i) => renderCard(b, i, false)).join('')}`;
+          ${activeTrips.map((b, i) => renderReferenceCard(b, i, 'live')).join('')}`;
       }
       if (scheduledTrips.length) {
         contentHtml += `
@@ -4257,7 +4309,7 @@ function renderBookingsList(tab) {
             <i data-lucide="calendar" style="width:14px;height:14px;color:#64748B;"></i>
             <span>SCHEDULED COMMUTES (${scheduledTrips.length})</span>
           </div>
-          ${scheduledTrips.map((b, i) => renderCard(b, i + (activeTrips.length || 0), false)).join('')}`;
+          ${scheduledTrips.map((b, i) => renderReferenceCard(b, i + (activeTrips.length || 0), 'upcoming')).join('')}`;
       }
       wrap.innerHTML = contentHtml;
     }
@@ -4277,7 +4329,7 @@ function renderBookingsList(tab) {
           <i data-lucide="check-circle" style="width:14px;height:14px;color:#10B981;"></i>
           <span>COMPLETED COMMUTES (${historyList.length})</span>
         </div>
-        ${historyList.map((b, i) => renderCard(b, i, true)).join('')}`;
+        ${historyList.map((b, i) => renderReferenceCard(b, i, 'history')).join('')}`;
     }
   } else if (normTab === 'cancelled') {
     btnC?.classList.add('active');
@@ -4294,7 +4346,7 @@ function renderBookingsList(tab) {
           <i data-lucide="x-circle" style="width:14px;height:14px;color:#EF4444;"></i>
           <span>CANCELLED / DECLINED (${cancelledList.length})</span>
         </div>
-        ${cancelledList.map((b, i) => renderCard(b, i, false)).join('')}`;
+        ${cancelledList.map((b, i) => renderReferenceCard(b, i, 'cancelled')).join('')}`;
     }
   }
 
