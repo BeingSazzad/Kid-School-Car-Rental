@@ -1300,23 +1300,25 @@
     const displayRate = hasAgreedRate ? booking.agreedRate : (booking?.listedRate || (req.rate ? `$${req.rate}` : '$75'));
     const period = req.frequency === 'recurring' ? 'week' : 'walk';
 
-    const parentPhoto = req.parentPhoto || (PARENTS[req.parentId] && PARENTS[req.parentId].photo) || '/assets/avatar_sarah.jpg';
-    const parentName = req.parentName || (PARENTS[req.parentId] && PARENTS[req.parentId].name) || 'Claire Dubois';
-    const parentPhone = req.parentPhone || (PARENTS[req.parentId] && PARENTS[req.parentId].phone) || '+1 (416) 555-0133';
+    let parentPhoto = req.parentPhoto || (PARENTS[req.parentId] && PARENTS[req.parentId].photo) || (req.parentId === 'PRNT-9042' ? '/assets/avatar_sadia.jpg' : '/assets/avatar_sarah.jpg');
+    let parentName = req.parentName || (PARENTS[req.parentId] && PARENTS[req.parentId].name) || 'Sarah Tremblay';
+    if (/sadia/i.test(parentName)) parentName = 'Sarah Tremblay';
+    if (/sadia/i.test(parentPhoto)) parentPhoto = '/assets/avatar_sadia.jpg';
+    const parentPhone = req.parentPhone || (PARENTS[req.parentId] && PARENTS[req.parentId].phone) || '+1 (416) 555-0192';
 
     // Parse Date & Days for schedule card
-    let fromDate = 'Sep 21';
+    let fromDate = 'Sep 17, 2026';
     const dl = String(req.dateLabel || '');
     const dateMatch = dl.match(/(?:starting|starts|from)\s+([A-Za-z]+(?:\s+\d{1,2})?(?:,?\s*\d{4})?)/i) ||
-                      dl.match(/([A-Za-z]{3,}\s+\d{1,2})/i);
+                      dl.match(/([A-Za-z]{3,}\s+\d{1,2}(?:,?\s*\d{4})?)/i);
     if (dateMatch && dateMatch[1]) {
       fromDate = dateMatch[1].replace(/^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*[,.\s]*/i, '').trim();
     }
     const daysLabel = (Array.isArray(req.recurringDays) && req.recurringDays.length === 5)
-      ? 'Mon–Fri'
+      ? 'Mon–Fri Recurring'
       : (Array.isArray(req.recurringDays) && req.recurringDays.length > 0)
         ? req.recurringDays.join(', ')
-        : (req.frequency === 'recurring' ? 'Mon–Fri' : 'One-time');
+        : (req.frequency === 'recurring' ? 'Mon–Fri Recurring' : 'One-time Walk');
 
     const pickupTimeStr = req.pickupTime || '08:05 AM';
     const returnTimeStr = (req.direction === 'oneway' || !req.returnTime) ? 'One-way' : req.returnTime;
@@ -1324,166 +1326,263 @@
     const childList = kids(req);
     const passengersHtml = childList.length > 0
       ? childList.map((c) => {
+          let cName = c.name || '';
+          if (/zara/i.test(cName)) cName = 'Chloe Tremblay';
+          if (/arman/i.test(cName)) cName = 'Liam Tremblay';
+          if (/emma\s+khan/i.test(cName)) cName = 'Emma Tremblay';
           const kidPhoto = c.photo || (c.id === 'arman' ? '/assets/avatar_arman.jpg' : c.id === 'emma' ? '/assets/avatar_emma.jpg' : c.id === 'omar' ? '/assets/avatar_arman.jpg' : '/assets/avatar_zara.jpg');
-          const sub = c.grade || c.age || 'Grade 5';
+          const sub = c.grade || c.age || 'Grade 4 (9 yrs)';
+          const schoolTag = c.school || (cleanPlace(req.dropoffLocation) || 'Greenfield School');
+          const reqTag = c.notes || 'High-vis walking vest';
           return `
-            <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
-              <img src="${esc(kidPhoto)}" alt="${esc(c.name)}" style="width:44px; height:44px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_arman.jpg'" />
-              <div>
-                <div style="font-size:15px; font-weight:700; color:#0F172A;">${esc(c.name)}</div>
-                <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:2px;">${esc(sub)}</div>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:2px 0;">
+              <div style="display:flex; align-items:center; gap:14px; min-width:0; flex:1;">
+                <img src="${esc(kidPhoto)}" alt="${esc(cName)}" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #EFF6FF; flex-shrink:0;" onerror="this.src='/assets/avatar_arman.jpg';" />
+                <div style="min-width:0; flex:1;">
+                  <div style="font-size:15px; font-weight:800; color:#0F172A; line-height:1.2;">${esc(cName)}</div>
+                  <div style="font-size:12px; color:#64748B; font-weight:600; margin-top:3px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <span style="background:#F1F5F9; color:#334155; padding:1px 6px; border-radius:4px; font-size:11px; font-weight:700;">${esc(sub)}</span>
+                    <span>•</span>
+                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(schoolTag)}</span>
+                  </div>
+                </div>
               </div>
+              <span style="background:#DCFCE7; color:#15803D; font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:6px; white-space:nowrap; flex-shrink:0;">
+                ${esc(reqTag)}
+              </span>
             </div>`;
-        }).join('')
+        }).join('<div style="height:1px; background:#F1F5F9; margin:4px 0;"></div>')
       : `
-        <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
-          <img src="/assets/avatar_arman.jpg" alt="Child" style="width:44px; height:44px; border-radius:50%; object-fit:cover;" />
+        <div style="display:flex; align-items:center; gap:14px;">
+          <img src="/assets/avatar_arman.jpg" alt="Child" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #EFF6FF;" />
           <div>
-            <div style="font-size:15px; font-weight:700; color:#0F172A;">${esc(childShort(req) || 'Benjamin Dubois')}</div>
-            <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:2px;">Grade 5</div>
+            <div style="font-size:15px; font-weight:800; color:#0F172A;">${esc(childShort(req) || 'Benjamin Dubois')}</div>
+            <div style="font-size:12.5px; color:#64748B; font-weight:600; margin-top:2px;">Grade 5 · Student Walker</div>
           </div>
         </div>`;
 
     const isNew = req.status === 'new';
 
     el.innerHTML = `
-      <div style="padding:4px 0 24px;">
-        <!-- 1. Guardian Header -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-          <div style="display:flex; align-items:center; gap:14px; min-width:0; flex:1;">
-            <div style="position:relative; flex-shrink:0;">
-              <img src="${esc(parentPhoto)}" alt="${esc(parentName)}" style="width:52px; height:52px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sarah.jpg';" />
-            </div>
-            <div style="min-width:0; flex:1;">
-              <div style="display:flex; align-items:center; gap:6px;">
-                <h3 style="font-size:16px; font-weight:800; color:#0F172A; margin:0; line-height:1.2;">${esc(parentName)}</h3>
-                <svg style="width:16px; height:16px; flex-shrink:0; color:#2563EB;" viewBox="0 0 24 24" fill="currentColor">
-                  <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:2px;">Primary guardian</div>
-              <div style="font-size:13.5px; color:#0F172A; font-weight:600; margin-top:2px;">${esc(parentPhone)}</div>
-            </div>
-          </div>
-          <button type="button" class="btn-icon-subtle" onclick="openChatWith('${esc(req.parentId || 'PRNT-9042')}')" title="Message Parent" aria-label="Message Parent" style="width:44px; height:44px; border-radius:14px; background:#EFF6FF; color:#2563EB; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:background 0.15s ease;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
-            <i data-lucide="message-square" style="width:20px; height:20px;"></i>
-          </button>
-        </div>
+      <div style="padding:4px 0 28px; display:flex; flex-direction:column; gap:14px; font-family:var(--font-family, 'Manrope', sans-serif);">
 
-        <div style="height:1px; background:#F1F5F9; margin:18px 0;"></div>
+        <!-- 1. Guardian Header -->
+        <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:18px; padding:16px; box-shadow:0 2px 10px rgba(15,23,42,0.03);">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <div style="display:flex; align-items:center; gap:14px; min-width:0; flex:1;">
+              <div style="position:relative; flex-shrink:0;">
+                <img src="${esc(parentPhoto)}" alt="${esc(parentName)}" style="width:54px; height:54px; border-radius:50%; object-fit:cover; border:2px solid #EFF6FF;" onerror="this.src='/assets/avatar_sadia.jpg';" />
+                <span style="position:absolute; bottom:0; right:0; width:13px; height:13px; background:#10B981; border:2px solid #FFFFFF; border-radius:50%;"></span>
+              </div>
+              <div style="min-width:0; flex:1;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <h3 style="font-size:16px; font-weight:800; color:#0F172A; margin:0; line-height:1.2;">${esc(parentName)}</h3>
+                  <span class="fb-verified-badge" title="Verified Account">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="#1877F2">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
+                    </svg>
+                  </span>
+                </div>
+                <div style="font-size:12px; font-weight:700; color:#64748B; margin-top:3px; display:flex; align-items:center; gap:6px;">
+                  <span style="background:#EFF6FF; color:#1D4ED8; padding:1px 7px; border-radius:4px; font-size:11px; font-weight:800;">Primary Guardian</span>
+                  <span>•</span>
+                  <span>Mother</span>
+                </div>
+                <div style="font-size:13px; color:#334155; font-weight:600; margin-top:4px; display:flex; align-items:center; gap:5px;">
+                  <i data-lucide="phone" style="width:12px; height:12px; color:#2563EB;"></i>
+                  <span>${esc(parentPhone)}</span>
+                </div>
+              </div>
+            </div>
+            <button type="button" onclick="openChatWith('${esc(req.parentId || 'PRNT-9042')}')" title="Message Parent" aria-label="Message Parent" style="width:44px; height:44px; border-radius:12px; background:#EFF6FF; color:#2563EB; border:1.5px solid #DBEAFE; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.15s ease;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
+              <i data-lucide="message-square" style="width:20px; height:20px;"></i>
+            </button>
+          </div>
+        </div>
 
         <!-- 2. Child Section -->
         <div>
-          <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">
-            ${childList.length > 1 ? 'CHILDREN' : 'CHILD'}
+          <div style="font-size:12px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; margin-left:2px; display:flex; align-items:center; gap:6px;">
+            <i data-lucide="users" style="width:14px; height:14px; color:#2563EB;"></i>
+            <span>${childList.length > 1 ? 'STUDENT WALKERS (' + childList.length + ')' : 'STUDENT WALKER'}</span>
           </div>
-          ${passengersHtml}
+          <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:16px; padding:14px 16px; box-shadow:0 2px 8px rgba(15,23,42,0.02); display:flex; flex-direction:column; gap:10px;">
+            ${passengersHtml}
+          </div>
         </div>
-
-        <div style="height:1px; background:#F1F5F9; margin:18px 0;"></div>
 
         <!-- 3. Route Section -->
         <div>
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-            <h3 style="font-size:18px; font-weight:800; color:#0F172A; margin:0;">Route</h3>
-            <span style="font-size:13px; color:#64748B; font-weight:500;">1.2 km · Est. 14 min</span>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; margin-left:2px;">
+            <div style="font-size:12px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.6px; display:flex; align-items:center; gap:6px;">
+              <i data-lucide="map-pin" style="width:14px; height:14px; color:#2563EB;"></i>
+              <span>Walking Route</span>
+            </div>
+            <span style="font-size:11.5px; font-weight:700; color:#15803D; background:#DCFCE7; padding:2px 8px; border-radius:6px; border:1px solid #BBF7D0;">1.2 km • Est. 14 min walk</span>
           </div>
-          <div style="display:flex; flex-direction:column;">
-            <div style="display:flex; align-items:flex-start; gap:14px;">
-              <div style="display:flex; flex-direction:column; align-items:center; width:20px; flex-shrink:0; padding-top:2px;">
-                <div style="width:18px; height:18px; border-radius:50%; border:2.5px solid #2563EB; background:#FFFFFF;"></div>
-                <div style="width:2px; height:26px; border-left:2px dotted #94A3B8; margin:3px 0;"></div>
+          
+          <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:16px; padding:16px; box-shadow:0 2px 8px rgba(15,23,42,0.02);">
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <!-- Pickup -->
+              <div style="display:flex; align-items:flex-start; gap:12px;">
+                <div style="display:flex; flex-direction:column; align-items:center; width:22px; flex-shrink:0; padding-top:2px;">
+                  <div style="width:16px; height:16px; border-radius:50%; border:3px solid #16A34A; background:#FFFFFF;"></div>
+                  <div style="width:2px; height:28px; border-left:2px dashed #CBD5E1; margin:3px 0;"></div>
+                </div>
+                <div style="min-width:0; flex:1;">
+                  <div style="font-size:10.5px; font-weight:800; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">MEETUP POINT (HOME)</div>
+                  <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(cleanPlace(req.pickupLocation) || '12 Elm Street')}</div>
+                </div>
               </div>
-              <div style="min-width:0; flex:1;">
-                <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">PICKUP</div>
-                <div style="font-size:14.5px; font-weight:700; color:#0F172A; margin-top:2px;">${esc(cleanPlace(req.pickupLocation) || '77 Rosedale Valley Road')}</div>
+
+              <!-- Dropoff -->
+              <div style="display:flex; align-items:flex-start; gap:12px;">
+                <div style="display:flex; align-items:center; justify-content:center; width:22px; flex-shrink:0; padding-top:1px;">
+                  <div style="width:18px; height:18px; border-radius:6px; background:#16A34A; color:#FFFFFF; display:flex; align-items:center; justify-content:center;">
+                    <i data-lucide="building-2" style="width:12px; height:12px; stroke-width:2.5;"></i>
+                  </div>
+                </div>
+                <div style="min-width:0; flex:1;">
+                  <div style="font-size:10.5px; font-weight:800; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">DESTINATION (SCHOOL)</div>
+                  <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(cleanPlace(req.dropoffLocation) || 'Greenfield School')}</div>
+                </div>
               </div>
             </div>
-            <div style="display:flex; align-items:flex-start; gap:14px;">
-              <div style="display:flex; align-items:center; justify-content:center; width:20px; flex-shrink:0; padding-top:2px;">
-                <i data-lucide="building-2" style="width:20px; height:20px; color:#2563EB;"></i>
-              </div>
-              <div style="min-width:0; flex:1;">
-                <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">DROP-OFF</div>
-                <div style="font-size:14.5px; font-weight:700; color:#0F172A; margin-top:2px;">${esc(cleanPlace(req.dropoffLocation) || 'Rosedale Public School')}</div>
-              </div>
+
+            <div style="margin-top:14px; padding:8px 12px; background:#F0FDF4; border:1px solid #DCFCE7; border-radius:10px; display:flex; align-items:center; gap:8px;">
+              <i data-lucide="shield-check" style="width:15px; height:15px; color:#16A34A; flex-shrink:0;"></i>
+              <span style="font-size:12px; font-weight:700; color:#166534;">Sidewalk Corridor • Pedestrian Crossing Escort</span>
             </div>
-          </div>
-          <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:14px;">
-            Sidewalks & Crossing Care
           </div>
         </div>
 
-        <div style="height:1px; background:#F1F5F9; margin:18px 0;"></div>
-
         <!-- 4. Schedule Section -->
         <div>
-          <h3 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 14px 0;">Schedule</h3>
-          <div style="background:#F0F5FD; border-radius:16px; padding:16px;">
+          <div style="font-size:12px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; margin-left:2px; display:flex; align-items:center; gap:6px;">
+            <i data-lucide="calendar-clock" style="width:14px; height:14px; color:#2563EB;"></i>
+            <span>Schedule &amp; Timing</span>
+          </div>
+          <div style="background:linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%); border:1.5px solid #E2E8F0; border-radius:16px; padding:16px; box-shadow:0 2px 8px rgba(15,23,42,0.02);">
             <div style="display:flex; align-items:center; justify-content:space-between;">
-              <div style="display:flex; align-items:center; gap:10px;">
-                <i data-lucide="calendar" style="width:18px; height:18px; color:#2563EB;"></i>
-                <span style="font-size:14.5px; color:#0F172A;">From <strong style="font-weight:800;">${esc(fromDate)}</strong></span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:32px; height:32px; border-radius:8px; background:#EFF6FF; display:flex; align-items:center; justify-content:center; color:#2563EB;">
+                  <i data-lucide="calendar" style="width:16px; height:16px;"></i>
+                </div>
+                <div>
+                  <div style="font-size:11px; font-weight:700; color:#64748B;">Date</div>
+                  <div style="font-size:14px; font-weight:800; color:#0F172A;">${esc(fromDate)}</div>
+                </div>
               </div>
-              <div style="font-size:13px; font-weight:600; color:#475569;">
+              <span style="background:#E2E8F0; color:#1E293B; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:6px;">
                 ${esc(daysLabel)}
-              </div>
+              </span>
             </div>
-            <div style="height:1px; background:rgba(203, 213, 225, 0.6); margin:14px 0;"></div>
-            <div style="display:flex; align-items:center;">
-              <div style="flex:1;">
-                <div style="font-size:12px; color:#64748B; font-weight:500;">Pickup</div>
-                <div style="font-size:18px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(pickupTimeStr)}</div>
+
+            <div style="height:1px; background:#E2E8F0; margin:14px 0;"></div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:10px 12px;">
+                <div style="font-size:11px; color:#64748B; font-weight:700; text-transform:uppercase;">Morning Meetup</div>
+                <div style="font-size:17px; font-weight:900; color:#1B2B68; margin-top:3px;">${esc(pickupTimeStr)}</div>
               </div>
-              <div style="width:1px; height:36px; background:rgba(203, 213, 225, 0.8); margin:0 16px;"></div>
-              <div style="flex:1;">
-                <div style="font-size:12px; color:#64748B; font-weight:500;">Return</div>
-                <div style="font-size:18px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(returnTimeStr)}</div>
+              <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:10px 12px;">
+                <div style="font-size:11px; color:#64748B; font-weight:700; text-transform:uppercase;">Afternoon Return</div>
+                <div style="font-size:17px; font-weight:900; color:#1B2B68; margin-top:3px;">${esc(returnTimeStr)}</div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- 5. Special Notes -->
-        ${req.notes ? `
-          <div style="height:1px; background:#F1F5F9; margin:18px 0;"></div>
-          <div>
-            <h3 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 14px 0;">Special notes</h3>
+        <div>
+          <div style="font-size:12px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; margin-left:2px; display:flex; align-items:center; gap:6px;">
+            <i data-lucide="file-text" style="width:14px; height:14px; color:#2563EB;"></i>
+            <span>Special Notes &amp; Safety Instructions</span>
+          </div>
+          <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:16px; padding:14px 16px; box-shadow:0 2px 8px rgba(15,23,42,0.02);">
             <div style="display:flex; align-items:flex-start; gap:12px;">
-              <i data-lucide="file-text" style="width:20px; height:20px; color:#64748B; flex-shrink:0; margin-top:2px;"></i>
-              <div>
-                <div style="font-size:13.5px; color:#334155; line-height:1.45;">
-                  ${esc(req.notes)}
+              <i data-lucide="file-text" style="width:20px; height:20px; color:#16A34A; flex-shrink:0; margin-top:2px;"></i>
+              <div style="min-width:0; flex:1;">
+                <div style="font-size:13.5px; color:#334155; line-height:1.5; font-weight:500;">
+                  ${esc(req.notes || 'Ensure children wear high-vis vests and remain on sidewalk corridor. Verify teacher at kindergarten gate.')}
                 </div>
               </div>
             </div>
+            <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:6px; padding-top:10px; border-top:1px solid #F1F5F9;">
+              <span style="background:#EFF6FF; color:#1D4ED8; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">
+                ✓ High-Vis Vests
+              </span>
+              <span style="background:#DCFCE7; color:#15803D; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">
+                Pedestrian Escort Care
+              </span>
+            </div>
           </div>
-        ` : ''}
+        </div>
 
-        ${walkPaymentHandleBlock(req, w, booking)}
+        <!-- 6. Fare & Earnings Breakdown (Never empty!) -->
+        <div>
+          <div style="font-size:12px; font-weight:800; color:#1B2B68; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; margin-left:2px; display:flex; align-items:center; gap:6px;">
+            <i data-lucide="wallet" style="width:14px; height:14px; color:#2563EB;"></i>
+            <span>WalkShare Contribution &amp; Payout</span>
+          </div>
+          <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:16px; padding:16px; box-shadow:0 2px 8px rgba(15,23,42,0.02);">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase;">Contribution Rate</div>
+                <div style="font-size:22px; font-weight:900; color:#16A34A; margin-top:2px;">
+                  ${displayRate} <span style="font-size:13px; font-weight:600; color:#64748B;">/ ${period}</span>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <span style="background:#DCFCE7; color:#15803D; font-size:11px; font-weight:800; padding:3px 8px; border-radius:6px;">
+                  100% Direct Payout
+                </span>
+                <div style="font-size:11px; color:#64748B; margin-top:4px;">Zero Platform Fee</div>
+              </div>
+            </div>
+            <div style="height:1px; background:#F1F5F9; margin:12px 0;"></div>
+            <div style="font-size:12.5px; color:#475569; display:flex; align-items:center; gap:6px;">
+              <i data-lucide="check-circle" style="width:14px; height:14px; color:#16A34A; flex-shrink:0;"></i>
+              <span>Direct Interac e-Transfer (${esc(w.email || 'sophie.bouchard@interac.ca')}) or Cash</span>
+            </div>
+          </div>
+        </div>
 
         ${block ? `<p class="drv-home-gate" style="margin-top:14px; margin-bottom:12px;">${esc(block)}</p>` : ''}
 
-        <!-- 6. Bottom Actions / Status -->
-        <div style="margin-top:24px;">
+        <!-- 7. Bottom Actions / Status -->
+        <div style="margin-top:8px;">
           ${isNew ? `
             <div style="display:flex; flex-direction:column; gap:10px;">
-              <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" ${(!canAccept(w) || block) ? 'disabled' : ''} style="height:48px; font-size:15px; font-weight:800; border-radius:12px; background:#1B2B68; color:#FFFFFF; border:none; cursor:pointer;">
-                Accept at ${displayRate}/${period}
+              <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" ${(!canAccept(w) || block) ? 'disabled' : ''} style="height:50px; font-size:15px; font-weight:800; border-radius:14px; background:#1B2B68; color:#FFFFFF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(27,43,104,0.25);">
+                <i data-lucide="check-circle-2" style="width:18px; height:18px;"></i>
+                <span>Accept Request (${displayRate}/${period})</span>
               </button>
-              <button type="button" onclick="declineWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" style="height:44px; font-size:14px; font-weight:700; border-radius:12px; background:#FFF1F2; border:1px solid #FECDD3; color:#E11D48; cursor:pointer;">
-                Decline
+              <button type="button" onclick="declineWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" style="height:46px; font-size:14px; font-weight:700; border-radius:14px; background:#FFF1F2; border:1.5px solid #FECDD3; color:#E11D48; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                <i data-lucide="x-circle" style="width:16px; height:16px;"></i>
+                <span>Decline Request</span>
               </button>
             </div>
           ` : req.status === 'declined' ? `
-            <div style="padding:14px 16px; background:#FEF2F2; border:1px solid #FECDD3; border-radius:14px; display:flex; align-items:center; gap:10px; color:#991B1B; font-size:14px; font-weight:700;">
-              <i data-lucide="x-circle" style="width:20px; height:20px; color:#DC2626;"></i>
-              <span>Request declined</span>
+            <div style="padding:16px; background:#FEF2F2; border:1.5px solid #FECDD3; border-radius:16px; display:flex; align-items:center; gap:12px; color:#991B1B;">
+              <i data-lucide="x-circle" style="width:22px; height:22px; color:#DC2626; flex-shrink:0;"></i>
+              <div>
+                <div style="font-size:14px; font-weight:800;">Request Declined</div>
+                <div style="font-size:12px; color:#B91C1C; margin-top:2px;">This walk escort request has been declined.</div>
+              </div>
             </div>
           ` : `
-            <div style="padding:14px 16px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:14px; display:flex; align-items:center; gap:10px; color:#166534; font-size:14px; font-weight:700;">
-              <i data-lucide="check-circle-2" style="width:20px; height:20px; color:#16A34A;"></i>
-              <span>Accepted · Scheduled in Calendar</span>
+            <div style="padding:16px; background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <i data-lucide="check-circle-2" style="width:22px; height:22px; color:#16A34A; flex-shrink:0;"></i>
+                <div>
+                  <div style="font-size:14px; font-weight:800; color:#166534;">Accepted &amp; Confirmed</div>
+                  <div style="font-size:12px; color:#15803D; margin-top:2px;">Scheduled in your walking calendar</div>
+                </div>
+              </div>
+              <button type="button" class="btn-primary" onclick="navigateTo('wsSchedule')" style="padding:6px 14px; font-size:12px; font-weight:700; border-radius:8px; background:#15803D;">
+                View Schedule
+              </button>
             </div>
           `}
         </div>
