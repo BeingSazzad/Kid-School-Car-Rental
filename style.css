@@ -4027,7 +4027,7 @@ svg.lucide {
    ========================================================= */
 .tracking-drawer-sheet {
   position: absolute;
-  bottom: 60px;
+  bottom: 0;
   left: 0;
   right: 0;
   background-color: #FFFFFF;
@@ -4035,7 +4035,7 @@ svg.lucide {
   border-top-right-radius: 24px;
   border-top: 1px solid rgba(226, 232, 240, 0.9);
   box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.08);
-  padding: 12px 20px 14px;
+  padding: 12px 20px calc(24px + env(safe-area-inset-bottom, 12px));
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -22320,7 +22320,7 @@ label.drv-upload-tile {
   flex-shrink: 0 !important;
   width: 100% !important;
   background: #FFFFFF !important;
-  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 6px)) !important;
+  padding: 14px 20px calc(24px + env(safe-area-inset-bottom, 14px)) !important;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05) !important;
   border-top: 1px solid #F1F5F9 !important;
   box-sizing: border-box !important;

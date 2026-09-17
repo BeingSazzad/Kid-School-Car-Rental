@@ -1712,7 +1712,7 @@
   flex-shrink: 0 !important;
   width: 100% !important;
   background: #FFFFFF !important;
-  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 6px)) !important;
+  padding: 14px 20px calc(24px + env(safe-area-inset-bottom, 14px)) !important;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05) !important;
   border-top: 1px solid #F1F5F9 !important;
   box-sizing: border-box !important;
@@ -6996,18 +6996,10 @@
           <button type="button" class="bd-clean-icon-btn" id="btnTripDetailsMore" onclick="event.stopPropagation(); window.toggleTripDetailsMenu()" aria-label="Trip Options" title="Trip Options">
             <i data-lucide="more-vertical" style="width:18px;height:18px;"></i>
           </button>
-          <div class="trip-details-dropdown" id="tripDetailsDropdownMenu" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1); width: 220px; padding: 6px; z-index: 100; flex-direction: column; gap: 2px;">
+          <div class="trip-details-dropdown" id="tripDetailsDropdownMenu" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1); width: 190px; padding: 6px; z-index: 100; flex-direction: column; gap: 2px;">
             <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.handleTripEditAction('editRide'); window.toggleTripDetailsMenu(false);">
-              <i data-lucide="pencil" style="width:14px;height:14px; color:#1B2B68;"></i>
+              <i data-lucide="edit-3" style="width:14px;height:14px; color:#1B2B68;"></i>
               <span style="font-weight:600; font-size:13px; color:#0F172A;">Edit Trip Details</span>
-            </button>
-            <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.handleTripEditAction('reschedule'); window.toggleTripDetailsMenu(false);">
-              <i data-lucide="calendar" style="width:14px;height:14px; color:#3B82F6;"></i>
-              <span style="font-weight:600; font-size:13px; color:#0F172A;">Reschedule Timing</span>
-            </button>
-            <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.navigateTo('messages'); window.toggleTripDetailsMenu(false);">
-              <i data-lucide="message-square" style="width:14px;height:14px; color:#10B981;"></i>
-              <span style="font-weight:600; font-size:13px; color:#0F172A;">Message Driver</span>
             </button>
             <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.openTripReport(window.appState.activeBookingId); window.toggleTripDetailsMenu(false);">
               <i data-lucide="flag" style="width:14px;height:14px; color:#F59E0B;"></i>
@@ -7094,21 +7086,21 @@
           <!-- Trip Stats 2-Column Strip -->
           <div class="bd-stats-strip">
             <div class="bd-stat-box">
-              <div class="bd-stat-icon-wrap">
+              <div class="bd-stat-icon-wrap" id="detailStatDistIconWrap">
                 <i data-lucide="car" style="width:16px;height:16px;"></i>
               </div>
               <div>
                 <div class="bd-stat-val" id="detailStatDistance">12.5 km</div>
-                <div class="bd-stat-lbl">Est. distance</div>
+                <div class="bd-stat-lbl" id="detailStatDistLabel">Est. distance</div>
               </div>
             </div>
             <div class="bd-stat-box">
-              <div class="bd-stat-icon-wrap">
+              <div class="bd-stat-icon-wrap" id="detailStatDurIconWrap">
                 <i data-lucide="clock" style="width:16px;height:16px;"></i>
               </div>
               <div>
                 <div class="bd-stat-val" id="detailStatDuration">30 min</div>
-                <div class="bd-stat-lbl">Est. duration</div>
+                <div class="bd-stat-lbl" id="detailStatDurLabel">Est. duration</div>
               </div>
             </div>
           </div>
@@ -7145,7 +7137,9 @@
           </div>
 
           <div class="bd-vehicle-row" id="detailVehicleRowClickable" onclick="openDriverProfile(window.currentBookingProviderId || 'tariq', 'bookingDetails')" style="cursor: pointer;" title="View Vehicle & Driver Details">
-            <img src="/assets/vehicle_hiace_white.jpg" alt="Vehicle" id="detailVehicleImage" class="bd-vehicle-thumb" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
+            <div id="detailVehicleMediaWrap" style="display: flex; align-items: center; flex-shrink: 0;">
+              <img src="/assets/vehicle_hiace_white.jpg" alt="Vehicle" id="detailVehicleImage" class="bd-vehicle-thumb" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
+            </div>
             <div style="min-width: 0; flex: 1;">
               <div class="bd-vehicle-title" id="detailVehicleName">Toyota Hiace</div>
               <div class="bd-vehicle-desc" id="detailVehiclePlate">SCH-4091 • White • 12 Seater</div>
@@ -11474,10 +11468,10 @@
     </div>
   </div>
 
-  <script type="module" src="/app.js?v=20260916-cleanprofile3"></script>
-  <script type="module" src="/mvp-parent.js?v=20260916-cleanprofile3"></script>
-  <script type="module" src="/mvp-driver.js?v=20260916-cleanprofile3"></script>
-  <script type="module" src="/mvp-walkshare.js?v=20260916-cleanprofile3"></script>
+  <script type="module" src="/app.js?v=20260917-cachebust1"></script>
+  <script type="module" src="/mvp-parent.js?v=20260917-cachebust1"></script>
+  <script type="module" src="/mvp-driver.js?v=20260917-cachebust1"></script>
+  <script type="module" src="/mvp-walkshare.js?v=20260917-cachebust1"></script>
 </body>
 
 </html>

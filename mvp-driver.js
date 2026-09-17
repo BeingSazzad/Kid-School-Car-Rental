@@ -3543,15 +3543,7 @@
     }
 
     if (handleStatus === 'shared') {
-      return `
-      <section class="drv-req-block" style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:12px; padding:14px; margin-top:12px;">
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-          <i data-lucide="check-circle-2" style="width:18px; height:18px; color:#16A34A;"></i>
-          <h4 class="drv-req-label" style="margin:0; font-size:13.5px; font-weight:700; color:#166534;">Payment Handle Shared</h4>
-        </div>
-        <p class="drv-req-value" style="font-weight:700; color:#0F172A; margin:4px 0 2px 0; font-size:14px;">${esc(handleValue)}</p>
-        <p class="drv-req-note" style="margin:0; font-size:12px; color:#475569;">Parent has direct access to send payment via Interac e-Transfer. 100% of ride fees stay with you.</p>
-      </section>`;
+      return '';
     }
 
     if (handleStatus === 'cash') {

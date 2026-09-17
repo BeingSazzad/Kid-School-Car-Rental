@@ -4426,6 +4426,30 @@ window.openManageBookingModal = function () {
   modal.style.justifyContent = 'center';
 };
 
+function addMinutesToTime(timeStr, minutesToAdd) {
+  if (!timeStr) return '';
+  const match = String(timeStr).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!match) return timeStr;
+  let hours = parseInt(match[1], 10);
+  const minutes = parseInt(match[2], 10);
+  const meridian = match[3].toUpperCase();
+  if (meridian === 'PM' && hours < 12) hours += 12;
+  if (meridian === 'AM' && hours === 12) hours = 0;
+  
+  let totalMin = hours * 60 + minutes + minutesToAdd;
+  totalMin = (totalMin + 24 * 60) % (24 * 60);
+  
+  let newH = Math.floor(totalMin / 60);
+  const newM = totalMin % 60;
+  const newMeridian = newH >= 12 ? 'PM' : 'AM';
+  if (newH > 12) newH -= 12;
+  if (newH === 0) newH = 12;
+  
+  const padM = newM < 10 ? '0' + newM : String(newM);
+  const padH = newH < 10 ? '0' + newH : String(newH);
+  return `${padH}:${padM} ${newMeridian}`;
+}
+
 function renderBookingDetails(bookingId) {
   const booking = window.appState.bookings.find(b => b.id === bookingId) || window.appState.bookings[0];
   if (!booking) return;
@@ -4436,7 +4460,7 @@ function renderBookingDetails(bookingId) {
   if (!children.length && Array.isArray(window.appState.children) && window.appState.children.length) {
     children = window.appState.children.slice(0, 1);
   }
-  const isWalk = provider.category === 'walkshare' || /walk/i.test(provider.name || '') || /walk/i.test(provider.vehicle || '');
+  const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena' || /walk/i.test(provider.name || '') || /walk/i.test(provider.vehicle || '');
 
   const setText = (id, value) => {
     const el = document.getElementById(id);
@@ -4465,7 +4489,7 @@ function renderBookingDetails(bookingId) {
 
   // 1. Hero Summary Titles & Date (Audited Input -> Output)
   const isRecurring = booking.frequency === 'recurring';
-  const isBothWay = booking.direction === 'bothway';
+  const isBothWay = Boolean(booking.direction === 'bothway');
   
   // Option A Format: Home ⇄ Greenfield International
   const cleanPickupShort = /home/i.test(booking.pickupLocation || '') ? 'Home' : String(booking.pickupLocation || 'Home').replace(/\s*\([^)]*\)/g, '').split(',')[0].trim();
@@ -4504,7 +4528,7 @@ function renderBookingDetails(bookingId) {
   const modalVehEl = document.getElementById('modalSafetyVehicleSub');
   if (modalPinEl) modalPinEl.textContent = pin;
   if (modalSubEl) modalSubEl.textContent = children.map(c => c.name.split(' ')[0]).join(' + ') || 'Children';
-  if (modalVehEl) modalVehEl.textContent = (provider.vehicle || '') + (provider.plate ? ' · ' + provider.plate : '');
+  if (modalVehEl) modalVehEl.textContent = isWalk ? 'Walking Escort Group' : ((provider.vehicle || '') + (provider.plate ? ' · ' + provider.plate : ''));
 
   // 2. Status Badge in Hero
   const heroStatusPill = document.getElementById('detailHeroStatusPill');
@@ -4529,10 +4553,17 @@ function renderBookingDetails(bookingId) {
     }
   }
 
-  // 3. Journey & Route Card (Audited for Scheduled, Live & Completed)
-  setText('detailOutboundTime', booking.outboundTime || '07:30 AM');
-  setText('detailSchoolTime', booking.schoolArriveTime || '07:45 AM');
-  setText('detailReturnTime', booking.returnTime || '01:00 PM');
+  // 3. Journey & Route Card (Chronologically Calculated for Scheduled, Live & Completed)
+  const outboundTime = booking.outboundTime || '07:30 AM';
+  let schoolArriveTime = booking.schoolArriveTime;
+  if (!schoolArriveTime) {
+    schoolArriveTime = addMinutesToTime(outboundTime, isWalk ? 18 : 25);
+  }
+  const returnTime = booking.returnTime || (isBothWay ? addMinutesToTime(schoolArriveTime, 300) : '01:00 PM');
+
+  setText('detailOutboundTime', outboundTime);
+  setText('detailSchoolTime', schoolArriveTime);
+  setText('detailReturnTime', returnTime);
   setText('detailPickupAddr', pickupStreet + ', Toronto, ON');
   setText('detailSchoolName', shortSchool.includes('School') || shortSchool.includes('Pre-school') ? shortSchool : shortSchool + ' International School');
   setText('detailReturnAddr', 'Drop-off at ' + pickupStreet + ', Toronto, ON');
@@ -4545,7 +4576,7 @@ function renderBookingDetails(bookingId) {
     // ACTIVE / IN-PROGRESS
     if (pickupStatusTag) {
       pickupStatusTag.className = 'bd-rt-pill-tag is-green';
-      pickupStatusTag.textContent = 'Picked up';
+      pickupStatusTag.textContent = isWalk ? 'Walking' : 'Picked up';
     }
     if (dropoffStatusTag) {
       dropoffStatusTag.className = 'bd-rt-pill-tag is-blue';
@@ -4559,15 +4590,15 @@ function renderBookingDetails(bookingId) {
     // COMPLETED (History)
     if (pickupStatusTag) {
       pickupStatusTag.className = 'bd-rt-pill-tag is-green';
-      pickupStatusTag.textContent = 'Completed (07:32 AM)';
+      pickupStatusTag.textContent = `Completed (${outboundTime})`;
     }
     if (dropoffStatusTag) {
       dropoffStatusTag.className = 'bd-rt-pill-tag is-green';
-      dropoffStatusTag.textContent = 'Delivered (07:46 AM)';
+      dropoffStatusTag.textContent = `Delivered (${schoolArriveTime})`;
     }
     if (returnStatusTag) {
       returnStatusTag.className = 'bd-rt-pill-tag is-green';
-      returnStatusTag.textContent = 'Completed (01:04 PM)';
+      returnStatusTag.textContent = `Completed (${returnTime})`;
     }
   } else if (isPending) {
     // PENDING REQUEST
@@ -4580,8 +4611,8 @@ function renderBookingDetails(bookingId) {
       dropoffStatusTag.textContent = 'Pending';
     }
     if (returnStatusTag) {
-      dropoffStatusTag.className = 'bd-rt-pill-tag is-grey';
-      dropoffStatusTag.textContent = 'Pending';
+      returnStatusTag.className = 'bd-rt-pill-tag is-grey';
+      returnStatusTag.textContent = 'Pending';
     }
   } else {
     // SCHEDULED / CONFIRMED BOOKING (Before trip starts)
@@ -4591,25 +4622,43 @@ function renderBookingDetails(bookingId) {
     }
     if (dropoffStatusTag) {
       dropoffStatusTag.className = 'bd-rt-pill-tag is-grey';
-      dropoffStatusTag.textContent = 'School Drop';
+      dropoffStatusTag.textContent = 'Drop-off';
     }
     if (returnStatusTag) {
-      dropoffStatusTag.className = 'bd-rt-pill-tag is-grey';
-      dropoffStatusTag.textContent = 'Return Leg';
+      returnStatusTag.className = 'bd-rt-pill-tag is-grey';
+      returnStatusTag.textContent = 'Return Leg';
     }
   }
 
+  // Isolate Return Leg strictly for round trips
   const retBox = document.getElementById('detailReturnLegBox');
   const retLine = document.getElementById('detailReturnRailLine');
-  const both = booking.direction === 'bothway';
-  if (retBox) retBox.style.display = both ? 'flex' : 'none';
-  if (retLine) retLine.style.display = both ? 'block' : 'none';
+  if (retBox) retBox.style.display = isBothWay ? 'flex' : 'none';
+  if (retLine) retLine.style.display = isBothWay ? 'block' : 'none';
 
-  // Stats Strip
-  setText('detailStatDistance', booking.distance || '12.5 km');
-  setText('detailStatDuration', booking.duration || '30 min');
+  // Stats Strip (WalkShare vs Vehicle metric isolation)
+  const distIconWrap = document.getElementById('detailStatDistIconWrap');
+  const durIconWrap = document.getElementById('detailStatDurIconWrap');
+  const distLabel = document.getElementById('detailStatDistLabel');
+  const durLabel = document.getElementById('detailStatDurLabel');
 
-  // 4. Driver & Vehicle Card
+  if (isWalk) {
+    setText('detailStatDistance', (booking.distance && !booking.distance.includes('12.5')) ? booking.distance : '1.2 km');
+    setText('detailStatDuration', (booking.duration && !booking.duration.includes('30 min')) ? booking.duration : '18 min');
+    if (distIconWrap) distIconWrap.innerHTML = '<i data-lucide="footprints" style="width:16px;height:16px;"></i>';
+    if (durIconWrap) durIconWrap.innerHTML = '<i data-lucide="clock" style="width:16px;height:16px;"></i>';
+    if (distLabel) distLabel.textContent = 'Est. walk distance';
+    if (durLabel) durLabel.textContent = 'Est. walk time';
+  } else {
+    setText('detailStatDistance', booking.distance || '12.5 km');
+    setText('detailStatDuration', booking.duration || '30 min');
+    if (distIconWrap) distIconWrap.innerHTML = '<i data-lucide="car" style="width:16px;height:16px;"></i>';
+    if (durIconWrap) durIconWrap.innerHTML = '<i data-lucide="clock" style="width:16px;height:16px;"></i>';
+    if (distLabel) distLabel.textContent = 'Est. distance';
+    if (durLabel) durLabel.textContent = 'Est. duration';
+  }
+
+  // 4. Driver & Vehicle / Chaperone Card
   setText('detailProviderName', String(provider.name || 'Mohammad Rahim').replace(/\s*\(WalkShare\)/i, ''));
   setText('detailProviderRating', String(provider.rating != null ? provider.rating : '4.8'));
   setText('detailProviderReviews', provider.reviewsCount != null ? '(' + provider.reviewsCount + ' trips)' : '(120 trips)');
@@ -4619,7 +4668,7 @@ function renderBookingDetails(bookingId) {
   setText(
     'detailVehiclePlate',
     isWalk
-      ? ([provider.zone || provider.serviceArea, provider.seats ? provider.seats + ' kids capacity' : 'Verified Escort'].filter(Boolean).join(' • '))
+      ? ([provider.zone || provider.serviceArea || 'Elm → Greenfield', provider.seats ? provider.seats + ' kids capacity' : 'Verified Escort'].filter(Boolean).join(' • '))
       : [(provider.plate || 'SCH-4091'), 'White', (provider.seats ? provider.seats + ' Seater' : '12 Seater')].join(' • ')
   );
 
@@ -4629,10 +4678,19 @@ function renderBookingDetails(bookingId) {
     pPhoto.onerror = function () { this.onerror = null; this.src = '/assets/avatar_tariq.jpg'; };
   }
 
-  const vPhoto = document.getElementById('detailVehicleImage');
-  if (vPhoto) {
-    vPhoto.src = isWalk ? '/assets/vehicle_walkshare.png' : '/assets/vehicle_hiace_white.jpg';
-    vPhoto.onerror = function () { this.onerror = null; this.src = '/assets/vehicle_hiace_white.jpg'; };
+  const mediaWrap = document.getElementById('detailVehicleMediaWrap');
+  if (mediaWrap) {
+    if (isWalk) {
+      mediaWrap.innerHTML = `
+        <div class="bd-walk-escort-thumb" style="width:48px;height:36px;border-radius:10px;background:#ECFDF5;border:1px solid #A7F3D0;display:flex;align-items:center;justify-content:center;color:#059669;flex-shrink:0;">
+          <i data-lucide="footprints" style="width:20px;height:20px;"></i>
+        </div>
+      `;
+    } else {
+      mediaWrap.innerHTML = `
+        <img src="${provider.vehiclePhoto || '/assets/vehicle_hiace_white.jpg'}" alt="Vehicle" id="detailVehicleImage" class="bd-vehicle-thumb" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
+      `;
+    }
   }
 
   const driverInfoClickable = document.getElementById('detailDriverInfoClickable');
@@ -4704,7 +4762,7 @@ function renderBookingDetails(bookingId) {
   setText('detailTileScheduleSub', isRecurring ? 'Repeats every Mon – Fri • Until Dec 31, 2026' : `${tripDate} • ${isBothWay ? 'Round Trip' : 'Single Ride'}`);
   setText('detailTileFareSub', isAgreed ? `Rate agreed: $${currentRate}/${rateUnitText} · Direct payment` : 'Direct payment to provider');
 
-  // 8. Bottom Sticky Contextual Actions
+  // 8. Bottom Sticky Contextual Actions (Hick's Law - Single Focused CTA)
   const primaryTrackBtn = document.getElementById('btnTrackLivePrimary');
   const actionsWrap = document.getElementById('detailContextualActions');
 
@@ -4712,28 +4770,28 @@ function renderBookingDetails(bookingId) {
     if (isLive) {
       if (primaryTrackBtn) {
         primaryTrackBtn.style.display = 'flex';
-        primaryTrackBtn.innerHTML = '<i data-lucide="map-pin" style="width:18px;height:18px;"></i> <span>Track live vehicle</span>';
+        primaryTrackBtn.innerHTML = isWalk 
+          ? '<i data-lucide="footprints" style="width:18px;height:18px;"></i> <span>Track live walk</span>'
+          : '<i data-lucide="map-pin" style="width:18px;height:18px;"></i> <span>Track live vehicle</span>';
         primaryTrackBtn.onclick = function () { openLiveTracking(booking.id); };
       }
-      actionsWrap.innerHTML = `
-        <button type="button" class="bd-btn-outline danger" onclick="openSosModal()" style="width:100%; justify-content:center;">
-          <i data-lucide="alert-triangle" style="width:16px;height:16px;"></i>
-          <span>Emergency / SOS Help</span>
-        </button>
-      `;
+      actionsWrap.innerHTML = '';
+      actionsWrap.style.display = 'none';
     } else if (isPending) {
       if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
+      actionsWrap.style.display = 'flex';
       actionsWrap.innerHTML = `
-        <button type="button" class="bd-btn-outline danger" onclick="cancelBooking('${booking.id}')" style="width:100%; justify-content:center;">
-          <i data-lucide="x-circle" style="width:16px;height:16px;"></i>
+        <button type="button" class="bd-btn-track-live" onclick="cancelBooking('${booking.id}')" style="background:#EF4444; width:100%; justify-content:center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);">
+          <i data-lucide="x-circle" style="width:18px;height:18px;"></i>
           <span>Cancel request</span>
         </button>
       `;
-    } else if (isCancelled) {
+    } else if (isCancelled || isCompleted) {
       if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
+      actionsWrap.style.display = 'flex';
       actionsWrap.innerHTML = `
-        <button type="button" class="bd-btn-outline" onclick="navigateToScreen('screen-browseCars')" style="width:100%; justify-content:center;">
-          <i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i>
+        <button type="button" class="bd-btn-track-live" onclick="navigateToScreen('screen-browseCars')" style="width:100%; justify-content:center;">
+          <i data-lucide="rotate-ccw" style="width:18px;height:18px;"></i>
           <span>Book again</span>
         </button>
       `;
@@ -4741,15 +4799,13 @@ function renderBookingDetails(bookingId) {
       // Confirmed / Scheduled
       if (primaryTrackBtn) {
         primaryTrackBtn.style.display = 'flex';
-        primaryTrackBtn.innerHTML = '<i data-lucide="map" style="width:18px;height:18px;"></i> <span>View route map</span>';
+        primaryTrackBtn.innerHTML = isWalk
+          ? '<i data-lucide="map" style="width:18px;height:18px;"></i> <span>View walk route</span>'
+          : '<i data-lucide="map" style="width:18px;height:18px;"></i> <span>View route map</span>';
         primaryTrackBtn.onclick = function () { openLiveTracking(booking.id); };
       }
-      actionsWrap.innerHTML = `
-        <button type="button" class="bd-btn-outline danger" onclick="cancelBooking('${booking.id}')" style="width:100%; justify-content:center;">
-          <i data-lucide="x-circle" style="width:16px;height:16px;"></i>
-          <span>Cancel booking</span>
-        </button>
-      `;
+      actionsWrap.innerHTML = '';
+      actionsWrap.style.display = 'none';
     }
   }
 
@@ -7048,21 +7104,10 @@ window.handleTripEditAction = function (action) {
   const booking = (window.appState.bookings || []).find(b => b.id === bookingId) || window.appState.bookings[0];
 
   if (action === 'editRide') {
-    const newNotes = prompt('Edit special instructions or pickup notes:', booking?.dropoffNote || 'Hand to school gate supervisor');
-    if (newNotes !== null) {
-      if (booking) booking.dropoffNote = newNotes;
-      if (window.showToast) window.showToast('✓ Trip instructions updated successfully!', 'success');
-      if (window.renderBookingDetails) window.renderBookingDetails(bookingId);
-    }
-  } else if (action === 'reschedule') {
-    const newTime = prompt('Enter new pickup time (e.g., 07:45 AM):', booking?.outboundTime || '07:30 AM');
-    if (newTime) {
-      if (booking) {
-        booking.outboundTime = newTime;
-        booking.scheduleText = `${booking.scheduleText?.split('•')[0] || 'Mon–Fri'} • ${newTime}`;
-      }
-      if (window.showToast) window.showToast(`✓ Commute rescheduled to ${newTime}`, 'success');
-      if (window.renderBookingDetails) window.renderBookingDetails(bookingId);
+    if (typeof window.openManageBookingModal === 'function') {
+      window.openManageBookingModal();
+    } else if (typeof window.modifyBooking === 'function') {
+      window.modifyBooking(bookingId);
     }
   } else if (action === 'cancel') {
     if (confirm(`Are you sure you want to cancel booking #${bookingId}?`)) {

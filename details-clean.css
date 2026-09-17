@@ -830,7 +830,7 @@
   flex-shrink: 0 !important;
   width: 100% !important;
   background: #FFFFFF !important;
-  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 6px)) !important;
+  padding: 14px 20px calc(24px + env(safe-area-inset-bottom, 14px)) !important;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05) !important;
   border-top: 1px solid #F1F5F9 !important;
   box-sizing: border-box !important;

@@ -1265,15 +1265,7 @@
     }
 
     if (handleStatus === 'shared') {
-      return `
-      <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:12px; padding:14px; margin-top:12px;">
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-          <i data-lucide="check-circle-2" style="width:18px; height:18px; color:#16A34A;"></i>
-          <h4 style="margin:0; font-size:13.5px; font-weight:700; color:#166534;">Payment Handle Shared</h4>
-        </div>
-        <p style="font-weight:700; color:#0F172A; margin:4px 0 2px 0; font-size:14px;">${esc(handleValue)}</p>
-        <p style="margin:0; font-size:12px; color:#475569;">Parent has your Interac handle. Escort fees stay 100% directly between you and the parent.</p>
-      </div>`;
+      return '';
     }
 
     if (handleStatus === 'cash') {
