@@ -4580,8 +4580,7 @@
       <!-- Section 3: FAQ, Support & Policies -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('help-circle', 'FAQ', "openDriverProfileChild('faq', event)")}
-        ${profileMenuRow('headphones', 'Contact Support', "openDriverProfileChild('contactSupport', event)")}
-        ${profileMenuRow('alert-triangle', 'Safety Center', "openDriverProfileChild('report', event)")}
+        ${profileMenuRow('headphones', 'Help & Safety Support', "openDriverProfileChild('contactSupport', event)")}
         ${profileMenuRow('shield', 'Privacy Policy', "openDriverProfileChild('privacy', event)")}
         ${profileMenuRow('file-text', 'Terms of Service', "openDriverProfileChild('legal', event)")}
         ${profileMenuRow('info', 'About Home2School', "openDriverProfileChild('about', event)")}

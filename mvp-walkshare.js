@@ -2047,8 +2047,7 @@
       <!-- Section 3: FAQ, Support & Policies -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('help-circle', 'FAQ', "openNestedScreen('faq', event)")}
-        ${profileMenuRow('headphones', 'Contact Support', "openNestedScreen('contactSupport', event)")}
-        ${profileMenuRow('alert-triangle', 'Safety Center', "openNestedScreen('report', event)")}
+        ${profileMenuRow('headphones', 'Help & Safety Support', "openNestedScreen('contactSupport', event)")}
         ${profileMenuRow('shield', 'Privacy Policy', "openNestedScreen('privacy', event)")}
         ${profileMenuRow('file-text', 'Terms of Service', "openNestedScreen('legal', event)")}
         ${profileMenuRow('info', 'About Home2School', "openNestedScreen('about', event)")}
