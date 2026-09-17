@@ -2033,10 +2033,9 @@
         </div>
       </div>
 
-      <!-- Online Status & Public Preview -->
+      <!-- Online Status -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${partnerOnlineRow(!!w.isOnline && isApproved(w), !isApproved(w))}
-        ${profileMenuRow('eye', 'Preview Public Profile & Rates', "openDriverProfile('sarah', 'wsProfile')")}
       </div>
 
       <!-- Section 1: Walking Group & Operations (3 links) -->
@@ -2690,14 +2689,14 @@
         </div>
 
         <div class="form-group" style="margin-bottom:12px;">
-          <label class="form-label">Weekly posted rate ($ CAD / child)</label>
+          <label class="form-label">Weekly posted rate ($ / child)</label>
           <div class="input-box-wrapper">
             <input class="form-input" type="number" id="wsRateAmount" value="${esc(r.amount || 75)}" placeholder="75" />
           </div>
         </div>
 
         <div class="form-group" style="margin-bottom:12px;">
-          <label class="form-label">Single walk rate (optional $ CAD)</label>
+          <label class="form-label">Single walk rate (optional $)</label>
           <div class="input-box-wrapper">
             <input class="form-input" type="number" id="wsDailyAmount" value="${esc(r.dailyAmount || 25)}" placeholder="25" />
           </div>

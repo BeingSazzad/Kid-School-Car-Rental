@@ -2568,14 +2568,14 @@
         </div>
 
         <div class="form-group" style="margin-bottom:12px;">
-          <label class="form-label">Weekly posted rate ($ CAD / child)</label>
+          <label class="form-label">Weekly posted rate ($ / child)</label>
           <div class="input-box-wrapper">
             <input class="form-input" id="drvRateAmt" type="number" value="${esc(r.amount || 120)}" placeholder="120" />
           </div>
         </div>
 
         <div class="form-group" style="margin-bottom:12px;">
-          <label class="form-label">Single ride / daily rate (optional $ CAD)</label>
+          <label class="form-label">Single ride / daily rate (optional $)</label>
           <div class="input-box-wrapper">
             <input class="form-input" id="drvDailyAmt" type="number" value="${esc(r.dailyAmount || 35)}" placeholder="35" />
           </div>
@@ -4566,10 +4566,9 @@
         </div>
       </div>
 
-      <!-- Online Status & Public Preview -->
+      <!-- Online Status -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${partnerOnlineRow('driver', !!d.isOnline && isApproved(d), !isApproved(d), 'window.setDriverOnlineStatus(this.checked)')}
-        ${profileMenuRow('eye', 'Preview Public Profile & Rates', "openDriverProfile('tariq', 'driverProfile')")}
       </div>
 
       <!-- Section 1: Operations (3 links) -->

@@ -5558,7 +5558,78 @@
 
         <!-- Dynamic reactive child cards container in a single unified grouped surface -->
         <div class="grouped-list-card" id="myChildrenListContainer">
-          <!-- Rendered dynamically by renderMyChildrenList() -->
+          <div class="grouped-row-item child-manage-row" onclick="openEditChildModal('arman')" role="button" tabindex="0" style="cursor:pointer; position: relative;">
+            <div class="grouped-row-left" style="gap: 12px; min-width: 0; flex: 1;">
+              <img src="/assets/avatar_arman.jpg" alt="Arman Khan" class="child-photo-avatar" onerror="this.src='/assets/avatar_arman.jpg';" />
+              <div style="min-width: 0; flex: 1;">
+                <div class="child-manage-name" style="font-size: 14px; font-weight: 700; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Arman Khan</div>
+                <div class="child-manage-sub" style="font-size: 12px; color: #64748B; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Grade 4 • Greenfield International School</div>
+              </div>
+            </div>
+            <div class="child-menu-wrapper" onclick="event.stopPropagation();">
+              <button type="button" class="btn-contact-action-icon btn-child-more" onclick="event.stopPropagation(); window.toggleChildMenu('arman')" aria-label="Options for Arman Khan" title="Options">
+                <i data-lucide="more-vertical" style="width:15px;height:15px;"></i>
+              </button>
+              <div class="child-dropdown-menu" id="childMenu-arman" style="display: none;">
+                <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.openEditChildModal('arman'); window.closeChildActionMenus();">
+                  <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+                  <span>Edit Profile</span>
+                </button>
+                <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.deleteChildProfile('arman'); window.closeChildActionMenus();">
+                  <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+                  <span>Delete Profile</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="grouped-row-item child-manage-row" onclick="openEditChildModal('emma')" role="button" tabindex="0" style="cursor:pointer; position: relative;">
+            <div class="grouped-row-left" style="gap: 12px; min-width: 0; flex: 1;">
+              <img src="/assets/avatar_emma.jpg" alt="Emma Khan" class="child-photo-avatar" onerror="this.src='/assets/avatar_emma.jpg';" />
+              <div style="min-width: 0; flex: 1;">
+                <div class="child-manage-name" style="font-size: 14px; font-weight: 700; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Emma Khan</div>
+                <div class="child-manage-sub" style="font-size: 12px; color: #64748B; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Grade 2 • Greenfield International School</div>
+              </div>
+            </div>
+            <div class="child-menu-wrapper" onclick="event.stopPropagation();">
+              <button type="button" class="btn-contact-action-icon btn-child-more" onclick="event.stopPropagation(); window.toggleChildMenu('emma')" aria-label="Options for Emma Khan" title="Options">
+                <i data-lucide="more-vertical" style="width:15px;height:15px;"></i>
+              </button>
+              <div class="child-dropdown-menu" id="childMenu-emma" style="display: none;">
+                <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.openEditChildModal('emma'); window.closeChildActionMenus();">
+                  <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+                  <span>Edit Profile</span>
+                </button>
+                <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.deleteChildProfile('emma'); window.closeChildActionMenus();">
+                  <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+                  <span>Delete Profile</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="grouped-row-item child-manage-row" onclick="openEditChildModal('zara')" role="button" tabindex="0" style="cursor:pointer; position: relative;">
+            <div class="grouped-row-left" style="gap: 12px; min-width: 0; flex: 1;">
+              <img src="/assets/avatar_zara.jpg" alt="Zara Khan" class="child-photo-avatar" onerror="this.src='/assets/avatar_zara.jpg';" />
+              <div style="min-width: 0; flex: 1;">
+                <div class="child-manage-name" style="font-size: 14px; font-weight: 700; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Zara Khan</div>
+                <div class="child-manage-sub" style="font-size: 12px; color: #64748B; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Pre-K • Sunshine Pre-school</div>
+              </div>
+            </div>
+            <div class="child-menu-wrapper" onclick="event.stopPropagation();">
+              <button type="button" class="btn-contact-action-icon btn-child-more" onclick="event.stopPropagation(); window.toggleChildMenu('zara')" aria-label="Options for Zara Khan" title="Options">
+                <i data-lucide="more-vertical" style="width:15px;height:15px;"></i>
+              </button>
+              <div class="child-dropdown-menu" id="childMenu-zara" style="display: none;">
+                <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.openEditChildModal('zara'); window.closeChildActionMenus();">
+                  <i data-lucide="pencil" style="width:13px;height:13px;"></i>
+                  <span>Edit Profile</span>
+                </button>
+                <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.deleteChildProfile('zara'); window.closeChildActionMenus();">
+                  <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+                  <span>Delete Profile</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Add Another Child Dashed Button with standard 16px spacing -->
@@ -6916,12 +6987,39 @@
         </div>
       </div>
 
-      <header class="bd-clean-topbar">
+      <header class="bd-clean-topbar" style="position: relative;">
         <button type="button" class="back-btn" onclick="handleBookingDetailsBack()" aria-label="Back">
           <i data-lucide="chevron-left" style="width:20px;height:20px;"></i>
         </button>
         <h2 class="bd-clean-title">Trip Details</h2>
-        <span style="width:20px;"></span>
+        <div style="position: relative;" class="trip-details-more-wrapper">
+          <button type="button" class="bd-clean-icon-btn" id="btnTripDetailsMore" onclick="event.stopPropagation(); window.toggleTripDetailsMenu()" aria-label="Trip Options" title="Trip Options">
+            <i data-lucide="more-vertical" style="width:18px;height:18px;"></i>
+          </button>
+          <div class="trip-details-dropdown" id="tripDetailsDropdownMenu" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1); width: 220px; padding: 6px; z-index: 100; flex-direction: column; gap: 2px;">
+            <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.handleTripEditAction('editRide'); window.toggleTripDetailsMenu(false);">
+              <i data-lucide="pencil" style="width:14px;height:14px; color:#1B2B68;"></i>
+              <span style="font-weight:600; font-size:13px; color:#0F172A;">Edit Trip Details</span>
+            </button>
+            <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.handleTripEditAction('reschedule'); window.toggleTripDetailsMenu(false);">
+              <i data-lucide="calendar" style="width:14px;height:14px; color:#3B82F6;"></i>
+              <span style="font-weight:600; font-size:13px; color:#0F172A;">Reschedule Timing</span>
+            </button>
+            <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.navigateTo('messages'); window.toggleTripDetailsMenu(false);">
+              <i data-lucide="message-square" style="width:14px;height:14px; color:#10B981;"></i>
+              <span style="font-weight:600; font-size:13px; color:#0F172A;">Message Driver</span>
+            </button>
+            <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.openTripReport(window.appState.activeBookingId); window.toggleTripDetailsMenu(false);">
+              <i data-lucide="flag" style="width:14px;height:14px; color:#F59E0B;"></i>
+              <span style="font-weight:600; font-size:13px; color:#0F172A;">Report an Issue</span>
+            </button>
+            <div style="height:1px; background:#F1F5F9; margin:4px 0;"></div>
+            <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.handleTripEditAction('cancel'); window.toggleTripDetailsMenu(false);">
+              <i data-lucide="x-circle" style="width:14px;height:14px; color:#EF4444;"></i>
+              <span style="font-weight:600; font-size:13px; color:#EF4444;">Cancel Booking</span>
+            </button>
+          </div>
+        </div>
       </header>
 
       <div class="screen-scroll-body bd-scroll">
@@ -7722,7 +7820,7 @@
               <span class="menu-title-text">My Children</span>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
-              <span style="background:#E2E8F0; color:#475569; font-size:11px; font-weight:700; padding:2px 7px; border-radius:99px;">2</span>
+              <span id="profileChildCountBadge" style="background:#E2E8F0; color:#475569; font-size:11px; font-weight:700; padding:2px 7px; border-radius:99px;">3</span>
               <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
             </div>
           </div>
@@ -8779,16 +8877,101 @@
         <span style="width: 26px;"></span>
       </div>
 
-      <div class="screen-scroll-body" style="text-align: center; gap: 16px;">
-        <div style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, var(--color-primary) 0%, #2563EB 100%); color: #fff; display: flex; align-items: center; justify-content: center; margin: 20px auto 0; box-shadow: 0 6px 18px rgba(37, 99, 235, 0.22);">
-          <i data-lucide="car" style="width: 30px; height: 30px;"></i>
+      <div class="screen-scroll-body" style="padding: 16px 16px 40px; display: flex; flex-direction: column; gap: 16px;">
+        <!-- Hero Header -->
+        <div style="text-align: center; padding: 12px 0 8px;">
+          <div style="width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, #111C44 0%, #1B2B68 100%); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; box-shadow: 0 8px 24px rgba(27, 43, 104, 0.25); border: 2px solid rgba(255,255,255,0.2);">
+            <img src="/assets/logo.svg" alt="H2S" style="width: 44px; height: 44px;" onerror="this.onerror=null;this.src='/assets/logo.png';" />
+          </div>
+          <h2 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0 0 4px; letter-spacing: -0.02em;">Home2School</h2>
+          <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #1B2B68; background: rgba(27,43,104,0.08); padding: 3px 10px; border-radius: 20px; margin-bottom: 6px;">Version 2.4.0 (Build 8942)</span>
+          <p style="font-size: 13px; color: #64748B; margin: 0 auto; line-height: 1.45; max-width: 290px;">
+            Safe neighborhood carpooling and supervised WalkShare for school children.
+          </p>
         </div>
 
-        <div>
-          <h2 style="font-size: 20px; font-weight: 800; color: #0F172A; letter-spacing: -0.02em;">Home2School</h2>
-          <p style="font-size: 12px; color: #64748B; margin-top: 6px; line-height: 1.45; max-width: 280px; margin-left: auto; margin-right: auto;">
-            Safe school rides and WalkShare for kids.
+        <!-- Trust Stats 2x2 Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px; color: #16A34A; font-size: 12px; font-weight: 700;">
+              <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+              <span>100% Vetted</span>
+            </div>
+            <span style="font-size: 11.5px; color: #64748B; line-height: 1.35;">Police CRC &amp; Vulnerable Sector Checks</span>
+          </div>
+
+          <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px; color: #2563EB; font-size: 12px; font-weight: 700;">
+              <i data-lucide="navigation" style="width: 16px; height: 16px;"></i>
+              <span>Live GPS</span>
+            </div>
+            <span style="font-size: 11.5px; color: #64748B; line-height: 1.35;">Real-time school trip tracking &amp; alerts</span>
+          </div>
+
+          <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px; color: #D97706; font-size: 12px; font-weight: 700;">
+              <i data-lucide="star" style="width: 16px; height: 16px; fill: #D97706;"></i>
+              <span>4.9 / 5.0</span>
+            </div>
+            <span style="font-size: 11.5px; color: #64748B; line-height: 1.35;">Rated by 1,200+ local families</span>
+          </div>
+
+          <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px; color: #7C3AED; font-size: 12px; font-weight: 700;">
+              <i data-lucide="award" style="width: 16px; height: 16px;"></i>
+              <span>99.8%</span>
+            </div>
+            <span style="font-size: 11.5px; color: #64748B; line-height: 1.35;">On-time school bell arrival record</span>
+          </div>
+        </div>
+
+        <!-- About Mission Card -->
+        <div class="profile-form-section-card" style="margin-bottom: 0; padding: 14px 16px;">
+          <h4 style="font-size: 14px; font-weight: 700; color: #0F172A; margin: 0 0 6px;">Our Mission</h4>
+          <p style="font-size: 12.5px; color: #64748B; line-height: 1.45; margin: 0;">
+            Home2School was built by parents to solve daily school commute challenges. We connect neighborhood families with verified parent drivers and licensed school walking chaperones on recurring routes.
           </p>
+        </div>
+
+        <!-- Links List -->
+        <div class="profile-menu-section" style="margin-bottom: 0;">
+          <div class="profile-menu-item" onclick="openNestedScreen('legal', event)">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap"><i data-lucide="file-text"></i></div>
+              <span class="menu-title-text">Terms &amp; Community Guidelines</span>
+            </div>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+          </div>
+
+          <div class="profile-menu-item" onclick="openNestedScreen('privacy', event)">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap"><i data-lucide="shield"></i></div>
+              <span class="menu-title-text">Privacy &amp; Data Protection</span>
+            </div>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+          </div>
+
+          <div class="profile-menu-item" onclick="openNestedScreen('faq', event)">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap"><i data-lucide="help-circle"></i></div>
+              <span class="menu-title-text">Frequently Asked Questions</span>
+            </div>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+          </div>
+
+          <div class="profile-menu-item" onclick="openNestedScreen('contactSupport', event)">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap"><i data-lucide="headphones"></i></div>
+              <span class="menu-title-text">Contact Support Team</span>
+            </div>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+          </div>
+        </div>
+
+        <!-- Footer Info -->
+        <div style="text-align: center; padding: 8px 0 16px;">
+          <p style="font-size: 11.5px; color: #94A3B8; margin: 0 0 2px;">© 2026 Home2School Technologies Inc.</p>
+          <p style="font-size: 11px; color: #CBD5E1; margin: 0;">Toronto, ON · Made with care for Canadian families</p>
         </div>
       </div>
 
@@ -10899,11 +11082,11 @@
           <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:12px;">
             <strong style="font-size:12px; color:#0F172A; margin-bottom:8px; display:block;">Platform Subscription Pricing (RFP Sec 4.7)</strong>
             <div class="form-group" style="margin-bottom:8px;">
-              <label class="form-label" style="font-size:10px;">Monthly Parent Fee ($ CAD)</label>
+              <label class="form-label" style="font-size:10px;">Monthly Parent Fee ($)</label>
               <input type="text" class="form-input" value="9.99" style="height:var(--control-height); font-size:var(--button-font-size);" />
             </div>
             <div class="form-group" style="margin-bottom:8px;">
-              <label class="form-label" style="font-size:10px;">Annual Parent Fee ($ CAD)</label>
+              <label class="form-label" style="font-size:10px;">Annual Parent Fee ($)</label>
               <input type="text" class="form-input" value="79.00" style="height:var(--control-height); font-size:var(--button-font-size);" />
             </div>
             <div class="form-group" style="margin-bottom:10px;">
@@ -11118,15 +11301,15 @@
       <div style="font-size: 12px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #F1F5F9;">
           <span>Monthly Parent Platform Access</span>
-          <strong>$9.99 CAD</strong>
+          <strong>$9.99</strong>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #F1F5F9; color: #64748B;">
           <span>Provincial Tax (13% HST)</span>
-          <span>$1.30 CAD</span>
+          <span>$1.30</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 10px 0; font-size: 14px; font-weight: 800; color: #0F172A;">
           <span>Total Paid</span>
-          <span style="color: var(--color-primary);">$11.29 CAD</span>
+          <span style="color: var(--color-primary);">$11.29</span>
         </div>
       </div>
 

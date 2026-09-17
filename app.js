@@ -4698,7 +4698,6 @@ function renderBookingDetails(bookingId) {
   }
 
   const payHandleWrap = document.getElementById('detailPaymentHandleWrap');
-}
 
   // 7. Special Notes & Schedule Tiles
   setText('detailSpecialNotesText', booking.notes || 'Gate 2 (Junior Wing Pickup) • Arman & Emma handover. Driver will wait 5 mins at home gate.');
@@ -4760,6 +4759,7 @@ function renderBookingDetails(bookingId) {
   if (payHandleWrap) {
     payHandleWrap.innerHTML = '';
   }
+}
 
 
 window.cancelBooking = function (bookingId) {
@@ -6982,10 +6982,10 @@ window.submitIssueReport = function () {
 /* ==========================================================
    Dedicated Trip Incident & Delay Report (#screen-report)
    ========================================================== */
-window.tripReportPreviousScreen = 'profile';
+window.tripReportPreviousScreen = 'bookingDetails';
 
 window.openTripReport = function (bookingId) {
-  window.tripReportPreviousScreen = currentScreen || 'bookingDetails';
+  window.tripReportPreviousScreen = (currentScreen && currentScreen !== 'report') ? currentScreen : 'bookingDetails';
   const booking = (window.appState.bookings || []).find(b => b.id === bookingId) || window.appState.bookings[0];
   const provider = (window.appState.providers || []).find(p => p.id === booking?.providerId) || window.appState.providers[0];
   const children = (booking?.childIds || []).map(id => (window.appState.children || []).find(c => c.id === id)?.name).filter(Boolean);
@@ -7007,12 +7007,71 @@ window.openTripReport = function (bookingId) {
 };
 
 window.handleTripReportBack = function () {
-  if (window.navReturnStack && window.navReturnStack.length) {
-    window.backNested(window.tripReportPreviousScreen || 'profile');
+  const prev = window.tripReportPreviousScreen || 'bookingDetails';
+  if (window.navReturnStack && window.navReturnStack.length && typeof window.backNested === 'function') {
+    window.backNested(prev);
     return;
   }
-  const prev = window.tripReportPreviousScreen || (activeNavRole() === 'driver' ? 'driverProfile' : activeNavRole() === 'walkshare' ? 'wsProfile' : 'profile');
-  window.navigateTo(prev, true);
+  if (typeof window.navigateTo === 'function') {
+    window.navigateTo(prev, true);
+  } else if (typeof window.navigateBack === 'function') {
+    window.navigateBack(prev);
+  }
+};
+
+/* ==========================================================
+   Trip Details 3-Dot Options Menu & Actions
+   ========================================================== */
+window.toggleTripDetailsMenu = function (force) {
+  const menu = document.getElementById('tripDetailsDropdownMenu');
+  if (!menu) return;
+  const isVisible = menu.style.display === 'flex';
+  const willOpen = typeof force === 'boolean' ? force : !isVisible;
+  menu.style.display = willOpen ? 'flex' : 'none';
+  if (willOpen && window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+if (!window.tripDetailsMenuListenerBound) {
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.trip-details-more-wrapper')) {
+      const menu = document.getElementById('tripDetailsDropdownMenu');
+      if (menu) menu.style.display = 'none';
+    }
+  });
+  window.tripDetailsMenuListenerBound = true;
+}
+
+window.handleTripEditAction = function (action) {
+  const bookingId = window.appState.activeBookingId || 'H2S-84920';
+  const booking = (window.appState.bookings || []).find(b => b.id === bookingId) || window.appState.bookings[0];
+
+  if (action === 'editRide') {
+    const newNotes = prompt('Edit special instructions or pickup notes:', booking?.dropoffNote || 'Hand to school gate supervisor');
+    if (newNotes !== null) {
+      if (booking) booking.dropoffNote = newNotes;
+      if (window.showToast) window.showToast('✓ Trip instructions updated successfully!', 'success');
+      if (window.renderBookingDetails) window.renderBookingDetails(bookingId);
+    }
+  } else if (action === 'reschedule') {
+    const newTime = prompt('Enter new pickup time (e.g., 07:45 AM):', booking?.outboundTime || '07:30 AM');
+    if (newTime) {
+      if (booking) {
+        booking.outboundTime = newTime;
+        booking.scheduleText = `${booking.scheduleText?.split('•')[0] || 'Mon–Fri'} • ${newTime}`;
+      }
+      if (window.showToast) window.showToast(`✓ Commute rescheduled to ${newTime}`, 'success');
+      if (window.renderBookingDetails) window.renderBookingDetails(bookingId);
+    }
+  } else if (action === 'cancel') {
+    if (confirm(`Are you sure you want to cancel booking #${bookingId}?`)) {
+      if (booking) booking.status = 'cancelled';
+      if (window.showToast) window.showToast(`✓ Booking #${bookingId} has been cancelled.`, 'info');
+      window.navigateTo('bookings');
+      if (window.renderBookingsList) window.renderBookingsList('cancelled');
+    }
+  }
 };
 
 window.onReportTripSelectChange = function (selectEl) {
