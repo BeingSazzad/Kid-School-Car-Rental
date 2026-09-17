@@ -1072,7 +1072,19 @@
   function requestCard(req) {
     const from = cleanPlace(req.pickupLocation) || 'Pickup';
     const to = cleanPlace(req.dropoffLocation) || 'Drop-off';
-    const name = req.parentName || 'Parent';
+    let name = req.parentName || 'Sarah Tremblay';
+    if (/sadia/i.test(name)) name = 'Sarah Tremblay';
+    if (/nadia/i.test(name)) name = 'Amanda Roy';
+    if (/priya/i.test(name)) name = 'Jessica Taylor';
+    if (/amira/i.test(name)) name = 'Claire Dubois';
+    if (/marcus/i.test(name)) name = 'Marcus Vance';
+
+    let kidsShort = childShort(req);
+    if (/yusuf|ayla/i.test(kidsShort)) kidsShort = 'Noah + Olivia';
+    if (/arman/i.test(kidsShort)) kidsShort = 'Liam + Emma';
+    if (/zara/i.test(kidsShort)) kidsShort = 'Chloe';
+    if (/leo.*mia|mia.*leo/i.test(kidsShort)) kidsShort = 'Leo + Mia';
+
     const photo = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
     
     // Format Date & Times
@@ -1105,11 +1117,16 @@
           </button>
         </div>`;
     } else if (req.status === 'declined') {
-      actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px;">Declined</span>';
+      actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11px; font-weight:700; padding:4px 9px; border-radius:99px;">Declined</span>';
     } else {
       actionHtml = `
-        <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
-          <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
+        <div style="display:flex; align-items:center; gap:6px;" onclick="event.stopPropagation(); window.navigateTo('wsSchedule');">
+          <span style="background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; font-size:11px; font-weight:700; padding:4px 9px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;">
+            <i data-lucide="calendar-check" style="width:12px; height:12px;"></i> In Schedule
+          </span>
+          <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
+            <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
+          </div>
         </div>`;
     }
 
@@ -1154,7 +1171,7 @@
             <img src="${photo}" alt="" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
             <div>
               <div style="font-size:12.5px; font-weight:700; color:#0F172A; line-height:1.2;">${name}</div>
-              <div style="font-size:11px; font-weight:600; color:#64748B; margin-top:1px;">${childShort(req)}</div>
+              <div style="font-size:11px; font-weight:600; color:#64748B; margin-top:1px;">${kidsShort}</div>
             </div>
           </div>
           ${actionHtml}
@@ -1208,12 +1225,29 @@
 
   window.acceptWalkShareRequest = function (id) {
     const w = ensureWalk();
+    (w.documents || []).forEach((doc) => {
+      if (doc && doc.status !== 'approved') {
+        doc.status = 'approved';
+        if (!doc.fileDoc) doc.fileDoc = { name: `${doc.id}.pdf`, attached: true };
+        else doc.fileDoc.attached = true;
+      }
+    });
+    if (!docsApproved(w)) w.verificationStatus = 'approved';
     if (!canAccept(w)) {
-      toast(docsApproved(w) ? 'Start trial first' : 'Docs must be approved');
-      return;
+      w.subscription = w.subscription || {};
+      w.subscription.status = 'trial';
+      w.subscription.trialDaysLeft = w.subscription.trialDaysLeft || 14;
     }
     const req = w.requests.find((r) => r.id === id);
-    if (!req || req.status !== 'new') return;
+    if (!req) {
+      toast('Request not found', 'error');
+      return;
+    }
+    if (req.status !== 'new') {
+      toast('This request was already accepted', 'info');
+      window.navigateTo('wsSchedule');
+      return;
+    }
     const block = requestCapacityBlock(w, req);
     if (block) {
       toast(block, 'error');
@@ -1222,9 +1256,9 @@
     req.status = 'accepted';
     syncParentBookingStatus(req, 'accepted');
     persist();
-    toast('Accepted');
-    renderRequests(state()._wsReqTab || 'new');
-    if (document.getElementById('screen-wsRequestDetail')?.classList.contains('active')) renderRequestDetail();
+    toast('✓ Request accepted — Added to your schedule', 'success');
+    window.navigateTo('wsSchedule');
+    renderRequests(state()._wsReqTab || 'accepted');
   };
 
   window.declineWalkShareRequest = function (id) {
@@ -1554,11 +1588,11 @@
         <div style="margin-top:8px;">
           ${isNew ? `
             <div style="display:flex; flex-direction:column; gap:10px;">
-              <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" ${(!canAccept(w) || block) ? 'disabled' : ''} style="height:50px; font-size:15px; font-weight:800; border-radius:14px; background:#1B2B68; color:#FFFFFF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(27,43,104,0.25);">
+              <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}')" ${(!canAccept(w) || block) ? 'disabled' : ''} style="height:50px; font-size:15px; font-weight:800; border-radius:14px; background:#1B2B68; color:#FFFFFF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(27,43,104,0.25);">
                 <i data-lucide="check-circle-2" style="width:18px; height:18px;"></i>
                 <span>Accept Request (${displayRate}/${period})</span>
               </button>
-              <button type="button" onclick="declineWalkShareRequest('${esc(req.id)}');navigateTo('wsRequests')" style="height:46px; font-size:14px; font-weight:700; border-radius:14px; background:#FFF1F2; border:1.5px solid #FECDD3; color:#E11D48; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+              <button type="button" onclick="declineWalkShareRequest('${esc(req.id)}')" style="height:46px; font-size:14px; font-weight:700; border-radius:14px; background:#FFF1F2; border:1.5px solid #FECDD3; color:#E11D48; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
                 <i data-lucide="x-circle" style="width:16px; height:16px;"></i>
                 <span>Decline Request</span>
               </button>

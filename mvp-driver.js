@@ -390,7 +390,7 @@
     if (/nadia/i.test(req.parentName || '')) req.parentName = 'Amanda Roy';
     if (/priya/i.test(req.parentName || '')) req.parentName = 'Jessica Taylor';
     if (/amira/i.test(req.parentName || '')) req.parentName = 'Claire Dubois';
-    if (/marcus\s+chen/i.test(req.parentName || '')) req.parentName = 'Marcus Vance';
+    if (/marcus(\s+chen)?/i.test(req.parentName || '')) req.parentName = 'Marcus Vance';
 
     if (typeof req.children?.[0] === 'string') {
       req.children = req.children.map((label, i) => ({
@@ -408,12 +408,21 @@
         if (/zara/i.test(c.name || '')) { c.name = 'Chloe Tremblay'; c.photo = '/assets/avatar_zara.jpg'; if (!c.grade) c.grade = 'Pre-K (5 yrs)'; }
         if (/arman/i.test(c.name || '')) { c.name = 'Liam Tremblay'; c.photo = '/assets/avatar_arman.jpg'; if (!c.grade) c.grade = 'Grade 4 (9 yrs)'; }
         if (/emma\s+khan/i.test(c.name || '')) { c.name = 'Emma Tremblay'; c.photo = '/assets/avatar_emma.jpg'; if (!c.grade) c.grade = 'Grade 2 (7 yrs)'; }
+        if (/yusuf/i.test(c.name || '')) { c.name = 'Noah Roy'; c.photo = '/assets/avatar_arman.jpg'; }
+        if (/ayla/i.test(c.name || '')) { c.name = 'Olivia Roy'; c.photo = '/assets/avatar_emma.jpg'; }
+        if (/leo(\s+chen)?/i.test(c.name || '')) { c.name = 'Leo Vance'; }
+        if (/mia(\s+chen)?/i.test(c.name || '')) { c.name = 'Mia Vance'; }
       });
     }
     req.pickupLocation = req.pickupLocation || req.routeFrom || '';
     req.dropoffLocation = req.dropoffLocation || req.routeTo || '';
     req.rateLabel = req.rateLabel || req.price || '';
-    req.childNamesShort = req.childNamesShort || childShort(req);
+    
+    let shortNames = childShort(req);
+    if (/yusuf|ayla/i.test(shortNames)) shortNames = 'Noah + Olivia';
+    if (/arman|zara/i.test(shortNames)) shortNames = 'Liam + Chloe';
+    if (/leo.*mia|mia.*leo/i.test(shortNames)) shortNames = 'Leo + Mia';
+    req.childNamesShort = shortNames;
     return req;
   }
 
@@ -3386,7 +3395,19 @@
 
   function requestCard(req, tabArg) {
     const tab = tabArg || state()._driverReqTab || 'new';
-    const name = req.parentName || 'Parent';
+    let name = req.parentName || 'Sarah Tremblay';
+    if (/sadia/i.test(name)) name = 'Sarah Tremblay';
+    if (/nadia/i.test(name)) name = 'Amanda Roy';
+    if (/priya/i.test(name)) name = 'Jessica Taylor';
+    if (/amira/i.test(name)) name = 'Claire Dubois';
+    if (/marcus/i.test(name)) name = 'Marcus Vance';
+
+    let kidsShort = childShort(req);
+    if (/yusuf|ayla/i.test(kidsShort)) kidsShort = 'Noah + Olivia';
+    if (/arman/i.test(kidsShort)) kidsShort = 'Liam + Emma';
+    if (/zara/i.test(kidsShort)) kidsShort = 'Chloe';
+    if (/leo.*mia|mia.*leo/i.test(kidsShort)) kidsShort = 'Leo + Mia';
+
     const from = cleanPlace(req.pickupLocation) || 'Pickup';
     const to = cleanPlace(req.dropoffLocation) || 'Drop-off';
     const photo = req.parentPhoto || PARENTS[req.parentId]?.photo || '/assets/avatar_sadia.jpg';
@@ -3410,7 +3431,7 @@
 
     // Contextual actions
     let actionHtml = '';
-    if (tab === 'new') {
+    if (tab === 'new' && req.status === 'new') {
       actionHtml = `
         <div style="display:flex; align-items:center; gap:6px;" onclick="event.stopPropagation();">
           <button type="button" onclick="declineDriverRequest('${req.id}')" style="background:#F8FAFC; color:#64748B; border:1px solid #E2E8F0; border-radius:99px; padding:5px 12px; font-size:11.5px; font-weight:700; cursor:pointer;">
@@ -3420,12 +3441,17 @@
             Accept
           </button>
         </div>`;
-    } else if (req.status === 'declined') {
-      actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px;">Declined</span>';
+    } else if (req.status === 'declined' || tab === 'declined') {
+      actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11px; font-weight:700; padding:4px 9px; border-radius:99px;">Declined</span>';
     } else {
       actionHtml = `
-        <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
-          <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
+        <div style="display:flex; align-items:center; gap:6px;" onclick="event.stopPropagation(); window.navigateTo('driverSchedule');">
+          <span style="background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; font-size:11px; font-weight:700; padding:4px 9px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;">
+            <i data-lucide="calendar-check" style="width:12px; height:12px;"></i> In Schedule
+          </span>
+          <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
+            <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
+          </div>
         </div>`;
     }
 
@@ -3470,7 +3496,7 @@
             <img src="${photo}" alt="" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
             <div>
               <div style="font-size:12.5px; font-weight:700; color:#0F172A; line-height:1.2;">${name}</div>
-              <div style="font-size:11px; font-weight:600; color:#64748B; margin-top:1px;">${childShort(req)}</div>
+              <div style="font-size:11px; font-weight:600; color:#64748B; margin-top:1px;">${kidsShort}</div>
             </div>
           </div>
           ${actionHtml}
@@ -3981,8 +4007,8 @@
       return;
     }
     if (req.status !== 'new') {
-      toast('This request was already handled', 'info');
-      refreshRequestViews(req.status === 'accepted' ? 'accepted' : 'declined');
+      toast('This request was already accepted', 'info');
+      window.navigateTo('driverSchedule');
       return;
     }
     const reason = acceptBlockReason(d) || requestCapacityBlock(d, req);
@@ -3996,10 +4022,8 @@
     req.status = 'accepted';
     syncParentBookingStatus(req, 'accepted');
     persist();
-    toast('Accepted');
-    if (document.getElementById('screen-driverRequestDetail')?.classList.contains('active')) {
-      window.navigateTo('driverRequests');
-    }
+    toast('✓ Request accepted — Added to your schedule', 'success');
+    window.navigateTo('driverSchedule');
     refreshRequestViews('accepted');
   };
 
