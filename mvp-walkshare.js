@@ -2735,80 +2735,567 @@
     }
   };
 
-  function renderOnboardAvailability() {
+  let wsAvailDraft = null;
+  let wsAvailTimeTarget = 'morningStart';
+  let wsAvailCalCursor = { year: 2026, month: 8 };
+  let wsAvailCalPending = '';
+  const WS_AVAIL_HOURS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
+  const WS_AVAIL_MINUTES = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0'));
+  const WS_AVAIL_PERIODS = ['AM', 'PM'];
+
+  function toLabel(hhmm) {
+    if (!hhmm) return '';
+    if (hhmm.indexOf('AM') !== -1 || hhmm.indexOf('PM') !== -1) return hhmm;
+    const parts = String(hhmm).split(':').map(Number);
+    const h = parts[0];
+    const m = parts[1] || 0;
+    const am = h < 12;
+    const hr = h % 12 || 12;
+    return `${String(hr).padStart(2, '0')}:${String(m).padStart(2, '0')} ${am ? 'AM' : 'PM'}`;
+  }
+
+  function toMinutes(value) {
+    if (!value) return 0;
+    const raw = String(value).trim();
+    const ampm = raw.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (ampm) {
+      let h = Number(ampm[1]);
+      const m = Number(ampm[2]);
+      const mer = ampm[3].toUpperCase();
+      if (mer === 'PM' && h !== 12) h += 12;
+      if (mer === 'AM' && h === 12) h = 0;
+      return h * 60 + m;
+    }
+    const parts = raw.split(':').map(Number);
+    if (parts.length < 2 || Number.isNaN(parts[0])) return 0;
+    return parts[0] * 60 + parts[1];
+  }
+
+  function parseAvailTimeParts(value) {
+    const mins = toMinutes(value || '07:15');
+    let h = Math.floor(mins / 60);
+    let minute = Math.round((mins % 60) / 5) * 5;
+    if (minute === 60) minute = 55;
+    const period = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return { hour: String(h).padStart(2, '0'), minute: String(minute).padStart(2, '0'), period };
+  }
+
+  function isoToMdY(iso) {
+    const parts = String(iso || '').split('-');
+    if (parts.length !== 3) return iso || '';
+    return `${parts[1]}/${parts[2]}/${parts[0]}`;
+  }
+
+  function defaultWalkAvailWindows() {
+    return [
+      { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '07:15', end: '08:45', label: 'Morning', enabled: true },
+      { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '14:30', end: '16:00', label: 'Afternoon', enabled: true }
+    ];
+  }
+
+  function resetWalkAvailDraft() {
     const w = ensureWalk();
     if (window.H2SAvailability) w.availability = window.H2SAvailability.normalize(w.availability);
-    const a = w.availability;
+    const win = (w.availability && w.availability.windows) ? w.availability.windows : defaultWalkAvailWindows();
+    wsAvailDraft = {
+      days: (w.availability && w.availability.weekly && w.availability.weekly.length ? w.availability.weekly : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']).slice(),
+      morningOn: win[0] ? win[0].enabled !== false : true,
+      afternoonOn: win[1] ? win[1].enabled !== false : true,
+      morningStart: win[0] ? (win[0].start || '07:15') : '07:15',
+      morningEnd: win[0] ? (win[0].end || '08:45') : '08:45',
+      afternoonStart: win[1] ? (win[1].start || '14:30') : '14:30',
+      afternoonEnd: win[1] ? (win[1].end || '16:00') : '16:00',
+      scheduleType: (w.availability && w.availability.scheduleType) || 'recurring',
+      exceptions: (w.availability && w.availability.exceptions ? w.availability.exceptions : []).slice(),
+      pendingDate: ''
+    };
+  }
+
+  function ensureWalkAvailSheets() {
+    const screen = document.getElementById('screen-wsOnboardAvailability');
+    if (!screen || document.getElementById('wsAvailTimeSheet')) return;
+    screen.insertAdjacentHTML('beforeend', `
+      <div class="book-ride-sheet" id="wsAvailTimeSheet" onclick="if(event.target===this) closeWalkShareAvailSheet('wsAvailTimeSheet')">
+        <div class="book-ride-sheet-card">
+          <div class="sheet-drag-handle" style="margin: 0 auto 8px;"></div>
+          <div class="book-ride-sheet-head">
+            <h3 id="wsAvailTimeSheetTitle">From</h3>
+            <button type="button" class="book-ride-sheet-close" onclick="closeWalkShareAvailSheet('wsAvailTimeSheet')" title="Close">
+              <i data-lucide="x"></i>
+            </button>
+          </div>
+          <div class="book-ride-time-wheels">
+            <div class="book-ride-time-col" id="wsAvailHourCol"></div>
+            <div class="book-ride-time-col" id="wsAvailMinuteCol"></div>
+            <div class="book-ride-time-col" id="wsAvailPeriodCol"></div>
+          </div>
+          <button type="button" class="btn-primary" onclick="confirmWalkShareAvailTime()">Done</button>
+        </div>
+      </div>
+      <div class="book-ride-sheet" id="wsAvailDateSheet" onclick="if(event.target===this) closeWalkShareAvailSheet('wsAvailDateSheet')">
+        <div class="book-ride-sheet-card">
+          <div class="sheet-drag-handle" style="margin: 0 auto 8px;"></div>
+          <div class="book-ride-sheet-head">
+            <h3>Select Date</h3>
+            <button type="button" class="book-ride-sheet-close" onclick="closeWalkShareAvailSheet('wsAvailDateSheet')" title="Close">
+              <i data-lucide="x"></i>
+            </button>
+          </div>
+          <div class="book-ride-calendar-nav">
+            <button type="button" onclick="shiftWalkShareAvailCalendar(-1)" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
+            <h4 id="wsAvailCalMonthLabel">September 2026</h4>
+            <button type="button" onclick="shiftWalkShareAvailCalendar(1)" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
+          </div>
+          <div class="book-ride-cal-week">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div class="book-ride-cal-grid" id="wsAvailCalGrid"></div>
+          <button type="button" class="btn-primary" onclick="confirmWalkShareAvailDate()">Done</button>
+        </div>
+      </div>
+    `);
+  }
+
+  window.closeWalkShareAvailSheet = function (id) {
+    document.getElementById(id)?.classList.remove('visible');
+  };
+
+  window.selectWalkShareAvailTimePart = function (btn) {
+    const col = btn.parentElement;
+    col.querySelectorAll('.book-ride-time-opt').forEach((el) => el.classList.remove('selected'));
+    btn.classList.add('selected');
+    scrollWalkAvailTimeOpt(col, btn);
+  };
+
+  function scrollWalkAvailTimeOpt(col, el) {
+    if (!col || !el) return;
+    col.scrollTop = el.offsetTop - (col.clientHeight / 2) + (el.clientHeight / 2);
+  }
+
+  function fillWalkAvailTimeCol(id, values, selected) {
+    const col = document.getElementById(id);
+    if (!col) return;
+    if (id === 'wsAvailPeriodCol') {
+      const btns = values.map((val) =>
+        `<button type="button" class="book-ride-period-btn${val === selected ? ' selected' : ''}" data-val="${val}" onclick="selectWalkShareAvailPeriod('${val}')">${val}</button>`
+      ).join('');
+      col.innerHTML = btns;
+      return;
+    }
+    const opts = values.map((val) => `<button type="button" class="book-ride-time-opt${val === selected ? ' selected' : ''}" data-val="${val}" onclick="selectWalkShareAvailTimePart(this)">${val}</button>`).join('');
+    col.innerHTML = `<div class="book-ride-time-opt" style="pointer-events:none;visibility:hidden;">00</div>${opts}<div class="book-ride-time-opt" style="pointer-events:none;visibility:hidden;">00</div>`;
+    scrollWalkAvailTimeOpt(col, col.querySelector('.book-ride-time-opt.selected'));
+  }
+
+  window.selectWalkShareAvailPeriod = function (val) {
+    const col = document.getElementById('wsAvailPeriodCol');
+    if (!col) return;
+    col.querySelectorAll('.book-ride-period-btn').forEach((btn) => {
+      if (btn.getAttribute('data-val') === val) btn.classList.add('selected');
+      else btn.classList.remove('selected');
+    });
+  };
+
+  window.openWalkShareAvailTime = function (target) {
+    if (!wsAvailDraft) resetWalkAvailDraft();
+    wsAvailTimeTarget = target;
+    const title = target.indexOf('End') !== -1 ? 'Arrival / Return Time' : 'Departure / Pickup Time';
+    const heading = document.getElementById('wsAvailTimeSheetTitle');
+    if (heading) heading.textContent = title;
+    const parts = parseAvailTimeParts(wsAvailDraft[target]);
+    fillWalkAvailTimeCol('wsAvailHourCol', WS_AVAIL_HOURS, parts.hour);
+    fillWalkAvailTimeCol('wsAvailMinuteCol', WS_AVAIL_MINUTES, parts.minute);
+    fillWalkAvailTimeCol('wsAvailPeriodCol', WS_AVAIL_PERIODS, parts.period);
+    document.getElementById('wsAvailTimeSheet')?.classList.add('visible');
+    requestAnimationFrame(() => {
+      ['wsAvailHourCol', 'wsAvailMinuteCol'].forEach((id) => {
+        const col = document.getElementById(id);
+        scrollWalkAvailTimeOpt(col, col?.querySelector('.book-ride-time-opt.selected'));
+      });
+    });
+    icons();
+  };
+
+  window.confirmWalkShareAvailTime = function () {
+    const hour = document.querySelector('#wsAvailHourCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '07';
+    const minute = document.querySelector('#wsAvailMinuteCol .book-ride-time-opt.selected')?.getAttribute('data-val') || '15';
+    const period = document.querySelector('#wsAvailPeriodCol .book-ride-period-btn.selected, #wsAvailPeriodCol .book-ride-time-opt.selected')?.getAttribute('data-val') || 'AM';
+    let h = parseInt(hour, 10);
+    if (period === 'AM') h = h === 12 ? 0 : h;
+    else h = h === 12 ? 12 : h + 12;
+    wsAvailDraft[wsAvailTimeTarget] = `${String(h).padStart(2, '0')}:${minute}`;
+    window.closeWalkShareAvailSheet('wsAvailTimeSheet');
+    paintWalkShareAvailability();
+  };
+
+  function renderWalkAvailCalendar() {
+    const grid = document.getElementById('wsAvailCalGrid');
+    const label = document.getElementById('wsAvailCalMonthLabel');
+    if (!grid) return;
+    const { year, month } = wsAvailCalCursor;
+    if (label) {
+      label.textContent = new Date(year, month, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+    const firstDow = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevMonthDays = new Date(year, month, 0).getDate();
+    const cells = [];
+    for (let i = 0; i < firstDow; i += 1) {
+      cells.push(`<button type="button" class="book-ride-cal-day muted">${prevMonthDays - firstDow + 1 + i}</button>`);
+    }
+    for (let d = 1; d <= daysInMonth; d += 1) {
+      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const selected = iso === wsAvailCalPending ? ' selected' : '';
+      cells.push(`<button type="button" class="book-ride-cal-day${selected}" onclick="selectWalkShareAvailCalendarDay('${iso}')">${d}</button>`);
+    }
+    let next = 1;
+    while (cells.length % 7 !== 0) {
+      cells.push(`<button type="button" class="book-ride-cal-day muted">${next}</button>`);
+      next += 1;
+    }
+    grid.innerHTML = cells.join('');
+  }
+
+  window.shiftWalkShareAvailCalendar = function (delta) {
+    wsAvailCalCursor.month += delta;
+    if (wsAvailCalCursor.month < 0) {
+      wsAvailCalCursor.month = 11;
+      wsAvailCalCursor.year -= 1;
+    } else if (wsAvailCalCursor.month > 11) {
+      wsAvailCalCursor.month = 0;
+      wsAvailCalCursor.year += 1;
+    }
+    renderWalkAvailCalendar();
+    icons();
+  };
+
+  window.selectWalkShareAvailCalendarDay = function (iso) {
+    wsAvailCalPending = iso;
+    renderWalkAvailCalendar();
+  };
+
+  window.openWalkShareAvailDate = function () {
+    const iso = wsAvailDraft.pendingDate || '2026-09-09';
+    wsAvailCalPending = iso;
+    const parts = iso.split('-').map(Number);
+    wsAvailCalCursor = { year: parts[0], month: parts[1] - 1 };
+    renderWalkAvailCalendar();
+    document.getElementById('wsAvailDateSheet')?.classList.add('visible');
+    icons();
+  };
+
+  window.confirmWalkShareAvailDate = function () {
+    wsAvailDraft.pendingDate = wsAvailCalPending;
+    window.closeWalkShareAvailSheet('wsAvailDateSheet');
+    paintWalkShareAvailability();
+  };
+
+  window.addWalkShareException = function () {
+    if (!wsAvailDraft) resetWalkAvailDraft();
+    const date = wsAvailDraft.pendingDate;
+    if (!date) return toast('Choose a date first', 'warning');
+    if (!wsAvailDraft.exceptions.includes(date)) wsAvailDraft.exceptions.push(date);
+    wsAvailDraft.exceptions.sort();
+    wsAvailDraft.pendingDate = '';
+    paintWalkShareAvailability();
+  };
+
+  window.removeWalkShareException = function (iso) {
+    if (!wsAvailDraft) resetWalkAvailDraft();
+    wsAvailDraft.exceptions = wsAvailDraft.exceptions.filter((item) => item !== iso);
+    paintWalkShareAvailability();
+  };
+
+  window.toggleWalkShareAvailDay = function (day) {
+    if (!wsAvailDraft) resetWalkAvailDraft();
+    const idx = wsAvailDraft.days.indexOf(day);
+    if (idx !== -1) {
+      if (wsAvailDraft.days.length > 1) {
+        wsAvailDraft.days.splice(idx, 1);
+      } else {
+        toast('At least one active service day is required', 'warning');
+        return;
+      }
+    } else {
+      wsAvailDraft.days.push(day);
+    }
+    paintWalkShareAvailability();
+  };
+
+  window.toggleWalkShareShift = function (shift) {
+    if (!wsAvailDraft) resetWalkAvailDraft();
+    if (shift === 'morning') {
+      wsAvailDraft.morningOn = !wsAvailDraft.morningOn;
+    } else if (shift === 'afternoon') {
+      wsAvailDraft.afternoonOn = !wsAvailDraft.afternoonOn;
+    }
+    if (!wsAvailDraft.morningOn && !wsAvailDraft.afternoonOn) {
+      if (shift === 'morning') wsAvailDraft.afternoonOn = true;
+      else wsAvailDraft.morningOn = true;
+      toast('At least one shift must remain active', 'warning');
+    }
+    paintWalkShareAvailability();
+  };
+
+  window.setWalkShareScheduleType = function (type) {
+    if (!wsAvailDraft) resetWalkAvailDraft();
+    wsAvailDraft.scheduleType = type;
+    paintWalkShareAvailability();
+  };
+
+  function paintWalkShareAvailability() {
+    if (!wsAvailDraft) resetWalkAvailDraft();
     const el = feed('wsOnboardAvailabilityFeed');
     if (!el) return;
+    ensureWalkAvailSheets();
     const editing = editingProfileChild();
-    bindChildTitle(el, editing ? 'Availability' : 'Escort Schedule & Shifts');
+    bindChildTitle(el, editing ? 'Availability' : 'Escort Schedule');
     bindChildBack(el, editing ? "backNested('wsProfile')" : "navigateTo('wsOnboardDocs')");
 
-    const m = a.windows[0] || {};
-    const n = a.windows[1] || {};
+    const ALL_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const activeDays = wsAvailDraft.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+
+    const activeWindows = [];
+    if (wsAvailDraft.morningOn) activeWindows.push(`${toLabel(wsAvailDraft.morningStart)} – ${toLabel(wsAvailDraft.morningEnd)}`);
+    if (wsAvailDraft.afternoonOn) activeWindows.push(`${toLabel(wsAvailDraft.afternoonStart)} – ${toLabel(wsAvailDraft.afternoonEnd)}`);
+    const dayStr = activeDays.length === 5 && activeDays.includes('Mon') && activeDays.includes('Fri') && !activeDays.includes('Sat') && !activeDays.includes('Sun')
+      ? 'Mon–Fri'
+      : (activeDays.length === 7 ? 'Everyday' : activeDays.join(', '));
+    const liveSummary = activeWindows.length ? `${dayStr} · ${activeWindows.join(' & ')}` : 'No active shifts selected';
+
     el.innerHTML = `
       ${editing ? '' : `
-        <div style="margin-bottom: 16px;">
+        <div style="margin-bottom: 20px;">
           <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1B2B68; background:rgba(27,43,104,0.08); padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 4 of 5</span>
-          <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Weekly Walking Schedule</h2>
-          <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Set morning and afternoon escort time windows (Mon–Fri).</p>
+          <h2 style="font-size:20px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Weekly Walking Schedule</h2>
+          <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Set active escort days, shift windows, and term schedule.</p>
         </div>
       `}
 
-      <div class="profile-form-section-card" style="margin-bottom: 16px;">
-        <div class="form-group">
-          <label class="form-label">Morning Escort Start</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" id="wsAvailMStart" value="${esc(m.start || '07:15')}" placeholder="07:15" />
+      <!-- Schedule Type (Recurring vs Flexible) -->
+      <h3 class="avail-section-heading">Schedule type</h3>
+      <div class="avail-type-grid">
+        <button type="button" class="avail-type-btn ${wsAvailDraft.scheduleType !== 'onetime' ? 'active' : ''}" onclick="setWalkShareScheduleType('recurring')">
+          <i data-lucide="repeat"></i>
+          <span>Recurring (School Term)</span>
+        </button>
+        <button type="button" class="avail-type-btn ${wsAvailDraft.scheduleType === 'onetime' ? 'active' : ''}" onclick="setWalkShareScheduleType('onetime')">
+          <i data-lucide="calendar"></i>
+          <span>Flexible / Casual</span>
+        </button>
+      </div>
+
+      <!-- Service Days -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+        <h3 class="avail-section-heading" style="margin:0;">Active walking days</h3>
+        <span style="font-size:12px; font-weight:700; color:#1B2B68; background:rgba(27,43,104,0.08); padding:2px 8px; border-radius:12px;">${activeDays.length} days</span>
+      </div>
+      <div class="avail-days-row">
+        ${ALL_DAYS.map((d) => {
+          const active = activeDays.includes(d);
+          return `<button type="button" class="avail-day-pill ${active ? 'active' : ''}" onclick="toggleWalkShareAvailDay('${d}')">${d}</button>`;
+        }).join('')}
+      </div>
+
+      <!-- Time Windows -->
+      <h3 class="avail-section-heading">Escort time windows</h3>
+
+      <!-- Morning Escort Card -->
+      <div class="avail-window-card">
+        <div class="avail-window-head">
+          <div class="avail-window-title-wrap">
+            <div class="avail-window-icon-badge" style="background:#FEF3C7; color:#D97706;">
+              <i data-lucide="sunrise"></i>
+            </div>
+            <div>
+              <span class="avail-window-title">Morning Escort</span>
+              <div style="font-size:12px; color:#64748B; margin-top:2px;">School drop-off window</div>
+            </div>
+          </div>
+          <div class="avail-toggle-switch" onclick="event.preventDefault(); toggleWalkShareShift('morning');">
+            <span class="avail-toggle-slider ${wsAvailDraft.morningOn ? 'active' : ''}"></span>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Morning Escort End</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" id="wsAvailMEnd" value="${esc(m.end || '08:45')}" placeholder="08:45" />
+        ${wsAvailDraft.morningOn ? `
+          <div class="avail-time-inputs-grid">
+            <div class="avail-time-col">
+              <span class="avail-time-label">Departure From</span>
+              <button type="button" class="avail-time-btn" onclick="openWalkShareAvailTime('morningStart')">
+                <span class="avail-time-val">${esc(toLabel(wsAvailDraft.morningStart))}</span>
+                <i data-lucide="clock"></i>
+              </button>
+            </div>
+            <div class="avail-time-col">
+              <span class="avail-time-label">Arrival By</span>
+              <button type="button" class="avail-time-btn" onclick="openWalkShareAvailTime('morningEnd')">
+                <span class="avail-time-val">${esc(toLabel(wsAvailDraft.morningEnd))}</span>
+                <i data-lucide="clock"></i>
+              </button>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- Afternoon Escort Card -->
+      <div class="avail-window-card">
+        <div class="avail-window-head">
+          <div class="avail-window-title-wrap">
+            <div class="avail-window-icon-badge" style="background:#EFF6FF; color:#2563EB;">
+              <i data-lucide="sun"></i>
+            </div>
+            <div>
+              <span class="avail-window-title">Afternoon Escort</span>
+              <div style="font-size:12px; color:#64748B; margin-top:2px;">School pickup & return window</div>
+            </div>
+          </div>
+          <div class="avail-toggle-switch" onclick="event.preventDefault(); toggleWalkShareShift('afternoon');">
+            <span class="avail-toggle-slider ${wsAvailDraft.afternoonOn ? 'active' : ''}"></span>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Afternoon Escort Start</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" id="wsAvailAStart" value="${esc(n.start || '14:30')}" placeholder="14:30" />
+        ${wsAvailDraft.afternoonOn ? `
+          <div class="avail-time-inputs-grid">
+            <div class="avail-time-col">
+              <span class="avail-time-label">Dismissal From</span>
+              <button type="button" class="avail-time-btn" onclick="openWalkShareAvailTime('afternoonStart')">
+                <span class="avail-time-val">${esc(toLabel(wsAvailDraft.afternoonStart))}</span>
+                <i data-lucide="clock"></i>
+              </button>
+            </div>
+            <div class="avail-time-col">
+              <span class="avail-time-label">Home Return By</span>
+              <button type="button" class="avail-time-btn" onclick="openWalkShareAvailTime('afternoonEnd')">
+                <span class="avail-time-val">${esc(toLabel(wsAvailDraft.afternoonEnd))}</span>
+                <i data-lucide="clock"></i>
+              </button>
+            </div>
           </div>
+        ` : ''}
+      </div>
+
+      <!-- Blackout Dates / PA Days (Optional) -->
+      <div style="margin-top:10px; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <h3 class="avail-section-heading" style="margin:0;">Unavailable dates (PA Days / Holidays)</h3>
         </div>
-        <div class="form-group">
-          <label class="form-label">Afternoon Escort End</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" id="wsAvailAEnd" value="${esc(n.end || '16:00')}" placeholder="16:00" />
+        <p style="font-size:12px; color:#64748B; margin:0 0 10px 0;">Add school closure days or dates you are taking off.</p>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="avail-time-btn" style="flex:1;" onclick="openWalkShareAvailDate()">
+            <span class="avail-time-val" style="font-weight:600; font-size:13px; color:${wsAvailDraft.pendingDate ? '#0F172A' : '#94A3B8'};">${wsAvailDraft.pendingDate ? esc(isoToMdY(wsAvailDraft.pendingDate)) : 'Select exception date'}</span>
+            <i data-lucide="calendar"></i>
+          </button>
+          <button type="button" class="btn-primary" style="height:46px; padding:0 16px; font-size:13px; border-radius:12px; white-space:nowrap;" onclick="addWalkShareException()">Add Date</button>
+        </div>
+        ${wsAvailDraft.exceptions && wsAvailDraft.exceptions.length ? `
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:10px;">
+            ${wsAvailDraft.exceptions.map((iso) => `
+              <span style="display:inline-flex; align-items:center; gap:6px; background:#F1F5F9; border:1px solid #E2E8F0; padding:4px 10px; border-radius:99px; font-size:12px; font-weight:700; color:#334155;">
+                <span>${esc(isoToMdY(iso))}</span>
+                <button type="button" onclick="removeWalkShareException('${esc(iso)}')" aria-label="Remove exception" style="border:none; background:none; cursor:pointer; display:flex; align-items:center; color:#94A3B8; padding:0;">
+                  <i data-lucide="x" style="width:12px; height:12px;"></i>
+                </button>
+              </span>
+            `).join('')}
           </div>
+        ` : ''}
+      </div>
+
+      <!-- Live Schedule Summary Badge -->
+      <div style="display:flex; align-items:flex-start; gap:12px; background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:14px; padding:12px 14px; margin-bottom:18px;">
+        <div style="width:24px; height:24px; border-radius:50%; background:#2563EB; color:#FFFFFF; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+          <i data-lucide="check" style="width:14px; height:14px; stroke-width:3;"></i>
+        </div>
+        <div>
+          <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1D4ED8;">Active Schedule</div>
+          <div style="font-size:13px; font-weight:600; color:#1E3A8A; margin-top:2px;">${liveSummary}</div>
         </div>
       </div>
 
-      <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveWalkShareAvailability()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Save Changes' : 'Save and Continue to Rates'}</button>
-      </div>
+      <button type="button" class="avail-save-btn" onclick="saveWalkShareAvailability()">
+        ${editing ? 'Save Changes' : 'Save and Continue to Rates'}
+      </button>
     `;
     icons();
   }
 
+  function renderOnboardAvailability() {
+    resetWalkAvailDraft();
+    paintWalkShareAvailability();
+  }
+
   window.saveWalkShareAvailability = function () {
     const w = ensureWalk();
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+    if (!wsAvailDraft) resetWalkAvailDraft();
+
+    if (!wsAvailDraft.morningOn && !wsAvailDraft.afternoonOn) {
+      toast('At least one escort shift (Morning or Afternoon) must be active', 'warning');
+      return;
+    }
+
+    if (!wsAvailDraft.days || !wsAvailDraft.days.length) {
+      toast('Please select at least one active walking day', 'warning');
+      return;
+    }
+
+    if (wsAvailDraft.morningOn) {
+      const mStart = toMinutes(wsAvailDraft.morningStart);
+      const mEnd = toMinutes(wsAvailDraft.morningEnd);
+      if (mEnd <= mStart) {
+        toast('Morning escort arrival time must be after departure time', 'warning');
+        return;
+      }
+    }
+
+    if (wsAvailDraft.afternoonOn) {
+      const aStart = toMinutes(wsAvailDraft.afternoonStart);
+      const aEnd = toMinutes(wsAvailDraft.afternoonEnd);
+      if (aEnd <= aStart) {
+        toast('Afternoon escort return time must be after dismissal time', 'warning');
+        return;
+      }
+    }
+
+    const weeklyDays = wsAvailDraft.days.slice();
+    const windows = [
+      {
+        id: 'w1',
+        days: weeklyDays.slice(),
+        start: wsAvailDraft.morningStart || '07:15',
+        end: wsAvailDraft.morningEnd || '08:45',
+        label: 'Morning',
+        enabled: wsAvailDraft.morningOn !== false
+      },
+      {
+        id: 'w2',
+        days: weeklyDays.slice(),
+        start: wsAvailDraft.afternoonStart || '14:30',
+        end: wsAvailDraft.afternoonEnd || '16:00',
+        label: 'Afternoon',
+        enabled: wsAvailDraft.afternoonOn !== false
+      }
+    ];
+
     w.availability = window.H2SAvailability
       ? window.H2SAvailability.normalize({
-          weekly: days,
-          windows: [
-            { id: 'w1', days, start: document.getElementById('wsAvailMStart')?.value || '07:15', end: document.getElementById('wsAvailMEnd')?.value || '08:45', label: 'Morning', enabled: true },
-            { id: 'w2', days, start: document.getElementById('wsAvailAStart')?.value || '14:30', end: document.getElementById('wsAvailAEnd')?.value || '16:00', label: 'Afternoon', enabled: true }
-          ],
-          exceptions: []
+          weekly: weeklyDays,
+          scheduleType: wsAvailDraft.scheduleType || 'recurring',
+          windows,
+          exceptions: (wsAvailDraft.exceptions || []).slice()
         })
-      : w.availability;
+      : {
+          weekly: weeklyDays,
+          scheduleType: wsAvailDraft.scheduleType || 'recurring',
+          windows,
+          exceptions: (wsAvailDraft.exceptions || []).slice()
+        };
+
     w.onboarding.availability = true;
     const provider = (state().providers || []).find((p) => p.id === 'sarah');
     if (provider) provider.availability = w.availability;
     persist();
+
     if (editingProfileChild()) {
-      toast('Availability updated');
+      toast('Availability updated successfully');
       window.backNested('wsProfile');
     } else {
       toast('Availability saved — continue to rates');

@@ -18378,11 +18378,11 @@ button.avail-save-btn:active,
   border-radius: var(--radius-md);
 }
 
-#screen-driverOnboardAvailability .book-ride-sheet {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .book-ride-sheet {
   z-index: 100;
 }
 
-#screen-driverOnboardAvailability .book-ride-sheet .btn-primary {
+:is(#screen-driverOnboardAvailability, #screen-wsOnboardAvailability) .book-ride-sheet .btn-primary {
   height: var(--button-height);
   min-height: var(--button-height);
   font-size: var(--button-font-size);
