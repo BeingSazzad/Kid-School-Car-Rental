@@ -17091,20 +17091,22 @@ button.drv-doc-row.profile-menu-item {
   text-align: left;
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  gap: 12px;
 }
 
 .drv-doc-row .menu-item-left {
+  display: flex;
   align-items: center;
   gap: 12px;
   min-width: 0;
   flex: 1;
+  padding-right: 6px;
 }
 
 .drv-doc-row .menu-subtitle {
   display: block;
   margin-top: 2px;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 500;
   color: var(--color-body);
   line-height: 1.25;
@@ -17123,6 +17125,7 @@ button.drv-doc-row.profile-menu-item {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .drv-doc-copy {
@@ -17132,14 +17135,15 @@ button.drv-doc-row.profile-menu-item {
 
 .drv-doc-title,
 .drv-doc-row .menu-title-text {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--color-title);
   font-family: var(--font-family);
-  line-height: 1.2;
+  line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: block;
 }
 
 .drv-doc-status {

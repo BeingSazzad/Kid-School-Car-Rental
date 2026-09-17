@@ -68,12 +68,12 @@
     ]
   };
   const REQUIRED_DOCS = [
-    { id: 'licence', title: "Driver's License", subtitle: "Valid driver's license (Front & Back)" },
-    { id: 'residency_tax_tenancy', title: "Proof of Residency 1: Property Tax / Tenancy", subtitle: "Property tax statement or tenancy agreement" },
-    { id: 'residency_utility', title: "Proof of Residency 2: Utility Bill", subtitle: "Recent utility bill (Electricity, Gas, Water, Internet)" },
-    { id: 'criminal', title: 'Criminal Background Check', subtitle: 'Police records check clearance' },
-    { id: 'vulnerable', title: 'Vulnerable Sector Check', subtitle: 'Vulnerable sector screening certificate' },
-    { id: 'firstaid', title: 'Pediatric First-Aid / CPR', subtitle: 'Emergency care & CPR certification' }
+    { id: 'licence', title: "Driver's License" },
+    { id: 'residency_tax_tenancy', title: "Proof of Residency 1" },
+    { id: 'residency_utility', title: "Proof of Residency 2" },
+    { id: 'criminal', title: 'Criminal Background Check' },
+    { id: 'vulnerable', title: 'Vulnerable Sector Check' },
+    { id: 'firstaid', title: 'Pediatric First-Aid / CPR' }
   ];
 
   let restored = false;
@@ -138,7 +138,7 @@
       },
       {
         id: 'residency_tax_tenancy',
-        title: "Proof of Residency 1: Property Tax / Tenancy",
+        title: "Proof of Residency 1",
         status: 'approved',
         file: demoUpload('sarah-property-tax-2026.pdf'),
         residencyType: 'Property Tax Statement',
@@ -147,7 +147,7 @@
       },
       {
         id: 'residency_utility',
-        title: "Proof of Residency 2: Utility Bill",
+        title: "Proof of Residency 2",
         status: 'approved',
         file: demoUpload('sarah-toronto-hydro-bill.pdf'),
         issuer: 'Toronto Hydro',
@@ -191,7 +191,6 @@
       return {
         id: spec.id,
         title: spec.title,
-        subtitle: spec.subtitle || '',
         status: src.status || (useDemo ? 'approved' : 'not_submitted'),
         number: src.number || (spec.id === 'licence' ? (demoItem.number || '') : ''),
         province: src.province || (spec.id === 'licence' ? 'Ontario' : ''),
@@ -216,7 +215,7 @@
     if (w.group && (w.group.label === 'Walking School Bus' || w.group.label === 'Greenfield Walking Bus')) {
       w.group.label = 'Neighborhood Walking Group';
     }
-    if (!Array.isArray(w.documents) || !w.documents.length) w.documents = demoDocuments();
+    w.documents = normalizeWalkDocs(w.documents);
     if (!w.availability) {
       w.availability = {
         weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
@@ -2481,10 +2480,9 @@
           <div class="profile-menu-item drv-doc-row" role="button" tabindex="0" onclick="openWalkShareDoc('${esc(doc.id)}')">
             <div class="menu-item-left">
               <div class="menu-icon-wrap drv-doc-icon"><i data-lucide="${doc.id === 'licence' || doc.id === 'id' ? 'credit-card' : (doc.id.startsWith('residency') ? 'home' : (doc.id === 'firstaid' ? 'heart-pulse' : 'shield-check'))}"></i></div>
-              <div>
-                <span class="menu-title-text">${esc(doc.title)}</span>
-                ${doc.subtitle ? `<span class="menu-subtitle" style="display:block;font-size:11px;color:#64748B;">${esc(doc.subtitle)}</span>` : ''}
-                ${needs ? '<span class="menu-subtitle" style="color:var(--color-primary);font-weight:700;">Tap to upload</span>' : ''}
+              <div style="min-width:0; flex:1;">
+                <span class="menu-title-text" style="font-size:13.5px; font-weight:700; color:#0F172A; display:block; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(doc.title)}</span>
+                ${needs ? '<span class="menu-subtitle" style="color:var(--color-primary);font-weight:700;font-size:11.5px;margin-top:2px;display:block;">Tap to upload</span>' : ''}
               </div>
             </div>
             <span class="drv-doc-row-end">
@@ -3070,9 +3068,8 @@
           <div class="profile-menu-item drv-doc-row" role="button" tabindex="0" onclick="openWalkShareDoc('${esc(doc.id)}')">
             <div class="menu-item-left">
               <div class="menu-icon-wrap drv-doc-icon"><i data-lucide="${doc.id === 'licence' ? 'credit-card' : (doc.id.startsWith('residency') ? 'home' : (doc.id === 'firstaid' ? 'heart-pulse' : 'shield-check'))}"></i></div>
-              <div>
-                <span class="menu-title-text">${esc(doc.title)}</span>
-                ${doc.subtitle ? `<span class="menu-subtitle" style="display:block;font-size:11px;color:#64748B;">${esc(doc.subtitle)}</span>` : ''}
+              <div style="min-width:0; flex:1;">
+                <span class="menu-title-text" style="font-size:13.5px; font-weight:700; color:#0F172A; display:block; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(doc.title)}</span>
               </div>
             </div>
             <span class="drv-doc-status ${esc(doc.status || 'not_submitted')}">${esc(doc.status === 'approved' ? 'Approved' : (doc.status === 'under_review' ? 'Under Review' : 'Pending'))}</span>
