@@ -21,31 +21,31 @@
     'wsOnboardRate', 'wsPayment', 'wsPending', 'wsSubscription', 'wsRequestDetail', 'wsWalkPrep', 'wsActiveWalk', 'wsRatings'
   ]);
   const PARENTS = {
-    'PRNT-9042': { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Arman, Emma & Zara' },
-    'PRNT-2201': { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', sub: 'Parent · Yusuf & Ayla' },
-    'PRNT-3310': { id: 'PRNT-3310', name: 'Priya Patel', photo: '/assets/avatar_farhana.jpg', sub: 'Parent · Riya' },
-    'PRNT-1188': { id: 'PRNT-1188', name: 'Marcus Chen', photo: '/assets/avatar_john.png', sub: 'Parent · Leo & Mia' }
+    'PRNT-9042': { id: 'PRNT-9042', name: 'Sarah Tremblay', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Liam, Emma & Chloe' },
+    'PRNT-2201': { id: 'PRNT-2201', name: 'Amanda Roy', photo: '/assets/avatar_rehana.jpg', sub: 'Parent · Noah & Olivia' },
+    'PRNT-3310': { id: 'PRNT-3310', name: 'Jessica Taylor', photo: '/assets/avatar_farhana.jpg', sub: 'Parent · Charlotte' },
+    'PRNT-1188': { id: 'PRNT-1188', name: 'Marcus Vance', photo: '/assets/avatar_john.png', sub: 'Parent · Leo & Mia' }
   };
   const DEMO_INBOX = [
-    { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', preview: 'Zara is at the corner with her high-vis vest.', time: '08:06 AM', unread: 2 },
-    { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', preview: 'Yusuf will wait at Maple & 2nd — blue backpack.', time: '07:48 AM', unread: 1 },
-    { id: 'PRNT-3310', name: 'Priya Patel', photo: '/assets/avatar_farhana.jpg', preview: 'Can Riya join the west-gate group next week?', time: 'Yesterday', unread: 1 },
-    { id: 'PRNT-1188', name: 'Marcus Chen', photo: '/assets/avatar_john.png', preview: 'Thanks for walking Leo to the after-care door.', time: 'Mon', unread: 0 }
+    { id: 'PRNT-9042', name: 'Sarah Tremblay', photo: '/assets/avatar_sadia.jpg', preview: 'Chloe is at the corner with her high-vis vest.', time: '08:06 AM', unread: 2 },
+    { id: 'PRNT-2201', name: 'Amanda Roy', photo: '/assets/avatar_rehana.jpg', preview: 'Noah will wait at Maple & 2nd — blue backpack.', time: '07:48 AM', unread: 1 },
+    { id: 'PRNT-3310', name: 'Jessica Taylor', photo: '/assets/avatar_farhana.jpg', preview: 'Can Charlotte join the west-gate group next week?', time: 'Yesterday', unread: 1 },
+    { id: 'PRNT-1188', name: 'Marcus Vance', photo: '/assets/avatar_john.png', preview: 'Thanks for walking Leo to the after-care door.', time: 'Mon', unread: 0 }
   ];
   const DEMO_CHATS = {
     'PRNT-9042': [
-      { type: 'system', text: 'WalkShare escort · Zara · Sunshine Pre-school' },
-      { type: 'provider', text: 'Morning Sarah — Zara is ready for the Elm & Maple meet-up.', time: '08:02 AM' },
+      { type: 'system', text: 'WalkShare escort · Chloe · Sunshine Pre-school' },
+      { type: 'provider', text: 'Morning Sarah — Chloe is ready for the Elm & Maple meet-up.', time: '08:02 AM' },
       { type: 'parent', text: 'Leaving the corner in 2 minutes with the group.', time: '08:04 AM' },
-      { type: 'provider', text: 'Zara is at the corner with her high-vis vest.', time: '08:06 AM' },
+      { type: 'provider', text: 'Chloe is at the corner with her high-vis vest.', time: '08:06 AM' },
       { type: 'system', text: 'Child joined walking group · 08:07 AM', tone: 'blue' },
       { type: 'parent', text: 'Got her — sidewalks are clear. Heading to Sunshine.', time: '08:08 AM' },
       { type: 'provider', text: 'Please hand to Ms. Jenkins at the west gate.', time: '08:09 AM' },
       { type: 'parent', text: 'Will do. About 4 minutes out.', time: '08:10 AM' }
     ],
     'PRNT-2201': [
-      { type: 'system', text: 'Morning walk · Yusuf · Greenfield International' },
-      { type: 'provider', text: 'Hi Sarah — Yusuf will wait at Maple & 2nd — blue backpack.', time: '07:42 AM' },
+      { type: 'system', text: 'Morning walk · Noah · Greenfield International' },
+      { type: 'provider', text: 'Hi Sarah — Noah will wait at Maple & 2nd — blue backpack.', time: '07:42 AM' },
       { type: 'parent', text: 'Perfect. Group reaches Maple around 07:50.', time: '07:44 AM' },
       { type: 'provider', text: 'He’s wearing the neon jacket today.', time: '07:48 AM' },
       { type: 'parent', text: 'Seen him — joining now. Crosswalk light is green.', time: '07:51 AM' },
@@ -54,9 +54,9 @@
     ],
     'PRNT-3310': [
       { type: 'system', text: 'Capacity inquiry · west-gate walk group' },
-      { type: 'provider', text: 'Can Riya join the west-gate group next week?', time: 'Yesterday 6:10 PM' },
+      { type: 'provider', text: 'Can Charlotte join the west-gate group next week?', time: 'Yesterday 6:10 PM' },
       { type: 'parent', text: 'We have one spot Mon–Thu mornings. Pickup near Birchwood?', time: 'Yesterday 6:18 PM' },
-      { type: 'provider', text: 'Yes — 42 Birchwood at 07:55. She has an epi-pen in the front pocket.', time: 'Yesterday 6:22 PM' },
+      { type: 'provider', text: 'Yes — 42 Birchwood at 07:55. She has an inhaler in the front pocket.', time: 'Yesterday 6:22 PM' },
       { type: 'parent', text: 'Noted on the roster. I’ll confirm Thursday night.', time: 'Yesterday 6:25 PM' }
     ],
     'PRNT-1188': [
@@ -296,21 +296,21 @@
       activeWalk: null,
       selectedRequestId: null,
       notifications: [
-        { id: 'wn-1', title: 'New request', body: 'Sadia asked for a morning walk for Arman and Emma.', time: '18 min ago', unread: true },
-        { id: 'wn-2', title: 'Message', body: 'Nadia: Yusuf will wait at the corner.', time: 'Yesterday', unread: true }
+        { id: 'wn-1', title: 'New request', body: 'Sarah asked for a morning walk for Liam and Emma.', time: '18 min ago', unread: true },
+        { id: 'wn-2', title: 'Message', body: 'Amanda: Noah will wait at the corner.', time: 'Yesterday', unread: true }
       ],
       requests: [
         {
           id: 'wreq-1',
           bookingId: 'H2S-WS-9042',
           parentId: 'PRNT-9042',
-          parentName: 'Sadia Khan',
+          parentName: 'Sarah Tremblay',
           parentPhoto: '/assets/avatar_sadia.jpg',
           children: [
-            { id: 'arman', name: 'Arman Khan', grade: 'Grade 3', photo: '/assets/avatar_arman.jpg' },
-            { id: 'emma', name: 'Emma Khan', grade: 'Grade 1', photo: '/assets/avatar_emma.jpg' }
+            { id: 'liam', name: 'Liam Tremblay', grade: 'Grade 4', photo: '/assets/avatar_arman.jpg' },
+            { id: 'emma', name: 'Emma Tremblay', grade: 'Grade 2', photo: '/assets/avatar_emma.jpg' }
           ],
-          childNamesShort: 'Arman + Emma',
+          childNamesShort: 'Liam + Emma',
           seatsNeeded: 2,
           pickupLocation: '12 Elm Street',
           dropoffLocation: 'Greenfield International School',
@@ -328,12 +328,12 @@
           id: 'wreq-2',
           bookingId: 'H2S-WS-2201',
           parentId: 'PRNT-2201',
-          parentName: 'Nadia Rahman',
+          parentName: 'Amanda Roy',
           parentPhoto: '/assets/avatar_rehana.jpg',
           children: [
-            { id: 'yusuf', name: 'Yusuf Rahman', grade: 'Grade 3', photo: '/assets/avatar_arman.jpg' }
+            { id: 'noah', name: 'Noah Roy', grade: 'Grade 3', photo: '/assets/avatar_arman.jpg' }
           ],
-          childNamesShort: 'Yusuf',
+          childNamesShort: 'Noah',
           seatsNeeded: 1,
           pickupLocation: '18 Maple Avenue',
           dropoffLocation: 'Greenfield International School',
@@ -1301,7 +1301,7 @@
     const period = req.frequency === 'recurring' ? 'week' : 'walk';
 
     const parentPhoto = req.parentPhoto || (PARENTS[req.parentId] && PARENTS[req.parentId].photo) || '/assets/avatar_sarah.jpg';
-    const parentName = req.parentName || (PARENTS[req.parentId] && PARENTS[req.parentId].name) || 'Amira Hassan';
+    const parentName = req.parentName || (PARENTS[req.parentId] && PARENTS[req.parentId].name) || 'Claire Dubois';
     const parentPhone = req.parentPhone || (PARENTS[req.parentId] && PARENTS[req.parentId].phone) || '+1 (416) 555-0133';
 
     // Parse Date & Days for schedule card
@@ -1339,7 +1339,7 @@
         <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
           <img src="/assets/avatar_arman.jpg" alt="Child" style="width:44px; height:44px; border-radius:50%; object-fit:cover;" />
           <div>
-            <div style="font-size:15px; font-weight:700; color:#0F172A;">${esc(childShort(req) || 'Omar Hassan')}</div>
+            <div style="font-size:15px; font-weight:700; color:#0F172A;">${esc(childShort(req) || 'Benjamin Dubois')}</div>
             <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:2px;">Grade 5</div>
           </div>
         </div>`;
@@ -1365,7 +1365,7 @@
               <div style="font-size:13.5px; color:#0F172A; font-weight:600; margin-top:2px;">${esc(parentPhone)}</div>
             </div>
           </div>
-          <button type="button" class="btn-icon-subtle" onclick="openChatWith('${esc(req.parentId || 'sadia')}')" title="Message Parent" aria-label="Message Parent" style="width:44px; height:44px; border-radius:14px; background:#EFF6FF; color:#2563EB; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:background 0.15s ease;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
+          <button type="button" class="btn-icon-subtle" onclick="openChatWith('${esc(req.parentId || 'PRNT-9042')}')" title="Message Parent" aria-label="Message Parent" style="width:44px; height:44px; border-radius:14px; background:#EFF6FF; color:#2563EB; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:background 0.15s ease;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
             <i data-lucide="message-square" style="width:20px; height:20px;"></i>
           </button>
         </div>
@@ -1587,7 +1587,7 @@
     const from = cleanPlace(item.from || item.pickupLocation) || 'Pickup';
     const to = cleanPlace(item.to || item.dropoffLocation || item.schoolLocation) || 'School';
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
-    const parentName = item.parentName || 'Sadia Khan';
+    const parentName = item.parentName || 'Sarah Tremblay';
     const kidsText = item.childNames || 'Children';
 
     let ctaHtml = '';
@@ -1699,9 +1699,9 @@
               </span>
               <span class="card-desc-muted" style="font-weight:700;color:var(--color-title);font-size:13px;">${esc(item.time || '07:40 AM')}</span>
             </div>
-            <h3 class="card-title-navy" style="font-size:16px;margin:0 0 4px;">${esc(item.childNames || 'Arman + Emma')}</h3>
+            <h3 class="card-title-navy" style="font-size:16px;margin:0 0 4px;">${esc(item.childNames || 'Liam + Emma')}</h3>
             <p class="card-desc-muted" style="margin:0 0 2px;">${esc(item.from || '12 Elm Street')} → ${esc(item.to || 'Greenfield Elementary')}</p>
-            <p class="card-desc-muted" style="margin:0;font-size:12px;">Parent: <strong style="color:var(--color-title);">${esc(item.parentName || 'Sadia Khan')}</strong></p>
+            <p class="card-desc-muted" style="margin:0;font-size:12px;">Parent: <strong style="color:var(--color-title);">${esc(item.parentName || 'Sarah Tremblay')}</strong></p>
           </div>
         </div>
       </div>
@@ -1768,7 +1768,7 @@
 
     if (chip) chip.textContent = stage.chip;
     if (title) title.textContent = atDest ? (item.to || 'Greenfield Elementary') : (item.from || '12 Elm Street (Meetup)');
-    if (desc) desc.textContent = `${item.childNames || 'Arman + Emma'} · ${atDest ? 'School gate arrival' : 'Morning walking escort'}`;
+    if (desc) desc.textContent = `${item.childNames || 'Liam + Emma'} · ${atDest ? 'School gate arrival' : 'Morning walking escort'}`;
     if (eta) eta.textContent = item.time || '07:50 AM';
     if (btn) btn.textContent = stage.cta;
     if (note) {
@@ -1882,10 +1882,10 @@
       w.activeWalkStage = 0;
       const completedMeta = {
         bookingId: 'WS-88421',
-        parentName: 'Sadia Khan',
+        parentName: 'Sarah Tremblay',
         parentId: 'PRNT-9042',
         parentPhoto: '/assets/avatar_sadia.jpg',
-        childNames: 'Arman (Gr 2) & Emma (JK)',
+        childNames: 'Liam (Gr 4) & Emma (Gr 2)',
         route: 'Annex Corridor → Sunshine Pre-school'
       };
       w.activeWalk = null;
@@ -1911,8 +1911,8 @@
     const list = document.getElementById('wsAttendanceList');
     if (list) {
       const children = item.children || [
-        { id: 'arman', name: 'Arman Khan', grade: 'Grade 4 · High-vis vest', photo: '/assets/avatar_arman.jpg' },
-        { id: 'emma', name: 'Emma Khan', grade: 'Grade 2 · Reflective band', photo: '/assets/avatar_emma.jpg' }
+        { id: 'liam', name: 'Liam Tremblay', grade: 'Grade 4 · High-vis vest', photo: '/assets/avatar_arman.jpg' },
+        { id: 'emma', name: 'Emma Tremblay', grade: 'Grade 2 · Reflective band', photo: '/assets/avatar_emma.jpg' }
       ];
       list.innerHTML = children.map((c) => {
         const key = c.id || c.name;
@@ -3362,10 +3362,10 @@
   window.openWalkShareRateParentModal = function (meta) {
     wsCurrentRateMeta = meta || {
       bookingId: 'WS-88421',
-      parentName: 'Sadia Khan',
+      parentName: 'Sarah Tremblay',
       parentId: 'PRNT-9042',
       parentPhoto: '/assets/avatar_sadia.jpg',
-      childNames: 'Arman & Emma',
+      childNames: 'Liam & Emma',
       route: 'Annex Corridor → Greenfield Elementary'
     };
     wsParentStars = 5;
@@ -3380,9 +3380,9 @@
       document.body.appendChild(modal);
     }
 
-    const parentName = wsCurrentRateMeta.parentName || 'Sadia Khan';
+    const parentName = wsCurrentRateMeta.parentName || 'Sarah Tremblay';
     const parentPhoto = wsCurrentRateMeta.parentPhoto || '/assets/avatar_sadia.jpg';
-    const children = wsCurrentRateMeta.childNames || 'Arman (Gr 2) & Emma (JK)';
+    const children = wsCurrentRateMeta.childNames || 'Liam (Gr 4) & Emma (Gr 2)';
     const route = wsCurrentRateMeta.route || 'Annex Corridor → Greenfield Elementary';
 
     modal.innerHTML = `
@@ -3495,7 +3495,7 @@
     const comment = (document.getElementById('wsParentReviewComment')?.value || '').trim();
     const tags = wsParentTags.slice();
     const meta = wsCurrentRateMeta || {};
-    const parentName = meta.parentName || 'Sadia Khan';
+    const parentName = meta.parentName || 'Sarah Tremblay';
     const parentId = meta.parentId || 'PRNT-9042';
 
     if (!state().parentFeedback) state().parentFeedback = [];

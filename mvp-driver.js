@@ -16,42 +16,43 @@
     'driverOnboardRate', 'driverPayment', 'driverPending', 'driverSubscription', 'driverRequestDetail', 'driverTripPrep', 'driverRateParent', 'driverRatings'
   ]);
   const PARENTS = {
-    'PRNT-9042': { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Arman, Emma & Zara' },
-    sadia: { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Arman, Emma & Zara' },
-    'PRNT-2201': { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', sub: 'Parent · Yusuf & Ayla' },
-    'PRNT-3310': { id: 'PRNT-3310', name: 'Priya Patel', photo: '/assets/avatar_farhana.jpg', sub: 'Parent · Riya' },
-    'PRNT-1188': { id: 'PRNT-1188', name: 'Marcus Chen', photo: '/assets/avatar_john.png', sub: 'Parent · Leo & Mia' },
-    'PRNT-5520': { id: 'PRNT-5520', name: 'Amira Hassan', photo: '/assets/avatar_sarah.jpg', sub: 'Parent · Omar' }
+    'PRNT-9042': { id: 'PRNT-9042', name: 'Sarah Tremblay', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Liam, Emma & Chloe' },
+    sarah: { id: 'PRNT-9042', name: 'Sarah Tremblay', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Liam, Emma & Chloe' },
+    sadia: { id: 'PRNT-9042', name: 'Sarah Tremblay', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Liam, Emma & Chloe' },
+    'PRNT-2201': { id: 'PRNT-2201', name: 'Amanda Roy', photo: '/assets/avatar_rehana.jpg', sub: 'Parent · Noah & Olivia' },
+    'PRNT-3310': { id: 'PRNT-3310', name: 'Jessica Taylor', photo: '/assets/avatar_farhana.jpg', sub: 'Parent · Charlotte' },
+    'PRNT-1188': { id: 'PRNT-1188', name: 'Marcus Vance', photo: '/assets/avatar_john.png', sub: 'Parent · Leo & Mia' },
+    'PRNT-5520': { id: 'PRNT-5520', name: 'Claire Dubois', photo: '/assets/avatar_sarah.jpg', sub: 'Parent · Benjamin' }
   };
   const DEMO_INBOX = [
-    { id: 'PRNT-9042', name: 'Sadia Khan', photo: '/assets/avatar_sadia.jpg', preview: 'Arman and Emma will be at the porch at 07:28.', time: '07:28 AM', unread: 2 },
-    { id: 'PRNT-2201', name: 'Nadia Rahman', photo: '/assets/avatar_rehana.jpg', preview: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday', unread: 1 },
-    { id: 'PRNT-3310', name: 'Priya Patel', photo: '/assets/avatar_farhana.jpg', preview: 'Riya has her epi-pen in the front pocket.', time: 'Mon', unread: 1 },
-    { id: 'PRNT-1188', name: 'Marcus Chen', photo: '/assets/avatar_john.png', preview: 'Thanks for accepting — curb pickup works great.', time: 'Sun', unread: 0 },
-    { id: 'PRNT-5520', name: 'Amira Hassan', photo: '/assets/avatar_sarah.jpg', preview: 'Understood about the route distance. Thanks anyway.', time: 'Sat', unread: 0 }
+    { id: 'PRNT-9042', name: 'Sarah Tremblay', photo: '/assets/avatar_sadia.jpg', preview: 'Liam and Emma will be at the porch at 07:28.', time: '07:28 AM', unread: 2 },
+    { id: 'PRNT-2201', name: 'Amanda Roy', photo: '/assets/avatar_rehana.jpg', preview: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday', unread: 1 },
+    { id: 'PRNT-3310', name: 'Jessica Taylor', photo: '/assets/avatar_farhana.jpg', preview: 'Charlotte has her inhaler in the front pocket.', time: 'Mon', unread: 1 },
+    { id: 'PRNT-1188', name: 'Marcus Vance', photo: '/assets/avatar_john.png', preview: 'Thanks for accepting — curb pickup works great.', time: 'Sun', unread: 0 },
+    { id: 'PRNT-5520', name: 'Claire Dubois', photo: '/assets/avatar_sarah.jpg', preview: 'Understood about the route distance. Thanks anyway.', time: 'Sat', unread: 0 }
   ];
   const DEMO_CHATS = {
     'PRNT-9042': [
-      { type: 'provider', text: 'Sadia here — Arman and Emma will be at the porch with backpacks.', time: '07:25 AM' },
+      { type: 'provider', text: 'Sarah here — Liam and Emma will be at the porch with backpacks.', time: '07:25 AM' },
       { type: 'parent', text: 'Thanks. I’m on the way in the Sienna — about 4 minutes out.', time: '07:26 AM' },
       { type: 'system', text: 'Driver arrived at Home (12 Elm Street) · 07:30 AM', tone: 'amber' },
       { type: 'provider', text: 'Perfect timing. Emma forgot her water bottle — I’ll bring the spare from yesterday.', time: '07:31 AM' },
       { type: 'parent', text: 'Got both buckled. Heading to Greenfield now.', time: '07:33 AM' },
-      { type: 'provider', text: 'Thank you Tariq — please text when you reach the loop.', time: '07:34 AM' }
+      { type: 'provider', text: 'Thank you Robert — please text when you reach the loop.', time: '07:34 AM' }
     ],
     'PRNT-2201': [
-      { type: 'system', text: 'Chat about Yusuf & Ayla · Greenfield commute' },
-      { type: 'provider', text: 'Hi Tariq — requesting Mon–Fri for Yusuf (Gr 3) and Ayla (Gr 1).', time: 'Mon 6:12 PM' },
-      { type: 'parent', text: 'Happy to review. Booster for Yusuf — noted.', time: 'Mon 6:18 PM' },
+      { type: 'system', text: 'Chat about Noah & Olivia · Greenfield commute' },
+      { type: 'provider', text: 'Hi Robert — requesting Mon–Fri for Noah (Gr 3) and Olivia (Gr 1).', time: 'Mon 6:12 PM' },
+      { type: 'parent', text: 'Happy to review. Booster for Noah — noted.', time: 'Mon 6:18 PM' },
       { type: 'provider', text: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday 8:40 PM' },
       { type: 'parent', text: 'Yes — both boosters stay in the Sienna. Pickup at 18 Maple.', time: 'Yesterday 8:44 PM' },
       { type: 'provider', text: 'Great. Hand-off is to the west loop supervisor.', time: 'Yesterday 8:46 PM' }
     ],
     'PRNT-3310': [
       { type: 'system', text: 'One-time afternoon pickup · Fri Sep 18' },
-      { type: 'provider', text: 'Hi — need a school pickup for Riya at 02:50 PM Friday.', time: 'Tue 1:05 PM' },
+      { type: 'provider', text: 'Hi — need a school pickup for Charlotte at 02:50 PM Friday.', time: 'Tue 1:05 PM' },
       { type: 'parent', text: 'I can take that. Drop at 42 Birchwood — wait for porch light?', time: 'Tue 1:12 PM' },
-      { type: 'provider', text: 'Yes please. Riya has her epi-pen in the front pocket.', time: 'Tue 1:14 PM' },
+      { type: 'provider', text: 'Yes please. Charlotte has her inhaler in the front pocket.', time: 'Tue 1:14 PM' },
       { type: 'parent', text: 'Noted and saved on the trip card.', time: 'Tue 1:15 PM' }
     ],
     'PRNT-1188': [
@@ -63,7 +64,7 @@
     ],
     'PRNT-5520': [
       { type: 'system', text: 'Request declined · outside service corridor' },
-      { type: 'provider', text: 'Hi Tariq, following up on the Rosedale route.', time: 'Sat 10:20 AM' },
+      { type: 'provider', text: 'Hi Robert, following up on the Rosedale route.', time: 'Sat 10:20 AM' },
       { type: 'parent', text: 'That corridor is too far from my Greenfield runs — sorry I can’t take it.', time: 'Sat 10:31 AM' },
       { type: 'provider', text: 'Understood about the route distance. Thanks anyway.', time: 'Sat 10:33 AM' }
     ]
@@ -416,15 +417,15 @@
       id: 'dreq-1',
       bookingId: 'H2S-REQ-2201',
       parentId: 'PRNT-2201',
-      parentName: 'Nadia Rahman',
+      parentName: 'Amanda Roy',
       parentRole: 'Mother',
       parentPhoto: '/assets/avatar_rehana.jpg',
       parentPhone: '+1 (416) 555-0160',
       children: [
-        { id: 'yusuf', name: 'Yusuf Rahman', age: '8 yrs', grade: 'Grade 3', school: 'Greenfield International School', notes: 'Booster seat', photo: '/assets/avatar_arman.jpg' },
-        { id: 'ayla', name: 'Ayla Rahman', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Sits with brother', photo: '/assets/avatar_emma.jpg' }
+        { id: 'noah', name: 'Noah Roy', age: '8 yrs', grade: 'Grade 3', school: 'Greenfield International School', notes: 'Booster seat', photo: '/assets/avatar_arman.jpg' },
+        { id: 'olivia', name: 'Olivia Roy', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Sits with brother', photo: '/assets/avatar_emma.jpg' }
       ],
-      childNamesShort: 'Yusuf + Ayla',
+      childNamesShort: 'Noah + Olivia',
       seatsNeeded: 2,
       pickupLocation: '18 Maple Avenue',
       dropoffLocation: 'Greenfield International School',
@@ -436,21 +437,21 @@
       direction: 'bothway',
       rate: 120,
       rateLabel: '$120 / week',
-      notes: 'Booster seat for Yusuf. Hand both children to the Greenfield loop supervisor.',
+      notes: 'Booster seat for Noah. Hand both children to the Greenfield loop supervisor.',
       status: 'new'
     },
     {
       id: 'dreq-2',
       bookingId: 'H2S-REQ-9042',
       parentId: 'PRNT-9042',
-      parentName: 'Sadia Khan',
+      parentName: 'Sarah Tremblay',
       parentRole: 'Mother (Primary Guardian)',
       parentPhoto: '/assets/avatar_sadia.jpg',
       parentPhone: '+1 (416) 555-0192',
       children: [
-        { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
+        { id: 'chloe', name: 'Chloe Tremblay', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
       ],
-      childNamesShort: 'Zara',
+      childNamesShort: 'Chloe',
       seatsNeeded: 1,
       pickupLocation: '12 Elm Street',
       dropoffLocation: 'Sunshine Pre-school',
@@ -469,14 +470,14 @@
       id: 'dreq-3',
       bookingId: 'H2S-REQ-3310',
       parentId: 'PRNT-3310',
-      parentName: 'Priya Patel',
+      parentName: 'Jessica Taylor',
       parentRole: 'Mother',
       parentPhoto: '/assets/avatar_farhana.jpg',
       parentPhone: '+1 (416) 555-0177',
       children: [
-        { id: 'riya', name: 'Riya Patel', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', notes: 'Carries epi-pen in backpack', photo: '/assets/avatar_emma.jpg' }
+        { id: 'charlotte', name: 'Charlotte Taylor', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', notes: 'Carries inhaler in backpack', photo: '/assets/avatar_emma.jpg' }
       ],
-      childNamesShort: 'Riya',
+      childNamesShort: 'Charlotte',
       seatsNeeded: 1,
       pickupLocation: '42 Birchwood Crescent',
       dropoffLocation: 'Greenfield International School',
@@ -495,13 +496,13 @@
       id: 'dreq-4',
       bookingId: 'H2S-REQ-1188',
       parentId: 'PRNT-1188',
-      parentName: 'Marcus Chen',
+      parentName: 'Marcus Vance',
       parentRole: 'Father',
       parentPhoto: '/assets/avatar_john.png',
       parentPhone: '+1 (416) 555-0148',
       children: [
-        { id: 'leo', name: 'Leo Chen', age: '9 yrs', grade: 'Grade 4', school: 'Greenfield International School', notes: '', photo: '/assets/avatar_arman.jpg' },
-        { id: 'mia', name: 'Mia Chen', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Booster', photo: '/assets/avatar_zara.jpg' }
+        { id: 'leo', name: 'Leo Vance', age: '9 yrs', grade: 'Grade 4', school: 'Greenfield International School', notes: '', photo: '/assets/avatar_arman.jpg' },
+        { id: 'mia', name: 'Mia Vance', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Booster', photo: '/assets/avatar_zara.jpg' }
       ],
       childNamesShort: 'Leo + Mia',
       seatsNeeded: 2,
@@ -522,14 +523,14 @@
       id: 'dreq-5',
       bookingId: 'H2S-REQ-5520',
       parentId: 'PRNT-5520',
-      parentName: 'Amira Hassan',
+      parentName: 'Claire Dubois',
       parentRole: 'Mother',
       parentPhoto: '/assets/avatar_sarah.jpg',
       parentPhone: '+1 (416) 555-0133',
       children: [
-        { id: 'omar', name: 'Omar Hassan', age: '10 yrs', grade: 'Grade 5', school: 'Rosedale Public School', notes: '', photo: '/assets/avatar_arman.jpg' }
+        { id: 'benjamin', name: 'Benjamin Dubois', age: '10 yrs', grade: 'Grade 5', school: 'Rosedale Public School', notes: '', photo: '/assets/avatar_arman.jpg' }
       ],
-      childNamesShort: 'Omar',
+      childNamesShort: 'Benjamin',
       seatsNeeded: 1,
       pickupLocation: '77 Rosedale Valley Road',
       dropoffLocation: 'Rosedale Public School',
@@ -548,12 +549,12 @@
 
   function mergeDemoNotifications(d) {
     const pack = [
-      { id: 'dn-1', title: 'New ride request', body: 'Nadia Rahman requested a Mon–Fri school commute for Yusuf and Ayla.', time: '12 min ago', unread: true, action: 'requests' },
-      { id: 'dn-2', title: 'New ride request', body: 'Priya Patel asked for a one-time afternoon pickup for Riya.', time: '28 min ago', unread: true, action: 'requests' },
-      { id: 'dn-3', title: 'Message from parent', body: 'Sadia: Arman and Emma will be at the porch at 07:28.', time: '1 hr ago', unread: true, action: 'inbox' },
-      { id: 'dn-4', title: 'Message from Nadia', body: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday', unread: true, action: 'inbox' },
-      { id: 'dn-5', title: 'Booking accepted', body: 'You accepted Marcus Chen’s Mon–Wed morning commute.', time: '2 days ago', unread: false, action: 'requests' },
-      { id: 'dn-6', title: 'Trip reminder', body: 'Morning pickup for Arman & Emma starts in 25 minutes.', time: 'Tue', unread: false, action: 'inbox' }
+      { id: 'dn-1', title: 'New ride request', body: 'Amanda Roy requested a Mon–Fri school commute for Noah and Olivia.', time: '12 min ago', unread: true, action: 'requests' },
+      { id: 'dn-2', title: 'New ride request', body: 'Jessica Taylor asked for a one-time afternoon pickup for Charlotte.', time: '28 min ago', unread: true, action: 'requests' },
+      { id: 'dn-3', title: 'Message from parent', body: 'Sarah: Liam and Emma will be at the porch at 07:28.', time: '1 hr ago', unread: true, action: 'inbox' },
+      { id: 'dn-4', title: 'Message from Amanda', body: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday', unread: true, action: 'inbox' },
+      { id: 'dn-5', title: 'Booking accepted', body: 'You accepted Marcus Vance’s Mon–Wed morning commute.', time: '2 days ago', unread: false, action: 'requests' },
+      { id: 'dn-6', title: 'Trip reminder', body: 'Morning pickup for Liam & Emma starts in 25 minutes.', time: 'Tue', unread: false, action: 'inbox' }
     ];
     if (!Array.isArray(d.notifications)) d.notifications = [];
     const have = new Set(d.notifications.map((n) => n.id));
@@ -1283,7 +1284,7 @@
         <div class="form-group">
           <label class="form-label">Full Legal Name</label>
           <div class="input-box-wrapper">
-            <input type="text" class="form-input" id="drvName" value="${esc(d.name || '')}" placeholder="e.g. Tariq Ahmed" />
+            <input type="text" class="form-input" id="drvName" value="${esc(d.name || '')}" placeholder="e.g. Robert MacDonald" />
           </div>
         </div>
 
@@ -2317,7 +2318,7 @@
       }
 
       const pAbout = document.getElementById('detailsAboutLabel');
-      const firstName = (provider.name || 'Tariq').split(' ')[0];
+      const firstName = (provider.name || 'Robert').split(' ')[0];
       if (pAbout) pAbout.textContent = `About ${firstName}`;
 
       const pBio = document.getElementById('detailsProviderBio');
@@ -2406,9 +2407,9 @@
     }
 
     // 1. Core Profile Sync
-    provider.name = d.name || provider.name || 'Tariq Ahmed';
+    provider.name = d.name || provider.name || 'Robert MacDonald';
     provider.phone = d.phone || provider.phone || '+1 (416) 555-0182';
-    provider.email = d.email || provider.email || 'tariq.ahmed@torontoschoolrides.ca';
+    provider.email = d.email || provider.email || 'robert.macdonald@torontoschoolrides.ca';
     if (d.photo) provider.photo = d.photo;
     provider.zone = d.serviceArea || provider.zone || 'Greenfield / Midtown';
     provider.serviceArea = d.serviceArea || provider.serviceArea || 'Greenfield / Midtown';
@@ -2946,7 +2947,7 @@
         childNames: names,
         children: roster,
         parentId: b.parentId || 'PRNT-9042',
-        parentName: b.parentName || 'Sadia Khan',
+        parentName: b.parentName || 'Sarah Tremblay',
         route: `${b.pickupLocation} → ${b.schoolLocation}`,
         from: b.pickupLocation,
         to: b.schoolLocation,
@@ -2967,7 +2968,7 @@
           childNames: names,
           children: roster,
           parentId: b.parentId || 'PRNT-9042',
-          parentName: b.parentName || 'Sadia Khan',
+          parentName: b.parentName || 'Sarah Tremblay',
           route: `${b.schoolLocation} → ${b.pickupLocation}`,
           from: b.schoolLocation,
           to: b.pickupLocation,
@@ -3062,7 +3063,7 @@
     const greet = document.getElementById('driverHomeGreeting');
     const meta = document.getElementById('driverHomeMeta');
     const avatar = document.getElementById('driverHomeAvatar');
-    const first = (d.name || 'Tariq').split(' ')[0];
+    const first = (d.name || 'Robert').split(' ')[0];
     if (greet) greet.textContent = `Hello, ${first}`;
     if (meta) {
       meta.textContent = isApproved(d)
@@ -3519,7 +3520,7 @@
   function paymentHandleBlock(req, d) {
     const booking = (state().bookings || []).find((b) => b.id === req.bookingId || b.id === req.id || ('dreq-' + b.id) === req.id);
     const handleStatus = booking?.paymentHandleStatus || (req.status === 'accepted' ? 'shared' : 'not_requested');
-    const handleValue = booking?.paymentHandle || d.rate?.paymentHandle || d.paymentHandle || 'tariq.ahmed@interac.ca';
+    const handleValue = booking?.paymentHandle || d.rate?.paymentHandle || d.paymentHandle || 'robert.macdonald@interac.ca';
 
     if (handleStatus === 'requested') {
       return `
@@ -3663,7 +3664,7 @@
         <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
           <img src="/assets/avatar_arman.jpg" alt="Child" style="width:44px; height:44px; border-radius:50%; object-fit:cover;" />
           <div>
-            <div style="font-size:15px; font-weight:700; color:#0F172A;">${esc(childShort(req) || 'Omar Hassan')}</div>
+            <div style="font-size:15px; font-weight:700; color:#0F172A;">${esc(childShort(req) || 'Benjamin Dubois')}</div>
             <div style="font-size:13px; color:#64748B; font-weight:500; margin-top:2px;">Grade 5</div>
           </div>
         </div>`;
@@ -3674,7 +3675,7 @@
     const period = req.frequency === 'recurring' ? 'week' : 'trip';
 
     const parentPhoto = req.parentPhoto || (PARENTS[req.parentId] && PARENTS[req.parentId].photo) || (req.parentId === 'PRNT-5520' ? '/assets/avatar_sarah.jpg' : '/assets/avatar_sadia.jpg');
-    const parentName = req.parentName || (PARENTS[req.parentId] && PARENTS[req.parentId].name) || 'Amira Hassan';
+    const parentName = req.parentName || (PARENTS[req.parentId] && PARENTS[req.parentId].name) || 'Claire Dubois';
     const parentPhone = req.parentPhone || (PARENTS[req.parentId] && PARENTS[req.parentId].phone) || '+1 (416) 555-0133';
 
     // Parse Date & Days for schedule card
@@ -3998,7 +3999,7 @@
     const from = cleanPlace(item.from || item.pickupLocation) || 'Pickup';
     const to = cleanPlace(item.to || item.dropoffLocation || item.schoolLocation) || 'School';
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
-    const parentName = item.parentName || 'Sadia Khan';
+    const parentName = item.parentName || 'Sarah Tremblay';
     const kidsText = item.childNames || 'Children';
 
     let ctaHtml = '';
@@ -4537,7 +4538,7 @@
         <div class="profile-user-meta">
           <div class="profile-user-top">
             <div class="profile-user-name-row">
-              <h3 class="profile-user-name">${esc(d.name || 'Tariq Ahmed')}</h3>
+              <h3 class="profile-user-name">${esc(d.name || 'Robert MacDonald')}</h3>
               ${isApproved(d) ? `
                 <span class="profile-verified-badge-wrap" title="Verified Driver">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" style="vertical-align:middle;">
@@ -4866,9 +4867,9 @@
     bindChildTitle(el, 'Rate Parent & Trip');
     bindChildBack(el, "navigateTo('driverHome')");
 
-    const parentName = 'Sadia Khan';
+    const parentName = 'Sarah Tremblay';
     const parentPhoto = '/assets/avatar_sadia.jpg';
-    const children = 'Arman (Gr 2) & Emma (JK)';
+    const children = 'Liam (Gr 4) & Emma (Gr 2)';
     const route = 'Home (12 Elm St) → Greenfield Int.';
 
     el.innerHTML = `
@@ -4968,14 +4969,14 @@
     state().parentFeedback.push({
       id: 'fb-' + Date.now(),
       parentId: 'PRNT-9042',
-      parentName: 'Sadia Khan',
+      parentName: 'Sarah Tremblay',
       rating: stars,
       date: 'Today',
       comment: comment,
       tags: tags
     });
     persist();
-    toast(`★ ${stars}-star rating submitted for Sadia Khan!`);
+    toast(`★ ${stars}-star rating submitted for Sarah Tremblay!`);
     window.navigateTo('driverHome');
   };
 

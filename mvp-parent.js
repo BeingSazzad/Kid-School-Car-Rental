@@ -66,7 +66,7 @@
       };
     }
     if (!state().paymentHandle) {
-      state().paymentHandle = { status: 'idle', handle: 'sadia.khan@interac', requestedBy: null };
+      state().paymentHandle = { status: 'idle', handle: 'sarah.tremblay@interac', requestedBy: null };
     }
   }
 
@@ -1248,7 +1248,7 @@
           <img src="${user.photo || '/assets/avatar_sadia.jpg'}" alt="" class="folio-parent-avatar" onerror="this.src='/assets/avatar_sadia.jpg'" />
           <div class="folio-parent-info">
             <div class="folio-parent-name-row">
-              <span class="folio-parent-name">${user.name || 'Sadia Khan'}</span>
+              <span class="folio-parent-name">${user.name || 'Sarah Tremblay'}</span>
               <span class="folio-parent-you-pill">You</span>
               <span class="mvp-pickup-role">Primary</span>
             </div>
@@ -1269,8 +1269,8 @@
     const preview = document.querySelector('#summaryProviderPickupPreview span');
     if (preview) {
       preview.textContent = backup
-        ? `Provider will see: ${user.name || 'Sadia Khan'} (primary) · ${backup.name} (backup pickup)`
-        : `Provider will see: ${user.name || 'Sadia Khan'} (primary)`;
+        ? `Provider will see: ${user.name || 'Sarah Tremblay'} (primary) · ${backup.name} (backup pickup)`
+        : `Provider will see: ${user.name || 'Sarah Tremblay'} (primary)`;
     }
   }
 
@@ -1278,11 +1278,11 @@
     const wrap = document.getElementById('inboxThreadList');
     if (!wrap) return;
     const threads = [
-      { id: 'tariq', name: 'Tariq Ahmed', photo: '/assets/avatar_tariq.jpg', preview: 'Got both of them buckled in safely! Heading to Greenfield.', time: '07:34 AM', unread: 2 },
+      { id: 'tariq', name: 'Robert MacDonald', photo: '/assets/avatar_tariq.jpg', preview: 'Got both of them buckled in safely! Heading to Greenfield.', time: '07:34 AM', unread: 2 },
       { id: 'sarah', name: 'Sarah Jenkins', photo: '/assets/avatar_sarah.jpg', preview: 'Walking group is 2 minutes from Sunshine Pre-school.', time: '08:12 AM', unread: 1 },
-      { id: 'farhana', name: 'Farhana Yasmin', photo: '/assets/avatar_farhana.jpg', preview: 'Happy to cover Emma’s Friday return if Tariq is full.', time: 'Yesterday', unread: 1 },
-      { id: 'kabir', name: 'Kabir Hossain', photo: '/assets/avatar_kabir.jpg', preview: 'Confirmed Mon–Wed backup for Arman’s soccer practice ride.', time: 'Mon', unread: 0 },
-      { id: 'elena', name: 'Elena Rostova', photo: '/assets/avatar_rehana.jpg', preview: 'West-gate walk group has space for Zara next week.', time: 'Sun', unread: 0 }
+      { id: 'farhana', name: 'Emily Campbell', photo: '/assets/avatar_farhana.jpg', preview: 'Happy to cover Emma’s Friday return if Robert is full.', time: 'Yesterday', unread: 1 },
+      { id: 'kabir', name: 'Lucas Bennett', photo: '/assets/avatar_kabir.jpg', preview: 'Confirmed Mon–Wed backup for Liam’s soccer practice ride.', time: 'Mon', unread: 0 },
+      { id: 'elena', name: 'Sophie Bouchard', photo: '/assets/avatar_rehana.jpg', preview: 'West-gate walk group has space for Chloe next week.', time: 'Sun', unread: 0 }
     ];
     wrap.innerHTML = threads.map((t) => `
       <button type="button" class="mvp-inbox-row${t.unread ? ' is-unread' : ''}" onclick="openChatWith('${t.id}')">
@@ -1299,37 +1299,37 @@
   const PARENT_DEMO_CHATS = {
     tariq: [
       { type: 'system', text: 'Trip started · 07:22 AM' },
-      { type: 'provider', text: 'Good morning Sadia! I am about 5 minutes away from your home pickup.', time: '07:25 AM' },
+      { type: 'provider', text: 'Good morning Sarah! I am about 5 minutes away from your home pickup.', time: '07:25 AM' },
       { type: 'system', text: 'Driver arrived at Home (12 Elm Street) · 07:30 AM', tone: 'amber' },
-      { type: 'parent', text: 'Good morning Tariq! Arman and Emma are waiting at the front porch with their school backpacks.', time: '07:31 AM' },
+      { type: 'parent', text: 'Good morning Robert! Liam and Emma are waiting at the front porch with their school backpacks.', time: '07:31 AM' },
       { type: 'system', text: 'Children safely boarded & buckled in · 07:33 AM', tone: 'blue' },
       { type: 'provider', text: 'Got both of them buckled in safely! We are now heading towards Greenfield International School.', time: '07:34 AM' },
       { type: 'parent', text: 'Thank you — please ping when you reach the loop.', time: '07:35 AM' },
       { type: 'provider', text: 'Will do. Traffic is light on Mt Pleasant.', time: '07:36 AM' }
     ],
     sarah: [
-      { type: 'system', text: 'WalkShare escort · Zara · Sunshine Pre-school' },
-      { type: 'provider', text: 'Morning Sadia — walking group leaves Elm & Maple in 3 minutes.', time: '08:05 AM' },
-      { type: 'parent', text: 'Zara is at the corner with her high-vis vest.', time: '08:06 AM' },
+      { type: 'system', text: 'WalkShare escort · Chloe · Sunshine Pre-school' },
+      { type: 'provider', text: 'Morning Sarah — walking group leaves Elm & Maple in 3 minutes.', time: '08:05 AM' },
+      { type: 'parent', text: 'Chloe is at the corner with her high-vis vest.', time: '08:06 AM' },
       { type: 'provider', text: 'Joined the group. Sidewalks are clear today.', time: '08:08 AM' },
       { type: 'provider', text: 'Walking group is 2 minutes from Sunshine Pre-school.', time: '08:12 AM' },
       { type: 'parent', text: 'Perfect — hand to Ms. Jenkins at the gate please.', time: '08:13 AM' }
     ],
     farhana: [
       { type: 'system', text: 'Backup driver chat' },
-      { type: 'provider', text: 'Hi Sadia — I can cover Emma’s Friday return if Tariq’s afternoon fills up.', time: 'Yesterday 5:40 PM' },
+      { type: 'provider', text: 'Hi Sarah — I can cover Emma’s Friday return if Robert’s afternoon fills up.', time: 'Yesterday 5:40 PM' },
       { type: 'parent', text: 'That would help. Pickup from Greenfield at 01:00 PM?', time: 'Yesterday 5:44 PM' },
       { type: 'provider', text: 'Yes — Odyssey is booster-ready. I’ll confirm Thursday night.', time: 'Yesterday 5:46 PM' }
     ],
     kabir: [
-      { type: 'system', text: 'Activity ride · Arman soccer' },
-      { type: 'parent', text: 'Kabir — can you do Mon/Wed backup from Greenfield to the community centre?', time: 'Mon 7:10 PM' },
-      { type: 'provider', text: 'Confirmed Mon–Wed backup for Arman’s soccer practice ride.', time: 'Mon 7:18 PM' },
+      { type: 'system', text: 'Activity ride · Liam soccer' },
+      { type: 'parent', text: 'Lucas — can you do Mon/Wed backup from Greenfield to the community centre?', time: 'Mon 7:10 PM' },
+      { type: 'provider', text: 'Confirmed Mon–Wed backup for Liam’s soccer practice ride.', time: 'Mon 7:18 PM' },
       { type: 'parent', text: 'Great — practice ends at 5:30 PM.', time: 'Mon 7:20 PM' }
     ],
     elena: [
       { type: 'system', text: 'WalkShare capacity inquiry' },
-      { type: 'provider', text: 'West-gate walk group has space for Zara next week.', time: 'Sun 11:02 AM' },
+      { type: 'provider', text: 'West-gate walk group has space for Chloe next week.', time: 'Sun 11:02 AM' },
       { type: 'parent', text: 'Tempting — keeping Sarah for now but thank you!', time: 'Sun 11:20 AM' }
     ]
   };
@@ -1349,13 +1349,13 @@
       if (!isRateAgreed) {
         script = [
           ...PARENT_DEMO_CHATS.tariq,
-          { type: 'provider', text: 'Hi Sadia, I received your request for 12 Elm Street → Greenfield (8.6 km). With morning loop congestion, I can do this route for $135/week.', time: 'Just now' },
+          { type: 'provider', text: 'Hi Sarah, I received your request for 12 Elm Street → Greenfield (8.6 km). With morning loop congestion, I can do this route for $135/week.', time: 'Just now' },
           { type: 'rate_proposal', amount: 135, period: 'week', bookingId: bookingWithProvider.id }
         ];
       } else {
         script = [
           ...PARENT_DEMO_CHATS.tariq,
-          { type: 'provider', text: `Hi Sadia, I reviewed the route (8.6 km). I can do this route for $${agreedVal}/week.`, time: '07:28 AM' },
+          { type: 'provider', text: `Hi Sarah, I reviewed the route (8.6 km). I can do this route for $${agreedVal}/week.`, time: '07:28 AM' },
           { type: 'parent', text: 'Sounds fair, let’s do it!', time: '07:29 AM' },
           { type: 'system', text: `✓ Agreed rate: $${agreedVal}/week confirmed by both parties.`, tone: 'blue' }
         ];
@@ -1378,7 +1378,7 @@
         return `<div class="rate-proposal-card" style="background:#F0FDF4; border:1.5px solid #86EFAC; border-radius:12px; padding:12px 14px; margin:8px 0;">
           <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#166534; letter-spacing:0.5px;">Driver Rate Adjustment</div>
           <div style="font-size:18px; font-weight:800; color:#0F172A; margin:4px 0;">$${item.amount}/${item.period}</div>
-          <div style="font-size:12px; color:#166534; margin-bottom:10px;">Tariq proposed $${item.amount}/${item.period} based on the 8.6 km route and morning schedule.</div>
+          <div style="font-size:12px; color:#166534; margin-bottom:10px;">Robert proposed $${item.amount}/${item.period} based on the 8.6 km route and morning schedule.</div>
           <button type="button" class="btn-primary" style="width:100%; padding:8px 12px; font-size:12.5px; border-radius:8px;" onclick="window.acceptRateProposal('${item.bookingId}', ${item.amount})">Accept $${item.amount}/${item.period} Proposal</button>
         </div>`;
       }

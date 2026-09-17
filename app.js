@@ -96,31 +96,39 @@ window.personAvatar = function (name, fallback) {
   const raw = String(name || '').trim();
   const n = raw.toLowerCase();
   const map = [
-    ['sadia', '/assets/avatar_sadia.jpg'],
-    ['tariq', '/assets/avatar_tariq.jpg'],
-    ['farhana', '/assets/avatar_farhana.jpg'],
     ['sarah', '/assets/avatar_sarah.jpg'],
-    ['elena', '/assets/avatar_rehana.jpg'],
-    ['rehana', '/assets/avatar_rehana.jpg'],
-    ['nadia', '/assets/avatar_rehana.jpg'],
+    ['sadia', '/assets/avatar_sadia.jpg'],
+    ['tremblay', '/assets/avatar_sadia.jpg'],
+    ['robert', '/assets/avatar_tariq.jpg'],
+    ['tariq', '/assets/avatar_tariq.jpg'],
+    ['emily', '/assets/avatar_farhana.jpg'],
+    ['farhana', '/assets/avatar_farhana.jpg'],
+    ['lucas', '/assets/avatar_kabir.jpg'],
     ['kabir', '/assets/avatar_kabir.jpg'],
+    ['sophie', '/assets/avatar_rehana.jpg'],
+    ['elena', '/assets/avatar_rehana.jpg'],
+    ['eleanor', '/assets/avatar_rehana.jpg'],
+    ['rehana', '/assets/avatar_rehana.jpg'],
+    ['amanda', '/assets/avatar_rehana.jpg'],
+    ['nadia', '/assets/avatar_rehana.jpg'],
+    ['david', '/assets/avatar_farhan.jpg'],
     ['farhan', '/assets/avatar_farhan.jpg'],
     ['marcus', '/assets/avatar_john.png'],
+    ['jessica', '/assets/avatar_farhana.jpg'],
     ['priya', '/assets/avatar_farhana.jpg'],
+    ['claire', '/assets/avatar_sarah.jpg'],
     ['amira', '/assets/avatar_sarah.jpg'],
+    ['liam', '/assets/avatar_arman.jpg'],
     ['arman', '/assets/avatar_arman.jpg'],
     ['emma', '/assets/avatar_emma.jpg'],
+    ['chloe', '/assets/avatar_zara.jpg'],
     ['zara', '/assets/avatar_zara.jpg'],
-    ['omar', '/assets/avatar_arman.jpg'],
-    ['yusuf', '/assets/avatar_arman.jpg'],
-    ['ayla', '/assets/avatar_emma.jpg'],
-    ['riya', '/assets/avatar_emma.jpg'],
+    ['noah', '/assets/avatar_arman.jpg'],
+    ['olivia', '/assets/avatar_emma.jpg'],
+    ['charlotte', '/assets/avatar_emma.jpg'],
+    ['benjamin', '/assets/avatar_arman.jpg'],
     ['leo', '/assets/avatar_arman.jpg'],
     ['mia', '/assets/avatar_zara.jpg'],
-    ['david', '/assets/avatar_kabir.jpg'],
-    ['sumaiya', '/assets/avatar_farhana.jpg'],
-    ['james', '/assets/avatar_john.png'],
-    ['lisa', '/assets/avatar_sadia.jpg'],
     ['school', '/assets/avatar_school.jpg']
   ];
   for (let i = 0; i < map.length; i++) {
@@ -146,18 +154,18 @@ window.personAvatar = function (name, fallback) {
 window.appState = {
   user: {
     id: 'PRNT-9042',
-    name: 'Sadia Khan',
+    name: 'Sarah Tremblay',
     phone: '+1 (416) 555-0192',
-    email: 'sadia.khan@example.com',
+    email: 'sarah.tremblay@example.com',
     role: 'Mother',
     relationship: 'Mother (Primary Guardian)',
     status: 'Verified Guardian',
     photo: '/assets/avatar_sadia.jpg'
   },
   children: [
-    { id: 'arman', name: 'Arman Khan', age: '9 yrs', grade: 'Grade 4', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Wears booster seat', photo: '/assets/avatar_arman.jpg' },
-    { id: 'emma', name: 'Emma Khan', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Sits next to brother', photo: '/assets/avatar_emma.jpg' },
-    { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
+    { id: 'arman', name: 'Liam Tremblay', age: '9 yrs', grade: 'Grade 4', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Wears booster seat', photo: '/assets/avatar_arman.jpg' },
+    { id: 'emma', name: 'Emma Tremblay', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', pickup: 'Home (12 Elm Street)', notes: 'Sits next to brother', photo: '/assets/avatar_emma.jpg' },
+    { id: 'zara', name: 'Chloe Tremblay', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', pickup: 'Home (12 Elm Street)', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
   ],
   savedLocations: [
     { id: 'loc-1', name: 'Home', street: '12 Elm Street, Toronto, ON', type: 'home', isDefault: true },
@@ -166,7 +174,7 @@ window.appState = {
   providers: [
     {
       id: 'tariq',
-      name: 'Tariq Ahmed',
+      name: 'Robert MacDonald',
       vehicle: 'Toyota Sienna (2023)',
       plate: 'SCH-4091',
       rating: 4.9,
@@ -178,15 +186,15 @@ window.appState = {
       oneTimeRate: 35,
       negotiable: true,
       preferredPayment: 'e-Transfer · Cash',
-      paymentHandle: 'tariq.ahmed@interac.ca',
+      paymentHandle: 'robert.macdonald@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'Midtown Toronto',
       photo: '/assets/avatar_tariq.jpg',
       phone: '+1 (416) 555-0182',
       experience: '4+ Yrs',
       onTimeRate: '99.8%',
-      quote: '"Tariq has safely driven our kids to Greenfield School for over 8 months. Very gentle, always punctual, and sends notifications right away."',
-      reviewer: '— Nadia Rahman (Parent of 2)',
+      quote: '"Robert has safely driven our kids to Greenfield School for over 8 months. Very gentle, always punctual, and sends notifications right away."',
+      reviewer: '— Amanda Roy (Parent of 2)',
       availability: {
         weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
         windows: [
@@ -201,7 +209,7 @@ window.appState = {
     },
     {
       id: 'farhana',
-      name: 'Farhana Yasmin',
+      name: 'Emily Campbell',
       vehicle: 'Honda Odyssey (2024)',
       plate: 'KID-2810',
       rating: 5.0,
@@ -213,14 +221,14 @@ window.appState = {
       oneTimeRate: 40,
       negotiable: true,
       preferredPayment: 'e-Transfer · Cash',
-      paymentHandle: 'farhana.yasmin@interac.ca',
+      paymentHandle: 'emily.campbell@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'Annex / Midtown',
       photo: '/assets/avatar_farhana.jpg',
       phone: '+1 (416) 555-0183',
       experience: '6+ Yrs',
       onTimeRate: '100%',
-      quote: '"Farhana is amazing with younger kids! Emma always looks forward to her morning commute and arrives at school with a big smile."',
+      quote: '"Emily is amazing with younger kids! Emma always looks forward to her morning commute and arrives at school with a big smile."',
       reviewer: '— David Miller (Parent of 1)',
       availability: {
         weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
@@ -236,7 +244,7 @@ window.appState = {
     },
     {
       id: 'kabir',
-      name: 'Kabir Hossain',
+      name: 'Lucas Bennett',
       vehicle: 'Toyota Highlander (2022)',
       plate: 'SCH-9102',
       rating: 4.8,
@@ -248,15 +256,15 @@ window.appState = {
       oneTimeRate: 30,
       negotiable: false,
       preferredPayment: 'e-Transfer · Cash',
-      paymentHandle: 'kabir.hossain@interac.ca',
+      paymentHandle: 'lucas.bennett@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'East York',
       photo: '/assets/avatar_kabir.jpg',
       phone: '+1 (416) 555-0184',
       experience: '3+ Yrs',
       onTimeRate: '99.2%',
-      quote: '"Kabir is extremely reliable, always takes the safest routes and never speeds. Highly recommended for daily school carpool."',
-      reviewer: '— Sumaiya Akter (Parent of 2)',
+      quote: '"Lucas is extremely reliable, always takes the safest routes and never speeds. Highly recommended for daily school carpool."',
+      reviewer: '— Jessica Taylor (Parent of 2)',
       availability: {
         weekly: ['Mon', 'Wed', 'Fri'],
         windows: [
@@ -307,7 +315,7 @@ window.appState = {
     },
     {
       id: 'elena',
-      name: 'Elena Rostova',
+      name: 'Sophie Bouchard',
       category: 'walkshare',
       vehicle: 'Greenfield Walk Escort',
       plate: 'WALK-SAFE-02',
@@ -320,15 +328,15 @@ window.appState = {
       oneTimeRate: 25,
       negotiable: true,
       preferredPayment: 'e-Transfer · Cash',
-      paymentHandle: 'elena.rostova@interac.ca',
+      paymentHandle: 'sophie.bouchard@interac.ca',
       maxServiceDistanceKm: 5,
       serviceArea: 'West-gate / Greenfield',
       photo: '/assets/avatar_rehana.jpg',
       phone: '+1 (416) 555-0186',
       experience: '4+ Yrs',
       onTimeRate: '100%',
-      quote: '"Elena leads the morning walking group with immense care. The children practice safe sidewalk habits while getting fresh morning air."',
-      reviewer: '— Sophia Lin (Parent of 1)',
+      quote: '"Sophie leads the morning walking group with immense care. The children practice safe sidewalk habits while getting fresh morning air."',
+      reviewer: '— Chloe Martin (Parent of 1)',
       availability: {
         weekly: ['Tue', 'Thu'],
         windows: [
@@ -345,7 +353,7 @@ window.appState = {
   emergencyContacts: [
     {
       id: 'ec-1',
-      name: 'Farhan Khan',
+      name: 'David Tremblay',
       rel: 'Father',
       phone: '+1 (416) 555-0199',
       isPrimary: true,
@@ -355,7 +363,7 @@ window.appState = {
     },
     {
       id: 'ec-2',
-      name: 'Rehana Begum',
+      name: 'Eleanor Tremblay',
       rel: 'Grandmother',
       phone: '+1 (416) 555-0144',
       isPrimary: false,
@@ -365,7 +373,7 @@ window.appState = {
     },
     {
       id: 'ec-3',
-      name: 'Greenfield School Main Office',
+      name: 'Greenfield International School Main Office',
       rel: 'School Admin',
       phone: '+1 (416) 555-0800',
       isPrimary: false,
@@ -408,7 +416,7 @@ window.appState = {
   },
   paymentHandle: {
     status: 'idle',
-    handle: 'sadia.khan@interac',
+    handle: 'sarah.tremblay@interac',
     requestedBy: null
   },
   bookings: [
@@ -416,10 +424,10 @@ window.appState = {
     {
       id: 'H2S-84920',
       status: 'in_progress',
-      notes: 'Gate 2 (Junior Wing Pickup) • Arman & Emma handover requires PIN verification. Driver will wait 5 mins at home gate.',
+      notes: 'Gate 2 (Junior Wing Pickup) • Liam & Emma handover requires PIN verification. Driver will wait 5 mins at home gate.',
       activeNow: true,
       parentId: 'PRNT-9042',
-      parentName: 'Sadia Khan',
+      parentName: 'Sarah Tremblay',
       parentPhone: '+1 (416) 555-0192',
       parentRole: 'Mother (Primary Guardian)',
       parentPhoto: '/assets/avatar_sadia.jpg',
@@ -439,7 +447,7 @@ window.appState = {
       ratePeriod: 'week',
       preferredPayment: 'e-Transfer · Cash',
       paymentHandleStatus: 'shared',
-      paymentHandle: 'tariq.ahmed@interac.ca',
+      paymentHandle: 'robert.macdonald@interac.ca',
       paymentMethod: 'Interac e-Transfer (Direct to Driver)',
       createdAt: 'May 20, 2026'
     },
@@ -447,9 +455,9 @@ window.appState = {
     {
       id: 'H2S-91042',
       status: 'confirmed',
-      notes: 'Front gate drop-off. Arman walks to homeroom with morning monitor.',
+      notes: 'Front gate drop-off. Liam walks to homeroom with morning monitor.',
       parentId: 'PRNT-9042',
-      parentName: 'Sadia Khan',
+      parentName: 'Sarah Tremblay',
       parentPhone: '+1 (416) 555-0192',
       parentRole: 'Mother (Primary Guardian)',
       parentPhoto: '/assets/avatar_sadia.jpg',
@@ -469,7 +477,7 @@ window.appState = {
       ratePeriod: 'week',
       preferredPayment: 'e-Transfer · Cash',
       paymentHandleStatus: 'shared',
-      paymentHandle: 'farhana.yasmin@interac.ca',
+      paymentHandle: 'emily.campbell@interac.ca',
       paymentMethod: 'Interac e-Transfer (Direct to Driver)',
       createdAt: 'May 22, 2026'
     },
@@ -477,9 +485,9 @@ window.appState = {
     {
       id: 'H2S-82194',
       status: 'confirmed',
-      notes: 'Emma & Zara: Booster seats required. Handover to classroom teacher Ms. Jenkins at Kindergarten entrance.',
+      notes: 'Emma & Chloe: Booster seats required. Handover to classroom teacher Ms. Jenkins at Kindergarten entrance.',
       parentId: 'PRNT-9042',
-      parentName: 'Sadia Khan',
+      parentName: 'Sarah Tremblay',
       parentPhone: '+1 (416) 555-0192',
       parentRole: 'Mother (Primary Guardian)',
       parentPhoto: '/assets/avatar_sadia.jpg',
@@ -499,7 +507,7 @@ window.appState = {
       ratePeriod: 'trip',
       preferredPayment: 'e-Transfer · Cash',
       paymentHandleStatus: 'shared',
-      paymentHandle: 'kabir.hossain@interac.ca',
+      paymentHandle: 'lucas.bennett@interac.ca',
       paymentMethod: 'Cash at pickup',
       createdAt: 'May 23, 2026'
     },
@@ -507,7 +515,7 @@ window.appState = {
     {
       id: 'H2S-73190',
       status: 'pending',
-      notes: 'Please wait with Zara until teacher receives her at the playground gate.',
+      notes: 'Please wait with Chloe until teacher receives her at the playground gate.',
       childIds: ['zara'],
       direction: 'oneway',
       frequency: 'onetime',
@@ -532,7 +540,7 @@ window.appState = {
       id: 'H2S-REQ-9042',
       status: 'pending',
       parentId: 'PRNT-9042',
-      parentName: 'Sadia Khan',
+      parentName: 'Sarah Tremblay',
       parentPhone: '+1 (416) 555-0192',
       parentRole: 'Mother (Primary Guardian)',
       parentPhoto: '/assets/avatar_sadia.jpg',
@@ -552,7 +560,7 @@ window.appState = {
       ratePeriod: 'trip',
       preferredPayment: 'e-Transfer · Cash',
       paymentHandleStatus: 'not_requested',
-      paymentHandle: 'tariq.ahmed@interac.ca',
+      paymentHandle: 'robert.macdonald@interac.ca',
       paymentMethod: 'Direct to Driver',
       createdAt: 'Sep 9, 2026'
     },
@@ -597,7 +605,7 @@ window.appState = {
       completedAt: 'May 18, 2026 • 08:24 AM',
       dropoffNote: 'Signed in at Sunshine Pre-school front reception desk',
       userRating: '5.0',
-      userReview: 'Zara loved the nursery rhymes and car seat was clean!',
+      userReview: 'Chloe loved the nursery rhymes and safe sidewalk walk!',
       createdAt: 'May 18, 2026'
     },
     // 7. Two-Way + One-Time (Completed)
@@ -723,9 +731,9 @@ window.appState = {
   activeRole: localStorage.getItem('h2s_active_role') || 'parent',
   driver: {
     id: 'tariq',
-    name: 'Tariq Ahmed',
+    name: 'Robert MacDonald',
     phone: '+1 (416) 555-0182',
-    email: 'tariq.ahmed@torontoschoolrides.ca',
+    email: 'robert.macdonald@torontoschoolrides.ca',
     photo: '/assets/avatar_tariq.jpg',
     serviceArea: 'Greenfield / Midtown',
     rating: 4.9,
@@ -798,7 +806,7 @@ window.appState = {
         issuer: 'Toronto Police Service',
         issueDate: '2026-07-12',
         expiry: '2029-07-12',
-        fileDoc: { name: 'crc-tariq-ahmed.pdf', attached: true }
+        fileDoc: { name: 'crc-robert-macdonald.pdf', attached: true }
       },
       {
         id: 'vulnerable',
@@ -808,7 +816,7 @@ window.appState = {
         issuer: 'Toronto Police Service',
         issueDate: '2026-07-12',
         expiry: '2029-07-12',
-        fileDoc: { name: 'vsc-tariq-ahmed.pdf', attached: true }
+        fileDoc: { name: 'vsc-robert-macdonald.pdf', attached: true }
       }
     ],
     availability: {
@@ -837,27 +845,27 @@ window.appState = {
       history: []
     },
     notifications: [
-      { id: 'dn-1', title: 'New ride request', body: 'Nadia Rahman requested a Mon–Fri school commute for Yusuf and Ayla.', time: '12 min ago', unread: true, action: 'requests' },
-      { id: 'dn-2', title: 'New ride request', body: 'Priya Patel asked for a one-time afternoon pickup for Riya.', time: '28 min ago', unread: true, action: 'requests' },
-      { id: 'dn-3', title: 'Message from parent', body: 'Sadia: Arman and Emma will be at the porch at 07:28.', time: '1 hr ago', unread: true, action: 'inbox' },
-      { id: 'dn-4', title: 'Message from Nadia', body: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday', unread: true, action: 'inbox' },
-      { id: 'dn-5', title: 'Booking accepted', body: 'You accepted Marcus Chen’s Mon–Wed morning commute.', time: '2 days ago', unread: false, action: 'requests' },
-      { id: 'dn-6', title: 'Trip reminder', body: 'Morning pickup for Arman & Emma starts in 25 minutes.', time: 'Tue', unread: false, action: 'inbox' }
+      { id: 'dn-1', title: 'New ride request', body: 'Amanda Roy requested a Mon–Fri school commute for Noah and Olivia.', time: '12 min ago', unread: true, action: 'requests' },
+      { id: 'dn-2', title: 'New ride request', body: 'Jessica Taylor asked for a one-time afternoon pickup for Charlotte.', time: '28 min ago', unread: true, action: 'requests' },
+      { id: 'dn-3', title: 'Message from parent', body: 'Sarah: Liam and Emma will be at the porch at 07:28.', time: '1 hr ago', unread: true, action: 'inbox' },
+      { id: 'dn-4', title: 'Message from Amanda', body: 'Can you confirm booster seats for both kids tomorrow?', time: 'Yesterday', unread: true, action: 'inbox' },
+      { id: 'dn-5', title: 'Booking accepted', body: 'You accepted Marcus Vance’s Mon–Wed morning commute.', time: '2 days ago', unread: false, action: 'requests' },
+      { id: 'dn-6', title: 'Trip reminder', body: 'Morning pickup for Liam & Emma starts in 25 minutes.', time: 'Tue', unread: false, action: 'inbox' }
     ],
     requests: [
       {
         id: 'dreq-1',
         bookingId: 'H2S-REQ-2201',
         parentId: 'PRNT-2201',
-        parentName: 'Nadia Rahman',
+        parentName: 'Amanda Roy',
         parentRole: 'Mother',
         parentPhoto: '/assets/avatar_rehana.jpg',
         parentPhone: '+1 (416) 555-0160',
         children: [
-          { id: 'yusuf', name: 'Yusuf Rahman', age: '8 yrs', grade: 'Grade 3', school: 'Greenfield International School', notes: 'Booster seat', photo: '/assets/avatar_arman.jpg' },
-          { id: 'ayla', name: 'Ayla Rahman', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Sits with brother', photo: '/assets/avatar_emma.jpg' }
+          { id: 'yusuf', name: 'Noah Roy', age: '8 yrs', grade: 'Grade 3', school: 'Greenfield International School', notes: 'Booster seat', photo: '/assets/avatar_arman.jpg' },
+          { id: 'ayla', name: 'Olivia Roy', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Sits with brother', photo: '/assets/avatar_emma.jpg' }
         ],
-        childNamesShort: 'Yusuf + Ayla',
+        childNamesShort: 'Noah + Olivia',
         seatsNeeded: 2,
         pickupLocation: '18 Maple Avenue',
         dropoffLocation: 'Greenfield International School',
@@ -873,21 +881,21 @@ window.appState = {
         rate: 120,
         rateLabel: '$120 / week',
         price: '$120 / week',
-        notes: 'Booster seat for Yusuf. Hand both children to the Greenfield loop supervisor.',
+        notes: 'Booster seat for Noah. Hand both children to the Greenfield loop supervisor.',
         status: 'new'
       },
       {
         id: 'dreq-2',
         bookingId: 'H2S-REQ-9042',
         parentId: 'PRNT-9042',
-        parentName: 'Sadia Khan',
+        parentName: 'Sarah Tremblay',
         parentRole: 'Mother (Primary Guardian)',
         parentPhoto: '/assets/avatar_sadia.jpg',
         parentPhone: '+1 (416) 555-0192',
         children: [
-          { id: 'zara', name: 'Zara Khan', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
+          { id: 'zara', name: 'Chloe Tremblay', age: '5 yrs', grade: 'Pre-K', school: 'Sunshine Pre-school', notes: 'Hand to teacher at gate', photo: '/assets/avatar_zara.jpg' }
         ],
-        childNamesShort: 'Zara',
+        childNamesShort: 'Chloe',
         seatsNeeded: 1,
         pickupLocation: 'Home (12 Elm Street)',
         dropoffLocation: 'Sunshine Pre-school',
@@ -910,14 +918,14 @@ window.appState = {
         id: 'dreq-3',
         bookingId: 'H2S-REQ-3310',
         parentId: 'PRNT-3310',
-        parentName: 'Priya Patel',
+        parentName: 'Jessica Taylor',
         parentRole: 'Mother',
         parentPhoto: '/assets/avatar_farhana.jpg',
         parentPhone: '+1 (416) 555-0177',
         children: [
-          { id: 'riya', name: 'Riya Patel', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', notes: 'Carries epi-pen in backpack', photo: '/assets/avatar_emma.jpg' }
+          { id: 'riya', name: 'Charlotte Taylor', age: '7 yrs', grade: 'Grade 2', school: 'Greenfield International School', notes: 'Carries epi-pen in backpack', photo: '/assets/avatar_emma.jpg' }
         ],
-        childNamesShort: 'Riya',
+        childNamesShort: 'Charlotte',
         seatsNeeded: 1,
         pickupLocation: '42 Birchwood Crescent',
         dropoffLocation: 'Greenfield International School',
@@ -940,13 +948,13 @@ window.appState = {
         id: 'dreq-4',
         bookingId: 'H2S-REQ-1188',
         parentId: 'PRNT-1188',
-        parentName: 'Marcus Chen',
+        parentName: 'Marcus Vance',
         parentRole: 'Father',
         parentPhoto: '/assets/avatar_john.png',
         parentPhone: '+1 (416) 555-0148',
         children: [
-          { id: 'leo', name: 'Leo Chen', age: '9 yrs', grade: 'Grade 4', school: 'Greenfield International School', notes: '', photo: '/assets/avatar_arman.jpg' },
-          { id: 'mia', name: 'Mia Chen', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Booster', photo: '/assets/avatar_zara.jpg' }
+          { id: 'leo', name: 'Leo Vance', age: '9 yrs', grade: 'Grade 4', school: 'Greenfield International School', notes: '', photo: '/assets/avatar_arman.jpg' },
+          { id: 'mia', name: 'Mia Vance', age: '6 yrs', grade: 'Grade 1', school: 'Greenfield International School', notes: 'Booster', photo: '/assets/avatar_zara.jpg' }
         ],
         childNamesShort: 'Leo + Mia',
         seatsNeeded: 2,
@@ -971,14 +979,14 @@ window.appState = {
         id: 'dreq-5',
         bookingId: 'H2S-REQ-5520',
         parentId: 'PRNT-5520',
-        parentName: 'Amira Hassan',
+        parentName: 'Claire Dubois',
         parentRole: 'Mother',
         parentPhoto: '/assets/avatar_sarah.jpg',
         parentPhone: '+1 (416) 555-0133',
         children: [
-          { id: 'omar', name: 'Omar Hassan', age: '10 yrs', grade: 'Grade 5', school: 'Rosedale Public School', notes: '', photo: '/assets/avatar_arman.jpg' }
+          { id: 'omar', name: 'Benjamin Dubois', age: '10 yrs', grade: 'Grade 5', school: 'Rosedale Public School', notes: '', photo: '/assets/avatar_arman.jpg' }
         ],
-        childNamesShort: 'Omar',
+        childNamesShort: 'Benjamin',
         seatsNeeded: 1,
         pickupLocation: '77 Rosedale Valley Road',
         dropoffLocation: 'Rosedale Public School',
@@ -1002,7 +1010,7 @@ window.appState = {
       {
         id: 'dsched-1',
         time: '07:30 AM',
-        childNames: 'Arman + Emma Khan',
+        childNames: 'Liam + Emma Tremblay',
         route: 'Home (12 Elm Street) → Greenfield School',
         leg: 'Morning Ride (To School)',
         seats: 2,
@@ -1012,7 +1020,7 @@ window.appState = {
       {
         id: 'dsched-2',
         time: '01:00 PM',
-        childNames: 'Arman + Emma Khan',
+        childNames: 'Liam + Emma Tremblay',
         route: 'Greenfield School → Home (12 Elm Street)',
         leg: 'Afternoon Ride (Back Home)',
         seats: 2,
@@ -1022,7 +1030,7 @@ window.appState = {
       {
         id: 'dsched-3',
         time: '03:15 PM',
-        childNames: 'Zara Khan',
+        childNames: 'Chloe Tremblay',
         route: 'Sunshine Pre-school → Home (12 Elm Street)',
         leg: 'Return Ride',
         seats: 1,
@@ -2289,7 +2297,7 @@ function renderHome() {
 }
 
 window.toggleNotificationAlert = function () {
-  alert('🔔 Home2School Updates:\n• Tariq Ahmed scheduled for 07:30 AM tomorrow\n• Weekly recurring schedule active for Arman & Emma');
+  alert('🔔 Home2School Updates:\n• Robert MacDonald scheduled for 07:30 AM tomorrow\n• Weekly recurring schedule active for Liam & Emma');
 };
 
 /* ==========================================================
@@ -3162,14 +3170,14 @@ window.getProviderReviews = function (provider) {
     provider.reviewsList = provider.category === 'walkshare'
       ? [
           { id: 'rev-seed-1', name: shortName, rating: 5, date: '3 wk ago', text: mainQuote, tags: ['Safe Crossings', 'Friendly'], flaggedForAdmin: false, hidden: false },
-          { id: 'rev-seed-2', name: 'Priya S.', rating: 5, date: '1 mo ago', text: 'Kids love the morning walk. Clear updates every day.', tags: ['Punctual', 'Clear Updates'], flaggedForAdmin: false, hidden: false },
-          { id: 'rev-seed-3', name: 'Omar H.', rating: 5, date: '2 mo ago', text: 'Safe crossings and friendly group. Highly recommend.', tags: ['Safe Crossings'], flaggedForAdmin: false, hidden: false },
+          { id: 'rev-seed-2', name: 'Jessica T.', rating: 5, date: '1 mo ago', text: 'Kids love the morning walk. Clear updates every day.', tags: ['Punctual', 'Clear Updates'], flaggedForAdmin: false, hidden: false },
+          { id: 'rev-seed-3', name: 'Claire D.', rating: 5, date: '2 mo ago', text: 'Safe crossings and friendly group. Highly recommend.', tags: ['Safe Crossings'], flaggedForAdmin: false, hidden: false },
           { id: 'rev-seed-4', name: 'Lisa M.', rating: 4, date: '3 mo ago', text: 'Punctual and calm. Would book again.', tags: ['Punctual'], flaggedForAdmin: false, hidden: false }
         ]
       : [
           { id: 'rev-seed-1', name: shortName, rating: 5, date: '2 wk ago', text: mainQuote, tags: ['Punctual', 'Careful Driver'], flaggedForAdmin: false, hidden: false },
           { id: 'rev-seed-2', name: 'David M.', rating: 5, date: '1 mo ago', text: 'Always on time. Kids feel safe in the car.', tags: ['Punctual', 'Clean Vehicle'], flaggedForAdmin: false, hidden: false },
-          { id: 'rev-seed-3', name: 'Sumaiya A.', rating: 5, date: '6 wk ago', text: 'Clear chat updates and careful driving.', tags: ['Clear Updates', 'Careful Driver'], flaggedForAdmin: false, hidden: false },
+          { id: 'rev-seed-3', name: 'Amanda R.', rating: 5, date: '6 wk ago', text: 'Clear chat updates and careful driving.', tags: ['Clear Updates', 'Careful Driver'], flaggedForAdmin: false, hidden: false },
           { id: 'rev-seed-4', name: 'James K.', rating: 4, date: '2 mo ago', text: 'Professional and friendly. Easy booking.', tags: ['Polite & Friendly'], flaggedForAdmin: false, hidden: false }
         ];
   }
@@ -3465,7 +3473,7 @@ window.submitParentDriverRating = function (providerId, bookingId) {
   if (!provider) return;
 
   const isFlagged = stars < 3.5;
-  const parentName = (window.appState.user?.name || 'Sadia Khan');
+  const parentName = (window.appState.user?.name || 'Sarah Tremblay');
   const shortName = parentName.split(' ').map((p, i) => (i === 0 ? p : (p[0] ? p[0] + '.' : ''))).join(' ').trim();
 
   const newReview = {
@@ -3554,11 +3562,11 @@ window.renderParentReviewsScreen = function () {
     {
       id: 'rev-prnt-1',
       providerId: 'tariq',
-      providerName: 'Tariq Ahmed',
+      providerName: 'Robert MacDonald',
       providerPhoto: '/assets/avatar_tariq.jpg',
       rating: 5,
       date: 'Sep 15, 2026',
-      text: 'Tariq is extremely punctual and always ensures Emma and Arman are buckled safely before driving.',
+      text: 'Robert is extremely punctual and always ensures Emma and Liam are buckled safely before driving.',
       tags: ['⏰ Punctual', '🛡️ Safe Driving'],
       flaggedForAdmin: false
     },
@@ -3569,7 +3577,7 @@ window.renderParentReviewsScreen = function () {
       providerPhoto: '/assets/avatar_sarah.jpg',
       rating: 5,
       date: 'Sep 10, 2026',
-      text: 'Supervised neighborhood walking group was fantastic. Arman enjoyed walking with friends.',
+      text: 'Supervised neighborhood walking group was fantastic. Liam enjoyed walking with friends.',
       tags: ['👦 Great with Kids', '🚪 Curbside Care'],
       flaggedForAdmin: false
     }
@@ -3590,12 +3598,12 @@ window.renderParentReviewsScreen = function () {
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
           <img src="/assets/avatar_tariq.jpg" alt="" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #FDE68A;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
           <div>
-            <div style="font-size:14px; font-weight:800; color:#0F172A;">Tariq Ahmed</div>
+            <div style="font-size:14px; font-weight:800; color:#0F172A;">Robert MacDonald</div>
             <div style="font-size:12px; color:#78350F;">Toyota Sienna · Greenfield Int. Drop-off</div>
           </div>
         </div>
         <button type="button" onclick="openParentRateDriverModal('tariq', 'H2S-84920')" class="btn-primary" style="width:100%; padding:10px; font-size:13px; font-weight:800; border-radius:10px; background:#F59E0B; color:#0F172A; border:none; display:flex; align-items:center; justify-content:center; gap:6px;">
-          <span>★</span> Rate Tariq Ahmed
+          <span>★</span> Rate Robert MacDonald
         </button>
       </div>
     `;
@@ -3908,7 +3916,7 @@ function renderBookingSummary() {
 
   if (parentEl) {
     const u = window.appState.user;
-    parentEl.textContent = `${u.name || 'Sadia Khan'} (ID: #${u.id || 'PRNT-9042'})`;
+    parentEl.textContent = `${u.name || 'Sarah Tremblay'} (ID: #${u.id || 'PRNT-9042'})`;
   }
   if (childrenEl) childrenEl.textContent = `${children.join(' & ')} (${children.length})`;
   if (dirEl) {
@@ -4001,7 +4009,7 @@ window.submitBookingRequest = function () {
     id: `H2S-${Math.floor(10000 + Math.random() * 90000)}`,
     status: 'pending',
     parentId: window.appState.user.id || 'PRNT-9042',
-    parentName: window.appState.user.name || 'Sadia Khan',
+    parentName: window.appState.user.name || 'Sarah Tremblay',
     parentPhone: window.appState.user.phone || '+1 (416) 555-0192',
     parentRole: 'Mother (Primary Guardian)',
     parentPhoto: window.appState.user.photo || '/assets/avatar_sadia.jpg',
@@ -4860,7 +4868,7 @@ function renderBookingDetails(bookingId) {
   }
 
   // 9. Special Notes
-  setText('detailSpecialNotesText', booking.notes || 'Gate 2 (Junior Wing Pickup) • Arman & Emma handover. Driver will wait 5 mins at home gate.');
+  setText('detailSpecialNotesText', booking.notes || 'Gate 2 (Junior Wing Pickup) • Liam & Emma handover. Driver will wait 5 mins at home gate.');
 
   // 10. Schedule & Manage Action Tiles (State-Aware)
   const schedTitle = document.getElementById('detailTileScheduleTitle');
@@ -5459,7 +5467,7 @@ window.initTrackingMap = function () {
               <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
             </svg>
           </div>
-          <div class="map-car-tag">Tariq • 32 km/h</div>
+          <div class="map-car-tag">Robert • 32 km/h</div>
         `,
         iconSize: [44, 52],
         iconAnchor: [22, 22]
@@ -5511,9 +5519,9 @@ window.zoomOutTrackingMap = function () {
 };
 
 const trackingStages = [
-  { chip: 'Live • Trip Started', text: 'Tariq is on the way to pickup', eta: '07:28 AM', pct: '18%' },
-  { chip: 'Live • Provider Arrived', text: 'Tariq has arrived at Home (12 Elm Street)', eta: '07:30 AM', pct: '45%' },
-  { chip: 'Live • Child Picked Up', text: 'Arman and Emma are on the way to school', eta: '07:42 AM', pct: '72%' },
+  { chip: 'Live • Trip Started', text: 'Robert is on the way to pickup', eta: '07:28 AM', pct: '18%' },
+  { chip: 'Live • Provider Arrived', text: 'Robert has arrived at Home (12 Elm Street)', eta: '07:30 AM', pct: '45%' },
+  { chip: 'Live • Child Picked Up', text: 'Liam and Emma are on the way to school', eta: '07:42 AM', pct: '72%' },
   { chip: 'Live • Child Dropped Off', text: 'Approaching Greenfield School drop-off zone', eta: '07:44 AM', pct: '90%' },
   { chip: 'Trip Completed', text: 'Children safely handed to school attendant', eta: '07:46 AM', pct: '100%' }
 ];
@@ -5640,11 +5648,11 @@ window.openChatWith = function (providerId) {
 };
 
 window.callCurrentChatParty = function () {
-  let partyName = 'Tariq Ahmed';
+  let partyName = 'Robert MacDonald';
   let partyPhone = '+1 (416) 555-0182';
 
   if (window.appState && window.appState.activeRole === 'driver') {
-    partyName = document.getElementById('chatDriverName')?.textContent || 'Sadia Khan';
+    partyName = document.getElementById('chatDriverName')?.textContent || 'Sarah Tremblay';
     partyPhone = '+1 (416) 555-0199';
   } else if (window.activeChatProviderId) {
     const provider = (window.appState?.providers || []).find(p => p.id === window.activeChatProviderId);
@@ -6011,7 +6019,7 @@ window.handleParentReviewSubmit = function () {
   const provider = (window.appState.providers || []).find((p) => p.id === (window._ratingBookingId || 'tariq')) || window.appState.providers?.[0];
 
   if (provider) {
-    const parentName = window.appState.user?.name || 'Sadia Khan';
+    const parentName = window.appState.user?.name || 'Sarah Tremblay';
     const shortName = parentName.split(' ').map((p, i) => (i === 0 ? p : (p[0] ? p[0] + '.' : ''))).join(' ').trim();
     const newReview = {
       id: 'rev-' + Date.now(),
@@ -7796,7 +7804,7 @@ window.requestDriverCallback = function () {
       </div>
       <div class="sos-card-content">
         <div class="sos-card-title" style="color:#15803D;">✓ Escort Cab Pinged Successfully</div>
-        <div class="sos-card-desc" style="color:#166534;">Tariq Ahmed notified to initiate emergency safety callback</div>
+        <div class="sos-card-desc" style="color:#166534;">Robert MacDonald notified to initiate emergency safety callback</div>
       </div>
     `;
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -7810,8 +7818,8 @@ window.requestDriverCallback = function () {
 
 window.shareEmergencyLiveTelemetry = function () {
   const shareText = '🚨 URGENT LIVE SAFETY TELEMETRY - Home2School\n' +
-    'Children: Arman & Emma Khan (On Board)\n' +
-    'Vehicle: Toyota Sienna (SCH-4091) - Tariq Ahmed\n' +
+    'Children: Liam & Emma Tremblay (On Board)\n' +
+    'Vehicle: Toyota Sienna (SCH-4091) - Robert MacDonald\n' +
     'Current GPS: Bloor St W & Bay St, Toronto (Speed: 32 km/h)\n' +
     'Destination: Greenfield International School (ETA: 6 min)\n' +
     'Encrypted Live Route: https://home2school.app/live/H2S-84920?sos=true';
@@ -8666,7 +8674,7 @@ window.continueAuthAfterPhoto = function () {
 };
 
 window.handleEmailSignIn = function () {
-  const email = document.getElementById('authEmailInput')?.value || 'sadia.khan@example.com';
+  const email = document.getElementById('authEmailInput')?.value || 'sarah.tremblay@example.com';
   window.appState.user.email = email;
   if (typeof window.showToast === 'function') {
     window.showToast('✓ Welcome back! Signed in successfully.', 'success');
@@ -8676,8 +8684,8 @@ window.handleEmailSignIn = function () {
 
 window.handleEmailSignUp = function () {
   const role = window.appState._signupRole || 'parent';
-  const name = document.getElementById('authSignupNameInput')?.value || 'Sadia Khan';
-  const email = document.getElementById('authSignupEmailInput')?.value || 'sadia.khan@example.com';
+  const name = document.getElementById('authSignupNameInput')?.value || 'Sarah Tremblay';
+  const email = document.getElementById('authSignupEmailInput')?.value || 'sarah.tremblay@example.com';
   const pipedaChecked = document.getElementById('authSignupPipedaCheck')?.checked;
   
   if (!pipedaChecked) {

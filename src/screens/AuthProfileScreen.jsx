@@ -3,8 +3,8 @@ import StatusBar from '../components/StatusBar';
 import { ChevronLeft, User, Mail, ChevronDown } from 'lucide-react';
 
 export default function AuthProfileScreen({ onContinue, onBack }) {
-  const [fullName, setFullName] = useState('Sadia Khan');
-  const [email, setEmail] = useState('sadia.khan@example.com');
+  const [fullName, setFullName] = useState('Sarah Tremblay');
+  const [email, setEmail] = useState('sarah.tremblay@example.com');
   const [relationship, setRelationship] = useState('Mother');
 
   const handleSubmit = (e) => {

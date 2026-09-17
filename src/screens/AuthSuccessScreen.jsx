@@ -3,7 +3,7 @@ import StatusBar from '../components/StatusBar';
 import { Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export default function AuthSuccessScreen({ userName = "Sadia", onGetStarted }) {
+export default function AuthSuccessScreen({ userName = "Sarah", onGetStarted }) {
   useEffect(() => {
     // Trigger confetti burst on entrance
     try {
