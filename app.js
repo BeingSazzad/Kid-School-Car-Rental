@@ -3515,6 +3515,9 @@ window.submitParentDriverRating = function (providerId, bookingId) {
     window.syncDriverToProviders();
   }
 
+  // Mark parent has rated the current trip
+  window.appState.parentHasRatedTrip = true;
+
   window.closeParentRateDriverModal();
 
   if (isFlagged) {
@@ -3530,6 +3533,13 @@ window.submitParentDriverRating = function (providerId, bookingId) {
     window.renderParentReviewsScreen();
   } else if (window.currentScreen === 'bookingProviderDetails') {
     window.openDriverProfile(provider.id);
+  }
+};
+
+window.dismissUnratedFeedbackPrompt = function () {
+  window.appState.parentDismissedPendingRating = true;
+  if (window.renderParentReviewsScreen) {
+    window.renderParentReviewsScreen();
   }
 };
 
@@ -3589,24 +3599,38 @@ window.renderParentReviewsScreen = function () {
 
   // Render Unrated Trip Prompt (e.g. recent completed trip)
   if (unratedWrap) {
-    unratedWrap.innerHTML = `
-      <div style="background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:14px; padding:14px 16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span style="font-size:11px; font-weight:800; color:#D97706; text-transform:uppercase; letter-spacing:0.5px;">Pending Feedback</span>
-          <span style="font-size:11px; color:#92400E; font-weight:600;">Today's Completed Run</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-          <img src="/assets/avatar_tariq.jpg" alt="" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #FDE68A;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
-          <div>
-            <div style="font-size:14px; font-weight:800; color:#0F172A;">Robert MacDonald</div>
-            <div style="font-size:12px; color:#78350F;">Toyota Sienna · Greenfield Int. Drop-off</div>
+    const showPending = !window.appState.parentHasRatedTrip && !window.appState.parentDismissedPendingRating;
+    if (showPending) {
+      unratedWrap.innerHTML = `
+        <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:16px; padding:16px; box-shadow:0 2px 8px rgba(15,23,42,0.04); position:relative;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span style="font-size:11px; font-weight:800; color:#1B2B68; background:#EEF2FF; border:1px solid #E0E7FF; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; letter-spacing:0.3px;">
+              <i data-lucide="clock" style="width:11px; height:11px;"></i>
+              PENDING RATING
+            </span>
+            <span style="font-size:11.5px; color:#64748B; font-weight:600;">Today's Run · 3:30 PM</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px; background:#F8FAFC; border:1px solid #F1F5F9; border-radius:12px; padding:10px 12px;">
+            <img src="/assets/avatar_tariq.jpg" alt="" style="width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid #E2E8F0;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.3;">Robert MacDonald</div>
+              <div style="font-size:12px; color:#64748B; margin-top:2px;">Toyota Sienna · Greenfield Int. Drop-off</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button type="button" onclick="openParentRateDriverModal('tariq', 'H2S-84920')" class="btn-primary" style="flex:1; height:44px; font-size:13.5px; font-weight:700; border-radius:12px; background:linear-gradient(135deg, #1B2B68 0%, #2A3F8E 100%); color:#FFFFFF; border:none; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 6px rgba(27,43,104,0.18); cursor:pointer;">
+              <span style="color:#FBBF24; font-size:15px;">★</span>
+              <span>Rate &amp; Review Robert</span>
+            </button>
+            <button type="button" onclick="dismissUnratedFeedbackPrompt()" title="Dismiss for now" style="height:44px; width:44px; border-radius:12px; background:#F1F5F9; border:1px solid #E2E8F0; color:#64748B; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+              <i data-lucide="x" style="width:16px; height:16px;"></i>
+            </button>
           </div>
         </div>
-        <button type="button" onclick="openParentRateDriverModal('tariq', 'H2S-84920')" class="btn-primary" style="width:100%; padding:10px; font-size:13px; font-weight:800; border-radius:10px; background:#F59E0B; color:#0F172A; border:none; display:flex; align-items:center; justify-content:center; gap:6px;">
-          <span>★</span> Rate Robert MacDonald
-        </button>
-      </div>
-    `;
+      `;
+    } else {
+      unratedWrap.innerHTML = '';
+    }
   }
 
   // Render Submitted Reviews
