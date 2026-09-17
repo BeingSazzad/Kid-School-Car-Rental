@@ -818,6 +818,11 @@
     else if (name === 'inbox') renderInbox();
     else if (name === 'messages') renderChatHeader();
     else if (name === 'notifications') renderNotifications();
+    else if (name === 'report') {
+      if (typeof window.renderReportScreen === 'function') {
+        window.renderReportScreen(window.appState?.activeBookingId, state().activeRole || 'walkshare');
+      }
+    }
     icons();
   }
 

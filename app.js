@@ -5889,9 +5889,8 @@ window.toggleMuteChatNotifications = function () {
 
 window.reportSafetyIssueFromChat = function () {
   window.closeChatOptionsMenu();
-  if (window.showToast) {
-    window.showToast('🛡️ Safety incident report logged with Trust & Safety Desk', 'info');
-  }
+  const isDriver = (window.appState && (window.appState.activeRole === 'driver' || window.appState.activeRole === 'walkshare'));
+  window.openTripReport(window.appState?.activeBookingId || 'H2S-84920', isDriver ? (window.appState.activeRole || 'driver') : 'parent');
 };
 
 window.sendQuickReply = function (text) {
@@ -7239,9 +7238,9 @@ window.submitIssueReport = function () {
 
   const ticketId = 'H2S-INC-' + Math.floor(1000 + Math.random() * 9000);
   if (window.showToast) {
-    window.showToast(`Report ${ticketId} submitted. Dispatch is reviewing.`, 'success');
+    window.showToast(`Report #${ticketId} submitted. Dispatch is reviewing.`, 'success');
   } else {
-    alert(`Report ${ticketId} submitted.`);
+    alert(`Report #${ticketId} submitted.`);
   }
 
   if (document.getElementById('reportDescriptionInput')) {
@@ -7251,35 +7250,298 @@ window.submitIssueReport = function () {
   window.handleTripReportBack();
 };
 
-/* ==========================================================
-   Dedicated Trip Incident & Delay Report (#screen-report)
-   ========================================================== */
-window.tripReportPreviousScreen = 'bookingDetails';
+window.selectDriverUrgencyLevel = function (btn, level) {
+  const container = btn.parentElement;
+  if (!container) return;
+  container.querySelectorAll('.driver-urgency-chip').forEach(b => {
+    b.style.background = '#FFFFFF';
+    b.style.color = '#64748B';
+    b.style.borderColor = '#E2E8F0';
+    b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  if (level === 'critical') {
+    btn.style.background = '#E11D48';
+    btn.style.color = '#FFFFFF';
+    btn.style.borderColor = '#E11D48';
+  } else if (level === 'priority') {
+    btn.style.background = '#EA580C';
+    btn.style.color = '#FFFFFF';
+    btn.style.borderColor = '#EA580C';
+  } else {
+    btn.style.background = '#1B2B68';
+    btn.style.color = '#FFFFFF';
+    btn.style.borderColor = '#1B2B68';
+  }
+  const input = document.getElementById('driverUrgencyInput');
+  if (input) input.value = level;
+};
 
-window.openTripReport = function (bookingId) {
-  window.tripReportPreviousScreen = (currentScreen && currentScreen !== 'report') ? currentScreen : 'bookingDetails';
-  const booking = (window.appState.bookings || []).find(b => b.id === bookingId) || window.appState.bookings[0];
-  const provider = (window.appState.providers || []).find(p => p.id === booking?.providerId) || window.appState.providers[0];
-  const children = (booking?.childIds || []).map(id => (window.appState.children || []).find(c => c.id === id)?.name).filter(Boolean);
+window.mockDriverAttachEvidence = function () {
+  const label = document.getElementById('driverEvidenceLabel');
+  const box = document.getElementById('driverReportEvidenceBox');
+  if (!label || !box) return;
+  if (box.dataset.attached === 'true') {
+    box.dataset.attached = 'false';
+    box.style.background = '#F8FAFC';
+    box.style.borderColor = '#CBD5E1';
+    label.textContent = 'Add photo (e.g. car seat, porch status, gate)';
+    if (window.showToast) window.showToast('Evidence photo removed', 'info');
+  } else {
+    box.dataset.attached = 'true';
+    box.style.background = '#ECFDF5';
+    box.style.borderColor = '#10B981';
+    label.innerHTML = '<span style="color:#059669; font-weight:700;">✓ Attached: incident_evidence_01.jpg</span>';
+    if (window.showToast) window.showToast('✓ Photo evidence attached', 'success');
+  }
+};
 
-  const badgeEl = document.getElementById('tripReportBookingBadge');
-  const titleEl = document.getElementById('tripReportTitle');
-  const routeEl = document.getElementById('tripReportRoute');
-  const selectEl = document.getElementById('reportTripSelect');
+window.submitDriverIncidentReport = function () {
+  const desc = document.getElementById('driverReportDescriptionInput')?.value?.trim();
+  const cat = document.getElementById('driverIncidentCategorySelect')?.value || 'General Incident';
+  const urgency = document.getElementById('driverUrgencyInput')?.value || 'standard';
 
-  if (badgeEl && booking) badgeEl.textContent = booking.id.startsWith('#') ? booking.id : `#${booking.id}`;
-  if (titleEl && booking) titleEl.textContent = `${provider?.name || 'Driver'} • ${children.join(' & ') || 'Child Commute'}`;
-  if (routeEl && booking) routeEl.textContent = `${booking.pickupLocation} → ${booking.schoolLocation}`;
-
-  if (selectEl && booking) {
-    selectEl.value = booking.id;
+  if (!desc) {
+    if (window.showToast) {
+      window.showToast('Please provide brief incident details', 'error');
+    } else {
+      alert('Please describe what happened.');
+    }
+    return;
   }
 
+  const incId = 'DRV-INC-' + Math.floor(2000 + Math.random() * 8000);
+  if (window.showToast) {
+    window.showToast(`✓ Incident Report #${incId} submitted to Safety Desk. Dispatch is reviewing.`, 'success');
+  } else {
+    alert(`Incident Report #${incId} submitted to Safety Desk.`);
+  }
+
+  window.handleTripReportBack();
+};
+
+/* ==========================================================
+   Dedicated Incident & Safety Report Screen (#screen-report)
+   Role-Aware: Dynamic Driver vs Parent views
+   ========================================================== */
+window.tripReportPreviousScreen = 'messages';
+
+window.openTripReport = function (bookingId, roleOverride) {
+  window.tripReportPreviousScreen = (currentScreen && currentScreen !== 'report') ? currentScreen : 'messages';
+  const role = roleOverride || (window.appState ? window.appState.activeRole : 'parent') || 'parent';
+  window._activeReportRole = role;
+
+  window.renderReportScreen(bookingId, role);
   window.navigateTo('report');
 };
 
+window.renderReportScreen = function (bookingId, role) {
+  const isDriver = role === 'driver' || role === 'walkshare';
+  const screenEl = document.getElementById('screen-report');
+  if (!screenEl) return;
+
+  const headerTitle = screenEl.querySelector('.top-bar-title');
+  if (headerTitle) {
+    headerTitle.textContent = isDriver ? 'Driver Incident Report' : 'Report an Issue';
+  }
+
+  let passengerName = 'Sarah Tremblay';
+  let kidsNames = 'Liam & Emma';
+  let routeText = '12 Elm Street → Greenfield International School';
+  let bookingBadge = '#DRV-84920';
+
+  if (isDriver) {
+    const activePartyId = window.activeChatProviderId;
+    if (activePartyId === 'PRNT-2201') {
+      passengerName = 'Amanda Roy';
+      kidsNames = 'Noah & Olivia';
+      routeText = '18 Maple Avenue → Greenfield International School';
+      bookingBadge = '#DRV-2201';
+    } else if (activePartyId === 'PRNT-3310') {
+      passengerName = 'Jessica Taylor';
+      kidsNames = 'Charlotte';
+      routeText = '42 Birchwood Crescent → Greenfield International School';
+      bookingBadge = '#DRV-3310';
+    } else if (activePartyId === 'PRNT-1188') {
+      passengerName = 'Marcus Vance';
+      kidsNames = 'Leo & Mia';
+      routeText = '9 Harbourview Lane → Greenfield International School';
+      bookingBadge = '#DRV-1188';
+    } else if (activePartyId === 'PRNT-5520') {
+      passengerName = 'Claire Dubois';
+      kidsNames = 'Benjamin';
+      routeText = '77 Rosedale Valley Road → Rosedale Public School';
+      bookingBadge = '#DRV-5520';
+    }
+  } else {
+    const booking = (window.appState?.bookings || []).find(b => b.id === bookingId) || (window.appState?.bookings || [])[0];
+    const provider = (window.appState?.providers || []).find(p => p.id === booking?.providerId) || (window.appState?.providers || [])[0];
+    const children = (booking?.childIds || []).map(id => (window.appState?.children || []).find(c => c.id === id)?.name).filter(Boolean);
+    passengerName = provider?.name || 'Robert MacDonald (Driver)';
+    kidsNames = children.join(' & ') || 'Child Commute';
+    routeText = `${booking?.pickupLocation || 'Home'} → ${booking?.schoolLocation || 'School'}`;
+    bookingBadge = booking?.id ? (booking.id.startsWith('#') ? booking.id : `#${booking.id}`) : '#84920';
+  }
+
+  const scrollBody = screenEl.querySelector('.screen-scroll-body');
+  if (!scrollBody) return;
+
+  if (isDriver) {
+    scrollBody.innerHTML = `
+      <!-- Driver Trip & Passenger Chip -->
+      <div class="report-trip-chip" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:12px 14px; margin-bottom:16px;">
+        <div class="report-trip-chip-icon" style="width:38px; height:38px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <i data-lucide="shield-alert" style="width:18px; height:18px;"></i>
+        </div>
+        <div class="report-trip-chip-text" style="flex:1; min-width:0; padding-left:4px;">
+          <div class="report-trip-chip-title" style="font-size:14px; font-weight:800; color:#0F172A;">${passengerName} • ${kidsNames}</div>
+          <div class="report-trip-chip-sub" style="font-size:12px; font-weight:600; color:#64748B; margin-top:2px;">${routeText}</div>
+        </div>
+        <span class="report-trip-chip-id" style="font-size:11px; font-weight:700; color:#94A3B8; background:#FFFFFF; border:1px solid #E2E8F0; padding:3px 8px; border-radius:6px;">${bookingBadge}</span>
+      </div>
+
+      <form id="driverIncidentForm" onsubmit="event.preventDefault(); submitDriverIncidentReport();" style="display:flex; flex-direction:column; gap:16px;">
+        <!-- Incident Category -->
+        <div class="form-group" style="margin:0;">
+          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;">
+            <span>Driver Incident Type</span>
+            <span style="font-size:11px; font-weight:600; color:#EA580C;">Required</span>
+          </label>
+          <div class="input-box-wrapper" style="height:46px; background:#FFFFFF; position:relative; border:1px solid #E2E8F0; border-radius:12px;">
+            <i data-lucide="alert-triangle" class="input-box-icon" style="width:16px; height:16px; color:#EA580C;"></i>
+            <select class="form-input" id="driverIncidentCategorySelect" style="cursor:pointer; font-size:13.5px; font-weight:700; color:#0F172A; width:100%; border:none; background:transparent; padding-right:28px;">
+              <option value="Child No-Show / Late at Pickup" selected>🧒 Child No-Show / Late at Pickup</option>
+              <option value="Child Behavioral / Safety Incident">⚠️ Child Behavioral / Safety Conduct</option>
+              <option value="No Authorized Adult at Drop-off">🛑 No Authorized Guardian at Drop-off</option>
+              <option value="Missing Booster or Car Seat">💺 Booster / Car Seat Not Provided</option>
+              <option value="Inappropriate Parent Communication">💬 Disrespectful / Inappropriate Parent</option>
+              <option value="Vehicle Breakdown / Road Roadblock">🚗 Vehicle Breakdown / Severe Traffic Delay</option>
+              <option value="Fare / Payment Dispute">💳 Fare / Cash / Reimbursement Dispute</option>
+              <option value="Other Operational Incident">❓ Other Safety or Operational Issue</option>
+            </select>
+            <i data-lucide="chevron-down" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#94A3B8; pointer-events:none;"></i>
+          </div>
+        </div>
+
+        <!-- Urgency Level Chips -->
+        <div class="form-group" style="margin:0;">
+          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:8px;">Urgency Level</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+            <button type="button" class="driver-urgency-chip active" data-level="standard" onclick="selectDriverUrgencyLevel(this, 'standard')" style="padding:8px 6px; font-size:11.5px; font-weight:700; border-radius:10px; border:1.5px solid #1B2B68; background:#1B2B68; color:#FFFFFF; cursor:pointer; text-align:center;">
+              Standard
+            </button>
+            <button type="button" class="driver-urgency-chip" data-level="priority" onclick="selectDriverUrgencyLevel(this, 'priority')" style="padding:8px 6px; font-size:11.5px; font-weight:700; border-radius:10px; border:1.5px solid #E2E8F0; background:#FFFFFF; color:#64748B; cursor:pointer; text-align:center;">
+              Priority
+            </button>
+            <button type="button" class="driver-urgency-chip" data-level="critical" onclick="selectDriverUrgencyLevel(this, 'critical')" style="padding:8px 6px; font-size:11.5px; font-weight:700; border-radius:10px; border:1.5px solid #FECDD3; background:#FFF1F2; color:#E11D48; cursor:pointer; text-align:center;">
+              🚨 Urgent
+            </button>
+          </div>
+          <input type="hidden" id="driverUrgencyInput" value="standard" />
+        </div>
+
+        <!-- Incident Description -->
+        <div class="form-group" style="margin:0;">
+          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px;">Incident Description &amp; Details</label>
+          <div class="textarea-box-wrapper" style="padding:10px 12px; border:1px solid #E2E8F0; border-radius:12px; background:#FFFFFF;">
+            <textarea class="form-textarea" id="driverReportDescriptionInput" rows="3" style="min-height:84px; font-size:13.5px; line-height:1.4; color:#0F172A; width:100%; border:none; resize:none; outline:none; background:transparent;" placeholder="Describe what occurred, time of event, actions you took, and any parent/child response..."></textarea>
+          </div>
+        </div>
+
+        <!-- Photo / Evidence Upload (Optional) -->
+        <div class="form-group" style="margin:0;">
+          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px;">Photo Evidence (Optional)</label>
+          <div id="driverReportEvidenceBox" onclick="mockDriverAttachEvidence()" style="border:1.5px dashed #CBD5E1; border-radius:12px; padding:14px; text-align:center; background:#F8FAFC; cursor:pointer; transition:all 0.15s ease;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; color:#64748B; font-size:12.5px; font-weight:600;">
+              <i data-lucide="camera" style="width:16px; height:16px; color:#1B2B68;"></i>
+              <span id="driverEvidenceLabel">Add photo (e.g. car seat, porch status, gate)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 24/7 Driver Hotline Box -->
+        <div style="background:#FEF3C7; border:1px solid #FDE68A; border-radius:14px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i data-lucide="phone-call" style="width:18px; height:18px; color:#D97706; flex-shrink:0;"></i>
+            <div style="font-size:12px; font-weight:700; color:#92400E; line-height:1.3;">
+              Emergency? 24/7 Driver Safety Desk
+            </div>
+          </div>
+          <a href="tel:18005555437" style="padding:6px 12px; font-size:11.5px; font-weight:800; border-radius:8px; background:#D97706; color:#FFFFFF; text-decoration:none; white-space:nowrap;">
+            Call Desk
+          </a>
+        </div>
+
+        <!-- Submit Button -->
+        <div style="margin-top:4px;">
+          <button type="button" class="btn-primary" onclick="submitDriverIncidentReport()" style="width:100%; height:48px; font-size:14.5px; font-weight:800; border-radius:14px; background:#1B2B68; color:#FFFFFF; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(27,43,104,0.2);">
+            Submit Incident Report
+          </button>
+        </div>
+      </form>
+    `;
+  } else {
+    scrollBody.innerHTML = `
+      <input type="hidden" id="reportTripSelect" value="${bookingBadge}" />
+      <div class="report-trip-chip">
+        <div class="report-trip-chip-icon" aria-hidden="true">
+          <i data-lucide="car"></i>
+        </div>
+        <div class="report-trip-chip-text">
+          <div class="report-trip-chip-title" id="tripReportTitle">${passengerName} • ${kidsNames}</div>
+          <div class="report-trip-chip-sub" id="tripReportRoute">${routeText}</div>
+        </div>
+        <span class="report-trip-chip-id" id="tripReportBookingBadge">${bookingBadge}</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Category Selection Dropdown -->
+        <div class="form-group" style="margin: 0;">
+          <label class="form-label" for="reportCategorySelect" style="margin-bottom: 6px;">Issue Category</label>
+          <div class="input-box-wrapper" style="height: 46px; background: #FFFFFF; position: relative;">
+            <i data-lucide="help-circle" class="input-box-icon" style="width: 16px; height: 16px; color: #64748B;"></i>
+            <select class="form-input" id="reportCategorySelect" style="cursor: pointer; font-size: 14px; font-weight: 600; color: #0F172A; width: 100%; border: none; background: transparent; padding-right: 28px;">
+              <option value="Safety / Driving" selected>🚗 Driving Safety / Concern</option>
+              <option value="Driver Delay">⏱️ Driver Delay / Punctuality</option>
+              <option value="Lost Item">🎒 Lost Item in Vehicle</option>
+              <option value="Billing Issue">💳 Fare / Payment / Route</option>
+              <option value="Vehicle Condition">🧼 Vehicle Condition &amp; Cleanliness</option>
+              <option value="Other">❓ Other Feedback</option>
+            </select>
+            <i data-lucide="chevron-down" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #94A3B8; pointer-events: none;"></i>
+          </div>
+        </div>
+
+        <!-- Description Input -->
+        <div class="form-group" style="margin: 0;">
+          <label class="form-label" style="margin-bottom: 6px;">Describe What Happened</label>
+          <div class="textarea-box-wrapper" style="padding: 10px 12px;">
+            <textarea class="form-textarea" id="reportDescriptionInput" rows="3" style="min-height: 72px; font-size: 14px;" placeholder="Tell us what happened so our team can resolve it..."></textarea>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div style="margin-top: 2px;">
+          <button type="button" class="btn-primary" onclick="submitIssueReport()" style="width: 100%; height: 44px; font-size: 14px; font-weight: 700;">
+            <span>Submit Report</span>
+          </button>
+        </div>
+
+        <!-- Subtle 1-line Emergency Safety Notice -->
+        <p style="text-align: center; font-size: 12px; color: #94A3B8; margin: 0 0 16px;">
+          Immediate emergency? Call <a href="tel:911" style="font-weight: 700; color: #DC2626; text-decoration: none;">911</a> or <a href="tel:18005555437" style="font-weight: 700; color: var(--color-primary); text-decoration: none;">Dispatch Hotline</a>
+        </p>
+      </div>
+    `;
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
 window.handleTripReportBack = function () {
-  const prev = window.tripReportPreviousScreen || 'bookingDetails';
+  const prev = window.tripReportPreviousScreen || 'messages';
   if (window.navReturnStack && window.navReturnStack.length && typeof window.backNested === 'function') {
     window.backNested(prev);
     return;

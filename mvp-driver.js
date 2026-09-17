@@ -1061,6 +1061,11 @@
     else if (name === 'inbox') renderDriverInbox();
     else if (name === 'messages') renderDriverChatHeader();
     else if (name === 'notifications' && state().activeRole === 'driver') renderDriverNotifications();
+    else if (name === 'report') {
+      if (typeof window.renderReportScreen === 'function') {
+        window.renderReportScreen(window.appState?.activeBookingId, state().activeRole || 'driver');
+      }
+    }
     icons();
   }
 
@@ -4794,12 +4799,23 @@
   }
 
   function parentParty(id) {
-    if (PARENTS[id]) return PARENTS[id];
-    const req = ensureDriver().requests.find((r) => r.parentId === id || r.id === id);
-    if (req) return { id: req.parentId, name: req.parentName, photo: req.parentPhoto || '/assets/avatar_sadia.jpg', sub: 'Parent · ' + childShort(req) };
-    const demo = DEMO_INBOX.find((t) => t.id === id);
-    if (demo) return { id: demo.id, name: demo.name, photo: demo.photo || '/assets/avatar_sadia.jpg', sub: 'Parent' };
-    return null;
+    let p = null;
+    if (PARENTS[id]) p = { ...PARENTS[id] };
+    else {
+      const req = ensureDriver().requests.find((r) => r.parentId === id || r.id === id);
+      if (req) p = { id: req.parentId, name: req.parentName, photo: req.parentPhoto || '/assets/avatar_sadia.jpg', sub: 'Parent · ' + childShort(req) };
+      else {
+        const demo = DEMO_INBOX.find((t) => t.id === id);
+        if (demo) p = { id: demo.id, name: demo.name, photo: demo.photo || '/assets/avatar_sadia.jpg', sub: 'Parent' };
+      }
+    }
+    if (!p) p = { ...PARENTS['PRNT-9042'] };
+    if (/sadia/i.test(p.name)) p.name = 'Sarah Tremblay';
+    if (/nadia/i.test(p.name)) p.name = 'Amanda Roy';
+    if (/priya/i.test(p.name)) p.name = 'Jessica Taylor';
+    if (/amira/i.test(p.name)) p.name = 'Claire Dubois';
+    if (/marcus/i.test(p.name)) p.name = 'Marcus Vance';
+    return p;
   }
 
   const origChat = window.openChatWith;
@@ -4817,15 +4833,17 @@
       const tone = item.tone === 'amber'
         ? 'background:#FEF3C7;border-color:#FDE68A;color:#B45309;'
         : '';
+      let sysText = esc(item.text).replace(/Sadia/g, 'Sarah').replace(/Arman/g, 'Liam');
       return `<div class="system-status-bubble" style="${tone}display:flex;align-items:center;justify-content:flex-start;gap:6px;">
         <i data-lucide="clock" style="width:14px;height:14px;"></i>
-        <span>${esc(item.text)}</span>
+        <span>${sysText}</span>
       </div>`;
     }
     // In driver chat, "provider" bubble = parent message; "parent" bubble = driver (me)
     const cls = item.type === 'provider' ? 'provider' : 'parent';
+    let bubbleText = esc(item.text).replace(/Sadia/g, 'Sarah').replace(/Arman/g, 'Liam');
     return `<div class="chat-bubble ${cls}">
-      <div class="chat-bubble-text">${esc(item.text)}</div>
+      <div class="chat-bubble-text">${bubbleText}</div>
       <div class="chat-timestamp">
         ${esc(item.time || '')}
         ${cls === 'parent' ? '<i data-lucide="check-check" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-left:2px;opacity:0.85;"></i>' : ''}
