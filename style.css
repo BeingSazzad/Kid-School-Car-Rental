@@ -7000,11 +7000,10 @@ svg.lucide {
 }
 
 .profile-user-name-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 6px;
-  width: 100%;
   min-width: 0;
 }
 

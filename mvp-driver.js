@@ -4530,15 +4530,13 @@
     el.innerHTML = `
       <!-- User Profile Header Card -->
       <div class="profile-user-card" style="margin-bottom: 12px;" onclick="openDriverProfileChild('driverOnboardProfile', event)">
-        <div class="profile-user-avatar-wrap">
-          <img src="${esc(photo)}" alt="Profile photo" class="profile-user-avatar" id="drvProfileHeaderPhoto" onerror="this.src='/assets/avatar_sadia.jpg'" />
-          <button type="button" class="profile-user-avatar-edit-btn" onclick="event.stopPropagation(); openDriverProfileChild('driverOnboardProfile', event)" aria-label="Change photo">
-            <i data-lucide="camera"></i>
-          </button>
+        <div style="position: relative; flex-shrink: 0;">
+          <img src="${esc(photo)}" alt="Profile photo" class="profile-user-avatar" id="drvProfileHeaderPhoto" style="width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 2.5px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.25);" onerror="this.src='/assets/avatar_sadia.jpg'" />
+          <span style="position: absolute; bottom: 0; right: 0; background: ${d.isOnline ? '#10B981' : '#94A3B8'}; border: 2px solid #09122C; border-radius: 50%; width: 12px; height: 12px;" title="${d.isOnline ? 'Online' : 'Offline'}"></span>
         </div>
-        <div class="profile-user-info">
-          <div class="profile-user-name-row">
-            <div style="display:flex; align-items:center; gap:6px; min-width:0; overflow:hidden;">
+        <div class="profile-user-meta">
+          <div class="profile-user-top">
+            <div class="profile-user-name-row">
               <h3 class="profile-user-name">${esc(d.name || 'Tariq Ahmed')}</h3>
               ${isApproved(d) ? `
                 <span class="profile-verified-badge-wrap" title="Verified Driver">
@@ -4550,7 +4548,9 @@
             </div>
             <i data-lucide="chevron-right" class="profile-user-chevron"></i>
           </div>
-          <p class="profile-user-role" style="margin:2px 0 0 0; font-size:12.5px; color:#93C5FD; font-weight:600;">School Driver</p>
+          <p class="profile-user-role" style="font-size:12.5px; color:#BAE6FD; margin:2px 0 0 0; font-weight:500;">
+            School Driver
+          </p>
           <p class="profile-user-rating" style="margin:2px 0 0 0; font-size:12px; color:#FCD34D; font-weight:600; display:flex; align-items:center; gap:4px;">
             <span>★ ${Number(d.rating || 4.9).toFixed(1)}</span>
             <span style="color:rgba(255,255,255,0.75); font-weight:400;">(142 trips)</span>
