@@ -2612,16 +2612,38 @@
       <h3 class="card-title-navy" style="margin:0 0 4px;">${esc(doc.title)}</h3>
       ${helpNote ? `<p class="card-desc-muted" style="font-size:12px;margin:0 0 14px;line-height:1.4;">${esc(helpNote)}</p>` : ''}
       ${fieldHtml}
-      <div class="form-group">
-        <label class="form-label" for="wsDocFile">Document File (PDF or Photo)</label>
-        <label class="drv-upload-tile" for="wsDocFile">
-          ${thumb}
-          <span class="drv-upload-copy">
-            <span class="drv-upload-name">${esc(fileName)}</span>
-            <span class="drv-upload-hint">${attached ? 'Tap to replace · JPG, PNG, or PDF' : 'Tap to upload · JPG, PNG, or PDF'}</span>
-          </span>
-        </label>
-        <input type="file" accept="image/*,.pdf,application/pdf" id="wsDocFile" class="drv-file-input" onchange="onWalkShareDocFile(event)" />
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Document File (PDF or Photo)</label>
+        ${attached ? `
+          <div class="drv-doc-card-attached">
+            <div class="drv-doc-info-left">
+              ${thumb}
+              <div class="drv-doc-meta-col">
+                <div class="drv-doc-file-name" title="${esc(fileName)}">${esc(fileName)}</div>
+                <div class="drv-doc-status-badge">
+                  <i data-lucide="check-circle-2" style="width:12px; height:12px; color:#16A34A;"></i>
+                  <span>Ready for verification</span>
+                </div>
+              </div>
+            </div>
+            <div class="drv-doc-actions-right">
+              <label for="wsDocFile" class="btn-drv-doc-replace" title="Replace document">
+                <i data-lucide="refresh-cw" style="width:13px; height:13px;"></i>
+                <span>Replace</span>
+              </label>
+              <button type="button" class="btn-drv-doc-delete" onclick="deleteWalkShareDocFile(event)" title="Delete document">
+                <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+              </button>
+            </div>
+          </div>
+        ` : `
+          <label class="drv-doc-dropzone" for="wsDocFile">
+            <div class="drv-doc-dropzone-icon"><i data-lucide="upload-cloud"></i></div>
+            <div class="drv-doc-dropzone-title">Upload Document File</div>
+            <div class="drv-doc-dropzone-hint">JPG, PNG or PDF (Max 10MB)</div>
+          </label>
+        `}
+        <input type="file" accept="image/*,.pdf,application/pdf" id="wsDocFile" class="drv-file-input" style="display:none;" onchange="onWalkShareDocFile(event)" />
       </div>
       <div class="drv-actions-col">
         <button type="button" class="btn-primary" onclick="saveWalkShareDoc()">${doc.status === 'not_submitted' ? 'Submit for review' : 'Save changes'}</button>
@@ -2629,6 +2651,21 @@
     `;
     icons();
   }
+
+  window.deleteWalkShareDocFile = function (event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const w = ensureWalk();
+    const doc = w.documents.find((d) => d.id === w.selectedDocId);
+    if (!doc) return;
+    doc.file = { name: '', attached: false, preview: '' };
+    doc._fileTouched = true;
+    persist();
+    renderDocDetail();
+    toast('Document removed. Please upload a clear photo or PDF.');
+  };
 
   window.onWalkShareDocFile = function (event) {
     const input = event.target;

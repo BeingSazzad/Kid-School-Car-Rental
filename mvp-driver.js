@@ -1421,18 +1421,40 @@
           ${field('Plate', `<input class="form-input" id="drvVPlate" value="${esc(v.plate || '')}" placeholder="e.g. SCH-4091" />`)}
           ${field('Seats', `<input class="form-input" id="drvVSeats" type="number" min="1" max="8" value="${esc(v.capacity || '')}" placeholder="4" />`)}
         </div>
-        <div class="form-group">
-          <label class="form-label" for="drvVehicleFile">Vehicle photo</label>
-          <label class="drv-upload-tile" for="drvVehicleFile">
-            ${thumb
-              ? `<img class="drv-upload-thumb" src="${esc(thumb)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
-              : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="upload"></i></span>`}
-            <span class="drv-upload-copy">
-              <span class="drv-upload-name">${esc(photoName)}</span>
-              <span class="drv-upload-hint">${esc(photoHint)}</span>
-            </span>
-          </label>
-          <input type="file" accept="image/*" capture="environment" id="drvVehicleFile" class="drv-file-input" onchange="onDriverVehiclePhoto(event)" />
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Vehicle photo</label>
+          ${(thumb || v.photoName) ? `
+            <div class="drv-doc-card-attached">
+              <div class="drv-doc-info-left">
+                ${thumb
+                  ? `<img class="drv-doc-thumb-preview" src="${esc(thumb)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
+                  : `<div class="drv-doc-icon-badge"><i data-lucide="car"></i></div>`}
+                <div class="drv-doc-meta-col">
+                  <div class="drv-doc-file-name" title="${esc(photoName || 'Vehicle photo')}">${esc(photoName || 'Vehicle photo')}</div>
+                  <div class="drv-doc-status-badge">
+                    <i data-lucide="check-circle-2" style="width:12px; height:12px; color:#16A34A;"></i>
+                    <span>Ready for verification</span>
+                  </div>
+                </div>
+              </div>
+              <div class="drv-doc-actions-right">
+                <label for="drvVehicleFile" class="btn-drv-doc-replace" title="Replace photo">
+                  <i data-lucide="refresh-cw" style="width:13px; height:13px;"></i>
+                  <span>Replace</span>
+                </label>
+                <button type="button" class="btn-drv-doc-delete" onclick="deleteDriverVehiclePhoto(event)" title="Delete photo">
+                  <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+                </button>
+              </div>
+            </div>
+          ` : `
+            <label class="drv-doc-dropzone" for="drvVehicleFile">
+              <div class="drv-doc-dropzone-icon"><i data-lucide="camera"></i></div>
+              <div class="drv-doc-dropzone-title">Upload Vehicle Photo</div>
+              <div class="drv-doc-dropzone-hint">Take photo or choose JPG/PNG of exterior</div>
+            </label>
+          `}
+          <input type="file" accept="image/*" capture="environment" id="drvVehicleFile" class="drv-file-input" style="display:none;" onchange="onDriverVehiclePhoto(event)" />
         </div>
       </div>
       <div class="drv-actions-col">
@@ -1441,6 +1463,20 @@
     `;
     icons();
   }
+
+  window.deleteDriverVehiclePhoto = function (event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const d = ensureDriver();
+    d.vehicle.photo = '';
+    d.vehicle.photoName = '';
+    syncDriverToProviders();
+    persist();
+    renderOnboardVehicle();
+    toast('Vehicle photo removed. Please upload a clear photo.');
+  };
 
   window.onDriverVehiclePhoto = function (event) {
     const input = event.target;
@@ -1569,22 +1605,51 @@
 
   function uploadTile(file, key, label, hint, status) {
     const attached = hasUpload(file);
-    const name = attached ? (file.name || 'File attached') : 'Tap to upload';
+    const name = attached ? (file.name || 'File attached') : '';
     const inputId = `drvUpload_${key}`;
-    const thumb = attached && file.preview && String(file.preview).indexOf('data:') === 0
-      ? `<img class="drv-upload-thumb" src="${esc(file.preview)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
-      : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="${attached ? 'file-check' : 'upload'}"></i></span>`;
+    const previewSrc = attached && file.preview && String(file.preview).indexOf('data:') === 0 ? file.preview : '';
+    const thumb = previewSrc
+      ? `<img class="drv-doc-thumb-preview" src="${esc(previewSrc)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
+      : `<div class="drv-doc-icon-badge"><i data-lucide="file-check-2"></i></div>`;
+
+    if (attached) {
+      return `
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">${esc(label)}</label>
+          <div class="drv-doc-card-attached">
+            <div class="drv-doc-info-left">
+              ${thumb}
+              <div class="drv-doc-meta-col">
+                <div class="drv-doc-file-name" title="${esc(name)}">${esc(name)}</div>
+                <div class="drv-doc-status-badge">
+                  <i data-lucide="check-circle-2" style="width:12px; height:12px; color:#16A34A;"></i>
+                  <span>Ready for verification</span>
+                </div>
+              </div>
+            </div>
+            <div class="drv-doc-actions-right">
+              <label for="${inputId}" class="btn-drv-doc-replace" title="Replace document">
+                <i data-lucide="refresh-cw" style="width:13px; height:13px;"></i>
+                <span>Replace</span>
+              </label>
+              <button type="button" class="btn-drv-doc-delete" onclick="deleteDriverDocFile(event, '${key}')" title="Delete document">
+                <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+              </button>
+            </div>
+          </div>
+          <input type="file" accept="image/*,.pdf,application/pdf" id="${inputId}" class="drv-file-input" style="display:none;" onchange="onDriverDocFile(event, '${key}')" />
+        </div>`;
+    }
+
     return `
-      <div class="form-group">
-        <label class="form-label" for="${inputId}">${esc(label)}</label>
-        <label class="drv-upload-tile" for="${inputId}">
-          ${thumb}
-          <span class="drv-upload-copy">
-            <span class="drv-upload-name">${esc(name)}</span>
-            <span class="drv-upload-hint">${esc(uploadHint(status, attached, hint))}</span>
-          </span>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">${esc(label)}</label>
+        <label class="drv-doc-dropzone" for="${inputId}">
+          <div class="drv-doc-dropzone-icon"><i data-lucide="upload-cloud"></i></div>
+          <div class="drv-doc-dropzone-title">Upload ${esc(label)}</div>
+          <div class="drv-doc-dropzone-hint">${esc(hint || 'JPG, PNG or PDF (Max 10MB)')}</div>
         </label>
-        <input type="file" accept="image/*,.pdf,application/pdf" id="${inputId}" class="drv-file-input" onchange="onDriverDocFile(event, '${key}')" />
+        <input type="file" accept="image/*,.pdf,application/pdf" id="${inputId}" class="drv-file-input" style="display:none;" onchange="onDriverDocFile(event, '${key}')" />
       </div>`;
   }
 
@@ -1754,6 +1819,19 @@
   }
 
   window.returnToDriverDocList = returnToDocList;
+
+  window.deleteDriverDocFile = function (event, key) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    if (!docDraft) return;
+    harvestDocDraft();
+    docDraft[key] = { name: '', attached: false, preview: '' };
+    docDraft._fileTouched = true;
+    renderDocDetail();
+    toast('Document removed. Please upload a clear photo or PDF.');
+  };
 
   window.onDriverDocFile = function (event, key) {
     const input = event.target;
