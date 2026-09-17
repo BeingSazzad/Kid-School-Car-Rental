@@ -7016,7 +7016,7 @@
 
       <div class="screen-scroll-body bd-scroll">
         <!-- 1. Standalone Trip Overview Card -->
-        <div class="bd-trip-hero-card">
+        <div class="bd-trip-hero-card" id="detailTripHeroCard">
           <div class="bd-hero-meta-row">
             <span class="bd-hero-status-pill" id="detailHeroStatusPill">
               <i data-lucide="check-circle" style="width:13px;height:13px;"></i>
@@ -7031,6 +7031,9 @@
           <h3 class="bd-hero-main-title" id="detailHeaderTitle">Morning to School</h3>
           <p class="bd-hero-sub-text" id="detailHeaderSubtitle">Regular Trip • Weekdays (Mon – Fri)</p>
         </div>
+
+        <!-- State Notice Card (Contextual for Cancelled / Completed / Pending) -->
+        <div id="detailStateNoticeCard" class="bd-state-notice-card" style="display: none;"></div>
 
         <!-- 2. Standalone Journey & Route Card -->
         <section class="bd-route-floating-card">
@@ -7105,6 +7108,20 @@
             </div>
           </div>
         </section>
+
+        <!-- Handover Safety PIN Banner (Active / Scheduled Trips) -->
+        <div class="bd-safety-pin-banner" id="detailSafetyPinBanner" onclick="openSafetyPinModal()" style="display: flex;">
+          <div class="bd-safety-pin-left">
+            <div class="bd-safety-pin-icon">
+              <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
+            </div>
+            <div>
+              <div class="bd-safety-pin-title">Child Handover PIN</div>
+              <div class="bd-safety-pin-code" id="detailSafetyPinBannerCode">PIN 4920</div>
+            </div>
+          </div>
+          <button type="button" class="bd-safety-pin-btn">Show QR &amp; Code</button>
+        </div>
 
         <!-- 3. Driver & Vehicle Card -->
         <section class="bd-card-clean">
@@ -7187,13 +7204,13 @@
         </section>
 
         <!-- 7. Schedule Action Row Card -->
-        <div class="bd-action-tile-card" onclick="openScheduleDetailsModal()">
+        <div class="bd-action-tile-card" id="detailTileScheduleCard" onclick="openScheduleDetailsModal()">
           <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-            <div class="bd-tile-icon-box is-calendar">
+            <div class="bd-tile-icon-box is-calendar" id="detailTileScheduleIconWrap">
               <i data-lucide="calendar" style="width:20px;height:20px;"></i>
             </div>
             <div>
-              <div class="bd-tile-title">Schedule</div>
+              <div class="bd-tile-title" id="detailTileScheduleTitle">Schedule</div>
               <div class="bd-tile-sub" id="detailTileScheduleSub">Repeats every Mon – Fri • Until Dec 31, 2026</div>
             </div>
           </div>
@@ -7201,13 +7218,13 @@
         </div>
 
         <!-- 8. Manage Booking Action Row Card -->
-        <div class="bd-action-tile-card is-muted" onclick="openManageBookingModal()">
+        <div class="bd-action-tile-card is-muted" id="detailTileManageCard" onclick="openManageBookingModal()">
           <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-            <div class="bd-tile-icon-box is-manage">
+            <div class="bd-tile-icon-box is-manage" id="detailTileManageIconWrap">
               <i data-lucide="edit-3" style="width:18px;height:18px;"></i>
             </div>
             <div>
-              <div class="bd-tile-title">Manage Booking</div>
+              <div class="bd-tile-title" id="detailTileManageTitle">Manage Booking</div>
               <div class="bd-tile-sub" id="detailTileFareSub">Change dates, route, or cancel subscription</div>
             </div>
           </div>

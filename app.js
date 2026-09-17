@@ -4484,14 +4484,13 @@ function renderBookingDetails(bookingId) {
   const isCompleted = booking.status === 'completed';
   const isLive = booking.status === 'in_progress';
   const isPending = booking.status === 'pending';
-  const isCancelled = booking.status === 'cancelled';
-  const isConfirmed = booking.status === 'confirmed';
+  const isCancelled = booking.status === 'cancelled' || booking.status === 'declined';
+  const isConfirmed = !isCompleted && !isLive && !isPending && !isCancelled;
 
-  // 1. Hero Summary Titles & Date (Audited Input -> Output)
+  // 1. Hero Summary Titles & Date
   const isRecurring = booking.frequency === 'recurring';
   const isBothWay = Boolean(booking.direction === 'bothway');
   
-  // Option A Format: Home ⇄ Greenfield International
   const cleanPickupShort = /home/i.test(booking.pickupLocation || '') ? 'Home' : String(booking.pickupLocation || 'Home').replace(/\s*\([^)]*\)/g, '').split(',')[0].trim();
   const cleanSchoolShort = String(booking.schoolLocation || 'Greenfield International').replace(/\s*\([^)]*\)/g, '').split(',')[0].trim();
   
@@ -4499,30 +4498,42 @@ function renderBookingDetails(bookingId) {
     ? `${cleanPickupShort} ⇄ ${cleanSchoolShort}`
     : `${cleanPickupShort} → ${cleanSchoolShort}`);
 
-  // Dynamic recurrence or single pass subtitle
-  let tripSub = '';
-  if (isRecurring) {
-    if (booking.selectedDays && booking.selectedDays.length) {
-      tripSub = `Weekly Commute • ${booking.selectedDays.join(', ')}`;
-    } else {
-      tripSub = 'Weekly Commute • Weekdays (Mon – Fri)';
-    }
-  } else {
-    tripSub = `One-Time Pass • ${isBothWay ? 'Round Trip' : 'Single Ride'}`;
-  }
-
-  // Exact date without fallback mismatch
   const tripDate = booking.tripDate || booking.date || booking.startDate || (booking.createdAt ? (booking.createdAt.includes('2026') ? booking.createdAt : booking.createdAt + ', 2026') : 'Mon, Sep 1, 2026');
+
+  // Subtitle per State
+  let tripSub = '';
+  if (isLive) {
+    tripSub = isRecurring ? 'Weekly Commute • Live In Progress' : 'One-Time Pass • Live In Progress';
+  } else if (isCompleted) {
+    tripSub = isRecurring ? `Weekly Commute • Finished on ${tripDate}` : `One-Time Pass • Completed on ${tripDate}`;
+  } else if (isCancelled) {
+    tripSub = isRecurring ? 'Weekly Commute • Cancelled ($0 Due)' : 'One-Time Pass • Cancelled ($0 Due)';
+  } else if (isPending) {
+    tripSub = isRecurring ? 'Weekly Commute • Awaiting Acceptance' : 'One-Time Pass • Pending Driver Confirmation';
+  } else {
+    // Scheduled / Confirmed
+    if (isRecurring) {
+      if (booking.selectedDays && booking.selectedDays.length) {
+        tripSub = `Weekly Commute • ${booking.selectedDays.join(', ')}`;
+      } else {
+        tripSub = 'Weekly Commute • Weekdays (Mon – Fri)';
+      }
+    } else {
+      tripSub = `One-Time Pass • ${isBothWay ? 'Round Trip' : 'Single Ride'}`;
+    }
+  }
 
   setText('detailHeaderTitle', tripTitle);
   setText('detailHeaderSubtitle', tripSub);
-  setText('detailScheduleDate', tripDate);
+  setText('detailScheduleDate', isLive ? 'Live Now' : tripDate);
 
   const idShort = String(booking.id || '').replace(/^H2S-?/i, '');
   setText('detailRefId', idShort ? '#' + idShort : '');
 
   const pin = String(booking.id || '').replace(/\D/g, '').slice(-4) || '4920';
   setText('detailSafetyPin', pin);
+  setText('detailSafetyPinBannerCode', 'PIN ' + pin);
+
   const modalPinEl = document.getElementById('modalSafetyPinText');
   const modalSubEl = document.getElementById('modalSafetyPinSub');
   const modalVehEl = document.getElementById('modalSafetyVehicleSub');
@@ -4530,9 +4541,36 @@ function renderBookingDetails(bookingId) {
   if (modalSubEl) modalSubEl.textContent = children.map(c => c.name.split(' ')[0]).join(' + ') || 'Children';
   if (modalVehEl) modalVehEl.textContent = isWalk ? 'Walking Escort Group' : ((provider.vehicle || '') + (provider.plate ? ' · ' + provider.plate : ''));
 
-  // 2. Status Badge in Hero
+  // 2. Hero Background & Status Badge
+  const heroCard = document.getElementById('detailTripHeroCard');
   const heroStatusPill = document.getElementById('detailHeroStatusPill');
   const heroStatusText = document.getElementById('detailHeroStatusText');
+
+  if (heroCard) {
+    if (isLive) {
+      heroCard.style.background = 'linear-gradient(135deg, #112255 0%, #1E3A8A 100%)';
+      heroCard.style.border = '1px solid #2563EB';
+      heroCard.style.boxShadow = '0 8px 24px rgba(37, 99, 235, 0.25)';
+    } else if (isCompleted) {
+      heroCard.style.background = 'linear-gradient(135deg, #064E3B 0%, #047857 100%)';
+      heroCard.style.border = '1px solid #10B981';
+      heroCard.style.boxShadow = '0 8px 24px rgba(16, 185, 129, 0.2)';
+    } else if (isCancelled) {
+      heroCard.style.background = 'linear-gradient(135deg, #334155 0%, #1E293B 100%)';
+      heroCard.style.border = '1px solid #475569';
+      heroCard.style.boxShadow = '0 8px 24px rgba(15, 23, 42, 0.15)';
+    } else if (isPending) {
+      heroCard.style.background = 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)';
+      heroCard.style.border = '1px solid #D97706';
+      heroCard.style.boxShadow = '0 8px 24px rgba(217, 119, 6, 0.2)';
+    } else {
+      // Scheduled / Confirmed
+      heroCard.style.background = 'linear-gradient(135deg, #112255 0%, #1E3A8A 100%)';
+      heroCard.style.border = 'none';
+      heroCard.style.boxShadow = '0 8px 24px rgba(17, 34, 85, 0.12)';
+    }
+  }
+
   if (heroStatusPill && heroStatusText) {
     if (isLive) {
       heroStatusPill.className = 'bd-hero-status-pill';
@@ -4542,6 +4580,10 @@ function renderBookingDetails(bookingId) {
       heroStatusPill.className = 'bd-hero-status-pill is-completed';
       heroStatusPill.style.background = '#059669';
       heroStatusPill.innerHTML = '<i data-lucide="check-circle" style="width:13px;height:13px;"></i> <span>Completed</span>';
+    } else if (isCancelled) {
+      heroStatusPill.className = 'bd-hero-status-pill is-cancelled';
+      heroStatusPill.style.background = '#DC2626';
+      heroStatusPill.innerHTML = '<i data-lucide="x-circle" style="width:13px;height:13px;"></i> <span>Cancelled</span>';
     } else if (isPending) {
       heroStatusPill.className = 'bd-hero-status-pill is-pending';
       heroStatusPill.style.background = '#D97706';
@@ -4553,7 +4595,34 @@ function renderBookingDetails(bookingId) {
     }
   }
 
-  // 3. Journey & Route Card (Chronologically Calculated for Scheduled, Live & Completed)
+  // 3. Contextual State Notice Banner
+  const noticeCard = document.getElementById('detailStateNoticeCard');
+  if (noticeCard) {
+    if (isCompleted) {
+      noticeCard.style.display = 'flex';
+      noticeCard.className = 'bd-state-notice-card is-completed';
+      noticeCard.innerHTML = `<i data-lucide="check-circle-2" style="width:18px;height:18px;color:#059669;flex-shrink:0;"></i> <span>Trip completed successfully on ${tripDate}. Safe child handover was verified.</span>`;
+    } else if (isCancelled) {
+      noticeCard.style.display = 'flex';
+      noticeCard.className = 'bd-state-notice-card is-cancelled';
+      noticeCard.innerHTML = `<i data-lucide="alert-circle" style="width:18px;height:18px;color:#DC2626;flex-shrink:0;"></i> <span>This ride booking was cancelled. No fee was charged, and the provider was notified.</span>`;
+    } else if (isPending) {
+      noticeCard.style.display = 'flex';
+      noticeCard.className = 'bd-state-notice-card is-pending';
+      noticeCard.innerHTML = `<i data-lucide="clock" style="width:18px;height:18px;color:#D97706;flex-shrink:0;"></i> <span>Request sent to ${(provider.name || 'driver').split(' ')[0]}. You will be notified once schedule & rate are confirmed.</span>`;
+    } else {
+      noticeCard.style.display = 'none';
+      noticeCard.innerHTML = '';
+    }
+  }
+
+  // 4. Handover Safety PIN Banner (Only visible on Active & Scheduled)
+  const pinBanner = document.getElementById('detailSafetyPinBanner');
+  if (pinBanner) {
+    pinBanner.style.display = (isLive || isConfirmed) ? 'flex' : 'none';
+  }
+
+  // 5. Journey & Route Card (Chronologically Calculated)
   const outboundTime = booking.outboundTime || '07:30 AM';
   let schoolArriveTime = booking.schoolArriveTime;
   if (!schoolArriveTime) {
@@ -4573,7 +4642,6 @@ function renderBookingDetails(bookingId) {
   const returnStatusTag = document.getElementById('detailReturnStatus');
 
   if (isLive) {
-    // ACTIVE / IN-PROGRESS
     if (pickupStatusTag) {
       pickupStatusTag.className = 'bd-rt-pill-tag is-green';
       pickupStatusTag.textContent = isWalk ? 'Walking' : 'Picked up';
@@ -4587,7 +4655,6 @@ function renderBookingDetails(bookingId) {
       returnStatusTag.textContent = 'Scheduled';
     }
   } else if (isCompleted) {
-    // COMPLETED (History)
     if (pickupStatusTag) {
       pickupStatusTag.className = 'bd-rt-pill-tag is-green';
       pickupStatusTag.textContent = `Completed (${outboundTime})`;
@@ -4600,22 +4667,34 @@ function renderBookingDetails(bookingId) {
       returnStatusTag.className = 'bd-rt-pill-tag is-green';
       returnStatusTag.textContent = `Completed (${returnTime})`;
     }
-  } else if (isPending) {
-    // PENDING REQUEST
+  } else if (isCancelled) {
     if (pickupStatusTag) {
-      pickupStatusTag.className = 'bd-rt-pill-tag is-grey';
+      pickupStatusTag.className = 'bd-rt-pill-tag is-red';
+      pickupStatusTag.textContent = 'Cancelled';
+    }
+    if (dropoffStatusTag) {
+      dropoffStatusTag.className = 'bd-rt-pill-tag is-red';
+      dropoffStatusTag.textContent = 'Cancelled';
+    }
+    if (returnStatusTag) {
+      returnStatusTag.className = 'bd-rt-pill-tag is-red';
+      returnStatusTag.textContent = 'Cancelled';
+    }
+  } else if (isPending) {
+    if (pickupStatusTag) {
+      pickupStatusTag.className = 'bd-rt-pill-tag is-amber';
       pickupStatusTag.textContent = 'Pending';
     }
     if (dropoffStatusTag) {
-      dropoffStatusTag.className = 'bd-rt-pill-tag is-grey';
+      dropoffStatusTag.className = 'bd-rt-pill-tag is-amber';
       dropoffStatusTag.textContent = 'Pending';
     }
     if (returnStatusTag) {
-      returnStatusTag.className = 'bd-rt-pill-tag is-grey';
+      returnStatusTag.className = 'bd-rt-pill-tag is-amber';
       returnStatusTag.textContent = 'Pending';
     }
   } else {
-    // SCHEDULED / CONFIRMED BOOKING (Before trip starts)
+    // Scheduled / Confirmed
     if (pickupStatusTag) {
       pickupStatusTag.className = 'bd-rt-pill-tag is-blue';
       pickupStatusTag.textContent = 'Scheduled';
@@ -4658,7 +4737,7 @@ function renderBookingDetails(bookingId) {
     if (durLabel) durLabel.textContent = 'Est. duration';
   }
 
-  // 4. Driver & Vehicle / Chaperone Card
+  // 6. Driver & Vehicle / Chaperone Card
   setText('detailProviderName', String(provider.name || 'Mohammad Rahim').replace(/\s*\(WalkShare\)/i, ''));
   setText('detailProviderRating', String(provider.rating != null ? provider.rating : '4.8'));
   setText('detailProviderReviews', provider.reviewsCount != null ? '(' + provider.reviewsCount + ' trips)' : '(120 trips)');
@@ -4703,7 +4782,7 @@ function renderBookingDetails(bookingId) {
     vehicleRowClickable.setAttribute('onclick', `openDriverProfile('${provider.id || 'tariq'}', 'bookingDetails')`);
   }
 
-  // 5. Children (2) Card
+  // 7. Children Card
   const childrenHeader = document.getElementById('detailChildrenHeaderLabel');
   if (childrenHeader) {
     childrenHeader.textContent = `Children (${children.length})`;
@@ -4728,26 +4807,51 @@ function renderBookingDetails(bookingId) {
     }).join('') || '<div class="bd-student-meta">No children added</div>';
   }
 
-  // 6. Safety PIN Banner, Pricing Card & Special Instructions
-  setText('detailSafetyPinBannerCode', 'PIN ' + pin);
+  // 8. Pricing & Payment Card (State-Aware)
   const ratePeriod = booking.ratePeriod || (isRecurring ? 'week' : 'trip');
   const rateUnitText = ratePeriod === 'week' ? 'week' : 'trip';
   const isAgreed = booking.rateStatus === 'agreed' || (booking.status !== 'pending' && booking.agreedRate != null);
   const currentRate = isAgreed ? (booking.agreedRate || booking.amount || 120) : (booking.listedRate || booking.amount || 120);
 
-  setText('detailPriceAmount', `$${currentRate}/${rateUnitText}`);
-  setText('detailPriceBillingCycle', isAgreed ? `Agreed rate · Paid directly to ${(provider.name || 'driver').split(' ')[0]}` : `Listed rate (Negotiable) · Pending confirmation`);
-  setText('detailPaymentCardLabel', booking.preferredPayment || 'e-Transfer · Cash (Direct)');
-
   const payPill = document.getElementById('detailPaymentStatusPill');
   const payPillText = document.getElementById('detailPaymentStatusText');
-  if (payPill && payPillText) {
-    if (isPending) {
+
+  if (isCancelled) {
+    setText('detailPriceAmount', '$0');
+    setText('detailPriceBillingCycle', 'No fee charged for cancelled request');
+    setText('detailPaymentCardLabel', 'Cancelled · No Payment Due');
+    if (payPill && payPillText) {
+      payPill.style.background = '#FEF2F2';
+      payPill.style.color = '#DC2626';
+      payPill.style.borderColor = '#FECACA';
+      payPillText.textContent = 'Cancelled ($0)';
+    }
+  } else if (isCompleted) {
+    setText('detailPriceAmount', `$${currentRate}/${rateUnitText}`);
+    setText('detailPriceBillingCycle', `Settled · Direct payment to ${(provider.name || 'driver').split(' ')[0]}`);
+    setText('detailPaymentCardLabel', booking.preferredPayment || 'e-Transfer · Cash (Settled)');
+    if (payPill && payPillText) {
+      payPill.style.background = '#ECFDF5';
+      payPill.style.color = '#059669';
+      payPill.style.borderColor = '#A7F3D0';
+      payPillText.textContent = 'Settled / Paid';
+    }
+  } else if (isPending) {
+    setText('detailPriceAmount', `$${currentRate}/${rateUnitText}`);
+    setText('detailPriceBillingCycle', 'Listed rate (Negotiable) · Pending confirmation');
+    setText('detailPaymentCardLabel', booking.preferredPayment || 'e-Transfer · Cash (Direct)');
+    if (payPill && payPillText) {
       payPill.style.background = '#FEF3C7';
       payPill.style.color = '#D97706';
       payPill.style.borderColor = '#FDE68A';
       payPillText.textContent = 'Rate: Pending';
-    } else {
+    }
+  } else {
+    // Live or Scheduled
+    setText('detailPriceAmount', `$${currentRate}/${rateUnitText}`);
+    setText('detailPriceBillingCycle', isAgreed ? `Agreed rate · Paid directly to ${(provider.name || 'driver').split(' ')[0]}` : `Listed rate (Negotiable) · Pending confirmation`);
+    setText('detailPaymentCardLabel', booking.preferredPayment || 'e-Transfer · Cash (Direct)');
+    if (payPill && payPillText) {
       payPill.style.background = '#ECFDF5';
       payPill.style.color = '#059669';
       payPill.style.borderColor = '#A7F3D0';
@@ -4755,14 +4859,49 @@ function renderBookingDetails(bookingId) {
     }
   }
 
-  const payHandleWrap = document.getElementById('detailPaymentHandleWrap');
-
-  // 7. Special Notes & Schedule Tiles
+  // 9. Special Notes
   setText('detailSpecialNotesText', booking.notes || 'Gate 2 (Junior Wing Pickup) • Arman & Emma handover. Driver will wait 5 mins at home gate.');
-  setText('detailTileScheduleSub', isRecurring ? 'Repeats every Mon – Fri • Until Dec 31, 2026' : `${tripDate} • ${isBothWay ? 'Round Trip' : 'Single Ride'}`);
-  setText('detailTileFareSub', isAgreed ? `Rate agreed: $${currentRate}/${rateUnitText} · Direct payment` : 'Direct payment to provider');
 
-  // 8. Bottom Sticky Contextual Actions (Hick's Law - Single Focused CTA)
+  // 10. Schedule & Manage Action Tiles (State-Aware)
+  const schedTitle = document.getElementById('detailTileScheduleTitle');
+  const schedSub = document.getElementById('detailTileScheduleSub');
+  const schedIconWrap = document.getElementById('detailTileScheduleIconWrap');
+  const manageTitle = document.getElementById('detailTileManageTitle');
+  const manageSub = document.getElementById('detailTileFareSub');
+  const manageCard = document.getElementById('detailTileManageCard');
+
+  if (isCancelled) {
+    if (schedTitle) schedTitle.textContent = 'Cancelled Schedule';
+    if (schedSub) schedSub.textContent = `Trip was cancelled for ${tripDate}`;
+    if (schedIconWrap) schedIconWrap.innerHTML = '<i data-lucide="calendar-x" style="width:20px;height:20px;color:#94A3B8;"></i>';
+    if (manageTitle) manageTitle.textContent = 'Find Replacement Ride';
+    if (manageSub) manageSub.textContent = 'Browse verified school rides & walkshare escorts';
+    if (manageCard) manageCard.setAttribute('onclick', "navigateToScreen('screen-browseCars')");
+  } else if (isCompleted) {
+    if (schedTitle) schedTitle.textContent = 'Past Schedule';
+    if (schedSub) schedSub.textContent = `Completed on ${tripDate} • Safe arrival verified`;
+    if (schedIconWrap) schedIconWrap.innerHTML = '<i data-lucide="calendar-check" style="width:20px;height:20px;color:#059669;"></i>';
+    if (manageTitle) manageTitle.textContent = 'Rebook This Commute';
+    if (manageSub) manageSub.textContent = `Quickly re-schedule with ${(provider.name || 'driver').split(' ')[0]}`;
+    if (manageCard) manageCard.setAttribute('onclick', `rebookRide('${booking.id}')`);
+  } else if (isPending) {
+    if (schedTitle) schedTitle.textContent = 'Requested Schedule';
+    if (schedSub) schedSub.textContent = `Requested for ${tripDate} • Awaiting acceptance`;
+    if (schedIconWrap) schedIconWrap.innerHTML = '<i data-lucide="clock" style="width:20px;height:20px;color:#D97706;"></i>';
+    if (manageTitle) manageTitle.textContent = 'Manage Request';
+    if (manageSub) manageSub.textContent = 'Update instructions or withdraw request';
+    if (manageCard) manageCard.setAttribute('onclick', 'openManageBookingModal()');
+  } else {
+    // Live or Scheduled
+    if (schedTitle) schedTitle.textContent = 'Schedule';
+    if (schedSub) schedSub.textContent = isRecurring ? 'Repeats every Mon – Fri • Until Dec 31, 2026' : `${tripDate} • ${isBothWay ? 'Round Trip' : 'Single Ride'}`;
+    if (schedIconWrap) schedIconWrap.innerHTML = '<i data-lucide="calendar" style="width:20px;height:20px;color:#2563EB;"></i>';
+    if (manageTitle) manageTitle.textContent = 'Manage Booking';
+    if (manageSub) manageSub.textContent = isAgreed ? `Rate agreed: $${currentRate}/${rateUnitText} · Direct payment` : 'Change dates, route, or cancel subscription';
+    if (manageCard) manageCard.setAttribute('onclick', 'openManageBookingModal()');
+  }
+
+  // 11. Bottom Sticky Contextual Actions (Hick's Law - Single Focused CTA)
   const primaryTrackBtn = document.getElementById('btnTrackLivePrimary');
   const actionsWrap = document.getElementById('detailContextualActions');
 
@@ -4790,7 +4929,7 @@ function renderBookingDetails(bookingId) {
       if (primaryTrackBtn) primaryTrackBtn.style.display = 'none';
       actionsWrap.style.display = 'flex';
       actionsWrap.innerHTML = `
-        <button type="button" class="bd-btn-track-live" onclick="navigateToScreen('screen-browseCars')" style="width:100%; justify-content:center;">
+        <button type="button" class="bd-btn-track-live" onclick="rebookRide('${booking.id}')" style="width:100%; justify-content:center;">
           <i data-lucide="rotate-ccw" style="width:18px;height:18px;"></i>
           <span>Book again</span>
         </button>
@@ -4809,11 +4948,80 @@ function renderBookingDetails(bookingId) {
     }
   }
 
+  // 12. Dynamic Top-Bar 3-Dot Dropdown Menu
+  const menuEl = document.getElementById('tripDetailsDropdownMenu');
+  if (menuEl) {
+    if (isCancelled) {
+      menuEl.innerHTML = `
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); rebookRide('${booking.id}'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="rotate-ccw" style="width:14px;height:14px; color:#1B2B68;"></i>
+          <span style="font-weight:600; font-size:13px; color:#0F172A;">Book Again</span>
+        </button>
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); openTripReport('${booking.id}'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="flag" style="width:14px;height:14px; color:#F59E0B;"></i>
+          <span style="font-weight:600; font-size:13px; color:#0F172A;">Report an Issue</span>
+        </button>
+      `;
+    } else if (isCompleted) {
+      menuEl.innerHTML = `
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); openRatingModal('${booking.id}'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="star" style="width:14px;height:14px; color:#F59E0B;"></i>
+          <span style="font-weight:600; font-size:13px; color:#0F172A;">Rate Experience</span>
+        </button>
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); rebookRide('${booking.id}'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="rotate-ccw" style="width:14px;height:14px; color:#1B2B68;"></i>
+          <span style="font-weight:600; font-size:13px; color:#0F172A;">Book Again</span>
+        </button>
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); openTripReport('${booking.id}'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="flag" style="width:14px;height:14px; color:#64748B;"></i>
+          <span style="font-weight:600; font-size:13px; color:#0F172A;">Report an Issue</span>
+        </button>
+      `;
+    } else if (isPending) {
+      menuEl.innerHTML = `
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); openManageBookingModal(); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="edit-3" style="width:14px;height:14px; color:#1B2B68;"></i>
+          <span style="font-weight:600; font-size:13px; color:#0F172A;">Edit Request Notes</span>
+        </button>
+        <div style="height:1px; background:#F1F5F9; margin:4px 0;"></div>
+        <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); cancelBooking('${booking.id}'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="x-circle" style="width:14px;height:14px; color:#EF4444;"></i>
+          <span style="font-weight:600; font-size:13px; color:#EF4444;">Withdraw Request</span>
+        </button>
+      `;
+    } else if (isLive) {
+      menuEl.innerHTML = `
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); openTripReport('${booking.id}'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="flag" style="width:14px;height:14px; color:#F59E0B;"></i>
+          <span style="font-weight:600; font-size:13px; color:#0F172A;">Report an Issue</span>
+        </button>
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); openEmergencySOSModal(); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="alert-triangle" style="width:14px;height:14px; color:#EF4444;"></i>
+          <span style="font-weight:600; font-size:13px; color:#EF4444;">Emergency SOS</span>
+        </button>
+      `;
+    } else {
+      // Confirmed / Scheduled
+      menuEl.innerHTML = `
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); handleTripEditAction('editRide'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="edit-3" style="width:14px;height:14px; color:#1B2B68;"></i>
+          <span style="font-weight:600; font-size:13px; color:#0F172A;">Edit Trip Details</span>
+        </button>
+        <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); openTripReport('${booking.id}'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="flag" style="width:14px;height:14px; color:#F59E0B;"></i>
+          <span style="font-weight:600; font-size:13px; color:#0F172A;">Report an Issue</span>
+        </button>
+        <div style="height:1px; background:#F1F5F9; margin:4px 0;"></div>
+        <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); handleTripEditAction('cancel'); window.toggleTripDetailsMenu(false);">
+          <i data-lucide="x-circle" style="width:14px;height:14px; color:#EF4444;"></i>
+          <span style="font-weight:600; font-size:13px; color:#EF4444;">Cancel Booking</span>
+        </button>
+      `;
+    }
+  }
+
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
-  }
-  if (payHandleWrap) {
-    payHandleWrap.innerHTML = '';
   }
 }
 
