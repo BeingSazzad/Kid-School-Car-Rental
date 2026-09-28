@@ -48,85 +48,165 @@
       line-height: 1.2 !important;
     }
 
-    #screen-bookingSearchProviders .mvp-search-toolbar {
+    /* 2-Box Search Controls (Sort & Filter) matching Design System */
+    #screen-bookingSearchProviders .provider-search-controls-wrap {
       display: flex !important;
-      margin: 0 0 8px 0 !important;
-      padding: 0 !important;
-    }
-
-    #screen-bookingSearchProviders .provider-view-toggle {
-      display: inline-flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+      margin: 0 0 12px 0 !important;
       width: 100% !important;
-      background: #FFFFFF !important;
-      border-radius: 10px !important;
-      padding: 3px !important;
-      gap: 4px !important;
-      border: 1px solid #E2E8F0 !important;
-      box-sizing: border-box !important;
     }
 
-    #screen-bookingSearchProviders .provider-view-btn {
-      flex: 1 !important;
-      height: 30px !important;
-      padding: 0 10px !important;
-      border-radius: 7px !important;
-      background: transparent !important;
-      color: #64748B !important;
-      font-family: 'Manrope', system-ui, sans-serif !important;
-      font-size: 12.5px !important;
-      font-weight: 600 !important;
-      border: none !important;
-      cursor: pointer !important;
+    #screen-bookingSearchProviders .provider-search-controls-row {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+      width: 100% !important;
+    }
+
+    #screen-bookingSearchProviders .search-ctrl-box {
+      background: #FFFFFF !important;
+      border: 1.5px solid #E2E8F0 !important;
+      border-radius: 12px !important;
+      height: 42px !important;
+      padding: 0 12px !important;
       display: flex !important;
       align-items: center !important;
-      justify-content: center !important;
-    }
-
-    #screen-bookingSearchProviders .provider-view-btn.active {
-      background: #1B2B68 !important;
-      color: #FFFFFF !important;
-      font-weight: 700 !important;
-      box-shadow: 0 2px 4px rgba(27, 43, 104, 0.15) !important;
-    }
-
-    #screen-bookingSearchProviders .mvp-filter-row {
-      display: flex !important;
-      gap: 6px !important;
-      overflow-x: auto !important;
-      margin: 0 0 10px 0 !important;
-      padding: 2px 0 4px 0 !important;
-      scrollbar-width: none !important;
-      clear: both !important;
-      position: relative !important;
-      z-index: 1 !important;
-    }
-
-    #screen-bookingSearchProviders .mvp-filter-row::-webkit-scrollbar {
-      display: none !important;
-    }
-
-    #screen-bookingSearchProviders .mvp-filter-chip {
-      flex: 0 0 auto !important;
-      height: 27px !important;
-      padding: 0 11px !important;
-      border-radius: 999px !important;
-      border: 1px solid #E2E8F0 !important;
-      background: #FFFFFF !important;
-      color: #475569 !important;
+      justify-content: space-between !important;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+      transition: all 0.18s ease !important;
+      box-sizing: border-box !important;
       font-family: 'Manrope', system-ui, sans-serif !important;
+      color: #0F172A !important;
+      user-select: none !important;
+    }
+
+    #screen-bookingSearchProviders .search-ctrl-box:hover {
+      border-color: #CBD5E1 !important;
+      background: #F8FAFC !important;
+    }
+
+    #screen-bookingSearchProviders .sort-ctrl-box {
+      position: relative !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      cursor: pointer !important;
+    }
+
+    #screen-bookingSearchProviders .sort-ctrl-box:focus-within {
+      border-color: #2563EB !important;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+    }
+
+    #screen-bookingSearchProviders .ctrl-box-icon {
+      width: 16px !important;
+      height: 16px !important;
+      color: #2563EB !important;
+      flex-shrink: 0 !important;
+    }
+
+    #screen-bookingSearchProviders .ctrl-box-label {
       font-size: 11.5px !important;
       font-weight: 600 !important;
-      cursor: pointer !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
+      color: #64748B !important;
+      flex-shrink: 0 !important;
     }
 
-    #screen-bookingSearchProviders .mvp-filter-chip.active {
-      background: #1B2B68 !important;
-      color: #FFFFFF !important;
-      border-color: #1B2B68 !important;
+    #screen-bookingSearchProviders .provider-sort-select {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      border: none !important;
+      outline: none !important;
+      background: transparent !important;
+      font-family: 'Manrope', system-ui, sans-serif !important;
+      font-size: 12.5px !important;
       font-weight: 700 !important;
+      color: #0F172A !important;
+      cursor: pointer !important;
+      width: 100% !important;
+      padding-right: 18px !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+    }
+
+    #screen-bookingSearchProviders .provider-sort-select option {
+      background: #FFFFFF !important;
+      color: #0F172A !important;
+      font-weight: 600 !important;
+      padding: 8px 12px !important;
+    }
+
+    #screen-bookingSearchProviders .ctrl-box-caret {
+      width: 14px !important;
+      height: 14px !important;
+      color: #94A3B8 !important;
+      position: absolute !important;
+      right: 10px !important;
+      pointer-events: none !important;
+      flex-shrink: 0 !important;
+    }
+
+    #screen-bookingSearchProviders .filter-ctrl-btn {
+      border: 1.5px solid #E2E8F0 !important;
+      cursor: pointer !important;
+      width: 100% !important;
+      text-align: left !important;
+    }
+
+    #screen-bookingSearchProviders .filter-ctrl-btn:hover {
+      border-color: #CBD5E1 !important;
+      background: #F8FAFC !important;
+    }
+
+    #screen-bookingSearchProviders .filter-ctrl-btn:active {
+      background: #F1F5F9 !important;
+      transform: scale(0.985) !important;
+    }
+
+    #screen-bookingSearchProviders .filter-ctrl-content {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    #screen-bookingSearchProviders .ctrl-box-title {
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      color: #0F172A !important;
+    }
+
+    #screen-bookingSearchProviders .filter-active-pill {
+      background: #2563EB !important;
+      color: #FFFFFF !important;
+      font-size: 11px !important;
+      font-weight: 800 !important;
+      padding: 1px 7px !important;
+      border-radius: 999px !important;
+      min-width: 18px !important;
+      text-align: center !important;
+      line-height: 16px !important;
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3) !important;
+    }
+
+    #screen-bookingSearchProviders .search-results-summary-row {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 0 2px !important;
+      font-size: 12px !important;
+    }
+
+    #screen-bookingSearchProviders .search-count-highlight {
+      font-weight: 700 !important;
+      color: #0F172A !important;
+    }
+
+    #screen-bookingSearchProviders .search-alloc-text {
+      font-size: 11.5px !important;
+      color: #64748B !important;
     }
 
     #screen-bookingSearchProviders .mvp-search-map {
@@ -304,24 +384,7 @@
     }
 
     #screen-bookingSearchProviders .pcm-chevron {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      color: #9CA3AF !important;
-      flex-shrink: 0 !important;
-      margin-left: auto !important;
-      padding: 2px !important;
-      transition: color 0.15s ease, transform 0.15s ease !important;
-    }
-
-    #screen-bookingSearchProviders .pcm-chevron svg {
-      width: 16px !important;
-      height: 16px !important;
-    }
-
-    #screen-bookingSearchProviders .pcm-top-row:hover .pcm-chevron {
-      color: #4B5563 !important;
-      transform: translateX(2px) !important;
+      display: none !important;
     }
 
     #screen-bookingSearchProviders .pcm-divider {
@@ -387,25 +450,26 @@
       background: #1B2B68 !important;
       color: #FFFFFF !important;
       font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
-      font-size: 12.5px !important;
+      font-size: 13px !important;
       font-weight: 700 !important;
-      padding: 6px 14px !important;
-      height: 33px !important;
-      min-height: 33px !important;
-      border-radius: 8px !important;
+      padding: 6px 18px !important;
+      height: 34px !important;
+      min-height: 34px !important;
+      min-width: 76px !important;
+      border-radius: 9px !important;
       border: none !important;
       outline: none !important;
       cursor: pointer !important;
       white-space: nowrap !important;
       line-height: 1.2 !important;
-      box-shadow: 0 2px 4px rgba(27, 43, 104, 0.15) !important;
+      box-shadow: 0 2px 5px rgba(27, 43, 104, 0.18) !important;
       transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease !important;
     }
 
     #screen-bookingSearchProviders .btn-request-booking:hover,
     #screen-bookingSearchProviders button.btn-request-booking:hover {
       background: #142152 !important;
-      box-shadow: 0 4px 10px rgba(27, 43, 104, 0.22) !important;
+      box-shadow: 0 4px 10px rgba(27, 43, 104, 0.25) !important;
     }
 
     #screen-bookingSearchProviders .btn-request-booking:active,
@@ -4410,7 +4474,11 @@
         <div class="splash-logo-container pulse-animation">
           <img src="/assets/logo.svg" alt="Home2School Logo" class="splash-logo" />
         </div>
-        <span class="splash-hint">Tap anywhere to continue</span>
+        <div style="text-align: center; margin-top: 18px;">
+          <h1 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin: 0; letter-spacing: -0.02em;">Welcome to Home2School</h1>
+          <span class="brand-subtext-light" style="font-size: 13px; letter-spacing: 1.5px; margin-top: 4px; display: block;">School2Home</span>
+        </div>
+        <span class="splash-hint" style="margin-top: 24px;">Tap anywhere to begin</span>
       </div>
 
       <div class="home-indicator light"></div>
@@ -4580,6 +4648,7 @@
             </div>
             <h1 class="welcome-heading">
               Welcome to <span class="brand-text">Home2School</span>
+              <span class="brand-subtext">School2Home</span>
             </h1>
             <p class="welcome-subtext">
               Safe school rides &amp; certified walking escorts for students, trusted by verified neighborhood families.
@@ -4597,8 +4666,8 @@
               <span>Live GPS</span>
             </div>
             <div class="welcome-trust-pill">
-              <i data-lucide="key-round"></i>
-              <span>PIN Handover</span>
+              <i data-lucide="camera"></i>
+              <span>Photo Proof</span>
             </div>
           </div>
         </div>
@@ -4878,6 +4947,19 @@
                 <option value="Father">Father</option>
                 <option value="Guardian">Guardian</option>
                 <option value="Grandparent">Grandparent</option>
+              </select>
+              <i data-lucide="chevron-down" class="select-chevron"
+                style="width:18px;height:18px;color:currentColor;"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <div class="select-wrapper">
+              <select class="form-select" id="authProfileGender">
+                <option value="Female" selected>Female</option>
+                <option value="Male">Male</option>
+                <option value="Prefer not to say">Prefer not to say</option>
               </select>
               <i data-lucide="chevron-down" class="select-chevron"
                 style="width:18px;height:18px;color:currentColor;"></i>
@@ -6226,51 +6308,46 @@
           <h1 class="providers-header-title">Transport providers</h1>
         </div>
 
-        <div class="mvp-search-toolbar">
-          <div class="provider-view-toggle" role="tablist" aria-label="View mode">
-            <button type="button" class="provider-view-btn active" id="searchViewList" role="tab" aria-selected="true" onclick="setProviderSearchView('list')">List</button>
-            <button type="button" class="provider-view-btn" id="searchViewMap" role="tab" aria-selected="false" onclick="setProviderSearchView('map')">Map</button>
+        <!-- Clean 2-Box Search Controls (Sort & Filter) matching Design System -->
+        <div class="provider-search-controls-wrap">
+          <div class="provider-search-controls-row">
+            <!-- Box 1: Sort Control -->
+            <div class="search-ctrl-box sort-ctrl-box" title="Sort Providers">
+              <i data-lucide="arrow-up-down" class="ctrl-box-icon"></i>
+              <span class="ctrl-box-label">Sort:</span>
+              <select id="providerSortSelect" class="provider-sort-select" onchange="window.handleProviderSortChange(this.value)" aria-label="Sort providers">
+                <option value="nearest" selected>Nearest</option>
+                <option value="rating">Top Rated</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+              </select>
+              <i data-lucide="chevron-down" class="ctrl-box-caret"></i>
+            </div>
+
+            <!-- Box 2: Filter Button (triggers Search Filter Modal) -->
+            <button type="button" class="search-ctrl-box filter-ctrl-btn" onclick="window.openSearchFilterModal()" aria-label="Open filter modal">
+              <div class="filter-ctrl-content">
+                <i data-lucide="sliders-horizontal" class="ctrl-box-icon"></i>
+                <span class="ctrl-box-title">Filters</span>
+              </div>
+              <span id="activeFilterBadge" class="filter-active-pill" style="display:none;">0</span>
+            </button>
+          </div>
+
+          <!-- Matching Providers Count Info -->
+          <div class="search-results-summary-row">
+            <span id="searchResultCountBadge" class="search-count-highlight">5 Providers Matching</span>
+            <span class="search-alloc-text">Dynamic Seat Allocation Active</span>
           </div>
         </div>
 
-        <div id="advancedSearchFilterTray" class="mvp-adv-filter-panel" hidden>
-          <div class="mvp-adv-filter-group">
-            <div class="mvp-adv-filter-head">
-              <span class="mvp-adv-filter-label">Distance</span>
-              <span id="radiusFilterLabel" class="mvp-adv-filter-value">5 km</span>
-            </div>
-            <div class="mvp-adv-filter-chips" data-chip-group="radius">
-              <button type="button" class="mvp-filter-chip active" onclick="window.setDistanceRadius(5, this)">5 km</button>
-              <button type="button" class="mvp-filter-chip" onclick="window.setDistanceRadius(10, this)">10 km</button>
-              <button type="button" class="mvp-filter-chip" onclick="window.setDistanceRadius(25, this)">25 km</button>
-              <button type="button" class="mvp-filter-chip" onclick="window.setDistanceRadius(0, this)">Any</button>
-            </div>
-          </div>
-          <div class="mvp-adv-filter-group">
-            <div class="mvp-adv-filter-head">
-              <span class="mvp-adv-filter-label">Timing</span>
-            </div>
-            <div class="mvp-adv-filter-chips" data-chip-group="timing">
-              <button type="button" class="mvp-filter-chip active" onclick="window.setTripTimingFilter('all', this)">All</button>
-              <button type="button" class="mvp-filter-chip" onclick="window.setTripTimingFilter('morning', this)">Morning</button>
-              <button type="button" class="mvp-filter-chip" onclick="window.setTripTimingFilter('afternoon', this)">Afternoon</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="mvp-filter-row" id="providerFilterRow">
-          <button type="button" class="mvp-filter-chip active" data-filter="all" onclick="applyProviderCompactFilter('all', this)">All</button>
-          <button type="button" class="mvp-filter-chip" data-filter="distance" onclick="applyProviderCompactFilter('distance', this)">Nearest</button>
-          <button type="button" class="mvp-filter-chip" data-filter="rating" onclick="applyProviderCompactFilter('rating', this)">Rating</button>
-          <button type="button" class="mvp-filter-chip" data-filter="verified" onclick="applyProviderCompactFilter('verified', this)">Verified</button>
-        </div>
-        <div class="mvp-search-map" id="providerSearchMap">
+        <div class="mvp-search-map" id="providerSearchMap" style="display:none;">
           <div id="providerSearchMapHost" class="provider-search-leaflet" role="img" aria-label="Providers map"></div>
         </div>
 
         <div id="providersResultList" class="providers-result-list">
           <!-- 1. Robert MacDonald -->
-          <div class="provider-result-card provider-card-slim" data-category="drivers" data-provider-id="tariq" data-rating="4.9" data-verified="true" data-distance="0.8">
+          <div class="provider-result-card provider-card-slim" data-category="drivers" data-provider-id="tariq" data-gender="male" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="4.9" data-verified="true" data-distance="0.8" data-price="60">
             <div class="pcm-top-row" onclick="openDriverProfile('tariq', 'bookingSearchProviders')">
               <img src="/assets/avatar_tariq.jpg" alt="Robert MacDonald" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_tariq.jpg'" />
               <div class="pcm-info-col provider-name-block">
@@ -6299,11 +6376,14 @@
                   </svg>
                   <span class="pcm-vehicle-name">Toyota Sienna</span>
                 </div>
-              </div>
-              <div class="pcm-chevron" aria-label="View Details">
-                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <!-- Dynamic Seat & Trip Type Pills -->
+                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
+                  <span class="seat-availability-pill available" id="seatBadge-tariq">
+                    <i data-lucide="users" style="width:11px;height:11px;"></i>
+                    <span>3 of 4 Seats Available</span>
+                  </span>
+                  <span style="font-size:10.5px; font-weight:700; background:#F1F5F9; color:#475569; padding:2px 7px; border-radius:6px;">One-way &amp; Round-trip</span>
+                </div>
               </div>
             </div>
 
@@ -6312,19 +6392,19 @@
             <div class="pcm-bottom-row">
               <div class="pcm-price-col">
                 <div class="pcm-price-line">
-                  <span class="pcm-price-val">$120</span>
+                  <span class="pcm-price-val">$60</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Negotiable</div>
+                <div class="pcm-price-status">Stripe Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('tariq')">
-                Request Booking
+                Book
               </button>
             </div>
           </div>
 
           <!-- 2. Emily Campbell -->
-          <div class="provider-result-card provider-card-slim" data-category="drivers" data-provider-id="farhana" data-rating="5.0" data-verified="true" data-distance="1.2">
+          <div class="provider-result-card provider-card-slim" data-category="drivers" data-provider-id="farhana" data-gender="female" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="5.0" data-verified="true" data-distance="1.2" data-price="70">
             <div class="pcm-top-row" onclick="openDriverProfile('farhana', 'bookingSearchProviders')">
               <img src="/assets/avatar_farhana.jpg" alt="Emily Campbell" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_farhana.jpg'" />
               <div class="pcm-info-col provider-name-block">
@@ -6353,11 +6433,14 @@
                   </svg>
                   <span class="pcm-vehicle-name">Honda Odyssey</span>
                 </div>
-              </div>
-              <div class="pcm-chevron" aria-label="View Details">
-                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <!-- Dynamic Seat & Trip Type Pills -->
+                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
+                  <span class="seat-availability-pill available" id="seatBadge-farhana">
+                    <i data-lucide="users" style="width:11px;height:11px;"></i>
+                    <span>3 of 5 Seats Available</span>
+                  </span>
+                  <span style="font-size:10.5px; font-weight:700; background:#F1F5F9; color:#475569; padding:2px 7px; border-radius:6px;">One-way &amp; Round-trip</span>
+                </div>
               </div>
             </div>
 
@@ -6366,19 +6449,19 @@
             <div class="pcm-bottom-row">
               <div class="pcm-price-col">
                 <div class="pcm-price-line">
-                  <span class="pcm-price-val">$135</span>
+                  <span class="pcm-price-val">$70</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Negotiable</div>
+                <div class="pcm-price-status">Stripe Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('farhana')">
-                Request Booking
+                Book
               </button>
             </div>
           </div>
 
           <!-- 3. Lucas Bennett -->
-          <div class="provider-result-card provider-card-slim" data-category="drivers" data-provider-id="kabir" data-rating="4.8" data-verified="true" data-distance="1.5">
+          <div class="provider-result-card provider-card-slim" data-category="drivers" data-provider-id="kabir" data-gender="male" data-triptype="oneway" data-freq="daily,weekly" data-rating="4.8" data-verified="true" data-distance="1.5" data-price="55">
             <div class="pcm-top-row" onclick="openDriverProfile('kabir', 'bookingSearchProviders')">
               <img src="/assets/avatar_kabir.jpg" alt="Lucas Bennett" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_kabir.jpg'" />
               <div class="pcm-info-col provider-name-block">
@@ -6407,11 +6490,14 @@
                   </svg>
                   <span class="pcm-vehicle-name">Toyota Highlander</span>
                 </div>
-              </div>
-              <div class="pcm-chevron" aria-label="View Details">
-                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <!-- Dynamic Seat & Trip Type Pills -->
+                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
+                  <span class="seat-availability-pill low" id="seatBadge-kabir">
+                    <i data-lucide="users" style="width:11px;height:11px;"></i>
+                    <span>1 Seat Left</span>
+                  </span>
+                  <span style="font-size:10.5px; font-weight:700; background:#F1F5F9; color:#475569; padding:2px 7px; border-radius:6px;">One-way Only</span>
+                </div>
               </div>
             </div>
 
@@ -6420,27 +6506,27 @@
             <div class="pcm-bottom-row">
               <div class="pcm-price-col">
                 <div class="pcm-price-line">
-                  <span class="pcm-price-val">$110</span>
+                  <span class="pcm-price-val">$55</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Fixed</div>
+                <div class="pcm-price-status">Stripe Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('kabir')">
-                Request Booking
+                Book
               </button>
             </div>
           </div>
 
-          <!-- 4. Sarah Jenkins (WalkShare) -->
-          <div class="provider-result-card provider-card-slim walkshare-card" data-category="walkshare" data-provider-id="sarah" data-rating="4.9" data-verified="true" data-distance="0.4">
+          <!-- 4. Sarah Jenkins (WalkShare Guide) -->
+          <div class="provider-result-card provider-card-slim walkshare-card" data-category="walkshare" data-provider-id="sarah" data-gender="female" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="4.9" data-verified="true" data-distance="0.4" data-price="35">
             <div class="pcm-top-row" onclick="openDriverProfile('sarah', 'bookingSearchProviders')">
               <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_sarah.jpg'" />
               <div class="pcm-info-col provider-name-block">
                 <div class="pcm-name-row provider-name-verified">
                   <span class="pcm-name">Sarah Jenkins</span>
-                  <span class="pcm-verified-badge" title="Verified Provider">
+                  <span class="pcm-verified-badge" title="Verified WalkShare Guide">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                      <circle cx="12" cy="12" r="10" fill="#1D4ED8"/>
+                      <circle cx="12" cy="12" r="10" fill="#15803D"/>
                       <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </span>
@@ -6455,18 +6541,19 @@
                     <span class="pcm-zone-name pcs-zone">High Park</span>
                   </span>
                 </div>
-                <div class="pcm-vehicle-row pcs-sub">
-                  <svg class="pcm-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M13 4v6m0 0l3 5m-3-5l-3 4m3 6v-5"/>
-                    <circle cx="13" cy="2" r="1.5"/>
-                  </svg>
-                  <span class="pcm-vehicle-name">Neighborhood Walking Group</span>
+                <!-- Clean WalkShare Guide Info (NO VEHICLE) -->
+                <div class="pcs-sub" style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#15803D; font-weight:700; margin-top:2px;">
+                  <i data-lucide="footprints" style="width:13px;height:13px;"></i>
+                  <span>WalkShare Guide · Walking Escort</span>
                 </div>
-              </div>
-              <div class="pcm-chevron" aria-label="View Details">
-                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <!-- Spots Pill -->
+                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
+                  <span class="seat-availability-pill available" id="seatBadge-sarah">
+                    <i data-lucide="users" style="width:11px;height:11px;"></i>
+                    <span>3 Escort Spots Open</span>
+                  </span>
+                  <span style="font-size:10.5px; font-weight:700; background:#DCFCE7; color:#15803D; padding:2px 7px; border-radius:6px;">Walking Route</span>
+                </div>
               </div>
             </div>
 
@@ -6475,27 +6562,27 @@
             <div class="pcm-bottom-row">
               <div class="pcm-price-col">
                 <div class="pcm-price-line">
-                  <span class="pcm-price-val">$75</span>
+                  <span class="pcm-price-val">$35</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Negotiable</div>
+                <div class="pcm-price-status">Stripe Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('sarah')">
-                Request Booking
+                Book
               </button>
             </div>
           </div>
 
-          <!-- 5. Sophie Bouchard (WalkShare) -->
-          <div class="provider-result-card provider-card-slim walkshare-card" data-category="walkshare" data-provider-id="elena" data-rating="4.9" data-verified="true" data-distance="0.5">
+          <!-- 5. Sophie Bouchard (WalkShare Guide) -->
+          <div class="provider-result-card provider-card-slim walkshare-card" data-category="walkshare" data-provider-id="elena" data-gender="female" data-triptype="roundtrip" data-freq="daily,weekly" data-rating="4.9" data-verified="true" data-distance="0.5" data-price="35">
             <div class="pcm-top-row" onclick="openDriverProfile('elena', 'bookingSearchProviders')">
               <img src="/assets/avatar_rehana.jpg" alt="Sophie Bouchard" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_rehana.jpg'" />
               <div class="pcm-info-col provider-name-block">
                 <div class="pcm-name-row provider-name-verified">
                   <span class="pcm-name">Sophie Bouchard</span>
-                  <span class="pcm-verified-badge" title="Verified Provider">
+                  <span class="pcm-verified-badge" title="Verified WalkShare Guide">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                      <circle cx="12" cy="12" r="10" fill="#1D4ED8"/>
+                      <circle cx="12" cy="12" r="10" fill="#15803D"/>
                       <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </span>
@@ -6510,18 +6597,19 @@
                     <span class="pcm-zone-name pcs-zone">Greenfield</span>
                   </span>
                 </div>
-                <div class="pcm-vehicle-row pcs-sub">
-                  <svg class="pcm-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M13 4v6m0 0l3 5m-3-5l-3 4m3 6v-5"/>
-                    <circle cx="13" cy="2" r="1.5"/>
-                  </svg>
-                  <span class="pcm-vehicle-name">Greenfield Escort</span>
+                <!-- Clean WalkShare Guide Info (NO VEHICLE) -->
+                <div class="pcs-sub" style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#15803D; font-weight:700; margin-top:2px;">
+                  <i data-lucide="footprints" style="width:13px;height:13px;"></i>
+                  <span>WalkShare Guide · Walking Escort</span>
                 </div>
-              </div>
-              <div class="pcm-chevron" aria-label="View Details">
-                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <!-- Spots Pill -->
+                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
+                  <span class="seat-availability-pill available" id="seatBadge-elena">
+                    <i data-lucide="users" style="width:11px;height:11px;"></i>
+                    <span>2 Escort Spots Open</span>
+                  </span>
+                  <span style="font-size:10.5px; font-weight:700; background:#DCFCE7; color:#15803D; padding:2px 7px; border-radius:6px;">Walking Route</span>
+                </div>
               </div>
             </div>
 
@@ -6530,13 +6618,13 @@
             <div class="pcm-bottom-row">
               <div class="pcm-price-col">
                 <div class="pcm-price-line">
-                  <span class="pcm-price-val">$70</span>
+                  <span class="pcm-price-val">$35</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Negotiable</div>
+                <div class="pcm-price-status">Stripe Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('elena')">
-                Request Booking
+                Book
               </button>
             </div>
           </div>
@@ -6569,7 +6657,7 @@
           <i data-lucide="chevron-left"></i>
         </button>
         <h2 class="top-bar-title" id="providerDetailsTitle">Provider Profile</h2>
-        <button type="button" class="clean-fav-btn" onclick="this.classList.toggle('active')" title="Favorite" style="padding: 4px;">
+        <button type="button" class="clean-fav-btn" id="providerFavBtn" onclick="window.toggleFavoriteProvider(window.currentDriverProfileId)" title="Save to Favorites" aria-label="Favorite" style="padding: 4px;">
           <i data-lucide="heart" style="width: 20px; height: 20px;"></i>
         </button>
       </div>
@@ -6618,25 +6706,32 @@
               <div class="profile-service-title" id="detailsProviderVehTitle">Neighborhood Walking Group</div>
               <div class="profile-service-subtitle" id="detailsProviderVehSubtitle">Supervised neighborhood group walk to school</div>
             </div>
-            <div class="pp-info-grid" id="detailsSpecsGrid">
-              <div class="pp-info-item">
-                <span class="pp-info-lbl">Capacity</span>
-                <strong id="specSeatsText">3 kids</strong>
-              </div>
-              <div class="pp-info-item">
-                <span class="pp-info-lbl" id="specPlateLbl">Path</span>
-                <strong id="specPlateText">Sidewalks only</strong>
-              </div>
-              <div class="pp-info-item">
-                <span class="pp-info-lbl">Zone</span>
-                <strong id="detailsZoneText">Elm → Greenfield</strong>
-              </div>
-              <div class="pp-info-item">
-                <span class="pp-info-lbl">Schedule</span>
-                <strong id="detailsAvailText">Mon–Fri · AM &amp; PM</strong>
-              </div>
+
+            <!-- Clean Commute Specs Table (replaces 4 bulky boxes) -->
+            <div class="pp-specs-table-wrap" id="detailsSpecsTableWrap">
+              <table class="pp-specs-clean-table">
+                <tbody>
+                  <tr>
+                    <td class="spec-table-lbl"><i data-lucide="users" class="spec-icon"></i> <span>Capacity</span></td>
+                    <td class="spec-table-val" id="specSeatsText">3 kids</td>
+                  </tr>
+                  <tr>
+                    <td class="spec-table-lbl"><i data-lucide="shield" class="spec-icon"></i> <span id="specPlateLbl">Path</span></td>
+                    <td class="spec-table-val" id="specPlateText">Sidewalks only</td>
+                  </tr>
+                  <tr>
+                    <td class="spec-table-lbl"><i data-lucide="map-pin" class="spec-icon"></i> <span>Service Zone</span></td>
+                    <td class="spec-table-val" id="detailsZoneText">Elm → Greenfield</td>
+                  </tr>
+                  <tr>
+                    <td class="spec-table-lbl"><i data-lucide="calendar" class="spec-icon"></i> <span>Schedule</span></td>
+                    <td class="spec-table-val" id="detailsAvailText">Mon–Fri · AM &amp; PM</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="profile-spec-chips" id="detailsSafetyChips">
+
+            <div class="profile-spec-chips" id="detailsSafetyChips" style="margin-top: 10px;">
               <span class="profile-spec-chip" id="specBoosterText">High-vis vests</span>
               <span class="profile-spec-chip" id="specLocksText">Crossing care</span>
             </div>
@@ -6647,14 +6742,15 @@
         <section class="pp-section">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
             <h4 class="pp-label" style="margin:0;">Safety &amp; Verification Checks</h4>
-            <span style="background:#DCFCE7; color:#15803D; font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px; border:1px solid #BBF7D0;">5 / 5 Verified</span>
+            <span id="detailsSafetyBadge" style="background:#DCFCE7; color:#15803D; font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px; border:1px solid #BBF7D0;">6 / 6 Verified</span>
           </div>
           <ul class="pp-safety-list" id="detailsSafetyList">
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Driver’s licence verified</span></li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Proof of residency: Property Tax / Tenancy</span></li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Proof of residency: Utility Bill</span></li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Proof of residency: Property Tax / Tenancy agreement</span></li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Proof of residency: Utility bill</span></li>
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Criminal background check</span></li>
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Vulnerable sector check</span></li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Pediatric First-Aid / CPR certified</span></li>
           </ul>
         </section>
 
@@ -6826,26 +6922,38 @@
         </section>
 
         <section class="rs-section" id="summaryPricingCardSection">
-          <h4 class="rs-label">Pricing</h4>
-          <div class="rs-meta-card" style="padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <div>
-                <span style="font-size:11px; color:#64748B; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Listed rate</span>
-                <div style="font-size:20px; font-weight:800; color:#0F172A;" id="summaryListedRateVal">$120/week</div>
+          <h4 class="rs-label">Total Escrow Price</h4>
+          <div class="rs-meta-card" style="padding: 16px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span style="font-size: 13.5px; font-weight: 700; color: #0F172A; display: block; margin-bottom: 3px;">Stripe Escrow Rate</span>
+              <div style="font-size: 11.5px; color: #059669; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+                <span>Held safely until ride completed</span>
               </div>
-              <span id="summaryNegotiableBadge" style="background:#EFF6FF; color:#2563EB; font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; border:1px solid #BFDBFE;">Negotiable</span>
             </div>
-            <div style="font-size:11.5px; color:#64748B; margin-top:6px; line-height:1.4;">Final rate may be confirmed with the provider.</div>
+            <div style="text-align: right;">
+              <div style="font-size: 24px; font-weight: 800; color: #0F172A; font-family: 'Manrope', system-ui, sans-serif;" id="summaryTotalEscrowVal">$60.00</div>
+              <span style="font-size: 11px; color: #64748B; font-weight: 600;" id="summaryPriceUnitText">/week</span>
+            </div>
           </div>
+          <span id="summaryBaseRateVal" style="display:none;">$60.00</span>
+          <span id="summaryServiceFeeVal" style="display:none;">$0.00</span>
+          <span id="summaryStripeFeeVal" style="display:none;">$0.00</span>
         </section>
 
         <span id="summaryDateText" style="display:none;">Mon, Sep 8</span>
         <span id="summaryTripTypeText" style="display:none;">Round trip</span>
+        <span id="summaryListedRateVal" style="display:none;">$60/week</span>
 
-        <p class="rs-note">Request only — ride fee paid directly to the provider.</p>
+        <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 10px 12px; margin: 12px 0 16px; display: flex; align-items: flex-start; gap: 8px;">
+          <i data-lucide="shield-check" style="width: 18px; height: 18px; color: #1B2B68; flex-shrink: 0; margin-top: 1px;"></i>
+          <p style="font-size: 11.5px; color: #1E293B; margin: 0; line-height: 1.4;">
+            <strong>In-Platform Escrow Protection:</strong> Payment remains safely held by Stripe until your driver completes the trip and you confirm safe arrival.
+          </p>
+        </div>
 
         <div class="rs-actions">
-          <button class="btn-primary" onclick="submitBookingRequest()">Send Booking Request</button>
+          <button class="btn-primary" onclick="submitBookingRequest()">Authorize &amp; Send Booking Request</button>
           <button class="btn-secondary-link" onclick="navigateTo('bookingTripSetup')">Edit details</button>
         </div>
       </div>
@@ -7109,18 +7217,18 @@
           </div>
         </section>
 
-        <!-- Handover Safety PIN Banner (Active / Scheduled Trips) -->
-        <div class="bd-safety-pin-banner" id="detailSafetyPinBanner" onclick="openSafetyPinModal()" style="display: flex;">
+        <!-- Handover Photo Proof Banner (Active / Scheduled / Completed Trips) -->
+        <div class="bd-safety-pin-banner" id="detailSafetyPinBanner" onclick="openTripPhotoProofModal('pickup')" style="display: flex; cursor: pointer;">
           <div class="bd-safety-pin-left">
-            <div class="bd-safety-pin-icon">
-              <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
+            <div class="bd-safety-pin-icon" style="background: rgba(255,255,255,0.25);">
+              <i data-lucide="camera" style="width:18px;height:18px;"></i>
             </div>
             <div>
-              <div class="bd-safety-pin-title">Child Handover PIN</div>
-              <div class="bd-safety-pin-code" id="detailSafetyPinBannerCode">PIN 4920</div>
+              <div class="bd-safety-pin-title">Pickup &amp; Drop-off Photo Proof</div>
+              <div class="bd-safety-pin-code" id="detailSafetyPinBannerCode">View &amp; upload safe handover photos</div>
             </div>
           </div>
-          <button type="button" class="bd-safety-pin-btn">Show QR &amp; Code</button>
+          <button type="button" class="bd-safety-pin-btn">Photo Proof</button>
         </div>
 
         <!-- 3. Driver & Vehicle Card -->
@@ -7173,19 +7281,23 @@
           <div id="detailPassengersWrap" class="bd-children-stacked-list"></div>
         </section>
 
-        <!-- 5. Dedicated Payment & Pricing Card (Pure Peer-to-Peer Model) -->
+        <!-- 5. Dedicated Payment & Pricing Card (Stripe Escrow Model) -->
         <section class="bd-pricing-card">
           <div class="bd-pricing-head">
-            <div class="bd-pricing-title">Peer-to-Peer Rate</div>
-            <span class="bd-pricing-pill" id="detailPaymentStatusPill">
-              <i data-lucide="check" style="width:12px;height:12px;"></i>
-              <span id="detailPaymentStatusText">Agreed</span>
+            <div class="bd-pricing-title">Stripe In-Platform Escrow</div>
+            <span class="bd-pricing-pill" id="detailPaymentStatusPill" style="background:#ECFDF5; color:#059669; border-color:#A7F3D0;">
+              <i data-lucide="shield-check" style="width:12px;height:12px;"></i>
+              <span id="detailPaymentStatusText">Funds Held in Escrow</span>
             </span>
           </div>
           <div class="bd-pricing-amount-row" style="border-bottom: none; padding-bottom: 0; display: flex; align-items: center; justify-content: space-between;">
             <div>
-              <div class="bd-pricing-amount" id="detailPriceAmount">$120/week</div>
-              <div style="font-size:11.5px; color:#64748B; font-weight:600; margin-top: 2px;" id="detailPriceBillingCycle">Paid directly to provider</div>
+              <div class="bd-pricing-amount" id="detailPriceAmount">$60/week</div>
+              <div style="font-size:11.5px; color:#64748B; font-weight:600; margin-top: 2px;" id="detailPriceBillingCycle">Protected by Stripe Escrow Guarantee</div>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="btn-secondary-surface" style="height: 32px; padding: 0 10px; font-size: 11px; border-radius: 8px; font-weight: 700;" onclick="openDisputeModal(window.appState.activeBookingId)">Report Issue</button>
+              <button type="button" class="btn-primary" style="height: 32px; padding: 0 12px; font-size: 11px; border-radius: 8px; font-weight: 700;" onclick="openEscrowReleaseModal('$60.00', window.appState.activeBookingId)">Release Payout</button>
             </div>
           </div>
           <!-- Dynamic Direct Payment Handle & Consent Container -->
@@ -7199,7 +7311,7 @@
           </div>
           <div style="flex:1;">
             <div class="bd-notes-title">Additional Notes</div>
-            <div class="bd-notes-text" id="detailSpecialNotesText">Gate 2 (Junior Wing Pickup) • Liam &amp; Emma handover requires PIN verification. Driver will wait 5 mins at home gate.</div>
+            <div class="bd-notes-text" id="detailSpecialNotesText">Gate 2 (Junior Wing Pickup) • Liam &amp; Emma handover photo proof verified. Driver will wait 5 mins at home gate.</div>
           </div>
         </section>
 
@@ -7505,6 +7617,23 @@
                 <i data-lucide="shield-alert" style="width:15px;height:15px;"></i>
               </button>
             </div>
+          </div>
+
+          <!-- Handover Photo Proof Bar (Optional Pickup & Drop-off Documentation) -->
+          <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 32px; height: 32px; border-radius: 50%; background: #1B2B68; display: flex; align-items: center; justify-content: center; color: #FFFFFF;">
+                <i data-lucide="camera" style="width: 16px; height: 16px;"></i>
+              </div>
+              <div>
+                <div style="font-size: 12.5px; font-weight: 800; color: #1B2B68;">Handover Photo Proof</div>
+                <div style="font-size: 11px; color: #64748B;">Pickup &amp; Drop-off photo records</div>
+              </div>
+            </div>
+            <button type="button" class="btn-primary" style="height: 32px; padding: 0 12px; font-size: 11.5px; border-radius: 8px;" onclick="openTripPhotoProofModal('pickup')">
+              <span>View Proof</span>
+              <i data-lucide="chevron-right" style="width: 12px; height: 12px; margin-left: 2px;"></i>
+            </button>
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid #F1F5F9;">
@@ -7846,6 +7975,19 @@
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
 
+          <div class="profile-menu-item" onclick="window.openFavoriteProvidersModal(event)">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap" style="background:#FEE2E2; color:#EF4444;">
+                <i data-lucide="heart" style="fill:#EF4444;"></i>
+              </div>
+              <span class="menu-title-text">Favorite Drivers &amp; WalkShare</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span id="profileFavCountBadge" style="background:#FEE2E2; color:#EF4444; font-size:11px; font-weight:800; padding:2px 7px; border-radius:99px; display:none;">0</span>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
+          </div>
+
           <div class="profile-menu-item" onclick="openNestedScreen('profileEmergency', event)">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
@@ -7877,6 +8019,16 @@
               <span class="menu-title-text">Parent Subscription</span>
             </div>
             <span style="background:#DCFCE7; color:#15803D; font-size:11px; font-weight:800; padding:2px 8px; border-radius:99px;">Trial Active</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="openReferralModal()">
+            <div class="menu-item-left">
+              <div class="menu-icon-wrap" style="background:#FEF3C7; color:#D97706;">
+                <i data-lucide="gift"></i>
+              </div>
+              <span class="menu-title-text">Refer a Friend &amp; Earn $15</span>
+            </div>
+            <span style="background:#FEF3C7; color:#B45309; font-size:11px; font-weight:800; padding:2px 8px; border-radius:99px;">$15 Bonus</span>
           </div>
 
           <div class="profile-menu-item" onclick="openNestedScreen('profileNotifications', event)">
@@ -8218,6 +8370,17 @@
                 <option value="Mother" selected>Mother</option>
                 <option value="Father">Father</option>
                 <option value="Guardian">Legal Guardian</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <div class="input-box-wrapper">
+              <select class="form-input" id="parentProfileGender" style="cursor: pointer;">
+                <option value="Female" selected>Female</option>
+                <option value="Male">Male</option>
+                <option value="Prefer not to say">Prefer not to say</option>
               </select>
             </div>
           </div>
@@ -9352,6 +9515,173 @@
       </div>
     </div>
 
+    <!-- ================= ENTERPRISE REFERRAL MODAL ================= -->
+    <div class="referral-modal-overlay" id="referralModal" onclick="if(event.target === this) closeReferralModal()">
+      <div class="referral-modal-card" onclick="event.stopPropagation()">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: #EFF6FF; border: 2px solid #BFDBFE; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+          <i data-lucide="gift" style="width: 28px; height: 28px; color: #1B2B68;"></i>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0 0 6px;">Refer Families &amp; Earn</h3>
+        <p style="font-size: 13px; color: #64748B; margin: 0 0 16px; line-height: 1.4;">
+          Invite neighborhood parents or drivers to <strong>Home2School</strong>. You both get <strong>$15 ride credits</strong> on their first completed school commute.
+        </p>
+
+        <div style="background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px; padding: 14px; margin-bottom: 16px;">
+          <span style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Your Personal Referral Code</span>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <div class="referral-code-badge" id="refModalCodeDisplay" style="background:#1B2B68; color:#FFFFFF; font-size:16px;">H2S-KID-9821</div>
+            <button type="button" class="btn-primary" style="height:36px; padding:0 14px; font-size:12px; border-radius:8px;" onclick="copyReferralCode()">
+              <i data-lucide="copy" style="width:14px;height:14px;margin-right:4px;"></i>
+              <span id="refModalCopyBtnText">Copy Code</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+          <button type="button" class="btn-secondary-surface" style="padding: 10px; font-size: 12px; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="shareReferralLink('whatsapp')">
+            <i data-lucide="message-circle" style="width: 16px; height: 16px; color: #10B981;"></i>
+            <span>WhatsApp</span>
+          </button>
+          <button type="button" class="btn-secondary-surface" style="padding: 10px; font-size: 12px; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="shareReferralLink('sms')">
+            <i data-lucide="send" style="width: 16px; height: 16px; color: #0284C7;"></i>
+            <span>SMS / Share</span>
+          </button>
+        </div>
+
+        <button type="button" class="btn-secondary-link" onclick="closeReferralModal()" style="font-size: 13px;">Close</button>
+      </div>
+    </div>
+
+    <!-- ================= TRIP HANDOVER PHOTO PROOF MODAL (PICKUP & DROP-OFF) ================= -->
+    <div class="referral-modal-overlay" id="tripPhotoProofModal" onclick="if(event.target === this) closeTripPhotoProofModal()">
+      <div class="referral-modal-card" onclick="event.stopPropagation()" style="max-width: 410px; text-align: left;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #EFF6FF; border: 1.5px solid #BFDBFE; display: flex; align-items: center; justify-content: center;">
+              <i data-lucide="camera" style="width: 20px; height: 20px; color: #1B2B68;"></i>
+            </div>
+            <div>
+              <h3 style="font-size: 17px; font-weight: 800; color: #0F172A; margin: 0;" id="photoProofModalTitle">Handover Photo Proof</h3>
+              <span style="font-size: 11px; color: #64748B;">Optional Safety Photo Documentation</span>
+            </div>
+          </div>
+          <button type="button" class="btn-close-modal" onclick="closeTripPhotoProofModal()" aria-label="Close">
+            <i data-lucide="x" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+
+        <!-- Mode Toggle Tabs (Pickup vs Drop-off) -->
+        <div class="photo-proof-tabs">
+          <button type="button" class="photo-proof-tab-btn active" id="tabPhotoPickup" onclick="switchPhotoProofTab('pickup')">
+            <i data-lucide="home" style="width:13px;height:13px;vertical-align:middle;margin-right:3px;"></i>
+            <span>Pickup Handover</span>
+          </button>
+          <button type="button" class="photo-proof-tab-btn" id="tabPhotoDropoff" onclick="switchPhotoProofTab('dropoff')">
+            <i data-lucide="school" style="width:13px;height:13px;vertical-align:middle;margin-right:3px;"></i>
+            <span>Drop-off Handover</span>
+          </button>
+        </div>
+
+        <!-- Photo Display Frame -->
+        <div class="photo-proof-card" id="photoProofCard">
+          <div class="photo-proof-frame">
+            <img id="photoProofImg" src="/assets/onboarding1.jpg" alt="Handover Proof Photo" onerror="this.src='/assets/auth_hero.jpg';" />
+            <div class="photo-proof-tag" id="photoProofBadge">
+              <i data-lucide="check-circle" style="width: 13px; height: 13px;"></i>
+              <span id="photoProofBadgeText">Verified Pickup Proof</span>
+            </div>
+          </div>
+          <div class="photo-proof-meta-box">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+              <div style="font-size: 12.5px; font-weight: 800; color: #0F172A;" id="photoProofLocationTitle">📍 12 Elm Street, Toronto</div>
+              <div style="font-size: 11px; font-weight: 700; color: #059669;" id="photoProofTimeText">07:34 AM</div>
+            </div>
+            <p style="font-size: 11.5px; color: #64748B; margin: 0;" id="photoProofDesc">
+              Liam &amp; Emma safely boarded Robert MacDonald's Toyota Sienna.
+            </p>
+          </div>
+        </div>
+
+        <!-- Driver / Parent Action Buttons -->
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
+          <label class="btn-primary" style="flex: 1; height: 42px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0;">
+            <i data-lucide="camera" style="width: 15px; height: 15px;"></i>
+            <span id="btnUploadProofLabel">Upload New Photo</span>
+            <input type="file" accept="image/*" style="display: none;" onchange="handlePhotoProofUpload(this)" />
+          </label>
+          <button type="button" class="btn-secondary-surface" style="padding: 0 14px; height: 42px; font-size: 12.5px; font-weight: 700;" onclick="simulateInstantPhotoSnap()">
+            <span>Simulate Snap</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= RAISE DISPUTE / COMPLAINT MODAL ================= -->
+    <div class="referral-modal-overlay" id="disputeModal" onclick="if(event.target === this) closeDisputeModal()">
+      <div class="referral-modal-card" onclick="event.stopPropagation()" style="max-width: 400px; text-align: left;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: #FEF2F2; display: flex; align-items: center; justify-content: center;">
+              <i data-lucide="alert-triangle" style="width: 18px; height: 18px; color: #DC2626;"></i>
+            </div>
+            <div>
+              <h3 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0;">Raise Dispute / Complaint</h3>
+              <span style="font-size: 11px; color: #64748B;">Home2School Safety &amp; Escrow Mediation</span>
+            </div>
+          </div>
+          <button type="button" class="btn-close-modal" onclick="closeDisputeModal()"><i data-lucide="x" style="width:16px;height:16px;"></i></button>
+        </div>
+
+        <p style="font-size: 12.5px; color: #475569; margin: 0 0 12px; line-height: 1.4;">
+          If the commute was incomplete, delayed, or safety guidelines were violated, submitting a dispute will immediately place the escrow payout on hold.
+        </p>
+
+        <div style="margin-bottom: 12px;">
+          <label style="font-size: 11.5px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Dispute Reason</label>
+          <select id="disputeReasonSelect" style="width: 100%; height: 40px; border-radius: 8px; border: 1px solid #CBD5E1; padding: 0 10px; font-size: 13px; background: #FFFFFF;">
+            <option value="late">Driver was more than 20 minutes late</option>
+            <option value="noshow">Driver did not arrive (No-show)</option>
+            <option value="safety">Unsafe driving or route deviation</option>
+            <option value="cleanliness">Vehicle condition / seatbelt concern</option>
+            <option value="other">Other issue with service</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="font-size: 11.5px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Additional Details (Optional)</label>
+          <textarea id="disputeNotesInput" placeholder="Explain what occurred..." rows="3" style="width: 100%; border-radius: 8px; border: 1px solid #CBD5E1; padding: 8px 10px; font-size: 12.5px; font-family: inherit; resize: none;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn-primary" style="flex: 1; background: #DC2626; border-color: #DC2626; height: 42px; font-size: 13px;" onclick="submitTripDispute()">
+            Submit Dispute &amp; Hold Funds
+          </button>
+          <button type="button" class="btn-secondary-surface" style="padding: 0 16px; height: 42px; font-size: 13px;" onclick="closeDisputeModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= CONFIRM COMPLETION & RELEASE PAYOUT MODAL ================= -->
+    <div class="referral-modal-overlay" id="escrowReleaseModal" onclick="if(event.target === this) closeEscrowReleaseModal()">
+      <div class="referral-modal-card" onclick="event.stopPropagation()" style="max-width: 390px;">
+        <div style="width: 52px; height: 52px; border-radius: 50%; background: #ECFDF5; border: 2px solid #A7F3D0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+          <i data-lucide="check-circle-2" style="width: 28px; height: 28px; color: #10B981;"></i>
+        </div>
+        <h3 style="font-size: 18px; font-weight: 800; color: #0F172A; margin: 0 0 6px;">Approve Commute Completion</h3>
+        <p style="font-size: 12.5px; color: #64748B; margin: 0 0 16px; line-height: 1.4;">
+          Confirming completion will immediately release the held escrow funds (<strong id="escrowReleaseAmtDisplay">$60.00</strong>) to your driver's payout balance.
+        </p>
+
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn-primary" style="flex: 1; height: 42px; font-size: 13px;" onclick="confirmEscrowRelease()">
+            <i data-lucide="check" style="width: 15px; height: 15px; margin-right: 4px;"></i>
+            <span>Confirm &amp; Release Payout</span>
+          </button>
+          <button type="button" class="btn-secondary-surface" style="padding: 0 14px; height: 42px; font-size: 13px;" onclick="closeEscrowReleaseModal()">Not Yet</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ================= CHILD SAFETY CENTER MODAL (DESIGN SYSTEM MATCH) ================= -->
     <div class="csc-modal-overlay" id="modal-childSafetyCenter" style="display: none;" onclick="if(event.target === this) closeChildSafetyCenter()">
       <div class="csc-modal-sheet" onclick="event.stopPropagation()">
@@ -9870,7 +10200,13 @@
                 </button>
               </div>
             </div>
-            <button type="button" class="btn-secondary-surface" id="driverTripMessageBtn" onclick="openChatWith('PRNT-9042')">Message parent</button>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-secondary-surface" style="flex: 1;" id="driverTripMessageBtn" onclick="openChatWith('PRNT-9042')">Message parent</button>
+              <button type="button" class="btn-secondary-surface" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; font-weight: 700;" onclick="openTripPhotoProofModal('pickup')">
+                <i data-lucide="camera" style="width: 14px; height: 14px; color: #1B2B68;"></i>
+                <span>Photo Proof</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -11375,15 +11711,15 @@
 
       <div class="search-filter-body">
         
-        <!-- 1. Interactive Drag Radius Slider Section -->
+        <!-- 1. Interactive Drag Radius Slider Section (Nearest Default) -->
         <div class="sf-section">
           <div class="sf-section-header">
             <span class="sf-section-label">Distance Radius</span>
-            <div class="sf-radius-badge" id="modalRadiusBadge">10 km</div>
+            <div class="sf-radius-badge" id="modalRadiusBadge">5 km</div>
           </div>
           
           <div class="sf-slider-container">
-            <input type="range" id="modalRadiusSlider" min="1" max="50" step="1" value="10" 
+            <input type="range" id="modalRadiusSlider" min="1" max="50" step="1" value="5" 
               class="sf-range-slider" 
               oninput="window.handleRadiusSliderChange(this.value)" />
           </div>
@@ -11391,14 +11727,26 @@
           <!-- Quick Preset Chips -->
           <div class="sf-chip-row" id="modalRadiusPresetChips">
             <button type="button" class="sf-chip" onclick="window.setModalRadius(3)">3 km</button>
-            <button type="button" class="sf-chip" onclick="window.setModalRadius(5)">5 km</button>
-            <button type="button" class="sf-chip active" onclick="window.setModalRadius(10)">10 km</button>
+            <button type="button" class="sf-chip active" onclick="window.setModalRadius(5)">5 km (Nearest)</button>
+            <button type="button" class="sf-chip" onclick="window.setModalRadius(10)">10 km</button>
             <button type="button" class="sf-chip" onclick="window.setModalRadius(25)">25 km</button>
             <button type="button" class="sf-chip" onclick="window.setModalRadius(50)">Any</button>
           </div>
         </div>
 
-        <!-- 2. Trip Timing Shift Section -->
+        <!-- 2. Driver Gender Section -->
+        <div class="sf-section">
+          <div class="sf-section-header">
+            <span class="sf-section-label">Driver Gender</span>
+          </div>
+          <div class="sf-chip-row" id="modalGenderChips">
+            <button type="button" class="sf-chip active" onclick="window.setModalGender('all', this)">All</button>
+            <button type="button" class="sf-chip" onclick="window.setModalGender('female', this)">Female Only</button>
+            <button type="button" class="sf-chip" onclick="window.setModalGender('male', this)">Male Only</button>
+          </div>
+        </div>
+
+        <!-- 3. Trip Timing Shift Section -->
         <div class="sf-section">
           <div class="sf-section-header">
             <span class="sf-section-label">Shift</span>
@@ -11410,7 +11758,7 @@
           </div>
         </div>
 
-        <!-- 3. Commute Mode Section -->
+        <!-- Commute Mode Section -->
         <div class="sf-section">
           <div class="sf-section-header">
             <span class="sf-section-label">Service</span>
@@ -11422,42 +11770,6 @@
           </div>
         </div>
 
-        <!-- 4. Trust & Safety Filters -->
-        <div class="sf-section">
-          <div class="sf-section-header">
-            <span class="sf-section-label">Trust &amp; Safety</span>
-          </div>
-          <div class="sf-toggle-list">
-            <label class="sf-feature-card" for="modalFilterVerifiedCheck">
-              <div class="sf-feature-icon-wrap is-verified">
-                <i data-lucide="badge-check"></i>
-              </div>
-              <div class="sf-feature-content">
-                <span class="sf-feature-title">Verified Only</span>
-                <span class="sf-feature-sub">Background &amp; police check certified</span>
-              </div>
-              <div class="sf-switch">
-                <input type="checkbox" id="modalFilterVerifiedCheck" class="sf-switch-input" onchange="window.updateLiveFilterCount(); this.closest('.sf-feature-card').classList.toggle('is-checked', this.checked);" />
-                <span class="sf-switch-slider"></span>
-              </div>
-            </label>
-
-            <label class="sf-feature-card" for="modalFilterTopRatedCheck">
-              <div class="sf-feature-icon-wrap is-rating">
-                <i data-lucide="star"></i>
-              </div>
-              <div class="sf-feature-content">
-                <span class="sf-feature-title">Top Rated (4.8+ ★)</span>
-                <span class="sf-feature-sub">Highest rated by parents</span>
-              </div>
-              <div class="sf-switch">
-                <input type="checkbox" id="modalFilterTopRatedCheck" class="sf-switch-input" onchange="window.updateLiveFilterCount(); this.closest('.sf-feature-card').classList.toggle('is-checked', this.checked);" />
-                <span class="sf-switch-slider"></span>
-              </div>
-            </label>
-          </div>
-        </div>
-
       </div>
 
       <!-- Footer Buttons -->
@@ -11466,6 +11778,32 @@
         <button type="button" class="btn-primary" style="flex:2;" onclick="window.applySearchFiltersAndClose()">
           <span id="modalApplyFilterBtnText">Apply</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 7. FAVORITE PROVIDERS MODAL ================= -->
+  <div class="custom-modal-overlay search-filter-modal-backdrop" id="favoriteProvidersModal" style="display:none;" onclick="if(event.target===this) window.closeFavoriteProvidersModal()">
+    <div class="search-filter-modal-box" style="max-height: 82vh; display: flex; flex-direction: column;">
+      <div class="sheet-drag-handle" style="margin: 0 auto 12px;"></div>
+      
+      <div class="search-filter-header" style="padding-bottom: 12px; border-bottom: 1px solid #F1F5F9; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:34px; height:34px; border-radius:50%; background:#FEE2E2; display:flex; align-items:center; justify-content:center; color:#EF4444; flex-shrink:0;">
+            <i data-lucide="heart" style="width:18px; height:18px; fill:#EF4444;"></i>
+          </div>
+          <div>
+            <h3 class="sf-title" style="margin:0; font-size:16px;">Favorite Providers</h3>
+            <span style="font-size:12px; color:#64748B;" id="favModalSubtitle">Saved drivers &amp; walk escorts</span>
+          </div>
+        </div>
+        <button type="button" class="btn-icon-close" onclick="window.closeFavoriteProvidersModal()" aria-label="Close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="search-filter-body" id="favoriteProvidersModalList" style="flex:1; overflow-y:auto; padding: 14px 0; display:flex; flex-direction:column; gap:10px;">
+        <!-- Populated dynamically via JS -->
       </div>
     </div>
   </div>

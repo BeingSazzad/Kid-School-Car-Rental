@@ -119,7 +119,7 @@ flowchart TD
 ### 🔹 Step-by-Step Experience:
 1. **Neighborhood Chaperone Verification**:
    - Submission of Driver's License and Two Proofs of Residency: (1) Address proof with Property Tax Statement or Tenancy Agreement, and (2) Utility Bill (Electricity, Gas, Water, Internet).
-   - Police Criminal Background Check and Vulnerable Sector Screening.
+   - Vulnerable Sector Screening and identity verification.
    - First-aid certification and child escort safety guidelines review.
 
 2. **Safe Walking Route Definition**:

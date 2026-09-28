@@ -175,17 +175,30 @@ window.appState = {
     {
       id: 'tariq',
       name: 'Robert MacDonald',
+      roleTitle: 'School Ride Driver',
+      gender: 'male',
       vehicle: 'Toyota Sienna (2023)',
       plate: 'SCH-4091',
       rating: 4.9,
       reviewsCount: 128,
-      seats: 4,
-      baseWeekly: 120,
-      listedRate: 120,
+      totalCapacity: 4,
+      bookedSeats: 1,
+      seats: 3, // dynamically updated (totalCapacity - bookedSeats)
+      tripTypes: ['oneway', 'roundtrip'],
+      frequencies: ['daily', 'weekly', 'monthly'],
+      pricing: {
+        daily: 14,
+        weekly: 60,
+        monthly: 220,
+        weeklyDiscount: 10,
+        monthlyDiscount: 18
+      },
+      baseWeekly: 60,
+      listedRate: 60,
       ratePeriod: 'week',
-      oneTimeRate: 35,
+      oneTimeRate: 14,
       negotiable: true,
-      preferredPayment: 'e-Transfer · Cash',
+      preferredPayment: 'Stripe Protected Escrow',
       paymentHandle: 'robert.macdonald@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'Midtown Toronto',
@@ -210,17 +223,30 @@ window.appState = {
     {
       id: 'farhana',
       name: 'Emily Campbell',
+      roleTitle: 'School Ride Driver',
+      gender: 'female',
       vehicle: 'Honda Odyssey (2024)',
       plate: 'KID-2810',
       rating: 5.0,
       reviewsCount: 94,
-      seats: 5,
-      baseWeekly: 135,
-      listedRate: 135,
+      totalCapacity: 5,
+      bookedSeats: 2,
+      seats: 3,
+      tripTypes: ['oneway', 'roundtrip'],
+      frequencies: ['daily', 'weekly', 'monthly'],
+      pricing: {
+        daily: 16,
+        weekly: 70,
+        monthly: 250,
+        weeklyDiscount: 12,
+        monthlyDiscount: 20
+      },
+      baseWeekly: 70,
+      listedRate: 70,
       ratePeriod: 'week',
-      oneTimeRate: 40,
+      oneTimeRate: 16,
       negotiable: true,
-      preferredPayment: 'e-Transfer · Cash',
+      preferredPayment: 'Stripe Protected Escrow',
       paymentHandle: 'emily.campbell@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'Annex / Midtown',
@@ -245,17 +271,30 @@ window.appState = {
     {
       id: 'kabir',
       name: 'Lucas Bennett',
+      roleTitle: 'School Ride Driver',
+      gender: 'male',
       vehicle: 'Toyota Highlander (2022)',
       plate: 'SCH-9102',
       rating: 4.8,
       reviewsCount: 62,
-      seats: 4,
-      baseWeekly: 110,
-      listedRate: 110,
+      totalCapacity: 4,
+      bookedSeats: 3,
+      seats: 1,
+      tripTypes: ['oneway'],
+      frequencies: ['daily', 'weekly'],
+      pricing: {
+        daily: 12,
+        weekly: 55,
+        monthly: 200,
+        weeklyDiscount: 8,
+        monthlyDiscount: 15
+      },
+      baseWeekly: 55,
+      listedRate: 55,
       ratePeriod: 'week',
-      oneTimeRate: 30,
+      oneTimeRate: 12,
       negotiable: false,
-      preferredPayment: 'e-Transfer · Cash',
+      preferredPayment: 'Stripe Protected Escrow',
       paymentHandle: 'lucas.bennett@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'East York',
@@ -281,17 +320,30 @@ window.appState = {
       id: 'sarah',
       name: 'Sarah Jenkins',
       category: 'walkshare',
-      vehicle: 'Neighborhood Walking Group',
+      roleTitle: 'WalkShare Guide',
+      gender: 'female',
+      vehicle: 'Sidewalk Escort Group',
       plate: 'VERIFIED-ESCORT',
       rating: 4.9,
       reviewsCount: 45,
+      totalCapacity: 4,
+      bookedSeats: 1,
       seats: 3,
-      baseWeekly: 75,
-      listedRate: 75,
+      tripTypes: ['oneway', 'roundtrip'],
+      frequencies: ['daily', 'weekly', 'monthly'],
+      pricing: {
+        daily: 8,
+        weekly: 35,
+        monthly: 130,
+        weeklyDiscount: 10,
+        monthlyDiscount: 20
+      },
+      baseWeekly: 35,
+      listedRate: 35,
       ratePeriod: 'week',
-      oneTimeRate: 25,
+      oneTimeRate: 8,
       negotiable: true,
-      preferredPayment: 'e-Transfer · Cash',
+      preferredPayment: 'Stripe Protected Escrow',
       paymentHandle: 'sarah.jenkins@interac.ca',
       maxServiceDistanceKm: 5,
       serviceArea: 'Elm → Greenfield',
@@ -317,17 +369,30 @@ window.appState = {
       id: 'elena',
       name: 'Sophie Bouchard',
       category: 'walkshare',
+      roleTitle: 'WalkShare Guide',
+      gender: 'female',
       vehicle: 'Greenfield Walk Escort',
       plate: 'WALK-SAFE-02',
       rating: 4.9,
       reviewsCount: 38,
+      totalCapacity: 3,
+      bookedSeats: 1,
       seats: 2,
-      baseWeekly: 70,
-      listedRate: 70,
+      tripTypes: ['oneway', 'roundtrip'],
+      frequencies: ['daily', 'weekly'],
+      pricing: {
+        daily: 8,
+        weekly: 35,
+        monthly: 130,
+        weeklyDiscount: 10,
+        monthlyDiscount: 15
+      },
+      baseWeekly: 35,
+      listedRate: 35,
       ratePeriod: 'week',
-      oneTimeRate: 25,
+      oneTimeRate: 8,
       negotiable: true,
-      preferredPayment: 'e-Transfer · Cash',
+      preferredPayment: 'Stripe Protected Escrow',
       paymentHandle: 'sophie.bouchard@interac.ca',
       maxServiceDistanceKm: 5,
       serviceArea: 'West-gate / Greenfield',
@@ -693,32 +758,109 @@ window.appState = {
   ],
   transactions: [
     {
+      id: 'tx_escrow_1',
+      receiptNo: 'H2S-ESC-8492',
+      date: 'Today • 08:30 AM',
+      title: 'School Ride Escrow — Robert M.',
+      subtitle: 'Funds secured in platform escrow',
+      provider: 'Robert MacDonald',
+      baseAmount: 60.00,
+      serviceFee: 4.50,
+      stripeFee: 1.95,
+      amount: 66.45,
+      paymentMethod: 'Stripe • Visa •••• 4242',
+      status: 'held',
+      statusText: 'Held in Escrow',
+      type: 'onetime',
+      stripeTxId: 'pi_escrow_84920_sec',
+      escrowReleaseTime: 'Releases upon trip completion approval'
+    },
+    {
+      id: 'tx_released_2',
+      receiptNo: 'H2S-REL-7102',
+      date: 'Yesterday • 04:15 PM',
+      title: 'Completed Commute — Emily C.',
+      subtitle: 'Payout released to driver account',
+      provider: 'Emily Campbell',
+      baseAmount: 70.00,
+      serviceFee: 4.50,
+      stripeFee: 2.25,
+      amount: 76.75,
+      paymentMethod: 'Stripe • Visa •••• 4242',
+      status: 'released',
+      statusText: 'Payout Released',
+      type: 'onetime',
+      stripeTxId: 'pi_rel_71029_payout',
+      escrowReleaseTime: 'Released Sep 27, 2026'
+    },
+    {
+      id: 'tx_pending_3',
+      receiptNo: 'H2S-PND-3391',
+      date: 'Sep 26, 2026 • 09:00 AM',
+      title: 'WalkShare Escrow Auth — Sarah J.',
+      subtitle: 'Awaiting Guide Confirmation',
+      provider: 'Sarah Jenkins',
+      baseAmount: 35.00,
+      serviceFee: 3.50,
+      stripeFee: 1.15,
+      amount: 39.65,
+      paymentMethod: 'Stripe • Mastercard •••• 8812',
+      status: 'pending',
+      statusText: 'Pending Acceptance',
+      type: 'onetime',
+      stripeTxId: 'pi_auth_pnd_33910'
+    },
+    {
+      id: 'tx_disputed_4',
+      receiptNo: 'H2S-DSP-1904',
+      date: 'Sep 22, 2026 • 11:30 AM',
+      title: 'Ride Dispute — Lucas B.',
+      subtitle: 'Under safety team review',
+      provider: 'Lucas Bennett',
+      baseAmount: 55.00,
+      serviceFee: 4.50,
+      stripeFee: 1.80,
+      amount: 61.30,
+      paymentMethod: 'Stripe • Visa •••• 4242',
+      status: 'disputed',
+      statusText: 'Disputed / Under Review',
+      type: 'onetime',
+      stripeTxId: 'ch_dsp_19042_hold',
+      disputeReason: 'Driver arrived 45m late at morning pickup gate'
+    },
+    {
+      id: 'tx_refunded_5',
+      receiptNo: 'H2S-REF-5401',
+      date: 'Sep 15, 2026 • 02:20 PM',
+      title: 'Full Escrow Refund — Sophie B.',
+      subtitle: 'Cancelled prior to pickup window',
+      provider: 'Sophie Bouchard',
+      baseAmount: 35.00,
+      serviceFee: 0.00,
+      stripeFee: 0.00,
+      amount: 35.00,
+      paymentMethod: 'Stripe • Visa •••• 4242',
+      status: 'refunded',
+      statusText: 'Refunded to Card',
+      type: 'onetime',
+      stripeTxId: 're_54012_full_rev'
+    },
+    {
       id: 'tx_1',
       receiptNo: 'H2S-SUB-0999',
       date: 'Sep 1, 2026 • 09:15 AM',
-      title: 'Platform subscription — Monthly',
-      subtitle: 'Home2School app access',
-      provider: 'Home2School',
+      title: 'Platform Subscription — Monthly',
+      subtitle: 'Home2School & School2Home Access',
+      provider: 'Home2School Inc.',
+      baseAmount: 9.99,
+      serviceFee: 0.00,
+      stripeFee: 0.00,
       amount: 9.99,
       paymentMethod: 'Stripe • Visa •••• 4242',
-      status: 'paid',
-      statusText: 'Paid via Stripe',
+      status: 'completed',
+      statusText: 'Completed',
       type: 'recurring',
       stripeTxId: 'ch_sub_monthly_0999'
-    },
-    {
-      id: 'tx_2',
-      receiptNo: 'H2S-SUB-0000',
-      date: 'Aug 18, 2026 • 10:00 AM',
-      title: '14-day free trial started',
-      subtitle: 'No charge during trial',
-      provider: 'Home2School',
-      amount: 0.00,
-      paymentMethod: 'Trial · no charge',
-      status: 'paid',
-      statusText: 'Trial',
-      type: 'onetime',
-      stripeTxId: 'ch_sub_trial_0000'
     }
   ],
   activeBookingId: 'H2S-84920',
@@ -3701,6 +3843,15 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
 
   window.currentDriverProfileId = provider.id;
 
+  // Sync Favorite Button State
+  const favBtn = document.getElementById('providerFavBtn');
+  if (favBtn) {
+    const favs = window.getFavoriteProviderIds ? window.getFavoriteProviderIds() : [];
+    const isFav = favs.includes(provider.id);
+    favBtn.classList.toggle('active', isFav);
+    favBtn.setAttribute('title', isFav ? 'Saved to Favorites' : 'Save to Favorites');
+  }
+
   const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
   const cleanFirstName = provider.name.replace(/\s*\(WalkShare\)/i, '').split(' ')[0];
   const cleanFullName = provider.name.replace(/\s*\(WalkShare\)/i, '');
@@ -3759,16 +3910,22 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (safetyList) {
     const checks = isWalk
       ? [
-          "Driver's licence verified",
-          'Proof of residency: Property Tax / Tenancy',
-          'Proof of residency: Utility Bill',
-          'Criminal background check',
-          'Vulnerable sector check'
+          "Driver’s licence verified",
+          "Proof of residency: Property Tax / Tenancy agreement",
+          "Proof of residency: Utility bill",
+          "Criminal background check",
+          "Vulnerable sector check",
+          "Pediatric First-Aid / CPR certified"
         ]
-      : ["Driver's licence verified", 'Vehicle insurance on file', 'Criminal background check', 'Vulnerable sector check'];
+      : ["Driver’s licence verified", 'Vehicle insurance on file', 'Criminal background check', 'Vulnerable sector check'];
     safetyList.innerHTML = checks.map((label) =>
       `<li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg><span>${label}</span></li>`
     ).join('');
+
+    const safetyBadge = document.getElementById('detailsSafetyBadge');
+    if (safetyBadge) {
+      safetyBadge.textContent = `${checks.length} / ${checks.length} Verified`;
+    }
   }
 
   const expPillar = document.getElementById('detailsProviderExpPillar');
@@ -4029,6 +4186,39 @@ window.submitBookingRequest = function () {
   const provider = window.appState.providers.find(p => p.id === draft.providerId) || window.appState.providers[0];
   const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena';
 
+  // 1. Seat Capacity Verification for Selected Children
+  const seatsNeeded = (window.appState.selectedChildIds || []).length || 1;
+  const availableSeats = Math.max(0, (provider.totalCapacity || 4) - (provider.bookedSeats || 0));
+
+  if (seatsNeeded > availableSeats && availableSeats >= 0) {
+    alert(`⚠️ Cannot proceed: ${provider.name} currently only has ${availableSeats} seat(s) available, but you have selected ${seatsNeeded} children. Please choose fewer children or another provider.`);
+    return;
+  }
+
+  // 2. Consume Seats & Update Dynamic Capacity
+  provider.bookedSeats = (provider.bookedSeats || 0) + seatsNeeded;
+  provider.seats = Math.max(0, (provider.totalCapacity || 4) - provider.bookedSeats);
+
+  // Update Dynamic Seat Badge in Search List if available
+  const seatBadge = document.getElementById(`seatBadge-${provider.id}`);
+  if (seatBadge) {
+    if (provider.seats === 0) {
+      seatBadge.className = 'seat-availability-pill low';
+      seatBadge.innerHTML = `<i data-lucide="users" style="width:11px;height:11px;"></i><span>Fully Booked</span>`;
+    } else if (provider.seats === 1) {
+      seatBadge.className = 'seat-availability-pill low';
+      seatBadge.innerHTML = `<i data-lucide="users" style="width:11px;height:11px;"></i><span>1 ${isWalk ? 'Spot' : 'Seat'} Left</span>`;
+    } else {
+      seatBadge.className = 'seat-availability-pill available';
+      seatBadge.innerHTML = `<i data-lucide="users" style="width:11px;height:11px;"></i><span>${provider.seats} of ${provider.totalCapacity || 4} ${isWalk ? 'Spots Open' : 'Seats Available'}</span>`;
+    }
+  }
+
+  const baseFare = draft.frequency === 'recurring' ? (provider.listedRate || provider.baseWeekly || 60) : (provider.oneTimeRate || 35);
+  const platformFee = 4.50;
+  const stripeFee = Number(((baseFare + platformFee) * 0.029 + 0.30).toFixed(2));
+  const totalEscrow = Number((baseFare + platformFee + stripeFee).toFixed(2));
+
   const newBooking = {
     id: `H2S-${Math.floor(10000 + Math.random() * 90000)}`,
     status: 'pending',
@@ -4062,21 +4252,43 @@ window.submitBookingRequest = function () {
     outboundTime: draft.outboundTime,
     returnTime: draft.direction === 'bothway' ? draft.returnTime : '',
     providerId: provider.id,
-    listedRate: draft.frequency === 'recurring' ? (provider.listedRate || provider.baseWeekly || 120) : (provider.oneTimeRate || 35),
+    listedRate: baseFare,
     ratePeriod: draft.frequency === 'recurring' ? 'week' : 'trip',
     agreedRate: null,
     rateStatus: 'listed',
     negotiable: provider.negotiable !== false,
-    amount: draft.frequency === 'recurring' ? (provider.listedRate || 120) : (provider.oneTimeRate || 35),
-    preferredPayment: provider.preferredPayment || 'e-Transfer · Cash',
-    paymentHandleStatus: 'not_requested',
-    paymentHandle: provider.paymentHandle || (provider.id + '@interac.ca'),
-    paymentMethod: 'Direct to provider',
+    amount: baseFare,
+    totalEscrow: totalEscrow,
+    preferredPayment: 'Stripe Protected Escrow',
+    paymentHandleStatus: 'escrow_held',
+    paymentHandle: 'stripe_escrow',
+    paymentMethod: 'In-Platform Stripe Escrow',
     createdAt: 'Just now'
   };
 
   window.appState.bookings.unshift(newBooking);
   window.appState.activeBookingId = newBooking.id;
+
+  // Record 6-State Stripe Escrow Transaction
+  const newTx = {
+    id: `tx_${Date.now()}`,
+    bookingId: newBooking.id,
+    date: 'Today',
+    title: `${provider.name.split(' ')[0]} · School Commute`,
+    amount: `$${totalEscrow.toFixed(2)}`,
+    type: 'debit',
+    status: 'held',
+    statusText: 'Held in Stripe Escrow',
+    category: isWalk ? 'walkshare' : 'ride',
+    escrowReleaseAfterHours: 24,
+    breakdown: {
+      baseFare: `$${baseFare}`,
+      platformFee: `$${platformFee.toFixed(2)}`,
+      stripeFee: `$${stripeFee.toFixed(2)}`
+    }
+  };
+  if (!window.appState.transactions) window.appState.transactions = [];
+  window.appState.transactions.unshift(newTx);
 
   // Also sync into driver's / walkshare requests if active
   if (window.syncNewBookingToDriver) {
@@ -8557,9 +8769,11 @@ if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       if (window.renderBookingSavedLocations) window.renderBookingSavedLocations();
+      if (window.updateParentProfileFavBadge) window.updateParentProfileFavBadge();
     });
   } else {
     if (window.renderBookingSavedLocations) window.renderBookingSavedLocations();
+    if (window.updateParentProfileFavBadge) window.updateParentProfileFavBadge();
   }
 }
 
@@ -8587,8 +8801,9 @@ window.openSearchFilterModal = function () {
   modal.classList.add('active');
 
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
-  const currentRadius = Number(window.appState.bookingDraft.searchRadiusKm);
-  const radiusVal = (Number.isFinite(currentRadius) && currentRadius > 0) ? currentRadius : 10;
+  const draft = window.appState.bookingDraft;
+  const currentRadius = Number(draft.searchRadiusKm);
+  const radiusVal = (Number.isFinite(currentRadius) && currentRadius > 0) ? currentRadius : 5; // Default 5 km (Nearest)
   
   const slider = document.getElementById('modalRadiusSlider');
   const badge = document.getElementById('modalRadiusBadge');
@@ -8598,29 +8813,56 @@ window.openSearchFilterModal = function () {
   // Sync radius preset chips
   document.querySelectorAll('#modalRadiusPresetChips .sf-chip').forEach((chip) => {
     const text = chip.textContent.trim();
-    if (radiusVal >= 50 && text === 'Any') chip.classList.add('active');
-    else if (text === `${radiusVal} km`) chip.classList.add('active');
+    if (radiusVal >= 50 && text.startsWith('Any')) chip.classList.add('active');
+    else if (text.startsWith(`${radiusVal} km`)) chip.classList.add('active');
     else chip.classList.remove('active');
   });
 
-  // Sync Trust & Safety toggle cards
-  const verifiedCheck = document.getElementById('modalFilterVerifiedCheck');
-  if (verifiedCheck) {
-    verifiedCheck.closest('.sf-feature-card')?.classList.toggle('is-checked', verifiedCheck.checked);
-  }
-  const topRatedCheck = document.getElementById('modalFilterTopRatedCheck');
-  if (topRatedCheck) {
-    topRatedCheck.closest('.sf-feature-card')?.classList.toggle('is-checked', topRatedCheck.checked);
-  }
+  // Sync Gender chips
+  const currentGender = (draft.genderFilter || 'all').toLowerCase();
+  document.querySelectorAll('#modalGenderChips .sf-chip').forEach((chip) => {
+    const fnStr = chip.getAttribute('onclick') || '';
+    if (fnStr.includes(`'${currentGender}'`)) chip.classList.add('active');
+    else chip.classList.remove('active');
+  });
+
+  // Sync Timing shift chips
+  const currentTiming = (draft.timingFilter || 'all').toLowerCase();
+  document.querySelectorAll('#modalTimingChips .sf-chip').forEach((chip) => {
+    const fnStr = chip.getAttribute('onclick') || '';
+    if (fnStr.includes(`'${currentTiming}'`)) chip.classList.add('active');
+    else chip.classList.remove('active');
+  });
+
+  // Sync Service mode chips
+  const currentService = (draft.serviceType || 'all').toLowerCase();
+  document.querySelectorAll('#modalServiceTypeChips .sf-chip').forEach((chip) => {
+    const fnStr = chip.getAttribute('onclick') || '';
+    if (fnStr.includes(`'${currentService}'`)) chip.classList.add('active');
+    else chip.classList.remove('active');
+  });
 
   window.updateLiveFilterCount();
-  if (window.lucide) window.lucide.createIcons();
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
 };
 
 window.closeSearchFilterModal = function () {
   const modal = document.getElementById('searchFilterModal');
   if (!modal) return;
   modal.classList.remove('active');
+  modal.style.display = 'none';
+};
+
+window.setModalGender = function (gender, btn) {
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.sf-chip').forEach((c) => c.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.genderFilter = gender || 'all';
+  window.updateLiveFilterCount();
 };
 
 window.handleRadiusSliderChange = function (val) {
@@ -8634,8 +8876,8 @@ window.handleRadiusSliderChange = function (val) {
   // Sync preset chips
   document.querySelectorAll('#modalRadiusPresetChips .sf-chip').forEach((chip) => {
     const text = chip.textContent.trim();
-    if (km >= 50 && text === 'Any') chip.classList.add('active');
-    else if (text === `${km} km`) chip.classList.add('active');
+    if (km >= 50 && text.startsWith('Any')) chip.classList.add('active');
+    else if (text.startsWith(`${km} km`)) chip.classList.add('active');
     else chip.classList.remove('active');
   });
 
@@ -8684,35 +8926,28 @@ window.setModalZone = function (zone, btn) {
 
 window.updateLiveFilterCount = function () {
   const cards = Array.from(document.querySelectorAll('#providersResultList .provider-result-card'));
-  if (!cards.length) return;
+  if (!cards.length) return 0;
 
   const draft = window.appState.bookingDraft || {};
   const radiusKm = Number(draft.searchRadiusKm);
   const hasRadius = Number.isFinite(radiusKm) && radiusKm > 0;
-  const service = draft.serviceType || 'all';
-  const selectedZone = (draft.zone || '').toLowerCase().trim();
-  const verifiedOnly = document.getElementById('modalFilterVerifiedCheck')?.checked;
-  const topRatedOnly = document.getElementById('modalFilterTopRatedCheck')?.checked;
-
-  const providers = (window.appState && window.appState.providers) || [];
+  const service = (draft.serviceType || 'all').toLowerCase();
+  const gender = (draft.genderFilter || 'all').toLowerCase();
+  const timing = (draft.timingFilter || 'all').toLowerCase();
 
   let count = 0;
   cards.forEach((card) => {
-    const cat = card.getAttribute('data-category');
-    const rating = parseFloat(card.getAttribute('data-rating') || '0');
-    const verified = card.getAttribute('data-verified') === 'true';
+    const cat = (card.getAttribute('data-category') || 'drivers').toLowerCase();
     const distance = parseFloat(card.getAttribute('data-distance') || '99');
-    const providerId = (card.getAttribute('data-provider-id') || '').toLowerCase();
-    const provider = providers.find((p) => p.id === providerId);
+    const cardGender = (card.getAttribute('data-gender') || '').toLowerCase();
+    const cardTripType = (card.getAttribute('data-triptype') || '').toLowerCase();
 
     let match = true;
     if (service !== 'all' && cat !== service) match = false;
     if (hasRadius && distance > radiusKm) match = false;
-    if (verifiedOnly && !verified) match = false;
-    if (topRatedOnly && rating < 4.8) match = false;
-    if (selectedZone && selectedZone !== 'all') {
-      const pZone = ((provider && (provider.zone || provider.serviceArea)) || '').toLowerCase();
-      if (!pZone.includes(selectedZone)) match = false;
+    if (gender !== 'all' && cardGender !== gender) match = false;
+    if (timing === 'morning' || timing === 'afternoon') {
+      if (cardTripType !== 'oneway' && cardTripType !== 'roundtrip') match = false;
     }
 
     if (match) count++;
@@ -8722,44 +8957,303 @@ window.updateLiveFilterCount = function () {
   if (btnText) {
     btnText.textContent = count > 0 ? `Apply (${count})` : 'Apply (0)';
   }
+  return count;
 };
 
 window.resetSearchFilters = function () {
-  window.setModalRadius(10);
+  window.setModalRadius(5); // Reset to Nearest 5 km
   
+  const allGender = document.querySelector('#modalGenderChips .sf-chip');
+  if (allGender) window.setModalGender('all', allGender);
+
   const allTiming = document.querySelector('#modalTimingChips .sf-chip');
   if (allTiming) window.setModalTiming('all', allTiming);
 
   const allService = document.querySelector('#modalServiceTypeChips .sf-chip');
   if (allService) window.setModalServiceType('all', allService);
 
-  const verifiedCheck = document.getElementById('modalFilterVerifiedCheck');
-  if (verifiedCheck) {
-    verifiedCheck.checked = false;
-    verifiedCheck.closest('.sf-feature-card')?.classList.remove('is-checked');
+  if (window.appState.bookingDraft) {
+    window.appState.bookingDraft.genderFilter = 'all';
+    window.appState.bookingDraft.serviceType = 'all';
+    window.appState.bookingDraft.timingFilter = 'all';
+    window.appState.bookingDraft.searchRadiusKm = 5;
   }
 
-  const topRatedCheck = document.getElementById('modalFilterTopRatedCheck');
-  if (topRatedCheck) {
-    topRatedCheck.checked = false;
-    topRatedCheck.closest('.sf-feature-card')?.classList.remove('is-checked');
+  const activeFilterBadge = document.getElementById('activeFilterBadge');
+  if (activeFilterBadge) {
+    activeFilterBadge.style.display = 'none';
+    activeFilterBadge.textContent = '0';
   }
 
   window.updateLiveFilterCount();
+  window.applyCurrentProviderFiltersAndSort();
 };
 
 window.applySearchFiltersAndClose = function () {
   window.closeSearchFilterModal();
 
-  const active = document.querySelector('#providerFilterRow .mvp-filter-chip.active');
-  if (typeof window.applyProviderCompactFilter === 'function') {
-    window.applyProviderCompactFilter(active?.getAttribute('data-filter') || 'all', active);
+  // Calculate active filter count for badge
+  let activeFilters = 0;
+  const draft = window.appState.bookingDraft || {};
+  if (draft.searchRadiusKm && Number(draft.searchRadiusKm) > 0 && Number(draft.searchRadiusKm) !== 5) activeFilters++;
+  if (draft.genderFilter && draft.genderFilter !== 'all') activeFilters++;
+  if (draft.serviceType && draft.serviceType !== 'all') activeFilters++;
+  if (draft.timingFilter && draft.timingFilter !== 'all') activeFilters++;
+
+  const activeFilterBadge = document.getElementById('activeFilterBadge');
+  if (activeFilterBadge) {
+    if (activeFilters > 0) {
+      activeFilterBadge.textContent = String(activeFilters);
+      activeFilterBadge.style.display = 'inline-flex';
+    } else {
+      activeFilterBadge.style.display = 'none';
+      activeFilterBadge.textContent = '0';
+    }
   }
 
-  const radius = window.appState.bookingDraft?.searchRadiusKm;
-  const radiusText = radius && radius > 0 ? `Within ${radius} km` : 'All distances';
+  window.applyCurrentProviderFiltersAndSort();
+
   if (typeof window.showToast === 'function') {
-    window.showToast(`✓ Filter applied: ${radiusText}`, 'info');
+    window.showToast('✓ Filters applied', 'info');
+  }
+};
+
+window.handleProviderSortChange = function (sortVal) {
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.sortBy = sortVal || 'nearest';
+  window.applyCurrentProviderFiltersAndSort();
+};
+
+window.applyCurrentProviderFiltersAndSort = function () {
+  const cards = Array.from(document.querySelectorAll('#providersResultList .provider-result-card'));
+  if (!cards.length) return;
+
+  const draft = (window.appState && window.appState.bookingDraft) || {};
+  const radiusKm = Number(draft.searchRadiusKm);
+  const hasRadius = Number.isFinite(radiusKm) && radiusKm > 0;
+  const service = (draft.serviceType || 'all').toLowerCase();
+  const gender = (draft.genderFilter || 'all').toLowerCase();
+  const timing = (draft.timingFilter || 'all').toLowerCase();
+  const sortBy = (draft.sortBy || document.getElementById('providerSortSelect')?.value || 'nearest').toLowerCase();
+  const seatsNeeded = (window.appState?.selectedChildIds || []).length || (draft.childIds || []).length || 1;
+  const providers = (window.appState && window.appState.providers) || [];
+
+  let visibleCount = 0;
+  cards.forEach((card) => {
+    const cat = (card.getAttribute('data-category') || 'drivers').toLowerCase();
+    const distance = parseFloat(card.getAttribute('data-distance') || '99');
+    const cardGender = (card.getAttribute('data-gender') || '').toLowerCase();
+    const cardTripType = (card.getAttribute('data-triptype') || '').toLowerCase();
+    const providerId = (card.getAttribute('data-provider-id') || '').toLowerCase();
+    const provider = providers.find((p) => p.id === providerId);
+
+    let show = true;
+    if (service !== 'all' && cat !== service) show = false;
+    if (hasRadius && distance > radiusKm) show = false;
+    if (gender !== 'all' && cardGender !== gender) show = false;
+    if (timing === 'morning' || timing === 'afternoon') {
+      if (cardTripType !== 'oneway' && cardTripType !== 'roundtrip') show = false;
+    }
+    if (provider && Number(provider.seats) > 0 && provider.seats < seatsNeeded) show = false;
+
+    card.style.display = show ? 'flex' : 'none';
+    if (show) {
+      card.removeAttribute('data-hide-reason');
+      visibleCount++;
+    } else {
+      card.setAttribute('data-hide-reason', 'filtered');
+    }
+  });
+
+  // Sort cards inside container
+  const listWrap = document.getElementById('providersResultList');
+  if (listWrap) {
+    cards.sort((a, b) => {
+      const distA = parseFloat(a.getAttribute('data-distance') || '99');
+      const distB = parseFloat(b.getAttribute('data-distance') || '99');
+      const ratingA = parseFloat(a.getAttribute('data-rating') || '0');
+      const ratingB = parseFloat(b.getAttribute('data-rating') || '0');
+      const priceA = parseFloat(a.getAttribute('data-price') || a.querySelector('.pcm-price-val')?.textContent?.replace(/[^0-9.]/g, '') || '0');
+      const priceB = parseFloat(b.getAttribute('data-price') || b.querySelector('.pcm-price-val')?.textContent?.replace(/[^0-9.]/g, '') || '0');
+
+      if (sortBy === 'nearest') {
+        return distA - distB; // closest distance first
+      } else if (sortBy === 'rating') {
+        return ratingB - ratingA; // highest rated first
+      } else if (sortBy === 'price-asc') {
+        return priceA - priceB; // lowest price first
+      } else if (sortBy === 'price-desc') {
+        return priceB - priceA; // highest price first
+      }
+      return distA - distB;
+    });
+    cards.forEach((c) => listWrap.appendChild(c));
+  }
+
+  const countBadge = document.getElementById('searchResultCountBadge');
+  if (countBadge) {
+    countBadge.textContent = `${visibleCount} Provider${visibleCount === 1 ? '' : 's'} Matching`;
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+/* ==========================================================
+   Favorite Providers System (Parent Favorites)
+   ========================================================== */
+window.getFavoriteProviderIds = function () {
+  try {
+    const raw = localStorage.getItem('h2s_favorite_providers');
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+};
+
+window.toggleFavoriteProvider = function (providerId) {
+  const id = providerId || window.currentDriverProfileId || 'tariq';
+  const favs = window.getFavoriteProviderIds();
+  const index = favs.indexOf(id);
+  const isNowFav = index === -1;
+
+  if (isNowFav) {
+    favs.push(id);
+  } else {
+    favs.splice(index, 1);
+  }
+
+  try {
+    localStorage.setItem('h2s_favorite_providers', JSON.stringify(favs));
+  } catch (e) { /* local storage fallback */ }
+
+  const favBtn = document.getElementById('providerFavBtn');
+  if (favBtn && (!window.currentDriverProfileId || window.currentDriverProfileId === id)) {
+    favBtn.classList.toggle('active', isNowFav);
+    favBtn.setAttribute('title', isNowFav ? 'Saved to Favorites' : 'Save to Favorites');
+  }
+
+  window.updateParentProfileFavBadge();
+  window.renderFavoriteProvidersList();
+
+  if (typeof window.showToast === 'function') {
+    window.showToast(isNowFav ? '❤️ Saved to Favorite Providers' : 'Removed from Favorites', 'info');
+  }
+};
+
+window.updateParentProfileFavBadge = function () {
+  const badge = document.getElementById('profileFavCountBadge');
+  if (!badge) return;
+  const favs = window.getFavoriteProviderIds();
+  if (favs.length > 0) {
+    badge.textContent = String(favs.length);
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+};
+
+window.openFavoriteProvidersModal = function (evt) {
+  if (evt && typeof evt.stopPropagation === 'function') evt.stopPropagation();
+  const modal = document.getElementById('favoriteProvidersModal');
+  if (!modal) return;
+  window.renderFavoriteProvidersList();
+  modal.classList.add('active');
+  modal.style.display = 'flex';
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.closeFavoriteProvidersModal = function () {
+  const modal = document.getElementById('favoriteProvidersModal');
+  if (!modal) return;
+  modal.classList.remove('active');
+  modal.style.display = 'none';
+};
+
+window.renderFavoriteProvidersList = function () {
+  const container = document.getElementById('favoriteProvidersModalList');
+  if (!container) return;
+
+  const favIds = window.getFavoriteProviderIds();
+  const providers = (window.appState && window.appState.providers) || [];
+
+  if (favIds.length === 0) {
+    container.innerHTML = `
+      <div class="fav-empty-state">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: #FEE2E2; display: flex; align-items: center; justify-content: center; color: #EF4444; margin: 0 auto 6px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </div>
+        <h4 style="margin: 0; font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 800; color: #0F172A;">No saved favorites yet</h4>
+        <p style="margin: 0; font-size: 12.5px; color: #64748B; max-width: 280px; line-height: 1.4;">
+          Tap the heart on any driver or WalkShare escort profile to save them here for one-tap booking and priority messaging.
+        </p>
+        <button type="button" class="btn-primary" style="margin-top: 8px; padding: 9px 18px; font-size: 13px; border-radius: 12px;" onclick="window.closeFavoriteProvidersModal(); window.navigateTo('bookingSearchProviders');">
+          Browse Providers
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  const cardsHtml = favIds.map((id) => {
+    const p = providers.find((prov) => prov.id === id) || {
+      id,
+      name: id === 'sarah' ? 'Sarah Jenkins' : (id === 'farhana' ? 'Farhana Yeasmin' : 'Tariq Al-Mansoor'),
+      category: (id === 'sarah' || id === 'elena') ? 'walkshare' : 'drivers',
+      rating: 4.9,
+      trips: '300+',
+      vehicle: id === 'sarah' ? 'Neighborhood Walking Group' : 'Toyota Sienna (2023)',
+      baseWeekly: (id === 'sarah' || id === 'elena') ? 75 : 120,
+      photo: id === 'sarah' ? '/assets/avatar_sarah.jpg' : (id === 'farhana' ? '/assets/avatar_farhana.jpg' : '/assets/avatar_tariq.jpg')
+    };
+
+    const isWalk = p.category === 'walkshare' || p.id === 'sarah' || p.id === 'elena';
+    const cleanName = String(p.name || '').replace(/\s*\(WalkShare\)/i, '');
+    const roleTitle = isWalk ? 'WalkShare Escort' : 'School Driver';
+    const rate = p.listedRate || p.baseWeekly || (isWalk ? 75 : 120);
+
+    return `
+      <div class="fav-provider-card">
+        <div class="fav-card-top">
+          <img src="${p.photo || '/assets/avatar_tariq.jpg'}" alt="${cleanName}" class="fav-card-avatar" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+          <div class="fav-card-info">
+            <div class="fav-card-name-row">
+              <span class="fav-card-name">${cleanName}</span>
+              <span class="pp-role-chip ${isWalk ? 'walkshare' : ''}" style="font-size:10px; padding:2px 6px;">${roleTitle}</span>
+            </div>
+            <div class="fav-card-meta">
+              <span style="color:#D97706; font-weight:700;">★ ${p.rating || 4.9}</span>
+              <span>·</span>
+              <span>${p.tripsCount || p.trips || '300+'} trips</span>
+            </div>
+          </div>
+          <button type="button" class="fav-card-unfav-btn" onclick="window.toggleFavoriteProvider('${p.id}')" title="Remove favorite" aria-label="Remove favorite">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#EF4444" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </button>
+        </div>
+        <div class="fav-card-bottom">
+          <div class="fav-card-rate">$${rate}/wk</div>
+          <div class="fav-card-actions">
+            <button type="button" class="btn-secondary-surface" style="padding: 7px 12px; font-size: 12px; border-radius: 10px; font-weight: 700;" onclick="window.closeFavoriteProvidersModal(); window.openDriverProfile('${p.id}', 'profile')">
+              Profile
+            </button>
+            <button type="button" class="btn-primary" style="padding: 7px 14px; font-size: 12px; border-radius: 10px; font-weight: 800;" onclick="window.closeFavoriteProvidersModal(); window.startBookingReview('${p.id}')">
+              Book
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = cardsHtml;
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
   }
 };
 
@@ -8776,10 +9270,7 @@ window.setDistanceRadius = function (km, btn) {
     btn.parentElement.querySelectorAll('.mvp-filter-chip').forEach((c) => c.classList.remove('active'));
     btn.classList.add('active');
   }
-  const active = document.querySelector('#providerFilterRow .mvp-filter-chip.active');
-  if (typeof window.applyProviderCompactFilter === 'function') {
-    window.applyProviderCompactFilter(active?.getAttribute('data-filter') || 'all', active);
-  }
+  window.applyCurrentProviderFiltersAndSort();
 };
 
 window.setTripTimingFilter = function (timing, btn) {
@@ -9199,3 +9690,238 @@ window.setDefaultPaymentMethod = function (last4) {
     alert(`✓ Card ending in ${last4} set as default.`);
   }
 };
+
+/* ==========================================================
+   Home2School & School2Home 63-Item Enterprise Feature Handlers
+   ========================================================== */
+
+// 1. Referral Management System
+window.openReferralModal = function () {
+  const role = window.appState?.activeRole || 'parent';
+  const rolePrefix = role === 'driver' ? 'DRV' : role === 'walkshare' ? 'WSG' : 'KID';
+  const code = `H2S-${rolePrefix}-${Math.floor(1000 + Math.random() * 9000)}`;
+  
+  const display = document.getElementById('refModalCodeDisplay');
+  if (display) display.textContent = code;
+  
+  const modal = document.getElementById('referralModal');
+  if (modal) {
+    modal.classList.add('active');
+    modal.style.setProperty('display', 'flex', 'important');
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.closeReferralModal = function () {
+  const modal = document.getElementById('referralModal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.setProperty('display', 'none', 'important');
+  }
+};
+
+window.copyReferralCode = function () {
+  const code = document.getElementById('refModalCodeDisplay')?.textContent || 'H2S-KID-9821';
+  navigator.clipboard?.writeText(code).catch(() => {});
+  const btnText = document.getElementById('refModalCopyBtnText');
+  if (btnText) btnText.textContent = 'Copied!';
+  if (window.showToast) window.showToast(`✓ Referral code "${code}" copied to clipboard!`, 'success');
+  setTimeout(() => { if (btnText) btnText.textContent = 'Copy Code'; }, 2000);
+};
+
+window.shareReferralLink = function (channel) {
+  const code = document.getElementById('refModalCodeDisplay')?.textContent || 'H2S-KID-9821';
+  const url = `https://home2school.app/r/${code}`;
+  const text = `Join Home2School & School2Home for verified safe child commutes. Use code ${code} for $15 ride credit! ${url}`;
+  if (channel === 'whatsapp') {
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+  } else {
+    if (navigator.share) {
+      navigator.share({ title: 'Home2School Referral', text: text, url: url }).catch(() => {});
+    } else {
+      window.copyReferralCode();
+    }
+  }
+};
+
+// 2. Handover Photo Proof System (Pickup & Drop-off Photo Documentation)
+window.currentPhotoProofTab = 'pickup';
+window.photoProofData = {
+  pickup: {
+    photo: '/assets/onboarding1.jpg',
+    badge: 'Verified Pickup Proof',
+    location: '📍 12 Elm Street, Toronto',
+    time: '07:34 AM',
+    desc: 'Liam & Emma safely boarded Robert MacDonald’s Toyota Sienna.'
+  },
+  dropoff: {
+    photo: '/assets/onboarding3.jpg',
+    badge: 'Verified Drop-off Proof',
+    location: '📍 Greenfield Gate 2 Drop-off Loop',
+    time: '08:12 AM',
+    desc: 'Handover completed to Greenfield Campus Hall monitor at main entrance.'
+  }
+};
+
+window.openTripPhotoProofModal = function (tab = 'pickup') {
+  window.currentPhotoProofTab = tab;
+  window.switchPhotoProofTab(tab);
+  const modal = document.getElementById('tripPhotoProofModal');
+  if (modal) {
+    modal.classList.add('active');
+    modal.style.setProperty('display', 'flex', 'important');
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.closeTripPhotoProofModal = function () {
+  const modal = document.getElementById('tripPhotoProofModal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.setProperty('display', 'none', 'important');
+  }
+};
+
+window.switchPhotoProofTab = function (tab) {
+  window.currentPhotoProofTab = tab;
+  const data = window.photoProofData[tab] || window.photoProofData.pickup;
+  
+  const tabPickup = document.getElementById('tabPhotoPickup');
+  const tabDropoff = document.getElementById('tabPhotoDropoff');
+  if (tabPickup) tabPickup.classList.toggle('active', tab === 'pickup');
+  if (tabDropoff) tabDropoff.classList.toggle('active', tab === 'dropoff');
+  
+  const img = document.getElementById('photoProofImg');
+  const badgeText = document.getElementById('photoProofBadgeText');
+  const locTitle = document.getElementById('photoProofLocationTitle');
+  const timeText = document.getElementById('photoProofTimeText');
+  const desc = document.getElementById('photoProofDesc');
+  
+  if (img) img.src = data.photo;
+  if (badgeText) badgeText.textContent = data.badge;
+  if (locTitle) locTitle.textContent = data.location;
+  if (timeText) timeText.textContent = data.time;
+  if (desc) desc.textContent = data.desc;
+  
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.handlePhotoProofUpload = function (input) {
+  if (input && input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const tab = window.currentPhotoProofTab || 'pickup';
+      window.photoProofData[tab].photo = e.target.result;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      window.photoProofData[tab].time = `${timeStr} (Just now)`;
+      window.photoProofData[tab].badge = tab === 'pickup' ? '✓ New Pickup Photo Captured' : '✓ New Drop-off Photo Captured';
+      window.switchPhotoProofTab(tab);
+      if (window.showToast) window.showToast(`✓ ${tab === 'pickup' ? 'Pickup' : 'Drop-off'} photo proof updated!`, 'success');
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+};
+
+window.simulateInstantPhotoSnap = function () {
+  const tab = window.currentPhotoProofTab || 'pickup';
+  const samplePhotos = {
+    pickup: '/assets/onboarding1.jpg',
+    dropoff: '/assets/onboarding3.jpg'
+  };
+  window.photoProofData[tab].photo = samplePhotos[tab] || '/assets/onboarding1.jpg';
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  window.photoProofData[tab].time = `${timeStr} (Verified)`;
+  window.switchPhotoProofTab(tab);
+  if (window.showToast) window.showToast(`✓ Verified ${tab === 'pickup' ? 'pickup' : 'drop-off'} photo snapshot captured!`, 'success');
+};
+
+// 3. Dispute Mediation Handler
+window.openDisputeModal = function (txId) {
+  const modal = document.getElementById('disputeModal');
+  if (modal) {
+    modal.dataset.txId = txId || 'tx_escrow_1';
+    modal.classList.add('active');
+    modal.style.setProperty('display', 'flex', 'important');
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.closeDisputeModal = function () {
+  const modal = document.getElementById('disputeModal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.setProperty('display', 'none', 'important');
+  }
+};
+
+window.submitTripDispute = function () {
+  const modal = document.getElementById('disputeModal');
+  const reason = document.getElementById('disputeReasonSelect')?.value;
+  const txId = modal?.dataset?.txId || 'tx_escrow_1';
+  
+  const tx = (window.appState?.transactions || []).find(t => t.id === txId);
+  if (tx) {
+    tx.status = 'disputed';
+    tx.statusText = 'Disputed / Under Review';
+  }
+  
+  window.closeDisputeModal();
+  if (window.renderTransactions) window.renderTransactions('all');
+  if (window.showToast) window.showToast('✓ Dispute filed. Escrow funds placed on security hold.', 'warning');
+};
+
+// 4. Escrow Payout Release Handler
+window.openEscrowReleaseModal = function (amt = '$60.00', txId = 'tx_escrow_1') {
+  const amtDisplay = document.getElementById('escrowReleaseAmtDisplay');
+  if (amtDisplay) amtDisplay.textContent = amt;
+  const modal = document.getElementById('escrowReleaseModal');
+  if (modal) {
+    modal.dataset.txId = txId;
+    modal.classList.add('active');
+    modal.style.setProperty('display', 'flex', 'important');
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.closeEscrowReleaseModal = function () {
+  const modal = document.getElementById('escrowReleaseModal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.setProperty('display', 'none', 'important');
+  }
+};
+
+window.confirmEscrowRelease = function () {
+  const modal = document.getElementById('escrowReleaseModal');
+  const txId = modal?.dataset?.txId || 'tx_escrow_1';
+  const tx = (window.appState?.transactions || []).find(t => t.id === txId);
+  if (tx) {
+    tx.status = 'released';
+    tx.statusText = 'Payout Released';
+  }
+  window.closeEscrowReleaseModal();
+  if (window.renderTransactions) window.renderTransactions('all');
+  if (window.showToast) window.showToast('✓ Payout released to driver account successfully!', 'success');
+};
+
+// 5. Dynamic Seat Availability Calculator
+window.calculateAvailableSeats = function (provider) {
+  if (!provider) return 0;
+  const total = provider.totalCapacity || provider.seats || 4;
+  const booked = provider.bookedSeats || 0;
+  return Math.max(0, total - booked);
+};
+
+// 6. Enterprise Search Filter by Criteria (Gender, Trip Type, Frequency)
+if (typeof window.filterSearchByCriteria !== 'function') {
+  window.filterSearchByCriteria = function () {
+    const active = document.querySelector('#providerFilterRow .mvp-filter-chip.active')
+      || document.querySelector('#providerFilterRow .mvp-filter-chip');
+    if (typeof window.applyProviderCompactFilter === 'function') {
+      window.applyProviderCompactFilter(active?.getAttribute('data-filter') || 'all', active);
+    }
+  };
+}
+

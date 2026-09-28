@@ -964,57 +964,24 @@
     }
   };
 
-  window.applyProviderCompactFilter = function (filter, btnEl) {
-    document.querySelectorAll('#providerFilterRow .mvp-filter-chip').forEach((chip) => chip.classList.remove('active'));
-    btnEl?.classList.add('active');
-    const serviceRaw = state().bookingDraft.serviceType || 'drivers';
-    const service = serviceRaw === 'walkshare' ? 'walkshare' : (serviceRaw === 'all' ? 'all' : 'drivers');
-    const cards = Array.from(document.querySelectorAll('#providersResultList .provider-result-card'));
-    const seatsNeeded = (state().selectedChildIds || []).length || (state().bookingDraft.childIds || []).length || 1;
-    const radiusKm = Number(state().bookingDraft.searchRadiusKm);
-    const hasRadius = Number.isFinite(radiusKm) && radiusKm > 0;
-
-    cards.forEach((card) => {
-      const cat = card.getAttribute('data-category');
-      const rating = parseFloat(card.getAttribute('data-rating') || '0');
-      const verified = card.getAttribute('data-verified') === 'true';
-      const distance = parseFloat(card.getAttribute('data-distance') || '99');
-      let show = service === 'all' ? true : cat === service;
-      if (filter === 'distance') show = show && distance <= 2;
-      if (filter === 'rating') show = show && rating >= 4.8;
-      if (filter === 'verified') show = show && verified;
-      if (hasRadius) show = show && distance <= radiusKm;
-      const providerId = (card.getAttribute('data-provider-id') || '').toLowerCase();
-      const provider = (state().providers || []).find((p) => p.id === providerId);
-      if (provider && Number(provider.seats) > 0 && provider.seats < seatsNeeded) show = false;
-
-      const selectedZone = (state().bookingDraft?.zone || '').toLowerCase().trim();
-      if (selectedZone && selectedZone !== 'all') {
-        const pZone = ((provider && (provider.zone || provider.serviceArea)) || card.querySelector('.pcs-zone')?.textContent || '').toLowerCase();
-        if (!pZone.includes(selectedZone)) show = false;
-      }
-
-      card.style.display = show ? 'flex' : 'none';
-      if (show) card.removeAttribute('data-hide-reason');
-      else card.setAttribute('data-hide-reason', 'compact');
-    });
-
-    if (filter === 'distance') {
-      const wrap = document.getElementById('providersResultList');
-      const visible = cards.filter((c) => c.style.display !== 'none');
-      visible.sort((a, b) => (parseFloat(a.getAttribute('data-distance') || '99') - parseFloat(b.getAttribute('data-distance') || '99')));
-      visible.forEach((card) => wrap.appendChild(card));
+  window.applyProviderCompactFilter = function () {
+    if (typeof window.applyCurrentProviderFiltersAndSort === 'function') {
+      window.applyCurrentProviderFiltersAndSort();
     }
-    if (window.H2SAvailability) window.H2SAvailability.applyToProviderCards(state().bookingDraft || {});
-    if (window.H2SZone) window.H2SZone.paintProviderCards();
-    if (document.getElementById('providerSearchMap')?.classList.contains('visible')) {
-      window.initProviderSearchMap();
+  };
+
+  window.filterSearchByCriteria = function () {
+    if (typeof window.applyCurrentProviderFiltersAndSort === 'function') {
+      window.applyCurrentProviderFiltersAndSort();
     }
   };
 
   window.initProviderSearchPage = function () {
     const draft = state().bookingDraft || {};
     if (draft.searchRadiusKm == null) draft.searchRadiusKm = 5;
+    if (draft.sortBy == null) draft.sortBy = 'nearest';
+    if (draft.genderFilter == null) draft.genderFilter = 'all';
+
     document.querySelectorAll('#providersResultList .provider-result-card').forEach((card) => {
       card.classList.add('mvp-compact', 'provider-card-slim');
       const id = card.getAttribute('data-provider-id') || 'tariq';
@@ -1028,20 +995,31 @@
         actions.style.cssText = 'display:flex; gap:8px; margin-top:10px; padding-top:10px; border-top:1px solid #F1F5F9;';
         actions.innerHTML = `
           <button type="button" class="btn-secondary-surface" style="flex:1; padding:8px 10px; font-size:12px; border-radius:10px; font-weight:700;" onclick="event.stopPropagation(); openDriverProfile('${id}', 'bookingSearchProviders')">View Profile</button>
-          <button type="button" class="btn-primary" style="flex:1; padding:8px 10px; font-size:12px; border-radius:10px; font-weight:700;" onclick="event.stopPropagation(); startBookingReview('${id}')">Request Booking</button>
+          <button type="button" class="btn-primary" style="flex:1; padding:8px 10px; font-size:12px; border-radius:10px; font-weight:700;" onclick="event.stopPropagation(); startBookingReview('${id}')">Book</button>
         `;
         card.appendChild(actions);
       }
     });
-    const activeChip = document.querySelector('#providerFilterRow .mvp-filter-chip.active')
-      || document.querySelector('#providerFilterRow .mvp-filter-chip');
-    window.applyProviderCompactFilter(activeChip?.getAttribute('data-filter') || 'all', activeChip);
+
+    if (typeof window.applyCurrentProviderFiltersAndSort === 'function') {
+      window.applyCurrentProviderFiltersAndSort();
+    }
     window.setProviderSearchView('list');
-    if (window.lucide) window.lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
   };
 
   window.startBookingReview = function (providerId) {
     const provider = (state().providers || []).find((p) => p.id === providerId) || state().providers[0];
+    const seatsNeeded = (state().selectedChildIds || []).length || (state().bookingDraft?.childIds || []).length || 1;
+    const availableSeats = Math.max(0, (provider.totalCapacity || 4) - (provider.bookedSeats || 0));
+
+    if (seatsNeeded > availableSeats && availableSeats > 0) {
+      alert(`⚠️ Capacity Notice: ${provider.name} currently only has ${availableSeats} seat(s) available, but ${seatsNeeded} children are selected. Please select fewer children or choose another provider.`);
+      return;
+    }
+
     state().bookingDraft.providerId = provider.id;
     window.navigateTo('bookingSummary');
   };
@@ -1096,6 +1074,9 @@
       ? (provider?.listedRate || provider?.baseWeekly || (isWalk ? 75 : 120))
       : (provider?.oneTimeRate || (isWalk ? 25 : 35));
     setText('summaryListedRateVal', `$${rateVal}/${rateUnit}`);
+    const escrowNum = Number(rateVal) || 60;
+    setText('summaryTotalEscrowVal', `$${escrowNum.toFixed(2)}`);
+    setText('summaryPriceUnitText', `/${rateUnit}`);
     const negBadge = document.getElementById('summaryNegotiableBadge');
     if (negBadge) {
       negBadge.style.display = provider?.negotiable !== false ? 'inline-block' : 'none';
@@ -1130,6 +1111,8 @@
     setText('summaryProviderText', cleanName || 'Provider');
     setText('summaryVehicleText', [provider?.vehicle, provider?.plate].filter(Boolean).join(' · ') || 'Vehicle');
     setText('summaryListedRateVal', `$${rateVal}/${rateUnit}`);
+    setText('summaryTotalEscrowVal', `$${escrowNum.toFixed(2)}`);
+    setText('summaryPriceUnitText', `/${rateUnit}`);
     if (negBadge) {
       negBadge.style.display = provider?.negotiable !== false ? 'inline-block' : 'none';
     }

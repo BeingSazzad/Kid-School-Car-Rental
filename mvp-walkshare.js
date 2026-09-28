@@ -68,10 +68,9 @@
     ]
   };
   const REQUIRED_DOCS = [
-    { id: 'licence', title: "Driver's License" },
+    { id: 'licence', title: "Government ID / Driver's License" },
     { id: 'residency_tax_tenancy', title: "Proof of Residency 1" },
     { id: 'residency_utility', title: "Proof of Residency 2" },
-    { id: 'criminal', title: 'Criminal Background Check' },
     { id: 'vulnerable', title: 'Vulnerable Sector Check' },
     { id: 'firstaid', title: 'Pediatric First-Aid / CPR' }
   ];
@@ -153,13 +152,6 @@
         issuer: 'Toronto Hydro',
         address: '124 Greenfield Ave, Toronto, ON M4B 1B3',
         billDate: '2026-08-10'
-      },
-      {
-        id: 'criminal',
-        title: 'Criminal Background Check',
-        status: 'approved',
-        file: demoUpload('crc-sarah.pdf'),
-        issuer: 'Toronto Police Service'
       },
       {
         id: 'vulnerable',
@@ -2158,7 +2150,7 @@
             <i data-lucide="chevron-right" class="profile-user-chevron"></i>
           </div>
           <p class="profile-user-role" style="font-size:12.5px; color:#BAE6FD; margin:2px 0 0 0; font-weight:500;">
-            WalkShare Escort
+            WalkShare Guide
           </p>
           <p class="profile-user-rating" style="margin:2px 0 0 0; font-size:12px; color:#FCD34D; font-weight:600; display:flex; align-items:center; gap:4px;">
             <span>★ ${Number(w.rating || 4.9).toFixed(1)}</span>
@@ -2179,9 +2171,10 @@
         ${profileMenuRow('clock', 'Availability', "openNestedScreen('wsOnboardAvailability', event)")}
       </div>
 
-      <!-- Section 2: Earnings, Reviews & Subscription (3 links) -->
+      <!-- Section 2: Earnings, Reviews & Subscription -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('wallet', 'Payment & Rates', "openNestedScreen('wsPayment', event)")}
+        ${profileMenuRow('gift', 'Refer a Guide & Earn $15', "window.openReferralModal()", '', '<span style="background:#DCFCE7; color:#15803D; font-size:11px; font-weight:800; padding:2px 8px; border-radius:99px;">$15 Bonus</span>')}
         ${profileMenuRow('star', 'Ratings & reviews', "openNestedScreen('wsRatings', event)")}
         ${profileMenuRow('crown', 'WalkShare subscription', "openNestedScreen('wsSubscription', event)")}
       </div>

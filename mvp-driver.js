@@ -3975,7 +3975,7 @@
               <i data-lucide="file-text" style="width:20px; height:20px; color:#2563EB; flex-shrink:0; margin-top:2px;"></i>
               <div style="min-width:0; flex:1;">
                 <div style="font-size:13.5px; color:#334155; line-height:1.5; font-weight:500;">
-                  ${esc(req.notes || 'Hand to classroom teacher at the main entrance gate. Driver must verify parent safety PIN before child release.')}
+                  ${esc(req.notes || 'Hand to classroom teacher at the main entrance gate. Driver takes photo proof snapshot at pickup and drop-off.')}
                 </div>
                 ${hasCorridorIssue ? `<div style="font-size:12px; font-weight:700; color:#D97706; margin-top:6px;">⚠️ Corridor status needs review</div>` : ''}
               </div>
@@ -4788,9 +4788,10 @@
         ${profileMenuRow('clock', 'Availability', "openDriverProfileChild('driverOnboardAvailability', event)")}
       </div>
 
-      <!-- Section 2: Earnings, Reviews & Subscription (3 links) -->
+      <!-- Section 2: Earnings, Reviews & Subscription -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('wallet', 'Payment & Rates', "openDriverProfileChild('driverPayment', event)")}
+        ${profileMenuRow('gift', 'Refer a Driver & Earn $15', "window.openReferralModal()", '', '<span style="background:#FEF3C7; color:#B45309; font-size:11px; font-weight:800; padding:2px 8px; border-radius:99px;">$15 Bonus</span>')}
         ${profileMenuRow('star', 'Ratings & reviews', "openDriverProfileChild('driverRatings', event)")}
         ${profileMenuRow('crown', 'Driver subscription', "openDriverProfileChild('driverSubscription', event)")}
       </div>

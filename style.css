@@ -16043,11 +16043,11 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   font-size: 12px !important;
   font-weight: 800 !important;
   color: #FFFFFF !important;
-  background: #1B2B68 !important;
+  background: #2563EB !important;
   padding: 3px 10px !important;
   border-radius: 999px !important;
   letter-spacing: 0.2px !important;
-  box-shadow: 0 2px 6px rgba(27, 43, 104, 0.2) !important;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25) !important;
 }
 
 /* Range Slider */
@@ -16076,9 +16076,9 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   width: 22px !important;
   height: 22px !important;
   border-radius: 50% !important;
-  background: #1B2B68 !important;
+  background: #2563EB !important;
   border: 3px solid #FFFFFF !important;
-  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.35) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35) !important;
   cursor: grab !important;
   transition: transform 0.15s ease !important;
 }
@@ -16092,9 +16092,9 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
   width: 22px !important;
   height: 22px !important;
   border-radius: 50% !important;
-  background: #1B2B68 !important;
+  background: #2563EB !important;
   border: 3px solid #FFFFFF !important;
-  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.35) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35) !important;
   cursor: grab !important;
 }
 
@@ -16131,10 +16131,10 @@ body[data-role="walkshare"] .role-switcher-floating-bar {
 }
 
 .sf-chip.active {
-  background: #1B2B68 !important;
-  border-color: #1B2B68 !important;
+  background: #2563EB !important;
+  border-color: #2563EB !important;
   color: #FFFFFF !important;
-  box-shadow: 0 2px 8px rgba(27, 43, 104, 0.25) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
 }
 
 /* Toggle List */
@@ -21547,23 +21547,7 @@ label.drv-upload-tile {
 }
 
 .pcm-chevron {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: #9CA3AF !important;
-  flex-shrink: 0 !important;
-  padding: 2px !important;
-  transition: transform 0.15s ease, color 0.15s ease !important;
-}
-
-.pcm-chevron svg {
-  width: 16px !important;
-  height: 16px !important;
-}
-
-.pcm-top-row:hover .pcm-chevron {
-  color: #4B5563 !important;
-  transform: translateX(2px) !important;
+  display: none !important;
 }
 
 .pcm-divider {
@@ -21626,23 +21610,24 @@ label.drv-upload-tile {
   justify-content: center !important;
   background: #1B2B68 !important;
   color: #FFFFFF !important;
-  font-size: 12.5px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
-  padding: 6px 14px !important;
-  height: 33px !important;
-  min-height: 33px !important;
-  border-radius: 8px !important;
+  padding: 6px 18px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  min-width: 76px !important;
+  border-radius: 9px !important;
   border: none !important;
   cursor: pointer !important;
   white-space: nowrap !important;
-  box-shadow: 0 2px 4px rgba(27, 43, 104, 0.15) !important;
+  box-shadow: 0 2px 5px rgba(27, 43, 104, 0.18) !important;
   transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease !important;
   line-height: 1.2 !important;
 }
 
 .btn-request-booking:hover {
   background: #142152 !important;
-  box-shadow: 0 4px 10px rgba(27, 43, 104, 0.22) !important;
+  box-shadow: 0 4px 10px rgba(27, 43, 104, 0.25) !important;
 }
 
 .btn-request-booking:active {
@@ -23547,6 +23532,361 @@ label.drv-upload-tile {
   margin: 3px 0 !important;
   width: 100% !important;
 }
+
+/* ==========================================================
+   Home2School & School2Home 63-Item Enterprise Upgrade Styles
+   ========================================================== */
+
+/* 1. Dual Branding Typography */
+.brand-subtext,
+.brand-tagline-sub {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #F2600C;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: 1px;
+  line-height: 1.2;
+}
+.brand-subtext-light {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #FDBA74;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* 2. Referral System Styles */
+.referral-promo-card {
+  background: linear-gradient(135deg, #1B2B68 0%, #263C8C 100%);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  color: #FFFFFF;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(27, 43, 104, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+.referral-promo-card::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  top: -20px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(242, 96, 12, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+.referral-code-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-family: monospace;
+  font-weight: 800;
+  font-size: 14px;
+  color: #FFEDD5;
+  letter-spacing: 1px;
+}
+.referral-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.referral-modal-overlay.active {
+  display: flex !important;
+}
+.referral-modal-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 400px;
+  padding: 24px 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 3. Dynamic Driver Seats Badges */
+.seat-availability-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+.seat-availability-pill.available {
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+.seat-availability-pill.low {
+  background: #FFFBEB;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+.seat-availability-pill.full {
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+/* 4. Enhanced Search & Filter Controls (Gender, Trip Type, Frequency) */
+.search-filter-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scrollbar-width: none;
+}
+.search-filter-row::-webkit-scrollbar {
+  display: none;
+}
+.filter-chip-select {
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #475569;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+.filter-chip-select.active,
+.filter-chip-select:hover {
+  background: #1B2B68;
+  color: #FFFFFF;
+  border-color: #1B2B68;
+}
+
+/* 5. Food Delivery Style Trip Progress Stepper (6-Stages) */
+.trip-stepper-wrap {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.stepper-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin: 14px 0 8px;
+}
+.stepper-track-line {
+  position: absolute;
+  top: 14px;
+  left: 10%;
+  right: 10%;
+  height: 4px;
+  background: #E2E8F0;
+  z-index: 1;
+}
+.stepper-track-fill {
+  position: absolute;
+  top: 14px;
+  left: 10%;
+  height: 4px;
+  background: linear-gradient(90deg, #10B981, #0284C7);
+  z-index: 2;
+  transition: width 0.3s ease;
+}
+.step-node {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #64748B;
+  transition: all 0.2s ease;
+}
+.step-node.completed .step-dot {
+  background: #10B981;
+  border-color: #10B981;
+  color: #FFFFFF;
+}
+.step-node.current .step-dot {
+  background: #0284C7;
+  border-color: #0284C7;
+  color: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2);
+  animation: pulseNode 1.5s infinite;
+}
+.step-node-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748B;
+  text-align: center;
+  max-width: 60px;
+  line-height: 1.2;
+}
+.step-node.current .step-node-label {
+  color: #0284C7;
+  font-weight: 800;
+}
+.step-node.completed .step-node-label {
+  color: #10B981;
+}
+
+@keyframes pulseNode {
+  0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(2, 132, 199, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
+}
+
+/* 6. Handover Photo Proof (Pickup & Drop-off Verification) */
+.photo-proof-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+  margin-top: 12px;
+}
+.photo-proof-frame {
+  width: 100%;
+  height: 200px;
+  background: #0F172A;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.photo-proof-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+.photo-proof-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(16, 185, 129, 0.95);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.photo-proof-meta-box {
+  padding: 12px 14px;
+  background: #F8FAFC;
+  border-top: 1px solid #F1F5F9;
+  text-align: left;
+}
+.photo-proof-tabs {
+  display: flex;
+  background: #F1F5F9;
+  border-radius: 12px;
+  padding: 3px;
+  gap: 3px;
+  margin-bottom: 12px;
+}
+.photo-proof-tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.photo-proof-tab-btn.active {
+  background: #FFFFFF;
+  color: #1B2B68;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.photo-proof-upload-box {
+  border: 1.5px dashed #CBD5E1;
+  border-radius: 14px;
+  padding: 20px 14px;
+  text-align: center;
+  background: #F8FAFC;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.photo-proof-upload-box:hover {
+  background: #EFF6FF;
+  border-color: #93C5FD;
+}
+
+/* 7. Stripe Escrow & Transaction Status Badges */
+.tx-badge.held {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FCD34D;
+}
+.tx-badge.released {
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+.tx-badge.disputed {
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+.tx-badge.refunded {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #CBD5E1;
+}
+
+/* 8. Notification Red Unread Indicator */
+.nav-unread-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 9px;
+  height: 9px;
+  background: #EF4444;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+}
+
 
 
 
