@@ -12046,59 +12046,54 @@
   <!-- ================= 6. SEARCH & DISTANCE RADIUS FILTER MODAL ================= -->
   <div class="custom-modal-overlay search-filter-modal-backdrop" id="searchFilterModal" style="display:none;" onclick="if(event.target===this) window.closeSearchFilterModal()">
     <div class="search-filter-modal-box">
-      <div class="sheet-drag-handle" style="margin: 0 auto 12px;"></div>
+      <div class="sf-drag-handle"></div>
       
-      <div class="search-filter-header">
-        <h3 class="sf-title">Filters</h3>
-        <button type="button" class="btn-icon-close" onclick="window.closeSearchFilterModal()" aria-label="Close">
-          <i data-lucide="x"></i>
+      <div class="sf-modal-header">
+        <h3 class="sf-modal-title">Filters</h3>
+        <button type="button" class="sf-close-btn" onclick="window.closeSearchFilterModal()" aria-label="Close">
+          <i data-lucide="x" style="width:16px;height:16px;"></i>
         </button>
       </div>
 
-      <div class="search-filter-body">
-        
-        <!-- 1. Interactive Drag Radius Slider Section (Nearest Default) -->
-        <div class="sf-section">
-          <div class="sf-section-header">
-            <span class="sf-section-label">Distance Radius</span>
-            <div class="sf-radius-badge" id="modalRadiusBadge">5 km</div>
+      <div class="sf-modal-body">
+        <!-- 1. Interactive Distance Radius Slider (3km, 5km, 10km, 25km) -->
+        <div class="sf-field-group">
+          <div class="sf-field-header">
+            <span class="sf-field-label">Distance Radius</span>
+            <span class="sf-field-value" id="modalRadiusValue">5 km</span>
           </div>
           
-          <div class="sf-slider-container">
-            <input type="range" id="modalRadiusSlider" min="1" max="50" step="1" value="5" 
-              class="sf-range-slider" 
-              oninput="window.handleRadiusSliderChange(this.value)" />
+          <div class="sf-slider-wrap">
+            <input type="range" id="modalRadiusSlider" min="0" max="3" step="1" value="1" 
+              class="sf-clean-slider" 
+              oninput="window.handleCleanRadiusChange(this.value)" />
           </div>
 
-          <!-- Quick Preset Chips -->
-          <div class="sf-chip-row" id="modalRadiusPresetChips">
-            <button type="button" class="sf-chip" onclick="window.setModalRadius(3)">3 km</button>
-            <button type="button" class="sf-chip active" onclick="window.setModalRadius(5)">5 km (Nearest)</button>
-            <button type="button" class="sf-chip" onclick="window.setModalRadius(10)">10 km</button>
-            <button type="button" class="sf-chip" onclick="window.setModalRadius(25)">25 km</button>
-            <button type="button" class="sf-chip" onclick="window.setModalRadius(50)">Any</button>
+          <!-- Discrete Step Tick Labels -->
+          <div class="sf-ticks-row" id="modalRadiusTicks">
+            <span class="sf-tick" data-step="0" onclick="window.setCleanRadiusStep(0)">3 km</span>
+            <span class="sf-tick active" data-step="1" onclick="window.setCleanRadiusStep(1)">5 km</span>
+            <span class="sf-tick" data-step="2" onclick="window.setCleanRadiusStep(2)">10 km</span>
+            <span class="sf-tick" data-step="3" onclick="window.setCleanRadiusStep(3)">25 km</span>
           </div>
         </div>
 
-        <!-- 2. Driver Gender Section -->
-        <div class="sf-section">
-          <div class="sf-section-header">
-            <span class="sf-section-label">Driver Gender</span>
+        <!-- 2. Driver Gender (All, Male Only, Female Only) -->
+        <div class="sf-field-group">
+          <div class="sf-field-header">
+            <span class="sf-field-label">Driver Gender</span>
           </div>
-          <div class="sf-chip-row" id="modalGenderChips">
-            <button type="button" class="sf-chip active" onclick="window.setModalGender('all', this)">All</button>
-            <button type="button" class="sf-chip" onclick="window.setModalGender('male', this)">Male Only</button>
-            <button type="button" class="sf-chip" onclick="window.setModalGender('female', this)">Female Only</button>
-            <button type="button" class="sf-chip" onclick="window.setModalGender('other', this)">Other</button>
+          <div class="sf-gender-pills-row" id="modalGenderChips">
+            <button type="button" class="sf-gender-pill active" onclick="window.setModalGender('all', this)">All</button>
+            <button type="button" class="sf-gender-pill" onclick="window.setModalGender('male', this)">Male Only</button>
+            <button type="button" class="sf-gender-pill" onclick="window.setModalGender('female', this)">Female Only</button>
           </div>
         </div>
-
       </div>
 
-      <!-- Footer Buttons -->
-      <div class="search-filter-footer">
-        <button type="button" class="btn-secondary-surface" style="flex:1;" onclick="window.resetSearchFilters()">Reset</button>
-        <button type="button" class="btn-primary" style="flex:2;" onclick="window.applySearchFiltersAndClose()">
+      <!-- Action Button: Apply -->
+      <div class="sf-modal-footer">
+        <button type="button" class="sf-btn-apply" onclick="window.applySearchFiltersAndClose()">
           <span id="modalApplyFilterBtnText">Apply</span>
         </button>
       </div>

@@ -9043,54 +9043,83 @@ window.showAdminSection = function (sectionName, btn) {
 /* ==========================================================
    Search & Distance Radius Filter Modal & Drag Slider Logic
    ========================================================== */
+const RADIUS_STEPS = [3, 5, 10, 25];
+
+window.handleCleanRadiusChange = function (val) {
+  const stepIndex = Math.min(Math.max(parseInt(val, 10) || 0, 0), 3);
+  const km = RADIUS_STEPS[stepIndex] || 5;
+
+  const valueEl = document.getElementById('modalRadiusValue');
+  if (valueEl) valueEl.textContent = `${km} km`;
+
+  const slider = document.getElementById('modalRadiusSlider');
+  if (slider) {
+    slider.value = stepIndex;
+    const pct = (stepIndex / (RADIUS_STEPS.length - 1)) * 100;
+    slider.style.background = `linear-gradient(to right, #1D4ED8 0%, #1D4ED8 ${pct}%, #E2E8F0 ${pct}%, #E2E8F0 100%)`;
+  }
+
+  // Highlight active tick label
+  document.querySelectorAll('#modalRadiusTicks .sf-tick').forEach((tick) => {
+    const s = parseInt(tick.getAttribute('data-step'), 10);
+    tick.classList.toggle('active', s === stepIndex);
+  });
+
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.searchRadiusKm = km;
+  if (typeof window.updateLiveFilterCount === 'function') window.updateLiveFilterCount();
+};
+
+window.setCleanRadiusStep = function (step) {
+  window.handleCleanRadiusChange(step);
+};
+
+window.handleRadiusSliderChange = function (val) {
+  const km = Number(val);
+  let stepIdx = RADIUS_STEPS.indexOf(km);
+  if (stepIdx === -1) {
+    if (km <= 3) stepIdx = 0;
+    else if (km <= 5) stepIdx = 1;
+    else if (km <= 10) stepIdx = 2;
+    else stepIdx = 3;
+  }
+  window.handleCleanRadiusChange(stepIdx);
+};
+
+window.setModalRadius = function (km) {
+  window.handleRadiusSliderChange(km);
+};
+
 window.openSearchFilterModal = function () {
   const modal = document.getElementById('searchFilterModal');
   if (!modal) return;
+  modal.style.display = 'flex';
   modal.classList.add('active');
 
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
   const draft = window.appState.bookingDraft;
   const currentRadius = Number(draft.searchRadiusKm);
-  const radiusVal = (Number.isFinite(currentRadius) && currentRadius > 0) ? currentRadius : 5; // Default 5 km (Nearest)
+  const km = (Number.isFinite(currentRadius) && currentRadius > 0) ? currentRadius : 5; // Default 5 km (Nearest)
   
-  const slider = document.getElementById('modalRadiusSlider');
-  const badge = document.getElementById('modalRadiusBadge');
-  if (slider) slider.value = radiusVal >= 50 ? 50 : radiusVal;
-  if (badge) badge.textContent = radiusVal >= 50 ? 'Any' : `${radiusVal} km`;
+  let stepIdx = RADIUS_STEPS.indexOf(km);
+  if (stepIdx === -1) {
+    if (km <= 3) stepIdx = 0;
+    else if (km <= 5) stepIdx = 1;
+    else if (km <= 10) stepIdx = 2;
+    else stepIdx = 3;
+  }
+  window.handleCleanRadiusChange(stepIdx);
 
-  // Sync radius preset chips
-  document.querySelectorAll('#modalRadiusPresetChips .sf-chip').forEach((chip) => {
-    const text = chip.textContent.trim();
-    if (radiusVal >= 50 && text.startsWith('Any')) chip.classList.add('active');
-    else if (text.startsWith(`${radiusVal} km`)) chip.classList.add('active');
-    else chip.classList.remove('active');
-  });
-
-  // Sync Gender chips
+  // Sync Gender pills
   const currentGender = (draft.genderFilter || 'all').toLowerCase();
-  document.querySelectorAll('#modalGenderChips .sf-chip').forEach((chip) => {
-    const fnStr = chip.getAttribute('onclick') || '';
-    if (fnStr.includes(`'${currentGender}'`)) chip.classList.add('active');
-    else chip.classList.remove('active');
+  document.querySelectorAll('#modalGenderChips .sf-gender-pill').forEach((pill) => {
+    const fnStr = pill.getAttribute('onclick') || '';
+    pill.classList.toggle('active', fnStr.includes(`'${currentGender}'`));
   });
 
-  // Sync Timing shift chips
-  const currentTiming = (draft.timingFilter || 'all').toLowerCase();
-  document.querySelectorAll('#modalTimingChips .sf-chip').forEach((chip) => {
-    const fnStr = chip.getAttribute('onclick') || '';
-    if (fnStr.includes(`'${currentTiming}'`)) chip.classList.add('active');
-    else chip.classList.remove('active');
-  });
-
-  // Sync Service mode chips
-  const currentService = (draft.serviceType || 'all').toLowerCase();
-  document.querySelectorAll('#modalServiceTypeChips .sf-chip').forEach((chip) => {
-    const fnStr = chip.getAttribute('onclick') || '';
-    if (fnStr.includes(`'${currentService}'`)) chip.classList.add('active');
-    else chip.classList.remove('active');
-  });
-
-  window.updateLiveFilterCount();
+  if (typeof window.updateLiveFilterCount === 'function') {
+    window.updateLiveFilterCount();
+  }
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
   }
@@ -9105,62 +9134,43 @@ window.closeSearchFilterModal = function () {
 
 window.setModalGender = function (gender, btn) {
   if (btn && btn.parentElement) {
-    btn.parentElement.querySelectorAll('.sf-chip').forEach((c) => c.classList.remove('active'));
+    btn.parentElement.querySelectorAll('.sf-gender-pill, .sf-chip').forEach((c) => c.classList.remove('active'));
     btn.classList.add('active');
   }
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
   window.appState.bookingDraft.genderFilter = gender || 'all';
-  window.updateLiveFilterCount();
-};
-
-window.handleRadiusSliderChange = function (val) {
-  const km = Number(val);
-  const badge = document.getElementById('modalRadiusBadge');
-  if (badge) badge.textContent = km >= 50 ? 'Any' : `${km} km`;
-
-  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
-  window.appState.bookingDraft.searchRadiusKm = km >= 50 ? 0 : km;
-
-  // Sync preset chips
-  document.querySelectorAll('#modalRadiusPresetChips .sf-chip').forEach((chip) => {
-    const text = chip.textContent.trim();
-    if (km >= 50 && text.startsWith('Any')) chip.classList.add('active');
-    else if (text.startsWith(`${km} km`)) chip.classList.add('active');
-    else chip.classList.remove('active');
-  });
-
-  window.updateLiveFilterCount();
-};
-
-window.setModalRadius = function (km) {
-  const slider = document.getElementById('modalRadiusSlider');
-  if (slider) slider.value = km;
-  window.handleRadiusSliderChange(km);
+  if (typeof window.updateLiveFilterCount === 'function') {
+    window.updateLiveFilterCount();
+  }
 };
 
 window.setModalTiming = function (timing, btn) {
   if (btn && btn.parentElement) {
-    btn.parentElement.querySelectorAll('.sf-chip').forEach((c) => c.classList.remove('active'));
+    btn.parentElement.querySelectorAll('.sf-gender-pill, .sf-chip').forEach((c) => c.classList.remove('active'));
     btn.classList.add('active');
   }
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
   window.appState.bookingDraft.timingFilter = timing || 'all';
-  window.updateLiveFilterCount();
+  if (typeof window.updateLiveFilterCount === 'function') {
+    window.updateLiveFilterCount();
+  }
 };
 
 window.setModalServiceType = function (type, btn) {
   if (btn && btn.parentElement) {
-    btn.parentElement.querySelectorAll('.sf-chip').forEach((c) => c.classList.remove('active'));
+    btn.parentElement.querySelectorAll('.sf-gender-pill, .sf-chip').forEach((c) => c.classList.remove('active'));
     btn.classList.add('active');
   }
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
   window.appState.bookingDraft.serviceType = type || 'all';
-  window.updateLiveFilterCount();
+  if (typeof window.updateLiveFilterCount === 'function') {
+    window.updateLiveFilterCount();
+  }
 };
 
 window.setModalZone = function (zone, btn) {
   if (btn && btn.parentElement) {
-    btn.parentElement.querySelectorAll('.sf-chip').forEach((c) => c.classList.remove('active'));
+    btn.parentElement.querySelectorAll('.sf-gender-pill, .sf-chip').forEach((c) => c.classList.remove('active'));
     btn.classList.add('active');
   }
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
@@ -9169,7 +9179,9 @@ window.setModalZone = function (zone, btn) {
   if (label) {
     label.textContent = zone === 'all' ? 'All' : zone.charAt(0).toUpperCase() + zone.slice(1);
   }
-  window.updateLiveFilterCount();
+  if (typeof window.updateLiveFilterCount === 'function') {
+    window.updateLiveFilterCount();
+  }
 };
 
 window.updateLiveFilterCount = function () {
@@ -9203,15 +9215,15 @@ window.updateLiveFilterCount = function () {
 
   const btnText = document.getElementById('modalApplyFilterBtnText');
   if (btnText) {
-    btnText.textContent = count > 0 ? `Apply (${count})` : 'Apply (0)';
+    btnText.textContent = 'Apply';
   }
   return count;
 };
 
 window.resetSearchFilters = function () {
-  window.setModalRadius(5); // Reset to Nearest 5 km
+  window.setCleanRadiusStep(1); // Reset to Nearest 5 km
   
-  const allGender = document.querySelector('#modalGenderChips .sf-chip');
+  const allGender = document.querySelector('#modalGenderChips .sf-gender-pill, #modalGenderChips .sf-chip');
   if (allGender) window.setModalGender('all', allGender);
 
   if (window.appState.bookingDraft) {
