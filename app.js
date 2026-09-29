@@ -2861,7 +2861,7 @@ window.setBookingFrequency = function (freq) {
 window.toggleRepeatDay = function (btn) {
   if (!btn) return;
   btn.classList.toggle('active');
-  const activeDays = Array.from(document.querySelectorAll('#cleanDaysGrid .clean-day-btn.active'))
+  const activeDays = Array.from(document.querySelectorAll('#cleanDaysGrid .clean-day-btn.active, #cleanDaysGrid .bk-figma-day-btn.active'))
     .map(b => b.getAttribute('data-day'))
     .filter(Boolean);
   window.appState.bookingDraft.selectedDays = activeDays;

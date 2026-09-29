@@ -5605,6 +5605,74 @@
           </button>
         </div>
 
+        <!-- ================= 🌟 FLOATING LIVE CURRENT TRIP TRACKER WIDGET 🌟 ================= -->
+        <section class="home-live-tracker-card" id="homeLiveTrackerCard" onclick="openLiveTracking('H2S-84920')" role="button" tabindex="0" aria-label="Current trip in progress">
+          <!-- Top Status Row -->
+          <div class="hlt-top-row">
+            <div class="hlt-live-badge">
+              <span class="hlt-radar-beacon">
+                <span class="hlt-radar-ping"></span>
+                <span class="hlt-radar-core"></span>
+              </span>
+              <span class="hlt-live-title">LIVE TRIP IN PROGRESS</span>
+            </div>
+            <div class="hlt-eta-pill">
+              <i data-lucide="zap" style="width: 12px; height: 12px; fill: #F59E0B; color: #F59E0B;"></i>
+              <span>ETA 8 mins · On Time</span>
+            </div>
+          </div>
+
+          <!-- Middle Body Row -->
+          <div class="hlt-body-row">
+            <div class="hlt-info-col">
+              <div class="hlt-destination-name">Greenfield International School</div>
+              <div class="hlt-passengers-text">
+                <i data-lucide="shield-check" style="width: 13px; height: 13px; color: #10B981; flex-shrink:0;"></i>
+                <span>Liam &amp; Emma · Safe with Robert (Toyota Sienna)</span>
+              </div>
+              <div class="hlt-subloc-text">
+                <i data-lucide="map-pin" style="width: 12px; height: 12px; color: #64748B;"></i>
+                <span>Passing Harbourview Lane · 34 km/h</span>
+              </div>
+            </div>
+
+            <!-- Floating Car Capsule -->
+            <div class="hlt-car-capsule" title="Vehicle Live Tracking">
+              <div class="hlt-floating-car-wrap">
+                <img src="/assets/toyota_sienna_white.jpg" alt="Live Vehicle" class="hlt-floating-car-img" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
+              </div>
+              <span class="hlt-car-live-chip">LIVE GPS</span>
+            </div>
+          </div>
+
+          <!-- Mini Progress Road with animated car -->
+          <div class="hlt-road-container">
+            <div class="hlt-road-bar">
+              <div class="hlt-road-progress"></div>
+              <div class="hlt-road-mini-car" title="Current GPS Location">
+                <i data-lucide="car" style="width: 12px; height: 12px; color: #FFFFFF;"></i>
+              </div>
+            </div>
+            <div class="hlt-road-stops">
+              <span class="hlt-stop-label">Home (Departed 07:30)</span>
+              <span class="hlt-stop-label dest">School (ETA 07:55 AM)</span>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="hlt-actions-row">
+            <button type="button" class="hlt-btn-view-details" onclick="event.stopPropagation(); openBookingDetails('H2S-84920', 'home')">
+              <i data-lucide="info" style="width: 14px; height: 14px;"></i>
+              <span>Trip Details</span>
+            </button>
+            <button type="button" class="hlt-btn-track-live" onclick="event.stopPropagation(); openLiveTracking('H2S-84920')">
+              <i data-lucide="navigation" style="width: 14px; height: 14px;"></i>
+              <span>Track Live Map</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </button>
+          </div>
+        </section>
+
         <!-- Hero Promo Banner Card (Figma 1:1) -->
         <div class="home-figma-hero-card" onclick="navigateTo('bookingTripSetup')" title="Book School Ride">
           <div class="home-figma-hero-content">
@@ -5768,6 +5836,19 @@
         </div>
 
       </div>
+
+      <!-- Persistent Floating Live Car Widget (Vasoiman Car) -->
+      <aside class="home-floating-car-capsule" id="homeFloatingCarCapsule" onclick="openLiveTracking('H2S-84920')" title="Track live school ride" aria-label="Floating Live Car Tracker">
+        <div class="hf-car-circle">
+          <img src="/assets/toyota_sienna_white.jpg" alt="Car" class="hf-car-img" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
+          <span class="hf-pulse-dot"></span>
+        </div>
+        <div class="hf-car-info">
+          <div class="hf-car-eta">8 min away</div>
+          <div class="hf-car-label">Track Live</div>
+        </div>
+        <i data-lucide="chevron-right" style="width: 15px; height: 15px; color: #38BDF8;"></i>
+      </aside>
 
       <!-- Universal Parent Bottom Navigation Bar -->
       <nav class="bottom-tab-bar">
@@ -7398,6 +7479,23 @@
       </header>
 
       <div class="screen-scroll-body trip-figma-body">
+        <!-- Live GPS Tracking Banner (Figma 1:1 Live Trip) -->
+        <div class="bd-live-map-banner" onclick="openLiveTracking(window.appState.activeBookingId || 'H2S-84920')">
+          <div class="bd-live-map-left">
+            <div class="bd-live-car-icon-box">
+              <i data-lucide="navigation" style="width: 18px; height: 18px; color: #2563EB;"></i>
+            </div>
+            <div>
+              <div class="bd-live-banner-title">Live GPS Vehicle Tracking</div>
+              <div class="bd-live-banner-sub">Watch Robert's vehicle moving on live map</div>
+            </div>
+          </div>
+          <div class="bd-live-map-right">
+            <span class="bd-live-badge-chip"><span class="live-dot-pulse"></span> LIVE</span>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #2563EB;"></i>
+          </div>
+        </div>
+
         <!-- 1. Route Timeline Card (Figma 1:1) -->
         <section class="trip-figma-timeline-card">
           <!-- Stop 1: Pickup -->
