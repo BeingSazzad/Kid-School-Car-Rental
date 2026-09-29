@@ -6,6 +6,7 @@ import './providers-clean.css';
 import './details-clean.css';
 import './flow-clean.css';
 import './type-standard.css';
+import './auth-clean.css';
 
 /* ==========================================================
    Home2School Interactive Controller & Navigation Logic
@@ -20,13 +21,19 @@ const screens = [
   'onboarding2',
   'onboarding3',
   'authWelcome',
-  'authLogin',
   'authRoleSelect',
+  'authCreateAccount',
   'authOtp',
   'authProfile',
   'authPhoto',
   'authAddChild',
+  'authChoosePlan',
   'subscription',
+  'authLogin',
+  'authForgotPassword',
+  'authCheckEmail',
+  'authNewPassword',
+  'authPasswordSuccess',
   'authSuccess',
   'home',
   'myChildren',
@@ -1833,6 +1840,10 @@ window.backNested = function (fallback) {
   window.navigateTo(coerceScreenToRole(target), true);
 };
 
+/* ==========================================================
+   Home2School — 12-Screen Authentic Auth & Onboarding Flow Handlers
+   ========================================================== */
+
 window.selectSignupRoleDirect = function(role) {
   const valid = role === 'driver' || role === 'walkshare' ? role : 'parent';
   if (!window.appState) window.appState = {};
@@ -1841,10 +1852,14 @@ window.selectSignupRoleDirect = function(role) {
   try { localStorage.setItem('h2s_active_role', valid); } catch (e) {}
   if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI(valid);
 
-  document.querySelectorAll('.role-choice-card').forEach(card => {
+  document.querySelectorAll('.auth-role-card, .role-choice-card').forEach(card => {
     const isSelected = card.getAttribute('data-role') === valid;
     card.classList.toggle('active', isSelected);
   });
+
+  setTimeout(() => {
+    window.navigateTo('authCreateAccount');
+  }, 100);
 };
 
 window.proceedFromRoleSelect = function() {
@@ -1878,11 +1893,224 @@ window.proceedFromRoleSelect = function() {
     return;
   }
 
-  // Parent default
+  window.navigateTo('authCreateAccount');
+};
+
+window.handleCreateAccountSubmit = function() {
+  const nameEl = document.getElementById('regFullName');
+  const emailEl = document.getElementById('regEmail');
+  const phoneEl = document.getElementById('regPhone');
+
+  const fullName = nameEl ? nameEl.value.trim() : 'Sarah Mitchell';
+  const email = emailEl ? emailEl.value.trim() : 'sarah.mitchell@mail.com';
+  const phone = phoneEl ? phoneEl.value.trim() : '+1 (416) 555-0123';
+
+  if (!window.appState) window.appState = {};
+  window.appState.user = window.appState.user || {};
+  window.appState.user.name = fullName || 'Sarah Mitchell';
+  window.appState.user.email = email || 'sarah.mitchell@mail.com';
+  window.appState.user.phone = phone || '+1 (416) 555-0123';
+
+  const otpPhoneDisplay = document.getElementById('authOtpDisplayPhone');
+  if (otpPhoneDisplay) otpPhoneDisplay.textContent = phone || '+1 (416) 555-0123';
+
+  const piName = document.getElementById('piFullName');
+  if (piName) piName.value = fullName;
+  const piEmail = document.getElementById('piEmail');
+  if (piEmail) piEmail.value = email;
+
+  window.navigateTo('authOtp');
+};
+
+window.handleOtpInput = function(inputEl, nextId, prevId, evt) {
+  if (!inputEl) return;
+  if (inputEl.value.length === 1 && nextId) {
+    const nextEl = document.getElementById(nextId);
+    if (nextEl) nextEl.focus();
+  } else if (inputEl.value.length === 0 && prevId && evt && evt.inputType === 'deleteContentBackward') {
+    const prevEl = document.getElementById(prevId);
+    if (prevEl) prevEl.focus();
+  }
+};
+
+window.handleOtpVerify = function() {
   if (typeof window.showToast === 'function') {
-    window.showToast('Setting up your Family profile...', 'info');
+    window.showToast('Phone verified successfully!', 'success');
   }
   window.navigateTo('authProfile');
+};
+
+window.handlePersonalInfoSubmit = function() {
+  const nameEl = document.getElementById('piFullName');
+  const emailEl = document.getElementById('piEmail');
+  if (nameEl && window.appState && window.appState.user) {
+    window.appState.user.name = nameEl.value.trim() || 'Sarah Mitchell';
+  }
+  if (emailEl && window.appState && window.appState.user) {
+    window.appState.user.email = emailEl.value.trim() || 'sarah.mitchell@mail.com';
+  }
+  window.navigateTo('authAddChild');
+};
+
+window.handleAuthPhotoSelected = function(event, previewId) {
+  const file = event && event.target && event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const imgEl = document.getElementById(previewId);
+    if (imgEl) imgEl.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.handleAddChildSubmit = function() {
+  const childNameEl = document.getElementById('acChildName');
+  const dobEl = document.getElementById('acDob');
+  const schoolEl = document.getElementById('acSchool');
+
+  if (window.appState) {
+    window.appState.child = {
+      name: (childNameEl && childNameEl.value.trim()) || 'Alex Mitchell',
+      dob: (dobEl && dobEl.value.trim()) || 'Mar 12, 2016',
+      school: (schoolEl && schoolEl.options[schoolEl.selectedIndex] ? schoolEl.options[schoolEl.selectedIndex].text : 'Greenfield International School')
+    };
+  }
+
+  window.navigateTo('authChoosePlan');
+};
+
+window.setPlanPeriod = function(period) {
+  const tabMonthly = document.getElementById('tabMonthly');
+  const tabYearly = document.getElementById('tabYearly');
+  const priceDisplay = document.getElementById('planPlusPriceDisplay');
+
+  if (period === 'yearly') {
+    if (tabYearly) tabYearly.classList.add('active');
+    if (tabMonthly) tabMonthly.classList.remove('active');
+    if (priceDisplay) priceDisplay.textContent = '$79/yr';
+  } else {
+    if (tabMonthly) tabMonthly.classList.add('active');
+    if (tabYearly) tabYearly.classList.remove('active');
+    if (priceDisplay) priceDisplay.textContent = '$9.99/mo';
+  }
+};
+
+window.selectPlanCard = function(plan) {
+  const basicCard = document.getElementById('planCardBasic');
+  const plusCard = document.getElementById('planCardPlus');
+  if (plan === 'plus') {
+    if (plusCard) plusCard.classList.add('active');
+    if (basicCard) basicCard.classList.remove('active');
+  } else {
+    if (basicCard) basicCard.classList.add('active');
+    if (plusCard) plusCard.classList.remove('active');
+  }
+};
+
+window.handleFinishOnboarding = function(targetScreen) {
+  if (!window.appState) window.appState = {};
+  window.appState.isLoggedIn = true;
+  try { localStorage.setItem('h2s_logged_in', 'true'); } catch (e) {}
+
+  if (typeof window.showToast === 'function') {
+    window.showToast('Welcome to Home2School!', 'success');
+  }
+
+  const role = window.appState.activeRole || 'parent';
+  if (role === 'driver') {
+    window.navigateTo('driverHome');
+  } else if (role === 'walkshare') {
+    window.navigateTo('wsHome');
+  } else {
+    window.navigateTo(targetScreen || 'home');
+  }
+};
+
+window.handleSignInSubmit = function() {
+  const emailEl = document.getElementById('loginEmail');
+  const passEl = document.getElementById('loginPassword');
+  const email = emailEl ? emailEl.value.trim() : 'sarah.mitchell@mail.com';
+
+  if (!window.appState) window.appState = {};
+  window.appState.isLoggedIn = true;
+  window.appState.user = window.appState.user || {};
+  window.appState.user.email = email;
+  try { localStorage.setItem('h2s_logged_in', 'true'); } catch (e) {}
+
+  if (typeof window.showToast === 'function') {
+    window.showToast('Signed in successfully!', 'success');
+  }
+  window.navigateTo('home');
+};
+
+window.handleSocialSignIn = function(provider) {
+  if (typeof window.showToast === 'function') {
+    window.showToast(`Signed in with ${provider}!`, 'success');
+  }
+  if (!window.appState) window.appState = {};
+  window.appState.isLoggedIn = true;
+  try { localStorage.setItem('h2s_logged_in', 'true'); } catch (e) {}
+  window.navigateTo('home');
+};
+
+window.handleSendResetLink = function() {
+  const emailEl = document.getElementById('forgotEmail');
+  const email = emailEl ? emailEl.value.trim() : 'sarah.mitchell@mail.com';
+
+  const checkEmailTarget = document.getElementById('checkEmailTarget');
+  if (checkEmailTarget) checkEmailTarget.textContent = email || 'sarah.mitchell@mail.com';
+
+  if (typeof window.showToast === 'function') {
+    window.showToast('Reset code sent to your email!', 'info');
+  }
+  window.navigateTo('authCheckEmail');
+};
+
+window.toggleAuthPasswordVisibility = function(inputId, btnEl) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isPass = input.type === 'password';
+  input.type = isPass ? 'text' : 'password';
+  if (btnEl) {
+    btnEl.innerHTML = isPass ? '<i data-lucide="eye-off" style="width:18px;height:18px;"></i>' : '<i data-lucide="eye" style="width:18px;height:18px;"></i>';
+    if (typeof window.lucide !== 'undefined' && window.lucide.createIcons) {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.validateNewPassword = function(password) {
+  const pass = password || '';
+  const ruleLen = document.getElementById('ruleLength');
+  const ruleNum = document.getElementById('ruleNumber');
+  const ruleLetter = document.getElementById('ruleLetter');
+
+  if (ruleLen) ruleLen.classList.toggle('valid', pass.length >= 8);
+  if (ruleNum) ruleNum.classList.toggle('valid', /\d/.test(pass));
+  if (ruleLetter) ruleLetter.classList.toggle('valid', /[a-zA-Z]/.test(pass));
+};
+
+window.handleResetPasswordSubmit = function() {
+  const newPass = (document.getElementById('npNewPassword') || {}).value || '';
+  const confirmPass = (document.getElementById('npConfirmPassword') || {}).value || '';
+
+  if (newPass.length < 8) {
+    if (typeof window.showToast === 'function') {
+      window.showToast('Password must be at least 8 characters', 'error');
+    }
+    return;
+  }
+  if (newPass !== confirmPass) {
+    if (typeof window.showToast === 'function') {
+      window.showToast('Passwords do not match', 'error');
+    }
+    return;
+  }
+
+  if (typeof window.showToast === 'function') {
+    window.showToast('Password reset successful!', 'success');
+  }
+  window.navigateTo('authPasswordSuccess');
 };
 
 window.navigateTo = function (screenName, isBack = false) {

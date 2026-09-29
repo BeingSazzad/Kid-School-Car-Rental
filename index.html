@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="/details-clean.css?direct" />
   <link rel="stylesheet" href="/flow-clean.css?direct" />
   <link rel="stylesheet" href="/type-standard.css?direct" />
+  <link rel="stylesheet" href="/auth-clean.css?direct" />
 
   <!-- Critical UI Overrides for Time Picker & Modals -->
   <style>
@@ -5009,628 +5010,711 @@
     </section>
 
 
-    <!-- ================= 5. ONBOARDING & WELCOME ================= -->
-    <section class="screen-view" id="screen-authWelcome" style="background-color: #FFFFFF;">
+        <!-- ================= 5. ONBOARDING & AUTH FLOW (12 SCREENS FIGMA AUTHENTIC) ================= -->
+
+    <!-- SCREEN 1: Welcome to Home2School -->
+    <section class="screen-view auth-flow-screen" id="screen-authWelcome">
       <div class="status-bar light">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
           <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Top Car Hero Image with Dark Gradient & Status Overhang -->
-      <div class="auth-hero-container">
-        <img src="/assets/auth_hero.jpg" alt="School Car Ride" class="auth-hero-img" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />
-        <div class="auth-hero-overlay"></div>
-      </div>
-
-      <!-- Structured Modern Sheet Content -->
-      <div class="auth-content">
-        <!-- Main Top Content Group -->
-        <div class="welcome-main-info">
-          <!-- Brand & Heading Hierarchy -->
-          <div class="welcome-header-block">
-            <div class="welcome-badge-pill">
-              <i data-lucide="shield-check" style="width: 13px; height: 13px; color: #10B981;"></i>
-              <span>Verified School Transportation</span>
-            </div>
-            <h1 class="welcome-heading">
-              Welcome to <span class="brand-text">Home2School</span>
-              <span class="brand-subtext">School2Home</span>
-            </h1>
-            <p class="welcome-subtext">
-              Safe school rides &amp; certified walking escorts for students, trusted by verified neighborhood families.
-            </p>
-          </div>
-
-          <!-- Clean Micro-Pill Trust Bar -->
-          <div class="welcome-trust-pills">
-            <div class="welcome-trust-pill">
-              <i data-lucide="shield-check"></i>
-              <span>100% Vetted</span>
-            </div>
-            <div class="welcome-trust-pill">
-              <i data-lucide="map-pin"></i>
-              <span>Live GPS</span>
-            </div>
-            <div class="welcome-trust-pill">
-              <i data-lucide="camera"></i>
-              <span>Photo Proof</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Action Buttons & Safety Footer Group -->
-        <div class="welcome-bottom-group">
-          <!-- Action Buttons Hierarchy -->
-          <div class="welcome-actions-block">
-            <button type="button" class="welcome-btn-primary" onclick="navigateTo('authRoleSelect')">
-              <span>Create an Account</span>
-              <i data-lucide="arrow-right" style="width: 17px; height: 17px;"></i>
-            </button>
-            
-            <button type="button" class="welcome-btn-secondary" onclick="navigateTo('authLogin')">
-              <i data-lucide="phone" style="width: 16px; height: 16px; color: #1B2B68;"></i>
-              <span>Sign In with Phone</span>
-            </button>
-          </div>
-
-          <!-- Subtle Footer Trust Note -->
-          <p class="welcome-footer-note">
-            <i data-lucide="lock" style="width: 12px; height: 12px; color: #10B981;"></i>
-            <span>100% background-checked &amp; child safety compliant</span>
-          </p>
-        </div>
-      </div>
-
-      <div class="home-indicator"></div>
-    </section>
-
-    <!-- ================= 5B. AUTH: LOGIN ================= -->
-    <section class="screen-view" id="screen-authLogin" style="background-color: #FFFFFF;">
-      <div class="status-bar dark">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="top-nav-bar" style="display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #F1F5F9;">
-        <button class="back-btn" onclick="navigateTo('authWelcome')">
-          <i data-lucide="chevron-left"></i>
-        </button>
-        <span style="font-size: 15px; font-weight: 700; color: #0F172A; margin-left: 8px;">Sign In</span>
-      </div>
-
-      <div class="screen-scroll-body" style="padding: 24px 20px 32px; display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
-        <div>
-          <div style="margin-bottom: 24px;">
-            <h1 style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0 0 6px;">Sign In to Home2School</h1>
-            <p style="font-size: 13.5px; color: #64748B; margin: 0; line-height: 1.45;">Enter your registered mobile number to receive a one-time verification code.</p>
-          </div>
-
-          <form id="authLoginForm" onsubmit="event.preventDefault(); window.handleSendLoginOtp();" style="display: flex; flex-direction: column; gap: 16px;">
-            <div class="form-group" style="margin-bottom: 0;">
-              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #1E293B; margin-bottom: 8px;">Mobile Phone Number</label>
-              <div class="input-with-icon" style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 0 14px; height: 50px; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease;">
-                <span style="font-size: 18px; line-height: 1;">🇨🇦</span>
-                <span style="font-size: 14px; font-weight: 700; color: #0F172A; padding-right: 8px; border-right: 1.5px solid #E2E8F0;">+1</span>
-                <input type="tel" id="loginPhoneInput" class="form-input" placeholder="(416) 555-0192" value="(416) 555-0192" required style="border: none; background: transparent; padding: 0; height: 100%; font-size: 15px; font-weight: 600; color: #0F172A; outline: none; width: 100%; box-shadow: none;" />
-              </div>
-            </div>
-
-            <button type="submit" class="btn-primary" style="margin-top: 4px; height: 48px; font-size: 14.5px; font-weight: 700; border-radius: 12px; background: #1B2B68; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.16); cursor: pointer;">
-              <span>Send Verification Code</span>
-              <i data-lucide="arrow-right" style="width: 17px; height: 17px;"></i>
-            </button>
-          </form>
-        </div>
-
-        <div style="text-align: center; margin-top: 28px; padding-top: 20px; border-top: 1px solid #F1F5F9;">
-          <p style="font-size: 13.5px; color: #64748B; margin: 0;">
-            Don't have an account? 
-            <a href="javascript:void(0)" onclick="navigateTo('authRoleSelect')" style="color: #1B2B68; font-weight: 800; text-decoration: none;">Create Account</a>
-          </p>
-        </div>
-      </div>
-
-      <div class="home-indicator"></div>
-    </section>
-
-    <!-- ================= 5C. AUTH: ROLE SELECTION ================= -->
-    <section class="screen-view" id="screen-authRoleSelect" style="background-color: #FFFFFF;">
-      <div class="status-bar dark">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="top-nav-bar" style="display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #F1F5F9;">
-        <button class="back-btn" onclick="navigateTo('authWelcome')">
-          <i data-lucide="chevron-left"></i>
-        </button>
-        <span style="font-size: 15px; font-weight: 700; color: #0F172A; margin-left: 8px;">Select Account Type</span>
-      </div>
-
-      <div class="screen-scroll-body" style="padding: 20px 20px 32px; gap: 0; display: flex; flex-direction: column;">
-        <div style="margin-bottom: 20px;">
-          <h1 style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0 0 6px; line-height: 1.25;">Join Home2School</h1>
-          <p style="font-size: 13.5px; color: #64748B; margin: 0; line-height: 1.45;">Choose how you want to use the platform.</p>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
-          <!-- 1. Parent -->
-          <div class="role-choice-card active" data-role="parent" id="roleChoiceParent" onclick="window.selectSignupRoleDirect('parent')">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(27,43,104,0.1); color: #1B2B68; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i data-lucide="users" style="width: 22px; height: 22px;"></i>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-              <span style="font-size: 15px; font-weight: 800; color: #0F172A; display: block;">Parent / Guardian</span>
-              <p style="font-size: 12.5px; color: #64748B; margin: 3px 0 0 0; line-height: 1.35;">Book &amp; track rides or WalkShare groups for kids</p>
-            </div>
-          </div>
-
-          <!-- 2. Driver -->
-          <div class="role-choice-card" data-role="driver" id="roleChoiceDriver" onclick="window.selectSignupRoleDirect('driver')">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #FFF7ED; color: #EA580C; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i data-lucide="car" style="width: 22px; height: 22px;"></i>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-              <span style="font-size: 15px; font-weight: 800; color: #0F172A; display: block;">Driver Partner</span>
-              <p style="font-size: 12.5px; color: #64748B; margin: 3px 0 0 0; line-height: 1.35;">Drive verified school routes &amp; earn weekly</p>
-            </div>
-          </div>
-
-          <!-- 3. WalkShare -->
-          <div class="role-choice-card" data-role="walkshare" id="roleChoiceWalkshare" onclick="window.selectSignupRoleDirect('walkshare')">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #F0FDF4; color: #16A34A; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i data-lucide="footprints" style="width: 22px; height: 22px;"></i>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-              <span style="font-size: 15px; font-weight: 800; color: #0F172A; display: block;">WalkShare Escort</span>
-              <p style="font-size: 12.5px; color: #64748B; margin: 3px 0 0 0; line-height: 1.35;">Safely escort neighborhood walking student groups</p>
-            </div>
-          </div>
-        </div>
-
-        <button type="button" class="btn-primary" onclick="window.proceedFromRoleSelect()" style="width: 100%; height: 48px; font-size: 14.5px; font-weight: 700; border-radius: 12px; background: #1B2B68; display: flex; align-items: center; justify-content: center; gap: 8px;">
-          <span>Continue Setup</span>
-          <i data-lucide="arrow-right" style="width: 17px; height: 17px;"></i>
-        </button>
-      </div>
-
-      <div class="home-indicator"></div>
-    </section>
-
-
-    <!-- ================= 6. AUTH 2: OTP VERIFICATION ================= -->
-    <section class="screen-view" id="screen-authOtp" style="background-color: #FFFFFF;">
-      <div class="status-bar dark">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="top-nav-bar" style="display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #F1F5F9;">
-        <button class="back-btn" onclick="navigateTo(window.appState && window.appState.authPrevScreen ? window.appState.authPrevScreen : 'authLogin')">
-          <i data-lucide="chevron-left"></i>
-        </button>
-        <span style="font-size: 15px; font-weight: 700; color: #0F172A; margin-left: 8px;">Verification</span>
-      </div>
-
-      <div class="auth-subpage-content" style="padding: 24px 20px 32px; display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
-        <div>
-          <div style="text-align: center; margin-bottom: 24px;">
-            <h1 class="page-title" style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0 0 6px;">Verify Your Number</h1>
-            <p class="page-subtitle" style="font-size: 13.5px; color: #64748B; margin: 0 0 4px;">Enter the 4-digit code sent to</p>
-            <p class="target-phone-text" id="otpTargetPhoneDisplay" style="font-size: 15px; font-weight: 800; color: #1B2B68; margin: 0;">+1 (416) 555-0192</p>
-          </div>
-
-          <!-- 4-digit OTP Boxes -->
-          <div class="otp-inputs-grid" style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px;">
-            <input type="tel" maxlength="1" class="otp-box active" value="4" oninput="window.handleOtpInput(this, event, 0)" onkeydown="window.handleOtpKeydown(this, event, 0)" style="width: 54px; height: 58px; font-size: 24px; font-weight: 800; text-align: center; border-radius: 14px; border: 2px solid #1B2B68; background: #F8FAFC; color: #0F172A; outline: none;" />
-            <input type="tel" maxlength="1" class="otp-box active" value="8" oninput="window.handleOtpInput(this, event, 1)" onkeydown="window.handleOtpKeydown(this, event, 1)" style="width: 54px; height: 58px; font-size: 24px; font-weight: 800; text-align: center; border-radius: 14px; border: 2px solid #1B2B68; background: #F8FAFC; color: #0F172A; outline: none;" />
-            <input type="tel" maxlength="1" class="otp-box active" value="6" oninput="window.handleOtpInput(this, event, 2)" onkeydown="window.handleOtpKeydown(this, event, 2)" style="width: 54px; height: 58px; font-size: 24px; font-weight: 800; text-align: center; border-radius: 14px; border: 2px solid #1B2B68; background: #F8FAFC; color: #0F172A; outline: none;" />
-            <input type="tel" maxlength="1" class="otp-box" value="2" oninput="window.handleOtpInput(this, event, 3)" onkeydown="window.handleOtpKeydown(this, event, 3)" style="width: 54px; height: 58px; font-size: 24px; font-weight: 800; text-align: center; border-radius: 14px; border: 2px solid #1B2B68; background: #F8FAFC; color: #0F172A; outline: none;" />
-          </div>
-
-          <div class="resend-block" style="text-align: center; font-size: 13px; color: #64748B;">
-            <span>Didn't receive code?</span>
-            <a href="javascript:void(0)" onclick="window.resendOtpCode()" style="color: #1B2B68; font-weight: 700; text-decoration: none; margin-left: 4px;">Resend code</a>
-          </div>
-        </div>
-
-        <div class="bottom-action-wrap" style="margin-top: 32px;">
-          <button type="button" class="btn-primary" onclick="window.continueAfterOtp()" style="width: 100%; height: 48px; font-size: 14.5px; font-weight: 700; border-radius: 12px; background: #1B2B68; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;">
-            <span>Verify &amp; Continue</span>
-            <i data-lucide="arrow-right" style="width: 17px; height: 17px;"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="home-indicator"></div>
-    </section>
-
-
-    <!-- ================= 7. AUTH 3: PROFILE DETAILS ================= -->
-    <section class="screen-view" id="screen-authProfile" style="background-color: #FFFFFF;">
-      <div class="status-bar dark">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="top-nav-bar">
-        <button class="back-btn" onclick="navigateTo('authOtp')">
-          <i data-lucide="chevron-left"></i>
-        </button>
-      </div>
-
-      <div class="auth-subpage-content">
-        <div class="text-center">
-          <h1 class="page-title">Let's get to know you</h1>
-        </div>
-
-        <form onsubmit="event.preventDefault(); navigateTo('authPhoto');" class="profile-fields-form">
-          <!-- Full Name -->
-          <div class="form-group">
-            <label class="form-label">Full Name</label>
-            <div class="input-with-icon">
-              <i data-lucide="user" style="width:18px;height:18px;color:#94A3B8;"></i>
-              <input type="text" class="form-input" placeholder="Enter your full name" value="Sarah Tremblay" required />
-            </div>
-          </div>
-
-          <!-- Email Address -->
-          <div class="form-group">
-            <label class="form-label">Email Address</label>
-            <div class="input-with-icon">
-              <i data-lucide="mail" style="width:18px;height:18px;color:#94A3B8;"></i>
-              <input type="email" class="form-input" placeholder="Enter your email address"
-                value="sarah.tremblay@example.com" required />
-            </div>
-          </div>
-
-          <!-- Relationship -->
-          <div class="form-group">
-            <label class="form-label">Relationship</label>
-            <div class="select-wrapper">
-              <select class="form-select">
-                <option value="Mother" selected>Mother</option>
-                <option value="Father">Father</option>
-                <option value="Guardian">Guardian</option>
-                <option value="Grandparent">Grandparent</option>
-              </select>
-              <i data-lucide="chevron-down" class="select-chevron"
-                style="width:18px;height:18px;color:currentColor;"></i>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Gender</label>
-            <div class="select-wrapper">
-              <select class="form-select" id="authProfileGender">
-                <option value="Male">Male</option>
-                <option value="Female" selected>Female</option>
-                <option value="Other">Other</option>
-              </select>
-              <i data-lucide="chevron-down" class="select-chevron"
-                style="width:18px;height:18px;color:currentColor;"></i>
-            </div>
-          </div>
-
-          <!-- PIPEDA Parent Consent Form Checkbox (Mandatory Child Data & GPS Consent) -->
-          <div class="form-group" style="margin-top: 14px; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px 14px;">
-            <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; user-select: none;">
-              <input type="checkbox" id="authParentConsentCheckbox" checked required style="width: 18px; height: 18px; margin-top: 2px; accent-color: var(--color-primary); cursor: pointer;" />
-              <span style="font-size: 12px; color: #334155; line-height: 1.45;">
-                I agree to the <a href="javascript:void(0)" onclick="window.openPipedaConsentModal()" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Terms, Privacy &amp; Parent Consent</a>.
-              </span>
-            </label>
-          </div>
-
-          <div class="bottom-action-wrap">
-            <button type="submit" class="btn-primary">Continue</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="home-indicator"></div>
-    </section>
-
-
-    <!-- ================= 8. AUTH 4: ADD PHOTO ================= -->
-    <section class="screen-view" id="screen-authPhoto" style="background-color: #FFFFFF;">
-      <div class="status-bar dark">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="top-nav-bar">
-        <button class="back-btn" onclick="navigateTo('authProfile')">
-          <i data-lucide="chevron-left"></i>
-        </button>
-      </div>
-
-      <div class="auth-subpage-content">
-        <div class="text-center">
-          <h1 class="page-title">Add Your Photo</h1>
-        </div>
-
-        <div class="avatar-picker-wrap" onclick="triggerPhotoUpload()">
-          <div class="dashed-avatar-ring"></div>
-          <div class="inner-avatar-circle" id="avatarPreviewContainer">
-            <i data-lucide="user" style="width:74px;height:74px;color:#1E293B;"></i>
-          </div>
-          <div class="camera-floating-badge">
-            <i data-lucide="camera" style="width:18px;height:18px;color:#FFFFFF;"></i>
-          </div>
-          <input type="file" id="photoFileInput" accept="image/*" style="display:none"
-            onchange="handlePhotoUpload(event)" />
-        </div>
-
-        <p class="change-later-note">You can change this later</p>
-
-        <div class="bottom-action-wrap">
-          <button class="btn-primary" onclick="continueAuthAfterPhoto()">Continue</button>
-          <button class="btn-secondary-link" onclick="continueAuthAfterPhoto()">Skip for now</button>
-        </div>
-      </div>
-
-      <div class="home-indicator"></div>
-    </section>
-
-
-    <!-- ================= 8B. AUTH 4B: ADD CHILD (PARENT SETUP) ================= -->
-    <section class="screen-view" id="screen-authAddChild" style="background-color: #FFFFFF;">
-      <div class="status-bar dark">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="top-nav-bar">
-        <button class="back-btn" onclick="navigateTo('authPhoto')">
-          <i data-lucide="chevron-left"></i>
-        </button>
-      </div>
-
-      <div class="auth-subpage-content">
-        <div class="text-center">
-          <h1 class="page-title">Add Your Child</h1>
-        </div>
-
-          <form onsubmit="event.preventDefault(); navigateTo('authSuccess');" class="profile-fields-form" id="authAddChildForm">
-          <!-- Child Full Name -->
-          <div class="form-group">
-            <label class="form-label">Child's Full Name</label>
-            <div class="input-with-icon">
-              <i data-lucide="user" style="width:18px;height:18px;color:#94A3B8;"></i>
-              <input type="text" class="form-input" id="authChildName" placeholder="e.g. Liam Tremblay" value="Liam Tremblay"
-                required />
-            </div>
-          </div>
-
-          <!-- Child Grade -->
-          <div class="form-group">
-            <label class="form-label">Grade</label>
-            <div class="select-wrapper">
-              <select class="form-select" id="authChildGrade">
-                <option value="Pre-K">Pre-K</option>
-                <option value="Kindergarten">Kindergarten</option>
-                <option value="Grade 1">Grade 1</option>
-                <option value="Grade 2">Grade 2</option>
-                <option value="Grade 3">Grade 3</option>
-                <option value="Grade 4" selected>Grade 4</option>
-                <option value="Grade 5">Grade 5</option>
-                <option value="Grade 6">Grade 6</option>
-                <option value="Grade 7">Grade 7</option>
-                <option value="Grade 8">Grade 8</option>
-              </select>
-              <i data-lucide="chevron-down" class="select-chevron" style="width:18px;height:18px;color:currentColor;"></i>
-            </div>
-          </div>
-
-          <!-- School -->
-          <div class="form-group">
-            <label class="form-label">School Name</label>
-            <div class="input-with-icon">
-              <i data-lucide="book-open" style="width:18px;height:18px;color:#94A3B8;"></i>
-              <input type="text" class="form-input" id="authChildSchool"
-                placeholder="e.g. Greenfield International School" value="Greenfield International School" required />
-            </div>
-          </div>
-
-          <div class="bottom-action-wrap">
-            <button type="submit" class="btn-primary">Save &amp; Complete Setup</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="home-indicator"></div>
-    </section>
-
-
-    <!-- ================= 8C. PARENT SUBSCRIPTION / TRIAL ================= -->
-    <section class="screen-view" id="screen-subscription" style="background-color: #FFFFFF;">
-      <div class="status-bar dark">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" />
-          </svg>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
           <div class="battery-icon"><div class="battery-level"></div></div>
         </div>
       </div>
 
-      <div class="top-bar-sticky">
-        <button class="back-btn" onclick="backNested('home')">
-          <i data-lucide="chevron-left"></i>
+      <div class="splash-bg-container">
+        <img src="/assets/splash_car_bg.jpg" alt="Home2School Transportation" class="splash-bg-img" />
+      </div>
+
+      <div class="splash-sheet-card">
+        <h1 class="splash-title">
+          Welcome to
+          <span class="splash-brand">Home2School</span>
+        </h1>
+        <p class="splash-subtitle">Safe. Reliable. Together.</p>
+
+        <button type="button" class="auth-btn-primary" onclick="navigateTo('authRoleSelect')">
+          <span>Create an account</span>
+          <div class="auth-btn-arrow-circle">
+            <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+          </div>
         </button>
-        <h2 class="top-bar-title">Subscription</h2>
-        <span style="width: 26px;"></span>
+
+        <button type="button" class="auth-btn-secondary" onclick="navigateTo('authLogin')">
+          Sign in
+        </button>
       </div>
-
-      <div class="screen-scroll-body sub-screen-body">
-        <div class="sub-simple-intro">
-          <h3 class="sub-screen-lede">Choose your plan</h3>
-          <p class="sub-screen-note">Platform fee only. Ride pay stays with your provider.</p>
-        </div>
-
-        <div class="sub-status-strip" id="subscriptionStatusCard" data-status="trial">
-          <span class="sub-status-kicker" id="subscriptionStatusKicker">Free trial</span>
-          <strong class="sub-status-title" id="subscriptionStatusTitle">14 days left</strong>
-          <span class="sub-status-sub" id="subscriptionStatusSub">Next billing Sep 22, 2026</span>
-        </div>
-
-        <div class="sub-plan-block" role="radiogroup" aria-label="Subscription plan">
-          <button type="button" class="sub-plan-card" id="planAnnual" onclick="selectSubscriptionPlan('annual')">
-            <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
-            <span class="sub-plan-copy">
-              <span class="sub-plan-name">Annual</span>
-              <span class="sub-plan-desc">Best for the school year</span>
-            </span>
-            <span class="sub-plan-pricing">
-              <span class="sub-plan-price">$79/year</span>
-              <span class="sub-plan-compare">$119.88/year</span>
-            </span>
-            <span class="sub-plan-badge sub-plan-badge-save">Save 34%</span>
-          </button>
-          <button type="button" class="sub-plan-card active" id="planMonthly" onclick="selectSubscriptionPlan('monthly')">
-            <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
-            <span class="sub-plan-copy">
-              <span class="sub-plan-name">Monthly</span>
-              <span class="sub-plan-desc">Platform access</span>
-            </span>
-            <span class="sub-plan-pricing">
-              <span class="sub-plan-price">$9.99/month</span>
-            </span>
-          </button>
-        </div>
-
-        <div class="sub-actions" style="margin-top: 16px;">
-          <button type="button" class="btn-primary" id="btnContinueTrial" onclick="continueWithParentTrial()">
-            <span id="btnContinueTrialLabel">Keep free trial</span>
-          </button>
-          <button type="button" class="btn-primary" id="btnActivateSubscription" onclick="activateParentSubscription()" style="display:none;">Activate</button>
-          <button type="button" class="sub-cancel-link" id="btnCancelSubscription" onclick="cancelParentSubscription()">Cancel renewal</button>
-        </div>
-      </div>
-
       <div class="home-indicator"></div>
     </section>
 
-
-    <!-- ================= 9. AUTH 5: SUCCESS CELEBRATION ================= -->
-    <section class="screen-view" id="screen-authSuccess" style="background-color: #FFFFFF;">
+    <!-- SCREEN 2: Choose your role -->
+    <section class="screen-view auth-flow-screen" id="screen-authRoleSelect">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
           <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
         </div>
       </div>
 
-      <div class="success-screen-body">
-        <div class="success-middle-content">
-          <!-- Confetti & Checkmark Graphic -->
-          <div class="confetti-badge-wrap">
-            <svg class="confetti-particles-svg" viewBox="0 0 140 140" fill="none">
-              <rect x="70" y="8" width="4" height="12" rx="2" transform="rotate(15 70 8)" fill="#F2600C" />
-              <circle cx="98" cy="20" r="3.5" fill="#3B82F6" />
-              <rect x="36" y="24" width="10" height="4" rx="2" transform="rotate(-30 36 24)" fill="#EAB308" />
-              <circle cx="16" cy="65" r="4" fill="#06B6D4" />
-              <rect x="22" y="86" width="12" height="4" rx="2" transform="rotate(25 22 86)" fill="#3B82F6" />
-              <circle cx="124" cy="68" r="3.5" fill="#8B5CF6" />
-              <rect x="114" y="92" width="10" height="4" rx="2" transform="rotate(-40 114 92)" fill="#F2600C" />
-              <rect x="95" y="112" width="4" height="10" rx="2" transform="rotate(45 95 112)" fill="#8B5CF6" />
-              <circle cx="50" cy="115" r="3" fill="#EC4899" />
-            </svg>
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authWelcome', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
 
-            <div class="navy-check-circle">
-              <i data-lucide="check" style="width:36px;height:36px;color:#FFFFFF;stroke-width:3.2;"></i>
+      <div class="auth-flow-body">
+        <div class="auth-header-wrap">
+          <h2 class="auth-title">Choose your role</h2>
+          <p class="auth-subtitle">Select how you would like to use Home2School.</p>
+        </div>
+
+        <div class="auth-roles-list">
+          <div class="auth-role-card active" data-role="parent" onclick="selectSignupRoleDirect('parent')">
+            <div class="auth-role-icon-box">
+              <i data-lucide="user" style="width:20px;height:20px;color:#1B2B68;"></i>
+            </div>
+            <div class="auth-role-info">
+              <div class="auth-role-title">Parent</div>
+              <div class="auth-role-desc">Book rides and manage your child's trips.</div>
+            </div>
+            <div class="auth-role-avatar-wrap">
+              <img src="/assets/avatar_sarah.jpg" alt="Parent" class="auth-role-avatar" />
+              <i data-lucide="chevron-right" class="auth-role-chevron"></i>
             </div>
           </div>
 
-          <h1 class="welcome-name-title">Welcome, Sarah!</h1>
-          <p class="account-created-sub">Next: start your free trial.</p>
-        </div>
+          <div class="auth-role-card" data-role="driver" onclick="selectSignupRoleDirect('driver')">
+            <div class="auth-role-icon-box">
+              <i data-lucide="car" style="width:20px;height:20px;color:#1B2B68;"></i>
+            </div>
+            <div class="auth-role-info">
+              <div class="auth-role-title">Driver</div>
+              <div class="auth-role-desc">Drive school routes and earn.</div>
+            </div>
+            <div class="auth-role-avatar-wrap">
+              <img src="/assets/avatar_kabir.jpg" alt="Driver" class="auth-role-avatar" />
+              <i data-lucide="chevron-right" class="auth-role-chevron"></i>
+            </div>
+          </div>
 
-        <div class="bottom-action-wrap">
-          <button class="btn-primary" onclick="navigateTo('subscription')">Continue</button>
+          <div class="auth-role-card" data-role="walkshare" onclick="selectSignupRoleDirect('walkshare')">
+            <div class="auth-role-icon-box">
+              <i data-lucide="users" style="width:20px;height:20px;color:#1B2B68;"></i>
+            </div>
+            <div class="auth-role-info">
+              <div class="auth-role-title">WalaShare Guide</div>
+              <div class="auth-role-desc">Help with rides and support your community.</div>
+            </div>
+            <div class="auth-role-avatar-wrap">
+              <img src="/assets/avatar_farhana.jpg" alt="Guide" class="auth-role-avatar" />
+              <i data-lucide="chevron-right" class="auth-role-chevron"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 3: Create your account -->
+    <section class="screen-view auth-flow-screen" id="screen-authCreateAccount">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
         </div>
       </div>
 
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authRoleSelect', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="auth-flow-body space-between">
+        <div>
+          <div class="auth-header-wrap">
+            <h2 class="auth-title">Create your account</h2>
+            <p class="auth-subtitle">Enter your details to get started.</p>
+          </div>
+
+          <div class="auth-input-group">
+            <div class="auth-input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></div>
+            <input type="text" id="regFullName" class="auth-input" placeholder="Full name" value="Sarah Mitchell" />
+          </div>
+
+          <div class="auth-input-group">
+            <div class="auth-input-icon"><i data-lucide="mail" style="width:18px;height:18px;"></i></div>
+            <input type="email" id="regEmail" class="auth-input" placeholder="Email address" value="sarah.mitchell@mail.com" />
+          </div>
+
+          <div class="auth-input-group">
+            <div class="auth-input-icon"><i data-lucide="phone" style="width:18px;height:18px;"></i></div>
+            <input type="tel" id="regPhone" class="auth-input" placeholder="Phone number" value="+1 (416) 555-0123" />
+          </div>
+
+          <div class="auth-input-group">
+            <div class="auth-input-icon"><i data-lucide="lock" style="width:18px;height:18px;"></i></div>
+            <input type="password" id="regPassword" class="auth-input" placeholder="Enter password" value="SuperSecure123" />
+            <button type="button" class="auth-eye-btn" onclick="toggleAuthPasswordVisibility('regPassword', this)" aria-label="Toggle password">
+              <i data-lucide="eye" style="width:18px;height:18px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="auth-btn-primary" onclick="handleCreateAccountSubmit()">
+            <span>Continue</span>
+            <div class="auth-btn-arrow-circle">
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+          </button>
+          <div class="auth-bottom-text">
+            Already have an account? <a href="javascript:void(0)" onclick="navigateTo('authLogin')" class="auth-link-bold">Sign in</a>
+          </div>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 4: Verify your number -->
+    <section class="screen-view auth-flow-screen" id="screen-authOtp">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authCreateAccount', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="auth-flow-body space-between">
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+          <div class="auth-badge-circle">
+            <i data-lucide="phone-call" style="width:26px;height:26px;"></i>
+          </div>
+
+          <h2 class="auth-title">Verify your number</h2>
+          <p class="auth-subtitle">We've sent a 4-digit code to your phone number.</p>
+
+          <div class="auth-phone-tag">
+            <span class="auth-phone-num" id="authOtpDisplayPhone">+1 (416) 555-0123</span>
+            <button type="button" class="auth-phone-edit-btn" onclick="navigateTo('authCreateAccount', true)">Edit</button>
+          </div>
+
+          <div class="auth-otp-grid">
+            <input type="text" maxlength="1" class="auth-otp-box" value="4" oninput="handleOtpInput(this, 'otpBox2', null, event)" id="otpBox1" />
+            <input type="text" maxlength="1" class="auth-otp-box" value="2" oninput="handleOtpInput(this, 'otpBox3', 'otpBox1', event)" id="otpBox2" />
+            <input type="text" maxlength="1" class="auth-otp-box" value="0" oninput="handleOtpInput(this, 'otpBox4', 'otpBox2', event)" id="otpBox3" />
+            <input type="text" maxlength="1" class="auth-otp-box" value="1" oninput="handleOtpInput(this, null, 'otpBox3', event)" id="otpBox4" />
+          </div>
+
+          <div class="auth-resend-text">
+            Resend code in <span class="auth-timer" id="otpTimerText">00:30</span>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="auth-btn-primary" onclick="handleOtpVerify()">
+            <span>Verify</span>
+            <div class="auth-btn-arrow-circle">
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 5: Personal information -->
+    <section class="screen-view auth-flow-screen" id="screen-authProfile">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authOtp', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="auth-flow-body space-between">
+        <div>
+          <div class="auth-header-wrap">
+            <h2 class="auth-title">Personal information</h2>
+            <p class="auth-subtitle">Tell us a bit about yourself.</p>
+          </div>
+
+          <div class="auth-avatar-picker-wrap">
+            <div class="auth-avatar-picker" onclick="document.getElementById('personalPhotoInput').click()">
+              <img src="/assets/avatar_sarah.jpg" alt="Sarah Mitchell" class="auth-avatar-img" id="personalAvatarPreview" />
+              <div class="auth-avatar-badge">
+                <i data-lucide="camera" style="width:14px;height:14px;color:#FFFFFF;"></i>
+              </div>
+            </div>
+            <input type="file" id="personalPhotoInput" accept="image/*" style="display:none;" onchange="handleAuthPhotoSelected(event, 'personalAvatarPreview')" />
+          </div>
+
+          <div class="auth-field-block">
+            <label class="auth-field-label">Full name</label>
+            <div class="auth-input-group no-icon">
+              <input type="text" id="piFullName" class="auth-input" value="Sarah Mitchell" />
+            </div>
+          </div>
+
+          <div class="auth-field-block">
+            <label class="auth-field-label">Email address</label>
+            <div class="auth-input-group no-icon">
+              <input type="email" id="piEmail" class="auth-input" value="sarah.mitchell@mail.com" />
+            </div>
+          </div>
+
+          <div class="auth-field-block">
+            <label class="auth-field-label">Location</label>
+            <div class="auth-select-wrap">
+              <i data-lucide="map-pin" class="auth-select-icon"></i>
+              <select id="piLocation" class="auth-select">
+                <option value="toronto" selected>Toronto, Canada</option>
+                <option value="vancouver">Vancouver, Canada</option>
+                <option value="montreal">Montreal, Canada</option>
+                <option value="calgary">Calgary, Canada</option>
+              </select>
+              <i data-lucide="chevron-down" class="auth-select-chevron"></i>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="auth-btn-primary" onclick="handlePersonalInfoSubmit()">
+            <span>Continue</span>
+            <div class="auth-btn-arrow-circle">
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 6: Add your child -->
+    <section class="screen-view auth-flow-screen" id="screen-authAddChild">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authProfile', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="auth-flow-body space-between">
+        <div>
+          <div class="auth-header-wrap">
+            <h2 class="auth-title">Add your child</h2>
+            <p class="auth-subtitle">Enter your child's basic information.</p>
+          </div>
+
+          <div class="auth-avatar-picker-wrap">
+            <div class="auth-avatar-picker" onclick="document.getElementById('childPhotoInput').click()">
+              <img src="/assets/avatar_arman.jpg" alt="Child" class="auth-avatar-img" id="childAvatarPreview" />
+              <div class="auth-avatar-badge">
+                <i data-lucide="camera" style="width:14px;height:14px;color:#FFFFFF;"></i>
+              </div>
+            </div>
+            <input type="file" id="childPhotoInput" accept="image/*" style="display:none;" onchange="handleAuthPhotoSelected(event, 'childAvatarPreview')" />
+          </div>
+
+          <div class="auth-field-block">
+            <label class="auth-field-label">Child's name</label>
+            <div class="auth-input-group no-icon">
+              <input type="text" id="acChildName" class="auth-input" value="Alex Mitchell" />
+            </div>
+          </div>
+
+          <div class="auth-field-block">
+            <label class="auth-field-label">Date of birth</label>
+            <div class="auth-input-group no-icon has-trailing">
+              <input type="text" id="acDob" class="auth-input" value="Mar 12, 2016" />
+              <div class="auth-input-trailing">
+                <i data-lucide="calendar" style="width:18px;height:18px;color:#64748B;"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-field-block">
+            <label class="auth-field-label">School</label>
+            <div class="auth-select-wrap">
+              <select id="acSchool" class="auth-select">
+                <option value="greenfield" selected>Greenfield International School</option>
+                <option value="stmarys">St. Mary's Elementary</option>
+                <option value="oakridge">Oakridge Academy</option>
+              </select>
+              <i data-lucide="chevron-down" class="auth-select-chevron"></i>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="auth-btn-primary" onclick="handleAddChildSubmit()">
+            <span>Continue</span>
+            <div class="auth-btn-arrow-circle">
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 7: Choose a plan -->
+    <section class="screen-view auth-flow-screen" id="screen-authChoosePlan">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authAddChild', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="auth-flow-body space-between">
+        <div>
+          <div class="auth-header-wrap">
+            <h2 class="auth-title">Choose a plan</h2>
+            <p class="auth-subtitle">Start with a plan or continue without. You can change anytime.</p>
+          </div>
+
+          <div class="auth-plan-toggle">
+            <button type="button" class="auth-plan-tab active" id="tabMonthly" onclick="setPlanPeriod('monthly')">Monthly</button>
+            <button type="button" class="auth-plan-tab" id="tabYearly" onclick="setPlanPeriod('yearly')">
+              Yearly <span class="auth-save-badge">Save 30%</span>
+            </button>
+          </div>
+
+          <div class="auth-plan-card active" id="planCardBasic" onclick="selectPlanCard('basic')">
+            <div class="auth-plan-info">
+              <div class="auth-plan-name">Basic</div>
+              <div class="auth-plan-sub">Essential ride booking</div>
+            </div>
+            <div class="auth-plan-radio">
+              <div class="auth-plan-radio-dot"></div>
+            </div>
+          </div>
+
+          <div class="auth-plan-card" id="planCardPlus" onclick="selectPlanCard('plus')">
+            <div class="auth-plan-info">
+              <div class="auth-plan-name">Plus</div>
+              <div class="auth-plan-sub">Advanced features</div>
+              <div class="auth-plan-price" id="planPlusPriceDisplay">$9.99/mo</div>
+            </div>
+            <div class="auth-plan-radio">
+              <div class="auth-plan-radio-dot"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="auth-btn-primary" onclick="handleFinishOnboarding('home')">
+            <span>Continue</span>
+            <div class="auth-btn-arrow-circle">
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+          </button>
+          <button type="button" class="auth-skip-btn" onclick="handleFinishOnboarding('home')">
+            Skip for now
+          </button>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 8: Sign in -->
+    <section class="screen-view auth-flow-screen" id="screen-authLogin">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authWelcome', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="auth-flow-body">
+        <div class="auth-header-wrap">
+          <h2 class="auth-title">Sign in</h2>
+          <p class="auth-subtitle">Welcome back to Home2School.</p>
+        </div>
+
+        <div class="auth-input-group">
+          <div class="auth-input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></div>
+          <input type="email" id="loginEmail" class="auth-input" value="sarah.mitchell@mail.com" placeholder="Email address" />
+        </div>
+
+        <div class="auth-input-group">
+          <div class="auth-input-icon"><i data-lucide="lock" style="width:18px;height:18px;"></i></div>
+          <input type="password" id="loginPassword" class="auth-input" value="12345678" placeholder="Password" />
+          <button type="button" class="auth-eye-btn" onclick="toggleAuthPasswordVisibility('loginPassword', this)" aria-label="Toggle password">
+            <i data-lucide="eye" style="width:18px;height:18px;"></i>
+          </button>
+        </div>
+
+        <div class="auth-remember-row">
+          <label class="auth-checkbox-label">
+            <input type="checkbox" id="loginRememberMe" checked />
+            <span class="auth-checkbox-custom"><i data-lucide="check" style="width:12px;height:12px;"></i></span>
+            <span class="auth-checkbox-text">Remember me</span>
+          </label>
+          <a href="javascript:void(0)" onclick="navigateTo('authForgotPassword')" class="auth-forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="button" class="auth-btn-primary" onclick="handleSignInSubmit()">
+          <span>Sign in</span>
+          <div class="auth-btn-arrow-circle">
+            <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+          </div>
+        </button>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <button type="button" class="auth-social-btn" onclick="handleSocialSignIn('Apple')">
+          <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.89c.65-.79 1.1-1.9 0.98-3-.95.04-2.09.64-2.77 1.43-.6.69-1.12 1.82-.98 2.9 1.06.08 2.14-.54 2.77-1.33z"/>
+          </svg>
+          <span>Continue with Apple</span>
+        </button>
+
+        <button type="button" class="auth-social-btn" onclick="handleSocialSignIn('Google')">
+          <svg style="width:18px;height:18px;" viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/>
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.3 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/>
+            <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 16.4C3.7 20.1 7.5 23 12 23z"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+
+        <div class="auth-bottom-text" style="margin-top:16px;">
+          Don't have an account? <a href="javascript:void(0)" onclick="navigateTo('authRoleSelect')" class="auth-link-bold">Sign up</a>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 9: Forgot password? -->
+    <section class="screen-view auth-flow-screen" id="screen-authForgotPassword">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authLogin', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="auth-flow-body">
+        <div class="auth-header-wrap">
+          <h2 class="auth-title">Forgot password?</h2>
+          <p class="auth-subtitle">Enter your email and we'll send you a reset link.</p>
+        </div>
+
+        <div class="auth-input-group">
+          <div class="auth-input-icon"><i data-lucide="mail" style="width:18px;height:18px;"></i></div>
+          <input type="email" id="forgotEmail" class="auth-input" value="sarah.mitchell@mail.com" placeholder="Email address" />
+        </div>
+
+        <button type="button" class="auth-btn-primary" onclick="handleSendResetLink()">
+          <span>Send reset link</span>
+          <div class="auth-btn-arrow-circle">
+            <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+          </div>
+        </button>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 10: Check your email -->
+    <section class="screen-view auth-flow-screen" id="screen-authCheckEmail">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authForgotPassword', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="auth-flow-body space-between">
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+          <div class="auth-badge-circle">
+            <i data-lucide="mail" style="width:26px;height:26px;"></i>
+          </div>
+
+          <h2 class="auth-title">Check your email</h2>
+          <p class="auth-subtitle">We've sent a 4-digit code to <span id="checkEmailTarget">sarah.mitchell@mail.com</span></p>
+
+          <div class="auth-otp-grid">
+            <input type="text" maxlength="1" class="auth-otp-box" value="4" oninput="handleOtpInput(this, 'emailOtp2', null, event)" id="emailOtp1" />
+            <input type="text" maxlength="1" class="auth-otp-box" value="2" oninput="handleOtpInput(this, 'emailOtp3', 'emailOtp1', event)" id="emailOtp2" />
+            <input type="text" maxlength="1" class="auth-otp-box" value="0" oninput="handleOtpInput(this, 'emailOtp4', 'emailOtp2', event)" id="emailOtp3" />
+            <input type="text" maxlength="1" class="auth-otp-box" value="1" oninput="handleOtpInput(this, null, 'emailOtp3', event)" id="emailOtp4" />
+          </div>
+
+          <div class="auth-resend-text">
+            Resend code in <span class="auth-timer" id="emailOtpTimerText">00:30</span>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="auth-btn-primary" onclick="navigateTo('authNewPassword')">
+            <span>Continue</span>
+            <div class="auth-btn-arrow-circle">
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 11: Create a new password -->
+    <section class="screen-view auth-flow-screen" id="screen-authNewPassword">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="auth-nav-bar">
+        <button type="button" class="auth-back-btn" onclick="navigateTo('authCheckEmail', true)" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="auth-flow-body space-between">
+        <div>
+          <div class="auth-header-wrap">
+            <h2 class="auth-title">Create a new password</h2>
+            <p class="auth-subtitle">Your new password must be different from previous ones.</p>
+          </div>
+
+          <div class="auth-input-group">
+            <div class="auth-input-icon"><i data-lucide="lock" style="width:18px;height:18px;"></i></div>
+            <input type="password" id="npNewPassword" class="auth-input" placeholder="New password" oninput="validateNewPassword(this.value)" />
+            <button type="button" class="auth-eye-btn" onclick="toggleAuthPasswordVisibility('npNewPassword', this)" aria-label="Toggle password">
+              <i data-lucide="eye" style="width:18px;height:18px;"></i>
+            </button>
+          </div>
+
+          <div class="auth-input-group">
+            <div class="auth-input-icon"><i data-lucide="lock" style="width:18px;height:18px;"></i></div>
+            <input type="password" id="npConfirmPassword" class="auth-input" placeholder="Confirm new password" />
+            <button type="button" class="auth-eye-btn" onclick="toggleAuthPasswordVisibility('npConfirmPassword', this)" aria-label="Toggle password">
+              <i data-lucide="eye" style="width:18px;height:18px;"></i>
+            </button>
+          </div>
+
+          <div class="auth-rules-list">
+            <div class="auth-rule-item" id="ruleLength">
+              <span class="auth-rule-dot"></span>
+              <span>At least 8 characters</span>
+            </div>
+            <div class="auth-rule-item" id="ruleNumber">
+              <span class="auth-rule-dot"></span>
+              <span>Include a number</span>
+            </div>
+            <div class="auth-rule-item" id="ruleLetter">
+              <span class="auth-rule-dot"></span>
+              <span>Include a letter</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="auth-btn-primary" id="btnResetPassword" onclick="handleResetPasswordSubmit()">
+            <span>Reset password</span>
+          </button>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- SCREEN 12: Password reset successful! -->
+    <section class="screen-view auth-flow-screen" id="screen-authPasswordSuccess">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="auth-flow-body space-between">
+        <div class="auth-success-box">
+          <div class="auth-success-circle">
+            <i data-lucide="check" style="width:38px;height:38px;stroke-width:3.2;"></i>
+          </div>
+          <h2 class="auth-title">Password reset successful!</h2>
+          <p class="auth-subtitle">You can now sign in with your new password.</p>
+        </div>
+
+        <div>
+          <button type="button" class="auth-btn-primary" onclick="navigateTo('authLogin')">
+            <span>Go to sign in</span>
+            <div class="auth-btn-arrow-circle">
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+          </button>
+        </div>
+      </div>
       <div class="home-indicator"></div>
     </section>
 
