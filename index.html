@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="/flow-clean.css?direct" />
   <link rel="stylesheet" href="/type-standard.css?direct" />
   <link rel="stylesheet" href="/auth-clean.css?direct" />
+  <link rel="stylesheet" href="/figma-design.css?direct" />
 
   <!-- Critical UI Overrides for Time Picker & Modals -->
   <style>
@@ -5573,330 +5574,197 @@
 
 
     <!-- ================= 10. HOME SCREEN (STATE-DRIVEN: A / B / C) ================= -->
-    <section class="screen-view" id="screen-home" style="background-color: #FFFFFF;">
+    <section class="screen-view" id="screen-home" style="background-color: #F8FAFC;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
           <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
         </div>
       </div>
 
-      <!-- Scrollable Home Content -->
-      <div class="home-scroll-body ph-home">
-
-        <!-- Demo state switcher hidden for clean parent UX -->
-        <div class="state-switcher-container" hidden aria-hidden="true">
-          <span class="state-switcher-label">View State:</span>
-          <div class="state-pills-group">
-            <button class="state-pill-btn" id="btnStateA" onclick="setHomeState('A')">A: New Parent</button>
-            <button class="state-pill-btn active" id="btnStateB" onclick="setHomeState('B')">B: Upcoming</button>
-            <button class="state-pill-btn" id="btnStateC" onclick="setHomeState('C')">C: Active Ride</button>
-          </div>
-        </div>
+      <!-- Scrollable Figma Home Content -->
+      <div class="screen-scroll-body home-figma-body">
 
         <!-- Top Profile Header -->
-        <div class="home-header-row" style="display: flex; align-items: center; justify-content: space-between; padding-top: 4px;">
-          <div class="user-profile-group" onclick="navigateTo('profile')" style="display: flex; align-items: center; gap: 12px; cursor: pointer;" title="View Profile">
-            <div class="user-avatar-wrap" style="width: 46px; height: 46px; border-radius: 50%; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); border: 2px solid #FFFFFF; flex-shrink: 0;">
-              <img src="/assets/avatar_sadia.jpg" alt="Sarah Avatar" class="user-avatar-img" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />
+        <div class="home-figma-header">
+          <div class="home-figma-user-profile" onclick="navigateTo('profile')" title="View Profile">
+            <div class="home-figma-avatar-wrap">
+              <img src="/assets/avatar_john.png" alt="John" class="home-figma-avatar-img" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />
             </div>
-            <div class="user-welcome-texts">
-              <h2 class="user-greeting" style="font-size: 17px; font-weight: 800; color: #0F172A; line-height: 1.2; margin: 0;">Hello, Sarah 👋</h2>
-              <p class="user-question" style="font-size: 13px; color: #64748B; font-weight: 500; margin: 2px 0 0 0;">School rides &amp; carpools</p>
+            <div>
+              <h2 class="home-figma-greeting">Hello, John 👋</h2>
+              <p class="home-figma-subgreeting">Where would you like to go?</p>
             </div>
           </div>
 
-          <button class="bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')" style="width: 42px; height: 42px; border-radius: 50%; background-color: #FFFFFF; border: 1.5px solid #E2E8F0; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);">
+          <button type="button" class="home-figma-bell-btn" aria-label="Notifications" onclick="navigateTo('notifications')" title="Notifications">
             <i data-lucide="bell" style="width: 20px; height: 20px; color: #0F172A;"></i>
-            <span class="unread-badge-dot" style="position: absolute; top: 9px; right: 9px; width: 8px; height: 8px; border-radius: 50%; background-color: #F2600C; border: 1.5px solid #FFFFFF;"></span>
+            <span class="home-figma-bell-dot"></span>
           </button>
         </div>
 
-        <!-- Hero Promo Banner Card (Compact) -->
-        <div class="home-hero-card" onclick="navigateTo('bookingTripSetup')" style="width: 100%; height: 106px; border-radius: 18px; overflow: hidden; position: relative; box-shadow: 0 4px 16px rgba(27, 43, 104, 0.08); border: 1px solid #E2E8F0; background-color: #FFFFFF; cursor: pointer;" title="Book School Ride">
-          <img 
-            src="/assets/home_van_banner.jpg" 
-            alt="School Transportation Van"
-            style="width: 100%; height: 100%; object-fit: cover; object-position: right center;"
-          onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
-          <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.90) 46%, rgba(255,255,255,0.2) 70%, transparent 100%); display: flex; align-items: center; padding: 0 18px;">
-            <div style="max-width: 220px;">
-              <span style="display: inline-block; font-size: 10px; font-weight: 700; color: #1B2B68; background: #EFF6FF; border-radius: 20px; padding: 2px 8px; margin-bottom: 6px; letter-spacing: 0.4px;">SCHOOL TERM 2026</span>
-              <h3 style="font-size: 17px; font-weight: 800; color: #1B2B68; line-height: 1.2; margin: 0 0 3px 0;">Book Daily School Ride</h3>
-              <p style="font-size: 11.5px; color: #64748B; font-weight: 500; line-height: 1.3; margin: 0;">Verified drivers &amp; walking escorts</p>
+        <!-- Hero Promo Banner Card (Figma 1:1) -->
+        <div class="home-figma-hero-card" onclick="navigateTo('bookingTripSetup')" title="Book School Ride">
+          <div class="home-figma-hero-content">
+            <div>
+              <div class="home-figma-hero-accent-bar"></div>
+              <h3 class="home-figma-hero-title-main">Safe Ride</h3>
+              <h3 class="home-figma-hero-title-orange">Brighter Future</h3>
+              <p class="home-figma-hero-desc">Trusted school transport for your child's everyday journey.</p>
             </div>
-          </div>
-        </div>
-
-        <!-- Quick Actions Section (Figma 1:1 Grid) -->
-        <div class="section-block">
-          <h3 class="section-heading" style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0 0 12px 0;">Quick Actions</h3>
-          <div class="quick-actions-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
-            <!-- Action 1: New Booking (Featured Dark Navy Card) -->
-            <div class="action-card navy" onclick="navigateTo('bookingTripSetup')" style="background-color: #1B2B68; border-radius: 16px; padding: 16px 14px; color: #FFFFFF; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.18); transition: transform 0.15s ease;">
-              <div class="action-icon-circle white-glass" style="width: 40px; height: 40px; border-radius: 10px; background-color: rgba(255, 255, 255, 0.18); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
-                <i data-lucide="calendar-plus" style="width: 22px; height: 22px; color: #FFFFFF;"></i>
-              </div>
-              <h4 style="font-size: 15px; font-weight: 800; margin: 0 0 2px 0; color: #FFFFFF;">New Booking</h4>
-              <p style="font-size: 12px; color: rgba(255, 255, 255, 0.75); font-weight: 500; margin: 0;">Book a school trip</p>
-            </div>
-
-            <!-- Action 2: My Children -->
-            <div class="action-card light" onclick="openNestedScreen('myChildren')" style="background-color: #F8FAFC; border-radius: 16px; padding: 16px 14px; border: 1.5px solid #E2E8F0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; transition: transform 0.15s ease;">
-              <div class="action-icon-circle blue-tint" style="width: 40px; height: 40px; border-radius: 10px; background-color: #EFF6FF; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
-                <i data-lucide="users" style="width: 22px; height: 22px; color: #2563EB;"></i>
-              </div>
-              <h4 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0 0 2px 0;">My Children</h4>
-              <p style="font-size: 12px; color: #64748B; font-weight: 500; margin: 0;">Manage profiles</p>
-            </div>
-
-            <!-- Action 3: My Bookings -->
-            <div class="action-card light horizontal" onclick="navigateTo('bookings')" style="background-color: #F8FAFC; border-radius: 16px; padding: 14px; border: 1.5px solid #E2E8F0; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: transform 0.15s ease;">
-              <div class="action-icon-circle red-tint" style="width: 36px; height: 36px; border-radius: 10px; background-color: #FEE2E2; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <i data-lucide="calendar" style="width: 20px; height: 20px; color: #EF4444;"></i>
-              </div>
-              <h4 style="font-size: 14px; font-weight: 800; color: #0F172A; margin: 0;">My Bookings</h4>
-            </div>
-
-            <!-- Action 4: Safety & Help -->
-            <div class="action-card light horizontal" onclick="openChildSafetyCenter()" style="background-color: #F8FAFC; border-radius: 16px; padding: 14px; border: 1.5px solid #E2E8F0; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: transform 0.15s ease;">
-              <div class="action-icon-circle orange-tint" style="width: 36px; height: 36px; border-radius: 10px; background-color: #FFF4ED; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <i data-lucide="shield-alert" style="width: 20px; height: 20px; color: #F2600C;"></i>
-              </div>
-              <h4 style="font-size: 14px; font-weight: 800; color: #0F172A; margin: 0;">Safety &amp; Help</h4>
-            </div>
-          </div>
-        </div>
-
-        <!-- ================= STATE C: ACTIVE TRIP (featured) ================= -->
-        <div id="homeStateCView" style="display: none; flex-direction: column; gap: 16px;">
-          <div class="active-trip-hero-card">
-            <div class="active-trip-top-row">
-              <div class="active-trip-child-meta">
-                <div class="child-avatar-cluster">
-                  <img src="/assets/avatar_arman.jpg" alt="Liam Tremblay" class="avatar-img-circle" onerror="this.onerror=null;this.src='/assets/avatar_arman.jpg';" />
-                  <img src="/assets/avatar_emma.jpg" alt="Emma Tremblay" class="avatar-img-circle overlap" onerror="this.onerror=null;this.src='/assets/avatar_arman.jpg';" />
-                </div>
-                <div>
-                  <div class="child-name-text">Liam &amp; Emma</div>
-                  <div class="child-dest-text">Greenfield · 6 min</div>
-                </div>
-              </div>
-              <div class="active-trip-status-col">
-                <span class="live-pill-tag">
-                  <span class="live-dot-pulse"></span>
-                  <span>Live</span>
+            <div>
+              <div class="home-figma-hero-cta">
+                <span class="home-figma-hero-cta-circle">
+                  <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
                 </span>
+                <span>Learn more</span>
+              </div>
+              <div class="home-figma-hero-dots">
+                <span class="home-figma-hero-dot-active"></span>
+                <span class="home-figma-hero-dot"></span>
+                <span class="home-figma-hero-dot"></span>
               </div>
             </div>
+          </div>
+          <div class="home-figma-hero-img-wrap">
+            <img src="/assets/home_van_banner.jpg" alt="Safe School Van" class="home-figma-hero-img" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
+          </div>
+        </div>
 
-            <div class="active-route-tracker" onclick="openLiveTracking('H2S-84920')" title="Tap to view live tracking" role="button" tabindex="0">
-              <div class="route-track-bar">
-                <div class="route-track-fill" style="width: 65%;"></div>
-                <div class="route-track-car" style="left: 65%;">
-                  <i data-lucide="car"></i>
+        <!-- Quick Actions Section -->
+        <div>
+          <h3 class="home-figma-section-title">Quick Actions</h3>
+          
+          <!-- Primary Full Width New Booking Button -->
+          <button type="button" class="home-figma-btn-new-booking" onclick="navigateTo('bookingTripSetup')">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <i data-lucide="calendar" style="width: 20px; height: 20px;"></i>
+              <span>New Booking</span>
+            </div>
+            <i data-lucide="chevron-right" style="width: 20px; height: 20px;"></i>
+          </button>
+
+          <!-- 2 Action Cards Grid -->
+          <div class="home-figma-quick-grid">
+            <!-- Card 1: My Children -->
+            <div class="home-figma-quick-card" onclick="openNestedScreen('myChildren')">
+              <div class="home-figma-quick-left">
+                <div class="home-figma-icon-blue">
+                  <i data-lucide="users" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div style="min-width: 0;">
+                  <h4 class="home-figma-quick-title">My Children</h4>
+                  <p class="home-figma-quick-sub">View and manage</p>
                 </div>
               </div>
-              <div class="route-track-stops">
-                <div class="route-stop-point start">
-                  <span class="route-stop-dot"></span>
-                  <span class="route-stop-name">Home</span>
-                  <span class="route-stop-time">07:35 AM</span>
-                </div>
-                <div class="route-stop-point end">
-                  <span class="route-stop-name">Greenfield Int.</span>
-                  <span class="route-stop-time">07:42 AM</span>
-                  <span class="route-stop-dot"></span>
-                </div>
-              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8; flex-shrink: 0;"></i>
             </div>
 
-            <div class="active-driver-contact-row">
-              <div class="driver-mini-info" onclick="openDriverProfile('tariq', 'home')" style="cursor: pointer;" title="View Driver Profile">
-                <img src="/assets/avatar_tariq.jpg" alt="Robert MacDonald" class="driver-mini-avatar" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
-                <div class="driver-meta-text">
-                  <div class="driver-mini-name">
-                    <span>Robert MacDonald</span>
-                    <span class="fb-verified-badge" title="Verified Driver">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="#1877F2">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.2 14.6l-3.9-3.9 1.41-1.41 2.49 2.48 5.69-5.69 1.41 1.41-7.1 7.11z"/>
-                      </svg>
-                    </span>
-                    <i data-lucide="chevron-right" style="width: 13px; height: 13px; color: #94A3B8; margin-left: 2px;"></i>
-                  </div>
-                  <div class="driver-mini-sub">
-                    <span>Toyota Sienna</span>
-                    <span class="driver-sub-bullet">•</span>
-                    <i data-lucide="star" style="width:11px;height:11px;fill:#F59E0B;color:#F59E0B;"></i>
-                    <span>4.9</span>
-                  </div>
+            <!-- Card 2: Safety & Help -->
+            <div class="home-figma-quick-card" onclick="navigateTo('sos')">
+              <div class="home-figma-quick-left">
+                <div class="home-figma-icon-orange">
+                  <i data-lucide="shield" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div style="min-width: 0;">
+                  <h4 class="home-figma-quick-title">Safety &amp; Help</h4>
+                  <p class="home-figma-quick-sub">Get support</p>
                 </div>
               </div>
-
-              <div class="active-contact-buttons">
-                <button class="btn-icon-contact" onclick="openChatWith('tariq')" aria-label="Message Driver" title="Message Robert">
-                  <i data-lucide="message-square"></i>
-                </button>
-                <button class="btn-track-action" onclick="openLiveTracking('H2S-84920')" aria-label="Track">
-                  <span>Track</span>
-                  <i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
-                </button>
-              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8; flex-shrink: 0;"></i>
             </div>
           </div>
         </div>
 
-        <!-- ================= STATE B: NEXT TRIP FEATURED (1:1 REFERENCE UI) ================= -->
-        <div id="homeNextTripBlock" class="ph-next-block" style="display: block;">
-          <div class="ph-todays-trip-card" onclick="openBookingDetails(window.appState.activeBookingId || 'H2S-84920')">
-            <!-- Top Meta Row -->
-            <div class="ph-tt-top-row">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="ph-tt-date" id="homeTodayTripDate">Mon, Sep 1</span>
-                <span class="ph-tt-dir-badge is-round" id="homeTodayTripDirBadge" style="display:none;"></span>
-              </div>
-              <span class="ph-tt-status-pill" id="homeTodayTripStatus">
-                <span class="ph-tt-dot"></span> Upcoming
-              </span>
-            </div>
+        <!-- Today's Trips Section (Figma 1:1) -->
+        <div>
+          <div class="home-figma-trips-header">
+            <h3 class="home-figma-section-title" style="margin: 0;">Today's trips</h3>
+            <a href="#bookings" onclick="navigateTo('bookings'); return false;" class="home-figma-see-all-link">
+              <span>See all</span>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+            </a>
+          </div>
 
-            <!-- Route Timeline (Pickup from home & Return pickup from school) -->
-            <div class="ph-tt-timeline" style="margin-top: 10px; margin-bottom: 14px;">
-              <div class="ph-tt-stop">
-                <div class="ph-tt-rail">
-                  <span class="ph-tt-dot-solid"></span>
-                  <span class="ph-tt-dashed-line"></span>
+          <!-- Trip Card 1 -->
+          <div class="home-figma-trip-card" onclick="openBookingDetails('H2S-84920', 'home')">
+            <div class="home-figma-date-box">
+              <span class="home-figma-date-month">MAY</span>
+              <span class="home-figma-date-day">22</span>
+              <span class="home-figma-date-weekday">Wed</span>
+            </div>
+            <div class="home-figma-trip-info">
+              <div class="home-figma-trip-time">07:30 AM</div>
+              <div class="home-figma-route-rail">
+                <div class="home-figma-route-stop">
+                  <span class="home-figma-dot-solid"></span>
+                  <span>18 Harbourview Lane</span>
                 </div>
-                <div class="ph-tt-stop-content">
-                  <span class="ph-tt-stop-name" id="homeTodayPickupLoc">Home (12 Elm Street)</span>
-                  <span class="ph-tt-stop-time" id="homeTodayPickupTime">07:30 AM</span>
-                </div>
-              </div>
-              <div class="ph-tt-stop">
-                <div class="ph-tt-rail">
-                  <span class="ph-tt-dot-bullseye"></span>
-                </div>
-                <div class="ph-tt-stop-content">
-                  <span class="ph-tt-stop-name" id="homeTodayDropLoc">Greenfield International School</span>
-                  <span class="ph-tt-stop-time" id="homeTodayDropTime">01:00 PM</span>
+                <div class="home-figma-route-stop">
+                  <span class="home-figma-dot-ring"></span>
+                  <span>Greenfield International</span>
                 </div>
               </div>
             </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+              <span class="home-figma-badge-oneway">➔ One-way</span>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
+          </div>
 
-            <!-- Driver Footer Row -->
-            <div class="ph-tt-footer-row">
-              <div class="ph-tt-driver-col">
-                <img src="/assets/avatar_tariq.jpg" alt="Driver" id="homeTodayDriverPhoto" class="ph-tt-driver-avatar" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
-                <div style="min-width:0;">
-                  <div class="ph-tt-driver-name" id="homeTodayDriverName">Mohammad Rahim</div>
-                  <div class="ph-tt-driver-rating">
-                    <span style="color:#F59E0B;">★</span>
-                    <strong id="homeTodayDriverScore" style="color:#0F172A; font-weight:700;">4.8</strong>
-                  </div>
+          <!-- Trip Card 2 -->
+          <div class="home-figma-trip-card" onclick="openBookingDetails('H2S-73190', 'home')">
+            <div class="home-figma-date-box">
+              <span class="home-figma-date-month">MAY</span>
+              <span class="home-figma-date-day">22</span>
+              <span class="home-figma-date-weekday">Wed</span>
+            </div>
+            <div class="home-figma-trip-info">
+              <div class="home-figma-trip-time">07:30 AM &amp; 01:00 PM</div>
+              <div class="home-figma-route-rail">
+                <div class="home-figma-route-stop">
+                  <span class="home-figma-dot-solid"></span>
+                  <span>8 Harbourview Lane</span>
+                </div>
+                <div class="home-figma-route-stop">
+                  <span class="home-figma-dot-ring"></span>
+                  <span>Greenfield International</span>
                 </div>
               </div>
-              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#94A3B8;flex-shrink:0;margin-left:auto;"></i>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+              <span class="home-figma-badge-roundtrip">🔁 Round Trip</span>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
             </div>
           </div>
-        </div>
 
-        <!-- ================= STATE A: NEW PARENT / NO RIDES ================= -->
-        <div id="homeStateAView" style="display: none; flex-direction: column; gap: 16px;">
-          <div class="empty-trips-card">
-            <div class="empty-trips-icon">
-              <i data-lucide="calendar-x" style="width:28px;height:28px;"></i>
+          <!-- Trip Card 3 -->
+          <div class="home-figma-trip-card" onclick="openBookingDetails('H2S-66211', 'home')">
+            <div class="home-figma-date-box">
+              <span class="home-figma-date-month">MAY</span>
+              <span class="home-figma-date-day">24</span>
+              <span class="home-figma-date-weekday">Wed</span>
             </div>
-            <h4 class="empty-trips-title">No rides yet</h4>
-            <p class="empty-trips-desc">Book a school ride to get started.</p>
-            <button class="btn-primary" onclick="navigateTo('bookingTripSetup')" style="margin-top: 4px;">Book a ride</button>
-          </div>
-        </div>
-
-        <!-- ================= STATE B: UPCOMING LIST ================= -->
-        <div id="homeStateBView" style="display: flex; flex-direction: column; gap: 16px;">
-          <div class="section-block">
-            <div class="section-header-row" style="margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
-              <h3 class="section-heading" style="font-size: 18px; font-weight: 800; color: #0F172A; margin: 0;">Today's trips</h3>
-              <a href="#bookings" onclick="navigateTo('bookings'); return false;" class="link-see-all" style="font-size: 14px; font-weight: 700; color: #1B2B68; display: flex; align-items: center; gap: 3px; text-decoration: none;">See all <i
-                  data-lucide="chevron-right" style="width:14px;height:14px;"></i></a>
+            <div class="home-figma-trip-info">
+              <div class="home-figma-trip-time">07:30 AM &amp; 01:00 PM</div>
+              <div class="home-figma-route-rail">
+                <div class="home-figma-route-stop">
+                  <span class="home-figma-dot-solid"></span>
+                  <span>8 Harbourview Lane</span>
+                </div>
+                <div class="home-figma-route-stop">
+                  <span class="home-figma-dot-ring"></span>
+                  <span>Greenfield International</span>
+                </div>
+              </div>
             </div>
-
-            <div class="upcoming-trips-list ph-upcoming-list" id="homeUpcomingList">
-              <article class="h2s-booking-card ub-booking-card" onclick="openBookingDetails('H2S-84920')">
-                <div class="ub-card-left">
-                  <div class="ub-thumb-box" style="width:50px; height:50px; min-width:50px; min-height:50px; max-width:50px; max-height:50px; border-radius:12px; background:#F1F5F9; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; padding:4px; overflow:hidden; flex-shrink:0; box-sizing:border-box;">
-                    <img src="/assets/toyota_sienna_white.jpg" alt="Vehicle" style="width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; display:block;" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
-                  </div>
-                  <div class="ub-card-info">
-                    <div class="ub-card-title">Greenfield International</div>
-                    <div class="ub-card-time">May 22 · 07:30 AM</div>
-                    <div class="ub-card-price">$35</div>
-                  </div>
-                </div>
-                <div class="ub-card-right">
-                  <button type="button" class="ub-details-btn" onclick="event.stopPropagation(); openBookingDetails('H2S-84920')">
-                    <i data-lucide="calendar" style="width:13px; height:13px;"></i>
-                    <span>Details</span>
-                  </button>
-                </div>
-              </article>
-
-              <article class="h2s-booking-card ub-booking-card" onclick="openBookingDetails('H2S-73190')">
-                <div class="ub-card-left">
-                  <div class="ub-thumb-box" style="width:50px; height:50px; min-width:50px; min-height:50px; max-width:50px; max-height:50px; border-radius:12px; background:#F1F5F9; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; padding:4px; overflow:hidden; flex-shrink:0; box-sizing:border-box;">
-                    <img src="/assets/toyota_sienna_white.jpg" alt="Vehicle" style="width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; display:block;" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
-                  </div>
-                  <div class="ub-card-info">
-                    <div class="ub-card-title">Greenfield International</div>
-                    <div class="ub-card-time">May 22 · 07:30 AM &amp; 01:00 PM</div>
-                    <div class="ub-card-price">$135</div>
-                  </div>
-                </div>
-                <div class="ub-card-right">
-                  <button type="button" class="ub-details-btn" onclick="event.stopPropagation(); openBookingDetails('H2S-73190')">
-                    <i data-lucide="calendar" style="width:13px; height:13px;"></i>
-                    <span>Details</span>
-                  </button>
-                </div>
-              </article>
-
-              <article class="h2s-booking-card ub-booking-card" onclick="openBookingDetails('H2S-66211')">
-                <div class="ub-card-left">
-                  <div class="ub-thumb-box" style="width:50px; height:50px; min-width:50px; min-height:50px; max-width:50px; max-height:50px; border-radius:12px; background:#F1F5F9; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; padding:4px; overflow:hidden; flex-shrink:0; box-sizing:border-box;">
-                    <img src="/assets/toyota_sienna_white.jpg" alt="Vehicle" style="width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; display:block;" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
-                  </div>
-                  <div class="ub-card-info">
-                    <div class="ub-card-title">Greenfield International</div>
-                    <div class="ub-card-time">May 24 · 07:30 AM &amp; 01:00 PM</div>
-                    <div class="ub-card-price">$135</div>
-                  </div>
-                </div>
-                <div class="ub-card-right">
-                  <button type="button" class="ub-details-btn" onclick="event.stopPropagation(); openBookingDetails('H2S-66211')">
-                    <i data-lucide="calendar" style="width:13px; height:13px;"></i>
-                    <span>Details</span>
-                  </button>
-                </div>
-              </article>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+              <span class="home-figma-badge-roundtrip">🔁 Round Trip</span>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
             </div>
           </div>
-        </div>
-
-        <!-- Promo CTA -->
-        <div class="ph-promo-card" onclick="navigateTo('bookingTripSetup')" style="cursor: pointer;" title="Book a ride">
-          <div class="ph-promo-copy">
-            <h3 class="ph-promo-title">Need another ride?</h3>
-            <p class="ph-promo-desc">Book a driver or WalkShare.</p>
-          </div>
-          <img src="/assets/home_hero_card.png" alt="" class="ph-promo-img" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />
         </div>
 
       </div>
@@ -5923,7 +5791,6 @@
 
       <div class="home-indicator"></div>
     </section>
-
 
     <!-- ================= 11. MY CHILDREN MANAGEMENT ================= -->
     <section class="screen-view" id="screen-myChildren" style="background-color: #FFFFFF;">
@@ -6237,176 +6104,210 @@
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
           <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
         </div>
       </div>
 
-      <div class="top-bar-sticky book-ride-topbar">
-        <button class="back-btn" onclick="navigateTo('home', true)">
+      <div class="top-bar-sticky book-ride-topbar" style="background: #FFFFFF; border-bottom: none;">
+        <button type="button" class="back-btn" onclick="navigateTo('home', true)" aria-label="Go back">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Book a Ride</h2>
+        <h2 class="top-bar-title" style="font-size: 18px; font-weight: 800; color: #0F172A;">Book a Ride</h2>
         <span style="width: 28px;"></span>
       </div>
 
-      <div class="screen-scroll-body">
-        <div class="book-ride-section">
-          <div class="book-ride-section-head">
-            <i data-lucide="users"></i>
-            <div class="book-ride-section-title">Children</div>
-          </div>
-          <button type="button" class="book-ride-children-card is-empty" id="bookingChildrenTrigger" onclick="toggleChildrenDropdown()">
-            <div class="child-avatar-cluster" id="bookingChildrenAvatars" hidden></div>
-            <div class="book-ride-children-meta">
-              <div class="mvp-child-dropdown-value is-placeholder" id="bookingChildrenSummary">Select children</div>
+      <div class="screen-scroll-body bk-figma-body">
+        <!-- 1. Children Card (Figma 1:1) -->
+        <div class="bk-figma-card-clickable" id="bookingChildrenTrigger" onclick="toggleChildrenDropdown()">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <i data-lucide="users" style="width: 22px; height: 22px; color: #0F172A; flex-shrink: 0;"></i>
+            <div>
+              <div style="font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 800; color: #0F172A; line-height: 1.2;">Children</div>
+              <div class="mvp-child-dropdown-value is-placeholder" id="bookingChildrenSummary" style="font-family: 'Manrope', system-ui, sans-serif; font-size: 13px; color: #94A3B8; font-weight: 500; margin-top: 2px;">Select children</div>
+              <div class="child-avatar-cluster" id="bookingChildrenAvatars" hidden></div>
             </div>
-            <i data-lucide="chevron-right"></i>
-          </button>
-          <p class="mvp-hint-text" id="bookingChildrenHint" style="display:none;">Different schools need a separate booking for MVP.</p>
+          </div>
+          <i data-lucide="chevron-right" style="width: 18px; height: 18px; color: #94A3B8;"></i>
+        </div>
+        <p class="mvp-hint-text" id="bookingChildrenHint" style="display:none;">Different schools need a separate booking for MVP.</p>
+
+        <!-- 2. Pickup & Drop-off Card (Figma 1:1) -->
+        <div class="bk-figma-card">
+          <div class="bk-figma-card-head" style="margin-bottom: 10px;">
+            <div class="bk-figma-head-left">
+              <i data-lucide="map-pin" style="width: 18px; height: 18px; color: #0F172A;"></i>
+              <span>Pickup &amp; Drop-off</span>
+            </div>
+          </div>
+          <div class="bk-figma-route-box">
+            <!-- Pickup Stop -->
+            <div class="bk-figma-route-row" onclick="document.getElementById('setupPickupLocationInput').focus()">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #2563EB; margin: 0 4px; flex-shrink: 0;"></span>
+              <input type="text" id="setupPickupLocationInput" class="bk-figma-route-input" value="" placeholder="Pickup location" oninput="syncLocationInput('pickup', this.value); updateBookingSearchCta();" />
+              <input type="hidden" id="setupPickupLocation" value="" />
+              <button type="button" class="book-ride-clear" id="btnClearPickup" hidden onclick="event.stopPropagation(); clearBookingLocation('pickup')" title="Clear pickup" style="background: none; border: none; cursor: pointer; color: #94A3B8; padding: 2px;">
+                <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+              </button>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
+            
+            <div class="bk-figma-route-divider"></div>
+
+            <!-- Drop-off Stop -->
+            <div class="bk-figma-route-row" onclick="document.getElementById('setupSchoolLocationInput').focus()">
+              <i data-lucide="map-pin" style="width: 16px; height: 16px; color: #0F172A; margin: 0 1px; flex-shrink: 0;"></i>
+              <input type="text" id="setupSchoolLocationInput" class="bk-figma-route-input" value="" placeholder="Drop-off location" oninput="syncLocationInput('school', this.value); updateBookingSearchCta();" />
+              <input type="hidden" id="setupSchoolLocation" value="" />
+              <button type="button" class="book-ride-clear" id="btnClearDropoff" hidden onclick="event.stopPropagation(); clearBookingLocation('school')" title="Clear drop-off" style="background: none; border: none; cursor: pointer; color: #94A3B8; padding: 2px;">
+                <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+              </button>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
+          </div>
         </div>
 
-        <div class="book-ride-section">
-          <div class="book-ride-section-head">
-            <i data-lucide="map-pin"></i>
-            <div class="book-ride-section-title">Pickup &amp; Drop-off</div>
-          </div>
-          <div class="book-ride-route">
-            <div class="book-ride-route-point">
-              <div class="book-ride-route-icon navy">
-                <i data-lucide="home"></i>
-              </div>
-              <div class="clean-route-info">
-                <input type="text" id="setupPickupLocationInput" class="clean-route-input" value="" placeholder="Pickup location" oninput="syncLocationInput('pickup', this.value); updateBookingSearchCta();" />
-                <input type="hidden" id="setupPickupLocation" value="" />
-              </div>
-              <button type="button" class="book-ride-clear" id="btnClearPickup" hidden onclick="clearBookingLocation('pickup')" title="Clear pickup">
-                <i data-lucide="x"></i>
-              </button>
+        <!-- 3. Date & Time Card (Figma 1:1) -->
+        <div class="bk-figma-card">
+          <div class="bk-figma-card-head">
+            <div class="bk-figma-head-left">
+              <i data-lucide="calendar" style="width: 18px; height: 18px; color: #0F172A;"></i>
+              <span>Date &amp; Time</span>
             </div>
-            <div class="book-ride-route-point">
-              <div class="book-ride-route-icon orange">
-                <i data-lucide="school"></i>
-              </div>
-              <div class="clean-route-info">
-                <input type="text" id="setupSchoolLocationInput" class="clean-route-input orange" value="" placeholder="Drop-off location" oninput="syncLocationInput('school', this.value); updateBookingSearchCta();" />
-                <input type="hidden" id="setupSchoolLocation" value="" />
-              </div>
-              <button type="button" class="book-ride-clear" id="btnClearDropoff" hidden onclick="clearBookingLocation('school')" title="Clear drop-off">
-                <i data-lucide="x"></i>
-              </button>
+            <div class="bk-figma-segmented-wrap">
+              <button type="button" class="bk-figma-segmented-btn" id="btnTripDirectionOneWay" onclick="handleDirectionToggle('oneway')">One way</button>
+              <button type="button" class="bk-figma-segmented-btn active" id="btnTripDirectionRound" onclick="handleDirectionToggle('round')">Round trip</button>
             </div>
-            <button type="button" class="book-ride-swap-fab" onclick="swapPickupDropoff()" aria-label="Swap pickup and drop-off" title="Swap">
-              <i data-lucide="arrow-up-down"></i>
-            </button>
           </div>
-        </div>
 
-        <div class="book-ride-section">
-          <div class="book-ride-section-head">
-            <i data-lucide="calendar"></i>
-            <div class="book-ride-section-title">Schedule</div>
+          <!-- Select Date Box -->
+          <div class="bk-figma-select-box" id="bookingDateTrigger" onclick="openBookingDateSheet()">
+            <div class="bk-figma-select-val" id="setupOutboundDateText">
+              <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748B;"></i>
+              <span>Select date</span>
+            </div>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
           </div>
-          <button type="button" class="book-ride-date-field" id="bookingDateTrigger" onclick="openBookingDateSheet()">
-            <i data-lucide="calendar"></i>
-            <span class="book-ride-field-value is-placeholder" id="setupOutboundDateText">Select date</span>
-            <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
-          </button>
-          <input type="date" id="setupStartDate" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" onchange="handleScheduleDateChange('outbound', this.value); syncBookingDateDisplay(); updateBookingSearchCta();" />
+          <input type="date" id="setupStartDate" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" style="display:none;" onchange="handleScheduleDateChange('outbound', this.value); syncBookingDateDisplay(); updateBookingSearchCta();" />
           <input type="hidden" id="setupReturnDate" value="" />
           <input type="hidden" id="setupReturnDateText" value="" />
-          <div class="book-ride-times clean-sched-times-grid">
-            <button type="button" class="book-ride-time-field" id="morningScheduleBlock" onclick="openBookingTimeSheet('outbound')">
-              <i data-lucide="clock"></i>
-              <span class="book-ride-field-value is-placeholder" id="setupOutboundTimeText">Select pickup</span>
-              <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
-            </button>
-            <button type="button" class="book-ride-time-field" id="returnScheduleBlock" onclick="openBookingTimeSheet('return')">
-              <i data-lucide="clock"></i>
-              <span class="book-ride-field-value is-placeholder" id="setupReturnTimeText">Select return</span>
-              <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
-            </button>
+
+          <!-- Times Row (Pickup & Return) -->
+          <div class="bk-figma-times-row">
+            <div class="bk-figma-select-box" id="morningScheduleBlock" onclick="openBookingTimeSheet('outbound')">
+              <div class="bk-figma-select-val" id="setupOutboundTimeText">
+                <i data-lucide="clock" style="width: 16px; height: 16px; color: #64748B;"></i>
+                <span>Pickup time</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
+
+            <div class="bk-figma-select-box" id="returnScheduleBlock" onclick="openBookingTimeSheet('return')">
+              <div class="bk-figma-select-val" id="setupReturnTimeText">
+                <i data-lucide="clock" style="width: 16px; height: 16px; color: #64748B;"></i>
+                <span>Return time</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
           </div>
-          <input type="time" id="setupOutboundTime" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" onchange="updateTripTime('outbound', this.value); syncBookingTimeDisplays(); updateBookingSearchCta();" />
-          <input type="time" id="setupReturnTime" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" onchange="updateTripTime('return', this.value); syncBookingTimeDisplays(); updateBookingSearchCta();" />
-          <div class="book-ride-repeat-row">
-            <div class="book-ride-repeat-label" style="display: flex; align-items: center; gap: 8px;">
-              <i data-lucide="repeat" style="width: 16px; height: 16px; color: #64748B;"></i>
+          <input type="time" id="setupOutboundTime" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" style="display:none;" onchange="updateTripTime('outbound', this.value); syncBookingTimeDisplays(); updateBookingSearchCta();" />
+          <input type="time" id="setupReturnTime" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" style="display:none;" onchange="updateTripTime('return', this.value); syncBookingTimeDisplays(); updateBookingSearchCta();" />
+        </div>
+
+        <!-- 4. Repeat Card (Figma 1:1) -->
+        <div class="bk-figma-card">
+          <div class="bk-figma-card-head" style="margin-bottom: 8px;">
+            <div class="bk-figma-head-left">
+              <i data-lucide="repeat" style="width: 18px; height: 18px; color: #0F172A;"></i>
               <span>Repeat</span>
             </div>
-            <label class="book-ride-switch">
-              <input type="checkbox" id="toggleRecurringRide" aria-label="Repeat this ride" onchange="handleRecurringToggleChange(this.checked)" />
+            <label class="book-ride-switch" style="cursor: pointer;">
+              <input type="checkbox" id="toggleRecurringRide" checked aria-label="Repeat this ride" onchange="handleRecurringToggleChange(this.checked)" />
               <span class="book-ride-switch-ui" aria-hidden="true"></span>
             </label>
           </div>
-          <div id="repeatDaysSection" class="book-ride-repeat-details" hidden>
-            <div class="clean-days-grid" id="cleanDaysGrid">
-              <button type="button" class="clean-day-btn active" data-day="Mon" onclick="toggleRepeatDay(this)">M</button>
-              <button type="button" class="clean-day-btn active" data-day="Tue" onclick="toggleRepeatDay(this)">T</button>
-              <button type="button" class="clean-day-btn active" data-day="Wed" onclick="toggleRepeatDay(this)">W</button>
-              <button type="button" class="clean-day-btn active" data-day="Thu" onclick="toggleRepeatDay(this)">T</button>
-              <button type="button" class="clean-day-btn active" data-day="Fri" onclick="toggleRepeatDay(this)">F</button>
-              <button type="button" class="clean-day-btn" data-day="Sat" onclick="toggleRepeatDay(this)">S</button>
-              <button type="button" class="clean-day-btn" data-day="Sun" onclick="toggleRepeatDay(this)">S</button>
+
+          <div id="repeatDaysSection" class="book-ride-repeat-details" style="display: block;">
+            <!-- 7 Days Row -->
+            <div class="bk-figma-days-row" id="cleanDaysGrid">
+              <button type="button" class="bk-figma-day-btn active" data-day="Mon" onclick="toggleRepeatDay(this)">Mon</button>
+              <button type="button" class="bk-figma-day-btn active" data-day="Tue" onclick="toggleRepeatDay(this)">Tue</button>
+              <button type="button" class="bk-figma-day-btn active" data-day="Wed" onclick="toggleRepeatDay(this)">Wed</button>
+              <button type="button" class="bk-figma-day-btn active" data-day="Thu" onclick="toggleRepeatDay(this)">Thu</button>
+              <button type="button" class="bk-figma-day-btn active" data-day="Fri" onclick="toggleRepeatDay(this)">Fri</button>
+              <button type="button" class="bk-figma-day-btn" data-day="Sat" onclick="toggleRepeatDay(this)">Sat</button>
+              <button type="button" class="bk-figma-day-btn" data-day="Sun" onclick="toggleRepeatDay(this)">Sun</button>
             </div>
-            <label class="book-ride-until-check">
-              <input type="checkbox" id="toggleUntilCancelled" checked onchange="handleUntilCancelledChange(this.checked)" />
-              <span class="book-ride-check-box" aria-hidden="true"></span>
-              <span class="book-ride-until-check-text">Until cancelled</span>
+
+            <!-- Until Cancelled Checkbox -->
+            <label class="bk-figma-checkbox-row">
+              <input type="checkbox" id="toggleUntilCancelled" checked style="display:none;" onchange="handleUntilCancelledChange(this.checked)" />
+              <span class="bk-figma-custom-checkbox" id="customCheckUi">
+                <i data-lucide="check" style="width: 12px; height: 12px; stroke-width: 3;"></i>
+              </span>
+              <span style="font-family: 'Manrope', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: #0F172A;">Until cancelled</span>
             </label>
-            <button type="button" class="book-ride-date-field book-ride-end-date-field is-inactive" id="bookingEndDateTrigger" onclick="openBookingEndDateSheet()">
-              <i data-lucide="calendar"></i>
-              <span class="book-ride-field-value is-placeholder" id="bookingEndDateValue">End date</span>
-              <i data-lucide="chevron-right" class="book-ride-field-chevron"></i>
-            </button>
-            <input type="date" id="repeatEndDateInput" class="book-ride-until-native" tabindex="-1" aria-hidden="true" onchange="setRecurrenceEndDate(this.value)" />
+
+            <!-- End Date Box -->
+            <div class="bk-figma-select-box" id="bookingEndDateTrigger" onclick="openBookingEndDateSheet()" style="opacity: 0.6; pointer-events: none;">
+              <div class="bk-figma-select-val" id="bookingEndDateValue">
+                <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748B;"></i>
+                <span>End date</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
+            <input type="date" id="repeatEndDateInput" class="book-ride-until-native" tabindex="-1" aria-hidden="true" style="display:none;" onchange="setRecurrenceEndDate(this.value)" />
           </div>
         </div>
 
-        <div class="book-ride-section">
-          <div class="book-ride-section-head">
-            <i data-lucide="car"></i>
-            <div class="book-ride-section-title">Service type</div>
+        <!-- 5. Service Type Card (Figma 1:1) -->
+        <div class="bk-figma-card">
+          <div class="bk-figma-card-head" style="margin-bottom: 8px;">
+            <div class="bk-figma-head-left">
+              <i data-lucide="car" style="width: 18px; height: 18px; color: #0F172A;"></i>
+              <span>Service type</span>
+            </div>
           </div>
-          <div class="book-ride-service-grid clean-service-toggle">
-            <button type="button" class="clean-service-btn book-ride-service-card active" id="btnServiceDriver" onclick="setServiceType('drivers')">
-              <span class="book-ride-service-icon" aria-hidden="true"><i data-lucide="car"></i></span>
-              <span class="book-ride-service-name">Driver</span>
-              <i data-lucide="circle-check" class="book-ride-service-check"></i>
-            </button>
-            <button type="button" class="clean-service-btn book-ride-service-card" id="btnServiceWalk" onclick="setServiceType('walkshare')">
-              <span class="book-ride-service-icon" aria-hidden="true"><i data-lucide="person-standing"></i></span>
-              <span class="book-ride-service-name">WalkShare</span>
-              <i data-lucide="circle-check" class="book-ride-service-check"></i>
-            </button>
+          <div class="bk-figma-services-grid">
+            <!-- Option 1: Driver -->
+            <div class="bk-figma-service-card active" id="btnServiceDriver" onclick="setServiceType('drivers')">
+              <div class="bk-figma-service-left">
+                <i data-lucide="car" style="width: 18px; height: 18px; color: #1B2B68;"></i>
+                <span>Driver</span>
+              </div>
+              <div class="bk-figma-radio-circle">
+                <i data-lucide="check" style="width: 12px; height: 12px; stroke-width: 3;"></i>
+              </div>
+            </div>
+
+            <!-- Option 2: WalkShare -->
+            <div class="bk-figma-service-card" id="btnServiceWalk" onclick="setServiceType('walkshare')">
+              <div class="bk-figma-service-left">
+                <i data-lucide="user-check" style="width: 18px; height: 18px; color: #64748B;"></i>
+                <span>WalkShare</span>
+              </div>
+              <div class="bk-figma-radio-circle"></div>
+            </div>
           </div>
         </div>
 
-        <div class="book-ride-section" style="margin-top: 14px;">
-          <div class="book-ride-section-head">
-            <i data-lucide="file-text"></i>
-            <div class="book-ride-section-title">Additional Notes</div>
+        <!-- 6. Additional Notes Card (Figma 1:1) -->
+        <div class="bk-figma-card">
+          <div class="bk-figma-card-head" style="margin-bottom: 8px;">
+            <div class="bk-figma-head-left">
+              <i data-lucide="file-text" style="width: 18px; height: 18px; color: #0F172A;"></i>
+              <span>Additional Notes</span>
+            </div>
           </div>
-          <div style="margin-top: 8px;">
-            <textarea id="setupBookingNotesInput" class="form-textarea" placeholder="e.g. Gate 2 pickup, booster seat required, handover PIN instructions..." style="width: 100%; border-radius: 14px; border: 1.5px solid #E2E8F0; padding: 10px 12px; font-size: 13px; font-family: inherit; min-height: 64px; resize: none; box-sizing: border-box; outline: none; background: #FFFFFF; color: #0F172A; line-height: 1.45; transition: border-color 0.2s;" onfocus="this.style.borderColor='#1B2B68'" onblur="this.style.borderColor='#E2E8F0'"></textarea>
-          </div>
+          <textarea id="setupBookingNotesInput" class="bk-figma-textarea" placeholder="e.g. Gate 2 pickup, booster seat required, handover PIN instructions..."></textarea>
         </div>
-      </div>
 
-      <div class="book-ride-footer">
-        <button type="button" class="btn-primary book-ride-search-btn is-disabled" id="btnSearchProviders" disabled onclick="proceedFromTripSetup()">
-          <span class="book-ride-search-label">
-            <i data-lucide="search"></i>
-            <span>Search Available Providers</span>
-          </span>
-          <i data-lucide="arrow-right"></i>
+        <!-- Search Available Providers CTA Button (Figma 1:1) -->
+        <button type="button" class="bk-figma-btn-search" id="btnSearchProviders" onclick="proceedFromTripSetup()">
+          <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+          <span>Search Available Providers</span>
         </button>
+
       </div>
 
       <div class="book-ride-sheet" id="bookingChildrenSheet" onclick="if(event.target===this) closeBookingSheet('bookingChildrenSheet')">
@@ -7472,20 +7373,14 @@
 
 
     <!-- ================= 19B. BOOKING & TRIP DETAILS (1:1 REFERENCE UI) ================= -->
-    <section class="screen-view screen-bd-flat" id="screen-bookingDetails">
-      <!-- 1. Pinned Clean Topbar -->
+    <section class="screen-view screen-bd-flat" id="screen-bookingDetails" style="background-color: #F8FAFC;">
+      <!-- Pinned Topbar -->
       <div class="status-bar dark" style="background: #FFFFFF; height: 38px; padding: 0 16px; flex-shrink:0;">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
           <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
         </div>
       </div>
 
@@ -7493,289 +7388,190 @@
         <button type="button" class="back-btn" onclick="handleBookingDetailsBack()" aria-label="Back">
           <i data-lucide="chevron-left" style="width:20px;height:20px;"></i>
         </button>
-        <h2 class="bd-clean-title">Trip Details</h2>
-        <div style="position: relative; display: flex; align-items: center; gap: 8px;" class="trip-details-more-wrapper">
-          <button type="button" class="bd-topbar-sos-btn" onclick="openEmergencySOSModal()" aria-label="Emergency SOS" title="Emergency SOS">
+        <h2 class="bd-clean-title" id="detailHeaderTitleText">Current Trip</h2>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" class="bd-topbar-sos-btn" onclick="navigateTo('sos')" aria-label="Emergency SOS" title="Emergency SOS">
             <i data-lucide="shield-alert" style="width:14px;height:14px;"></i>
             <span>SOS</span>
           </button>
-          <button type="button" class="bd-clean-icon-btn" id="btnTripDetailsMore" onclick="event.stopPropagation(); window.toggleTripDetailsMenu()" aria-label="Trip Options" title="Trip Options">
-            <i data-lucide="more-vertical" style="width:18px;height:18px;"></i>
-          </button>
-          <div class="trip-details-dropdown" id="tripDetailsDropdownMenu" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1); width: 190px; padding: 6px; z-index: 100; flex-direction: column; gap: 2px;">
-            <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.handleTripEditAction('editRide'); window.toggleTripDetailsMenu(false);">
-              <i data-lucide="edit-3" style="width:14px;height:14px; color:#1B2B68;"></i>
-              <span style="font-weight:600; font-size:13px; color:#0F172A;">Edit Trip Details</span>
-            </button>
-            <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); window.openTripReport(window.appState.activeBookingId); window.toggleTripDetailsMenu(false);">
-              <i data-lucide="flag" style="width:14px;height:14px; color:#F59E0B;"></i>
-              <span style="font-weight:600; font-size:13px; color:#0F172A;">Report an Issue</span>
-            </button>
-            <div style="height:1px; background:#F1F5F9; margin:4px 0;"></div>
-            <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.handleTripEditAction('cancel'); window.toggleTripDetailsMenu(false);">
-              <i data-lucide="x-circle" style="width:14px;height:14px; color:#EF4444;"></i>
-              <span style="font-weight:600; font-size:13px; color:#EF4444;">Cancel Booking</span>
-            </button>
-          </div>
         </div>
       </header>
 
-      <div class="screen-scroll-body bd-scroll">
-        <!-- 1. Standalone Trip Overview Card (Hidden: destination & timing already shown in Route Card below) -->
-        <div class="bd-trip-hero-card" id="detailTripHeroCard" style="display: none !important;">
-          <span id="detailHeroStatusPill"><span id="detailHeroStatusText"></span></span>
-          <span id="detailHeroDateText"><span id="detailScheduleDate"></span></span>
-          <span id="detailHeaderTitle"></span>
-          <span id="detailHeaderSubtitle"></span>
-        </div>
-
-        <!-- State Notice Card (Contextual for Cancelled / Completed / Pending) -->
-        <div id="detailStateNoticeCard" class="bd-state-notice-card" style="display: none;"></div>
-
-        <!-- 2. Standalone Journey & Route Card -->
-        <section class="bd-route-floating-card">
-          <div class="bd-route-timeline">
-            <!-- Pickup Stop -->
-            <div class="bd-rt-stop">
-              <div class="bd-rt-rail">
-                <span class="bd-rt-dot-ring"></span>
-                <span class="bd-rt-dashed-line"></span>
-              </div>
-              <div class="bd-rt-content">
-                <div class="bd-rt-head-row">
-                  <div class="bd-rt-time" id="detailOutboundTime">7:15 AM</div>
-                  <span class="bd-rt-pill-tag is-green" id="detailPickupStatus">Picked up</span>
-                </div>
-                <div class="bd-rt-title">Pickup from Home</div>
-                <div class="bd-rt-address" id="detailPickupAddr">12 Elm Street, Toronto, ON</div>
-              </div>
+      <div class="screen-scroll-body trip-figma-body">
+        <!-- 1. Route Timeline Card (Figma 1:1) -->
+        <section class="trip-figma-timeline-card">
+          <!-- Stop 1: Pickup -->
+          <div class="trip-figma-stop-row">
+            <div class="trip-figma-stop-rail">
+              <span class="trip-figma-indicator-green"></span>
+              <span class="trip-figma-dotted-connector"></span>
             </div>
-
-            <!-- Drop-off Stop -->
-            <div class="bd-rt-stop">
-              <div class="bd-rt-rail">
-                <span class="bd-rt-dot-bullseye"></span>
-                <span class="bd-rt-dashed-line" id="detailReturnRailLine" style="display:none;"></span>
+            <div class="trip-figma-stop-content">
+              <div class="trip-figma-stop-head">
+                <span class="trip-figma-stop-time" id="detailOutboundTime">07:30 AM</span>
+                <span class="trip-figma-badge-green" id="detailPickupStatus">
+                  <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                  <span>Picked up</span>
+                </span>
               </div>
-              <div class="bd-rt-content">
-                <div class="bd-rt-head-row">
-                  <div class="bd-rt-time" id="detailSchoolTime">7:45 AM</div>
-                  <span class="bd-rt-pill-tag is-blue" id="detailDropoffStatus">Upcoming</span>
-                </div>
-                <div class="bd-rt-title" id="detailSchoolTitle">Drop at School</div>
-                <div class="bd-rt-address" id="detailSchoolName">Greenfield International School</div>
-              </div>
-            </div>
-
-            <!-- Return Stop (Optional) -->
-            <div class="bd-rt-stop" id="detailReturnLegBox" style="display:none;">
-              <div class="bd-rt-rail">
-                <span class="bd-rt-dot-bullseye" style="border-color:#F97316; box-shadow: inset 0 0 0 2px #F97316;"></span>
-              </div>
-              <div class="bd-rt-content">
-                <div class="bd-rt-head-row">
-                  <div class="bd-rt-time" id="detailReturnTime">1:00 PM</div>
-                  <span class="bd-rt-pill-tag is-grey" id="detailReturnStatus">Scheduled</span>
-                </div>
-                <div class="bd-rt-title" id="detailReturnTitle">Return to Home</div>
-                <div class="bd-rt-address" id="detailReturnAddr">Drop-off at 12 Elm Street, Toronto, ON</div>
+              <div class="trip-figma-stop-addr" id="detailPickupAddr">
+                <i data-lucide="map-pin" style="width: 13px; height: 13px; color: #64748B;"></i>
+                <span>12 Elm Street, Toronto, ON</span>
               </div>
             </div>
           </div>
 
-          <!-- Trip Stats Strip (Hidden: distance/duration removed per minimal design) -->
-          <div class="bd-stats-strip" style="display: none !important;">
-            <div id="detailStatDistIconWrap"></div>
-            <span id="detailStatDistance"></span>
-            <span id="detailStatDistLabel"></span>
-            <div id="detailStatDurIconWrap"></div>
-            <span id="detailStatDuration"></span>
-            <span id="detailStatDurLabel"></span>
-          </div>
-          <!-- Integrated Handover Photo Proof Row (Embedded inside Journey card) -->
-          <div class="bd-route-photo-strip" id="detailSafetyPinBanner" onclick="openTripPhotoProofModal('pickup')" style="display: flex; cursor: pointer;">
-            <div class="bd-rps-left">
-              <div class="bd-rps-icon">
-                <i data-lucide="camera" style="width:16px;height:16px;"></i>
+          <!-- Stop 2: In Transit to School -->
+          <div class="trip-figma-stop-row">
+            <div class="trip-figma-stop-rail">
+              <span class="trip-figma-indicator-blue"></span>
+              <span class="trip-figma-dotted-connector"></span>
+            </div>
+            <div class="trip-figma-stop-content">
+              <div class="trip-figma-stop-head">
+                <span class="trip-figma-stop-time" id="detailSchoolTime">07:55 AM</span>
+                <span class="trip-figma-badge-blue" id="detailDropoffStatus">
+                  <i data-lucide="car" style="width: 12px; height: 12px;"></i>
+                  <span>In Transit</span>
+                </span>
               </div>
-              <div>
-                <div class="bd-rps-title">Pickup &amp; Drop-off Photo Proof</div>
-                <div class="bd-rps-sub" id="detailSafetyPinBannerCode">Live handover verification photos</div>
+              <div class="trip-figma-stop-addr" id="detailSchoolName">
+                <i data-lucide="map-pin" style="width: 13px; height: 13px; color: #64748B;"></i>
+                <span>Greenfield International School</span>
               </div>
             </div>
-            <div class="bd-rps-action">
-              <span>View photos</span>
-              <i data-lucide="chevron-right" style="width:14px;height:14px;"></i>
+          </div>
+
+          <!-- Stop 3: Scheduled Return -->
+          <div class="trip-figma-stop-row" id="detailReturnLegRow">
+            <div class="trip-figma-stop-rail">
+              <span class="trip-figma-indicator-orange"></span>
+            </div>
+            <div class="trip-figma-stop-content" style="padding-bottom: 0;">
+              <div class="trip-figma-stop-head">
+                <span class="trip-figma-stop-time" id="detailReturnTime">01:00 PM</span>
+                <span class="trip-figma-badge-scheduled" id="detailReturnStatus">
+                  <i data-lucide="clock" style="width: 12px; height: 12px;"></i>
+                  <span>Scheduled</span>
+                </span>
+              </div>
+              <div class="trip-figma-stop-addr" id="detailReturnAddr">
+                <i data-lucide="map-pin" style="width: 13px; height: 13px; color: #64748B;"></i>
+                <span>12 Elm Street, Toronto, ON</span>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- 2. Driver Card (Clean & Minimal: No redundant vehicle row) -->
-        <section class="bd-card-clean">
-          <div class="bd-driver-head-row">
-            <div class="bd-driver-info-main" id="detailDriverInfoClickable" onclick="openDriverProfile(window.currentBookingProviderId || 'tariq', 'bookingDetails')" style="display:flex; align-items:center; gap:12px; flex:1; min-width:0; cursor:pointer;" title="View Driver Profile">
-              <div class="bd-driver-avatar-wrap">
-                <img src="/assets/avatar_tariq.jpg" alt="" id="detailDriverPhoto" class="bd-driver-avatar-img" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
-                <span class="bd-driver-online-dot"></span>
-              </div>
-              <div style="min-width: 0; flex: 1;">
-                <div class="bd-driver-name-title" style="display: flex; align-items: center; gap: 4px;">
-                  <span id="detailProviderName">Mohammad Rahim</span>
-                  <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: #94A3B8; flex-shrink: 0;"></i>
-                </div>
-                <div class="bd-driver-trips-sub" id="detailProviderRatingRow">
-                  <span style="color:#F59E0B;">★</span>
-                  <strong id="detailProviderRating" style="color:#0F172A;">4.8</strong>
-                  <span id="detailProviderReviews">(120 trips)</span>
-                </div>
-              </div>
+        <!-- 2. Driver Card (Figma 1:1) -->
+        <section class="trip-figma-driver-card">
+          <div class="trip-figma-driver-left" onclick="openDriverProfile(window.currentBookingProviderId || 'tariq', 'bookingDetails')">
+            <div class="trip-figma-driver-avatar-wrap">
+              <img src="/assets/avatar_tariq.jpg" alt="Driver" id="detailDriverPhoto" class="trip-figma-driver-avatar" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+              <span class="trip-figma-driver-online-dot"></span>
             </div>
-            <div class="bd-driver-actions-row" onclick="event.stopPropagation()">
-              <button type="button" class="bd-action-circle-btn" onclick="event.stopPropagation(); window.location.href='tel:+14165550182'" aria-label="Call Driver">
-                <i data-lucide="phone" style="width:17px;height:17px;"></i>
-              </button>
-              <button type="button" class="bd-action-circle-btn" onclick="event.stopPropagation(); openChatWith(window.currentBookingProviderId || 'tariq')" aria-label="Message Driver">
-                <i data-lucide="message-square" style="width:17px;height:17px;"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Vehicle Row (Hidden: removed per minimal design request) -->
-          <div class="bd-vehicle-row" id="detailVehicleRowClickable" style="display: none !important;">
-            <div id="detailVehicleMediaWrap"></div>
-            <span id="detailVehicleName"></span>
-            <span id="detailVehiclePlate"></span>
-          </div>
-        </section>
-
-        <!-- 3. Trip & Commute Information (Unified Grouped Card with Hairline Dividers) -->
-        <section class="bd-meta-grouped-card">
-          <div class="bd-mgc-header">Trip Information</div>
-
-          <!-- Row 1: Assigned Children / Riders -->
-          <div class="bd-grouped-row">
-            <div class="bd-grouped-icon is-user">
-              <i data-lucide="users" style="width:17px;height:17px;"></i>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-              <div class="bd-grouped-label" id="detailChildrenHeaderLabel">Riders (2)</div>
-              <div id="detailPassengersWrap" class="bd-children-stacked-list" style="margin-top: 6px;"></div>
-            </div>
-          </div>
-
-          <!-- Row 2: Commute Schedule -->
-          <div class="bd-grouped-row is-clickable" id="detailTileScheduleCard" onclick="openScheduleDetailsModal()">
-            <div class="bd-grouped-icon is-calendar" id="detailTileScheduleIconWrap">
-              <i data-lucide="calendar" style="width:17px;height:17px;"></i>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-              <div class="bd-grouped-label" id="detailTileScheduleTitle">Schedule</div>
-              <div class="bd-grouped-sub" id="detailTileScheduleSub">Repeats Mon–Fri • Monthly recurring pass</div>
-            </div>
-            <i data-lucide="chevron-right" style="width:16px;height:16px;color:#94A3B8;flex-shrink:0;margin-top:3px;"></i>
-          </div>
-
-          <!-- Row 3: Special Notes & Instructions -->
-          <div class="bd-grouped-row" id="detailSpecialNotesCard">
-            <div class="bd-grouped-icon is-info">
-              <i data-lucide="info" style="width:17px;height:17px;"></i>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-              <div class="bd-grouped-label">Special Instructions</div>
-              <div class="bd-grouped-sub" id="detailSpecialNotesText">Gate 2 (Junior Wing Pickup) • Driver will wait 5 mins at home gate.</div>
-            </div>
-          </div>
-
-          <!-- Row 4: Manage Booking Action -->
-          <div class="bd-grouped-row is-clickable" id="detailTileManageCard" onclick="openManageBookingModal()">
-            <div class="bd-grouped-icon is-manage" id="detailTileManageIconWrap">
-              <i data-lucide="sliders" style="width:17px;height:17px;"></i>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-              <div class="bd-grouped-label" id="detailTileManageTitle">Manage Booking</div>
-              <div class="bd-grouped-sub" id="detailTileFareSub">Change dates, route, or cancel (saved to history)</div>
-            </div>
-            <i data-lucide="chevron-right" style="width:16px;height:16px;color:#94A3B8;flex-shrink:0;margin-top:3px;"></i>
-          </div>
-        </section>
-
-        <!-- 4. Dedicated Monthly Payment Card -->
-        <section class="bd-pricing-card">
-          <div class="bd-pricing-head">
-            <div class="bd-pricing-title">Payment</div>
-            <span class="bd-pricing-pill" id="detailPaymentStatusPill" style="background:#ECFDF5; color:#059669; border-color:#A7F3D0;">
-              <i data-lucide="shield-check" style="width:12px;height:12px;"></i>
-              <span id="detailPaymentStatusText">Monthly Rate Agreed</span>
-            </span>
-          </div>
-          <div class="bd-pricing-amount-row" style="border-bottom: none; padding-bottom: 0;">
             <div>
-              <div class="bd-pricing-amount" id="detailPriceAmount">$240/month</div>
-              <div style="font-size:12px; color:#64748B; font-weight:600; margin-top: 3px;" id="detailPriceBillingCycle">Monthly recurring pass · Paid directly to driver</div>
+              <div class="trip-figma-driver-name" id="detailProviderName">Robert MacDonald</div>
+              <div class="trip-figma-driver-meta">
+                <i data-lucide="star" style="width: 13px; height: 13px; fill: #F59E0B; color: #F59E0B;"></i>
+                <span id="detailProviderRating" style="font-weight: 700; color: #0F172A;">4.8</span>
+                <span style="color: #CBD5E1; margin: 0 2px;">|</span>
+                <span id="detailProviderReviews">156 trips</span>
+              </div>
             </div>
           </div>
-          <!-- Dynamic Direct Payment Handle & Consent Container -->
-          <div id="detailPaymentHandleWrap"></div>
+          <div class="trip-figma-driver-actions">
+            <button type="button" class="trip-figma-circle-action-btn" onclick="window.location.href='tel:+14165550182'" aria-label="Call Driver" title="Call Robert">
+              <i data-lucide="phone" style="width: 18px; height: 18px;"></i>
+            </button>
+            <button type="button" class="trip-figma-circle-action-btn" onclick="openChatWith(window.currentBookingProviderId || 'tariq')" aria-label="Message Driver" title="Chat with Robert">
+              <i data-lucide="message-square" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
         </section>
 
-        <!-- 5. Dedicated Safety & Assistance (Emergency SOS & Report Issue) -->
-        <div class="bd-safety-support-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; box-sizing: border-box; width: 100%;">
-          <!-- Emergency SOS Card -->
-          <button type="button" class="bd-safety-tile is-sos" onclick="openEmergencySOSModal()" title="Emergency SOS" aria-label="Emergency SOS"
-            style="appearance: none; -webkit-appearance: none; background: #FFFFFF; border: 1.5px solid #FEE2E2; border-radius: 16px; padding: 13px 14px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; cursor: pointer; text-align: left; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.05); transition: all 0.15s ease; box-sizing: border-box; width: 100%; font-family: inherit;">
-            <div class="bd-safety-tile-top" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-              <div class="bd-safety-tile-icon is-sos" style="width: 34px; height: 34px; border-radius: 10px; background: #FEF2F2; color: #EF4444; border: 1px solid #FEE2E2; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#EF4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                  <line x1="12" y1="8" x2="12" y2="12"/>
-                  <line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-              </div>
-              <span class="bd-safety-tile-badge is-sos" style="font-size: 10.5px; font-weight: 700; color: #DC2626; background: #FEF2F2; padding: 2px 7px; border-radius: 999px; letter-spacing: 0.2px;">24/7 SOS</span>
+        <!-- 3. Children Card (Figma 1:1) -->
+        <section class="trip-figma-item-card" onclick="openNestedScreen('myChildren')">
+          <div class="trip-figma-item-left">
+            <div class="trip-figma-icon-square-blue">
+              <i data-lucide="users" style="width: 20px; height: 20px;"></i>
             </div>
-            <div class="bd-safety-tile-content" style="min-width: 0; width: 100%;">
-              <div class="bd-safety-tile-title" style="font-size: 13.5px; font-weight: 800; color: #991B1B; line-height: 1.25; margin-bottom: 2px;">Emergency SOS</div>
-              <div class="bd-safety-tile-desc" style="font-size: 11px; font-weight: 500; color: #B91C1C; line-height: 1.3;">Instant 911 &amp; alerts</div>
+            <div>
+              <div class="trip-figma-item-title" id="detailChildrenTitle">Children (2)</div>
             </div>
-          </button>
+          </div>
+          <div style="display: flex; align-items: center;">
+            <div class="trip-figma-kids-avatars-row" id="detailKidsAvatarsRow">
+              <img src="/assets/avatar_arman.jpg" alt="Child 1" class="trip-figma-kid-avatar" />
+              <img src="/assets/avatar_emma.jpg" alt="Child 2" class="trip-figma-kid-avatar" />
+            </div>
+            <i data-lucide="chevron-right" style="width: 18px; height: 18px; color: #94A3B8;"></i>
+          </div>
+        </section>
 
-          <!-- Report Issue Card -->
-          <button type="button" class="bd-safety-tile is-report" onclick="openTripReport(window.appState.activeBookingId || 'H2S-84920')" title="Report an Issue" aria-label="Report an Issue"
-            style="appearance: none; -webkit-appearance: none; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 13px 14px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; cursor: pointer; text-align: left; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); transition: all 0.15s ease; box-sizing: border-box; width: 100%; font-family: inherit;">
-            <div class="bd-safety-tile-top" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-              <div class="bd-safety-tile-icon is-report" style="width: 34px; height: 34px; border-radius: 10px; background: #F8FAFC; color: #475569; border: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
-                  <line x1="4" y1="22" x2="4" y2="15"/>
-                </svg>
+        <!-- 4. Special Instructions Card (Figma 1:1) -->
+        <section class="trip-figma-item-card" onclick="openSpecialInstructionsModal()">
+          <div class="trip-figma-item-left">
+            <div class="trip-figma-icon-square-yellow">
+              <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="trip-figma-item-title">Special Instructions</div>
+              <div class="trip-figma-item-sub" id="detailSpecialNotesText">Gate 2 pickup • Driver waits 5 mins</div>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" style="width: 18px; height: 18px; color: #94A3B8;"></i>
+        </section>
+
+        <!-- 5. Monthly Pass / Payment Card (Figma 1:1) -->
+        <section class="trip-figma-item-card" onclick="navigateTo('subscription')">
+          <div class="trip-figma-item-left">
+            <div class="trip-figma-icon-square-green">
+              <i data-lucide="credit-card" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="trip-figma-item-title" id="detailPriceAmount">$240 / month</div>
+              <div class="trip-figma-item-sub" id="detailPriceBillingCycle">Monthly pass</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center;">
+            <span class="trip-figma-badge-active">
+              <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+              <span>Active</span>
+            </span>
+            <i data-lucide="chevron-right" style="width: 18px; height: 18px; color: #94A3B8;"></i>
+          </div>
+        </section>
+
+        <!-- 6. Bottom Safety & Action Row (Emergency SOS & Report Issue) -->
+        <div class="trip-figma-actions-row">
+          <!-- Emergency SOS Button -->
+          <div class="trip-figma-btn-sos" onclick="navigateTo('sos')">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 30px; height: 30px; border-radius: 8px; background: #FEE2E2; display: flex; align-items: center; justify-content: center; color: #DC2626;">
+                <i data-lucide="shield-alert" style="width: 16px; height: 16px;"></i>
               </div>
-              <span class="bd-safety-tile-badge is-report" style="font-size: 10.5px; font-weight: 700; color: #475569; background: #F1F5F9; padding: 2px 7px; border-radius: 999px; letter-spacing: 0.2px;">Support</span>
+              <span class="trip-figma-btn-label-sos">Emergency SOS</span>
             </div>
-            <div class="bd-safety-tile-content" style="min-width: 0; width: 100%;">
-              <div class="bd-safety-tile-title" style="font-size: 13.5px; font-weight: 800; color: #0F172A; line-height: 1.25; margin-bottom: 2px;">Report Issue</div>
-              <div class="bd-safety-tile-desc" style="font-size: 11px; font-weight: 500; color: #64748B; line-height: 1.3;">Trip help, delays &amp; notes</div>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #DC2626;"></i>
+          </div>
+
+          <!-- Report Issue Button -->
+          <div class="trip-figma-btn-report" onclick="navigateTo('report')">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 30px; height: 30px; border-radius: 8px; background: #E2E8F0; display: flex; align-items: center; justify-content: center; color: #0F172A;">
+                <i data-lucide="flag" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="trip-figma-btn-label-report">Report Issue</span>
             </div>
-          </button>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #64748B;"></i>
+          </div>
         </div>
 
-        <span id="detailRefId" style="display:none;"></span>
-        <span id="detailSafetyPin" style="display:none;"></span>
-        <span id="detailSchoolAddr" style="display:none;"></span>
-        <span id="detailProviderVehicle" style="display:none;"></span>
-      </div>
-
-      <!-- Bottom Sticky Action Bar -->
-      <div class="bd-bottom-bar">
-        <button type="button" class="bd-btn-track-live" id="btnTrackLivePrimary" onclick="openLiveTracking(window.appState.activeBookingId || 'H2S-84920')">
-          <i data-lucide="map-pin" style="width:18px;height:18px;"></i>
-          <span>Track live vehicle</span>
-        </button>
-        <div id="detailContextualActions" style="display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
 
       <div class="home-indicator"></div>
     </section>
-
 
     <!-- ================= 20. LIVE TRACKING FULL SCREEN ================= -->
     <section class="screen-view" id="screen-tracking" style="background-color: #FFFFFF;">
@@ -8272,6 +8068,14 @@
           <button type="button" class="segment-btn" id="tabCancelled" onclick="switchBookingTab('cancelled')">Cancelled</button>
         </div>
 
+        <!-- Product Date Filter Bar (All / Last 7 Days / Last 30 Days / 1 Year) -->
+        <div class="bk-date-filter-bar" id="bkPeriodFilterBar" role="group" aria-label="Date range filter">
+          <button type="button" class="bk-filter-chip active" data-period="all" onclick="setBookingPeriodFilter('all', this)">All</button>
+          <button type="button" class="bk-filter-chip" data-period="7d" onclick="setBookingPeriodFilter('7d', this)">Last 7 Days</button>
+          <button type="button" class="bk-filter-chip" data-period="30d" onclick="setBookingPeriodFilter('30d', this)">Last 30 Days</button>
+          <button type="button" class="bk-filter-chip" data-period="1y" onclick="setBookingPeriodFilter('1y', this)">1 Year</button>
+        </div>
+
         <div id="bookingsListWrap" class="bookings-list-wrap bk-list">
           <!-- Populated by renderBookingsList() -->
         </div>
@@ -8496,71 +8300,140 @@
     </section>
 
 
-    <!-- ================= 24. TRIP COMPLETION & RATING ================= -->
-    <section class="screen-view rt-screen" id="screen-rating" style="background-color: #FFFFFF;">
+    <!-- ================= EMERGENCY SOS PROTOCOL SCREEN (FIGMA AUTHENTIC) ================= -->
+    <section class="screen-view" id="screen-sos" style="background-color: #FFFFFF;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
           <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor" />
-          </svg>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
           <div class="battery-icon"><div class="battery-level"></div></div>
         </div>
       </div>
 
       <div class="top-bar-sticky">
-        <button type="button" class="back-btn" onclick="backNested('home')" aria-label="Go back">
-          <i data-lucide="chevron-left"></i>
+        <button type="button" class="back-btn" onclick="handleSosBack()" aria-label="Go back">
+          <i data-lucide="arrow-left"></i>
         </button>
-        <h2 class="top-bar-title">Rate Your Experience</h2>
         <span style="width: 26px;"></span>
       </div>
 
-      <div class="screen-scroll-body rt-body rt-compose">
-        <div class="rt-hero">
-          <div class="rt-avatar-wrap">
-            <img src="/assets/avatar_tariq.jpg" alt="Provider" id="ratingProviderPhoto" class="rt-avatar" width="64" height="64" onerror="this.src='/assets/avatar_tariq.jpg'" />
-          </div>
-          <div class="rt-hero-copy">
-            <h2 class="rt-title" id="ratingProviderName">Robert MacDonald</h2>
-            <p class="rt-sub" id="ratingTripLine">Greenfield International · Trip completed</p>
-          </div>
-        </div>
-
-        <div class="rt-block">
-          <p class="rt-label">How was the ride?</p>
-          <div class="stars-row rt-stars" id="ratingStars">
-            <button type="button" class="star-btn active" onclick="setRatingScore(1)" aria-label="1 star"><i data-lucide="star"></i></button>
-            <button type="button" class="star-btn active" onclick="setRatingScore(2)" aria-label="2 stars"><i data-lucide="star"></i></button>
-            <button type="button" class="star-btn active" onclick="setRatingScore(3)" aria-label="3 stars"><i data-lucide="star"></i></button>
-            <button type="button" class="star-btn active" onclick="setRatingScore(4)" aria-label="4 stars"><i data-lucide="star"></i></button>
-            <button type="button" class="star-btn active" onclick="setRatingScore(5)" aria-label="5 stars"><i data-lucide="star"></i></button>
+      <div class="screen-scroll-body sos-figma-body">
+        <!-- Center Pulsing SOS Target -->
+        <div class="sos-pulse-container" onclick="triggerEmergencyCall()">
+          <div class="sos-ring-outer"></div>
+          <div class="sos-ring-mid"></div>
+          <div class="sos-button-core">
+            <i data-lucide="phone" class="sos-core-phone-icon"></i>
+            <span class="sos-core-text">SOS</span>
           </div>
         </div>
 
-        <div class="rt-flag" id="lowRatingAutoFlagNotice" hidden>
-          <strong>Safety check:</strong> Ratings of 3 stars or lower are automatically reviewed by the Home2School safety team to ensure transport quality.
+        <h2 class="sos-heading-title">Need immediate help?</h2>
+        <p class="sos-heading-subtitle">This will alert our safety team and share your trip details.</p>
+
+        <!-- Big Red CTA Button -->
+        <button type="button" class="sos-btn-emergency" onclick="triggerEmergencyCall()">
+          <i data-lucide="phone" style="width: 18px; height: 18px; fill: currentColor;"></i>
+          <span>Call for Emergency Help</span>
+        </button>
+
+        <!-- Location Notice Card -->
+        <div class="sos-notice-card">
+          <div class="sos-notice-icon-box">
+            <i data-lucide="shield-alert" style="width: 22px; height: 22px;"></i>
+          </div>
+          <p class="sos-notice-text">
+            Your current location and trip details will be shared with our team to get you the fastest help.
+          </p>
         </div>
 
-        <div class="rt-block">
-          <p class="rt-label">What went well?</p>
-          <div class="rating-tags-wrap rt-tags">
-            <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">Safe Driving</button>
-            <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">On Time</button>
-            <button type="button" class="rating-tag-pill active" onclick="this.classList.toggle('active')">Great Communication</button>
-            <button type="button" class="rating-tag-pill" onclick="this.classList.toggle('active')">Kids Loved It</button>
+        <!-- Section Divider -->
+        <div class="sos-divider">
+          <span>OTHER HELP OPTIONS</span>
+        </div>
+
+        <!-- Help Action Cards -->
+        <div class="sos-help-options-list">
+          <div class="sos-option-card" onclick="handleContactSupportOption()">
+            <div class="sos-option-icon-box">
+              <i data-lucide="phone" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div class="sos-option-info">
+              <div class="sos-option-title">Contact Support</div>
+              <div class="sos-option-sub">Get help from our team</div>
+            </div>
+            <i data-lucide="chevron-right" class="sos-option-chevron"></i>
+          </div>
+
+          <div class="sos-option-card" onclick="handleMessageSupportOption()">
+            <div class="sos-option-icon-box">
+              <i data-lucide="message-square" style="width: 18px; height: 18px;"></i>
+            </div>
+            <div class="sos-option-info">
+              <div class="sos-option-title">Message Support</div>
+              <div class="sos-option-sub">Chat with our team</div>
+            </div>
+            <i data-lucide="chevron-right" class="sos-option-chevron"></i>
           </div>
         </div>
+      </div>
 
-        <div class="rt-block">
-          <p class="rt-label">Feedback <span class="rt-optional">optional</span></p>
-          <textarea class="form-textarea" id="ratingCommentText" rows="3" placeholder="Share any feedback about punctuality, driving comfort, or handoff care..."></textarea>
+      <div class="home-indicator"></div>
+    </section>
+
+    <!-- ================= 24. TRIP COMPLETION & RATING (FIGMA AUTHENTIC) ================= -->
+    <section class="screen-view" id="screen-rating" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button type="button" class="back-btn" onclick="handleRatingBack()" aria-label="Go back">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body rating-figma-body">
+        <div class="rating-header-block">
+          <h2 class="rating-heading-title">Rate Your Trip</h2>
+          <p class="rating-heading-subtitle">How was your child's ride today?</p>
         </div>
 
-        <div class="rt-actions">
-          <button type="button" class="btn-primary" onclick="handleParentReviewSubmit()">Submit Review</button>
-          <button type="button" class="btn-secondary-link" onclick="navigateTo('home')">Skip for now</button>
+        <!-- Driver Profile Card -->
+        <div class="rating-provider-card">
+          <div class="rating-avatar-wrap">
+            <img src="/assets/avatar_tariq.jpg" alt="Driver" id="ratingDriverAvatar" class="rating-avatar-img" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+          </div>
+          <div class="rating-provider-name" id="ratingDriverName">Robert MacDonald</div>
+          <div class="rating-provider-role">Your driver today</div>
+        </div>
+
+        <!-- 5 Interactive Star Rating Row -->
+        <div class="rating-stars-row" id="figmaRatingStars">
+          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(1)">★</button>
+          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(2)">★</button>
+          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(3)">★</button>
+          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(4)">★</button>
+          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(5)">★</button>
+        </div>
+
+        <!-- Additional Feedback Container -->
+        <div class="rating-feedback-wrap">
+          <textarea id="figmaRatingFeedback" class="rating-feedback-textarea" placeholder="Share additional feedback (optional)" rows="4"></textarea>
+        </div>
+
+        <!-- Submit Rating Button -->
+        <div class="rating-submit-wrap">
+          <button type="button" class="rating-btn-primary" onclick="submitFigmaRating()">
+            Submit Rating
+          </button>
         </div>
       </div>
 
@@ -9566,64 +9439,95 @@
       </div>
 
       <div class="top-bar-sticky">
-        <button class="back-btn" onclick="handleTripReportBack()">
-          <i data-lucide="chevron-left"></i>
+        <button type="button" class="back-btn" onclick="handleReportBack()" aria-label="Go back">
+          <i data-lucide="arrow-left"></i>
         </button>
-        <h2 class="top-bar-title">Report an Issue</h2>
         <span style="width: 26px;"></span>
       </div>
 
-      <div class="screen-scroll-body">
-        <!-- Attached trip — kids + short route only -->
-        <input type="hidden" id="reportTripSelect" value="H2S-84920" />
-        <div class="report-trip-chip">
-          <div class="report-trip-chip-icon" aria-hidden="true">
-            <i data-lucide="car"></i>
-          </div>
-          <div class="report-trip-chip-text">
-            <div class="report-trip-chip-title" id="tripReportTitle">Liam &amp; Emma</div>
-            <div class="report-trip-chip-sub" id="tripReportRoute">Home → Greenfield</div>
-          </div>
-          <span class="report-trip-chip-id" id="tripReportBookingBadge">#84920</span>
+      <div class="screen-scroll-body report-figma-body">
+        <div class="report-header-block">
+          <h2 class="report-heading-title">Report an Issue</h2>
+          <p class="report-heading-subtitle">Tell us what happened and we'll look into it right away.</p>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <!-- Category Selection Dropdown -->
-          <div class="form-group" style="margin: 0;">
-            <label class="form-label" for="reportCategorySelect" style="margin-bottom: 6px;">Issue Category</label>
-            <div class="input-box-wrapper" style="height: 46px; background: #FFFFFF; position: relative;">
-              <i data-lucide="help-circle" class="input-box-icon" style="width: 16px; height: 16px; color: #64748B;"></i>
-              <select class="form-input" id="reportCategorySelect" style="cursor: pointer; font-size: 14px; font-weight: 600; color: #0F172A; width: 100%; border: none; background: transparent; padding-right: 28px;">
-                <option value="Safety / Driving" selected>Driving Safety / Concern</option>
-                <option value="Driver Delay">Driver Delay / Punctuality</option>
-                <option value="Lost Item">Lost Item in Vehicle</option>
-                <option value="Billing Issue">Fare / Payment / Route</option>
-                <option value="Vehicle Condition">Vehicle Condition &amp; Cleanliness</option>
-                <option value="Other">Other Feedback</option>
-              </select>
-              <i data-lucide="chevron-down" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #94A3B8; pointer-events: none;"></i>
+        <!-- 4 Selectable Radio Cards -->
+        <div class="report-categories-list">
+          <!-- Option 1: Driver related -->
+          <div class="report-radio-card active" onclick="selectReportCategory('driver', this)">
+            <div class="report-radio-indicator">
+              <span class="report-radio-dot"></span>
+            </div>
+            <div class="report-radio-icon-box">
+              <i data-lucide="car" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="report-radio-info">
+              <div class="report-radio-title">Driver related</div>
+              <div class="report-radio-sub">Behavior, route, etc.</div>
             </div>
           </div>
 
-          <!-- Description Input -->
-          <div class="form-group" style="margin: 0;">
-            <label class="form-label" style="margin-bottom: 6px;">Describe What Happened</label>
-            <div class="textarea-box-wrapper" style="padding: 10px 12px;">
-              <textarea class="form-textarea" id="reportDescriptionInput" rows="3" style="min-height: 72px; font-size: 14px;" placeholder="Tell us what happened so our team can resolve it..."></textarea>
+          <!-- Option 2: Route or timing -->
+          <div class="report-radio-card" onclick="selectReportCategory('route', this)">
+            <div class="report-radio-indicator">
+              <span class="report-radio-dot"></span>
+            </div>
+            <div class="report-radio-icon-box">
+              <i data-lucide="git-branch" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="report-radio-info">
+              <div class="report-radio-title">Route or timing</div>
+              <div class="report-radio-sub">Late, missed pickup, etc.</div>
             </div>
           </div>
 
-          <!-- Submit Button -->
-          <div style="margin-top: 2px;">
-            <button type="button" class="btn-primary" onclick="submitIssueReport()" style="width: 100%; height: 44px; font-size: 14px; font-weight: 700;">
-              <span>Submit Report</span>
-            </button>
+          <!-- Option 3: Safety concern -->
+          <div class="report-radio-card" onclick="selectReportCategory('safety', this)">
+            <div class="report-radio-indicator">
+              <span class="report-radio-dot"></span>
+            </div>
+            <div class="report-radio-icon-box">
+              <i data-lucide="shield-alert" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="report-radio-info">
+              <div class="report-radio-title">Safety concern</div>
+              <div class="report-radio-sub">Child safety, incident, etc.</div>
+            </div>
           </div>
 
-          <!-- Subtle 1-line Emergency Safety Notice -->
-          <p style="text-align: center; font-size: 12px; color: #94A3B8; margin: 0 0 16px;">
-            Immediate emergency? Call <a href="tel:911" style="font-weight: 700; color: #DC2626; text-decoration: none;">911</a> or <a href="tel:18005555437" style="font-weight: 700; color: var(--color-primary); text-decoration: none;">Dispatch Hotline</a>
-          </p>
+          <!-- Option 4: Other issue -->
+          <div class="report-radio-card" onclick="selectReportCategory('other', this)">
+            <div class="report-radio-indicator">
+              <span class="report-radio-dot"></span>
+            </div>
+            <div class="report-radio-icon-box">
+              <i data-lucide="more-horizontal" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="report-radio-info">
+              <div class="report-radio-title">Other issue</div>
+              <div class="report-radio-sub">Something else</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Textarea Container -->
+        <div class="report-textarea-container">
+          <textarea id="reportFigmaDetails" class="report-clean-textarea" placeholder="Add more details (optional)" maxlength="500" oninput="updateReportCharCount(this)"></textarea>
+          <div class="report-char-count" id="reportCharCount">0/500</div>
+        </div>
+
+        <!-- Add Photo Button -->
+        <input type="file" id="reportPhotoInput" accept="image/*" style="display: none;" onchange="handleReportPhotoAttach(event)" />
+        <button type="button" class="report-attach-btn" onclick="document.getElementById('reportPhotoInput').click()">
+          <i data-lucide="paperclip" style="width: 16px; height: 16px;"></i>
+          <span id="reportAttachBtnText">Add photo (optional)</span>
+        </button>
+
+        <!-- Submit Button -->
+        <div class="report-submit-wrap">
+          <button type="button" class="report-btn-primary" onclick="submitIssueReport()">
+            Submit Issue
+          </button>
         </div>
       </div>
 

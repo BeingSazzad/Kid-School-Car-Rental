@@ -7,6 +7,7 @@ import './details-clean.css';
 import './flow-clean.css';
 import './type-standard.css';
 import './auth-clean.css';
+import './figma-design.css';
 
 /* ==========================================================
    Home2School Interactive Controller & Navigation Logic
@@ -64,6 +65,7 @@ const screens = [
   'privacy',
   'report',
   'contactSupport',
+  'sos',
   // Driver Role Screens (10-Year Product Architecture)
   'driverHome',
   'driverRequests',
@@ -1704,7 +1706,7 @@ window.navReturnStack = window.navReturnStack || [];
 function navScreenBucket(name) {
   if (!name) return 'unknown';
   if (name === 'adminPortal') return 'admin';
-  if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'profileNotifications' || name === 'profileReviews' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'report' || name === 'rating' || name === 'bookingProviderDetails' || name === 'bookingProviderReviews') return 'shared';
+  if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'profileNotifications' || name === 'profileReviews' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'sos' || name === 'report' || name === 'rating' || name === 'bookingProviderDetails' || name === 'bookingProviderReviews') return 'shared';
   if (String(name).indexOf('driver') === 0) return 'driver';
   if (String(name).indexOf('ws') === 0) return 'walkshare';
   if (name === 'splash' || String(name).indexOf('onboarding') === 0 || String(name).indexOf('auth') === 0) return 'auth';
@@ -5208,7 +5210,7 @@ function renderBookingDetails(bookingId) {
   // 6. Driver & Vehicle / Chaperone Card
   setText('detailProviderName', String(provider.name || 'Mohammad Rahim').replace(/\s*\(WalkShare\)/i, ''));
   setText('detailProviderRating', String(provider.rating != null ? provider.rating : '4.8'));
-  setText('detailProviderReviews', provider.reviewsCount != null ? '(' + provider.reviewsCount + ' trips)' : '(120 trips)');
+  setText('detailProviderReviews', provider.reviewsCount != null ? provider.reviewsCount + ' trips' : '156 trips');
 
   const vehName = String(provider.vehicle || '').replace(/\s*\(\d{4}\)\s*/g, '').trim();
   setText('detailVehicleName', isWalk ? 'Walking Escort Group' : (vehName || 'Toyota Hiace'));
@@ -5603,7 +5605,10 @@ window.withdrawBookingRequest = function (bookingId) {
 };
 
 function renderBookingsList(tab) {
-  const normTab = (tab === 'past' || tab === 'history') ? 'history' : tab;
+  const normTab = (tab === 'past' || tab === 'history') ? 'history' : (tab || ((window.appState && window.appState.currentBookingTab) || 'upcoming'));
+  if (!window.appState) window.appState = {};
+  window.appState.currentBookingTab = normTab;
+
   const btnU = document.getElementById('tabUpcoming');
   const btnH = document.getElementById('tabHistory') || document.getElementById('tabPast');
   const btnC = document.getElementById('tabCancelled');
@@ -5622,6 +5627,32 @@ function renderBookingsList(tab) {
   [btnU, btnH, btnC].forEach(b => b?.classList.remove('active'));
 
   if (!wrap) return;
+
+  // Active date range filter: 'all', '7d', '30d', '1y'
+  const activeFilter = (window.appState && window.appState.bookingPeriodFilter) || (window.appState && window.appState.historyDateFilter) || 'all';
+
+  // Synchronize top filter pill buttons
+  document.querySelectorAll('#bkPeriodFilterBar .bk-filter-chip').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-period') === activeFilter);
+  });
+
+  // Calculate dates against reference time (May 22, 2026 active semester)
+  const refNow = new Date('2026-05-22T12:00:00Z').getTime();
+  const getTripTimestamp = (b) => {
+    const raw = b.completedAt || b.date || b.tripDate || b.startDate || b.createdAt || '';
+    const datePart = raw.split('•')[0].trim();
+    const parsed = Date.parse(datePart);
+    return isNaN(parsed) ? new Date('2026-05-18').getTime() : parsed;
+  };
+
+  const matchesFilter = (b) => {
+    if (activeFilter === 'all') return true;
+    const diffDays = Math.abs((refNow - getTripTimestamp(b)) / (1000 * 60 * 60 * 24));
+    if (activeFilter === '7d') return diffDays <= 7;
+    if (activeFilter === '30d') return diffDays <= 30;
+    if (activeFilter === '1y') return diffDays <= 365;
+    return true;
+  };
 
   const cleanLoc = (loc) => {
     if (!loc) return 'Home (12 Elm Street)';
@@ -5659,7 +5690,7 @@ function renderBookingsList(tab) {
 
     const priceVal = b.amount != null ? b.amount : (isBothWay ? 135 : 35);
 
-    // Left Vehicle Thumbnail (Uber style: 50x50 grey rounded box with car/walk picture)
+    // Left Vehicle Thumbnail
     const isWalk = provider.category === 'walkshare' || provider.id === 'sarah' || provider.id === 'elena' || /walk/i.test(provider.name || '') || /walk/i.test(provider.vehicle || '');
     const vehPhoto = provider.vehiclePhoto || (/sienna|toyota/i.test(provider.vehicle || '') ? '/assets/toyota_sienna_white.jpg' : '/assets/vehicle_hiace_white.jpg');
 
@@ -5695,7 +5726,6 @@ function renderBookingsList(tab) {
 
     return `
       <article class="h2s-booking-card ub-booking-card" onclick="openBookingDetails('${b.id}')">
-        <!-- Left Side: Vehicle Image + Trip Details (Destination, Date/Time, Price) -->
         <div class="ub-card-left">
           ${vehicleThumbHtml}
           <div class="ub-card-info">
@@ -5705,7 +5735,6 @@ function renderBookingsList(tab) {
           </div>
         </div>
 
-        <!-- Right Side: Action Button (Rebook or Track) -->
         <div class="ub-card-right">
           ${actionBtnHtml}
         </div>
@@ -5714,6 +5743,9 @@ function renderBookingsList(tab) {
 
   if (normTab === 'upcoming') {
     btnU?.classList.add('active');
+    const filteredActive = activeTrips.filter(matchesFilter);
+    const filteredScheduled = scheduledTrips.filter(matchesFilter);
+
     if (!totalUpcoming) {
       wrap.innerHTML = `
         <div class="bookings-empty-state">
@@ -5722,67 +5754,37 @@ function renderBookingsList(tab) {
           <p class="bookings-empty-sub">Book a school ride to see it here.</p>
           <button class="btn-primary" style="margin-top:14px;max-width:200px;height:44px;" onclick="navigateTo('bookingTripSetup')">Book a ride</button>
         </div>`;
+    } else if (!filteredActive.length && !filteredScheduled.length) {
+      wrap.innerHTML = `
+        <div class="bookings-empty-state" style="padding: 24px 16px;">
+          <div class="bookings-empty-icon-box"><i data-lucide="calendar-x" style="width:24px;height:24px;"></i></div>
+          <div class="bookings-empty-title">No trips in this period</div>
+          <p class="bookings-empty-sub">Try selecting 'All' or '1 Year' above to view all scheduled commutes.</p>
+          <button class="btn-primary" style="margin-top:14px;max-width:200px;height:44px;" onclick="setBookingPeriodFilter('all')">Show All Rides</button>
+        </div>`;
     } else {
       let contentHtml = '';
-      if (activeTrips.length) {
+      if (filteredActive.length) {
         contentHtml += `
           <div class="mb-section-title" style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#1E293B;text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 10px;padding:0 2px;">
             <span class="mb-section-dot green" style="width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,0.2);"></span>
-            <span>ACTIVE TRIP RIGHT NOW (${activeTrips.length})</span>
+            <span>ACTIVE TRIP RIGHT NOW (${filteredActive.length})</span>
           </div>
-          ${activeTrips.map((b, i) => renderCard(b, i, 'live')).join('')}`;
+          ${filteredActive.map((b, i) => renderCard(b, i, 'live')).join('')}`;
       }
-      if (scheduledTrips.length) {
+      if (filteredScheduled.length) {
         contentHtml += `
           <div class="mb-section-title" style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#1E293B;text-transform:uppercase;letter-spacing:0.5px;margin:18px 0 10px;padding:0 2px;">
             <i data-lucide="calendar" style="width:14px;height:14px;color:#64748B;"></i>
-            <span>SCHEDULED COMMUTES (${scheduledTrips.length})</span>
+            <span>SCHEDULED COMMUTES (${filteredScheduled.length})</span>
           </div>
-          ${scheduledTrips.map((b, i) => renderCard(b, i + (activeTrips.length || 0), 'upcoming')).join('')}`;
+          ${filteredScheduled.map((b, i) => renderCard(b, i + (filteredActive.length || 0), 'upcoming')).join('')}`;
       }
       wrap.innerHTML = contentHtml;
     }
   } else if (normTab === 'history') {
     btnH?.classList.add('active');
-    
-    // Active date range filter: 'all', '7d', '30d', '1y'
-    const activeFilter = (window.appState && window.appState.historyDateFilter) || 'all';
-    
-    // Filter chip bar (clean pill chips at the top)
-    const filterBarHtml = `
-      <div class="ub-history-filter-bar">
-        <button type="button" class="ub-filter-chip ${activeFilter === 'all' ? 'active' : ''}" onclick="setHistoryDateFilter('all')">All</button>
-        <button type="button" class="ub-filter-chip ${activeFilter === '7d' ? 'active' : ''}" onclick="setHistoryDateFilter('7d')">Last 7 Days</button>
-        <button type="button" class="ub-filter-chip ${activeFilter === '30d' ? 'active' : ''}" onclick="setHistoryDateFilter('30d')">Last 30 Days</button>
-        <button type="button" class="ub-filter-chip ${activeFilter === '1y' ? 'active' : ''}" onclick="setHistoryDateFilter('1y')">Last 1 Year</button>
-      </div>`;
-
-    // Calculate dates against reference time (May 22, 2026 active semester)
-    const refNow = new Date('2026-05-22T12:00:00Z').getTime();
-    const getTripTimestamp = (b) => {
-      const raw = b.completedAt || b.date || b.tripDate || b.startDate || b.createdAt || '';
-      const datePart = raw.split('•')[0].trim();
-      const parsed = Date.parse(datePart);
-      return isNaN(parsed) ? new Date('2026-05-18').getTime() : parsed;
-    };
-
-    let filteredHistory = historyList;
-    if (activeFilter === '7d') {
-      filteredHistory = historyList.filter(b => {
-        const diffDays = (refNow - getTripTimestamp(b)) / (1000 * 60 * 60 * 24);
-        return diffDays >= 0 && diffDays <= 7;
-      });
-    } else if (activeFilter === '30d') {
-      filteredHistory = historyList.filter(b => {
-        const diffDays = (refNow - getTripTimestamp(b)) / (1000 * 60 * 60 * 24);
-        return diffDays >= 0 && diffDays <= 30;
-      });
-    } else if (activeFilter === '1y') {
-      filteredHistory = historyList.filter(b => {
-        const diffDays = (refNow - getTripTimestamp(b)) / (1000 * 60 * 60 * 24);
-        return diffDays >= 0 && diffDays <= 365;
-      });
-    }
+    const filteredHistory = historyList.filter(matchesFilter);
 
     if (!historyList.length) {
       wrap.innerHTML = `
@@ -5794,15 +5796,14 @@ function renderBookingsList(tab) {
         </div>`;
     } else if (!filteredHistory.length) {
       wrap.innerHTML = `
-        ${filterBarHtml}
         <div class="bookings-empty-state" style="padding: 24px 16px;">
           <div class="bookings-empty-icon-box"><i data-lucide="calendar-x" style="width:24px;height:24px;"></i></div>
-          <div class="bookings-empty-title">No trips in this period</div>
-          <p class="bookings-empty-sub">Select 'All' or 'Last 1 Year' to view older completed rides.</p>
+          <div class="bookings-empty-title">No completed trips in this period</div>
+          <p class="bookings-empty-sub">Select 'All' or '1 Year' to view older completed rides.</p>
+          <button class="btn-primary" style="margin-top:14px;max-width:200px;height:44px;" onclick="setBookingPeriodFilter('all')">Show All Completed</button>
         </div>`;
     } else {
       wrap.innerHTML = `
-        ${filterBarHtml}
         <div class="mb-section-title" style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#1E293B;text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 10px;padding:0 2px;">
           <i data-lucide="check-circle" style="width:14px;height:14px;color:#10B981;"></i>
           <span>COMPLETED COMMUTES (${filteredHistory.length})</span>
@@ -5811,6 +5812,8 @@ function renderBookingsList(tab) {
     }
   } else if (normTab === 'cancelled') {
     btnC?.classList.add('active');
+    const filteredCancelled = cancelledList.filter(matchesFilter);
+
     if (!cancelledList.length) {
       wrap.innerHTML = `
         <div class="bookings-empty-state">
@@ -5818,13 +5821,21 @@ function renderBookingsList(tab) {
           <div class="bookings-empty-title">No cancelled bookings</div>
           <p class="bookings-empty-sub">Cancelled requests will appear here.</p>
         </div>`;
+    } else if (!filteredCancelled.length) {
+      wrap.innerHTML = `
+        <div class="bookings-empty-state" style="padding: 24px 16px;">
+          <div class="bookings-empty-icon-box"><i data-lucide="calendar-x" style="width:24px;height:24px;"></i></div>
+          <div class="bookings-empty-title">No cancelled trips in this period</div>
+          <p class="bookings-empty-sub">Select 'All' to view all cancelled rides.</p>
+          <button class="btn-primary" style="margin-top:14px;max-width:200px;height:44px;" onclick="setBookingPeriodFilter('all')">Show All</button>
+        </div>`;
     } else {
       wrap.innerHTML = `
         <div class="mb-section-title" style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#EF4444;text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 10px;padding:0 2px;">
           <i data-lucide="x-circle" style="width:14px;height:14px;color:#EF4444;"></i>
-          <span>CANCELLED / DECLINED (${cancelledList.length})</span>
+          <span>CANCELLED / DECLINED (${filteredCancelled.length})</span>
         </div>
-        ${cancelledList.map((b, i) => renderCard(b, i, 'cancelled')).join('')}`;
+        ${filteredCancelled.map((b, i) => renderCard(b, i, 'cancelled')).join('')}`;
     }
   }
 
@@ -5835,10 +5846,21 @@ function renderBookingsList(tab) {
 
 window.renderBookingsList = renderBookingsList;
 
-window.setHistoryDateFilter = function (range) {
+window.setBookingPeriodFilter = function (period, btn) {
   if (!window.appState) window.appState = {};
-  window.appState.historyDateFilter = range;
-  renderBookingsList('history');
+  window.appState.bookingPeriodFilter = period;
+  window.appState.historyDateFilter = period;
+
+  document.querySelectorAll('#bkPeriodFilterBar .bk-filter-chip').forEach(chip => {
+    chip.classList.toggle('active', chip.getAttribute('data-period') === period || (btn && chip === btn));
+  });
+
+  const curTab = (window.appState && window.appState.currentBookingTab) || 'upcoming';
+  renderBookingsList(curTab);
+};
+
+window.setHistoryDateFilter = function (range) {
+  window.setBookingPeriodFilter(range);
 };
 
 /* ==========================================================
@@ -10309,3 +10331,166 @@ if (typeof window.filterSearchByCriteria !== 'function') {
   };
 }
 
+
+/* ==========================================================
+   FIGMA AUTHENTIC INTERACTION SUITE (SOS, REPORT, RATING, BOOKING SETUP)
+   ========================================================== */
+
+// Universal smart back fallback
+window.handleSmartBack = function (fallback = 'home') {
+  if (typeof window.navigateBack === 'function') {
+    window.navigateBack(fallback);
+  } else if (typeof window.navigateTo === 'function') {
+    window.navigateTo(fallback, true);
+  }
+};
+
+// --- 1. Emergency SOS Handlers ---
+window.openEmergencySOSModal = function () {
+  window.navigateTo('sos');
+};
+
+window.handleSosBack = function () {
+  window.navigateBack('bookingDetails');
+};
+
+window.triggerEmergencyCall = function () {
+  if (typeof window.showToast === 'function') {
+    window.showToast('🚨 Emergency Alert Sent! Safety dispatch contacted & GPS live shared.', 'error');
+  }
+  setTimeout(() => {
+    window.location.href = 'tel:911';
+  }, 700);
+};
+
+window.handleContactSupportOption = function () {
+  if (typeof window.showToast === 'function') {
+    window.showToast('Calling 24/7 Home2School Support...', 'info');
+  }
+  setTimeout(() => {
+    window.location.href = 'tel:+18005550199';
+  }, 400);
+};
+
+window.handleMessageSupportOption = function () {
+  if (typeof window.openChatWith === 'function') {
+    window.openChatWith('support');
+  } else {
+    window.navigateTo('inbox');
+  }
+};
+
+// --- 2. Report an Issue Handlers ---
+window.currentReportCategory = 'driver';
+
+window.selectReportCategory = function (category, el) {
+  window.currentReportCategory = category;
+  document.querySelectorAll('.report-radio-card').forEach((card) => {
+    card.classList.remove('active');
+  });
+  if (el) el.classList.add('active');
+};
+
+window.updateReportCharCount = function (textarea) {
+  const countEl = document.getElementById('reportCharCount');
+  if (countEl && textarea) {
+    countEl.textContent = `${textarea.value.length}/500`;
+  }
+};
+
+window.handleReportPhotoAttach = function (event) {
+  const file = event.target.files && event.target.files[0];
+  const btnText = document.getElementById('reportAttachBtnText');
+  if (file && btnText) {
+    btnText.textContent = `Attached: ${file.name.substring(0, 18)}...`;
+    if (typeof window.showToast === 'function') {
+      window.showToast('Photo attached successfully!', 'success');
+    }
+  }
+};
+
+window.submitIssueReport = function () {
+  const details = (document.getElementById('reportFigmaDetails') || {}).value || '';
+  if (window.appState) {
+    window.appState.lastIssueReport = { category: window.currentReportCategory, details, time: new Date().toISOString() };
+  }
+  if (typeof window.showToast === 'function') {
+    window.showToast('Issue report submitted. Our safety team is looking into it.', 'success');
+  }
+  setTimeout(() => {
+    window.navigateBack('bookingDetails');
+  }, 600);
+};
+
+window.handleReportBack = function () {
+  window.navigateBack('bookingDetails');
+};
+
+// --- 3. Rate Your Trip Handlers ---
+window.currentFigmaRating = 5;
+
+window.setFigmaRating = function (score) {
+  window.currentFigmaRating = score;
+  const starButtons = document.querySelectorAll('#figmaRatingStars .rating-star-btn');
+  starButtons.forEach((btn, index) => {
+    btn.classList.toggle('active', index < score);
+  });
+};
+
+window.submitFigmaRating = function () {
+  const feedback = (document.getElementById('figmaRatingFeedback') || {}).value || '';
+  if (window.appState) {
+    window.appState.lastRatingFeedback = { rating: window.currentFigmaRating, feedback, time: new Date().toISOString() };
+  }
+  if (typeof window.showToast === 'function') {
+    window.showToast(`Thank you! Rating (${window.currentFigmaRating}★) submitted.`, 'success');
+  }
+  setTimeout(() => {
+    window.navigateTo('home', true);
+  }, 600);
+};
+
+window.handleRatingBack = function () {
+  window.navigateBack('home');
+};
+
+// --- 4. Book a Ride Direction Toggle & UI Helpers ---
+window.handleDirectionToggle = function (dir) {
+  const btnOneWay = document.getElementById('btnTripDirectionOneWay');
+  const btnRound = document.getElementById('btnTripDirectionRound');
+  const returnBlock = document.getElementById('returnScheduleBlock');
+  
+  if (dir === 'oneway') {
+    if (btnOneWay) btnOneWay.classList.add('active');
+    if (btnRound) btnRound.classList.remove('active');
+    if (returnBlock) returnBlock.style.opacity = '0.4';
+    if (typeof window.selectTripDirection === 'function') window.selectTripDirection('oneway');
+  } else {
+    if (btnOneWay) btnOneWay.classList.remove('active');
+    if (btnRound) btnRound.classList.add('active');
+    if (returnBlock) returnBlock.style.opacity = '1';
+    if (typeof window.selectTripDirection === 'function') window.selectTripDirection('both');
+  }
+  if (typeof window.updateBookingSearchCta === 'function') window.updateBookingSearchCta();
+};
+
+window.handleUntilCancelledChange = function (checked) {
+  const checkUi = document.getElementById('customCheckUi');
+  const endDateBox = document.getElementById('bookingEndDateTrigger');
+  if (checkUi) {
+    checkUi.innerHTML = checked ? '<i data-lucide="check" style="width: 12px; height: 12px; stroke-width: 3;"></i>' : '';
+    if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+  }
+  if (endDateBox) {
+    endDateBox.style.opacity = checked ? '0.5' : '1';
+    endDateBox.style.pointerEvents = checked ? 'none' : 'auto';
+  }
+};
+
+window.openSpecialInstructionsModal = function () {
+  if (typeof window.openManageBookingModal === 'function') {
+    window.openManageBookingModal();
+  } else if (typeof window.showToast === 'function') {
+    window.showToast('Special Instructions: Gate 2 pickup • Driver waits 5 mins', 'info');
+  }
+};
