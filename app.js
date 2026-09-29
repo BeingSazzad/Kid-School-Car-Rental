@@ -6452,7 +6452,7 @@ window.handlePhotoUpload = function (event) {
   const file = event.target.files?.[0];
   if (file) {
     const url = URL.createObjectURL(file);
-    const container = document.getElementById('avatarPreviewContainer');
+    const container = document.getElementById('avatarPreviewContainer') || document.getElementById('editProfileAvatarContainer');
     if (container) {
       container.innerHTML = `<img src="${url}" alt="Uploaded Avatar" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`;
     }
