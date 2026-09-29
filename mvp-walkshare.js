@@ -1093,9 +1093,7 @@
     const timesText = returnT ? pickupT + ' & ' + returnT : pickupT;
     
     const isBoth = req.direction === 'bothway' || (returnT && returnT.length > 0);
-    const dirPillHtml = isBoth
-      ? `<span style="background:rgba(27,43,104,0.08); color:#1B2B68; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="refresh-cw" style="width:11px; height:11px;"></i> Round Trip</span>`
-      : `<span style="background:#FFF7ED; color:#EA580C; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="arrow-right" style="width:11px; height:11px;"></i> One-way</span>`;
+    const dirPillHtml = '';
 
     // Parse price
     const priceVal = String(req.rate || (req.rateLabel ? req.rateLabel.replace(/\D/g, '') : '35') || '35');
@@ -1744,9 +1742,7 @@
     }
 
     const isRound = item.badge === 'Round trip' || (item.returnTime != null) || (item.leg === 'afternoon');
-    const dirPillHtml = isRound
-      ? `<span style="background:rgba(27,43,104,0.08); color:#1B2B68; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="refresh-cw" style="width:11px; height:11px;"></i> Round Trip</span>`
-      : `<span style="background:#FFF7ED; color:#EA580C; border-radius:99px; padding:4px 10px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="arrow-right" style="width:11px; height:11px;"></i> 1-Way Trip</span>`;
+    const dirPillHtml = '';
 
     return `
       <article class="h2s-booking-card" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">

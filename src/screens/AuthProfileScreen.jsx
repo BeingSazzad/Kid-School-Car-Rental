@@ -6,10 +6,11 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
   const [fullName, setFullName] = useState('Sarah Tremblay');
   const [email, setEmail] = useState('sarah.tremblay@example.com');
   const [relationship, setRelationship] = useState('Mother');
+  const [gender, setGender] = useState('Female');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onContinue({ fullName, email, relationship });
+    onContinue({ fullName, email, relationship, gender });
   };
 
   return (
@@ -163,6 +164,53 @@ export default function AuthProfileScreen({ onContinue, onBack }) {
                   <option value="Father">Father</option>
                   <option value="Guardian">Guardian</option>
                   <option value="Grandparent">Grandparent</option>
+                </select>
+                <div style={{
+                  position: 'absolute',
+                  right: '16px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  pointerEvents: 'none'
+                }}>
+                  <ChevronDown size={18} color="var(--color-body)" />
+                </div>
+              </div>
+            </div>
+
+            {/* Gender */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: 600,
+                color: 'var(--color-title)',
+                marginBottom: '8px'
+              }}>
+                Gender
+              </label>
+              <div style={{ position: 'relative' }}>
+                <select
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  style={{
+                    width: '100%',
+                    height: '50px',
+                    backgroundColor: 'var(--color-fade)',
+                    border: '1.5px solid var(--color-stroke)',
+                    borderRadius: '12px',
+                    padding: '0 40px 0 16px',
+                    fontFamily: 'var(--font-family)',
+                    fontSize: '15px',
+                    fontWeight: 500,
+                    color: 'var(--color-title)',
+                    appearance: 'none',
+                    outline: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
                 </select>
                 <div style={{
                   position: 'absolute',
