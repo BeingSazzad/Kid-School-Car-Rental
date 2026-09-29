@@ -9853,40 +9853,77 @@
       </div>
     </div>
 
-    <!-- ================= ENTERPRISE REFERRAL MODAL (CLEAN & MINIMAL) ================= -->
+    <!-- ================= 🎁 PREMIUM FIGMA REFERRAL REWARDS MODAL 🎁 ================= -->
     <div class="referral-modal-overlay" id="referralModal" onclick="if(event.target === this) closeReferralModal()">
-      <div class="referral-modal-card" onclick="event.stopPropagation()" style="max-width: 380px; width: 90%; border-radius: 20px; padding: 22px 20px; text-align: center; box-sizing: border-box; position: relative;">
-        <!-- Top Close Button -->
-        <button type="button" class="btn-close-modal" onclick="closeReferralModal()" aria-label="Close" style="position: absolute; top: 16px; right: 16px; background: #F1F5F9; border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748B;">
-          <i data-lucide="x" style="width: 15px; height: 15px;"></i>
+      <div class="ref-figma-card" onclick="event.stopPropagation()">
+        <!-- Close Button -->
+        <button type="button" class="ref-close-btn" onclick="closeReferralModal()" aria-label="Close">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
         </button>
 
-        <!-- Icon -->
-        <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(27, 43, 104, 0.08); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #1B2B68;">
-          <i data-lucide="gift" style="width: 26px; height: 26px;"></i>
+        <!-- Celebration Icon Badge with Ambient Halo -->
+        <div class="ref-icon-halo">
+          <div class="ref-icon-squircle">
+            <i data-lucide="gift" style="width: 28px; height: 28px; color: #2563EB;"></i>
+          </div>
+          <span class="ref-bonus-badge">$15 BONUS</span>
         </div>
 
-        <h3 style="font-size: 18px; font-weight: 800; color: #0F172A; margin: 0 0 6px;" id="refModalTitle">Invite &amp; Earn $15</h3>
-        <p style="font-size: 13px; color: #64748B; margin: 0 0 16px; line-height: 1.45;" id="refModalSubtitle">
-          Get <strong>$15 credit</strong> when an invited friend takes their first commute.
+        <!-- Title & Subtitle -->
+        <h3 class="ref-card-title" id="refModalTitle">Invite Friends &amp; Earn $15</h3>
+        <p class="ref-card-sub" id="refModalSubtitle">
+          Give <strong>$15 credit</strong> to a family for their first ride, and earn <strong>$15</strong> in your pass wallet when they complete it.
         </p>
 
-        <!-- Referral Link Box -->
-        <div style="display: flex; align-items: center; gap: 8px; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 6px 6px 6px 12px; margin-bottom: 14px; box-sizing: border-box;">
-          <i data-lucide="link-2" style="width: 16px; height: 16px; color: #64748B; flex-shrink: 0;"></i>
-          <input type="text" id="refModalLinkDisplay" readonly value="https://home2school.app/join?ref=parent-sarah-9821" onclick="this.select(); copyReferralLink();" style="flex: 1; border: none; background: transparent; font-size: 12.5px; font-family: inherit; color: #0F172A; font-weight: 600; outline: none; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; min-width: 0; cursor: pointer;" title="Click to copy link" />
-          <button type="button" class="btn-primary" id="refModalCopyBtn" style="height: 36px; padding: 0 14px; font-size: 12.5px; border-radius: 8px; font-weight: 700; flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px; background: #1B2B68;" onclick="copyReferralLink()">
-            <i data-lucide="copy" id="refModalCopyIcon" style="width: 14px; height: 14px;"></i>
+        <!-- Referral Code Highlight Box -->
+        <div class="ref-code-card">
+          <div class="ref-code-header">
+            <span class="ref-code-label">YOUR REFERRAL CODE</span>
+            <span class="ref-code-pill">Tap to copy</span>
+          </div>
+          <div class="ref-code-body" onclick="copyReferralCodeOnly()">
+            <span class="ref-code-val" id="refModalCodeDisplay">SARAH-KIDS15</span>
+            <button type="button" class="ref-code-copy-btn" id="btnCopyRefCode" title="Copy Code">
+              <i data-lucide="copy" id="refCodeCopyIcon" style="width: 13px; height: 13px;"></i>
+              <span id="refCodeCopyText">Copy</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Shareable Link Box (Properly Styled so Copy Button Never Overlaps) -->
+        <div class="ref-link-box">
+          <div class="ref-link-icon-wrap">
+            <i data-lucide="link-2" style="width: 15px; height: 15px; color: #2563EB;"></i>
+          </div>
+          <input type="text" id="refModalLinkDisplay" readonly value="https://home2school.app/join?ref=parent-sarah-9821" onclick="this.select(); copyReferralLink();" class="ref-link-input" title="Click to copy link" />
+          <button type="button" class="ref-link-copy-button" id="refModalCopyBtn" onclick="copyReferralLink()">
+            <i data-lucide="copy" id="refModalCopyIcon" style="width: 13px; height: 13px;"></i>
             <span id="refModalCopyBtnText">Copy</span>
           </button>
         </div>
 
-        <!-- Hidden fallback for legacy code checks -->
-        <div id="refModalCodeDisplay" style="display:none;">H2S-KID-9821</div>
+        <!-- 1-Tap Quick Share Options -->
+        <div class="ref-share-row">
+          <button type="button" class="ref-share-btn whatsapp" onclick="shareReferralLink('whatsapp')" title="Share via WhatsApp">
+            <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+            <span>WhatsApp</span>
+          </button>
+          <button type="button" class="ref-share-btn sms" onclick="shareReferralLink('sms')" title="Share via Messages">
+            <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
+            <span>Messages</span>
+          </button>
+          <button type="button" class="ref-share-btn more" onclick="shareReferralLink('more')" title="More Sharing Options">
+            <i data-lucide="share-2" style="width: 16px; height: 16px;"></i>
+            <span>Share</span>
+          </button>
+        </div>
 
-        <button type="button" class="btn-secondary-surface" onclick="closeReferralModal()" style="width: 100%; height: 42px; font-size: 13px; font-weight: 700; border-radius: 12px; border: 1px solid #E2E8F0; background: #FFFFFF; color: #475569; cursor: pointer;">
+        <!-- Bottom Done Button -->
+        <button type="button" class="ref-btn-done" onclick="closeReferralModal()">
           Done
         </button>
+
+        <p class="ref-footer-hint">Credits apply automatically toward your next monthly pass.</p>
       </div>
     </div>
 

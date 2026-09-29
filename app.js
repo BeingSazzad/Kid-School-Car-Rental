@@ -10059,7 +10059,186 @@ window.copyReferralLink = function () {
 };
 
 // Backwards compatibility alias
+
+window.copyReferralCodeOnly = function () {
+  const code = document.getElementById('refModalCodeDisplay')?.textContent?.trim() || 'SARAH-KIDS15';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).catch(() => {});
+  }
+  const btn = document.getElementById('btnCopyRefCode');
+  const txt = document.getElementById('refCodeCopyText');
+  if (txt) txt.textContent = 'Copied!';
+  if (btn) {
+    btn.style.background = '#10B981';
+    btn.style.color = '#FFFFFF';
+    btn.style.borderColor = '#10B981';
+  }
+  if (window.showToast) {
+    window.showToast(`✓ Referral code "${code}" copied to clipboard!`, 'success');
+  }
+  setTimeout(() => {
+    if (txt) txt.textContent = 'Copy';
+    if (btn) {
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }
+  }, 2200);
+};
+
 window.copyReferralCode = function () {
+  window.copyReferralCodeOnly();
+};
+
+window.copyReferralCode_legacy = function () {
+  window.copyReferralLink();
+};
+
+window.shareReferralLink = function (channel) {
+  const link = document.getElementById('refModalLinkDisplay')?.value || window.generateReferralLink();
+  const code = document.getElementById('refModalCodeDisplay')?.textContent?.trim() || 'SARAH-KIDS15';
+  const text = `Join Home2School for safe, verified child school commutes! Register with my invite code ${code} or link to get $15 credit:\n${link}`;
+
+  if (channel === 'whatsapp') {
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+  } else if (channel === 'sms') {
+    window.location.href = `sms:?&body=${encodeURIComponent(text)}`;
+  } else {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Home2School Referral Invite ($15 Credit)',
+        text: `Join Home2School for safe, verified child commutes! Use code ${code} for $15 credit:`,
+        url: link
+      }).catch(() => {});
+    } else {
+      window.copyReferralLink();
+    }
+  }
+};
+
+window.generateReferralLink = function () {
+  const role = window.appState?.activeRole || 'parent';
+  let slug = 'parent-sarah';
+  if (role === 'driver') {
+    slug = 'driver-robert';
+  } else if (role === 'walkshare') {
+    slug = 'guide-sarah';
+  } else {
+    const userName = window.appState?.currentUser?.name || 'sarah';
+    slug = 'parent-' + userName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
+  if (!window.appState._userRefSlug) {
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    window.appState._userRefSlug = `${slug}-${randomSuffix}`;
+  }
+
+  return `https://home2school.app/join?ref=${window.appState._userRefSlug}`;
+};
+
+window.openReferralModal = function () {
+  const role = window.appState?.activeRole || 'parent';
+  const link = window.generateReferralLink();
+  
+  const linkInput = document.getElementById('refModalLinkDisplay');
+  if (linkInput) linkInput.value = link;
+
+  const codeDisplay = document.getElementById('refModalCodeDisplay');
+  if (codeDisplay) codeDisplay.textContent = window.appState._userRefSlug || 'H2S-KID-9821';
+
+  const titleEl = document.getElementById('refModalTitle');
+  const subEl = document.getElementById('refModalSubtitle');
+  if (titleEl) {
+    titleEl.textContent = role === 'driver'
+      ? 'Invite Drivers & Earn $15'
+      : role === 'walkshare'
+      ? 'Invite Escorts & Earn $15'
+      : 'Invite Friends & Earn $15';
+  }
+  if (subEl) {
+    subEl.innerHTML = role === 'driver'
+      ? 'Get <strong>$15 bonus</strong> when an invited driver completes their first commute.'
+      : role === 'walkshare'
+      ? 'Get <strong>$15 credit</strong> when an invited escort completes their first walk.'
+      : 'Get <strong>$15 credit</strong> when an invited family completes their first commute.';
+  }
+  
+  const modal = document.getElementById('referralModal');
+  if (modal) {
+    modal.classList.add('active');
+    modal.style.setProperty('display', 'flex', 'important');
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.closeReferralModal = function () {
+  const modal = document.getElementById('referralModal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.setProperty('display', 'none', 'important');
+  }
+};
+
+window.copyReferralLink = function () {
+  const link = document.getElementById('refModalLinkDisplay')?.value || window.generateReferralLink();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(link).catch(() => {});
+  } else {
+    const input = document.getElementById('refModalLinkDisplay');
+    if (input) {
+      input.select();
+      document.execCommand('copy');
+    }
+  }
+
+  const btnText = document.getElementById('refModalCopyBtnText');
+  const copyBtn = document.getElementById('refModalCopyBtn');
+  if (btnText) btnText.textContent = 'Copied!';
+  if (copyBtn) copyBtn.style.background = '#16A34A';
+
+  if (window.showToast) {
+    window.showToast('✓ Referral link copied! Share with parents or drivers.', 'success');
+  }
+
+  setTimeout(() => {
+    if (btnText) btnText.textContent = 'Copy Link';
+    if (copyBtn) copyBtn.style.background = '#1B2B68';
+  }, 2200);
+};
+
+// Backwards compatibility alias
+
+window.copyReferralCodeOnly = function () {
+  const code = document.getElementById('refModalCodeDisplay')?.textContent?.trim() || 'SARAH-KIDS15';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).catch(() => {});
+  }
+  const btn = document.getElementById('btnCopyRefCode');
+  const txt = document.getElementById('refCodeCopyText');
+  if (txt) txt.textContent = 'Copied!';
+  if (btn) {
+    btn.style.background = '#10B981';
+    btn.style.color = '#FFFFFF';
+    btn.style.borderColor = '#10B981';
+  }
+  if (window.showToast) {
+    window.showToast(`✓ Referral code "${code}" copied to clipboard!`, 'success');
+  }
+  setTimeout(() => {
+    if (txt) txt.textContent = 'Copy';
+    if (btn) {
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }
+  }, 2200);
+};
+
+window.copyReferralCode = function () {
+  window.copyReferralCodeOnly();
+};
+
+window.copyReferralCode_legacy = function () {
   window.copyReferralLink();
 };
 
