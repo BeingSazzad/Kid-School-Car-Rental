@@ -198,7 +198,7 @@ window.appState = {
       ratePeriod: 'week',
       oneTimeRate: 14,
       negotiable: true,
-      preferredPayment: 'Stripe Protected Escrow',
+      preferredPayment: 'Protected Escrow',
       paymentHandle: 'robert.macdonald@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'Midtown Toronto',
@@ -246,7 +246,7 @@ window.appState = {
       ratePeriod: 'week',
       oneTimeRate: 16,
       negotiable: true,
-      preferredPayment: 'Stripe Protected Escrow',
+      preferredPayment: 'Protected Escrow',
       paymentHandle: 'emily.campbell@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'Annex / Midtown',
@@ -294,7 +294,7 @@ window.appState = {
       ratePeriod: 'week',
       oneTimeRate: 12,
       negotiable: false,
-      preferredPayment: 'Stripe Protected Escrow',
+      preferredPayment: 'Protected Escrow',
       paymentHandle: 'lucas.bennett@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'East York',
@@ -343,7 +343,7 @@ window.appState = {
       ratePeriod: 'week',
       oneTimeRate: 8,
       negotiable: true,
-      preferredPayment: 'Stripe Protected Escrow',
+      preferredPayment: 'Protected Escrow',
       paymentHandle: 'sarah.jenkins@interac.ca',
       maxServiceDistanceKm: 5,
       serviceArea: 'Elm → Greenfield',
@@ -392,7 +392,7 @@ window.appState = {
       ratePeriod: 'week',
       oneTimeRate: 8,
       negotiable: true,
-      preferredPayment: 'Stripe Protected Escrow',
+      preferredPayment: 'Protected Escrow',
       paymentHandle: 'sophie.bouchard@interac.ca',
       maxServiceDistanceKm: 5,
       serviceArea: 'West-gate / Greenfield',
@@ -3860,7 +3860,7 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   const schedule = window.formatProviderSchedule(provider);
 
   const titleEl = document.getElementById('providerDetailsTitle');
-  if (titleEl) titleEl.textContent = isWalk ? 'WalkShare profile' : 'Driver profile';
+  if (titleEl) titleEl.textContent = isWalk ? 'WalkShare Profile' : 'Driver Profile';
 
   const imgEl = document.getElementById('detailsProviderImg');
   const nameEl = document.getElementById('detailsProviderName');
@@ -3869,13 +3869,9 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   const distEl = document.getElementById('detailsProviderDistance');
   const trustEl = document.getElementById('detailsTrustLine');
   const trustTitle = document.getElementById('detailsTrustTitle');
-  const roleChip = document.getElementById('detailsRoleChip');
-  const roleChipText = document.getElementById('detailsRoleChipText');
-  const serviceLabel = document.getElementById('detailsServiceLabel');
   const zoneEl = document.getElementById('detailsZoneText');
   const availEl = document.getElementById('detailsAvailText');
   const safetyList = document.getElementById('detailsSafetyList');
-  const plateLbl = document.getElementById('specPlateLbl');
 
   if (imgEl) {
     imgEl.src = provider.photo || '/assets/avatar_tariq.jpg';
@@ -3887,91 +3883,85 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (reviewCountEl) reviewCountEl.textContent = (provider.reviewsCount || reviews.length) + ' reviews';
   if (distEl) {
     distEl.textContent = isWalk
-      ? ('~8 min walk · ' + (zone || 'Neighborhood corridor'))
-      : ('0.8 km away · ' + (zone || 'School corridor'));
+      ? ('WalkShare Guide · ' + (zone || 'High Park'))
+      : ('School Commute Driver · ' + (zone || 'Greenfield / Midtown'));
   }
   if (trustTitle) trustTitle.textContent = 'Home2School verified';
   if (trustEl) {
     trustEl.textContent = isWalk
       ? "Driver's license, 2× proof of residency, background & vulnerable sector checked"
-      : 'Licence, insurance, background & vulnerable sector checked';
+      : 'Licence, vehicle insurance, background & vulnerable sector checked';
   }
-  if (roleChip) {
-    roleChip.className = isWalk ? 'pp-role-chip walkshare' : 'pp-role-chip';
-    roleChip.innerHTML = (isWalk
-      ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.5v2"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.5v2"/></svg>'
-      : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C1.4 11.2 1 12 1 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>')
-      + '<span id="detailsRoleChipText">' + (isWalk ? 'WalkShare Escort' : 'School Driver') + '</span>';
+
+  // 3 Soft Pill Chips (Vehicle | Seats | Schedule)
+  const pillVehWrap = document.getElementById('detailsPillVehicle');
+  const pillVehEl = document.getElementById('detailsPillVehicleText');
+  if (pillVehWrap) {
+    pillVehWrap.innerHTML = (isWalk
+      ? '<i data-lucide="footprints" style="width:14px;height:14px;"></i>'
+      : '<i data-lucide="car" style="width:14px;height:14px;"></i>')
+      + `<span id="detailsPillVehicleText">${isWalk ? 'Walking Escort Group' : (provider.vehicle || 'Toyota Sienna (2023)')}</span>`;
+  } else if (pillVehEl) {
+    pillVehEl.textContent = isWalk ? 'Walking Escort Group' : (provider.vehicle || 'Toyota Sienna (2023)');
   }
-  if (serviceLabel) serviceLabel.textContent = isWalk ? 'Neighborhood Walking Group' : 'School commute';
-  if (zoneEl) zoneEl.textContent = zone || (isWalk ? 'Elm → Greenfield' : 'School corridor');
-  if (availEl) availEl.textContent = schedule;
+
+  const pillSeatsWrap = document.getElementById('detailsPillSeats');
+  if (pillSeatsWrap) {
+    pillSeatsWrap.innerHTML = '<i data-lucide="users" style="width:14px;height:14px;"></i>'
+      + `<span id="detailsPillSeatsText">${isWalk ? ((provider.seats || 3) + ' child spots open') : ((provider.seats || 4) + ' seats available')}</span>`;
+  }
+
+  const pillSchedWrap = document.getElementById('detailsPillSchedule');
+  if (pillSchedWrap) {
+    pillSchedWrap.innerHTML = '<i data-lucide="calendar" style="width:14px;height:14px;"></i>'
+      + '<span id="detailsPillScheduleText">Mon–Fri</span>';
+  }
+
+  // Overview Card Fields
+  if (zoneEl) zoneEl.textContent = zone || (isWalk ? 'High Park / Greenfield' : 'Greenfield / Midtown');
+  if (availEl) availEl.textContent = schedule || 'Mon–Fri · AM & PM';
+  
+  const overviewRouteLbl = document.getElementById('overviewRouteLabel');
+  if (overviewRouteLbl) {
+    overviewRouteLbl.textContent = isWalk ? 'Walking route' : 'Vehicle & Plate';
+  }
+  const specPlate = document.getElementById('specPlateText');
+  if (specPlate) {
+    specPlate.textContent = isWalk
+      ? 'Sidewalk & crossing corridors'
+      : (provider.vehicle ? `${provider.vehicle} · Plate ${provider.plate || 'SCH-4091'}` : (provider.plate || 'SCH-4091'));
+  }
 
   if (safetyList) {
     const checks = isWalk
       ? [
           "Driver’s licence verified",
-          "Proof of residency: Property Tax / Tenancy agreement",
+          "Proof of residency: Property tax / Tenancy agreement",
           "Proof of residency: Utility bill",
           "Criminal background check",
           "Vulnerable sector check",
-          "Pediatric First-Aid / CPR certified"
+          "Pediatric First Aid / CPR certified"
         ]
-      : ["Driver’s licence verified", 'Vehicle insurance on file', 'Criminal background check', 'Vulnerable sector check'];
+      : [
+          "Driver’s licence verified (Class G)",
+          "Commercial vehicle insurance on file",
+          "Criminal background check (Clean)",
+          "Vulnerable sector check (Police certified)",
+          "Child safety locks & booster seats inspected"
+        ];
     safetyList.innerHTML = checks.map((label) =>
-      `<li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg><span>${label}</span></li>`
+      `<li style="display:flex; align-items:center; gap:10px; font-size:13px; color:#1E293B; font-weight:600; padding-bottom:10px; border-bottom:1px solid #F8FAFC;">
+        <span style="width:20px; height:20px; border-radius:50%; background:#DCFCE7; display:flex; align-items:center; justify-content:center; color:#16A34A; flex-shrink:0;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <span>${label}</span>
+      </li>`
     ).join('');
 
     const safetyBadge = document.getElementById('detailsSafetyBadge');
     if (safetyBadge) {
-      safetyBadge.textContent = `${checks.length} / ${checks.length} Verified`;
+      safetyBadge.textContent = `${checks.length} / ${checks.length} verified`;
     }
-  }
-
-  const expPillar = document.getElementById('detailsProviderExpPillar');
-  const tripsPillar = document.getElementById('detailsProviderTripsPillar');
-  const tripsLbl = document.getElementById('detailsProviderTripsLbl');
-  const onTimePillar = document.getElementById('detailsProviderOnTimePillar');
-  const onTimeLbl = document.getElementById('detailsProviderOnTimeLbl');
-
-  if (expPillar) expPillar.textContent = provider.experience || '5+ Yrs';
-  if (tripsPillar) tripsPillar.textContent = isWalk ? '320+' : '500+';
-  if (tripsLbl) tripsLbl.textContent = isWalk ? 'Safe walks' : 'School trips';
-  if (onTimePillar) onTimePillar.textContent = provider.onTimeRate || '99.8%';
-  if (onTimeLbl) onTimeLbl.textContent = isWalk ? 'Safety record' : 'On time';
-
-  const iconBox = document.getElementById('detailsVehIconBox');
-  const vehTitle = document.getElementById('detailsProviderVehTitle');
-  const vehSubtitle = document.getElementById('detailsProviderVehSubtitle');
-  const specSeats = document.getElementById('specSeatsText');
-  const specPlate = document.getElementById('specPlateText');
-  const specBooster = document.getElementById('specBoosterText');
-  const specLocks = document.getElementById('specLocksText');
-
-  if (isWalk) {
-    if (iconBox) {
-      iconBox.className = 'profile-service-icon-box walkshare';
-      iconBox.innerHTML = '<i data-lucide="footprints" style="width: 22px; height: 22px;"></i>';
-    }
-    if (vehTitle) vehTitle.textContent = provider.vehicle || 'Neighborhood Walking Group';
-    if (vehSubtitle) vehSubtitle.textContent = 'Supervised neighborhood group walk to school';
-    if (specSeats) specSeats.textContent = (provider.seats || 3) + ' kids';
-    if (plateLbl) plateLbl.textContent = 'Path';
-    if (specPlate) specPlate.textContent = 'Sidewalks only';
-    if (specBooster) specBooster.textContent = 'High-vis vests';
-    if (specLocks) specLocks.textContent = 'Crossing care';
-  } else {
-    if (iconBox) {
-      iconBox.className = 'profile-service-icon-box';
-      iconBox.innerHTML = '<i data-lucide="car" style="width: 22px; height: 22px;"></i>';
-    }
-    if (vehTitle) vehTitle.textContent = provider.vehicle || 'Toyota Sienna (2023)';
-    if (vehSubtitle) vehSubtitle.textContent = (provider.seats || 4) + ' seats · Plate ' + (provider.plate || '—');
-    if (specSeats) specSeats.textContent = (provider.seats || 4) + ' seats';
-    if (plateLbl) plateLbl.textContent = 'Plate';
-    if (specPlate) specPlate.textContent = provider.plate || '—';
-    if (specBooster) specBooster.textContent = 'Booster seats';
-    if (specLocks) specLocks.textContent = 'Child locks';
   }
 
   const aboutLbl = document.getElementById('detailsAboutLabel');
@@ -3983,12 +3973,7 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
       : (cleanFirstName + ' provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.'));
   }
 
-  const stickyPrice = document.getElementById('detailsStickyPrice');
-  if (stickyPrice) stickyPrice.style.display = 'none';
-  const stickyBlock = document.querySelector('.profile-sticky-price-block');
-  if (stickyBlock) stickyBlock.style.display = 'none';
-
-  // Typical / Posted Rate and Preferred Payment
+  // Rate and Payment
   const postedRateEl = document.getElementById('detailsPostedRateText');
   const negBadgeEl = document.getElementById('detailsRateNegotiableBadge');
   const payPrefEl = document.getElementById('detailsPreferredPaymentText');
@@ -3998,6 +3983,16 @@ window.openDriverProfile = function (providerIdOrName, returnScreen) {
   if (postedRateEl) postedRateEl.textContent = `$${rateVal}/${rateUnit}`;
   if (negBadgeEl) negBadgeEl.style.display = provider.negotiable !== false ? 'inline-block' : 'none';
   if (payPrefEl) payPrefEl.textContent = provider.preferredPayment || 'e-Transfer · Cash';
+
+  // Request Booking Button Text
+  const bookBtn = document.getElementById('btnBookWithProvider');
+  if (bookBtn) {
+    bookBtn.innerHTML = `<span>Request ${cleanFirstName}</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`;
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
 
   const role = typeof activeNavRole === 'function' ? activeNavRole() : (window.appState?.activeRole || localStorage.getItem('h2s_active_role') || 'parent');
   const isOwner = (role === 'walkshare' && (provider.id === 'sarah' || isWalk)) ||
@@ -4259,17 +4254,17 @@ window.submitBookingRequest = function () {
     negotiable: provider.negotiable !== false,
     amount: baseFare,
     totalEscrow: totalEscrow,
-    preferredPayment: 'Stripe Protected Escrow',
+    preferredPayment: 'Protected Escrow',
     paymentHandleStatus: 'escrow_held',
-    paymentHandle: 'stripe_escrow',
-    paymentMethod: 'In-Platform Stripe Escrow',
+    paymentHandle: 'platform_escrow',
+    paymentMethod: 'Protected Escrow',
     createdAt: 'Just now'
   };
 
   window.appState.bookings.unshift(newBooking);
   window.appState.activeBookingId = newBooking.id;
 
-  // Record 6-State Stripe Escrow Transaction
+  // Record In-Platform Escrow Transaction
   const newTx = {
     id: `tx_${Date.now()}`,
     bookingId: newBooking.id,
@@ -4278,7 +4273,7 @@ window.submitBookingRequest = function () {
     amount: `$${totalEscrow.toFixed(2)}`,
     type: 'debit',
     status: 'held',
-    statusText: 'Held in Stripe Escrow',
+    statusText: 'Held in Escrow',
     category: isWalk ? 'walkshare' : 'ride',
     escrowReleaseAfterHours: 24,
     breakdown: {
@@ -8966,16 +8961,8 @@ window.resetSearchFilters = function () {
   const allGender = document.querySelector('#modalGenderChips .sf-chip');
   if (allGender) window.setModalGender('all', allGender);
 
-  const allTiming = document.querySelector('#modalTimingChips .sf-chip');
-  if (allTiming) window.setModalTiming('all', allTiming);
-
-  const allService = document.querySelector('#modalServiceTypeChips .sf-chip');
-  if (allService) window.setModalServiceType('all', allService);
-
   if (window.appState.bookingDraft) {
     window.appState.bookingDraft.genderFilter = 'all';
-    window.appState.bookingDraft.serviceType = 'all';
-    window.appState.bookingDraft.timingFilter = 'all';
     window.appState.bookingDraft.searchRadiusKm = 5;
   }
 
@@ -8992,13 +8979,11 @@ window.resetSearchFilters = function () {
 window.applySearchFiltersAndClose = function () {
   window.closeSearchFilterModal();
 
-  // Calculate active filter count for badge
+  // Calculate active filter count for badge (Radius != 5km or Gender != all)
   let activeFilters = 0;
   const draft = window.appState.bookingDraft || {};
   if (draft.searchRadiusKm && Number(draft.searchRadiusKm) > 0 && Number(draft.searchRadiusKm) !== 5) activeFilters++;
   if (draft.genderFilter && draft.genderFilter !== 'all') activeFilters++;
-  if (draft.serviceType && draft.serviceType !== 'all') activeFilters++;
-  if (draft.timingFilter && draft.timingFilter !== 'all') activeFilters++;
 
   const activeFilterBadge = document.getElementById('activeFilterBadge');
   if (activeFilterBadge) {
@@ -9695,14 +9680,53 @@ window.setDefaultPaymentMethod = function (last4) {
    Home2School & School2Home 63-Item Enterprise Feature Handlers
    ========================================================== */
 
-// 1. Referral Management System
+// 1. Referral Management System (Unique Link Generation)
+window.generateReferralLink = function () {
+  const role = window.appState?.activeRole || 'parent';
+  let slug = 'parent-sarah';
+  if (role === 'driver') {
+    slug = 'driver-robert';
+  } else if (role === 'walkshare') {
+    slug = 'guide-sarah';
+  } else {
+    const userName = window.appState?.currentUser?.name || 'sarah';
+    slug = 'parent-' + userName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
+  if (!window.appState._userRefSlug) {
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    window.appState._userRefSlug = `${slug}-${randomSuffix}`;
+  }
+
+  return `https://home2school.app/join?ref=${window.appState._userRefSlug}`;
+};
+
 window.openReferralModal = function () {
   const role = window.appState?.activeRole || 'parent';
-  const rolePrefix = role === 'driver' ? 'DRV' : role === 'walkshare' ? 'WSG' : 'KID';
-  const code = `H2S-${rolePrefix}-${Math.floor(1000 + Math.random() * 9000)}`;
+  const link = window.generateReferralLink();
   
-  const display = document.getElementById('refModalCodeDisplay');
-  if (display) display.textContent = code;
+  const linkInput = document.getElementById('refModalLinkDisplay');
+  if (linkInput) linkInput.value = link;
+
+  const codeDisplay = document.getElementById('refModalCodeDisplay');
+  if (codeDisplay) codeDisplay.textContent = window.appState._userRefSlug || 'H2S-KID-9821';
+
+  const titleEl = document.getElementById('refModalTitle');
+  const subEl = document.getElementById('refModalSubtitle');
+  if (titleEl) {
+    titleEl.textContent = role === 'driver'
+      ? 'Invite Drivers & Earn $15 Bonus'
+      : role === 'walkshare'
+      ? 'Invite Walking Guides & Earn $15'
+      : 'Refer Families & Earn $15';
+  }
+  if (subEl) {
+    subEl.innerHTML = role === 'driver'
+      ? 'Share your personal invite link with fellow drivers. You both receive <strong>$15 bonus</strong> on their first completed school commute.'
+      : role === 'walkshare'
+      ? 'Share your invite link with walking escorts or parents. You both receive <strong>$15 credit</strong>.'
+      : 'Share your personal invite link with neighborhood parents or drivers. When they complete their first school commute, you both get <strong>$15 ride credits</strong>.';
+  }
   
   const modal = document.getElementById('referralModal');
   if (modal) {
@@ -9720,26 +9744,53 @@ window.closeReferralModal = function () {
   }
 };
 
-window.copyReferralCode = function () {
-  const code = document.getElementById('refModalCodeDisplay')?.textContent || 'H2S-KID-9821';
-  navigator.clipboard?.writeText(code).catch(() => {});
+window.copyReferralLink = function () {
+  const link = document.getElementById('refModalLinkDisplay')?.value || window.generateReferralLink();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(link).catch(() => {});
+  } else {
+    const input = document.getElementById('refModalLinkDisplay');
+    if (input) {
+      input.select();
+      document.execCommand('copy');
+    }
+  }
+
   const btnText = document.getElementById('refModalCopyBtnText');
+  const copyBtn = document.getElementById('refModalCopyBtn');
   if (btnText) btnText.textContent = 'Copied!';
-  if (window.showToast) window.showToast(`✓ Referral code "${code}" copied to clipboard!`, 'success');
-  setTimeout(() => { if (btnText) btnText.textContent = 'Copy Code'; }, 2000);
+  if (copyBtn) copyBtn.style.background = '#16A34A';
+
+  if (window.showToast) {
+    window.showToast('✓ Referral link copied! Share with parents or drivers.', 'success');
+  }
+
+  setTimeout(() => {
+    if (btnText) btnText.textContent = 'Copy Link';
+    if (copyBtn) copyBtn.style.background = '#1B2B68';
+  }, 2200);
+};
+
+// Backwards compatibility alias
+window.copyReferralCode = function () {
+  window.copyReferralLink();
 };
 
 window.shareReferralLink = function (channel) {
-  const code = document.getElementById('refModalCodeDisplay')?.textContent || 'H2S-KID-9821';
-  const url = `https://home2school.app/r/${code}`;
-  const text = `Join Home2School & School2Home for verified safe child commutes. Use code ${code} for $15 ride credit! ${url}`;
+  const link = document.getElementById('refModalLinkDisplay')?.value || window.generateReferralLink();
+  const text = `Join Home2School for safe, verified child school commutes! Register with my invite link to get $15 credit:\n${link}`;
+  
   if (channel === 'whatsapp') {
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   } else {
     if (navigator.share) {
-      navigator.share({ title: 'Home2School Referral', text: text, url: url }).catch(() => {});
+      navigator.share({
+        title: 'Home2School Invite',
+        text: 'Join Home2School for verified safe child commutes and get $15 ride credit:',
+        url: link
+      }).catch(() => {});
     } else {
-      window.copyReferralCode();
+      window.copyReferralLink();
     }
   }
 };
@@ -9806,6 +9857,26 @@ window.switchPhotoProofTab = function (tab) {
   if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 };
 
+window.syncPhotoProofThumbnails = function () {
+  const pickupThumb = document.getElementById('trackingPickupThumbImg');
+  const dropoffThumb = document.getElementById('trackingDropoffThumbImg');
+  const pickupTime = document.getElementById('trackingPickupTimeLbl');
+  const dropoffTime = document.getElementById('trackingDropoffTimeLbl');
+  
+  if (pickupThumb && window.photoProofData?.pickup?.photo) {
+    pickupThumb.src = window.photoProofData.pickup.photo;
+  }
+  if (dropoffThumb && window.photoProofData?.dropoff?.photo) {
+    dropoffThumb.src = window.photoProofData.dropoff.photo;
+  }
+  if (pickupTime && window.photoProofData?.pickup?.time) {
+    pickupTime.textContent = window.photoProofData.pickup.time;
+  }
+  if (dropoffTime && window.photoProofData?.dropoff?.time) {
+    dropoffTime.textContent = window.photoProofData.dropoff.time;
+  }
+};
+
 window.handlePhotoProofUpload = function (input) {
   if (input && input.files && input.files[0]) {
     const reader = new FileReader();
@@ -9814,10 +9885,11 @@ window.handlePhotoProofUpload = function (input) {
       window.photoProofData[tab].photo = e.target.result;
       const now = new Date();
       const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      window.photoProofData[tab].time = `${timeStr} (Just now)`;
-      window.photoProofData[tab].badge = tab === 'pickup' ? '✓ New Pickup Photo Captured' : '✓ New Drop-off Photo Captured';
+      window.photoProofData[tab].time = `${timeStr} (Live Captured)`;
+      window.photoProofData[tab].badge = tab === 'pickup' ? '✓ Live Verified Pickup' : '✓ Live Verified Drop-off';
       window.switchPhotoProofTab(tab);
-      if (window.showToast) window.showToast(`✓ ${tab === 'pickup' ? 'Pickup' : 'Drop-off'} photo proof updated!`, 'success');
+      window.syncPhotoProofThumbnails();
+      if (window.showToast) window.showToast(`✓ Live ${tab === 'pickup' ? 'pickup' : 'drop-off'} proof photo uploaded & shared with parents!`, 'success');
     };
     reader.readAsDataURL(input.files[0]);
   }
@@ -9832,9 +9904,51 @@ window.simulateInstantPhotoSnap = function () {
   window.photoProofData[tab].photo = samplePhotos[tab] || '/assets/onboarding1.jpg';
   const now = new Date();
   const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  window.photoProofData[tab].time = `${timeStr} (Verified)`;
+  window.photoProofData[tab].time = `${timeStr} (Verified Live)`;
   window.switchPhotoProofTab(tab);
-  if (window.showToast) window.showToast(`✓ Verified ${tab === 'pickup' ? 'pickup' : 'drop-off'} photo snapshot captured!`, 'success');
+  window.syncPhotoProofThumbnails();
+  if (window.showToast) window.showToast(`✓ Verified live ${tab === 'pickup' ? 'pickup' : 'drop-off'} photo snapshot captured!`, 'success');
+};
+
+// Driver Attendance Photo Proof Handlers
+window.handleAttendancePhotoProof = function (input) {
+  if (input && input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      window._driverPendingAttendancePhoto = e.target.result;
+      const preview = document.getElementById('driverAttendancePhotoPreview');
+      const img = document.getElementById('driverAttendancePhotoImg');
+      const badge = document.getElementById('attPhotoStatusBadge');
+      if (preview && img) {
+        img.src = e.target.result;
+        preview.style.display = 'block';
+      }
+      if (badge) {
+        badge.textContent = '✓ Attached';
+        badge.style.background = '#DCFCE7';
+        badge.style.color = '#15803D';
+      }
+      if (window.showToast) window.showToast('✓ Handover photo attached! Tap confirm to finish.', 'info');
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+};
+
+window.simulateAttendancePhotoSnap = function () {
+  window._driverPendingAttendancePhoto = '/assets/onboarding1.jpg';
+  const preview = document.getElementById('driverAttendancePhotoPreview');
+  const img = document.getElementById('driverAttendancePhotoImg');
+  const badge = document.getElementById('attPhotoStatusBadge');
+  if (preview && img) {
+    img.src = '/assets/onboarding1.jpg';
+    preview.style.display = 'block';
+  }
+  if (badge) {
+    badge.textContent = '✓ Quick Snap Ready';
+    badge.style.background = '#EFF6FF';
+    badge.style.color = '#2563EB';
+  }
+  if (window.showToast) window.showToast('✓ Quick handover photo snapshot attached!', 'success');
 };
 
 // 3. Dispute Mediation Handler

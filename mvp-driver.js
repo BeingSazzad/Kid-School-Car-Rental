@@ -4584,9 +4584,17 @@
     document.getElementById('driverAttendanceModal')?.classList.remove('active');
     const d = ensureDriver();
     d.activeTripStage = 3;
+    if (window._driverPendingAttendancePhoto && window.photoProofData) {
+      window.photoProofData.pickup.photo = window._driverPendingAttendancePhoto;
+      const now = new Date();
+      window.photoProofData.pickup.time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' (Live)';
+      window.photoProofData.pickup.badge = '✓ Live Verified Pickup';
+      if (typeof window.syncPhotoProofThumbnails === 'function') window.syncPhotoProofThumbnails();
+      window._driverPendingAttendancePhoto = null;
+    }
     persist();
     renderActiveTrip();
-    toast('Pickup confirmed. Booking stays open for children not riding today.');
+    toast('Pickup confirmed & live handover photo proof shared with parents.');
   };
 
   function renderRateParent() {

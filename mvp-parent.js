@@ -1059,22 +1059,37 @@
 
     if (draft.frequency === 'recurring') {
       const days = (draft.selectedDays || []).join(' ') || 'Mon–Fri';
-      setText('summaryFreqText', days);
+      setText('summaryFreqText', `Recurring (${days})`);
     } else {
-      setText('summaryFreqText', 'One-time');
+      setText('summaryFreqText', 'One-Time Ride (Single Day Pass)');
     }
 
     const cleanName = String(provider?.name || '').replace(/\s*\(WalkShare\)/i, '');
-    setText('summaryProviderText', cleanName || 'Provider');
-    setText('summaryVehicleText', [provider?.vehicle, provider?.plate].filter(Boolean).join(' · ') || 'Vehicle');
+    setText('summaryProviderText', cleanName || 'Robert MacDonald');
+    const vehInfo = isWalk 
+      ? 'Neighborhood Walking Group · Sidewalks only' 
+      : ([provider?.vehicle || 'Toyota Sienna (2023)', provider?.plate || 'SCH-4091'].filter(Boolean).join(' · '));
+    setText('summaryVehicleText', vehInfo);
+
+    const carWrap = document.getElementById('summaryVehicleThumbWrap');
+    const carImg = document.getElementById('summaryVehicleThumb');
+    if (carWrap && carImg) {
+      if (isWalk) {
+        carWrap.style.display = 'none';
+      } else {
+        carWrap.style.display = 'flex';
+        carImg.style.display = 'block';
+        carImg.src = provider?.carPhoto || '/assets/toyota_sienna_white.jpg';
+      }
+    }
 
     const isWalk = provider?.category === 'walkshare' || provider?.id === 'sarah' || provider?.id === 'elena';
     const rateUnit = draft.frequency === 'recurring' ? 'week' : 'trip';
     const rateVal = draft.frequency === 'recurring'
       ? (provider?.listedRate || provider?.baseWeekly || (isWalk ? 75 : 120))
-      : (provider?.oneTimeRate || (isWalk ? 25 : 35));
+      : (provider?.oneTimeRate || (isWalk ? 25 : 14)); // $14 default for one-time trip
     setText('summaryListedRateVal', `$${rateVal}/${rateUnit}`);
-    const escrowNum = Number(rateVal) || 60;
+    const escrowNum = Number(rateVal) || 14;
     setText('summaryTotalEscrowVal', `$${escrowNum.toFixed(2)}`);
     setText('summaryPriceUnitText', `/${rateUnit}`);
     const negBadge = document.getElementById('summaryNegotiableBadge');
@@ -1097,6 +1112,11 @@
     const returnRow = document.getElementById('summaryReturnRow');
     if (returnRow) returnRow.style.display = draft.direction === 'oneway' ? 'none' : 'flex';
 
+    const actionBtn = document.getElementById('summaryActionBtnText');
+    if (actionBtn) {
+      actionBtn.textContent = isWalk ? 'Confirm & Request Walk' : 'Confirm & Request Ride';
+    }
+
     if (typeof originalSummary === 'function') {
       try { originalSummary(); } catch (err) { /* older summary nodes may be gone */ }
     }
@@ -1104,15 +1124,18 @@
     // Re-assert clean values after older renderer (it may overwrite times with long route strings)
     setText('summaryChildrenText', kidsLabel);
     setText('summaryPickupText', pickup);
-    setText('summaryDropoffText', school);
+    setText('summaryDropoffText', school.includes('School') ? school.replace('International', '').trim() : 'School');
     setText('summaryOutboundText', draft.outboundTime || '07:30 AM');
     setText('summaryReturnText', draft.returnTime || '01:00 PM');
     setText('summaryWhenText', `${dateLabel} · ${tripType}`);
-    setText('summaryProviderText', cleanName || 'Provider');
-    setText('summaryVehicleText', [provider?.vehicle, provider?.plate].filter(Boolean).join(' · ') || 'Vehicle');
+    setText('summaryProviderText', cleanName || 'Robert MacDonald');
+    setText('summaryVehicleText', vehInfo);
     setText('summaryListedRateVal', `$${rateVal}/${rateUnit}`);
     setText('summaryTotalEscrowVal', `$${escrowNum.toFixed(2)}`);
     setText('summaryPriceUnitText', `/${rateUnit}`);
+    if (actionBtn) {
+      actionBtn.textContent = isWalk ? 'Confirm & Request Walk' : 'Confirm & Request Ride';
+    }
     if (negBadge) {
       negBadge.style.display = provider?.negotiable !== false ? 'inline-block' : 'none';
     }

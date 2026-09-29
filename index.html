@@ -13,14 +13,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="/style.css?v=20260916-v46" />
-  <link rel="stylesheet" href="/bookings-clean.css?v=20260916-v46" />
-  <link rel="stylesheet" href="/safety-clean.css?v=20260916-v46" />
-  <link rel="stylesheet" href="/sos-clean.css?v=20260916-v46" />
-  <link rel="stylesheet" href="/providers-clean.css?v=20260916-v46" />
-  <link rel="stylesheet" href="/details-clean.css?v=20260916-v46" />
-  <link rel="stylesheet" href="/flow-clean.css?v=20260916-v46" />
-  <link rel="stylesheet" href="/type-standard.css?v=20260916-v46" />
+  <link rel="stylesheet" href="/style.css?v=20260929-v206" />
+  <link rel="stylesheet" href="/bookings-clean.css?v=20260929-v206" />
+  <link rel="stylesheet" href="/safety-clean.css?v=20260929-v206" />
+  <link rel="stylesheet" href="/sos-clean.css?v=20260929-v206" />
+  <link rel="stylesheet" href="/providers-clean.css?v=20260929-v206" />
+  <link rel="stylesheet" href="/details-clean.css?v=20260929-v206" />
+  <link rel="stylesheet" href="/flow-clean.css?v=20260929-v206" />
+  <link rel="stylesheet" href="/type-standard.css?v=20260929-v206" />
 
   <!-- Critical UI Overrides for Time Picker & Modals -->
   <style>
@@ -6395,7 +6395,7 @@
                   <span class="pcm-price-val">$60</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Stripe Protected Escrow</div>
+                <div class="pcm-price-status">Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('tariq')">
                 Book
@@ -6452,7 +6452,7 @@
                   <span class="pcm-price-val">$70</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Stripe Protected Escrow</div>
+                <div class="pcm-price-status">Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('farhana')">
                 Book
@@ -6509,7 +6509,7 @@
                   <span class="pcm-price-val">$55</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Stripe Protected Escrow</div>
+                <div class="pcm-price-status">Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('kabir')">
                 Book
@@ -6565,7 +6565,7 @@
                   <span class="pcm-price-val">$35</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Stripe Protected Escrow</div>
+                <div class="pcm-price-status">Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('sarah')">
                 Book
@@ -6621,7 +6621,7 @@
                   <span class="pcm-price-val">$35</span>
                   <span class="pcm-price-unit">/week</span>
                 </div>
-                <div class="pcm-price-status">Stripe Protected Escrow</div>
+                <div class="pcm-price-status">Protected Escrow</div>
               </div>
               <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('elena')">
                 Book
@@ -6656,135 +6656,161 @@
         <button class="back-btn" id="providerDetailsBackBtn" onclick="handleProviderDetailsBack()" aria-label="Go back">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title" id="providerDetailsTitle">Provider Profile</h2>
+        <h2 class="top-bar-title" id="providerDetailsTitle">Driver Profile</h2>
         <button type="button" class="clean-fav-btn" id="providerFavBtn" onclick="window.toggleFavoriteProvider(window.currentDriverProfileId)" title="Save to Favorites" aria-label="Favorite" style="padding: 4px;">
           <i data-lucide="heart" style="width: 20px; height: 20px;"></i>
         </button>
       </div>
 
-      <div class="screen-scroll-body profile-details-scroll">
-        <div class="pp-hero">
-          <div class="profile-avatar-wrap">
-            <img src="/assets/avatar_tariq.jpg" alt="Provider" class="profile-hero-avatar" id="detailsProviderImg" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+      <div class="screen-scroll-body profile-details-scroll" style="background:#F8FAFC; padding:14px 16px 100px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; box-sizing:border-box;">
+        <!-- Card 1: Top Hero Card -->
+        <div class="pp-hero" style="background:#FFFFFF; border-radius:20px; border:1px solid #F1F5F9; box-shadow:0 1px 4px rgba(15,23,42,0.03); padding:20px 16px 18px; text-align:center; display:flex; flex-direction:column; align-items:center; width:100%; box-sizing:border-box;">
+          <div class="profile-avatar-wrap" style="margin-bottom:8px;">
+            <img src="/assets/avatar_tariq.jpg" alt="Provider" class="profile-hero-avatar" id="detailsProviderImg" style="width:84px; height:84px; border-radius:50%; object-fit:cover; border:3px solid #FFFFFF; box-shadow:0 4px 14px rgba(15,23,42,0.1); display:block;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
           </div>
-          <h3 class="profile-hero-name">
-            <span id="detailsProviderName">Sarah Jenkins</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#0284C7" style="flex-shrink:0;"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 15l-4-4 1.41-1.41L10 13.17l6.59-6.59L18 8l-8 8z"/></svg>
+          <h3 class="profile-hero-name" style="margin:2px 0 4px; font-family:'Manrope',system-ui,sans-serif; font-size:20px; font-weight:800; color:#0F172A; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+            <span id="detailsProviderName">Robert MacDonald</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;">
+              <circle cx="12" cy="12" r="10" fill="#2563EB"/>
+              <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </h3>
-          <button type="button" class="profile-rating-link" id="detailsProviderRatingBtn" onclick="openProviderReviews()">
-            <span class="profile-rating-pill" id="detailsProviderRatingVal">★ 4.9</span>
-            <span class="profile-rating-count" id="detailsProviderReviewCount">45 reviews</span>
-          </button>
-          <div style="display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px;">
-            <span class="profile-hero-sub" id="detailsProviderDistance">~8 min walk · Elm → Greenfield</span>
-            <span class="pp-role-chip walkshare" id="detailsRoleChip">
-              <span id="detailsRoleChipText">WalkShare Escort</span>
+          <div class="profile-rating-row" style="display:inline-flex; align-items:center; justify-content:center; gap:5px; margin-bottom:4px; font-size:13px; font-weight:700; color:#0F172A;">
+            <span style="color:#F59E0B;">★</span>
+            <span id="detailsProviderRatingVal">4.9</span>
+            <span style="color:#94A3B8;">·</span>
+            <span id="detailsProviderReviewCount" style="color:#475569; font-weight:600;">45 reviews</span>
+          </div>
+          <div class="profile-hero-sub" id="detailsProviderDistance" style="font-size:12px; font-weight:600; color:#64748B; margin-bottom:12px;">School Commute Driver · Greenfield</div>
+
+          <!-- 3 Soft Pill Chips (Vehicle | Seats | Schedule) -->
+          <div class="pp-pills-row" style="display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; width:100%;">
+            <span class="pp-pill-chip" id="detailsPillVehicle" style="background:#F1F5F9; color:#334155; font-size:12px; font-weight:600; padding:6px 12px; border-radius:12px; display:inline-flex; align-items:center; gap:6px;">
+              <i data-lucide="car" style="width:14px;height:14px;"></i>
+              <span id="detailsPillVehicleText">Toyota Sienna (2023)</span>
+            </span>
+            <span class="pp-pill-chip" id="detailsPillSeats" style="background:#F1F5F9; color:#334155; font-size:12px; font-weight:600; padding:6px 12px; border-radius:12px; display:inline-flex; align-items:center; gap:6px;">
+              <i data-lucide="users" style="width:14px;height:14px;"></i>
+              <span id="detailsPillSeatsText">4 seats available</span>
+            </span>
+            <span class="pp-pill-chip" id="detailsPillSchedule" style="background:#F1F5F9; color:#334155; font-size:12px; font-weight:600; padding:6px 12px; border-radius:12px; display:inline-flex; align-items:center; gap:6px;">
+              <i data-lucide="calendar" style="width:14px;height:14px;"></i>
+              <span id="detailsPillScheduleText">Mon–Fri</span>
             </span>
           </div>
-
-          <!-- 3-Pillar Stats Strip -->
-          <div class="profile-stats-strip">
-            <div class="pp-stat-box">
-              <strong class="pp-stat-val" id="detailsProviderExpPillar">5+ Yrs</strong>
-              <span class="pp-stat-lbl">Experience</span>
-            </div>
-            <div class="pp-stat-box">
-              <strong class="pp-stat-val" id="detailsProviderTripsPillar">320+</strong>
-              <span class="pp-stat-lbl" id="detailsProviderTripsLbl">Safe walks</span>
-            </div>
-            <div class="pp-stat-box">
-              <strong class="pp-stat-val" id="detailsProviderOnTimePillar">99.8%</strong>
-              <span class="pp-stat-lbl" id="detailsProviderOnTimeLbl">Safety record</span>
-            </div>
-          </div>
+          <span id="detailsRoleChip" style="display:none;"><span id="detailsRoleChipText"></span></span>
+          <span id="detailsProviderExpPillar" style="display:none;"></span>
+          <span id="detailsProviderTripsPillar" style="display:none;"></span>
+          <span id="detailsProviderOnTimePillar" style="display:none;"></span>
         </div>
 
-        <section class="pp-section">
-          <h4 class="pp-label" id="detailsServiceLabel">Neighborhood Walking Group</h4>
-          <div id="detailsServiceCard">
-            <div class="pp-vehicle-line">
-              <div class="profile-service-title" id="detailsProviderVehTitle">Neighborhood Walking Group</div>
-              <div class="profile-service-subtitle" id="detailsProviderVehSubtitle">Supervised neighborhood group walk to school</div>
+        <!-- Card 2: Overview -->
+        <section class="pp-section" style="background:#FFFFFF; border-radius:18px; border:1px solid #F1F5F9; padding:16px 18px; box-shadow:0 1px 4px rgba(15,23,42,0.03); width:100%; box-sizing:border-box;">
+          <h4 class="pp-label" style="margin:0 0 14px; font-family:'Manrope',system-ui,sans-serif; font-size:15px; font-weight:800; color:#0F172A;">Overview</h4>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#64748B; font-weight:600;">
+                <i data-lucide="map-pin" style="width:16px;height:16px; color:#1E293B;"></i>
+                <span>Service area</span>
+              </div>
+              <div id="detailsZoneText" style="font-size:13px; font-weight:700; color:#0F172A; text-align:right;">Greenfield / Midtown</div>
             </div>
-
-            <!-- Clean Commute Specs Table (replaces 4 bulky boxes) -->
-            <div class="pp-specs-table-wrap" id="detailsSpecsTableWrap">
-              <table class="pp-specs-clean-table">
-                <tbody>
-                  <tr>
-                    <td class="spec-table-lbl"><i data-lucide="users" class="spec-icon"></i> <span>Capacity</span></td>
-                    <td class="spec-table-val" id="specSeatsText">3 kids</td>
-                  </tr>
-                  <tr>
-                    <td class="spec-table-lbl"><i data-lucide="shield" class="spec-icon"></i> <span id="specPlateLbl">Path</span></td>
-                    <td class="spec-table-val" id="specPlateText">Sidewalks only</td>
-                  </tr>
-                  <tr>
-                    <td class="spec-table-lbl"><i data-lucide="map-pin" class="spec-icon"></i> <span>Service Zone</span></td>
-                    <td class="spec-table-val" id="detailsZoneText">Elm → Greenfield</td>
-                  </tr>
-                  <tr>
-                    <td class="spec-table-lbl"><i data-lucide="calendar" class="spec-icon"></i> <span>Schedule</span></td>
-                    <td class="spec-table-val" id="detailsAvailText">Mon–Fri · AM &amp; PM</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#64748B; font-weight:600;">
+                <i data-lucide="car" id="overviewRouteIcon" style="width:16px;height:16px; color:#1E293B;"></i>
+                <span id="overviewRouteLabel">Vehicle &amp; Plate</span>
+              </div>
+              <div id="specPlateText" style="font-size:13px; font-weight:700; color:#0F172A; text-align:right;">Toyota Sienna · Plate SCH-4091</div>
             </div>
-
-            <div class="profile-spec-chips" id="detailsSafetyChips" style="margin-top: 10px;">
-              <span class="profile-spec-chip" id="specBoosterText">High-vis vests</span>
-              <span class="profile-spec-chip" id="specLocksText">Crossing care</span>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#64748B; font-weight:600;">
+                <i data-lucide="calendar" style="width:16px;height:16px; color:#1E293B;"></i>
+                <span>Schedule</span>
+              </div>
+              <div id="detailsAvailText" style="font-size:13px; font-weight:700; color:#0F172A; text-align:right;">Mon–Fri · AM &amp; PM</div>
             </div>
-            <div class="profile-service-icon-box" id="detailsVehIconBox" style="display:none;"></div>
           </div>
+          <!-- Fallback bindings for existing scripts -->
+          <span id="detailsServiceLabel" style="display:none;"></span>
+          <span id="detailsProviderVehTitle" style="display:none;"></span>
+          <span id="detailsProviderVehSubtitle" style="display:none;"></span>
+          <span id="specSeatsText" style="display:none;"></span>
+          <span id="specPlateLbl" style="display:none;"></span>
+          <span id="specBoosterText" style="display:none;"></span>
+          <span id="specLocksText" style="display:none;"></span>
+          <span id="detailsVehIconBox" style="display:none;"></span>
         </section>
 
-        <section class="pp-section">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-            <h4 class="pp-label" style="margin:0;">Safety &amp; Verification Checks</h4>
-            <span id="detailsSafetyBadge" style="background:#DCFCE7; color:#15803D; font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px; border:1px solid #BBF7D0;">6 / 6 Verified</span>
+        <!-- Card 3: Verification -->
+        <section class="pp-section" style="background:#FFFFFF; border-radius:18px; border:1px solid #F1F5F9; padding:16px 18px; box-shadow:0 1px 4px rgba(15,23,42,0.03); width:100%; box-sizing:border-box;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <h4 class="pp-label" style="margin:0; font-family:'Manrope',system-ui,sans-serif; font-size:15px; font-weight:800; color:#0F172A;">Verification</h4>
+            <span id="detailsSafetyBadge" style="background:#DCFCE7; color:#16A34A; font-size:11.5px; font-weight:800; padding:3px 10px; border-radius:999px;">5 / 5 verified</span>
           </div>
-          <ul class="pp-safety-list" id="detailsSafetyList">
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Driver’s licence verified</span></li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Proof of residency: Property Tax / Tenancy agreement</span></li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Proof of residency: Utility bill</span></li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Criminal background check</span></li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Vulnerable sector check</span></li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Pediatric First-Aid / CPR certified</span></li>
+          <ul class="pp-safety-list" id="detailsSafetyList" style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;">
+            <li style="display:flex; align-items:center; gap:10px; font-size:13px; color:#1E293B; font-weight:600; padding-bottom:10px; border-bottom:1px solid #F8FAFC;">
+              <span style="width:20px; height:20px; border-radius:50%; background:#DCFCE7; display:flex; align-items:center; justify-content:center; color:#16A34A; flex-shrink:0;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>Driver’s licence verified (Class G)</span>
+            </li>
+            <li style="display:flex; align-items:center; gap:10px; font-size:13px; color:#1E293B; font-weight:600; padding-bottom:10px; border-bottom:1px solid #F8FAFC;">
+              <span style="width:20px; height:20px; border-radius:50%; background:#DCFCE7; display:flex; align-items:center; justify-content:center; color:#16A34A; flex-shrink:0;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>Commercial vehicle insurance on file</span>
+            </li>
+            <li style="display:flex; align-items:center; gap:10px; font-size:13px; color:#1E293B; font-weight:600; padding-bottom:10px; border-bottom:1px solid #F8FAFC;">
+              <span style="width:20px; height:20px; border-radius:50%; background:#DCFCE7; display:flex; align-items:center; justify-content:center; color:#16A34A; flex-shrink:0;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>Criminal background check (Clean)</span>
+            </li>
+            <li style="display:flex; align-items:center; gap:10px; font-size:13px; color:#1E293B; font-weight:600; padding-bottom:10px; border-bottom:1px solid #F8FAFC;">
+              <span style="width:20px; height:20px; border-radius:50%; background:#DCFCE7; display:flex; align-items:center; justify-content:center; color:#16A34A; flex-shrink:0;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>Vulnerable sector check (Police certified)</span>
+            </li>
+            <li style="display:flex; align-items:center; gap:10px; font-size:13px; color:#1E293B; font-weight:600;">
+              <span style="width:20px; height:20px; border-radius:50%; background:#DCFCE7; display:flex; align-items:center; justify-content:center; color:#16A34A; flex-shrink:0;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>Child safety locks &amp; booster seats inspected</span>
+            </li>
           </ul>
         </section>
 
-        <section class="pp-section">
-          <h4 class="pp-label">Rates &amp; Payment</h4>
-          <div class="pp-rate-card">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
-              <div>
-                <div style="font-size:10.5px; color:#64748B; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Typical / Posted rate</div>
-                <div style="font-size:24px; font-weight:800; color:#0F172A; font-family:'Manrope', system-ui, sans-serif;" id="detailsPostedRateText">$75/week</div>
-              </div>
-              <span class="rate-negotiable-badge" id="detailsRateNegotiableBadge" style="background:#EFF6FF; color:#2563EB; font-size:11px; font-weight:700; padding:4px 10px; border-radius:9999px; border:1px solid #BFDBFE;">Negotiable</span>
+        <!-- Card 4: Rates & Payment -->
+        <section class="pp-section" style="background:#FFFFFF; border-radius:18px; border:1px solid #F1F5F9; padding:16px 18px; box-shadow:0 1px 4px rgba(15,23,42,0.03); width:100%; box-sizing:border-box;">
+          <h4 class="pp-label" style="margin:0 0 10px; font-family:'Manrope',system-ui,sans-serif; font-size:15px; font-weight:800; color:#0F172A;">Rates &amp; Payment</h4>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="font-family:'Manrope',system-ui,sans-serif; font-size:26px; font-weight:800; color:#0F172A; letter-spacing:-0.02em;" id="detailsPostedRateText">$60/week</div>
+            <span class="rate-negotiable-badge" id="detailsRateNegotiableBadge" style="background:#EFF6FF; color:#2563EB; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:999px;">Negotiable</span>
+          </div>
+          <div style="border-top:1px solid #F1F5F9; padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:#64748B; font-weight:500;">
+              <i data-lucide="credit-card" style="width:16px;height:16px; color:#64748B;"></i>
+              <span>Preferred payment</span>
             </div>
-            <div style="font-size:12px; color:#64748B; margin-bottom:12px;">Rate is arranged directly between parent and escort for your schedule &amp; children</div>
-            <div style="border-top:1px dashed #E2E8F0; padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:12px; color:#475569; font-weight:700;">Preferred payment:</span>
-              <span style="font-size:12.5px; color:#0F172A; font-weight:700;" id="detailsPreferredPaymentText">e-Transfer · Cash</span>
-            </div>
+            <span style="font-size:12.5px; color:#0F172A; font-weight:700;" id="detailsPreferredPaymentText">e-Transfer · Cash</span>
           </div>
         </section>
 
-        <section class="pp-section">
-          <h4 class="pp-label" id="detailsAboutLabel">About</h4>
-          <p class="profile-about-text" id="detailsProviderBio">Sarah leads a supervised neighborhood walking group so local children walk to school together safely on verified sidewalk corridors and crosswalks to the school gate.</p>
+        <!-- Card 5: About Robert -->
+        <section class="pp-section" style="background:#FFFFFF; border-radius:18px; border:1px solid #F1F5F9; padding:16px 18px; box-shadow:0 1px 4px rgba(15,23,42,0.03); width:100%; box-sizing:border-box;">
+          <h4 class="pp-label" id="detailsAboutLabel" style="margin:0 0 8px; font-family:'Manrope',system-ui,sans-serif; font-size:15px; font-weight:800; color:#0F172A;">About Robert</h4>
+          <p class="profile-about-text" id="detailsProviderBio" style="margin:0; font-size:13px; color:#475569; line-height:1.55; font-weight:500;">Robert provides daily school rides with a focus on child safety, calm pickups, booster-ready seating, and on-time arrival at the school gate.</p>
         </section>
 
-        <div class="booking-flow-sticky-footer" id="detailsProviderActionsWrap">
-          <div class="profile-sticky-footer-inner pp-footer-dual">
-            <button type="button" class="pp-btn-outline" onclick="openChatWith(window.currentBookingProviderId || 'tariq')">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+        <div class="booking-flow-sticky-footer" id="detailsProviderActionsWrap" style="position:sticky; bottom:0; left:0; right:0; background:#FFFFFF; border-top:1px solid #F1F5F9; padding:12px 16px 20px; z-index:50;">
+          <div class="profile-sticky-footer-inner pp-footer-dual" style="display:flex; gap:10px; width:100%;">
+            <button type="button" class="pp-btn-outline" onclick="openChatWith(window.currentBookingProviderId || 'tariq')" style="flex:1; height:48px; border-radius:12px; border:1.5px solid #E2E8F0; background:#FFFFFF; color:#0F172A; font-family:'Manrope',system-ui,sans-serif; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+              <i data-lucide="message-square" style="width:16px;height:16px;"></i>
               <span>Message</span>
             </button>
-            <button class="btn-primary" id="btnBookWithProvider" onclick="startBookingReview(window.currentBookingProviderId || 'tariq')">
-              <span>Request Booking</span>
+            <button class="btn-primary" id="btnBookWithProvider" onclick="startBookingReview(window.currentBookingProviderId || 'tariq')" style="flex:1.6; height:48px; border-radius:12px; background:#1B2B68; color:#FFFFFF; font-family:'Manrope',system-ui,sans-serif; font-size:14.5px; font-weight:800; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+              <span>Request Robert</span>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </button>
             <span id="detailsStickyPrice" style="display:none;"></span>
@@ -6851,110 +6877,163 @@
         </div>
       </div>
 
-      <div class="top-bar-sticky">
-        <button class="back-btn" onclick="navigateTo('bookingSearchProviders')">
-          <i data-lucide="chevron-left"></i>
+      <!-- Review Booking Screen -->
+      <div class="top-bar-sticky" style="background:#FFFFFF; border-bottom:1px solid #F1F5F9; position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:10px 16px; height:52px; box-sizing:border-box;">
+        <button class="back-btn" onclick="navigateTo('bookingSearchProviders')" aria-label="Go back" style="background:none; border:none; padding:6px; cursor:pointer; display:flex; align-items:center; color:#0F172A;">
+          <i data-lucide="chevron-left" style="width:22px; height:22px;"></i>
         </button>
-        <h2 class="top-bar-title">Review Booking</h2>
-        <span style="width: 26px;"></span>
+        <h2 class="top-bar-title" style="margin:0; font-family:'Manrope',system-ui,sans-serif; font-size:17px; font-weight:800; color:#0F172A; text-align:center; flex:1;">Review Booking</h2>
+        <span style="width: 32px;"></span>
       </div>
 
-      <div class="screen-scroll-body rs-scroll">
-        <button type="button" class="rs-provider" id="summaryProviderCard" onclick="openDriverProfile(window.appState.bookingDraft.providerId || 'tariq', 'bookingSummary')">
-          <img src="/assets/avatar_tariq.jpg" alt="" class="rs-provider-avatar" id="summaryProviderAvatar" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
-          <div class="rs-provider-main">
-            <div class="rs-provider-name" id="summaryProviderText">Robert MacDonald</div>
-            <div class="rs-provider-meta" id="summaryVehicleText">Toyota Sienna · SCH-4091</div>
+      <div class="screen-scroll-body rs-scroll" style="background:#F8FAFC; padding:14px 16px 100px; display:flex; flex-direction:column; gap:14px; overflow-y:auto; box-sizing:border-box;">
+        <!-- 1. Provider Card with Car Thumbnail -->
+        <div class="rs-provider-card" id="summaryProviderCard" onclick="openDriverProfile(window.appState.bookingDraft.providerId || 'tariq', 'bookingSummary')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; width:100%; box-sizing:border-box;">
+          <img src="/assets/avatar_tariq.jpg" alt="Provider" class="rs-provider-avatar" id="summaryProviderAvatar" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:1.5px solid #E2E8F0; flex-shrink:0;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+          <div class="rs-provider-info" style="flex:1; min-width:0; text-align:left;">
+            <div class="rs-provider-name" id="summaryProviderText" style="font-family:'Manrope',system-ui,sans-serif; font-size:15px; font-weight:800; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Robert MacDonald</div>
+            <div class="rs-provider-meta" id="summaryVehicleText" style="font-size:12px; color:#64748B; font-weight:500; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Toyota Sienna (2023) · SCH-4091</div>
+          </div>
+          <div class="rs-provider-car-wrap" id="summaryVehicleThumbWrap" style="width:76px; height:44px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">
+            <img src="/assets/toyota_sienna_white.jpg" alt="Vehicle" class="rs-provider-car-img" id="summaryVehicleThumb" style="width:76px; height:42px; max-width:76px; max-height:42px; object-fit:contain; display:block;" onerror="this.style.display='none';" />
           </div>
           <span id="summaryPostedRateText" style="display:none;"></span>
-        </button>
-
-        <section class="rs-section">
-          <h4 class="rs-label">Route</h4>
-          <div class="rs-route">
-            <div class="rs-route-point">
-              <span class="rs-dot home"></span>
-              <div>
-                <div class="rs-route-lbl">Pickup</div>
-                <div class="rs-route-val" id="summaryPickupText">12 Elm Street</div>
-              </div>
-              <div class="rs-route-time" id="summaryOutboundText">07:30 AM</div>
-            </div>
-            <div class="rs-route-line"></div>
-            <div class="rs-route-point">
-              <span class="rs-dot school"></span>
-              <div>
-                <div class="rs-route-lbl">Drop-off</div>
-                <div class="rs-route-val" id="summaryDropoffText">Greenfield International School</div>
-              </div>
-            </div>
-            <div class="rs-route-point" id="summaryReturnRow">
-              <span class="rs-dot return"></span>
-              <div>
-                <div class="rs-route-lbl">Return</div>
-                <div class="rs-route-val">Back home</div>
-              </div>
-              <div class="rs-route-time" id="summaryReturnText">01:00 PM</div>
-            </div>
-          </div>
-        </section>
-
-        <section class="rs-section">
-          <h4 class="rs-label">Details</h4>
-          <div class="rs-meta-card">
-            <div class="rs-meta-row">
-              <span class="rs-meta-lbl">Children</span>
-              <span class="rs-meta-val" id="summaryChildrenText">Liam &amp; Emma</span>
-            </div>
-            <div class="rs-meta-row">
-              <span class="rs-meta-lbl">When</span>
-              <span class="rs-meta-val" id="summaryWhenText">Mon, Sep 8 · Round trip</span>
-            </div>
-            <div class="rs-meta-row" id="summaryRecurringRow">
-              <span class="rs-meta-lbl">Repeat</span>
-              <span class="rs-meta-val" id="summaryFreqText">One-time</span>
-            </div>
-            <div class="rs-meta-row" id="summaryNotesRow" style="display:none; align-items: flex-start;">
-              <span class="rs-meta-lbl">Notes</span>
-              <span class="rs-meta-val" id="summaryNotesText" style="text-align: right; max-width: 65%; font-weight: 500; color: #334155; word-break: break-word;"></span>
-            </div>
-          </div>
-        </section>
-
-        <section class="rs-section" id="summaryPricingCardSection">
-          <h4 class="rs-label">Total Escrow Price</h4>
-          <div class="rs-meta-card" style="padding: 16px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <span style="font-size: 13.5px; font-weight: 700; color: #0F172A; display: block; margin-bottom: 3px;">Stripe Escrow Rate</span>
-              <div style="font-size: 11.5px; color: #059669; font-weight: 700; display: flex; align-items: center; gap: 4px;">
-                <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
-                <span>Held safely until ride completed</span>
-              </div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 24px; font-weight: 800; color: #0F172A; font-family: 'Manrope', system-ui, sans-serif;" id="summaryTotalEscrowVal">$60.00</div>
-              <span style="font-size: 11px; color: #64748B; font-weight: 600;" id="summaryPriceUnitText">/week</span>
-            </div>
-          </div>
-          <span id="summaryBaseRateVal" style="display:none;">$60.00</span>
-          <span id="summaryServiceFeeVal" style="display:none;">$0.00</span>
-          <span id="summaryStripeFeeVal" style="display:none;">$0.00</span>
-        </section>
-
-        <span id="summaryDateText" style="display:none;">Mon, Sep 8</span>
-        <span id="summaryTripTypeText" style="display:none;">Round trip</span>
-        <span id="summaryListedRateVal" style="display:none;">$60/week</span>
-
-        <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 10px 12px; margin: 12px 0 16px; display: flex; align-items: flex-start; gap: 8px;">
-          <i data-lucide="shield-check" style="width: 18px; height: 18px; color: #1B2B68; flex-shrink: 0; margin-top: 1px;"></i>
-          <p style="font-size: 11.5px; color: #1E293B; margin: 0; line-height: 1.4;">
-            <strong>In-Platform Escrow Protection:</strong> Payment remains safely held by Stripe until your driver completes the trip and you confirm safe arrival.
-          </p>
         </div>
 
-        <div class="rs-actions">
-          <button class="btn-primary" onclick="submitBookingRequest()">Authorize &amp; Send Booking Request</button>
-          <button class="btn-secondary-link" onclick="navigateTo('bookingTripSetup')">Edit details</button>
+        <!-- 2. Route Section (Vertical Timeline) -->
+        <section class="rs-section" style="padding:0; border:none; margin-top:2px;">
+          <span class="rs-section-lbl" style="font-size:12.5px; font-weight:700; color:#64748B; margin:0 0 8px 2px; display:block;">Route</span>
+          <div class="rs-route-box" style="background:transparent; padding:0 4px; display:flex; flex-direction:column;">
+            <!-- Drop-off point (School) -->
+            <div class="rs-route-step" style="display:flex; align-items:center; gap:12px; position:relative;">
+              <span class="rs-route-dot dropoff" style="width:10px; height:10px; border-radius:50%; background:#EA580C; outline:3px solid #FFEDD5; flex-shrink:0; box-sizing:border-box;"></span>
+              <div class="rs-route-info" style="flex:1; min-width:0;">
+                <div class="rs-route-title" id="summaryDropoffText" style="font-family:'Manrope',system-ui,sans-serif; font-size:14.5px; font-weight:800; color:#0F172A; line-height:1.2;">School</div>
+                <div class="rs-route-sub" id="summaryDropoffSubText" style="font-size:10px; font-weight:700; color:#94A3B8; letter-spacing:0.6px; text-transform:uppercase; margin-top:2px;">DROP-OFF</div>
+              </div>
+              <div class="rs-route-time" id="summaryOutboundText" style="display:none; font-family:'Manrope',system-ui,sans-serif; font-size:14px; font-weight:800; color:#0F172A;">07:30 AM</div>
+            </div>
+            
+            <div class="rs-route-dashed-line" style="border-left:2px dashed #CBD5E1; height:18px; margin:2px 0 2px 4px;"></div>
+
+            <!-- Return point (Back home) -->
+            <div class="rs-route-step" id="summaryReturnRow" style="display:flex; align-items:center; gap:12px; position:relative;">
+              <span class="rs-route-dot return" style="width:10px; height:10px; border-radius:50%; background:#16A34A; outline:3px solid #DCFCE7; flex-shrink:0; box-sizing:border-box;"></span>
+              <div class="rs-route-info" style="flex:1; min-width:0;">
+                <div class="rs-route-title" id="summaryReturnTextDesc" style="font-family:'Manrope',system-ui,sans-serif; font-size:14.5px; font-weight:800; color:#0F172A; line-height:1.2;">Back home</div>
+                <div class="rs-route-sub" style="font-size:10px; font-weight:700; color:#94A3B8; letter-spacing:0.6px; text-transform:uppercase; margin-top:2px;">RETURN</div>
+              </div>
+              <div class="rs-route-time" id="summaryReturnText" style="font-family:'Manrope',system-ui,sans-serif; font-size:14px; font-weight:800; color:#0F172A; text-align:right; flex-shrink:0;">01:00 PM</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Details Bento List Card with Chevrons -->
+        <div class="rs-details-card" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px; padding:0 16px; box-shadow:0 1px 4px rgba(15,23,42,0.04);">
+          <div class="rs-details-row" onclick="navigateTo('bookingTripSetup')" style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #F1F5F9; cursor:pointer;">
+            <div class="rs-details-left" style="display:flex; align-items:center; gap:12px;">
+              <i data-lucide="users" class="rs-details-icon" style="width:17px; height:17px; color:#1E293B; flex-shrink:0;"></i>
+              <span class="rs-details-lbl" style="font-size:13.5px; font-weight:600; color:#1E293B;">Children</span>
+            </div>
+            <div class="rs-details-right" style="display:flex; align-items:center; gap:6px; max-width:62%;">
+              <span class="rs-details-val" id="summaryChildrenText" style="font-size:13px; color:#334155; font-weight:500; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">No children selected</span>
+              <i data-lucide="chevron-right" class="rs-details-arrow" style="width:15px; height:15px; color:#94A3B8; flex-shrink:0;"></i>
+            </div>
+          </div>
+
+          <div class="rs-details-row" onclick="navigateTo('bookingTripSetup')" style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #F1F5F9; cursor:pointer;">
+            <div class="rs-details-left" style="display:flex; align-items:center; gap:12px;">
+              <i data-lucide="calendar" class="rs-details-icon" style="width:17px; height:17px; color:#1E293B; flex-shrink:0;"></i>
+              <span class="rs-details-lbl" style="font-size:13.5px; font-weight:600; color:#1E293B;">When</span>
+            </div>
+            <div class="rs-details-right" style="display:flex; align-items:center; gap:6px; max-width:62%;">
+              <span class="rs-details-val" id="summaryWhenText" style="font-size:13px; color:#334155; font-weight:500; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Mon, Sep 8 · Round Trip</span>
+              <i data-lucide="chevron-right" class="rs-details-arrow" style="width:15px; height:15px; color:#94A3B8; flex-shrink:0;"></i>
+            </div>
+          </div>
+
+          <div class="rs-details-row" onclick="navigateTo('bookingTripSetup')" style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; cursor:pointer;">
+            <div class="rs-details-left" style="display:flex; align-items:center; gap:12px;">
+              <i data-lucide="repeat" class="rs-details-icon" style="width:17px; height:17px; color:#1E293B; flex-shrink:0;"></i>
+              <span class="rs-details-lbl" style="font-size:13.5px; font-weight:600; color:#1E293B;">Repeat</span>
+            </div>
+            <div class="rs-details-right" style="display:flex; align-items:center; gap:6px; max-width:62%;">
+              <span class="rs-details-val" id="summaryFreqText" style="font-size:13px; color:#334155; font-weight:500; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">One-Time Ride (Single Day Pass)</span>
+              <i data-lucide="chevron-right" class="rs-details-arrow" style="width:15px; height:15px; color:#94A3B8; flex-shrink:0;"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Total for this trip Section -->
+        <section class="rs-total-section" style="margin-top:2px;">
+          <h4 class="rs-total-heading" style="font-family:'Manrope',system-ui,sans-serif; font-size:15.5px; font-weight:800; color:#0F172A; margin:6px 0 10px 2px; letter-spacing:-0.01em;">Total for this trip</h4>
+          
+          <!-- Escrow Rate Card (Soft Mint Green Tint) -->
+          <div class="rs-escrow-rate-card" style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:18px; padding:13px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; box-sizing:border-box;">
+            <div class="rs-escrow-rate-left" style="display:flex; align-items:center; gap:12px; min-width:0;">
+              <div class="rs-rate-icon-badge" style="width:40px; height:40px; border-radius:12px; background:#DCFCE7; display:flex; align-items:center; justify-content:center; color:#16A34A; flex-shrink:0;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <path d="m9 15 2 2 4-4"/>
+                </svg>
+              </div>
+              <div>
+                <span class="rs-rate-title" style="font-family:'Manrope',system-ui,sans-serif; font-size:14.5px; font-weight:800; color:#0F172A; display:block; line-height:1.2; margin-bottom:2px;">Trip Escrow Rate</span>
+                <div class="rs-rate-held-line" style="display:flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:#16A34A;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <span>Held safely until ride is completed</span>
+                </div>
+              </div>
+            </div>
+            <div class="rs-rate-price-block" style="text-align:right; flex-shrink:0;">
+              <div class="rs-rate-amount" id="summaryTotalEscrowVal" style="font-family:'Manrope',system-ui,sans-serif; font-size:24px; font-weight:800; color:#0F172A; line-height:1.1;">$14.00</div>
+              <span class="rs-rate-unit" id="summaryPriceUnitText" style="font-size:11.5px; font-weight:600; color:#64748B; display:block; margin-top:1px;">/ trip</span>
+            </div>
+          </div>
+
+          <!-- Safe Arrival Escrow Protection Card (Soft Blue Tint) -->
+          <div class="rs-escrow-protection-card" style="background:#EFF6FF; border:1px solid #DBEAFE; border-radius:18px; padding:13px 15px; display:flex; align-items:flex-start; gap:12px; margin-top:10px; box-sizing:border-box;">
+            <div class="rs-protection-icon-badge" style="width:34px; height:34px; border-radius:50%; background:#DBEAFE; display:flex; align-items:center; justify-content:center; color:#2563EB; flex-shrink:0; margin-top:1px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#2563EB" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4" stroke="#FFFFFF" stroke-width="2.5" fill="none"/>
+              </svg>
+            </div>
+            <div>
+              <h5 class="rs-protection-title" style="font-family:'Manrope',system-ui,sans-serif; font-size:13px; font-weight:800; color:#1E293B; margin:0 0 3px 0;">Safe Arrival Escrow Protection</h5>
+              <p class="rs-protection-desc" style="font-size:11.5px; color:#475569; line-height:1.45; margin:0; font-weight:500;">
+                Your payment is held safely in escrow. Funds are only released to your driver after your child arrives safely and you confirm drop-off.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Hidden Fallback State Elements -->
+        <span id="summaryPickupText" style="display:none;">12 Elm Street</span>
+        <span id="summaryDateText" style="display:none;">Mon, Sep 8</span>
+        <span id="summaryTripTypeText" style="display:none;">Round trip</span>
+        <span id="summaryListedRateVal" style="display:none;">$14/trip</span>
+        <span id="summaryBaseRateVal" style="display:none;">$14.00</span>
+        <span id="summaryServiceFeeVal" style="display:none;">$0.00</span>
+        <span id="summaryStripeFeeVal" style="display:none;">$0.00</span>
+
+        <!-- 5. Actions with Superior UX Copy -->
+        <div class="rs-actions-clean" style="display:flex; flex-direction:column; align-items:center; margin-top:8px; width:100%;">
+          <button type="button" class="rs-btn-primary" id="btnSubmitBookingRequest" onclick="submitBookingRequest()" style="width:100%; height:52px; border-radius:16px; background:#1B2B68; color:#FFFFFF; font-family:'Manrope',system-ui,sans-serif; font-size:15px; font-weight:800; border:none; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; box-shadow:0 4px 14px rgba(27,43,104,0.22);">
+            <span id="summaryActionBtnText">Confirm &amp; Request Booking</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+          
+          <div class="rs-reassurance-line" style="display:flex; align-items:center; justify-content:center; gap:5px; margin-top:8px; font-size:11.5px; color:#64748B; font-weight:600;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            <span>Safe Escrow Protection · Held securely until arrival</span>
+          </div>
+
+          <button type="button" class="rs-btn-edit-link" onclick="navigateTo('bookingTripSetup')" style="background:transparent; border:none; color:#2563EB; font-size:13.5px; font-weight:700; margin-top:6px; padding:6px 12px; cursor:pointer; text-decoration:none;">Edit details</button>
         </div>
       </div>
 
@@ -7281,10 +7360,10 @@
           <div id="detailPassengersWrap" class="bd-children-stacked-list"></div>
         </section>
 
-        <!-- 5. Dedicated Payment & Pricing Card (Stripe Escrow Model) -->
+        <!-- 5. Dedicated Payment & Pricing Card (Platform Escrow Model) -->
         <section class="bd-pricing-card">
           <div class="bd-pricing-head">
-            <div class="bd-pricing-title">Stripe In-Platform Escrow</div>
+            <div class="bd-pricing-title">Protected Escrow Payment</div>
             <span class="bd-pricing-pill" id="detailPaymentStatusPill" style="background:#ECFDF5; color:#059669; border-color:#A7F3D0;">
               <i data-lucide="shield-check" style="width:12px;height:12px;"></i>
               <span id="detailPaymentStatusText">Funds Held in Escrow</span>
@@ -7293,7 +7372,7 @@
           <div class="bd-pricing-amount-row" style="border-bottom: none; padding-bottom: 0; display: flex; align-items: center; justify-content: space-between;">
             <div>
               <div class="bd-pricing-amount" id="detailPriceAmount">$60/week</div>
-              <div style="font-size:11.5px; color:#64748B; font-weight:600; margin-top: 2px;" id="detailPriceBillingCycle">Protected by Stripe Escrow Guarantee</div>
+              <div style="font-size:11.5px; color:#64748B; font-weight:600; margin-top: 2px;" id="detailPriceBillingCycle">Protected by Safe Escrow Guarantee</div>
             </div>
             <div style="display: flex; gap: 6px;">
               <button type="button" class="btn-secondary-surface" style="height: 32px; padding: 0 10px; font-size: 11px; border-radius: 8px; font-weight: 700;" onclick="openDisputeModal(window.appState.activeBookingId)">Report Issue</button>
@@ -7619,21 +7698,46 @@
             </div>
           </div>
 
-          <!-- Handover Photo Proof Bar (Optional Pickup & Drop-off Documentation) -->
-          <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <div style="width: 32px; height: 32px; border-radius: 50%; background: #1B2B68; display: flex; align-items: center; justify-content: center; color: #FFFFFF;">
-                <i data-lucide="camera" style="width: 16px; height: 16px;"></i>
+          <!-- Live Handover Photo Proof (Pickup & Drop-off Visual Documentation) -->
+          <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 12px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(15,23,42,0.04);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 7px;">
+                <div style="width: 26px; height: 26px; border-radius: 50%; background: #EFF6FF; display: flex; align-items: center; justify-content: center; color: #1B2B68;">
+                  <i data-lucide="camera" style="width: 14px; height: 14px;"></i>
+                </div>
+                <div>
+                  <div style="font-size: 12.5px; font-weight: 800; color: #0F172A;">Live Handover Photo Proof</div>
+                </div>
               </div>
-              <div>
-                <div style="font-size: 12.5px; font-weight: 800; color: #1B2B68;">Handover Photo Proof</div>
-                <div style="font-size: 11px; color: #64748B;">Pickup &amp; Drop-off photo records</div>
+              <button type="button" class="btn-text-link" style="font-size: 11.5px; font-weight: 800; color: #2563EB; cursor: pointer; border: none; background: none; padding: 0;" onclick="openTripPhotoProofModal('pickup')">
+                <span>View Full Proof ➔</span>
+              </button>
+            </div>
+
+            <!-- Two Visual Handover Thumbnails (Pickup & Drop-off) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <!-- Pickup Thumbnail Card -->
+              <div onclick="openTripPhotoProofModal('pickup')" style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 6px; cursor: pointer; text-align: left; transition: all 0.15s ease;" title="Click to view pickup photo proof">
+                <div style="position: relative; border-radius: 7px; overflow: hidden; height: 80px; margin-bottom: 4px; background: #0F172A;">
+                  <img id="trackingPickupThumbImg" src="/assets/onboarding1.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Pickup proof" />
+                  <span style="position: absolute; top: 4px; left: 4px; background: rgba(15,23,42,0.75); color: #FFF; font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 4px;">Pickup</span>
+                  <span style="position: absolute; bottom: 4px; right: 4px; background: rgba(16,185,129,0.9); color: #FFF; font-size: 8.5px; font-weight: 800; padding: 1px 4px; border-radius: 3px;">✓ Boarded</span>
+                </div>
+                <div style="font-size: 11px; font-weight: 800; color: #0F172A;" id="trackingPickupTimeLbl">07:34 AM</div>
+                <div style="font-size: 10px; color: #16A34A; font-weight: 600;">Liam &amp; Emma safely seated</div>
+              </div>
+
+              <!-- Drop-off Thumbnail Card -->
+              <div onclick="openTripPhotoProofModal('dropoff')" style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 6px; cursor: pointer; text-align: left; transition: all 0.15s ease;" title="Click to view drop-off photo proof">
+                <div style="position: relative; border-radius: 7px; overflow: hidden; height: 80px; margin-bottom: 4px; background: #0F172A;">
+                  <img id="trackingDropoffThumbImg" src="/assets/onboarding3.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Drop-off proof" />
+                  <span style="position: absolute; top: 4px; left: 4px; background: rgba(15,23,42,0.75); color: #FFF; font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 4px;">Drop-off</span>
+                  <span style="position: absolute; bottom: 4px; right: 4px; background: rgba(37,99,235,0.9); color: #FFF; font-size: 8.5px; font-weight: 800; padding: 1px 4px; border-radius: 3px;" id="trackingDropoffBadge">Gate Safe</span>
+                </div>
+                <div style="font-size: 11px; font-weight: 800; color: #0F172A;" id="trackingDropoffTimeLbl">08:12 AM</div>
+                <div style="font-size: 10px; color: #64748B; font-weight: 600;" id="trackingDropoffStatusLbl">Greenfield School Gate</div>
               </div>
             </div>
-            <button type="button" class="btn-primary" style="height: 32px; padding: 0 12px; font-size: 11.5px; border-radius: 8px;" onclick="openTripPhotoProofModal('pickup')">
-              <span>View Proof</span>
-              <i data-lucide="chevron-right" style="width: 12px; height: 12px; margin-left: 2px;"></i>
-            </button>
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid #F1F5F9;">
@@ -9517,102 +9621,140 @@
 
     <!-- ================= ENTERPRISE REFERRAL MODAL ================= -->
     <div class="referral-modal-overlay" id="referralModal" onclick="if(event.target === this) closeReferralModal()">
-      <div class="referral-modal-card" onclick="event.stopPropagation()">
+      <div class="referral-modal-card" onclick="event.stopPropagation()" style="max-width: 420px; border-radius: 20px; padding: 24px 20px;">
         <div style="width: 56px; height: 56px; border-radius: 50%; background: #EFF6FF; border: 2px solid #BFDBFE; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
           <i data-lucide="gift" style="width: 28px; height: 28px; color: #1B2B68;"></i>
         </div>
-        <h3 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0 0 6px;">Refer Families &amp; Earn</h3>
-        <p style="font-size: 13px; color: #64748B; margin: 0 0 16px; line-height: 1.4;">
-          Invite neighborhood parents or drivers to <strong>Home2School</strong>. You both get <strong>$15 ride credits</strong> on their first completed school commute.
+        <h3 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0 0 6px;" id="refModalTitle">Refer Families &amp; Earn $15</h3>
+        <p style="font-size: 13px; color: #64748B; margin: 0 0 16px; line-height: 1.45;" id="refModalSubtitle">
+          Share your personal invite link with neighborhood parents or drivers. When they complete their first school commute, you both get <strong>$15 ride credits</strong>.
         </p>
 
-        <div style="background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px; padding: 14px; margin-bottom: 16px;">
-          <span style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Your Personal Referral Code</span>
-          <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-            <div class="referral-code-badge" id="refModalCodeDisplay" style="background:#1B2B68; color:#FFFFFF; font-size:16px;">H2S-KID-9821</div>
-            <button type="button" class="btn-primary" style="height:36px; padding:0 14px; font-size:12px; border-radius:8px;" onclick="copyReferralCode()">
-              <i data-lucide="copy" style="width:14px;height:14px;margin-right:4px;"></i>
-              <span id="refModalCopyBtnText">Copy Code</span>
+        <!-- Referral Link Generator Box -->
+        <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: left;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 5px;">
+              <i data-lucide="link-2" style="width: 13px; height: 13px; color: #2563EB;"></i>
+              <span>Your Unique Referral Link</span>
+            </span>
+            <span style="font-size: 11px; font-weight: 800; color: #16A34A; background: #DCFCE7; padding: 2px 8px; border-radius: 99px;">$15 Bonus</span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 10px; padding: 5px 6px 5px 12px; box-shadow: 0 1px 2px rgba(15,23,42,0.04);">
+            <i data-lucide="link" style="width: 15px; height: 15px; color: #64748B; flex-shrink: 0;"></i>
+            <input type="text" id="refModalLinkDisplay" readonly value="https://home2school.app/join?ref=parent-sarah-9821" onclick="this.select(); copyReferralLink();" style="flex: 1; border: none; background: transparent; font-size: 12.5px; font-family: 'JetBrains Mono', Menlo, Consolas, monospace; color: #0F172A; font-weight: 600; outline: none; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; min-width: 0; cursor: pointer;" title="Click to copy link" />
+            <button type="button" class="btn-primary" id="refModalCopyBtn" style="height: 36px; padding: 0 14px; font-size: 12.5px; border-radius: 8px; font-weight: 700; flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; background: #1B2B68;" onclick="copyReferralLink()">
+              <i data-lucide="copy" id="refModalCopyIcon" style="width: 14px; height: 14px;"></i>
+              <span id="refModalCopyBtnText">Copy Link</span>
             </button>
           </div>
+
+          <!-- Hidden fallback for legacy code checks -->
+          <div id="refModalCodeDisplay" style="display:none;">H2S-KID-9821</div>
+
+          <p style="margin: 8px 0 0; font-size: 11.5px; color: #64748B; line-height: 1.4;">
+            No manual code required — the $15 discount is applied automatically when anyone registers via this link.
+          </p>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
-          <button type="button" class="btn-secondary-surface" style="padding: 10px; font-size: 12px; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="shareReferralLink('whatsapp')">
+          <button type="button" class="btn-secondary-surface" style="padding: 10px; font-size: 12.5px; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid #E2E8F0;" onclick="shareReferralLink('whatsapp')">
             <i data-lucide="message-circle" style="width: 16px; height: 16px; color: #10B981;"></i>
             <span>WhatsApp</span>
           </button>
-          <button type="button" class="btn-secondary-surface" style="padding: 10px; font-size: 12px; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="shareReferralLink('sms')">
-            <i data-lucide="send" style="width: 16px; height: 16px; color: #0284C7;"></i>
-            <span>SMS / Share</span>
+          <button type="button" class="btn-secondary-surface" style="padding: 10px; font-size: 12.5px; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid #E2E8F0;" onclick="shareReferralLink('sms')">
+            <i data-lucide="share-2" style="width: 16px; height: 16px; color: #0284C7;"></i>
+            <span>Share Link</span>
           </button>
         </div>
 
-        <button type="button" class="btn-secondary-link" onclick="closeReferralModal()" style="font-size: 13px;">Close</button>
+        <button type="button" class="btn-secondary-link" onclick="closeReferralModal()" style="font-size: 13px; font-weight: 600; color: #64748B;">Close</button>
       </div>
     </div>
 
     <!-- ================= TRIP HANDOVER PHOTO PROOF MODAL (PICKUP & DROP-OFF) ================= -->
     <div class="referral-modal-overlay" id="tripPhotoProofModal" onclick="if(event.target === this) closeTripPhotoProofModal()">
-      <div class="referral-modal-card" onclick="event.stopPropagation()" style="max-width: 410px; text-align: left;">
+      <div class="referral-modal-card" onclick="event.stopPropagation()" style="max-width: 420px; text-align: left; border-radius: 20px; padding: 22px 20px;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <div style="width: 38px; height: 38px; border-radius: 50%; background: #EFF6FF; border: 1.5px solid #BFDBFE; display: flex; align-items: center; justify-content: center;">
+          <div style="display: flex; align-items: center; gap: 9px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #EFF6FF; border: 1.5px solid #BFDBFE; display: flex; align-items: center; justify-content: center;">
               <i data-lucide="camera" style="width: 20px; height: 20px; color: #1B2B68;"></i>
             </div>
             <div>
-              <h3 style="font-size: 17px; font-weight: 800; color: #0F172A; margin: 0;" id="photoProofModalTitle">Handover Photo Proof</h3>
-              <span style="font-size: 11px; color: #64748B;">Optional Safety Photo Documentation</span>
+              <h3 style="font-size: 17px; font-weight: 800; color: #0F172A; margin: 0;" id="photoProofModalTitle">Live Handover Photo Proof</h3>
+              <span style="font-size: 11px; color: #64748B;">Real-time Camera Verification · Pickup &amp; Drop-off</span>
             </div>
           </div>
-          <button type="button" class="btn-close-modal" onclick="closeTripPhotoProofModal()" aria-label="Close">
-            <i data-lucide="x" style="width:16px;height:16px;"></i>
+          <button type="button" class="btn-close-modal" onclick="closeTripPhotoProofModal()" aria-label="Close" style="background:#F1F5F9; border:none; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <i data-lucide="x" style="width:16px;height:16px; color:#475569;"></i>
           </button>
         </div>
 
         <!-- Mode Toggle Tabs (Pickup vs Drop-off) -->
-        <div class="photo-proof-tabs">
+        <div class="photo-proof-tabs" style="margin-bottom: 12px;">
           <button type="button" class="photo-proof-tab-btn active" id="tabPhotoPickup" onclick="switchPhotoProofTab('pickup')">
-            <i data-lucide="home" style="width:13px;height:13px;vertical-align:middle;margin-right:3px;"></i>
-            <span>Pickup Handover</span>
+            <i data-lucide="home" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;"></i>
+            <span>Pickup (Home ➔ Car)</span>
           </button>
           <button type="button" class="photo-proof-tab-btn" id="tabPhotoDropoff" onclick="switchPhotoProofTab('dropoff')">
-            <i data-lucide="school" style="width:13px;height:13px;vertical-align:middle;margin-right:3px;"></i>
-            <span>Drop-off Handover</span>
+            <i data-lucide="school" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;"></i>
+            <span>Drop-off (School Gate)</span>
           </button>
         </div>
 
         <!-- Photo Display Frame -->
-        <div class="photo-proof-card" id="photoProofCard">
-          <div class="photo-proof-frame">
-            <img id="photoProofImg" src="/assets/onboarding1.jpg" alt="Handover Proof Photo" onerror="this.src='/assets/auth_hero.jpg';" />
-            <div class="photo-proof-tag" id="photoProofBadge">
-              <i data-lucide="check-circle" style="width: 13px; height: 13px;"></i>
+        <div class="photo-proof-card" id="photoProofCard" style="border-radius: 16px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 4px 14px rgba(15,23,42,0.06);">
+          <div class="photo-proof-frame" style="height: 220px; position: relative; background: #0F172A; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <img id="photoProofImg" src="/assets/onboarding1.jpg" alt="Handover Proof Photo" onerror="this.src='/assets/auth_hero.jpg';" style="width: 100%; height: 100%; object-fit: cover;" />
+            <div class="photo-proof-tag" id="photoProofBadge" style="position: absolute; top: 12px; left: 12px; background: rgba(16, 185, 129, 0.95); color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.25);">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: #FFFFFF; display: inline-block; animation: pulse 1.8s infinite;"></span>
               <span id="photoProofBadgeText">Verified Pickup Proof</span>
             </div>
+            <!-- Live Watermark Overlay -->
+            <div style="position: absolute; bottom: 8px; left: 10px; right: 10px; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); padding: 5px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; color: #FFFFFF; font-size: 10.5px;">
+              <span id="photoProofWatermarkLoc" style="font-weight: 600;">📍 12 Elm Street, Toronto</span>
+              <span id="photoProofWatermarkTime" style="font-weight: 800; color: #34D399;">07:34 AM (Verified)</span>
+            </div>
           </div>
-          <div class="photo-proof-meta-box">
+          <div class="photo-proof-meta-box" style="padding: 12px 14px; background: #F8FAFC; border-top: 1px solid #F1F5F9;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
               <div style="font-size: 12.5px; font-weight: 800; color: #0F172A;" id="photoProofLocationTitle">📍 12 Elm Street, Toronto</div>
               <div style="font-size: 11px; font-weight: 700; color: #059669;" id="photoProofTimeText">07:34 AM</div>
             </div>
-            <p style="font-size: 11.5px; color: #64748B; margin: 0;" id="photoProofDesc">
-              Liam &amp; Emma safely boarded Robert MacDonald's Toyota Sienna.
+            <p style="font-size: 11.5px; color: #64748B; margin: 0; line-height: 1.45;" id="photoProofDesc">
+              Liam &amp; Emma safely boarded Robert MacDonald's Toyota Sienna. Booster seat secured.
             </p>
           </div>
         </div>
 
-        <!-- Driver / Parent Action Buttons -->
-        <div style="display: flex; gap: 8px; margin-top: 14px;">
-          <label class="btn-primary" style="flex: 1; height: 42px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0;">
-            <i data-lucide="camera" style="width: 15px; height: 15px;"></i>
-            <span id="btnUploadProofLabel">Upload New Photo</span>
-            <input type="file" accept="image/*" style="display: none;" onchange="handlePhotoProofUpload(this)" />
-          </label>
-          <button type="button" class="btn-secondary-surface" style="padding: 0 14px; height: 42px; font-size: 12.5px; font-weight: 700;" onclick="simulateInstantPhotoSnap()">
-            <span>Simulate Snap</span>
+        <!-- Upload & Live Camera Capture Actions -->
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px;">
+          <div style="display: flex; gap: 8px;">
+            <!-- Take Live Photo Button (Direct Camera Trigger) -->
+            <label class="btn-primary" style="flex: 1.3; height: 42px; font-size: 12.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; background: #1B2B68; border-radius: 12px;">
+              <i data-lucide="camera" style="width: 16px; height: 16px;"></i>
+              <span id="btnUploadProofLabel">📷 Take Live Photo</span>
+              <input type="file" accept="image/*" capture="environment" style="display: none;" onchange="handlePhotoProofUpload(this)" />
+            </label>
+            
+            <!-- Choose From Gallery Button -->
+            <label class="btn-secondary-surface" style="flex: 1; height: 42px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; border: 1px solid #CBD5E1; border-radius: 12px; background: #FFFFFF;">
+              <i data-lucide="image" style="width: 15px; height: 15px; color: #64748B;"></i>
+              <span>Upload File</span>
+              <input type="file" accept="image/*" style="display: none;" onchange="handlePhotoProofUpload(this)" />
+            </label>
+          </div>
+
+          <!-- Quick Simulate Snap for demo testing -->
+          <button type="button" class="btn-secondary-surface" style="height: 36px; font-size: 11.5px; font-weight: 700; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; color: #64748B;" onclick="simulateInstantPhotoSnap()">
+            <i data-lucide="zap" style="width: 13px; height: 13px; color: #F59E0B;"></i>
+            <span>Simulate Live Handover Snapshot (Instant Demo)</span>
           </button>
         </div>
+
+        <p style="margin: 10px 0 0; font-size: 11px; color: #94A3B8; text-align: center;">
+          🔒 Photos are timestamped &amp; sent in real-time to parents to verify child safety.
+        </p>
       </div>
     </div>
 
@@ -10250,10 +10392,38 @@
           </div>
         </div>
 
-        <p class="drv-lede">Uncheck anyone not riding today.</p>
+        <p class="drv-lede" style="margin-bottom:8px;">Uncheck anyone not riding today.</p>
+
+        <!-- Live Handover Photo Upload Box -->
+        <div style="margin: 6px 0 14px; padding: 12px 14px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px; text-align: left;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 6px;">
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:#0F172A;">
+              <i data-lucide="camera" style="width:14px;height:14px; color:#2563EB;"></i>
+              <span>Live Handover Photo Proof</span>
+            </div>
+            <span style="font-size:10px; font-weight:700; color:#16A34A; background:#DCFCE7; padding:2px 7px; border-radius:99px;" id="attPhotoStatusBadge">Live Proof</span>
+          </div>
+          <p style="font-size: 11px; color: #64748B; margin: 0 0 10px; line-height: 1.4;">
+            Capture children safely seated with booster/seatbelt for parent real-time peace of mind.
+          </p>
+          <div id="driverAttendancePhotoPreview" style="display:none; margin-bottom: 10px; position: relative; border-radius: 8px; overflow: hidden; max-height: 130px; border: 1px solid #E2E8F0;">
+            <img id="driverAttendancePhotoImg" src="" style="width: 100%; height: 130px; object-fit: cover;" alt="Live handover proof" />
+            <span style="position: absolute; bottom: 6px; right: 6px; background: rgba(15,23,42,0.85); color: #FFF; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px;">✓ Photo Attached</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <label class="btn-secondary-surface" style="flex:1.2; height:36px; padding:0 10px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:5px; border-radius:8px; border:1px solid #CBD5E1; background:#FFFFFF; margin:0;">
+              <i data-lucide="camera" style="width:14px;height:14px; color:#1B2B68;"></i>
+              <span id="btnAttPhotoLabel">📷 Take Live Photo</span>
+              <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="handleAttendancePhotoProof(this)" />
+            </label>
+            <button type="button" class="btn-secondary-surface" style="height:36px; padding:0 12px; font-size:12px; font-weight:700; border-radius:8px;" onclick="simulateAttendancePhotoSnap()">
+              <span>Quick Snap</span>
+            </button>
+          </div>
+        </div>
 
         <button type="button" class="btn-primary" id="btnConfirmAttendance" onclick="confirmDriverAttendance()">
-          <span>Confirm pickup</span>
+          <span>Confirm pickup &amp; Send Handover Proof</span>
         </button>
       </div>
     </div>
@@ -11746,30 +11916,6 @@
           </div>
         </div>
 
-        <!-- 3. Trip Timing Shift Section -->
-        <div class="sf-section">
-          <div class="sf-section-header">
-            <span class="sf-section-label">Shift</span>
-          </div>
-          <div class="sf-chip-row" id="modalTimingChips">
-            <button type="button" class="sf-chip active" onclick="window.setModalTiming('all', this)">All</button>
-            <button type="button" class="sf-chip" onclick="window.setModalTiming('morning', this)">Morning</button>
-            <button type="button" class="sf-chip" onclick="window.setModalTiming('afternoon', this)">Afternoon</button>
-          </div>
-        </div>
-
-        <!-- Commute Mode Section -->
-        <div class="sf-section">
-          <div class="sf-section-header">
-            <span class="sf-section-label">Service</span>
-          </div>
-          <div class="sf-chip-row" id="modalServiceTypeChips">
-            <button type="button" class="sf-chip active" onclick="window.setModalServiceType('all', this)">All</button>
-            <button type="button" class="sf-chip" onclick="window.setModalServiceType('drivers', this)">Driver</button>
-            <button type="button" class="sf-chip" onclick="window.setModalServiceType('walkshare', this)">WalkShare</button>
-          </div>
-        </div>
-
       </div>
 
       <!-- Footer Buttons -->
@@ -11808,10 +11954,10 @@
     </div>
   </div>
 
-  <script type="module" src="/app.js?v=20260917-cachebust1"></script>
-  <script type="module" src="/mvp-parent.js?v=20260917-cachebust1"></script>
-  <script type="module" src="/mvp-driver.js?v=20260917-cachebust1"></script>
-  <script type="module" src="/mvp-walkshare.js?v=20260917-cachebust1"></script>
+  <script type="module" src="/app.js?v=20260929-v207"></script>
+  <script type="module" src="/mvp-parent.js?v=20260929-v207"></script>
+  <script type="module" src="/mvp-driver.js?v=20260929-v207"></script>
+  <script type="module" src="/mvp-walkshare.js?v=20260929-v207"></script>
 </body>
 
 </html>
