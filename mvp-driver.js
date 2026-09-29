@@ -2,7 +2,7 @@
 
 (function () {
   const STORE = 'h2s_driver_mvp_v3';
-  const AUTH = new Set(['splash', 'onboarding1', 'onboarding2', 'onboarding3', 'authWelcome', 'authOtp', 'authProfile', 'authPhoto', 'authAddChild', 'authSuccess']);
+  const AUTH = new Set(['splash', 'onboarding1', 'onboarding2', 'onboarding3', 'authWelcome', 'authRoleSelect', 'authCreateAccount', 'authOtp', 'authProfile', 'authPhoto', 'authAddChild', 'authChoosePlan', 'authLogin', 'authForgotPassword', 'authCheckEmail', 'authNewPassword', 'authPasswordSuccess', 'authSuccess']);
   const SHARED = new Set(['inbox', 'messages', 'notifications', 'faq', 'legal', 'about', 'privacy', 'contactSupport', 'report']);
   const PARENT_ONLY = new Set([
     'home', 'myChildren', 'addChild', 'bookings', 'bookingSelectChildren', 'bookingTripSetup',
@@ -906,7 +906,7 @@
   }
 
   function resolveScreen(name) {
-    if (AUTH.has(name)) return name;
+    if (AUTH.has(name) || String(name).startsWith('auth')) return name;
     if (DRIVER_ONLY.has(name) || isDriverPartnerFlowScreen(name) || String(name || '').indexOf('driver') === 0) {
       if (state().activeRole !== 'driver') ensureDriverRole();
       return name;

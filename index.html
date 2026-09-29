@@ -4850,170 +4850,12 @@
   <!-- Centered 430px Mobile Container -->
   <main class="app-screen-container" id="appShell">
 
-    <!-- ================= 1. SPLASH SCREEN ================= -->
-    <section class="screen-view active" id="screen-splash" style="background-color: var(--color-brand-navy);">
-      <div class="status-bar light">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
+    <section class="screen-view" id="screen-splash" style="display:none;"></section>
 
-      <div class="splash-body" onclick="navigateTo('authWelcome')">
-        <div class="splash-logo-container pulse-animation">
-          <img src="/assets/logo.svg" alt="Home2School Logo" class="splash-logo" />
-        </div>
-        <div style="text-align: center; margin-top: 18px;">
-          <h1 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin: 0; letter-spacing: -0.02em;">Welcome to Home2School</h1>
-          <span class="brand-subtext-light" style="font-size: 13px; letter-spacing: 1.5px; margin-top: 4px; display: block;">School2Home</span>
-        </div>
-        <span class="splash-hint" style="margin-top: 24px;">Tap anywhere to begin</span>
-      </div>
-
-      <div class="home-indicator light"></div>
-    </section>
-
-
-    <!-- ================= 2. ONBOARDING 1: VERIFIED & TRUSTED ================= -->
-    <section class="screen-view" id="screen-onboarding1">
-      <div class="status-bar light">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="onboarding-bg" style="background-image: url('/assets/onboarding1.jpg');">
-        <div class="gradient-scrim-top"></div>
-        <div class="gradient-scrim-bottom"></div>
-      </div>
-
-      <div class="onboarding-content">
-        <h1 class="onboarding-title">Verified &amp; Trusted</h1>
-        <p class="onboarding-desc">All providers are background verified and rated by parents like you.</p>
-
-        <div class="onboarding-controls">
-          <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
-          <div class="pagination-dots">
-            <span class="dot active"></span>
-            <span class="dot" onclick="navigateTo('onboarding2')"></span>
-            <span class="dot" onclick="navigateTo('onboarding3')"></span>
-          </div> <button class="btn-circle-orange" onclick="navigateTo('onboarding2')" aria-label="Next">
-            <i data-lucide="arrow-right" style="width:22px;height:22px;"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="home-indicator light"></div>
-    </section>
-
-
-    <!-- ================= 3. ONBOARDING 2: REAL-TIME TRACKING ================= -->
-    <section class="screen-view" id="screen-onboarding2">
-      <div class="status-bar light">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="onboarding-bg" style="background-image: url('/assets/onboarding2.jpg');">
-        <div class="gradient-scrim-top"></div>
-        <div class="gradient-scrim-bottom"></div>
-      </div>
-
-      <div class="onboarding-content">
-        <h1 class="onboarding-title">Real-time Tracking</h1>
-        <p class="onboarding-desc">Track your child's trip in real-time and get instant updates.</p>
-
-        <div class="onboarding-controls">
-          <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
-          <div class="pagination-dots">
-            <span class="dot" onclick="navigateTo('onboarding1')"></span>
-            <span class="dot active"></span>
-            <span class="dot" onclick="navigateTo('onboarding3')"></span>
-          </div>
-          <button class="btn-circle-orange" onclick="navigateTo('onboarding3')" aria-label="Next">
-            <i data-lucide="arrow-right" style="width:22px;height:22px;"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="home-indicator light"></div>
-    </section>
-
-
-    <!-- ================= 4. ONBOARDING 3: STAY CONNECTED ================= -->
-    <section class="screen-view" id="screen-onboarding3">
-      <div class="status-bar light">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
-          <svg class="icon-wifi" viewBox="0 0 24 24">
-            <path
-              d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z"
-              fill="currentColor" />
-          </svg>
-          <div class="battery-icon">
-            <div class="battery-level"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="onboarding-bg" style="background-image: url('/assets/onboarding3.jpg');">
-        <div class="gradient-scrim-top"></div>
-        <div class="gradient-scrim-bottom"></div>
-      </div>
-
-      <div class="onboarding-content">
-        <h1 class="onboarding-title">Stay Connected</h1>
-        <p class="onboarding-desc">Communicate with providers and get updates at every step of the journey.</p>
-
-        <div class="onboarding-controls">
-          <button class="btn-text-skip" onclick="navigateTo('authWelcome')">Skip</button>
-          <div class="pagination-dots">
-            <span class="dot" onclick="navigateTo('onboarding1')"></span>
-            <span class="dot" onclick="navigateTo('onboarding2')"></span>
-            <span class="dot active"></span>
-          </div>
-          <button class="btn-circle-orange" onclick="navigateTo('authWelcome')" aria-label="Get Started">
-            <i data-lucide="arrow-right" style="width:22px;height:22px;"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="home-indicator light"></div>
-    </section>
-
-
-        <!-- ================= 5. ONBOARDING & AUTH FLOW (12 SCREENS FIGMA AUTHENTIC) ================= -->
+    <!-- ================= 5. ONBOARDING & AUTH FLOW (12 SCREENS FIGMA AUTHENTIC) ================= -->
 
     <!-- SCREEN 1: Welcome to Home2School -->
-    <section class="screen-view auth-flow-screen" id="screen-authWelcome">
+    <section class="screen-view auth-flow-screen active" id="screen-authWelcome">
       <div class="status-bar light">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
@@ -5065,54 +4907,65 @@
         </button>
       </div>
 
-      <div class="auth-flow-body">
-        <div class="auth-header-wrap">
-          <h2 class="auth-title">Choose your role</h2>
-          <p class="auth-subtitle">Select how you would like to use Home2School.</p>
+      <div class="auth-flow-body space-between">
+        <div>
+          <div class="auth-header-wrap">
+            <h2 class="auth-title">Choose your role</h2>
+            <p class="auth-subtitle">Select how you would like to use Home2School.</p>
+          </div>
+
+          <div class="auth-roles-list">
+            <div class="auth-role-card active" data-role="parent" onclick="selectSignupRoleDirect('parent')">
+              <div class="auth-role-icon-box">
+                <i data-lucide="user" style="width:20px;height:20px;color:#1B2B68;"></i>
+              </div>
+              <div class="auth-role-info">
+                <div class="auth-role-title">Parent</div>
+                <div class="auth-role-desc">Book rides and manage your child's trips.</div>
+              </div>
+              <div class="auth-role-avatar-wrap">
+                <img src="/assets/avatar_sarah.jpg" alt="Parent" class="auth-role-avatar" />
+                <i data-lucide="chevron-right" class="auth-role-chevron"></i>
+              </div>
+            </div>
+
+            <div class="auth-role-card" data-role="driver" onclick="selectSignupRoleDirect('driver')">
+              <div class="auth-role-icon-box">
+                <i data-lucide="car" style="width:20px;height:20px;color:#1B2B68;"></i>
+              </div>
+              <div class="auth-role-info">
+                <div class="auth-role-title">Driver</div>
+                <div class="auth-role-desc">Drive school routes and earn.</div>
+              </div>
+              <div class="auth-role-avatar-wrap">
+                <img src="/assets/avatar_kabir.jpg" alt="Driver" class="auth-role-avatar" />
+                <i data-lucide="chevron-right" class="auth-role-chevron"></i>
+              </div>
+            </div>
+
+            <div class="auth-role-card" data-role="walkshare" onclick="selectSignupRoleDirect('walkshare')">
+              <div class="auth-role-icon-box">
+                <i data-lucide="users" style="width:20px;height:20px;color:#1B2B68;"></i>
+              </div>
+              <div class="auth-role-info">
+                <div class="auth-role-title">WalaShare Guide</div>
+                <div class="auth-role-desc">Help with rides and support your community.</div>
+              </div>
+              <div class="auth-role-avatar-wrap">
+                <img src="/assets/avatar_farhana.jpg" alt="Guide" class="auth-role-avatar" />
+                <i data-lucide="chevron-right" class="auth-role-chevron"></i>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="auth-roles-list">
-          <div class="auth-role-card active" data-role="parent" onclick="selectSignupRoleDirect('parent')">
-            <div class="auth-role-icon-box">
-              <i data-lucide="user" style="width:20px;height:20px;color:#1B2B68;"></i>
+        <div>
+          <button type="button" class="auth-btn-primary" onclick="proceedFromRoleSelect()">
+            <span>Continue</span>
+            <div class="auth-btn-arrow-circle">
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
             </div>
-            <div class="auth-role-info">
-              <div class="auth-role-title">Parent</div>
-              <div class="auth-role-desc">Book rides and manage your child's trips.</div>
-            </div>
-            <div class="auth-role-avatar-wrap">
-              <img src="/assets/avatar_sarah.jpg" alt="Parent" class="auth-role-avatar" />
-              <i data-lucide="chevron-right" class="auth-role-chevron"></i>
-            </div>
-          </div>
-
-          <div class="auth-role-card" data-role="driver" onclick="selectSignupRoleDirect('driver')">
-            <div class="auth-role-icon-box">
-              <i data-lucide="car" style="width:20px;height:20px;color:#1B2B68;"></i>
-            </div>
-            <div class="auth-role-info">
-              <div class="auth-role-title">Driver</div>
-              <div class="auth-role-desc">Drive school routes and earn.</div>
-            </div>
-            <div class="auth-role-avatar-wrap">
-              <img src="/assets/avatar_kabir.jpg" alt="Driver" class="auth-role-avatar" />
-              <i data-lucide="chevron-right" class="auth-role-chevron"></i>
-            </div>
-          </div>
-
-          <div class="auth-role-card" data-role="walkshare" onclick="selectSignupRoleDirect('walkshare')">
-            <div class="auth-role-icon-box">
-              <i data-lucide="users" style="width:20px;height:20px;color:#1B2B68;"></i>
-            </div>
-            <div class="auth-role-info">
-              <div class="auth-role-title">WalaShare Guide</div>
-              <div class="auth-role-desc">Help with rides and support your community.</div>
-            </div>
-            <div class="auth-role-avatar-wrap">
-              <img src="/assets/avatar_farhana.jpg" alt="Guide" class="auth-role-avatar" />
-              <i data-lucide="chevron-right" class="auth-role-chevron"></i>
-            </div>
-          </div>
+          </button>
         </div>
       </div>
       <div class="home-indicator"></div>

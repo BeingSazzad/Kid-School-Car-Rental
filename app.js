@@ -1856,10 +1856,7 @@ window.selectSignupRoleDirect = function(role) {
     const isSelected = card.getAttribute('data-role') === valid;
     card.classList.toggle('active', isSelected);
   });
-
-  setTimeout(() => {
-    window.navigateTo('authCreateAccount');
-  }, 100);
+  // No auto navigation: User chooses role and taps Continue when ready!
 };
 
 window.proceedFromRoleSelect = function() {
@@ -2114,6 +2111,7 @@ window.handleResetPasswordSubmit = function() {
 };
 
 window.navigateTo = function (screenName, isBack = false) {
+  if (screenName === 'splash') screenName = 'authWelcome';
   // Always stay inside the active role's screen set (never flip role here).
   screenName = coerceScreenToRole(screenName);
   if (!screens.includes(screenName)) return;
@@ -2177,7 +2175,7 @@ window.navigateTo = function (screenName, isBack = false) {
   });
 
   document.body.setAttribute('data-screen', screenName);
-  const isAuthFlow = ['splash', 'onboarding1', 'onboarding2', 'onboarding3', 'authWelcome', 'authOtp', 'authProfile', 'authPhoto', 'authAddChild', 'authSuccess'].includes(screenName);
+  const isAuthFlow = String(screenName).startsWith('auth') || screenName === 'splash' || String(screenName).startsWith('onboarding');
   document.body.classList.toggle('is-auth-flow', isAuthFlow);
 
   const targetEl = document.getElementById(`screen-${screenName}`);
@@ -2457,14 +2455,22 @@ function initApp() {
   else if (btnP) btnP.classList.add('active');
 
   const hash = window.location.hash ? window.location.hash.replace('#', '') : '';
-  let initial = 'home';
+  let initial = 'authWelcome';
   if (hash && screens.includes(hash)) {
-    adoptRoleFromIntentionalHash(hash);
-    initial = hash;
+    if (hash === 'splash') {
+      initial = 'authWelcome';
+    } else {
+      adoptRoleFromIntentionalHash(hash);
+      initial = hash;
+    }
+  } else if (!hash) {
+    initial = 'authWelcome';
   } else if (savedRole === 'driver') {
     initial = typeof window.getDriverLanding === 'function' ? window.getDriverLanding() : 'driverSetup';
   } else if (savedRole === 'walkshare') {
     initial = typeof window.getWalkShareLanding === 'function' ? window.getWalkShareLanding() : 'wsHome';
+  } else {
+    initial = 'authWelcome';
   }
   // Re-read role after intentional hash adopt
   window.appState.activeRole = localStorage.getItem('h2s_active_role') || window.appState.activeRole || 'parent';
