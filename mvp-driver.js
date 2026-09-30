@@ -3751,50 +3751,51 @@
     }
 
     return `
-      <article class="h2s-booking-card drv-req-item" onclick="openDriverRequest('${req.id}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:10px !important;">
-        <!-- Top Row: Date & Direction -->
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:36px; height:36px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i data-lucide="calendar" style="width:17px; height:17px;"></i>
+      <article class="h2s-booking-card drv-req-item" onclick="openDriverRequest('${req.id}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:12px !important;">
+        <!-- Top Row: Date & Direction + Price -->
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
+            <div style="width:38px; height:38px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i data-lucide="calendar" style="width:18px; height:18px;"></i>
             </div>
-            <div>
-              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
-              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:1px;">${timesText}</div>
+            <div style="min-width:0;">
+              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${displayDate}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${timesText}</div>
             </div>
           </div>
-          ${dirPillHtml}
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:20px; font-weight:900; color:#0F172A; letter-spacing:-0.5px; line-height:1.1;">$${priceVal.replace(/^\$/, '')}</div>
+            <div style="font-size:10.5px; font-weight:700; color:#64748B; margin-top:2px;">${req.frequency === 'recurring' ? 'per week' : 'per trip'}</div>
+          </div>
         </div>
 
-        <!-- Middle Row: Route Rail & Payout -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;">
-          <div style="display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; position:relative; padding-left:2px;">
+        <!-- Middle Row: Route Rail Box (Full width clean route) -->
+        <div style="background:#F8FAFC; border-radius:12px; padding:10px 12px; border:1px solid #F1F5F9;">
+          <div style="display:flex; flex-direction:column; gap:8px; position:relative; padding-left:2px;">
             <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
               <span style="width:8px; height:8px; border-radius:50%; background:#1B2B68; flex-shrink:0;"></span>
-              <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
+              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
             </div>
-            <div style="position:absolute; left:5px; top:6px; bottom:6px; width:1.5px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
+            <div style="position:absolute; left:5.5px; top:8px; bottom:8px; width:1px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
             <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
               <span style="width:8px; height:8px; border-radius:50%; border:2px solid #1B2B68; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
-              <span style="font-size:12.5px; font-weight:600; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
+              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
             </div>
-          </div>
-
-          <div style="display:flex; align-items:center; gap:12px; flex-shrink:0; padding-left:12px; border-left:1px solid #F1F5F9;">
-            <div style="font-size:21px; font-weight:800; color:#0F172A; letter-spacing:-0.5px;">$${priceVal.replace(/^\$/, '')}</div>
           </div>
         </div>
 
         <!-- Footer Row: Parent & Kids Info & Actions -->
-        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:9px;">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <img src="${photo}" alt="" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.src='/assets/avatar_sadia.jpg';" />
-            <div>
-              <div style="font-size:12.5px; font-weight:700; color:#0F172A; line-height:1.2;">${name}</div>
-              <div style="font-size:11px; font-weight:600; color:#64748B; margin-top:1px;">${kidsShort}</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:10px; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
+            <img src="${photo}" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1.5px solid #E2E8F0; flex-shrink:0;" onerror="this.src='/assets/avatar_sadia.jpg';" />
+            <div style="min-width:0;">
+              <div style="font-size:13px; font-weight:800; color:#0F172A; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${name}</div>
+              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${kidsShort}</div>
             </div>
           </div>
-          ${actionHtml}
+          <div style="flex-shrink:0;">
+            ${actionHtml}
+          </div>
         </div>
       </article>`;
   }
@@ -4458,22 +4459,26 @@
     // Determine Round Trip vs 1-Way Trip
     const booking = (state().bookings || []).find((b) => b.id === item.bookingId);
     const isRound = item.isRoundTrip || (item.returnTime != null) || (item.leg === 'afternoon') || (booking && booking.direction === 'bothway') || (item.frequency === 'recurring');
-    const tripTypePill = '';
+    const legBadge = item.leg === 'afternoon' ? 'Return' : (isRound ? 'Round Trip' : 'Morning');
+    const rateVal = String(item.rate || (booking?.rate || '45')).replace(/\D/g, '') || '45';
 
     return `
-      <article class="h2s-booking-card drv-sched-item" onclick="startDriverTrip('${item.id}', '${open ? 'active' : (actionable ? 'soon' : 'prep')}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:10px !important;">
-        <!-- Top Row: Date & Trip Type Pill -->
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:36px; height:36px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i data-lucide="calendar" style="width:17px; height:17px;"></i>
+      <article class="h2s-booking-card drv-sched-item" onclick="startDriverTrip('${item.id}', '${open ? 'active' : (actionable ? 'soon' : 'prep')}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:12px !important;">
+        <!-- Top Row: Date & Trip Type Pill + Rate -->
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
+            <div style="width:38px; height:38px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i data-lucide="calendar" style="width:18px; height:18px;"></i>
             </div>
-            <div>
-              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2;">${displayDate}</div>
+            <div style="min-width:0;">
+              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${displayDate}</div>
               <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${timeText}</div>
             </div>
           </div>
-          ${tripTypePill}
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:18px; font-weight:900; color:#0F172A; letter-spacing:-0.5px; line-height:1.1;">$${rateVal}</div>
+            <div style="font-size:10.5px; font-weight:700; color:#64748B; margin-top:2px;">${legBadge}</div>
+          </div>
         </div>
 
         <!-- Middle Row: Route Rail (Clean, full width without redundant seats count) -->
