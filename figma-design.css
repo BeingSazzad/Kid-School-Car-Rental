@@ -2500,3 +2500,34 @@
 .bs-btn-edit:hover {
   color: #0F172A !important;
 }
+
+/* FORCE HORIZONTAL FIGMA ROW LAYOUT ON ALL SCREENS */
+#screen-bookingSearchProviders .provider-result-card,
+#screen-bookingSearchProviders .provider-card-figma,
+#screen-bookingSearchProviders .provider-card-slim,
+#screen-bookingSearchProviders .mvp-compact,
+.provider-result-card.provider-card-figma {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  text-align: left !important;
+  gap: 14px !important;
+  background: #FFFFFF !important;
+  padding: 16px 16px !important;
+  border: none !important;
+  border-bottom: 1px solid #E5E7EB !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+#screen-bookingSearchProviders .provider-result-card:last-child {
+  border-bottom: none !important;
+}
+
+#screen-bookingSearchProviders .pcf-info-col {
+  align-items: flex-start !important;
+  text-align: left !important;
+}

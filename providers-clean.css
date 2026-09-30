@@ -211,18 +211,23 @@
 }
 
 .provider-result-card,
+.provider-card-figma,
 .provider-card-slim {
   display: flex !important;
-  flex-direction: column !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  text-align: left !important;
+  gap: 14px !important;
   background: #FFFFFF !important;
-  border: 1px solid #E5E7EB !important;
-  border-radius: 14px !important;
-  padding: 11px 13px !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease !important;
-  position: relative !important;
+  border: none !important;
+  border-bottom: 1px solid #E5E7EB !important;
+  border-radius: 0 !important;
+  padding: 16px 16px !important;
+  box-shadow: none !important;
   box-sizing: border-box !important;
-  margin-bottom: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
 }
 
 .provider-result-card:hover,

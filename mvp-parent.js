@@ -1004,7 +1004,7 @@
     if (draft.genderFilter == null) draft.genderFilter = 'all';
 
     document.querySelectorAll('#providersResultList .provider-result-card').forEach((card) => {
-      card.classList.add('mvp-compact', 'provider-card-slim');
+      card.classList.add('provider-card-figma'); card.classList.remove('mvp-compact', 'provider-card-slim');
       const id = card.getAttribute('data-provider-id') || 'tariq';
       card.onclick = function (e) {
         if (e.target.closest('.pcm-bottom-row, .btn-request-booking, .pcs-actions-row, .mvp-card-actions, button, a')) return;
