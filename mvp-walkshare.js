@@ -18,7 +18,7 @@
   const WS_ONLY = new Set([
     'wsHome', 'wsRequests', 'wsSchedule', 'wsProfile', 'wsSetup',
     'wsOnboardProfile', 'wsOnboardGroup', 'wsOnboardDocs', 'wsDocDetail', 'wsOnboardAvailability',
-    'wsOnboardRate', 'wsPayment', 'wsPending', 'wsSubscription', 'wsRequestDetail', 'wsWalkPrep', 'wsActiveWalk', 'wsRatings'
+    'wsOnboardRate', 'wsPayment', 'wsPending', 'wsSubscription', 'wsRequestDetail', 'wsWalkPrep', 'wsActiveWalk', 'wsRatings', 'wsLegDone'
   ]);
   const PARENTS = {
     'PRNT-9042': { id: 'PRNT-9042', name: 'Sarah Tremblay', photo: '/assets/avatar_sadia.jpg', sub: 'Parent · Liam, Emma & Chloe' },
@@ -68,11 +68,9 @@
     ]
   };
   const REQUIRED_DOCS = [
-    { id: 'licence', title: "Government ID / Driver's License" },
-    { id: 'residency_tax_tenancy', title: "Proof of Residency 1" },
-    { id: 'residency_utility', title: "Proof of Residency 2" },
-    { id: 'vulnerable', title: 'Vulnerable Sector Check' },
-    { id: 'firstaid', title: 'Pediatric First-Aid / CPR' }
+    { id: 'licence', title: 'Driving licence', short: 'driving licence', icon: 'credit-card', hint: 'Both sides', slots: [{ key: 'fileFront', label: 'Front' }, { key: 'fileBack', label: 'Back' }] },
+    { id: 'residency_tax_tenancy', title: 'Proof of address', short: 'proof of address', icon: 'home', hint: 'Property tax or tenancy agreement', slots: [{ key: 'file', label: 'Photo or PDF', pdf: true }] },
+    { id: 'residency_utility', title: 'Utility bill', short: 'utility bill', icon: 'receipt', hint: 'From the last 90 days', slots: [{ key: 'file', label: 'Photo or PDF', pdf: true }] }
   ];
 
   let restored = false;
@@ -116,6 +114,7 @@
         activeWalkStage: w.activeWalkStage,
         activeWalk: w.activeWalk,
         completedWalkIds: w.completedWalkIds || [],
+        lastLegDone: w.lastLegDone || null,
         bio: w.bio,
         experience: w.experience,
         notifications: w.notifications
@@ -131,44 +130,22 @@
     return [
       {
         id: 'licence',
-        title: "Driver's License",
+        title: 'Driving licence',
         status: 'approved',
-        file: demoUpload('sarah-drivers-license.pdf'),
-        number: 'D4819-20381-90412',
-        province: 'Ontario',
-        expiry: '2028-09-15'
+        fileFront: demoUpload('sarah-licence-front.jpg'),
+        fileBack: demoUpload('sarah-licence-back.jpg')
       },
       {
         id: 'residency_tax_tenancy',
-        title: "Proof of Residency 1",
+        title: 'Proof of address',
         status: 'approved',
-        file: demoUpload('sarah-property-tax-2026.pdf'),
-        residencyType: 'Property Tax Statement',
-        address: '124 Greenfield Ave, Toronto, ON M4B 1B3',
-        issuer: 'City of Toronto Revenue Services'
+        file: demoUpload('sarah-property-tax-2026.pdf')
       },
       {
         id: 'residency_utility',
-        title: "Proof of Residency 2",
+        title: 'Utility bill',
         status: 'approved',
-        file: demoUpload('sarah-toronto-hydro-bill.pdf'),
-        issuer: 'Toronto Hydro',
-        address: '124 Greenfield Ave, Toronto, ON M4B 1B3',
-        billDate: '2026-08-10'
-      },
-      {
-        id: 'vulnerable',
-        title: 'Vulnerable Sector Check',
-        status: 'approved',
-        file: demoUpload('vsc-sarah.pdf'),
-        issuer: 'Toronto Police Service'
-      },
-      {
-        id: 'firstaid',
-        title: 'Pediatric First-Aid / CPR',
-        status: 'approved',
-        file: demoUpload('cpr-sarah.pdf'),
-        issuer: 'Red Cross'
+        file: demoUpload('sarah-toronto-hydro-bill.pdf')
       }
     ];
   }
@@ -177,28 +154,23 @@
     const list = Array.isArray(docs) ? docs : [];
     const demo = demoDocuments();
     return REQUIRED_DOCS.map((spec) => {
-      let existing = list.find((d) => d.id === spec.id);
-      if (!existing && (spec.id === 'licence' || spec.id === 'id')) {
-        existing = list.find((d) => d.id === 'licence' || d.id === 'id');
-      }
-      const demoItem = demo.find((d) => d.id === spec.id) || {};
-      const src = useDemo ? demoItem : (existing || {});
-      const fill = useDemo;
-      return {
+      const src = (useDemo ? demo : list).find((d) => d.id === spec.id) || {};
+      const doc = {
         id: spec.id,
         title: spec.title,
         status: src.status || (useDemo ? 'approved' : 'not_submitted'),
-        number: src.number || (fill && spec.id === 'licence' ? (demoItem.number || '') : ''),
-        province: src.province || (fill && spec.id === 'licence' ? 'Ontario' : ''),
-        expiry: src.expiry || (fill && spec.id === 'licence' ? '2028-09-15' : ''),
-        residencyType: src.residencyType || (fill && spec.id === 'residency_tax_tenancy' ? 'Property Tax Statement' : ''),
-        address: src.address || (fill && spec.id.startsWith('residency') ? '124 Greenfield Ave, Toronto, ON M4B 1B3' : ''),
-        billDate: src.billDate || (fill && spec.id === 'residency_utility' ? '2026-08-10' : ''),
-        issuer: src.issuer || (fill ? demoItem.issuer || '' : ''),
-        file: src.file || (useDemo ? demoItem.file : { name: '', attached: false }),
         rejectReason: src.rejectReason || ''
       };
+      spec.slots.forEach((slot) => {
+        const legacy = slot.key === 'fileFront' ? src.file : null;
+        doc[slot.key] = src[slot.key] || legacy || { name: '', attached: false, preview: '' };
+      });
+      return doc;
     });
+  }
+
+  function missingDocSpec(docs) {
+    return REQUIRED_DOCS.some((spec) => !(docs || []).some((d) => d && d.id === spec.id));
   }
 
   function ensureWalk() {
@@ -241,14 +213,21 @@
           if (Array.isArray(saved.documents)) w.documents = saved.documents;
           if (Array.isArray(saved.requests)) w.requests = saved.requests;
           if (Array.isArray(saved.completedWalkIds)) w.completedWalkIds = saved.completedWalkIds;
+          if (saved.lastLegDone) w.lastLegDone = saved.lastLegDone;
           if (Array.isArray(saved.notifications)) w.notifications = saved.notifications;
         }
       } catch (err) { /* ignore */ }
     }
+    w.requests.forEach((r) => {
+      if (!r) return;
+      if (r.direction === 'oneway' && !r.oneWayLeg) r.oneWayLeg = toMinutes(r.pickupTime || '07:00 AM') >= 12 * 60 ? 'pm' : 'am';
+      if (r.direction !== 'oneway') r.oneWayLeg = null;
+    });
     if (w.skipDemoUnlock) {
       w.documents = normalizeWalkDocs(w.documents, false);
     } else {
-      w.documents = normalizeWalkDocs(w.documents, !w.documents || !w.documents.length);
+      const staleDocs = missingDocSpec(w.documents) || w.documents.every((doc) => doc.status === 'not_submitted');
+      w.documents = normalizeWalkDocs(w.documents, staleDocs);
       if (w.verificationStatus !== 'approved' && w.verificationStatus !== 'verified') {
         w.verificationStatus = 'approved';
       }
@@ -461,7 +440,7 @@
       const doc = (w.documents || []).find((d) => d.id === spec.id);
       return !doc || !doc.status || doc.status === 'not_submitted' || doc.status === 'action_required';
     }).length;
-    if (missing) return { docs: true, text: `Upload your documents to accept · ${missing} of ${REQUIRED_DOCS.length} still needed` };
+    if (missing) return { docs: true, text: `Add your documents to accept requests` };
     if (!isApproved(w) || !docsApproved(w)) return { docs: false, text: 'Documents under review. You can accept once they are approved.' };
     if (!hasAccess(w)) return { docs: false, text: 'Start your free trial to accept requests' };
     return null;
@@ -550,8 +529,13 @@
 
   function tripKindLabel(req) {
     if (req.frequency === 'recurring') return 'Recurring';
-    if (req.direction === 'oneway') return 'One-time';
+    if (req.direction === 'oneway') return req.oneWayLeg === 'pm' ? 'One way · Afternoon' : 'One way';
     return 'Round trip';
+  }
+
+  function walkShapeLabel(req) {
+    if (req.direction !== 'oneway' && req.returnTime) return 'Round trip';
+    return req.oneWayLeg === 'pm' ? 'One way · Afternoon' : 'One way';
   }
 
   function timeLineCard(req) {
@@ -607,58 +591,77 @@
     return ensureWalk().requests.filter((r) => r.status === 'new');
   }
 
+  function walkLegCodes(r) {
+    if (r.direction !== 'oneway') return r.returnTime ? ['am', 'pm'] : ['am'];
+    return r.oneWayLeg === 'pm' ? ['pm'] : ['am'];
+  }
+
   function deriveSchedule() {
     const w = ensureWalk();
+    const T = window.H2STrip;
+    const today = T ? T.today() : '';
     const items = [];
     w.requests.filter((r) => r.status === 'accepted').forEach((r) => {
-      items.push({
-        id: r.id + '-am',
-        requestId: r.id,
-        time: r.pickupTime || '07:40 AM',
-        childNames: childShort(r),
-        children: kids(r),
-        parentId: r.parentId,
-        parentName: r.parentName,
-        from: cleanPlace(r.pickupLocation),
-        to: cleanPlace(r.dropoffLocation),
-        route: `${cleanPlace(r.pickupLocation)} → ${cleanPlace(r.dropoffLocation)}`,
-        leg: 'morning',
-        badge: r.direction === 'oneway' ? 'One way' : 'Round trip',
-        status: 'upcoming',
-        isActionableNow: true,
-        when: r.dateLabel || 'Tue, Sep 9, 2026'
-      });
-      if (r.returnTime) {
+      const booking = r.bookingId && T ? T.find(r.bookingId) : null;
+      if (booking && (booking.status === 'cancelled' || T.isSkipped(booking))) return;
+      if (booking && booking.status === 'completed' && booking.completedDate !== today) return;
+      if ((r.skippedDates || []).includes(today)) return;
+      if (r.frequency !== 'recurring' && r.completedDate && r.completedDate !== today) return;
+      const codes = walkLegCodes(r);
+      const hasReturn = codes.length > 1;
+      const home = cleanPlace(r.pickupLocation);
+      const school = cleanPlace(r.dropoffLocation);
+      codes.forEach((code) => {
+        const pm = code === 'pm';
         items.push({
-          id: r.id + '-pm',
+          id: `${r.id}-${code}`,
           requestId: r.id,
-          time: r.returnTime,
+          bookingId: r.bookingId || null,
+          time: pm ? (hasReturn ? r.returnTime : (r.pickupTime || '03:15 PM')) : (r.pickupTime || '07:40 AM'),
           childNames: childShort(r),
           children: kids(r),
           parentId: r.parentId,
           parentName: r.parentName,
-          from: cleanPlace(r.dropoffLocation),
-          to: cleanPlace(r.pickupLocation),
-          route: `${cleanPlace(r.dropoffLocation)} → ${cleanPlace(r.pickupLocation)}`,
-          leg: 'afternoon',
-          badge: 'Return',
+          from: pm ? school : home,
+          to: pm ? home : school,
+          route: pm ? `${school} → ${home}` : `${home} → ${school}`,
+          leg: pm ? 'afternoon' : 'morning',
+          badge: pm ? (hasReturn ? 'Return' : 'One way · Afternoon') : (hasReturn ? 'Morning' : 'One way'),
           status: 'upcoming',
-          isActionableNow: false,
+          isActionableNow: !pm || !hasReturn,
+          hasReturn,
+          frequency: r.frequency,
           when: r.dateLabel || 'Tue, Sep 9, 2026'
         });
-      }
+      });
     });
-    const done = new Set(w.completedWalkIds || []);
+    const done = T ? T.doneSet(w.completedWalkIds) : new Set(w.completedWalkIds || []);
     const liveId = w.activeWalkStage > 0 && w.activeWalk ? w.activeWalk.id : null;
     items.forEach((item) => {
       if (done.has(item.id)) {
         item.status = 'done';
         item.isActionableNow = false;
-      } else if (item.id === liveId) {
-        item.status = 'active';
+        return;
+      }
+      if (item.id === liveId) item.status = 'active';
+      if (item.leg === 'afternoon' && item.hasReturn && done.has(item.id.replace(/-pm$/, '-am'))) {
+        item.isActionableNow = true;
+        item.returnReady = true;
       }
     });
     return items.sort((a, b) => toMinutes(a.time) - toMinutes(b.time));
+  }
+
+  function walkReturnLocked(item) {
+    if (!item || item.leg !== 'afternoon' || !item.hasReturn) return false;
+    const w = ensureWalk();
+    const done = window.H2STrip ? window.H2STrip.doneSet(w.completedWalkIds) : new Set(w.completedWalkIds || []);
+    return !done.has(item.id.replace(/-pm$/, '-am'));
+  }
+
+  function returnWalkFor(legId) {
+    if (!/-am$/.test(String(legId || ''))) return null;
+    return deriveSchedule().find((item) => item.id === legId.replace(/-am$/, '-pm') && item.status !== 'done') || null;
   }
 
   window.getWalkShareLanding = function () {
@@ -738,7 +741,8 @@
       ['wsWalkPrep', 'Next walk', "navigateTo('wsSchedule')"],
       ['wsActiveWalk', 'Active walk', "navigateTo('wsHome')"],
       ['wsSetup', 'WalkShare setup', "backNested('wsHome')"],
-      ['wsRatings', 'Your ratings', "backNested('wsProfile')"]
+      ['wsRatings', 'Your ratings', "backNested('wsProfile')"],
+      ['wsLegDone', 'Walk update', "navigateTo('wsHome')"]
     ];
     screens.forEach(([id, title, back]) => {
       if (document.getElementById('screen-' + id)) return;
@@ -826,6 +830,7 @@
     else if (name === 'wsOnboardAvailability') renderOnboardAvailability();
     else if (name === 'wsOnboardRate') renderOnboardRate();
     else if (name === 'wsRatings') renderMyRatings();
+    else if (name === 'wsLegDone') renderWalkLegDone();
     else if (name === 'wsPayment') renderPayment();
     else if (name === 'wsPending') renderPending();
     else if (name === 'wsSubscription') renderSubscription();
@@ -1024,11 +1029,15 @@
       || `<img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" onerror="this.src='/assets/avatar_arman.jpg'" />`;
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
     const kidCount = kidsList.length || String(item.childNames || '').split(/\s*[+&,]\s*/).filter(Boolean).length || 1;
+    const between = !live && item.returnReady;
+    const lastDone = ensureWalk().lastLegDone;
+    const doneAt = lastDone && lastDone.returnLegId === item.id ? lastDone.finishedAt : '';
     return `<div class="drv-active-card">
       <div class="drv-active-head">
-        <h3 class="drv-home-heading">${live ? 'Active walk' : 'Upcoming walk'}</h3>
-        <span class="drv-live-pill${live ? '' : ' is-soon'}"><span class="drv-live-dot"></span>${live ? 'Live' : 'Soon'}</span>
+        <h3 class="drv-home-heading">${live ? 'Active walk' : (between ? 'Return walk' : 'Upcoming walk')}</h3>
+        <span class="drv-live-pill${live ? '' : ' is-soon'}"><span class="drv-live-dot"></span>${live ? 'Live' : (between ? 'At school' : 'Soon')}</span>
       </div>
+      ${between ? `<p class="drv-between-note"><i data-lucide="check-circle-2"></i>Handed off at school${doneAt ? ' &middot; ' + esc(doneAt) : ''}</p>` : ''}
       <div class="drv-active-passengers">
         <div class="child-avatar-cluster">${avatars}</div>
         <div class="drv-active-pass-copy">
@@ -1092,8 +1101,11 @@
   }
 
   function requestCard(req) {
-    const from = cleanPlace(req.pickupLocation) || 'Pickup';
-    const to = cleanPlace(req.dropoffLocation) || 'Drop-off';
+    const pmOnly = req.direction === 'oneway' && req.oneWayLeg === 'pm';
+    const home = cleanPlace(req.pickupLocation) || 'Pickup';
+    const school = cleanPlace(req.dropoffLocation) || 'Drop-off';
+    const from = pmOnly ? school : home;
+    const to = pmOnly ? home : school;
     let name = req.parentName || 'Sarah Tremblay';
     if (/sadia/i.test(name)) name = 'Sarah Tremblay';
     if (/nadia/i.test(name)) name = 'Amanda Roy';
@@ -1115,11 +1127,8 @@
       : (dateShort(req.dateLabel) || 'Sep 17, 2026'));
     
     const pickupT = req.pickupTime || '07:45 AM';
-    const returnT = req.returnTime || '';
-    const timesText = returnT ? pickupT + ' & ' + returnT : pickupT;
-    
-    const isBoth = req.direction === 'bothway' || (returnT && returnT.length > 0);
-    const dirPillHtml = '';
+    const returnT = req.direction !== 'oneway' ? (req.returnTime || '') : '';
+    const timesText = `${returnT ? pickupT + ' & ' + returnT : pickupT} · ${walkShapeLabel(req)}`;
 
     // Parse price
     const priceVal = String(req.rate || (req.rateLabel ? req.rateLabel.replace(/\D/g, '') : '35') || '35');
@@ -1136,6 +1145,8 @@
             Accept
           </button>
         </div>`;
+    } else if (req.status === 'cancelled') {
+      actionHtml = '<span style="background:#FFF4ED; color:#F2600C; font-size:11px; font-weight:700; padding:4px 9px; border-radius:99px;">Cancelled by parent</span>';
     } else if (req.status === 'declined') {
       actionHtml = '<span style="background:#FEE2E2; color:#DC2626; font-size:11px; font-weight:700; padding:4px 9px; border-radius:99px;">Declined</span>';
     } else {
@@ -1207,7 +1218,7 @@
 
   function renderRequests(tab) {
     const w = ensureWalk();
-    const list = w.requests.filter((r) => r.status === tab);
+    const list = w.requests.filter((r) => r.status === tab || (tab === 'declined' && r.status === 'cancelled'));
     ['new', 'accepted', 'declined'].forEach((key) => {
       const btn = document.getElementById('btnWsReq' + key.charAt(0).toUpperCase() + key.slice(1));
       if (btn) {
@@ -1233,7 +1244,7 @@
   function syncParentBookingStatus(req, next) {
     const bookings = state().bookings || [];
     const booking = bookings.find((b) => b.id === req.bookingId);
-    if (!booking) return;
+    if (!booking || booking.status === 'cancelled') return;
     if (next === 'accepted') {
       booking.status = 'confirmed';
       if (!booking.agreedRate) {
@@ -1242,7 +1253,53 @@
       }
     }
     if (next === 'declined') booking.status = 'declined';
+    if (window.H2STrip) window.H2STrip.save();
   }
+
+  function walkRequestStatusFor(booking) {
+    if (booking.status === 'cancelled') return 'cancelled';
+    if (booking.status === 'declined') return 'declined';
+    if (['confirmed', 'in_progress', 'completed'].includes(booking.status)) return 'accepted';
+    return 'new';
+  }
+
+  /** Parent-side booking change (cancel, skip a day, edit) reflected on the WalkShare request and live walk. */
+  window.__h2sWalkBookingSync = function (booking) {
+    const w = ensureWalk();
+    if (!isWalkBooking(booking)) return;
+    let req = w.requests.find((r) => r.bookingId === booking.id);
+    if (!req) {
+      ingestWalkShareBooking(booking);
+      req = w.requests.find((r) => r.bookingId === booking.id);
+    }
+    if (!req) return;
+    const wasCancelled = req.status === 'cancelled';
+    const prevSkips = req.skippedDates || [];
+    const newSkip = (booking.skippedDates || []).find((day) => !prevSkips.includes(day));
+    req.status = walkRequestStatusFor(booking);
+    req.skippedDates = (booking.skippedDates || []).slice();
+    const liveHere = w.activeWalk && w.activeWalk.requestId === req.id;
+    const liveSkipped = liveHere && window.H2STrip && window.H2STrip.isSkipped(booking);
+    if (liveHere && (req.status === 'cancelled' || liveSkipped)) {
+      w.activeWalk = null;
+      w.activeWalkStage = 0;
+      if (window.H2STrip) window.H2STrip.abandonLeg(booking.id);
+      if (req.status === 'cancelled' && booking.status !== 'cancelled') booking.status = 'cancelled';
+    }
+    const who = req.parentName || 'Parent';
+    let note = null;
+    if (req.status === 'cancelled' && !wasCancelled) {
+      note = { title: 'Booking cancelled by parent', body: `${who} cancelled ${childShort(req)}’s walk booking.` };
+    } else if (newSkip) {
+      const label = window.H2STrip ? window.H2STrip.dayLabel(newSkip) : newSkip;
+      note = { title: 'Walk cancelled for one day', body: `${who} cancelled ${childShort(req)}’s walk on ${label}. The rest of the series stays active.` };
+    }
+    if (note) {
+      w.notifications = w.notifications || [];
+      w.notifications.unshift(Object.assign({ id: 'wn-cancel-' + booking.id + '-' + Date.now(), time: 'Just now', unread: true }, note));
+    }
+    persist();
+  };
 
   window.acceptWalkShareRequest = function (id) {
     const w = ensureWalk();
@@ -1255,6 +1312,11 @@
     const req = w.requests.find((r) => r.id === id);
     if (!req) {
       toast('Request not found', 'error');
+      return;
+    }
+    if (req.status === 'cancelled') {
+      toast('The parent cancelled this booking', 'info');
+      renderRequests('declined');
       return;
     }
     if (req.status !== 'new') {
@@ -1370,7 +1432,18 @@
         : (req.frequency === 'recurring' ? 'Mon–Fri Recurring' : 'One-time Walk');
 
     const pickupTimeStr = req.pickupTime || '08:05 AM';
-    const returnTimeStr = (req.direction === 'oneway' || !req.returnTime) ? 'One-way' : req.returnTime;
+    const pmOnlyWalk = req.direction === 'oneway' && req.oneWayLeg === 'pm';
+    const hasReturnWalk = req.direction !== 'oneway' && !!req.returnTime;
+    const firstSlot = pmOnlyWalk
+      ? { label: 'Afternoon Pickup (School)', time: pickupTimeStr }
+      : { label: 'Morning Meetup', time: pickupTimeStr };
+    const secondSlot = hasReturnWalk
+      ? { label: 'Afternoon Return', time: req.returnTime }
+      : { label: 'Trip', time: pmOnlyWalk ? 'One way · PM' : 'One way' };
+    const homeStopWalk = { label: pmOnlyWalk ? 'DROP-OFF (HOME)' : 'MEETUP POINT (HOME)', place: cleanPlace(req.pickupLocation) || '12 Elm Street' };
+    const schoolStopWalk = { label: pmOnlyWalk ? 'PICKUP (SCHOOL GATE)' : 'DESTINATION (SCHOOL)', place: cleanPlace(req.dropoffLocation) || 'Greenfield School' };
+    const firstStopWalk = pmOnlyWalk ? schoolStopWalk : homeStopWalk;
+    const lastStopWalk = pmOnlyWalk ? homeStopWalk : schoolStopWalk;
 
     const childList = kids(req);
     const passengersHtml = childList.length > 0
@@ -1479,8 +1552,8 @@
                   <div style="width:2px; height:28px; border-left:2px dashed #CBD5E1; margin:3px 0;"></div>
                 </div>
                 <div style="min-width:0; flex:1;">
-                  <div style="font-size:10.5px; font-weight:800; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">MEETUP POINT (HOME)</div>
-                  <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(cleanPlace(req.pickupLocation) || '12 Elm Street')}</div>
+                  <div style="font-size:10.5px; font-weight:800; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">${firstStopWalk.label}</div>
+                  <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(firstStopWalk.place)}</div>
                 </div>
               </div>
 
@@ -1492,8 +1565,8 @@
                   </div>
                 </div>
                 <div style="min-width:0; flex:1;">
-                  <div style="font-size:10.5px; font-weight:800; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">DESTINATION (SCHOOL)</div>
-                  <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(cleanPlace(req.dropoffLocation) || 'Greenfield School')}</div>
+                  <div style="font-size:10.5px; font-weight:800; color:#64748B; text-transform:uppercase; letter-spacing:0.5px;">${lastStopWalk.label}</div>
+                  <div style="font-size:14.5px; font-weight:800; color:#0F172A; margin-top:2px;">${esc(lastStopWalk.place)}</div>
                 </div>
               </div>
             </div>
@@ -1531,12 +1604,12 @@
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:10px 12px;">
-                <div style="font-size:11px; color:#64748B; font-weight:700; text-transform:uppercase;">Morning Meetup</div>
-                <div style="font-size:17px; font-weight:900; color:#1B2B68; margin-top:3px;">${esc(pickupTimeStr)}</div>
+                <div style="font-size:11px; color:#64748B; font-weight:700; text-transform:uppercase;">${firstSlot.label}</div>
+                <div style="font-size:17px; font-weight:900; color:#1B2B68; margin-top:3px;">${esc(firstSlot.time)}</div>
               </div>
               <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:10px 12px;">
-                <div style="font-size:11px; color:#64748B; font-weight:700; text-transform:uppercase;">Afternoon Return</div>
-                <div style="font-size:17px; font-weight:900; color:#1B2B68; margin-top:3px;">${esc(returnTimeStr)}</div>
+                <div style="font-size:11px; color:#64748B; font-weight:700; text-transform:uppercase;">${secondSlot.label}</div>
+                <div style="font-size:17px; font-weight:900; color:#1B2B68; margin-top:3px;">${esc(secondSlot.time)}</div>
               </div>
             </div>
           </div>
@@ -1611,6 +1684,14 @@
                 <i data-lucide="x-circle" style="width:16px; height:16px;"></i>
                 <span>Decline Request</span>
               </button>
+            </div>
+          ` : req.status === 'cancelled' ? `
+            <div style="padding:16px; background:#FFF4ED; border:1.5px solid #FED7AA; border-radius:16px; display:flex; align-items:center; gap:12px; color:#1A1D24;">
+              <i data-lucide="calendar-x" style="width:22px; height:22px; color:#F2600C; flex-shrink:0;"></i>
+              <div>
+                <div style="font-size:14px; font-weight:800;">Cancelled by parent</div>
+                <div style="font-size:12px; color:#6B7280; margin-top:2px;">This walk is off your schedule. No action needed.</div>
+              </div>
             </div>
           ` : req.status === 'declined' ? `
             <div style="padding:16px; background:#FEF2F2; border:1.5px solid #FECDD3; border-radius:16px; display:flex; align-items:center; gap:12px; color:#991B1B;">
@@ -1735,7 +1816,7 @@
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
     const parentName = item.parentName || 'Parent';
     const kidsText = item.childNames || 'Children';
-    const walkType = item.leg === 'afternoon' ? 'Return' : (item.badge || 'Walk');
+    const walkType = item.badge || (item.leg === 'afternoon' ? 'Return' : 'Morning');
     const id = esc(item.id);
 
     let cta;
@@ -1780,8 +1861,13 @@
       window.navigateTo('wsActiveWalk');
       return;
     }
-    w.activeWalk = item;
+    if (walkReturnLocked(item)) {
+      toast('Return opens after school drop-off');
+      return;
+    }
+    w.activeWalk = Object.assign({}, item, { date: window.H2STrip ? window.H2STrip.today() : '' });
     w.activeWalkStage = 1;
+    if (window.H2STrip && item.bookingId) window.H2STrip.startLeg(item.bookingId, item.leg, 1);
     persist();
     window.navigateTo('wsActiveWalk');
   };
@@ -1856,10 +1942,24 @@
     { key: 5, chip: 'Handoff', cta: 'Complete walk', progress: 92, pin: { left: '80%', top: '48%' } }
   ];
 
+  const WALK_STAGES_PM = {
+    1: { cta: 'Arrived at school gate' },
+    2: { chip: 'At school gate', cta: 'Confirm children with me' },
+    3: { chip: 'Walking home', cta: 'Arrived home' },
+    4: { chip: 'At home', cta: 'Confirm handoff to parent' }
+  };
+
+  /** Afternoon walks start at the school gate and end at home, so stage labels flip. */
+  function walkStageFor(item, idx) {
+    const base = WALK_STAGES[Math.min(idx || 1, WALK_STAGES.length - 1)] || WALK_STAGES[1];
+    if (!item || item.leg !== 'afternoon') return base;
+    return Object.assign({}, base, WALK_STAGES_PM[base.key] || {});
+  }
+
   function renderActiveWalk() {
     const w = ensureWalk();
     const item = w.activeWalk || deriveSchedule()[0] || {};
-    const stage = WALK_STAGES[Math.min(w.activeWalkStage || 1, WALK_STAGES.length - 1)] || WALK_STAGES[1];
+    const stage = walkStageFor(item, w.activeWalkStage);
     const atDest = (w.activeWalkStage || 0) >= 3;
     const chip = document.getElementById('wsMilestoneText');
     const title = document.getElementById('wsActiveTargetTitle');
@@ -1877,12 +1977,13 @@
 
     if (chip) chip.textContent = stage.chip;
     if (title) title.textContent = atDest ? (item.to || 'Greenfield Elementary') : (item.from || '12 Elm Street (Meetup)');
-    if (desc) desc.textContent = `${item.childNames || 'Liam + Emma'} · ${atDest ? 'School gate arrival' : 'Morning walking escort'}`;
+    const isReturn = item.leg === 'afternoon';
+    if (desc) desc.textContent = `${item.childNames || 'Liam + Emma'} · ${isReturn ? (atDest ? 'Arriving home' : 'Return walk') : (atDest ? 'School gate arrival' : 'Morning walk')}`;
     if (eta) eta.textContent = item.time || '07:50 AM';
-    if (btn) btn.textContent = stage.cta;
+    if (btn) btn.textContent = stage.proof === 'dropoff' ? (returnWalkFor(item.id) ? 'Confirm school handoff' : 'Complete walk') : stage.cta;
     if (note) {
       note.textContent = atDest
-        ? 'Hand children only to authorized school staff at the gate.'
+        ? (isReturn ? 'Hand children only to a parent or authorized adult.' : 'Hand children only to authorized school staff at the gate.')
         : 'High-vis vests on. Parent sees live WalkShare status.';
     }
     if (avatars) {
@@ -1908,6 +2009,9 @@
     }
     const msg = document.getElementById('wsWalkMessageBtn');
     if (msg) msg.setAttribute('onclick', `openChatWith('${item.parentId || 'PRNT-9042'}')`);
+    if (w.activeWalk && w.activeWalkStage > 0 && item.bookingId && window.H2STrip) {
+      window.H2STrip.setStage(item.bookingId, item.leg, Math.min(4, w.activeWalkStage));
+    }
     if (typeof window.syncTripPhotoButton === 'function') window.syncTripPhotoButton('wsWalkPhotoBtn', w.activeWalkStage || 0);
     icons();
   }
@@ -1983,7 +2087,7 @@
 
   window.advanceWalkShareWalk = function () {
     const w = ensureWalk();
-    const stage = WALK_STAGES[Math.min(w.activeWalkStage || 1, WALK_STAGES.length - 1)] || WALK_STAGES[1];
+    const stage = walkStageFor(w.activeWalk, w.activeWalkStage);
     if (stage.attendance) {
       openWalkShareAttendance(true);
       return;
@@ -1996,50 +2100,141 @@
       }
       window.openLiveProofCamera({
         title: 'Handoff photo proof',
-        hint: `Photo of ${walkingChildNames(item)} handed to school staff`,
+        hint: `Photo of ${walkingChildNames(item)} handed to ${item.leg === 'afternoon' ? 'a parent' : 'school staff'}`,
         stamp: 'Handoff',
         onCapture: (photo) => {
           saveWalkProof(item, 'dropoff', photo);
-          w.activeWalkStage += 1;
-          persist();
-          renderActiveWalk();
-          toast('Handoff photo shared with parents');
+          finishWalkLeg(item);
         }
       });
       return;
     }
     if (w.activeWalkStage >= WALK_STAGES.length - 1) {
-      const finished = w.activeWalk || {};
-      const req = (w.requests || []).find((r) => r.id === finished.requestId);
-      const completedMeta = {
-        bookingId: req?.bookingId || finished.requestId || '',
-        parentName: finished.parentName || req?.parentName || 'Parent',
-        parentId: finished.parentId || req?.parentId || '',
-        parentPhoto: PARENTS[finished.parentId]?.photo || req?.parentPhoto || '/assets/avatar_sadia.jpg',
-        childNames: finished.childNames || '',
-        route: finished.route || ''
-      };
-      if (finished.id) {
-        w.completedWalkIds = Array.from(new Set([...(w.completedWalkIds || []), finished.id]));
-      }
-      w.activeWalkStage = 0;
-      w.activeWalkChildState = {};
-      w.activeWalk = null;
-      persist();
-      toast('Walk complete. Parent can see the drop-off update.');
-      window.navigateTo('wsHome');
-      setTimeout(() => {
-        if (typeof window.openWalkShareRateParentModal === 'function') {
-          window.openWalkShareRateParentModal(completedMeta);
-        }
-      }, 500);
+      finishWalkLeg(w.activeWalk || {});
       return;
     }
     w.activeWalkStage += 1;
     persist();
     renderActiveWalk();
-    toast(WALK_STAGES[w.activeWalkStage].chip);
+    toast(walkStageFor(w.activeWalk, w.activeWalkStage).chip);
   };
+
+  function walkNowClock() {
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function walkStartsIn(timeStr) {
+    const now = new Date();
+    const diff = toMinutes(timeStr) - (now.getHours() * 60 + now.getMinutes());
+    if (diff <= 0) return 'Due now';
+    const h = Math.floor(diff / 60);
+    const m = diff % 60;
+    return `Starts in ${h ? h + ' h ' : ''}${m} min`;
+  }
+
+  function walkProofKey(item) {
+    const req = (ensureWalk().requests || []).find((r) => r.id === item.requestId);
+    return item.bookingId || req?.bookingId || item.requestId || 'current';
+  }
+
+  function finishWalkLeg(item) {
+    const w = ensureWalk();
+    const finished = item || w.activeWalk || {};
+    const req = (w.requests || []).find((r) => r.id === finished.requestId);
+    const returnLeg = returnWalkFor(finished.id);
+    w.lastLegDone = {
+      legId: finished.id || '',
+      leg: finished.leg || 'morning',
+      final: !returnLeg,
+      returnLegId: returnLeg ? returnLeg.id : null,
+      finishedAt: walkNowClock(),
+      place: cleanPlace(finished.to) || (returnLeg ? 'School' : 'Home'),
+      childNames: walkingChildNames(finished),
+      children: (finished.children || []).slice(0, 3),
+      bookingId: finished.bookingId || req?.bookingId || finished.requestId || '',
+      requestId: finished.requestId || '',
+      parentName: finished.parentName || req?.parentName || 'Parent',
+      parentId: finished.parentId || req?.parentId || '',
+      parentPhoto: PARENTS[finished.parentId]?.photo || req?.parentPhoto || '/assets/avatar_sadia.jpg',
+      route: finished.route || '',
+      proofKey: walkProofKey(finished)
+    };
+    const T = window.H2STrip;
+    if (finished.id) {
+      w.completedWalkIds = T ? T.markDone(w.completedWalkIds, finished.id) : Array.from(new Set([...(w.completedWalkIds || []), finished.id]));
+    }
+    if (T && T.find(w.lastLegDone.bookingId)) T.finishLeg(w.lastLegDone.bookingId, w.lastLegDone.leg);
+    if (req && !returnLeg && req.frequency !== 'recurring') req.completedDate = T ? T.today() : '';
+    w.activeWalkStage = 0;
+    w.activeWalkChildState = {};
+    w.activeWalk = null;
+    persist();
+    window.navigateTo('wsLegDone');
+  }
+
+  window.rateWalkShareParentAfterWalk = function () {
+    const info = ensureWalk().lastLegDone || {};
+    window.navigateTo('wsHome');
+    setTimeout(() => {
+      if (typeof window.openWalkShareRateParentModal === 'function') window.openWalkShareRateParentModal(info);
+    }, 300);
+  };
+
+  function renderWalkLegDone() {
+    const w = ensureWalk();
+    const el = feed('wsLegDoneFeed');
+    const info = w.lastLegDone;
+    if (!el) return;
+    if (!info) {
+      window.navigateTo('wsHome');
+      return;
+    }
+    const ret = info.returnLegId ? deriveSchedule().find((item) => item.id === info.returnLegId) : null;
+    const proofs = typeof window.getHandoverProofs === 'function'
+      ? window.getHandoverProofs(info.proofKey, { tripLeg: info.leg === 'afternoon' ? 'pm' : 'am' })
+      : null;
+    const photo = proofs && proofs.dropoff && proofs.dropoff.photo;
+    const avatars = (info.children || []).map((c, i) => `<img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" onerror="this.src='/assets/avatar_arman.jpg'" />`).join('');
+    const title = info.final ? 'Walk complete' : 'Handed off at school';
+    const sub = info.final
+      ? `All kids handed off safely &middot; ${esc(info.finishedAt)}`
+      : `${esc(info.place)} &middot; ${esc(info.finishedAt)}`;
+    const handed = info.final ? (info.leg === 'afternoon' ? 'Handed to parent' : 'Handed off safely') : 'Handed to school staff';
+    el.innerHTML = `
+      <div class="dld">
+        <div class="dld-hero">
+          <span class="dld-check"><i data-lucide="check"></i></span>
+          <h2 class="dld-title">${title}</h2>
+          <p class="dld-sub">${sub}</p>
+        </div>
+        ${photo ? `<figure class="dld-photo"><img src="${photo}" alt="Handoff photo" /><figcaption><i data-lucide="camera"></i>Handoff photo shared with parent</figcaption></figure>` : ''}
+        <div class="dld-kids">
+          ${avatars ? `<div class="child-avatar-cluster">${avatars}</div>` : ''}
+          <div class="dld-kids-copy">
+            <div class="dld-kids-name">${esc(info.childNames || 'Children')}</div>
+            <div class="dld-kids-sub">${handed}</div>
+          </div>
+        </div>
+        ${ret ? `
+          <div class="dld-next">
+            <div class="dld-next-label">Next &middot; Return walk</div>
+            <div class="dld-next-time">${esc(ret.time)} <span>${esc(walkStartsIn(ret.time))}</span></div>
+            <div class="dsc-route">
+              <div class="dsc-stop"><span class="dsc-dot"></span><span class="dsc-place">${esc(cleanPlace(ret.from))}</span></div>
+              <div class="dsc-stop"><span class="dsc-dot is-end"></span><span class="dsc-place">${esc(cleanPlace(ret.to))}</span></div>
+            </div>
+          </div>` : ''}
+        <div class="dld-actions">
+          ${info.final
+            ? `<button type="button" class="btn-primary" onclick="rateWalkShareParentAfterWalk()">Rate ${esc(String(info.parentName || 'parent').split(' ')[0])}</button>
+               <button type="button" class="dld-secondary" onclick="navigateTo('wsHome')">Back to home</button>`
+            : `<button type="button" class="btn-primary" onclick="navigateTo('wsHome')">Back to home</button>
+               <button type="button" class="dld-secondary" onclick="openChatWith('${esc(info.parentId || 'PRNT-9042')}')">Message parent</button>`}
+        </div>
+      </div>
+    `;
+    icons();
+  }
 
   window.takeWalkSharePhoto = function () {
     const w = ensureWalk();
@@ -2057,7 +2252,10 @@
       window.openTripPhotoProofModal();
       return;
     }
-    toast(stageIdx < 2 ? 'Meetup photo opens when you arrive at the meetup' : 'Handoff photo opens when you arrive at the school gate');
+    const pm = w.activeWalk && w.activeWalk.leg === 'afternoon';
+    toast(stageIdx < 2
+      ? (pm ? 'Pickup photo opens when you reach the school gate' : 'Meetup photo opens when you arrive at the meetup')
+      : (pm ? 'Handoff photo opens when you arrive home' : 'Handoff photo opens when you arrive at the school gate'));
   };
 
   function walkingChildNames(item) {
@@ -2082,7 +2280,7 @@
       childNames: walkingChildNames(item),
       by: w.name || 'Your WalkShare escort',
       role: 'walkshare'
-    });
+    }, { tripLeg: item.leg === 'afternoon' ? 'pm' : 'am' });
     if (!saved) toast('Photo saved for this walk, but storage is full on this device.');
   }
 
@@ -2108,8 +2306,8 @@
       return;
     }
     window.openLiveProofCamera({
-      title: 'Meetup photo proof',
-      hint: `Photo of ${walkingChildNames(item)} with you at the meetup`,
+      title: item.leg === 'afternoon' ? 'School pickup photo proof' : 'Meetup photo proof',
+      hint: `Photo of ${walkingChildNames(item)} with you at the ${item.leg === 'afternoon' ? 'school gate' : 'meetup'}`,
       stamp: 'Pickup',
       onCapture: (photo) => {
         window._wsPendingPickupPhoto = photo;
@@ -2160,9 +2358,17 @@
   };
 
   window.confirmWalkShareAttendance = function () {
+    const walk = ensureWalk();
+    const walkItem = walk.activeWalk || {};
+    const roster = Array.isArray(walkItem.children) ? walkItem.children.filter(Boolean) : [];
+    const childState = walk.activeWalkChildState || {};
+    if (roster.length && roster.every((c) => childState[c.id || c.name] === 'not_walking')) {
+      toast('No child is walking. Message the parent before you continue.');
+      return;
+    }
     const photo = window._wsPendingPickupPhoto;
     if (!photo) {
-      toast('Take the meetup photo first');
+      toast(walkItem.leg === 'afternoon' ? 'Take the school pickup photo first' : 'Take the meetup photo first');
       window.captureWalkSharePickupProof();
       return;
     }
@@ -2316,15 +2522,7 @@
 
     el.innerHTML = `
       ${editing ? '' : `
-        <div style="margin-bottom: 14px;">
-          <span class="auth-step-pill-kicker">
-            <span>Step 1 of 5</span>
-            <span style="opacity:0.4;">•</span>
-            <span>Who you are</span>
-          </span>
-          <h2 style="font-size:22px; font-weight:800; color:#0F172A; margin:6px 0 4px; letter-spacing:-0.02em;">WalkShare Escort Profile</h2>
-          <p style="font-size:13.5px; color:#64748B; margin:0; line-height:1.45;">Enter your legal name, contact details, and parent-facing escort bio.</p>
-        </div>
+        ${wsSignupHead(1, 'About you', 'The details parents will see.')}
       `}
 
       <!-- Avatar Hero with Name & Verified Badge -->
@@ -2340,8 +2538,8 @@
           </div>
           <input type="file" accept="image/*" id="wsPhotoFile" class="drv-file-input" onchange="onWalkShareProfilePhoto(event)" style="display:none;" />
         </div>
-        <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px;">
-          <span>${esc(w.name || (editing ? 'Your Profile' : 'New WalkShare Escort'))}</span>
+        ${editing ? `<div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px;">
+          <span>${esc(w.name || 'Your Profile')}</span>
           ${isApproved(w) ? `
           <span class="fb-verified-badge" title="Verified Account">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="#1877F2">
@@ -2350,8 +2548,8 @@
           </span>` : ''}
         </div>
         <div style="font-size: 12.5px; font-weight: 600; color: #64748B; margin-top: 2px;">
-          ${w.serviceArea ? esc(w.serviceArea) : 'Certified Walking School Bus Escort'}
-        </div>
+          ${esc(w.serviceArea || '')}
+        </div>` : `<span style="margin-top: 8px; font-size: 12px; font-weight: 600; color: #6B7280;">${w.photo ? 'Change photo' : 'Add photo (optional)'}</span>`}
       </div>
 
       <!-- Modern Unified WalkShare Profile Input Stack (Matching Parent System 1:1) -->
@@ -2359,54 +2557,45 @@
         <!-- Full Legal Name -->
         <div class="auth-input-group" style="margin-bottom:0;">
           <div class="auth-input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></div>
-          <input type="text" class="auth-input" id="wsProfileName" value="${esc(w.name || '')}" placeholder="Full legal name (e.g. Sarah Jenkins)" />
+          <input type="text" class="auth-input" id="wsProfileName" value="${esc(w.name || '')}" placeholder="Full legal name" autocomplete="name" oninput="syncWalkShareProfileContinue(this)" />
         </div>
 
         <!-- Phone Number -->
         <div class="auth-input-group" style="margin-bottom:0;">
           <div class="auth-input-icon"><i data-lucide="phone" style="width:18px;height:18px;"></i></div>
-          <input type="tel" class="auth-input" id="wsProfilePhone" value="${esc(w.phone || '')}" placeholder="Phone number (e.g. +1 416 555-0199)" />
+          <input type="tel" class="auth-input" id="wsProfilePhone" value="${esc(w.phone || '')}" placeholder="Phone number" autocomplete="tel" oninput="syncWalkShareProfileContinue(this)" />
         </div>
 
         <!-- Email Address -->
         <div class="auth-input-group" style="margin-bottom:0;">
           <div class="auth-input-icon"><i data-lucide="mail" style="width:18px;height:18px;"></i></div>
-          <input type="email" class="auth-input" id="wsProfileEmail" value="${esc(w.email || '')}" placeholder="Email address (e.g. escort@example.com)" />
+          <input type="email" class="auth-input" id="wsProfileEmail" value="${esc(w.email || '')}" placeholder="Email address" />
         </div>
 
         <!-- Walking Corridor / Service Area -->
         <div class="auth-input-group" style="margin-bottom:0;">
           <div class="auth-input-icon"><i data-lucide="map-pin" style="width:18px;height:18px;"></i></div>
-          <input type="text" class="auth-input" id="wsProfileArea" value="${esc(w.serviceArea || '')}" placeholder="Walking corridor (e.g. Elm St → Greenfield)" />
+          <input type="text" class="auth-input" id="wsProfileArea" value="${esc(w.serviceArea || '')}" placeholder="Area you walk in (e.g. Elm St)" />
         </div>
 
-        <!-- Escort Experience & Certifications -->
+        ${editing ? `
         <div class="auth-input-group" style="margin-bottom:0;">
           <div class="auth-input-icon"><i data-lucide="award" style="width:18px;height:18px;"></i></div>
-          <input type="text" class="auth-input" id="wsProfileExp" value="${esc(w.experience || '')}" placeholder="Experience & Safety (e.g. CPR Certified, 4+ Yrs Walk Escort)" />
+          <input type="text" class="auth-input" id="wsProfileExp" value="${esc(w.experience || '')}" placeholder="Experience (e.g. CPR certified, 4 years)" />
         </div>
-
-        <!-- About / Bio -->
         <div class="auth-input-group" style="position:relative; margin-bottom:0;">
           <div class="auth-input-icon" style="top:18px; transform:none;"><i data-lucide="file-text" style="width:18px;height:18px;"></i></div>
-          <textarea class="auth-input" id="wsProfileBio" rows="3" placeholder="Tell parents about your neighborhood walking group, supervised sidewalk escort care, and morning route...">${esc(w.bio || w.about || '')}</textarea>
-        </div>
+          <textarea class="auth-input" id="wsProfileBio" rows="3" placeholder="About you (optional)">${esc(w.bio || w.about || '')}</textarea>
+        </div>` : ''}
       </div>
 
       <div class="drv-actions-col">
-        <button type="button" class="auth-btn-primary" onclick="completeWalkShareProfileAndOpenHome()" style="height: 52px; font-size: 15px; font-weight: 700; border-radius: 14px;">
-          <span>${editing ? 'Save Profile Changes' : 'Save & go to dashboard'}</span>
+        <button type="button" class="auth-btn-primary${editing || (w.name && w.phone) ? '' : ' is-waiting'}" id="wsProfileContinue" onclick="completeWalkShareProfileAndOpenHome()" style="height: 52px; font-size: 15px; font-weight: 700; border-radius: 14px;">
+          <span>${editing ? 'Save Profile Changes' : 'Continue'}</span>
           <div class="auth-btn-arrow-circle">
             <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
           </div>
         </button>
-
-        ${editing ? '' : `
-          <button type="button" class="auth-btn-secondary" onclick="saveWalkShareProfile()" style="margin-top:10px; width:100%; height:46px; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px; font-size:13.5px; font-weight:700; color:#1E293B; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
-            <span>Continue to Walking Group Setup (Optional)</span>
-            <i data-lucide="chevron-right" style="width:15px;height:15px;color:#64748B;"></i>
-          </button>
-        `}
       </div>
     `;
     icons();
@@ -2429,15 +2618,23 @@
       window.saveWalkShareProfile();
       return;
     }
-    const val = (id) => String(document.getElementById(id)?.value || '').trim();
-    const name = val('wsProfileName');
-    const phone = val('wsProfilePhone');
-    if (document.getElementById('wsProfileName') && (!name || !phone)) {
-      toast('Add your name and phone to continue', 'error');
+    const missing = ['wsProfileName', 'wsProfilePhone']
+      .map((id) => document.getElementById(id))
+      .filter((el) => el && !el.value.trim());
+    if (missing.length) {
+      missing.forEach((el) => el.closest('.auth-input-group')?.classList.add('is-missing'));
+      missing[0].focus();
+      toast(missing.length === 2 ? 'Enter your name and phone number' : `Enter your ${missing[0].id === 'wsProfileName' ? 'name' : 'phone number'}`, 'warning');
       return;
     }
     window.saveWalkShareProfile(true);
-    finishWalkShareSetup();
+    window.navigateTo('wsOnboardDocs');
+  };
+
+  window.syncWalkShareProfileContinue = function (input) {
+    if (input && input.value.trim()) input.closest('.auth-input-group')?.classList.remove('is-missing');
+    const ready = ['wsProfileName', 'wsProfilePhone'].every((id) => String(document.getElementById(id)?.value || '').trim());
+    document.getElementById('wsProfileContinue')?.classList.toggle('is-waiting', !ready);
   };
 
   window.onWalkShareProfilePhoto = function (event) {
@@ -2598,300 +2795,85 @@
     reader.readAsDataURL(file);
   }
 
-  function wsDocReady(doc) {
-    if (!doc) return false;
-    const hasFile = !!(doc.file && (doc.file.attached || doc.file.name));
-    if (doc.id === 'licence' || doc.id === 'id') {
-      return hasFile && !!String(doc.number || '').trim();
-    }
-    if (doc.id === 'residency_tax_tenancy') {
-      return hasFile && !!String(doc.address || '').trim();
-    }
-    if (doc.id === 'residency_utility') {
-      return hasFile && !!String(doc.issuer || '').trim();
-    }
-    if (doc.id === 'firstaid') return hasFile && !!String(doc.issuer || '').trim();
-    return hasFile && !!String(doc.issuer || '').trim();
+  function wsSignupHead(n, title, copy) {
+    return `<div class="drv-su-head">
+      <span class="drv-su-step">Step ${n} of 2</span>
+      <h2 class="drv-su-title">${title}</h2>
+      <p class="drv-su-copy">${copy}</p>
+    </div>`;
+  }
+
+  function inWalkSignup() {
+    if (state()._docsReturnTo) return false;
+    if (window.navReturnStack && window.navReturnStack.length) return false;
+    return !editingProfileChild();
   }
 
   function renderOnboardDocs() {
     const w = ensureWalk();
     const el = feed('wsOnboardDocsFeed');
     if (!el) return;
-    const editing = editingProfileChild();
-    bindChildTitle(el, editing ? 'Verification Documents' : 'Documents & Safety');
-    bindChildBack(el, editing ? "backNested('wsProfile')" : "navigateTo('wsOnboardGroup')");
-
-    const submitted = w.documents.filter((doc) => doc.status !== 'not_submitted' && doc.status !== 'action_required' && doc.status !== 'rejected').length;
+    const signup = inWalkSignup();
+    bindChildTitle(el, signup ? 'Documents' : 'Verification documents');
+    bindChildBack(el, signup ? "navigateTo('wsOnboardProfile')" : "backNested('wsProfile')");
     el.innerHTML = `
-      ${editing ? '' : `
-        <div style="margin-bottom: 16px;">
-          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1B2B68; background:rgba(27,43,104,0.08); padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 3 of 5</span>
-          <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Verification Documents</h2>
-          <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Submit your photo ID, proof of residency, and police record checks.</p>
-        </div>
-      `}
-      <p class="drv-docs-meta" style="margin-bottom: 12px;">${submitted} / ${w.documents.length} submitted · ID, Residency, VSC & CPR</p>
-      <div class="profile-menu-section drv-doc-list" style="margin-bottom: 16px;">
-        ${w.documents.map((doc) => {
-          const needs = doc.status === 'not_submitted' || doc.status === 'action_required' || doc.status === 'rejected';
-          return `
-          <div class="profile-menu-item drv-doc-row" role="button" tabindex="0" onclick="openWalkShareDoc('${esc(doc.id)}')">
-            <div class="menu-item-left">
-              <div class="menu-icon-wrap drv-doc-icon"><i data-lucide="${doc.id === 'licence' || doc.id === 'id' ? 'credit-card' : (doc.id.startsWith('residency') ? 'home' : (doc.id === 'firstaid' ? 'heart-pulse' : 'shield-check'))}"></i></div>
-              <div style="min-width:0; flex:1;">
-                <span class="menu-title-text" style="font-size:13.5px; font-weight:700; color:#0F172A; display:block; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(doc.title)}</span>
-                ${needs ? '<span class="menu-subtitle" style="color:var(--color-primary);font-weight:700;font-size:11.5px;margin-top:2px;display:block;">Tap to upload</span>' : ''}
-              </div>
-            </div>
-            <span class="drv-doc-row-end">
-              <span class="drv-doc-status ${esc(doc.status || 'not_submitted')}">${esc(doc.status === 'approved' ? 'Approved' : (doc.status === 'under_review' ? 'Under Review' : (doc.status === 'action_required' ? 'Action Required' : 'Not Submitted')))}</span>
-              <i data-lucide="chevron-right" style="width:16px;height:16px;color:#94A3B8;"></i>
-            </span>
-          </div>`;
-        }).join('')}
-      </div>
+      ${signup ? wsSignupHead(2, 'Verify your identity', 'Clear photos. We review them within 24 hours.') : ''}
+      ${window.H2SDocCapture.render(w.documents, REQUIRED_DOCS, 'onWalkShareDocPhoto')}
       <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveWalkShareDocsDone()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Done' : 'Save and Continue to Availability'}</button>
+        <button type="button" class="btn-primary" onclick="saveWalkShareDocsDone()">${signup ? 'Submit &amp; finish' : 'Done'}</button>
       </div>
     `;
     icons();
   }
 
-  window.openWalkShareDoc = function (id) {
-    const w = ensureWalk();
-    ensureWalkRole();
-    w.selectedDocId = id;
-    const current = window.currentScreen || '';
-    if (current && current !== 'wsDocDetail') {
-      window.navReturnStack = window.navReturnStack || [];
-      window.navReturnStack.push({ screen: current, role: 'walkshare' });
-    }
-    window.navigateTo('wsDocDetail', true);
-  };
-
-  function renderDocDetail() {
-    const w = ensureWalk();
-    const doc = w.documents.find((d) => d.id === w.selectedDocId) || w.documents[0];
-    const el = feed('wsDocDetailFeed');
-    if (!el || !doc) {
-      window.navigateTo('wsOnboardDocs', true);
-      return;
-    }
-    const attached = !!(doc.file && (doc.file.attached || doc.file.name));
-    const fileName = attached ? (doc.file.name || 'File attached') : 'Tap to upload';
-    const thumb = attached && doc.file.preview
-      ? `<img class="drv-upload-thumb" src="${esc(doc.file.preview)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
-      : `<span class="menu-icon-wrap drv-doc-icon" aria-hidden="true"><i data-lucide="${attached ? 'file-check' : 'upload'}"></i></span>`;
-    
-    let fieldHtml = '';
-    let helpNote = '';
-
-    if (doc.id === 'licence' || doc.id === 'id') {
-      helpNote = 'Upload a valid government driver\'s license (front & back). We verify identity and driving credentials.';
-      fieldHtml = `
-        <div class="form-group">
-          <label class="form-label" for="wsDocNumber">Driver's License Number</label>
-          <input class="form-input" id="wsDocNumber" value="${esc(doc.number || '')}" placeholder="e.g. D4819-20381-90412" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="wsDocProvince">Issuing Province / State</label>
-          <input class="form-input" id="wsDocProvince" value="${esc(doc.province || 'Ontario')}" placeholder="Ontario" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="wsDocExpiry">Expiry Date</label>
-          <input class="form-input" type="date" id="wsDocExpiry" value="${esc(doc.expiry || '2028-09-15')}" />
-        </div>
-      `;
-    } else if (doc.id === 'residency_tax_tenancy') {
-      helpNote = 'Proof of Residency #1: Submit your latest annual Property Tax Statement or active signed Residential Tenancy Agreement.';
-      fieldHtml = `
-        <div class="form-group">
-          <label class="form-label" for="wsDocResidencyType">Proof of Residency Type</label>
-          <select class="form-input" id="wsDocResidencyType">
-            <option value="Property Tax Statement" ${(doc.residencyType || '') === 'Property Tax Statement' ? 'selected' : ''}>Property Tax Statement</option>
-            <option value="Residential Tenancy Agreement" ${(doc.residencyType || '') === 'Residential Tenancy Agreement' ? 'selected' : ''}>Tenancy Agreement (Lease)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="wsDocAddress">Residential Address on Document</label>
-          <input class="form-input" id="wsDocAddress" value="${esc(doc.address || '')}" placeholder="e.g. 124 Greenfield Ave, Toronto, ON M4B 1B3" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="wsDocIssuer">Issuing Municipality / Landlord</label>
-          <input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="e.g. City of Toronto Revenue Services or Landlord" />
-        </div>
-      `;
-    } else if (doc.id === 'residency_utility') {
-      helpNote = 'Proof of Residency #2: Submit an official utility bill (electricity, natural gas, municipal water, or internet) issued within 90 days.';
-      fieldHtml = `
-        <div class="form-group">
-          <label class="form-label" for="wsDocIssuer">Utility Service Provider</label>
-          <input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="e.g. Toronto Hydro, Enbridge Gas, Rogers / Bell, City Water" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="wsDocAddress">Service / Billing Address</label>
-          <input class="form-input" id="wsDocAddress" value="${esc(doc.address || '')}" placeholder="e.g. 124 Greenfield Ave, Toronto, ON M4B 1B3" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="wsDocBillDate">Bill / Statement Date</label>
-          <input class="form-input" type="date" id="wsDocBillDate" value="${esc(doc.billDate || '2026-08-10')}" />
-        </div>
-      `;
-    } else if (doc.id === 'firstaid') {
-      helpNote = 'Certified pediatric emergency first-aid and CPR Level C certification.';
-      fieldHtml = `
-        <div class="form-group">
-          <label class="form-label" for="wsDocIssuer">Certification Body</label>
-          <input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="e.g. Red Cross / St. John Ambulance" />
-        </div>
-      `;
-    } else {
-      helpNote = 'Official police record clearance for escorting and supervising children.';
-      fieldHtml = `
-        <div class="form-group">
-          <label class="form-label" for="wsDocIssuer">Issuing Police Service</label>
-          <input class="form-input" id="wsDocIssuer" value="${esc(doc.issuer || '')}" placeholder="e.g. Toronto Police Service" />
-        </div>
-      `;
-    }
-
-    const back = el?.closest('.screen-view')?.querySelector('.back-btn');
-    if (back) {
-      back.setAttribute('onclick', "event.preventDefault();event.stopPropagation();navigateTo('wsOnboardDocs', true)");
-    }
-    const titleEl = el?.closest('.screen-view')?.querySelector('.top-bar-title');
-    if (titleEl) titleEl.textContent = doc.title;
-    el.innerHTML = `
-      <div class="drv-doc-detail-head">
-        <span class="drv-doc-status ${esc(doc.status || 'not_submitted')}">${esc(doc.status === 'under_review' ? 'Under Review' : (doc.status === 'approved' ? 'Approved' : 'Not Submitted'))}</span>
-      </div>
-      <h3 class="card-title-navy" style="margin:0 0 4px;">${esc(doc.title)}</h3>
-      ${helpNote ? `<p class="card-desc-muted" style="font-size:12px;margin:0 0 14px;line-height:1.4;">${esc(helpNote)}</p>` : ''}
-      ${fieldHtml}
-      <div class="form-group" style="margin-bottom:14px;">
-        <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Document File (PDF or Photo)</label>
-        ${attached ? `
-          <div class="drv-doc-card-attached">
-            <div class="drv-doc-info-left">
-              ${thumb}
-              <div class="drv-doc-meta-col">
-                <div class="drv-doc-file-name" title="${esc(fileName)}">${esc(fileName)}</div>
-                <div class="drv-doc-status-badge">
-                  <i data-lucide="check-circle-2" style="width:12px; height:12px; color:#16A34A;"></i>
-                  <span>Ready for verification</span>
-                </div>
-              </div>
-            </div>
-            <div class="drv-doc-actions-right">
-              <label for="wsDocFile" class="btn-drv-doc-replace" title="Replace document">
-                <i data-lucide="refresh-cw" style="width:13px; height:13px;"></i>
-                <span>Replace</span>
-              </label>
-              <button type="button" class="btn-drv-doc-delete" onclick="deleteWalkShareDocFile(event)" title="Delete document">
-                <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
-              </button>
-            </div>
-          </div>
-        ` : `
-          <label class="drv-doc-dropzone" for="wsDocFile">
-            <div class="drv-doc-dropzone-icon"><i data-lucide="upload-cloud"></i></div>
-            <div class="drv-doc-dropzone-title">Upload Document File</div>
-            <div class="drv-doc-dropzone-hint">JPG, PNG or PDF (Max 10MB)</div>
-          </label>
-        `}
-        <input type="file" accept="image/*,.pdf,application/pdf" id="wsDocFile" class="drv-file-input" style="display:none;" onchange="onWalkShareDocFile(event)" />
-      </div>
-      <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveWalkShareDoc()">${doc.status === 'not_submitted' ? 'Submit for review' : 'Save changes'}</button>
-      </div>
-    `;
-    icons();
-  }
-
-  window.deleteWalkShareDocFile = function (event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    const w = ensureWalk();
-    const doc = w.documents.find((d) => d.id === w.selectedDocId);
-    if (!doc) return;
-    doc.file = { name: '', attached: false, preview: '' };
-    doc._fileTouched = true;
-    persist();
-    renderDocDetail();
-    toast('Document removed. Please upload a clear photo or PDF.');
-  };
-
-  window.onWalkShareDocFile = function (event) {
+  window.onWalkShareDocPhoto = function (event, docId, key) {
     const input = event.target;
     const file = input.files && input.files[0];
     if (!file) return;
-    const w = ensureWalk();
-    const doc = w.documents.find((d) => d.id === w.selectedDocId);
-    if (!doc) return;
-    readLocalFile(file, (meta) => {
-      doc.file = { name: meta.name, attached: true, preview: meta.preview || '' };
-      doc._fileTouched = true;
-      persist();
+    const spec = REQUIRED_DOCS.find((item) => item.id === docId);
+    if (!spec) return;
+    window.H2SDocCapture.readFile(file, (meta) => {
       input.value = '';
-      toast('File attached');
-      renderDocDetail();
+      const doc = ensureWalk().documents.find((item) => item.id === docId);
+      if (!doc) return;
+      doc[key] = meta;
+      const next = window.H2SDocCapture.statusAfterUpload(doc, spec);
+      if (next !== doc.status) {
+        doc.status = next;
+        doc.rejectReason = '';
+      }
+      persist();
+      renderOnboardDocs();
+      toast(`${spec.title} added`);
     });
   };
 
-  window.saveWalkShareDoc = function () {
-    const w = ensureWalk();
-    const doc = w.documents.find((d) => d.id === w.selectedDocId);
-    if (!doc) return;
-    if (doc.id === 'licence' || doc.id === 'id') {
-      doc.number = (document.getElementById('wsDocNumber')?.value || '').trim();
-      doc.province = (document.getElementById('wsDocProvince')?.value || '').trim();
-      doc.expiry = (document.getElementById('wsDocExpiry')?.value || '').trim();
-    } else if (doc.id === 'residency_tax_tenancy') {
-      doc.residencyType = (document.getElementById('wsDocResidencyType')?.value || '').trim();
-      doc.address = (document.getElementById('wsDocAddress')?.value || '').trim();
-      doc.issuer = (document.getElementById('wsDocIssuer')?.value || '').trim();
-    } else if (doc.id === 'residency_utility') {
-      doc.issuer = (document.getElementById('wsDocIssuer')?.value || '').trim();
-      doc.address = (document.getElementById('wsDocAddress')?.value || '').trim();
-      doc.billDate = (document.getElementById('wsDocBillDate')?.value || '').trim();
-    } else {
-      doc.issuer = (document.getElementById('wsDocIssuer')?.value || '').trim();
-    }
-    if (!wsDocReady(doc)) {
-      toast('Add the required details and upload a file');
-      return;
-    }
-    doc.status = 'under_review';
-    delete doc._fileTouched;
-    persist();
-    toast('Submitted for review');
-    const stack = window.navReturnStack || [];
-    while (stack.length) {
-      const top = stack[stack.length - 1];
-      if (top && (top.screen === 'wsOnboardDocs' || top.screen === 'wsDocDetail')) {
-        stack.pop();
-        if (top.screen === 'wsOnboardDocs') break;
-        continue;
-      }
-      break;
-    }
-    window.navigateTo('wsOnboardDocs', true);
+  window.openWalkShareDoc = function () {
+    if (window.currentScreen === 'wsOnboardDocs') return;
+    if (typeof window.openNestedScreen === 'function') window.openNestedScreen('wsOnboardDocs');
+    else window.navigateTo('wsOnboardDocs');
   };
+
+  function renderDocDetail() {
+    window.navigateTo('wsOnboardDocs', true);
+  }
 
   window.saveWalkShareDocsDone = function () {
     const w = ensureWalk();
-    w.onboarding.docs = true;
-    persist();
-    if (editingProfileChild()) {
-      toast('Documents saved');
-      window.backNested('wsProfile');
-    } else {
-      toast('Documents saved — continue to availability');
-      window.navigateTo('wsOnboardAvailability');
+    const signup = inWalkSignup();
+    const missing = window.H2SDocCapture.missingText(w.documents, REQUIRED_DOCS);
+    if (signup && missing) {
+      toast(`Add your ${missing}`, 'warning');
+      return;
     }
+    w.onboarding.docs = !missing;
+    if (!missing && !isApproved(w)) w.verificationStatus = 'pending';
+    persist();
+    if (!signup) {
+      window.backNested('wsProfile');
+      return;
+    }
+    finishWalkShareSetup();
   };
 
   let wsAvailDraft = null;
@@ -3704,7 +3686,7 @@
       <div class="trip-card" style="text-align:center;">
         <div class="drv-home-empty-ico" style="margin:0 auto 12px;"><i data-lucide="shield-check"></i></div>
         <h3 class="card-title-navy">${isApproved(w) ? 'Verification Approved' : 'Verification Under Review'}</h3>
-        <p class="card-desc-muted">${isApproved(w) ? 'All WalkShare documents are verified and approved. You are ready to accept walks!' : 'Home2School is verifying your Driver\'s License, Proofs of Residency, and Safety background check.'}</p>
+        <p class="card-desc-muted">${isApproved(w) ? 'All WalkShare documents are verified and approved. You are ready to accept walks!' : 'Home2School is checking your driving licence and address proofs.'}</p>
         <div style="margin-top:12px;display:inline-block;padding:4px 12px;background:#EFF6FF;border-radius:999px;font-size:12px;font-weight:700;color:#1D4ED8;">
           ${approvedCount} of ${totalCount} documents approved
         </div>
@@ -4084,46 +4066,39 @@
     });
   }
 
+  /** The MVP WalkShare shell (Sarah) receives every WalkShare-category booking for demo routing. */
+  function isWalkBooking(booking) {
+    if (!booking) return false;
+    const provider = (state().providers || []).find((p) => p.id === booking.providerId);
+    return provider?.category === 'walkshare' || booking.providerId === 'sarah' || booking.providerId === 'elena';
+  }
+
   function ingestWalkShareBooking(booking) {
     const w = ensureWalk();
-    if (!booking) return;
-    const provider = (state().providers || []).find((p) => p.id === booking.providerId);
-    const isWalk = provider?.category === 'walkshare' || booking.providerId === 'sarah' || booking.providerId === 'elena';
-    // MVP WalkShare shell (Sarah) receives all WalkShare-category bookings for demo routing.
-    if (!isWalk) return;
+    if (!isWalkBooking(booking)) return;
     const status = String(booking.status || '').toLowerCase();
-    // Live pipeline only — skip archived declined noise on cold load.
-    if (!['pending', 'confirmed', 'in_progress'].includes(status)) {
-      // Still allow live decline updates for requests already on the board.
-      if ((status === 'declined' || status === 'cancelled') && (w.requests || []).some((r) => r.bookingId === booking.id)) {
-        const existing = w.requests.find((r) => r.bookingId === booking.id);
-        if (existing && existing.status !== 'declined') {
-          existing.status = 'declined';
-          persist();
-        }
+    const existing = (w.requests || []).find((r) => r.bookingId === booking.id);
+    if (existing) {
+      const mapped = walkRequestStatusFor(booking);
+      let changed = existing.status !== mapped;
+      existing.status = mapped;
+      const skips = (booking.skippedDates || []).slice();
+      if (JSON.stringify(existing.skippedDates || []) !== JSON.stringify(skips)) {
+        existing.skippedDates = skips;
+        changed = true;
       }
+      if (changed) persist();
       return;
     }
-    if ((w.requests || []).some((r) => r.bookingId === booking.id)) {
-      const existing = w.requests.find((r) => r.bookingId === booking.id);
-      if (existing) {
-        const mapped = status === 'confirmed' || status === 'in_progress'
-          ? 'accepted'
-          : (status === 'declined' || status === 'cancelled' ? 'declined' : existing.status);
-        if (existing.status !== mapped && (status === 'confirmed' || status === 'declined' || status === 'cancelled' || status === 'in_progress')) {
-          existing.status = mapped;
-          persist();
-        }
-      }
-      return;
-    }
+    // Live pipeline only: archived declined/cancelled bookings stay off a fresh board.
+    const doneToday = status === 'completed' && window.H2STrip && booking.completedDate === window.H2STrip.today();
+    if (!['pending', 'confirmed', 'in_progress'].includes(status) && !doneToday) return;
     const roster = bookingChildren(booking);
     const period = booking.frequency === 'recurring' ? 'week' : 'day';
-    const rate = booking.amount || w.rate?.amount || 75;
+    const rate = booking.agreedRate || booking.amount || w.rate?.amount || 75;
     const user = state().user || {};
-    const mapped = status === 'confirmed' || status === 'in_progress'
-      ? 'accepted'
-      : (status === 'declined' || status === 'cancelled' ? 'declined' : 'new');
+    const mapped = walkRequestStatusFor(booking);
+    const oneWay = booking.direction === 'oneway';
     w.requests.unshift({
       id: 'wreq-' + booking.id,
       bookingId: booking.id,
@@ -4137,14 +4112,19 @@
       dropoffLocation: booking.schoolLocation,
       dateLabel: booking.scheduleText || booking.createdAt || '',
       pickupTime: booking.outboundTime,
-      returnTime: booking.returnTime || '',
+      returnTime: oneWay ? '' : (booking.returnTime || ''),
       recurringDays: booking.frequency === 'recurring'
         ? (booking.selectedDays?.length ? booking.selectedDays : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'])
         : [],
       frequency: booking.frequency === 'recurring' ? 'recurring' : 'onetime',
-      direction: booking.direction === 'oneway' ? 'oneway' : 'bothway',
+      direction: oneWay ? 'oneway' : 'bothway',
+      oneWayLeg: oneWay ? (booking.oneWayLeg === 'pm' ? 'pm' : 'am') : null,
+      skippedDates: (booking.skippedDates || []).slice(),
+      completedDate: booking.completedDate || '',
       rateLabel: `$${rate} / ${period}`,
-      notes: 'Sidewalk-only WalkShare escort. Hand children to authorized school staff.',
+      notes: oneWay && booking.oneWayLeg === 'pm'
+        ? 'Afternoon walk from school only. Hand children to a parent or authorized adult at home.'
+        : 'Sidewalk-only WalkShare escort. Hand children to authorized school staff.',
       status: mapped
     });
     if (mapped === 'new') {
@@ -4307,10 +4287,15 @@
     const parentId = meta.parentId || 'PRNT-9042';
 
     if (!state().parentFeedback) state().parentFeedback = [];
+    const day = window.H2STrip ? window.H2STrip.today() : '';
+    const entryId = meta.bookingId ? `ws-fb-${meta.bookingId}-${day}` : 'ws-fb-' + Date.now();
+    state().parentFeedback = state().parentFeedback.filter((f) => f.id !== entryId);
     state().parentFeedback.push({
-      id: 'ws-fb-' + Date.now(),
+      id: entryId,
       parentId: parentId,
       parentName: parentName,
+      bookingId: meta.bookingId || '',
+      leg: meta.leg || '',
       service: 'walkshare',
       rating: stars,
       date: 'Today',
@@ -4323,6 +4308,25 @@
   };
 
   window.ingestWalkShareBooking = ingestWalkShareBooking;
+
+  /** Drops a restored live walk from another day or one the parent cancelled/skipped since. */
+  function reconcileLiveWalk() {
+    const w = ensureWalk();
+    const T = window.H2STrip;
+    const walk = w.activeWalk;
+    if (!walk || !T) return;
+    const booking = T.find(walk.bookingId);
+    const req = (w.requests || []).find((r) => r.id === walk.requestId);
+    const stale = (walk.date && walk.date !== T.today())
+      || (req && req.status === 'cancelled')
+      || (booking && (booking.status === 'cancelled' || T.isSkipped(booking)));
+    if (!stale) return;
+    if (booking && booking.status === 'in_progress') T.abandonLeg(booking.id);
+    w.activeWalk = null;
+    w.activeWalkStage = 0;
+    w.activeWalkChildState = {};
+    persist();
+  }
 
   const origSubmitBooking = window.submitBookingRequest;
   if (typeof origSubmitBooking === 'function') {
@@ -4345,6 +4349,7 @@
   injectScreens();
   ensureWalk();
   (state().bookings || []).forEach(ingestWalkShareBooking);
+  reconcileLiveWalk();
   applyRoleChrome();
   window.__h2sWalkShareReady = true;
   if (typeof window.__h2sTryBoot === 'function') window.__h2sTryBoot();

@@ -35,7 +35,18 @@
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
-  window.saveHandoverProof = function (bookingId, leg, record) {
+  function proofDay() {
+    if (window.H2STrip && typeof window.H2STrip.today === 'function') return window.H2STrip.today();
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function legSlot(opts) {
+    return `${opts.date || proofDay()}:${opts.tripLeg === 'pm' ? 'pm' : 'am'}`;
+  }
+
+  /** opts.tripLeg ('am' | 'pm') keeps morning and return photos apart; only today's legs are kept. */
+  window.saveHandoverProof = function (bookingId, leg, record, opts) {
     const key = String(bookingId || 'current');
     const all = loadAll();
     const now = new Date();
@@ -43,7 +54,18 @@
       time: timeLabel(now),
       takenAt: now.toISOString()
     }, record || {});
-    all[key] = Object.assign({}, all[key], { [leg]: entry, updatedAt: now.getTime() });
+    const next = Object.assign({}, all[key], { [leg]: entry, updatedAt: now.getTime() });
+    if (opts && opts.tripLeg) {
+      const slot = legSlot(opts);
+      const day = slot.split(':')[0];
+      const legs = {};
+      Object.keys(next.legs || {}).forEach((k) => {
+        if (k.split(':')[0] === day) legs[k] = next.legs[k];
+      });
+      legs[slot] = Object.assign({}, legs[slot], { [leg]: entry });
+      next.legs = legs;
+    }
+    all[key] = next;
     all.latest = key;
     const ok = saveAll(all);
     if (window.photoProofData) {
@@ -53,10 +75,15 @@
     return ok;
   };
 
-  window.getHandoverProofs = function (bookingId) {
+  window.getHandoverProofs = function (bookingId, opts) {
     const all = loadAll();
-    if (bookingId && all[bookingId]) return all[bookingId];
-    return null;
+    const rec = bookingId ? all[bookingId] : null;
+    if (!rec) return null;
+    if (opts && opts.tripLeg) {
+      if (rec.legs) return rec.legs[legSlot(opts)] || null;
+      return new Date(rec.updatedAt || 0).toDateString() === new Date().toDateString() ? rec : null;
+    }
+    return rec;
   };
 
   window.getLatestHandoverProofs = function () {

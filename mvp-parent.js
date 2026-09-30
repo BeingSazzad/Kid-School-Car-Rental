@@ -43,6 +43,8 @@
   function ensureDraftDefaults() {
     const draft = state().bookingDraft || (state().bookingDraft = {});
     if (draft.direction !== 'oneway' && draft.direction !== 'bothway') draft.direction = 'bothway';
+    if (draft.direction === 'oneway') draft.oneWayLeg = draft.oneWayLeg === 'pm' ? 'pm' : 'am';
+    else draft.oneWayLeg = null;
     if (!draft.serviceType) draft.serviceType = 'drivers';
     if (draft.serviceType === 'all') draft.serviceType = 'drivers';
     if (!draft.frequency) draft.frequency = 'onetime';
@@ -211,6 +213,7 @@
 
   function formatTimeLabel(hhmm) {
     if (!hhmm) return '';
+    if (/\s*(AM|PM)$/i.test(hhmm)) return hhmm.replace(/\s*(AM|PM)$/i, (m, p) => ` ${p.toUpperCase()}`);
     const [hRaw, mRaw] = hhmm.split(':');
     let h = parseInt(hRaw, 10);
     const m = (mRaw || '00').slice(0, 2);
@@ -240,7 +243,9 @@
   window.syncBookingTimeDisplays = function () {
     const out = document.getElementById('setupOutboundTime')?.value || '';
     const ret = document.getElementById('setupReturnTime')?.value || '';
-    setFieldPlaceholder(document.getElementById('setupOutboundTimeText'), !!out, formatTimeLabel(out), 'Select pickup');
+    const draftNow = state().bookingDraft || {};
+    const pmOneWay = draftNow.direction === 'oneway' && draftNow.oneWayLeg === 'pm';
+    setFieldPlaceholder(document.getElementById('setupOutboundTimeText'), !!out, formatTimeLabel(out), pmOneWay ? 'School pickup time' : 'Select pickup');
     setFieldPlaceholder(document.getElementById('setupReturnTimeText'), !!ret, formatTimeLabel(ret), 'Select return');
     if (window.updateTripTime) {
       if (out) window.updateTripTime('outbound', out);
@@ -494,19 +499,20 @@
   window.openBookingTimeSheet = function (target) {
     bookingTimeTarget = target === 'return' ? 'return' : 'outbound';
     const input = document.getElementById(bookingTimeTarget === 'return' ? 'setupReturnTime' : 'setupOutboundTime');
-    // Logically: Outbound default is 07:30 AM, Return default is 03:30 PM (15:30)
-    const fallbackDefault = bookingTimeTarget === 'return' ? '15:30' : '07:30';
+    const draftNow = state().bookingDraft || {};
+    const afternoon = bookingTimeTarget === 'return' || (draftNow.direction === 'oneway' && draftNow.oneWayLeg === 'pm');
+    const fallbackDefault = afternoon ? '15:30' : '07:30';
     const parts = parseTimeParts(input?.value || fallbackDefault);
     
     const title = document.getElementById('bookingTimeSheetTitle');
     const sub = document.getElementById('bookingTimeSheetSub');
-    if (title) title.textContent = bookingTimeTarget === 'return' ? 'Return Time' : 'Pickup Time';
-    if (sub) sub.textContent = bookingTimeTarget === 'return' ? 'Afternoon school dismissal commute' : 'Morning school departure commute';
+    if (title) title.textContent = bookingTimeTarget === 'return' ? 'Return Time' : afternoon ? 'School Pickup Time' : 'Pickup Time';
+    if (sub) sub.textContent = afternoon ? 'Afternoon school dismissal commute' : 'Morning school departure commute';
 
     // Render presets
     const presetsContainer = document.getElementById('bookingTimePresets');
     if (presetsContainer) {
-      const presets = bookingTimeTarget === 'return'
+      const presets = afternoon
         ? [
             { label: '02:30 PM', h: '02', m: '30', p: 'PM' },
             { label: '03:15 PM', h: '03', m: '15', p: 'PM' },
@@ -741,7 +747,8 @@
     if (outTime) outTime.value = parseDisplayTimeToHHMM(draft.outboundTime);
     if (retTime) retTime.value = parseDisplayTimeToHHMM(draft.returnTime);
     applyRepeatUiFromDraft(draft);
-    if (window.setTripDirection) window.setTripDirection(draft.direction === 'oneway' ? 'oneway' : 'bothway');
+    if (draft.direction === 'oneway' && window.selectOneWayLeg) window.selectOneWayLeg(draft.oneWayLeg === 'pm' ? 'pm' : 'am');
+    else if (window.setTripDirection) window.setTripDirection('bothway');
   }
 
   window.isBookingSetupComplete = function () {
@@ -777,8 +784,9 @@
     if (!draft.pickupLocation) draft.pickupLocation = '12 Elm Street, Toronto, ON';
     if (!draft.schoolLocation) draft.schoolLocation = 'Greenfield International School';
     if (!draft.startDate) draft.startDate = '2026-05-23';
-    if (!draft.outboundTime) draft.outboundTime = '07:30';
-    if (!draft.returnTime) draft.returnTime = '13:00';
+    if (!draft.outboundTime) draft.outboundTime = draft.direction === 'oneway' && draft.oneWayLeg === 'pm' ? '15:30' : '07:30';
+    if (!draft.returnTime && draft.direction === 'bothway') draft.returnTime = '15:30';
+    if (draft.direction === 'oneway') draft.returnTime = '';
     if (!draft.serviceType) draft.serviceType = 'drivers';
     if (!draft.selectedDays || !draft.selectedDays.length) {
       draft.selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
@@ -795,9 +803,9 @@
     const outDateEl = document.getElementById('setupStartDate');
     if (outDateEl) outDateEl.value = draft.startDate;
     const outTimeEl = document.getElementById('setupOutboundTime');
-    if (outTimeEl) outTimeEl.value = draft.outboundTime;
+    if (outTimeEl) outTimeEl.value = parseDisplayTimeToHHMM(draft.outboundTime);
     const retTimeEl = document.getElementById('setupReturnTime');
-    if (retTimeEl) retTimeEl.value = draft.returnTime;
+    if (retTimeEl) retTimeEl.value = parseDisplayTimeToHHMM(draft.returnTime);
 
     window.syncBookingDateDisplay();
     window.syncBookingTimeDisplays();
@@ -824,11 +832,13 @@
     const retTimeEl = document.getElementById('setupReturnTime');
     if (outTimeEl && outTimeEl.value) draft.outboundTime = outTimeEl.value;
     if (retTimeEl && retTimeEl.value) draft.returnTime = retTimeEl.value;
-    draft.outboundTime = draft.outboundTime || '07:30';
+    draft.outboundTime = formatTimeLabel(draft.outboundTime || '07:30');
     if (draft.direction === 'bothway') {
-      draft.returnTime = draft.returnTime || '13:00';
+      draft.returnTime = formatTimeLabel(draft.returnTime || '15:30');
+      draft.oneWayLeg = null;
     } else {
       draft.returnTime = '';
+      draft.oneWayLeg = draft.oneWayLeg === 'pm' ? 'pm' : 'am';
     }
 
     if (!draft.childIds || !draft.childIds.length) {
@@ -1075,22 +1085,34 @@
     setText('summaryChildrenText', kidsLabel);
 
     // 2. Trip Direction
-    const tripDirection = draft.direction === 'oneway' ? 'One Way' : 'Round Trip';
+    const oneWay = draft.direction === 'oneway';
+    const pmOneWay = oneWay && draft.oneWayLeg === 'pm';
+    const tripDirection = oneWay ? (pmOneWay ? 'One Way · From school' : 'One Way · To school') : 'Round Trip';
     setText('bsTripDirection', tripDirection);
     setText('summaryTripTypeText', tripDirection);
 
     // 3. Outbound & Return Legs
     const pickup = document.getElementById('setupPickupLocationInput')?.value || draft.pickupLocation || 'Home';
     const school = document.getElementById('setupSchoolLocationInput')?.value || draft.schoolLocation || 'School';
-    const outboundTime = draft.outboundTime || '07:30 AM';
-    const returnTime = draft.returnTime || '01:00 PM';
-    
-    setHtml('bsTripOutbound', `${pickup} &rarr; ${school.includes('School') ? 'School' : school} (${outboundTime})`);
-    setHtml('bsTripReturn', `${school.includes('School') ? 'School' : school} &rarr; ${pickup} (${returnTime})`);
-    setText('summaryPickupText', pickup);
-    setText('summaryDropoffText', school);
+    const schoolShortLabel = school.includes('School') ? 'School' : school;
+    const outboundTime = formatTimeLabel(draft.outboundTime || (pmOneWay ? '15:30' : '07:30'));
+    const returnTime = formatTimeLabel(draft.returnTime || '15:30');
+
+    setHtml('bsTripOutbound', pmOneWay
+      ? `${schoolShortLabel} &rarr; ${pickup} (${outboundTime})`
+      : `${pickup} &rarr; ${schoolShortLabel} (${outboundTime})`);
+    setHtml('bsTripReturn', `${schoolShortLabel} &rarr; ${pickup} (${returnTime})`);
+    const returnInfoRow = document.getElementById('bsTripReturn')?.closest('.bs-info-row');
+    if (returnInfoRow) {
+      if (oneWay) returnInfoRow.style.setProperty('display', 'none', 'important');
+      else returnInfoRow.style.removeProperty('display');
+    }
+    const outLegLabel = document.getElementById('bsTripOutbound')?.closest('.bs-info-row')?.querySelector('.bs-row-label');
+    if (outLegLabel) outLegLabel.textContent = pmOneWay ? 'Afternoon Leg' : oneWay ? 'Morning Leg' : 'Outbound Leg';
+    setText('summaryPickupText', pmOneWay ? school : pickup);
+    setText('summaryDropoffText', pmOneWay ? pickup : school);
     setText('summaryOutboundText', outboundTime);
-    setText('summaryReturnText', returnTime);
+    setText('summaryReturnText', oneWay ? '' : returnTime);
 
     // 4. Frequency
     const isRecurring = draft.frequency === 'recurring';
@@ -1277,9 +1299,17 @@
     window.closeSeriesActionSheet();
     if (!booking) return;
     if (action.mode === 'cancel') {
-      booking.status = 'cancelled';
-      booking.cancelScope = scope;
-      toast(scope === 'series' ? 'Entire series cancelled' : 'This occurrence cancelled');
+      if (scope === 'series' || !window.H2STrip) {
+        booking.status = 'cancelled';
+        booking.cancelScope = 'series';
+        booking.cancelledBy = 'parent';
+        booking.activeLeg = null;
+        if (window.H2STrip) window.H2STrip.syncToProviders(booking);
+        toast('Entire series cancelled');
+      } else {
+        const day = window.H2STrip.skipOccurrence(booking.id);
+        toast(`Ride cancelled for ${window.H2STrip.dayLabel(day)}`);
+      }
       if (window.renderBookingDetails) window.renderBookingDetails(booking.id);
       if (window.renderBookingsList) window.renderBookingsList('upcoming');
       return;
@@ -1523,7 +1553,11 @@
   };
 
   function liveBookings() {
-    return (state().bookings || []).filter((b) => b.status === 'in_progress');
+    const all = state().bookings || [];
+    const live = all.filter((b) => b.status === 'in_progress');
+    if (live.length || !window.H2STrip) return live;
+    const justDone = all.find((b) => b.id === state().activeTrackingBookingId && (window.H2STrip.tracking(b)?.stage || 0) >= 5);
+    return justDone ? [justDone] : live;
   }
 
   function childNamesForBooking(booking) {
@@ -1575,8 +1609,15 @@
       kidsEl.style.display = 'none';
       kidsEl.textContent = '';
     }
-    setText('trackingChipText', 'Live');
-    setText('trackingStageText', booking.schoolLocation || schoolShort(booking) || 'School');
+    const copy = window.H2STrip ? window.H2STrip.liveCopy(booking) : null;
+    if (copy && typeof window.advanceTrackingStage === 'function') window.advanceTrackingStage(copy.stage - 1);
+    setText('trackingChipText', copy ? copy.chip : 'Live');
+    setText('trackingStageText', copy ? copy.title : (booking.schoolLocation || schoolShort(booking) || 'School'));
+    if (copy) {
+      setText('trackingEtaText', copy.stage >= 5 ? 'Done' : copy.eta);
+      const bar = document.getElementById('stepperProgressBar');
+      if (bar) bar.style.width = `${copy.pct}%`;
+    }
     const kidsMeta = document.getElementById('trackingKidsMeta');
     if (kidsMeta) {
       kidsMeta.style.display = multi ? 'none' : '';
@@ -1594,17 +1635,25 @@
     if (reportBtn) reportBtn.setAttribute('onclick', `openTripReport('${booking.id}')`);
     const rateBtn = document.getElementById('trackingRateTripBtn');
     const safetyStatus = document.getElementById('trackingLiveSafetyStatus');
-    const isDone = booking.status === 'completed' || (window.appState && window.appState.trackingStageIndex >= 4);
+    const isDone = !!copy && copy.stage >= 5 && (booking.status === 'completed' || window.H2STrip.progress(booking) === 'day_complete');
+    const canRate = isDone && window.H2STrip.needsRating(booking);
     if (rateBtn) {
-      rateBtn.style.display = isDone ? 'inline-flex' : 'none';
+      rateBtn.style.display = canRate ? 'inline-flex' : 'none';
       rateBtn.setAttribute('onclick', `openParentRateDriverModal('${provider?.id || 'tariq'}', '${booking.id}')`);
     }
     if (safetyStatus) {
       safetyStatus.style.display = isDone ? 'none' : 'flex';
     }
+    const homeShort = String(booking.pickupLocation || 'Home').replace(/^Home\s*\((.+)\)\s*$/i, '$1').split(',')[0];
+    const pmLeg = copy && copy.leg === 'pm';
     document.querySelectorAll('.map-pin-label').forEach((el, i) => {
-      if (i === 1) el.textContent = schoolShort(booking);
+      if (i === 0) el.textContent = pmLeg ? `${homeShort} (Drop-off)` : `${homeShort} (Pickup)`;
+      if (i === 1) el.textContent = pmLeg ? `${schoolShort(booking)} (Pickup)` : schoolShort(booking);
     });
+    const safetyText = safetyStatus?.querySelector('span:last-child');
+    if (safetyText && copy) safetyText.textContent = copy.sub;
+    const boardedNote = document.getElementById('trackingPickupTimeLbl')?.nextElementSibling;
+    if (boardedNote) boardedNote.textContent = `• ${kidsLabel} ${pmLeg ? 'picked up at school' : 'safely boarded'}`;
     const carTag = document.querySelector('.map-car-tag');
     if (carTag) carTag.textContent = `${String(provider?.name || 'Provider').split(' ')[0]} • live`;
   }
@@ -1845,7 +1894,7 @@
   if (Array.isArray(state().bookings) && !state().bookings.some((b) => b.id === 'H2S-74012')) {
     state().bookings.push({
       id: 'H2S-74012',
-      status: 'in_progress',
+      status: 'confirmed',
       childIds: ['zara'],
       direction: 'oneway',
       frequency: 'onetime',
