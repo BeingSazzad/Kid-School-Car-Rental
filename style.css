@@ -24320,12 +24320,20 @@ label.drv-upload-tile {
 #screen-wsOnboardProfile .auth-input-group.is-missing .auth-input { border-color: #F2600C !important; background: #FFF4ED !important; }
 
 /* Signup document capture (Driver + WalkShare) */
-.dcap { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; font-family: Manrope, sans-serif; }
-.dcap-card { padding: 14px; border: 1px solid #ECECF0; border-radius: 16px; background: #FFFFFF; }
+:is(#screen-driverOnboardDocs, #screen-wsOnboardDocs) .screen-scroll-body { gap: 0; padding: 16px 16px 0; }
+.dcap { display: flex; flex-direction: column; gap: 12px; font-family: Manrope, sans-serif; }
+.dcap-progress { padding: 2px 0 4px; }
+.dcap-progress-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: #6B7280; }
+.dcap-progress-row span:first-child { color: #1A1D24; }
+.dcap-bar { height: 6px; overflow: hidden; border-radius: 999px; background: #F0F3FA; }
+.dcap-bar span { display: block; height: 100%; border-radius: inherit; background: #1B2B68; transition: width 0.3s ease; }
+.dcap-card { padding: 16px; border: 1px solid #ECECF0; border-radius: 16px; background: #FFFFFF; transition: border-color 0.2s ease; }
 .dcap-card.needs-retake { border-color: #F2600C; }
-.dcap-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.dcap-icon { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #F0F3FA; color: #1B2B68; }
-.dcap-icon svg { width: 18px; height: 18px; }
+.dcap-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.dcap-icon { width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: #F0F3FA; color: #1B2B68; transition: background 0.2s ease, color 0.2s ease; }
+.dcap-icon svg { width: 20px; height: 20px; }
+.dcap-card.is-ready .dcap-icon { background: #1B2B68; color: #FFFFFF; }
+.dcap-card.needs-retake .dcap-icon { background: #FFF4ED; color: #F2600C; }
 .dcap-titles { flex: 1; min-width: 0; }
 .dcap-title { margin: 0; font-size: 14px; font-weight: 700; color: #1A1D24; }
 .dcap-hint { margin: 2px 0 0; font-size: 12px; font-weight: 500; color: #6B7280; }
@@ -24336,15 +24344,29 @@ label.drv-upload-tile {
 .dcap-reject { margin: -4px 0 12px; font-size: 12px; font-weight: 600; color: #F2600C; }
 .dcap-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .dcap-slots.is-single { grid-template-columns: 1fr; }
-.dcap-slot { position: relative; height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; overflow: hidden; border: 1.5px dashed #D8DBE3; border-radius: 12px; background: #F0F3FA; cursor: pointer; }
-.dcap-slots.is-single .dcap-slot { height: 64px; flex-direction: row; gap: 8px; }
+.dcap-slot { position: relative; aspect-ratio: 1.58 / 1; min-width: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; overflow: hidden; border: 1.5px dashed #C9CFDD; border-radius: 12px; background: #F0F3FA; text-align: center; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
+.dcap-slot:active { transform: scale(0.98); }
+.dcap-slots.is-single .dcap-slot { aspect-ratio: auto; height: 68px; padding: 0 14px; flex-direction: row; justify-content: flex-start; gap: 12px; text-align: left; }
 .dcap-slot.is-filled { border-style: solid; border-color: #ECECF0; background: #FFFFFF; }
-.dcap-empty { display: flex; color: #1B2B68; }
-.dcap-empty svg { width: 20px; height: 20px; }
-.dcap-slot-label { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #1B2B68; }
-.dcap-slot-label svg { width: 12px; height: 12px; }
+.dcap-circle { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #FFFFFF; color: #1B2B68; box-shadow: 0 1px 2px rgba(26, 29, 36, 0.08); }
+.dcap-circle svg { width: 18px; height: 18px; }
+.dcap-circle.is-done { background: #F0F3FA; box-shadow: none; }
+.dcap-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; max-width: 100%; }
+.dcap-label { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; font-weight: 700; color: #1A1D24; }
+.dcap-sub { font-size: 12px; font-weight: 500; color: #6B7280; }
+.dcap-slots:not(.is-single) .dcap-label { font-size: 12px; }
+.dcap-slots:not(.is-single) .dcap-sub { font-size: 10px; }
 .dcap-thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.dcap-slot:has(.dcap-thumb) .dcap-slot-label { position: absolute; left: 6px; bottom: 6px; padding: 3px 8px; border-radius: 999px; background: rgba(26, 29, 36, 0.72); color: #FFFFFF; }
-.dcap-file { display: flex; align-items: center; gap: 6px; max-width: 90%; font-size: 12px; font-weight: 600; color: #1A1D24; }
-.dcap-file span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.dcap-file svg { width: 16px; height: 16px; flex-shrink: 0; color: #1B2B68; }
+.dcap-badge { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #1B2B68; color: #FFFFFF; box-shadow: 0 0 0 2px #FFFFFF; }
+.dcap-badge svg { width: 12px; height: 12px; stroke-width: 3; }
+.dcap-pill { position: absolute; left: 6px; bottom: 6px; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 999px; background: rgba(26, 29, 36, 0.72); color: #FFFFFF; font-size: 10px; font-weight: 700; }
+.dcap-pill svg { width: 10px; height: 10px; }
+.dcap-slots.is-single .dcap-slot.has-thumb { height: 120px; }
+.dcap-loading { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(240, 243, 250, 0.88); }
+.dcap-slot.is-loading .dcap-loading { display: flex; }
+.dcap-spinner { width: 22px; height: 22px; border: 2.5px solid #ECECF0; border-top-color: #1B2B68; border-radius: 50%; animation: dcapSpin 0.7s linear infinite; }
+@keyframes dcapSpin { to { transform: rotate(360deg); } }
+.dcap-footer { position: sticky; bottom: 0; z-index: 2; margin: auto -16px 0; padding: 16px 16px 20px; background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #FFFFFF 16px); }
+.dcap-submit { width: 100%; height: 52px; border: none; border-radius: 14px; background: #1B2B68; color: #FFFFFF; font: 700 16px/1 Manrope, sans-serif; cursor: pointer; transition: opacity 0.2s ease; }
+.dcap-submit.is-waiting { opacity: 0.45; }
+.dcap-submit:active { opacity: 0.9; }

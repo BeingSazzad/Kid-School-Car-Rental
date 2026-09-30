@@ -1666,9 +1666,7 @@
     el.innerHTML = `
       ${signup ? signupHead(3, 'Verify your identity', 'Clear photos of both sides. We review them within 24 hours.') : ''}
       ${window.H2SDocCapture.render(d.documents, REQUIRED_DOCS, 'onDriverDocPhoto')}
-      <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveDriverDocs()">${signup ? 'Submit &amp; finish' : 'Done'}</button>
-      </div>
+      ${window.H2SDocCapture.footer(signup ? 'Submit &amp; finish' : 'Done', 'saveDriverDocs()', !signup || !window.H2SDocCapture.missingText(d.documents, REQUIRED_DOCS))}
     `;
     icons();
   }

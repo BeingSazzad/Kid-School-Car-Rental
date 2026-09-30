@@ -2819,9 +2819,7 @@
     el.innerHTML = `
       ${signup ? wsSignupHead(2, 'Verify your identity', 'Clear photos. We review them within 24 hours.') : ''}
       ${window.H2SDocCapture.render(w.documents, REQUIRED_DOCS, 'onWalkShareDocPhoto')}
-      <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveWalkShareDocsDone()">${signup ? 'Submit &amp; finish' : 'Done'}</button>
-      </div>
+      ${window.H2SDocCapture.footer(signup ? 'Submit &amp; finish' : 'Done', 'saveWalkShareDocsDone()', !signup || !window.H2SDocCapture.missingText(w.documents, REQUIRED_DOCS))}
     `;
     icons();
   }
