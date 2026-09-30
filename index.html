@@ -5920,7 +5920,7 @@
             </div>
 
             <!-- Card 2: Safety & Help -->
-            <div class="home-figma-quick-card" onclick="navigateTo('sos')">
+            <div class="home-figma-quick-card" onclick="openNestedScreen('safetyHelp', event)">
               <div class="home-figma-quick-left">
                 <div class="home-figma-icon-orange">
                   <i data-lucide="shield" style="width: 20px; height: 20px;"></i>
@@ -7673,21 +7673,19 @@
         </section>
 
         <!-- 1B. Handover Verification & Photo Proof Card -->
-        <section class="trip-figma-item-card" id="detailSafetyPinBanner" onclick="openTripPhotoProofModal('pickup')" style="cursor: pointer; background: #FFFFFF; border-left: 4px solid #10B981; margin-bottom: 12px;" title="View Child Handover Photo Proof">
+        <section class="trip-figma-item-card hp-detail-card is-pending" id="detailSafetyPinBanner" onclick="openTripPhotoProofModal()" style="cursor: pointer; background: #FFFFFF; margin-bottom: 12px;" title="View pickup and drop-off photos">
           <div class="trip-figma-item-left" style="gap: 12px;">
-            <div style="position: relative; width: 42px; height: 42px; border-radius: 10px; overflow: hidden; border: 1.5px solid #E2E8F0; flex-shrink: 0; background: #0F172A;">
-              <img id="detailProofThumbImg" src="/assets/onboarding1.jpg" alt="Handover Proof" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='/assets/auth_hero.jpg';" />
-              <div style="position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; background: #10B981; border-radius: 4px 0 0 0; display: flex; align-items: center; justify-content: center; color: #FFF;">
-                <i data-lucide="check" style="width: 10px; height: 10px; stroke-width: 3;"></i>
-              </div>
+            <div class="hp-detail-thumb is-empty" id="detailProofThumbWrap">
+              <img id="detailProofThumbImg" src="" alt="Handover photo" style="display: none;" />
+              <span class="hp-detail-thumb-empty" id="detailProofThumbEmpty"><i data-lucide="camera"></i></span>
             </div>
             <div>
               <div style="display: flex; align-items: center; gap: 6px;">
-                <div class="trip-figma-item-title" style="font-size: 13.5px; font-weight: 800; color: #0F172A;">Handover Photo Proof</div>
-                <span style="font-size: 10px; font-weight: 800; background: #DCFCE7; color: #15803D; padding: 1.5px 6px; border-radius: 9999px;">Verified</span>
+                <div class="trip-figma-item-title" style="font-size: 14px; font-weight: 700; color: #1A1D24;">Pickup &amp; drop-off photos</div>
+                <span class="hp-detail-chip is-pending" id="detailProofStatusChip">Pending</span>
               </div>
-              <div class="trip-figma-item-sub" id="detailSafetyPinBannerCode" style="color: #64748B; font-size: 11.5px; margin-top: 2px;">
-                Pickup verified at 07:34 AM • Tap to view full photo
+              <div class="trip-figma-item-sub" id="detailSafetyPinBannerCode" style="color: #6B7280; font-size: 12px; margin-top: 2px;">
+                Photos appear here at pickup and drop-off
               </div>
             </div>
           </div>
@@ -9867,6 +9865,110 @@
       <div class="home-indicator"></div>
     </section>
 
+    <!-- ================= SAFETY & HELP SCREEN (NON-EMERGENCY HELP CENTER) ================= -->
+    <section class="screen-view shp-screen" id="screen-safetyHelp" style="background-color: #FFFFFF;">
+      <div class="status-bar dark">
+        <span class="sb-time">9:41</span>
+        <div class="sb-icons">
+          <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+          <svg class="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-6.36-4.95a9 9 0 0 1 12.72 0l-1.42 1.42a7 7 0 0 0-9.88 0l-1.42-1.42zm-2.83-2.83a13 13 0 0 1 18.38 0l-1.42 1.42a11 11 0 0 0-15.54 0L2.81 12.22z" fill="currentColor"/></svg>
+          <div class="battery-icon"><div class="battery-level"></div></div>
+        </div>
+      </div>
+
+      <div class="top-bar-sticky">
+        <button type="button" class="back-btn" onclick="event.preventDefault(); event.stopPropagation(); backNested()" aria-label="Go back">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 class="top-bar-title">Safety &amp; Help</h2>
+        <span style="width: 26px;"></span>
+      </div>
+
+      <div class="screen-scroll-body shp-body">
+        <div class="shp-intro">
+          <div class="shp-intro-icon"><i data-lucide="life-buoy"></i></div>
+          <div class="shp-intro-copy">
+            <h3 class="shp-intro-title">How can we help?</h3>
+            <p class="shp-intro-sub" id="shpIntroSub">Safety guidelines, support and answers in one place.</p>
+          </div>
+        </div>
+
+        <div class="shp-section">
+          <h4 class="shp-section-label">Safety guidelines</h4>
+          <div class="shp-card" id="shpTipsList"></div>
+        </div>
+
+        <div class="shp-section">
+          <h4 class="shp-section-label">Contact support</h4>
+          <div class="profile-menu-section shp-menu">
+            <div class="profile-menu-item" onclick="openSafetyHelpSupport(event)">
+              <div class="menu-item-left">
+                <div class="menu-icon-wrap"><i data-lucide="message-square"></i></div>
+                <div class="shp-row-copy">
+                  <span class="menu-title-text">Message support</span>
+                  <span class="shp-row-sub">We usually reply within minutes</span>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="shp-chevron"></i>
+            </div>
+            <a class="profile-menu-item shp-link-row" href="tel:+18005550199">
+              <div class="menu-item-left">
+                <div class="menu-icon-wrap"><i data-lucide="phone"></i></div>
+                <div class="shp-row-copy">
+                  <span class="menu-title-text">Call support</span>
+                  <span class="shp-row-sub">1-800-555-0199 · 7am – 9pm daily</span>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="shp-chevron"></i>
+            </a>
+            <a class="profile-menu-item shp-link-row" href="mailto:support@home2school.ca">
+              <div class="menu-item-left">
+                <div class="menu-icon-wrap"><i data-lucide="mail"></i></div>
+                <div class="shp-row-copy">
+                  <span class="menu-title-text">Email us</span>
+                  <span class="shp-row-sub">support@home2school.ca</span>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="shp-chevron"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="shp-section">
+          <h4 class="shp-section-label">Report &amp; answers</h4>
+          <div class="profile-menu-section shp-menu">
+            <div class="profile-menu-item" onclick="openSafetyHelpReport(event)">
+              <div class="menu-item-left">
+                <div class="menu-icon-wrap"><i data-lucide="flag"></i></div>
+                <div class="shp-row-copy">
+                  <span class="menu-title-text">Report a safety concern</span>
+                  <span class="shp-row-sub">Raise an issue about a trip or person</span>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="shp-chevron"></i>
+            </div>
+            <div class="profile-menu-item" onclick="openNestedScreen('faq', event)">
+              <div class="menu-item-left">
+                <div class="menu-icon-wrap"><i data-lucide="help-circle"></i></div>
+                <div class="shp-row-copy">
+                  <span class="menu-title-text">FAQs &amp; help center</span>
+                  <span class="shp-row-sub">Bookings, payments, accounts and more</span>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="shp-chevron"></i>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="shp-sos-link" onclick="openEmergencySOSModal()">
+          <i data-lucide="siren"></i>
+          <span>In an emergency? <strong>Open SOS</strong></span>
+        </button>
+      </div>
+
+      <div class="home-indicator"></div>
+    </section>
+
     <!-- Add New Address Modal (Map Picker + Simple Location Name) -->
     <div class="receipt-modal-overlay" id="addAddressModal" onclick="closeAddAddressModal(event)">
       <div class="receipt-modal-card address-picker-modal-card" onclick="event.stopPropagation()">
@@ -10127,7 +10229,11 @@
         <!-- Direct Image Frame with Verified Tag -->
         <div style="border-radius: 14px; overflow: hidden; border: 1px solid #E2E8F0; background: #0F172A; box-shadow: 0 2px 8px rgba(15,23,42,0.06);">
           <div style="height: 220px; position: relative; overflow: hidden; background: #0F172A;">
-            <img id="photoProofImg" src="/assets/onboarding1.jpg" alt="Handover Photo" onerror="this.src='/assets/auth_hero.jpg';" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img id="photoProofImg" src="" alt="Handover Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+            <div class="hp-proof-empty" id="photoProofEmpty">
+              <i data-lucide="camera"></i>
+              <span>Pickup photo appears here once your child is picked up.</span>
+            </div>
             <div class="photo-proof-tag" id="photoProofBadge" style="position: absolute; top: 10px; left: 10px; background: rgba(16, 185, 129, 0.95); color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
               <i data-lucide="check-circle" style="width: 13px; height: 13px;"></i>
               <span id="photoProofBadgeText">Verified Handover Proof</span>
@@ -10147,18 +10253,10 @@
           </div>
         </div>
 
-        <!-- Actions: Done and Recapture / Upload -->
-        <div style="display: flex; gap: 8px; margin-top: 14px;">
-          <button type="button" class="btn-primary" style="flex: 1.2; height: 44px; font-size: 13.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 12px; background: #1B2B68;" onclick="confirmPhotoProofDone()">
-            <i data-lucide="check" style="width: 17px; height: 17px;"></i>
-            <span>Done</span>
+        <div style="margin-top: 14px;">
+          <button type="button" class="btn-primary" style="width: 100%; height: 48px; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 12px; background: #1B2B68;" onclick="closeTripPhotoProofModal()">
+            <span>Close</span>
           </button>
-          
-          <label class="btn-secondary-surface" style="flex: 1; height: 44px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; border: 1.5px solid #CBD5E1; border-radius: 12px; background: #FFFFFF; color: #1B2B68;" id="btnUploadProofLabelWrap">
-            <i data-lucide="camera" style="width: 16px; height: 16px; color: #1B2B68;"></i>
-            <span id="btnUploadProofLabel">Upload Photo</span>
-            <input type="file" accept="image/*" capture="environment" style="display: none;" onchange="handlePhotoProofUpload(this)" />
-          </label>
         </div>
       </div>
     </div>
@@ -10749,9 +10847,9 @@
             </div>
             <div style="display: flex; gap: 8px;">
               <button type="button" class="btn-secondary-surface" style="flex: 1;" id="driverTripMessageBtn" onclick="openChatWith('PRNT-9042')">Message parent</button>
-              <button type="button" class="btn-secondary-surface" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; font-weight: 700;" onclick="openTripPhotoProofModal('pickup')">
-                <i data-lucide="camera" style="width: 14px; height: 14px; color: #1B2B68;"></i>
-                <span>Photo Proof</span>
+              <button type="button" class="btn-secondary-surface trip-photo-btn" id="driverTripPhotoBtn" onclick="takeDriverTripPhoto()">
+                <i data-lucide="camera"></i>
+                <span>Take photo</span>
               </button>
             </div>
           </div>
@@ -10799,33 +10897,20 @@
 
         <p class="drv-lede" style="margin-bottom:8px;">Uncheck anyone not riding today.</p>
 
-        <!-- Live Handover Photo Upload Box -->
-        <div style="margin: 6px 0 14px; padding: 12px 14px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px; text-align: left;">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 6px;">
-            <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:#0F172A;">
-              <i data-lucide="camera" style="width:14px;height:14px; color:#2563EB;"></i>
-              <span>Live Handover Photo Proof</span>
-            </div>
-            <span style="font-size:10px; font-weight:700; color:#16A34A; background:#DCFCE7; padding:2px 7px; border-radius:99px;" id="attPhotoStatusBadge">Live Proof</span>
+        <div class="hp-proof-box" id="driverPickupProofBox">
+          <div class="hp-proof-head">
+            <span class="hp-proof-label"><i data-lucide="camera"></i>Pickup photo proof</span>
+            <span class="hp-proof-badge" id="driverPickupProofBadge">Required</span>
           </div>
-          <p style="font-size: 11px; color: #64748B; margin: 0 0 10px; line-height: 1.4;">
-            Capture children safely seated with booster/seatbelt for parent real-time peace of mind.
-          </p>
-          <div id="driverAttendancePhotoPreview" style="display:none; margin-bottom: 10px; position: relative; border-radius: 8px; overflow: hidden; max-height: 130px; border: 1px solid #E2E8F0;">
-            <img id="driverAttendancePhotoImg" src="" style="width: 100%; height: 130px; object-fit: cover;" alt="Live handover proof" />
-            <span style="position: absolute; bottom: 6px; right: 6px; background: rgba(15,23,42,0.85); color: #FFF; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px;">✓ Photo Attached</span>
-          </div>
-          <div>
-            <label style="width:100%; height:44px; font-size:13.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:12px; border:1.5px solid #CBD5E1; background:#FFFFFF; color:#1B2B68; box-sizing:border-box; margin:0; transition:all 0.15s ease;">
-              <i data-lucide="camera" style="width:18px;height:18px; color:#1B2B68;"></i>
-              <span id="btnAttPhotoLabel">Take Live Handover Photo</span>
-              <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="handleAttendancePhotoProof(this)" />
-            </label>
-          </div>
+          <p class="hp-proof-copy">Take a live photo of the children seated in your vehicle. Parents see it in their booking.</p>
+          <img class="hp-proof-preview" id="driverPickupProofImg" alt="Pickup photo proof" hidden />
+          <button type="button" class="hp-proof-btn" onclick="captureDriverPickupProof()">
+            <i data-lucide="camera"></i><span id="driverPickupProofBtnText">Open camera</span>
+          </button>
         </div>
 
         <button type="button" class="btn-primary" id="btnConfirmAttendance" onclick="confirmDriverAttendance()">
-          <span>Confirm pickup &amp; Send Handover Proof</span>
+          <span>Confirm pickup &amp; share photo</span>
         </button>
       </div>
     </div>
@@ -11088,7 +11173,13 @@
                 </button>
               </div>
             </div>
-            <button type="button" class="btn-secondary-surface" id="wsWalkMessageBtn" onclick="openChatWith('PRNT-9042')">Message parent</button>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-secondary-surface" style="flex: 1;" id="wsWalkMessageBtn" onclick="openChatWith('PRNT-9042')">Message parent</button>
+              <button type="button" class="btn-secondary-surface trip-photo-btn" id="wsWalkPhotoBtn" onclick="takeWalkSharePhoto()">
+                <i data-lucide="camera"></i>
+                <span>Take photo</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -11109,8 +11200,20 @@
 
         <p class="drv-lede">Uncheck anyone not walking today.</p>
 
+        <div class="hp-proof-box" id="wsPickupProofBox">
+          <div class="hp-proof-head">
+            <span class="hp-proof-label"><i data-lucide="camera"></i>Meetup photo proof</span>
+            <span class="hp-proof-badge" id="wsPickupProofBadge">Required</span>
+          </div>
+          <p class="hp-proof-copy">Take a live photo of the children with you at the meetup point. Parents see it in their booking.</p>
+          <img class="hp-proof-preview" id="wsPickupProofImg" alt="Meetup photo proof" hidden />
+          <button type="button" class="hp-proof-btn" onclick="captureWalkSharePickupProof()">
+            <i data-lucide="camera"></i><span id="wsPickupProofBtnText">Open camera</span>
+          </button>
+        </div>
+
         <button type="button" class="btn-primary" id="btnConfirmWsAttendance" onclick="confirmWalkShareAttendance()">
-          <span>Confirm walking group</span>
+          <span>Confirm group &amp; share photo</span>
         </button>
       </div>
     </div>
@@ -12354,6 +12457,7 @@
   </div>
 
   <script type="module" src="/app.js?v=20260930-v220"></script>
+  <script type="module" src="/handover-proof.js?v=20260930-v220"></script>
   <script type="module" src="/mvp-parent.js?v=20260930-v220"></script>
   <script type="module" src="/mvp-driver.js?v=20260930-v220"></script>
   <script type="module" src="/mvp-walkshare.js?v=20260930-v220"></script>

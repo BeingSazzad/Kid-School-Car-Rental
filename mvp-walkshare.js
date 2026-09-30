@@ -1872,7 +1872,7 @@
     { key: 1, chip: 'On the way', cta: 'Arrived at meetup', progress: 22, pin: { left: '19%', top: '58%' } },
     { key: 2, chip: 'At meetup', cta: 'Confirm children with me', attendance: true, progress: 34, pin: { left: '19%', top: '36%' } },
     { key: 3, chip: 'Walking', cta: 'Arrived at school gate', progress: 58, pin: { left: '48%', top: '24%' } },
-    { key: 4, chip: 'At school gate', cta: 'Confirm handoff', progress: 78, pin: { left: '78%', top: '28%' } },
+    { key: 4, chip: 'At school gate', cta: 'Confirm handoff', proof: 'dropoff', progress: 78, pin: { left: '78%', top: '28%' } },
     { key: 5, chip: 'Handoff', cta: 'Complete walk', progress: 92, pin: { left: '80%', top: '48%' } }
   ];
 
@@ -1928,6 +1928,7 @@
     }
     const msg = document.getElementById('wsWalkMessageBtn');
     if (msg) msg.setAttribute('onclick', `openChatWith('${item.parentId || 'PRNT-9042'}')`);
+    if (typeof window.syncTripPhotoButton === 'function') window.syncTripPhotoButton('wsWalkPhotoBtn', w.activeWalkStage || 0);
     icons();
   }
 
@@ -2004,7 +2005,27 @@
     const w = ensureWalk();
     const stage = WALK_STAGES[Math.min(w.activeWalkStage || 1, WALK_STAGES.length - 1)] || WALK_STAGES[1];
     if (stage.attendance) {
-      openWalkShareAttendance();
+      openWalkShareAttendance(true);
+      return;
+    }
+    if (stage.proof === 'dropoff') {
+      const item = w.activeWalk || deriveSchedule()[0] || {};
+      if (typeof window.openLiveProofCamera !== 'function') {
+        toast('Camera is not ready. Reload and try again.');
+        return;
+      }
+      window.openLiveProofCamera({
+        title: 'Handoff photo proof',
+        hint: `Photo of ${walkingChildNames(item)} handed to school staff`,
+        stamp: 'Handoff',
+        onCapture: (photo) => {
+          saveWalkProof(item, 'dropoff', photo);
+          w.activeWalkStage += 1;
+          persist();
+          renderActiveWalk();
+          toast('Handoff photo shared with parents');
+        }
+      });
       return;
     }
     if (w.activeWalkStage >= WALK_STAGES.length - 1) {
@@ -2034,10 +2055,91 @@
     toast(WALK_STAGES[w.activeWalkStage].chip);
   };
 
-  function openWalkShareAttendance() {
+  window.takeWalkSharePhoto = function () {
+    const w = ensureWalk();
+    const stageIdx = w.activeWalkStage || 0;
+    if (stageIdx === 2) {
+      openWalkShareAttendance(true);
+      window.captureWalkSharePickupProof();
+      return;
+    }
+    if (stageIdx === 4) {
+      window.advanceWalkShareWalk();
+      return;
+    }
+    if (stageIdx > 4) {
+      window.openTripPhotoProofModal();
+      return;
+    }
+    toast(stageIdx < 2 ? 'Meetup photo opens when you arrive at the meetup' : 'Handoff photo opens when you arrive at the school gate');
+  };
+
+  function walkingChildNames(item) {
+    const w = ensureWalk();
+    const childState = w.activeWalkChildState || {};
+    const names = (Array.isArray(item?.children) ? item.children : [])
+      .filter((c) => c && childState[c.id || c.name] !== 'not_walking')
+      .map((c) => String(c.name || '').split(' ')[0])
+      .filter(Boolean);
+    if (!names.length) return item?.childNames || 'the children';
+    return names.length > 1 ? `${names.slice(0, -1).join(', ')} & ${names[names.length - 1]}` : names[0];
+  }
+
+  function saveWalkProof(item, leg, photo) {
+    const w = ensureWalk();
+    const req = (w.requests || []).find((r) => r.id === item.requestId);
+    const bookingId = item.bookingId || req?.bookingId || item.requestId || 'current';
+    if (typeof window.saveHandoverProof !== 'function') return;
+    const saved = window.saveHandoverProof(bookingId, leg, {
+      photo,
+      location: leg === 'pickup' ? cleanPlace(item.from) : cleanPlace(item.to),
+      childNames: walkingChildNames(item),
+      by: w.name || 'Your WalkShare escort',
+      role: 'walkshare'
+    });
+    if (!saved) toast('Photo saved for this walk, but storage is full on this device.');
+  }
+
+  function setWalkPickupProofUi(photo) {
+    const img = document.getElementById('wsPickupProofImg');
+    const badge = document.getElementById('wsPickupProofBadge');
+    const btnText = document.getElementById('wsPickupProofBtnText');
+    const box = document.getElementById('wsPickupProofBox');
+    if (img) {
+      img.hidden = !photo;
+      img.src = photo || '';
+    }
+    if (badge) badge.textContent = photo ? 'Captured' : 'Required';
+    if (box) box.classList.toggle('is-done', !!photo);
+    if (btnText) btnText.textContent = photo ? 'Retake photo' : 'Open camera';
+  }
+
+  window.captureWalkSharePickupProof = function () {
+    const w = ensureWalk();
+    const item = w.activeWalk || deriveSchedule()[0] || {};
+    if (typeof window.openLiveProofCamera !== 'function') {
+      toast('Camera is not ready. Reload and try again.');
+      return;
+    }
+    window.openLiveProofCamera({
+      title: 'Meetup photo proof',
+      hint: `Photo of ${walkingChildNames(item)} with you at the meetup`,
+      stamp: 'Pickup',
+      onCapture: (photo) => {
+        window._wsPendingPickupPhoto = photo;
+        setWalkPickupProofUi(photo);
+      }
+    });
+  };
+
+  function openWalkShareAttendance(reset) {
     const w = ensureWalk();
     const item = w.activeWalk || deriveSchedule()[0] || {};
     const list = document.getElementById('wsAttendanceList');
+    if (reset) {
+      window._wsPendingPickupPhoto = null;
+      setWalkPickupProofUi('');
+    }
     if (list) {
       const children = item.children || [
         { id: 'liam', name: 'Liam Tremblay', grade: 'Grade 4 · High-vis vest', photo: '/assets/avatar_arman.jpg' },
@@ -2072,12 +2174,20 @@
   };
 
   window.confirmWalkShareAttendance = function () {
+    const photo = window._wsPendingPickupPhoto;
+    if (!photo) {
+      toast('Take the meetup photo first');
+      window.captureWalkSharePickupProof();
+      return;
+    }
     document.getElementById('wsAttendanceModal')?.classList.remove('active');
     const w = ensureWalk();
+    saveWalkProof(w.activeWalk || deriveSchedule()[0] || {}, 'pickup', photo);
+    window._wsPendingPickupPhoto = null;
     w.activeWalkStage = 3;
     persist();
     renderActiveWalk();
-    toast('Walking group confirmed. Parents see live sidewalk progress.');
+    toast('Walking group confirmed. Photo shared with parents.');
   };
 
   function renderSetup() {
@@ -2182,7 +2292,7 @@
       <!-- Section 3: FAQ, Support & Policies -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
         ${profileMenuRow('help-circle', 'FAQ', "openNestedScreen('faq', event)")}
-        ${profileMenuRow('headphones', 'Help & Safety Support', "openNestedScreen('contactSupport', event)")}
+        ${profileMenuRow('life-buoy', 'Safety & Help', "openNestedScreen('safetyHelp', event)")}
         ${profileMenuRow('shield', 'Privacy Policy', "openNestedScreen('privacy', event)")}
         ${profileMenuRow('file-text', 'Terms of Service', "openNestedScreen('legal', event)")}
         ${profileMenuRow('info', 'About Home2School', "openNestedScreen('about', event)")}

@@ -65,6 +65,7 @@ const screens = [
   'privacy',
   'report',
   'contactSupport',
+  'safetyHelp',
   'sos',
   // Driver Role Screens (10-Year Product Architecture)
   'driverHome',
@@ -1754,7 +1755,7 @@ window.navReturnStack = window.navReturnStack || [];
 function navScreenBucket(name) {
   if (!name) return 'unknown';
   if (name === 'adminPortal') return 'admin';
-  if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'profileNotifications' || name === 'profileReviews' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'sos' || name === 'report' || name === 'rating' || name === 'bookingProviderDetails' || name === 'bookingProviderReviews') return 'shared';
+  if (name === 'inbox' || name === 'messages' || name === 'notifications' || name === 'profileNotifications' || name === 'profileReviews' || name === 'faq' || name === 'legal' || name === 'about' || name === 'privacy' || name === 'contactSupport' || name === 'safetyHelp' || name === 'sos' || name === 'report' || name === 'rating' || name === 'bookingProviderDetails' || name === 'bookingProviderReviews') return 'shared';
   if (String(name).indexOf('driver') === 0) return 'driver';
   if (String(name).indexOf('ws') === 0) return 'walkshare';
   if (name === 'splash' || String(name).indexOf('onboarding') === 0 || String(name).indexOf('auth') === 0) return 'auth';
@@ -2265,6 +2266,8 @@ window.navigateTo = function (screenName, isBack = false) {
     if (window.renderEmergencyContactsList) window.renderEmergencyContactsList();
   } else if (screenName === 'contactSupport') {
     if (window.renderSupportScreen) window.renderSupportScreen();
+  } else if (screenName === 'safetyHelp') {
+    if (window.renderSafetyHelpScreen) window.renderSafetyHelpScreen();
   } else if (screenName === 'profileLocations') {
     if (window.renderSavedLocations) window.renderSavedLocations();
   } else if (screenName === 'driverHome') {
@@ -5071,8 +5074,6 @@ function renderBookingDetails(bookingId) {
 
   const pin = String(booking.id || '').replace(/\D/g, '').slice(-4) || '4920';
   setText('detailSafetyPin', pin);
-  setText('detailSafetyPinBannerCode', 'Live handover verification photos');
-
   const modalPinEl = document.getElementById('modalSafetyPinText');
   const modalSubEl = document.getElementById('modalSafetyPinSub');
   const modalVehEl = document.getElementById('modalSafetyVehicleSub');
@@ -5136,7 +5137,10 @@ function renderBookingDetails(bookingId) {
   // 4. Handover Safety PIN Banner (Only visible on Active & Scheduled)
   const pinBanner = document.getElementById('detailSafetyPinBanner');
   if (pinBanner) {
-    pinBanner.style.display = (isLive || isConfirmed) ? 'flex' : 'none';
+    const ownProofs = typeof window.getHandoverProofs === 'function' ? window.getHandoverProofs(booking.id) : null;
+    const hasOwnProof = !!(ownProofs && (ownProofs.pickup?.photo || ownProofs.dropoff?.photo));
+    pinBanner.style.display = (isLive || isConfirmed || (isCompleted && hasOwnProof)) ? 'flex' : 'none';
+    if (typeof window.syncPhotoProofThumbnails === 'function') window.syncPhotoProofThumbnails();
   }
 
   // 5. Journey & Route Card (Chronologically Calculated)
@@ -8170,6 +8174,71 @@ window.onReportTripSelectChange = function (selectEl) {
 };
 
 /* ==========================================================
+   Safety & Help — non-emergency help center (#screen-safetyHelp).
+   Emergencies stay on SOS (openEmergencySOSModal).
+   ========================================================== */
+window.safetyHelpTips = {
+  parent: {
+    intro: 'Safety guidelines for your family, support and answers in one place.',
+    tips: [
+      ['shield-check', 'Verified providers only', 'Every driver and WalkShare partner passes background and licence checks.'],
+      ['key-round', 'Use the pickup PIN', 'Share your child’s safety PIN only with the assigned provider.'],
+      ['map-pin', 'Follow trips live', 'Track each ride on the map and get arrival alerts.'],
+      ['users', 'Keep contacts up to date', 'Add emergency contacts and authorised pickup guardians.']
+    ]
+  },
+  driver: {
+    intro: 'Driving guidelines, support and answers in one place.',
+    tips: [
+      ['badge-check', 'Confirm child & PIN', 'Check the pickup PIN and the child’s name before every pickup.'],
+      ['shield', 'Seats and belts first', 'Use the right booster or car seat and check every belt before moving.'],
+      ['smartphone', 'Stay hands-free', 'Never text while driving. Pull over to message parents.'],
+      ['file-check', 'Keep documents current', 'Renew your licence, insurance and checks before they expire.']
+    ]
+  },
+  walkshare: {
+    intro: 'Walking guidelines, support and answers in one place.',
+    tips: [
+      ['badge-check', 'Confirm child & PIN', 'Check the pickup PIN and the child’s name before every walk.'],
+      ['footprints', 'Stick to the planned route', 'Use safe crossings and the agreed walking route.'],
+      ['eye', 'Keep the group together', 'Keep children within sight, especially near roads.'],
+      ['message-circle', 'Keep parents updated', 'Mark pickup and drop-off in the app so parents are notified.']
+    ]
+  }
+};
+
+window.renderSafetyHelpScreen = function () {
+  const role = activeNavRole();
+  const content = window.safetyHelpTips[role] || window.safetyHelpTips.parent;
+  const intro = document.getElementById('shpIntroSub');
+  if (intro) intro.textContent = content.intro;
+  const list = document.getElementById('shpTipsList');
+  if (list) {
+    list.innerHTML = content.tips.map(([icon, title, sub]) => `
+      <div class="shp-tip">
+        <div class="shp-tip-icon"><i data-lucide="${icon}"></i></div>
+        <div class="shp-tip-copy">
+          <div class="shp-tip-title">${title}</div>
+          <div class="shp-tip-sub">${sub}</div>
+        </div>
+      </div>`).join('');
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.openSafetyHelpSupport = function (evt) {
+  window.openNestedScreen('contactSupport', evt);
+};
+
+window.openSafetyHelpReport = function (evt) {
+  window.openNestedScreen('contactSupport', evt);
+  const topic = document.getElementById('supportTopicSelect');
+  if (topic) topic.value = 'Safety & Incident';
+};
+
+/* ==========================================================
    Dedicated Contact Support Desk & Inquiry Dispatch (#screen-contactSupport)
    ========================================================== */
 window.supportTopicsMap = {
@@ -10312,22 +10381,32 @@ window.shareReferralLink = function (channel) {
 
 // 2. Handover Photo Proof System (Pickup & Drop-off Photo Documentation)
 window.currentPhotoProofTab = 'pickup';
-window.photoProofData = {
-  pickup: {
-    photo: '/assets/onboarding1.jpg',
-    location: '📍 12 Elm Street, Toronto',
-    time: '07:34 AM'
-  },
-  dropoff: {
-    photo: '/assets/onboarding3.jpg',
-    location: '📍 Greenfield Gate 2 Drop-off Loop',
-    time: '08:12 AM'
-  }
-};
+window.photoProofData = { pickup: {}, dropoff: {} };
 
-window.openTripPhotoProofModal = function (tab = 'pickup') {
-  window.currentPhotoProofTab = tab;
-  window.switchPhotoProofTab(tab);
+function activeBookingProofs() {
+  const id = window.appState?.activeBookingId;
+  const own = typeof window.getHandoverProofs === 'function' ? window.getHandoverProofs(id) : null;
+  if (own) return own;
+  const booking = (window.appState?.bookings || []).find((b) => b.id === id);
+  const status = String(booking?.status || '').toLowerCase();
+  if (/complet|cancel|declin|past/.test(status)) return null;
+  return typeof window.getLatestHandoverProofs === 'function' ? window.getLatestHandoverProofs() : null;
+}
+
+function loadPhotoProofData() {
+  const rec = activeBookingProofs() || {};
+  window.photoProofData = {
+    pickup: Object.assign({}, rec.pickup || {}),
+    dropoff: Object.assign({}, rec.dropoff || {})
+  };
+  return window.photoProofData;
+}
+
+window.openTripPhotoProofModal = function (tab) {
+  const data = loadPhotoProofData();
+  const leg = tab || (data.dropoff.photo ? 'dropoff' : 'pickup');
+  window.currentPhotoProofTab = leg;
+  window.switchPhotoProofTab(leg);
   const modal = document.getElementById('tripPhotoProofModal');
   if (modal) {
     modal.classList.add('active');
@@ -10346,153 +10425,92 @@ window.closeTripPhotoProofModal = function () {
 
 window.switchPhotoProofTab = function (tab) {
   window.currentPhotoProofTab = tab;
-  const data = (window.photoProofData && window.photoProofData[tab]) || window.photoProofData.pickup;
-  
+  const data = (window.photoProofData && window.photoProofData[tab]) || {};
+  const isDrop = tab === 'dropoff';
+  const has = !!data.photo;
+
   const title = document.getElementById('photoProofModalTitle');
-  if (title) {
-    title.textContent = tab === 'dropoff' ? 'Drop-off Photo Proof' : 'Pickup Photo Proof';
-  }
-  
+  if (title) title.textContent = isDrop ? 'Drop-off Photo Proof' : 'Pickup Photo Proof';
+
   const tabPickup = document.getElementById('tabPhotoPickup');
   const tabDropoff = document.getElementById('tabPhotoDropoff');
-  if (tabPickup) tabPickup.classList.toggle('active', tab === 'pickup');
-  if (tabDropoff) tabDropoff.classList.toggle('active', tab === 'dropoff');
-  
+  if (tabPickup) tabPickup.classList.toggle('active', !isDrop);
+  if (tabDropoff) tabDropoff.classList.toggle('active', isDrop);
+
   const img = document.getElementById('photoProofImg');
+  const empty = document.getElementById('photoProofEmpty');
+  const badge = document.getElementById('photoProofBadge');
+  const badgeText = document.getElementById('photoProofBadgeText');
   const locTitle = document.getElementById('photoProofLocationTitle');
   const timeText = document.getElementById('photoProofTimeText');
-  const badgeText = document.getElementById('photoProofBadgeText');
   const desc = document.getElementById('photoProofDesc');
-  
-  if (img && data.photo) img.src = data.photo;
-  if (locTitle && data.location) locTitle.textContent = data.location;
-  if (timeText && data.time) timeText.textContent = data.time;
-  if (badgeText) badgeText.textContent = tab === 'dropoff' ? 'Verified Drop-off Proof' : 'Verified Pickup Proof';
-  if (desc) {
-    desc.textContent = tab === 'dropoff' 
-      ? 'Liam & Emma safely arrived at Greenfield International School gate.' 
-      : 'Liam & Emma safely boarded Robert MacDonald\'s Toyota Sienna.';
+
+  if (img) {
+    img.style.display = has ? 'block' : 'none';
+    if (has) img.src = data.photo;
   }
-  
+  if (empty) {
+    empty.style.display = has ? 'none' : 'flex';
+    empty.querySelector('span') && (empty.querySelector('span').textContent = isDrop
+      ? 'Drop-off photo appears here after the handover.'
+      : 'Pickup photo appears here once your child is picked up.');
+  }
+  if (badge) badge.style.display = has ? 'inline-flex' : 'none';
+  if (badgeText) badgeText.textContent = isDrop ? 'Live drop-off photo' : 'Live pickup photo';
+  if (locTitle) locTitle.textContent = has ? (data.location || (isDrop ? 'Drop-off' : 'Pickup')) : (isDrop ? 'Drop-off' : 'Pickup');
+  if (timeText) timeText.textContent = has ? (data.time || '') : 'Waiting';
+  if (desc) {
+    desc.textContent = has
+      ? `${data.childNames || 'Your child'} ${isDrop ? 'dropped off' : 'picked up'} by ${data.by || 'your provider'}${!isDrop && data.vehicle ? ` ? ${data.vehicle}` : ''}.`
+      : 'Photos are taken live by your provider at pickup and drop-off.';
+  }
+
   if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 };
 
 window.syncPhotoProofThumbnails = function () {
+  const data = loadPhotoProofData();
+  const pData = data.pickup;
+  const dData = data.dropoff;
+  const latest = dData.photo ? dData : pData;
+
   const pickupThumb = document.getElementById('trackingPickupThumbImg');
   const dropoffThumb = document.getElementById('trackingDropoffThumbImg');
   const pickupTime = document.getElementById('trackingPickupTimeLbl');
   const dropoffTime = document.getElementById('trackingDropoffTimeLbl');
-  const detailThumb = document.getElementById('detailProofThumbImg');
-  const detailCode = document.getElementById('detailSafetyPinBannerCode');
-  
-  const pData = window.photoProofData?.pickup;
-  const dData = window.photoProofData?.dropoff;
+  if (pickupThumb && pData.photo) pickupThumb.src = pData.photo;
+  if (dropoffThumb && dData.photo) dropoffThumb.src = dData.photo;
+  if (pickupTime && pData.time) pickupTime.textContent = pData.time;
+  if (dropoffTime && dData.time) dropoffTime.textContent = dData.time;
 
-  if (pickupThumb && pData?.photo) {
-    pickupThumb.src = pData.photo;
-  }
-  if (dropoffThumb && dData?.photo) {
-    dropoffThumb.src = dData.photo;
-  }
+  const detailThumb = document.getElementById('detailProofThumbImg');
+  const detailThumbWrap = document.getElementById('detailProofThumbWrap');
+  const detailEmpty = document.getElementById('detailProofThumbEmpty');
+  const detailChip = document.getElementById('detailProofStatusChip');
+  const detailCode = document.getElementById('detailSafetyPinBannerCode');
+  const banner = document.getElementById('detailSafetyPinBanner');
+  const has = !!latest.photo;
   if (detailThumb) {
-    detailThumb.src = (dData?.photo && dData?.time && window.appState?.trackingStageIndex >= 4) ? dData.photo : (pData?.photo || '/assets/onboarding1.jpg');
+    detailThumb.style.display = has ? 'block' : 'none';
+    if (has) detailThumb.src = latest.photo;
   }
-  if (pickupTime && pData?.time) {
-    pickupTime.textContent = pData.time;
+  if (detailThumbWrap) detailThumbWrap.classList.toggle('is-empty', !has);
+  if (detailEmpty) detailEmpty.style.display = has ? 'none' : 'flex';
+  if (detailChip) {
+    detailChip.textContent = has ? 'Verified' : 'Pending';
+    detailChip.classList.toggle('is-pending', !has);
   }
-  if (dropoffTime && dData?.time) {
-    dropoffTime.textContent = dData.time;
-  }
+  if (banner) banner.classList.toggle('is-pending', !has);
   if (detailCode) {
-    if (dData?.time && (window.appState?.trackingStageIndex >= 4 || window.currentPhotoProofTab === 'dropoff')) {
-      detailCode.textContent = `Drop-off verified at ${dData.time} • Tap to view proof`;
-    } else if (pData?.time) {
-      detailCode.textContent = `Pickup verified at ${pData.time} • Tap to view proof`;
-    }
+    if (dData.photo) detailCode.textContent = `Drop-off photo at ${dData.time} ? Tap to view`;
+    else if (pData.photo) detailCode.textContent = `Pickup photo at ${pData.time} ? Tap to view`;
+    else detailCode.textContent = 'Photos appear here at pickup and drop-off';
   }
   if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 };
 
-window.handlePhotoProofUpload = function (input) {
-  if (input && input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const tab = window.currentPhotoProofTab || 'pickup';
-      window.photoProofData[tab].photo = e.target.result;
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      window.photoProofData[tab].time = timeStr;
-      window.switchPhotoProofTab(tab);
-      window.syncPhotoProofThumbnails();
-      if (window.showToast) window.showToast('✓ Photo updated. Tap Done to save.', 'info');
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-};
-
-window.simulateInstantPhotoSnap = function () {
-  const tab = window.currentPhotoProofTab || 'pickup';
-  const samplePhotos = {
-    pickup: '/assets/onboarding1.jpg',
-    dropoff: '/assets/onboarding3.jpg'
-  };
-  window.photoProofData[tab].photo = samplePhotos[tab] || '/assets/onboarding1.jpg';
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  window.photoProofData[tab].time = timeStr;
-  window.switchPhotoProofTab(tab);
-  window.syncPhotoProofThumbnails();
-  if (window.showToast) window.showToast('✓ Photo updated. Tap Done to save.', 'info');
-};
-
 window.confirmPhotoProofDone = function () {
-  const tab = window.currentPhotoProofTab || 'pickup';
   window.closeTripPhotoProofModal();
-  window.syncPhotoProofThumbnails();
-  if (window.showToast) {
-    window.showToast(`✓ ${tab === 'pickup' ? 'Pickup' : 'Drop-off'} photo proof verified & saved.`, 'success');
-  }
-};
-
-// Driver Attendance Photo Proof Handlers
-window.handleAttendancePhotoProof = function (input) {
-  if (input && input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      window._driverPendingAttendancePhoto = e.target.result;
-      const preview = document.getElementById('driverAttendancePhotoPreview');
-      const img = document.getElementById('driverAttendancePhotoImg');
-      const badge = document.getElementById('attPhotoStatusBadge');
-      if (preview && img) {
-        img.src = e.target.result;
-        preview.style.display = 'block';
-      }
-      if (badge) {
-        badge.textContent = '✓ Attached';
-        badge.style.background = '#DCFCE7';
-        badge.style.color = '#15803D';
-      }
-      if (window.showToast) window.showToast('✓ Handover photo attached! Tap confirm to finish.', 'info');
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-};
-
-window.simulateAttendancePhotoSnap = function () {
-  window._driverPendingAttendancePhoto = '/assets/onboarding1.jpg';
-  const preview = document.getElementById('driverAttendancePhotoPreview');
-  const img = document.getElementById('driverAttendancePhotoImg');
-  const badge = document.getElementById('attPhotoStatusBadge');
-  if (preview && img) {
-    img.src = '/assets/onboarding1.jpg';
-    preview.style.display = 'block';
-  }
-  if (badge) {
-    badge.textContent = '✓ Quick Snap Ready';
-    badge.style.background = '#EFF6FF';
-    badge.style.color = '#2563EB';
-  }
-  if (window.showToast) window.showToast('✓ Quick handover photo snapshot attached!', 'success');
 };
 
 // 3. Dispute Mediation Handler
