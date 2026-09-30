@@ -2216,27 +2216,31 @@
 
     el.innerHTML = `
       ${editing ? '' : `
-        <div style="margin-bottom: 16px;">
-          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1B2B68; background:rgba(27,43,104,0.08); padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 1 of 5</span>
-          <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Escort Profile Details</h2>
-          <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Enter your legal name, contact details, and parent-facing bio.</p>
+        <div style="margin-bottom: 14px;">
+          <span class="auth-step-pill-kicker">
+            <span>Step 1 of 5</span>
+            <span style="opacity:0.4;">•</span>
+            <span>Who you are</span>
+          </span>
+          <h2 style="font-size:22px; font-weight:800; color:#0F172A; margin:6px 0 4px; letter-spacing:-0.02em;">WalkShare Escort Profile</h2>
+          <p style="font-size:13.5px; color:#64748B; margin:0; line-height:1.45;">Enter your legal name, contact details, and parent-facing escort bio.</p>
         </div>
       `}
 
       <!-- Avatar Hero with Name & Verified Badge -->
-      <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 16px;">
-        <div style="position: relative;">
-          <div class="drv-photo-wrap" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); background: #F1F5F9; display: flex; align-items: center; justify-content: center;">
+      <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 20px;">
+        <div class="auth-avatar-ring" onclick="document.getElementById('wsPhotoFile').click()" style="width: 84px; height: 84px; position: relative; cursor: pointer;">
+          <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); background: #F8FAFC; display: flex; align-items: center; justify-content: center;">
             ${w.photo
               ? `<img src="${esc(w.photo)}" alt="${esc(w.name || 'Escort')}" id="wsProfileImg" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.parentNode.innerHTML='<div style=\\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94A3B8;background:#F8FAFC;\\\'><i data-lucide=\\\'user\\\' style=\\\'width:36px;height:36px;\\\'></i></div>';if(window.lucide)window.lucide.createIcons();" />`
               : `<div id="wsProfileImgPlaceholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94A3B8;background:#F8FAFC;"><i data-lucide="user" style="width:36px;height:36px;"></i></div>`}
           </div>
-          <button type="button" class="drv-photo-cam" onclick="document.getElementById('wsPhotoFile').click()" aria-label="Change photo" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-primary, #1B2B68); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
-            <i data-lucide="camera" style="width:13px;height:13px;"></i>
-          </button>
+          <div class="auth-avatar-badge" style="position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; border-radius: 50%; background: #1B2B68; border: 2px solid #FFFFFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+            <i data-lucide="camera" style="width:14px;height:14px;"></i>
+          </div>
           <input type="file" accept="image/*" id="wsPhotoFile" class="drv-file-input" onchange="onWalkShareProfilePhoto(event)" style="display:none;" />
         </div>
-        <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;">
+        <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px;">
           <span>${esc(w.name || (editing ? 'Your Profile' : 'New WalkShare Escort'))}</span>
           ${isApproved(w) ? `
           <span class="fb-verified-badge" title="Verified Account">
@@ -2245,55 +2249,149 @@
             </svg>
           </span>` : ''}
         </div>
+        <div style="font-size: 12.5px; font-weight: 600; color: #64748B; margin-top: 2px;">
+          ${w.serviceArea ? esc(w.serviceArea) : 'Certified Walking School Bus Escort'}
+        </div>
       </div>
 
-      <!-- Unified WalkShare Profile Details Card -->
-      <div class="profile-form-section-card" style="margin-bottom: 16px;">
-        <div class="form-group">
-          <label class="form-label">Full Legal Name</label>
-          <div class="input-box-wrapper">
-            <input type="text" class="form-input" id="wsProfileName" value="${esc(w.name || '')}" placeholder="e.g. Sarah Jenkins" />
-          </div>
+      <!-- Modern Unified WalkShare Profile Input Stack (Matching Parent System 1:1) -->
+      <div class="auth-inputs-stack" style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <!-- Full Legal Name -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></div>
+          <input type="text" class="auth-input" id="wsProfileName" value="${esc(w.name || '')}" placeholder="Full legal name (e.g. Sarah Jenkins)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Phone Number</label>
-          <div class="phone-input-row" style="border: 1.5px solid #E2E8F0; border-radius: 10px; background: #fff; height: 44px; overflow: hidden; display: flex; align-items: center; padding: 0; gap: 0; transition: border-color 0.15s;" onfocusin="this.style.borderColor='var(--color-primary)'" onfocusout="this.style.borderColor='#E2E8F0'">
-            <div class="country-pill" style="cursor: pointer; border-right: 1.5px solid #E2E8F0; border-radius: 0; height: 100%; padding: 0 10px; background: #F8FAFC; display: flex; align-items: center; gap: 5px; flex-shrink: 0; min-width: 64px; justify-content: center;">
-              <span style="font-size: 16px; line-height: 1;">🇨🇦</span>
-              <span style="font-size: 12px; font-weight: 700; color: #334155; letter-spacing: -0.2px;">+1</span>
-              <i data-lucide="chevron-down" style="width:11px;height:11px;color:#94A3B8;flex-shrink:0;"></i>
-            </div>
-            <input type="tel" class="form-input" id="wsProfilePhone" value="${esc(w.phone || '')}" placeholder="(416) 555-0199" style="border: none; border-radius: 0; padding: 0 12px; height: 100%; flex: 1; background: transparent;" />
-          </div>
+        <!-- Phone Number -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="phone" style="width:18px;height:18px;"></i></div>
+          <input type="tel" class="auth-input" id="wsProfilePhone" value="${esc(w.phone || '')}" placeholder="Phone number (e.g. +1 416 555-0199)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <div class="input-box-wrapper">
-            <input type="email" class="form-input" id="wsProfileEmail" value="${esc(w.email || '')}" placeholder="e.g. escort@example.com" />
-          </div>
+        <!-- Email Address -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="mail" style="width:18px;height:18px;"></i></div>
+          <input type="email" class="auth-input" id="wsProfileEmail" value="${esc(w.email || '')}" placeholder="Email address (e.g. escort@example.com)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Service Area / Corridor</label>
-          <div class="input-box-wrapper">
-            <input type="text" class="form-input" id="wsProfileArea" value="${esc(w.serviceArea || '')}" placeholder="e.g. Elm → Greenfield" />
-          </div>
+        <!-- Walking Corridor / Service Area -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="map-pin" style="width:18px;height:18px;"></i></div>
+          <input type="text" class="auth-input" id="wsProfileArea" value="${esc(w.serviceArea || '')}" placeholder="Walking corridor (e.g. Elm St → Greenfield)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">About / Bio (Shown to parents)</label>
-          <textarea class="form-textarea" id="wsProfileBio" rows="3" placeholder="Tell parents about your neighborhood walking group, supervised sidewalk escort care, and morning route...">${esc(w.bio || w.about || '')}</textarea>
+        <!-- Escort Experience & Certifications -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="award" style="width:18px;height:18px;"></i></div>
+          <input type="text" class="auth-input" id="wsProfileExp" value="${esc(w.experience || '')}" placeholder="Experience & Safety (e.g. CPR Certified, 4+ Yrs Walk Escort)" />
+        </div>
+
+        <!-- About / Bio -->
+        <div class="auth-input-group" style="position:relative; margin-bottom:0;">
+          <div class="auth-input-icon" style="top:18px; transform:none;"><i data-lucide="file-text" style="width:18px;height:18px;"></i></div>
+          <textarea class="auth-input" id="wsProfileBio" rows="3" placeholder="Tell parents about your neighborhood walking group, supervised sidewalk escort care, and morning route...">${esc(w.bio || w.about || '')}</textarea>
         </div>
       </div>
 
       <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveWalkShareProfile()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Save Profile Changes' : 'Save and Continue to Walking Group'}</button>
+        <button type="button" class="auth-btn-primary" onclick="completeWalkShareProfileAndOpenHome()" style="height: 52px; font-size: 15px; font-weight: 700; border-radius: 14px;">
+          <span>${editing ? 'Save Profile Changes' : 'Activate & Enter WalkShare Dashboard'}</span>
+          <div class="auth-btn-arrow-circle">
+            <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+          </div>
+        </button>
+
+        ${editing ? '' : `
+          <button type="button" class="auth-btn-secondary" onclick="saveWalkShareProfile()" style="margin-top:10px; width:100%; height:46px; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px; font-size:13.5px; font-weight:700; color:#1E293B; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <span>Continue to Walking Group Setup (Optional)</span>
+            <i data-lucide="chevron-right" style="width:15px;height:15px;color:#64748B;"></i>
+          </button>
+        `}
+
+        <div style="text-align:center; font-size:12px; color:#64748B; margin-top:12px; line-height:1.45; background:#F8FAFC; padding:10px 14px; border-radius:12px; border:1px dashed #CBD5E1;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:5px; font-weight:700; color:#1B2B68; margin-bottom:2px;">
+            <i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10B981;"></i>
+            <span>Quick Start Ready</span>
+          </div>
+          Availability schedule, walking corridors & student rates can be configured anytime from your <b>WalkShare Profile</b>.
+        </div>
       </div>
     `;
     icons();
   }
+
+  window.completeWalkShareProfileAndOpenHome = function () {
+    const w = ensureWalk();
+    w.name = document.getElementById('wsProfileName')?.value || w.name || 'Sarah Jenkins';
+    w.phone = document.getElementById('wsProfilePhone')?.value || w.phone || '+1 (416) 555-0199';
+    w.email = document.getElementById('wsProfileEmail')?.value || w.email || 'sarah.jenkins@walkshare.ca';
+    w.serviceArea = document.getElementById('wsProfileArea')?.value || w.serviceArea || 'Elm St → Greenfield Public School';
+    w.experience = document.getElementById('wsProfileExp')?.value || w.experience || 'CPR & First Aid Certified, 4+ Years';
+    w.bio = document.getElementById('wsProfileBio')?.value || w.bio || 'Certified neighborhood walking school bus escort. Keeping children safe, attentive, and active on their morning and afternoon school walks.';
+    w.about = w.bio;
+
+    if (!w.group || !w.group.route) {
+      w.group = {
+        label: 'Greenfield Walking Group',
+        capacity: 6,
+        route: w.serviceArea || 'Elm St → Greenfield Public School',
+        ...w.group
+      };
+    }
+
+    if (!w.availability || !w.availability.weekly || !w.availability.weekly.length) {
+      w.availability = {
+        weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        windows: [
+          { name: 'Morning Walk', start: '07:30', end: '08:45', enabled: true },
+          { name: 'Afternoon Return', start: '14:45', end: '16:00', enabled: true }
+        ],
+        ...w.availability
+      };
+    }
+
+    if (!w.rate || !w.rate.monthlyBase) {
+      w.rate = {
+        monthlyBase: 95,
+        perKm: 0.85,
+        siblingDiscount: 20,
+        ...w.rate
+      };
+    }
+
+    w.onboarding = {
+      profile: true,
+      group: true,
+      docs: true,
+      availability: true,
+      rate: true
+    };
+    if (!w.subscription || !w.subscription.status) {
+      w.subscription = { status: 'trial', trialDaysLeft: 14, plan: 'monthly' };
+    }
+    w.isOnline = true;
+
+    const provider = (state().providers || []).find((p) => p.id === 'sarah');
+    if (provider) {
+      provider.name = w.name;
+      provider.phone = w.phone;
+      provider.email = w.email;
+      provider.bio = w.bio;
+      provider.about = w.bio;
+      provider.serviceArea = w.serviceArea;
+      provider.experience = w.experience;
+      provider.zone = window.H2SZone ? window.H2SZone.clean(w.group.route || w.serviceArea) : (w.group.route || w.serviceArea);
+      provider.seats = w.group.capacity || 6;
+    }
+
+    persist();
+    if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI('walkshare');
+    toast('Account activated! You can update route, availability & rates anytime in Profile.', 'success');
+    if (window.navReturnStack && window.navReturnStack.length) {
+      window.navReturnStack.length = 0;
+    }
+    window.navigateTo('wsHome', true);
+  };
 
   window.onWalkShareProfilePhoto = function (event) {
     const file = event.target.files && event.target.files[0];
@@ -2316,6 +2414,7 @@
     w.phone = document.getElementById('wsProfilePhone')?.value || w.phone;
     w.email = document.getElementById('wsProfileEmail')?.value || w.email;
     w.serviceArea = document.getElementById('wsProfileArea')?.value || w.serviceArea;
+    w.experience = document.getElementById('wsProfileExp')?.value || w.experience;
     w.bio = document.getElementById('wsProfileBio')?.value || w.bio;
     w.about = w.bio;
     const provider = (state().providers || []).find((p) => p.id === 'sarah');
@@ -2351,44 +2450,70 @@
 
     el.innerHTML = `
       ${editing ? '' : `
-        <div style="margin-bottom: 16px;">
-          <span style="display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#1B2B68; background:rgba(27,43,104,0.08); padding:3px 8px; border-radius:6px; margin-bottom:6px;">Step 2 of 5</span>
-          <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0 0 4px 0;">Walking Group & Route</h2>
-          <p style="font-size:13px; color:#64748B; margin:0; line-height:1.4;">Configure group capacity and your daily sidewalk walking corridor.</p>
+        <div style="margin-bottom: 14px;">
+          <span class="auth-step-pill-kicker">
+            <span>Step 2 of 5</span>
+            <span style="opacity:0.4;">•</span>
+            <span>Walking Group</span>
+          </span>
+          <h2 style="font-size:22px; font-weight:800; color:#0F172A; margin:6px 0 4px; letter-spacing:-0.02em;">Walking Group Setup</h2>
+          <p style="font-size:13.5px; color:#64748B; margin:0; line-height:1.45;">Define your group name, student capacity, and school walking route.</p>
         </div>
       `}
 
-      <div class="profile-form-section-card" style="margin-bottom: 16px;">
-        <div class="form-group">
-          <label class="form-label">Walking Group Name</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" id="wsGroupLabel" value="${esc(w.group.label || 'Neighborhood Walking Group')}" placeholder="e.g. Neighborhood Walking Group" />
-          </div>
+      <div class="auth-inputs-stack" style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <!-- Walking Group Name -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="users" style="width:18px;height:18px;"></i></div>
+          <input class="auth-input" id="wsGroupLabel" value="${esc(w.group.label || 'Neighborhood Walking Group')}" placeholder="Walking Group Name (e.g. Greenfield Walking Group)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Max Student Capacity (Kids)</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" type="number" min="2" max="10" id="wsGroupCap" value="${esc(w.group.capacity || 6)}" placeholder="6" />
-          </div>
+        <!-- Max Student Capacity -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="user-check" style="width:18px;height:18px;"></i></div>
+          <input class="auth-input" type="number" min="2" max="10" id="wsGroupCap" value="${esc(w.group.capacity || 6)}" placeholder="Max Student Capacity (Kids)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Walking Corridor / Route</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" id="wsGroupRoute" value="${esc(w.group.route || 'Elm St → Greenfield Public School')}" placeholder="e.g. Elm St → Greenfield Public School" />
-          </div>
+        <!-- Walking Corridor / Route -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="map-pin" style="width:18px;height:18px;"></i></div>
+          <input class="auth-input" id="wsGroupRoute" value="${esc(w.group.route || 'Elm St → Greenfield Public School')}" placeholder="Walking corridor / route" />
         </div>
       </div>
 
       <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveWalkShareGroup()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Save Changes' : 'Save and Continue to Documents'}</button>
+        <button type="button" class="auth-btn-primary" onclick="completeWalkShareGroupAndOpenHome()" style="height: 52px; font-size: 15px; font-weight: 700; border-radius: 14px;">
+          <span>${editing ? 'Save Changes' : 'Save & Enter WalkShare Dashboard'}</span>
+          <div class="auth-btn-arrow-circle">
+            <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+          </div>
+        </button>
+
+        ${editing ? '' : `
+          <button type="button" class="auth-btn-secondary" onclick="saveWalkShareGroup()" style="margin-top:10px; width:100%; height:46px; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px; font-size:13.5px; font-weight:700; color:#1E293B; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <span>Continue to Documents (Optional)</span>
+            <i data-lucide="chevron-right" style="width:15px;height:15px;color:#64748B;"></i>
+          </button>
+        `}
+
+        <div style="text-align:center; font-size:12px; color:#64748B; margin-top:12px; line-height:1.45; background:#F8FAFC; padding:10px 14px; border-radius:12px; border:1px dashed #CBD5E1;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:5px; font-weight:700; color:#1B2B68; margin-bottom:2px;">
+            <i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10B981;"></i>
+            <span>Flexible Setup</span>
+          </div>
+          Availability hours, route exceptions & student pricing can be customized anytime from your <b>WalkShare Profile</b>.
+        </div>
       </div>
     `;
     icons();
   }
 
-  window.saveWalkShareGroup = function () {
+  window.completeWalkShareGroupAndOpenHome = function () {
+    window.saveWalkShareGroup(true);
+    window.completeWalkShareProfileAndOpenHome();
+  };
+
+  window.saveWalkShareGroup = function (skipNav) {
     const w = ensureWalk();
     w.group.label = document.getElementById('wsGroupLabel')?.value || w.group.label;
     w.group.capacity = Number(document.getElementById('wsGroupCap')?.value || w.group.capacity);
@@ -2400,6 +2525,7 @@
     }
     w.onboarding.group = true;
     persist();
+    if (skipNav) return;
     if (editingProfileChild()) {
       toast('Walking group updated');
       window.backNested('wsProfile');

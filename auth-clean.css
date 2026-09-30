@@ -1079,3 +1079,37 @@
 .auth-forgot-link:hover {
   text-decoration: underline !important;
 }
+
+/* 15. Cross-Role Input System Alignment (Parent, Driver, WalkShare) */
+.auth-step-pill-kicker {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  color: #1B2B68 !important;
+  background: rgba(27, 43, 104, 0.08) !important;
+  padding: 4px 10px !important;
+  border-radius: 20px !important;
+  margin-bottom: 8px !important;
+}
+
+textarea.auth-input {
+  height: auto !important;
+  min-height: 96px !important;
+  padding: 14px 16px 14px 44px !important;
+  line-height: 1.5 !important;
+  resize: vertical !important;
+}
+
+.auth-input-group:not(.has-trailing) .auth-input:not(textarea):not(.with-toggle) {
+  padding-right: 16px !important;
+}
+
+.auth-inputs-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}

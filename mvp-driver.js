@@ -1282,22 +1282,32 @@
     bindChildTitle(el, editing ? 'Edit profile' : 'Your profile');
     bindChildBack(el, "leaveDriverGate()");
     el.innerHTML = `
-      ${editing ? '' : stepIntro(1, 5, 'Who you are', 'Name and service area parents will see.')}
+      ${editing ? '' : `
+        <div style="margin-bottom: 14px;">
+          <span class="auth-step-pill-kicker">
+            <span>Step 1 of 5</span>
+            <span style="opacity:0.4;">•</span>
+            <span>Who you are</span>
+          </span>
+          <h2 style="font-size:22px; font-weight:800; color:#0F172A; margin:6px 0 4px; letter-spacing:-0.02em;">Driver Profile Details</h2>
+          <p style="font-size:13.5px; color:#64748B; margin:0; line-height:1.45;">Name, contact info, and service area parents will see.</p>
+        </div>
+      `}
       
       <!-- Avatar Hero with Name & Verified Badge -->
-      <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 16px;">
-        <div style="position: relative;">
-          <div class="drv-photo-wrap" style="width: 76px; height: 76px; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); background: #F1F5F9; display: flex; align-items: center; justify-content: center;">
+      <div style="display: flex; flex-direction: column; align-items: center; margin: 4px 0 20px;">
+        <div class="auth-avatar-ring" onclick="document.getElementById('drvPhotoFile').click()" style="width: 84px; height: 84px; position: relative; cursor: pointer;">
+          <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(27, 43, 104, 0.12); background: #F8FAFC; display: flex; align-items: center; justify-content: center;">
             ${d.photo
               ? `<img src="${esc(d.photo)}" alt="${esc(d.name || 'Driver')}" id="drvProfileImg" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.parentNode.innerHTML='<div style=\\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94A3B8;background:#F8FAFC;\\\'><i data-lucide=\\\'user\\\' style=\\\'width:36px;height:36px;\\\'></i></div>';if(window.lucide)window.lucide.createIcons();" />`
               : `<div id="drvProfileImgPlaceholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94A3B8;background:#F8FAFC;"><i data-lucide="user" style="width:36px;height:36px;"></i></div>`}
           </div>
-          <button type="button" class="drv-photo-cam" onclick="document.getElementById('drvPhotoFile').click()" aria-label="Change photo" style="position: absolute; bottom: -2px; right: -2px; background: var(--color-primary, #1B2B68); color: #fff; border: 2px solid #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
-            <i data-lucide="camera" style="width:13px;height:13px;"></i>
-          </button>
+          <div class="auth-avatar-badge" style="position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; border-radius: 50%; background: #1B2B68; border: 2px solid #FFFFFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+            <i data-lucide="camera" style="width:14px;height:14px;"></i>
+          </div>
           <input type="file" accept="image/*" id="drvPhotoFile" class="drv-file-input" onchange="onDriverProfilePhoto(event)" style="display:none;" />
         </div>
-        <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;">
+        <div style="font-size: 18px; font-weight: 800; color: #0F172A; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px;">
           <span>${esc(d.name || (editing ? 'Your Profile' : 'New Driver Partner'))}</span>
           ${isApproved(d) ? `
           <span class="fb-verified-badge" title="Verified Account">
@@ -1306,51 +1316,78 @@
             </svg>
           </span>` : ''}
         </div>
+        <div style="font-size: 12.5px; font-weight: 600; color: #64748B; margin-top: 2px;">
+          ${d.serviceArea ? esc(d.serviceArea) : 'School Route Transport Partner'}
+        </div>
       </div>
 
-      <!-- Unified Driver Profile Details Card -->
-      <div class="profile-form-section-card" style="margin-bottom: 16px;">
-        <div class="form-group">
-          <label class="form-label">Full Legal Name</label>
-          <div class="input-box-wrapper">
-            <input type="text" class="form-input" id="drvName" value="${esc(d.name || '')}" placeholder="e.g. Robert MacDonald" />
-          </div>
+      <!-- Modern Unified Driver Profile Input Stack (Matching Parent System 1:1) -->
+      <div class="auth-inputs-stack" style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <!-- Full Legal Name -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></div>
+          <input type="text" class="auth-input" id="drvName" value="${esc(d.name || '')}" placeholder="Full legal name (e.g. Robert MacDonald)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Phone Number</label>
-          <div class="phone-input-row" style="border: 1.5px solid #E2E8F0; border-radius: 10px; background: #fff; height: 44px; overflow: hidden; display: flex; align-items: center; padding: 0; gap: 0; transition: border-color 0.15s;" onfocusin="this.style.borderColor='var(--color-primary)'" onfocusout="this.style.borderColor='#E2E8F0'">
-            <div class="country-pill" style="cursor: pointer; border-right: 1.5px solid #E2E8F0; border-radius: 0; height: 100%; padding: 0 10px; background: #F8FAFC; display: flex; align-items: center; gap: 5px; flex-shrink: 0; min-width: 64px; justify-content: center;">
-              <span style="font-size: 16px; line-height: 1;">🇨🇦</span>
-              <span style="font-size: 12px; font-weight: 700; color: #334155; letter-spacing: -0.2px;">+1</span>
-              <i data-lucide="chevron-down" style="width:11px;height:11px;color:#94A3B8;flex-shrink:0;"></i>
-            </div>
-            <input type="tel" class="form-input" id="drvPhone" value="${esc(d.phone || '')}" placeholder="(416) 555-0192" style="border: none; border-radius: 0; padding: 0 12px; height: 100%; flex: 1; background: transparent;" />
-          </div>
+        <!-- Phone Number -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="phone" style="width:18px;height:18px;"></i></div>
+          <input type="tel" class="auth-input" id="drvPhone" value="${esc(d.phone || '')}" placeholder="Phone number (e.g. +1 416 555-0192)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <div class="input-box-wrapper">
-            <input type="email" class="form-input" id="drvEmail" value="${esc(d.email || '')}" placeholder="e.g. driver@example.com" />
-          </div>
+        <!-- Email Address -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="mail" style="width:18px;height:18px;"></i></div>
+          <input type="email" class="auth-input" id="drvEmail" value="${esc(d.email || '')}" placeholder="Email address (e.g. driver@example.com)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Service Area</label>
-          <div class="input-box-wrapper">
-            <input type="text" class="form-input" id="drvArea" value="${esc(d.serviceArea || '')}" placeholder="e.g. Greenfield / Midtown" />
-          </div>
+        <!-- Service Area -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="map-pin" style="width:18px;height:18px;"></i></div>
+          <input type="text" class="auth-input" id="drvArea" value="${esc(d.serviceArea || '')}" placeholder="Service area (e.g. Greenfield / Midtown)" />
         </div>
 
-        <div class="form-group">
-          <label class="form-label">About / Bio (Shown to parents)</label>
-          <textarea class="form-textarea" id="drvBio" rows="3" placeholder="Tell parents about your driving experience, focus on child safety, boosters, and calm school rides...">${esc(d.bio || d.about || '')}</textarea>
+        <!-- Driver's Licence Number -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="credit-card" style="width:18px;height:18px;"></i></div>
+          <input type="text" class="auth-input" id="drvLicence" value="${esc(d.licenceNumber || '')}" placeholder="Driver's License No. (e.g. A8472-19305)" />
+        </div>
+
+        <!-- Driving Experience -->
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <div class="auth-input-icon"><i data-lucide="award" style="width:18px;height:18px;"></i></div>
+          <input type="text" class="auth-input" id="drvExp" value="${esc(d.experience || '')}" placeholder="Driving Experience (e.g. 5+ Years, G-Class)" />
+        </div>
+
+        <!-- About / Bio -->
+        <div class="auth-input-group" style="position:relative; margin-bottom:0;">
+          <div class="auth-input-icon" style="top:18px; transform:none;"><i data-lucide="file-text" style="width:18px;height:18px;"></i></div>
+          <textarea class="auth-input" id="drvBio" rows="3" placeholder="Tell parents about your driving experience, focus on child safety, boosters, and calm school rides...">${esc(d.bio || d.about || '')}</textarea>
         </div>
       </div>
 
       <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveDriverOnboardProfile()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Save Changes' : 'Save and Continue to Vehicle'}</button>
+        <button type="button" class="auth-btn-primary" onclick="completeDriverProfileAndOpenHome()" style="height: 52px; font-size: 15px; font-weight: 700; border-radius: 14px;">
+          <span>${editing ? 'Save Profile Changes' : 'Activate & Enter Driver Dashboard'}</span>
+          <div class="auth-btn-arrow-circle">
+            <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+          </div>
+        </button>
+
+        ${editing ? '' : `
+          <button type="button" class="auth-btn-secondary" onclick="saveDriverOnboardProfile()" style="margin-top:10px; width:100%; height:46px; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px; font-size:13.5px; font-weight:700; color:#1E293B; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <span>Continue to Vehicle Setup (Optional)</span>
+            <i data-lucide="chevron-right" style="width:15px;height:15px;color:#64748B;"></i>
+          </button>
+        `}
+
+        <div style="text-align:center; font-size:12px; color:#64748B; margin-top:12px; line-height:1.45; background:#F8FAFC; padding:10px 14px; border-radius:12px; border:1px dashed #CBD5E1;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:5px; font-weight:700; color:#1B2B68; margin-bottom:2px;">
+            <i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10B981;"></i>
+            <span>Quick Start Ready</span>
+          </div>
+          Availability schedule, pricing rates & full documents can be configured anytime from your <b>Driver Profile</b>.
+        </div>
       </div>
     `;
     icons();
@@ -1370,14 +1407,99 @@
     });
   };
 
+  window.completeDriverProfileAndOpenHome = function () {
+    const d = ensureDriver();
+    d.name = val('drvName') || d.name || 'Robert MacDonald';
+    d.phone = val('drvPhone') || d.phone || '+1 (416) 555-0192';
+    d.email = val('drvEmail') || d.email || 'robert.macdonald@torontoschoolrides.ca';
+    d.serviceArea = val('drvArea') || d.serviceArea || 'Greenfield / Midtown';
+    d.licenceNumber = val('drvLicence') || d.licenceNumber || 'DL-A8472-19305';
+    d.experience = val('drvExp') || d.experience || '5+ Years Clean Record';
+    d.bio = val('drvBio') || d.bio || 'Experienced school route driver focused on child safety, booster seating, and calm reliable on-time rides.';
+    d.about = d.bio;
+
+    // Sync licence number to documents
+    const lic = (d.documents || []).find((doc) => doc.id === 'licence');
+    if (lic) {
+      lic.number = d.licenceNumber;
+      if (lic.status === 'not_submitted') lic.status = 'under_review';
+    }
+
+    // Default vehicle if not filled yet
+    if (!d.vehicle || !d.vehicle.make) {
+      d.vehicle = {
+        type: 'Minivan',
+        make: 'Toyota',
+        model: 'Sienna',
+        year: '2023',
+        color: 'Silver',
+        plate: 'SCH-4091',
+        capacity: 4,
+        ...d.vehicle
+      };
+    }
+
+    // Default availability
+    if (!d.availability || !d.availability.weekly || !d.availability.weekly.length) {
+      d.availability = {
+        weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        windows: [
+          { name: 'Morning', start: '06:30', end: '09:00', enabled: true },
+          { name: 'Afternoon', start: '13:00', end: '16:30', enabled: true }
+        ],
+        ...d.availability
+      };
+    }
+
+    // Default rate
+    if (!d.rate || !d.rate.monthlyBase) {
+      d.rate = {
+        monthlyBase: 240,
+        perKm: 1.75,
+        siblingDiscount: 15,
+        ...d.rate
+      };
+    }
+
+    d.onboarding = {
+      profile: true,
+      vehicle: true,
+      docs: true,
+      availability: true,
+      rate: true
+    };
+    if (!d.subscription || !d.subscription.status) {
+      d.subscription = { status: 'trial', trialDaysLeft: 14, plan: 'monthly' };
+    }
+    d.isOnline = true;
+
+    syncDriverToProviders();
+    persist();
+    ensureDriverRole();
+    toast('Account activated! You can update availability, rates & vehicle anytime in Profile.', 'success');
+    if (window.navReturnStack && window.navReturnStack.length) {
+      window.navReturnStack.length = 0;
+    }
+    window.navigateTo('driverHome', true);
+  };
+
   window.saveDriverOnboardProfile = function () {
     const d = ensureDriver();
     d.name = val('drvName') || d.name || '';
     d.phone = val('drvPhone') || d.phone || '';
     d.email = val('drvEmail') || d.email || '';
     d.serviceArea = val('drvArea') || d.serviceArea || '';
+    d.licenceNumber = val('drvLicence') || d.licenceNumber || '';
+    d.experience = val('drvExp') || d.experience || '';
     d.bio = val('drvBio') || d.bio || '';
     d.about = d.bio;
+
+    const lic = (d.documents || []).find((doc) => doc.id === 'licence');
+    if (lic && d.licenceNumber) {
+      lic.number = d.licenceNumber;
+      if (lic.status === 'not_submitted') lic.status = 'under_review';
+    }
+
     d.onboarding.profile = true;
     syncDriverToProviders();
     persist();
@@ -1406,63 +1528,133 @@
     const photoHint = hasCustomPhoto ? 'Tap to replace' : 'Tap to upload · JPG or PNG';
     const thumb = hasCustomPhoto && v.photo ? v.photo : '';
     el.innerHTML = `
-      ${editing ? '' : stepIntro(2, 5, 'One vehicle', 'Vehicle parents will see.')}
-      <div class="profile-form-section-card" style="margin-bottom: 16px;">
-        ${selectField('Type', `<select class="form-select" id="drvVType">${['Minivan', 'SUV', 'Sedan', 'Wagon'].map((t) => `<option ${v.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>`)}
-        <div class="drv-window-row">
-          ${field('Make', `<input class="form-input" id="drvVMake" value="${esc(v.make || '')}" placeholder="e.g. Toyota" />`)}
-          ${field('Model', `<input class="form-input" id="drvVModel" value="${esc(v.model || '')}" placeholder="e.g. Sienna" />`)}
+      ${editing ? '' : `
+        <div style="margin-bottom: 14px;">
+          <span class="auth-step-pill-kicker">
+            <span>Step 2 of 5</span>
+            <span style="opacity:0.4;">•</span>
+            <span>Your Vehicle</span>
+          </span>
+          <h2 style="font-size:22px; font-weight:800; color:#0F172A; margin:6px 0 4px; letter-spacing:-0.02em;">Vehicle Details</h2>
+          <p style="font-size:13.5px; color:#64748B; margin:0; line-height:1.45;">Registered vehicle parents and students will ride in.</p>
         </div>
-        <div class="drv-window-row">
-          ${field('Year', `<input class="form-input" id="drvVYear" value="${esc(v.year || '')}" placeholder="e.g. 2023" />`)}
-          ${field('Colour', `<input class="form-input" id="drvVColor" value="${esc(v.color || '')}" placeholder="e.g. Silver" />`)}
+      `}
+
+      <div class="auth-inputs-stack" style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+        <!-- Vehicle Type -->
+        <div class="auth-select-wrap" style="margin-bottom:0;">
+          <i data-lucide="car" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:#64748B; pointer-events:none;"></i>
+          <select class="auth-select" id="drvVType">
+            ${['Minivan', 'SUV', 'Sedan', 'Wagon'].map((t) => `<option ${v.type === t ? 'selected' : ''}>${t}</option>`).join('')}
+          </select>
+          <i data-lucide="chevron-down" class="auth-select-chevron"></i>
         </div>
-        <div class="drv-window-row">
-          ${field('Plate', `<input class="form-input" id="drvVPlate" value="${esc(v.plate || '')}" placeholder="e.g. SCH-4091" />`)}
-          ${field('Seats', `<input class="form-input" id="drvVSeats" type="number" min="1" max="8" value="${esc(v.capacity || '')}" placeholder="4" />`)}
+
+        <!-- Make & Model -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="auth-input-group" style="margin-bottom:0;">
+            <div class="auth-input-icon"><i data-lucide="shield" style="width:18px;height:18px;"></i></div>
+            <input class="auth-input" id="drvVMake" value="${esc(v.make || '')}" placeholder="Make (e.g. Toyota)" />
+          </div>
+          <div class="auth-input-group" style="margin-bottom:0;">
+            <div class="auth-input-icon"><i data-lucide="tag" style="width:18px;height:18px;"></i></div>
+            <input class="auth-input" id="drvVModel" value="${esc(v.model || '')}" placeholder="Model (e.g. Sienna)" />
+          </div>
         </div>
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label class="form-label" style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:6px; display:block;">Vehicle photo</label>
-          ${(thumb || v.photoName) ? `
-            <div class="drv-doc-card-attached">
-              <div class="drv-doc-info-left">
-                ${thumb
-                  ? `<img class="drv-doc-thumb-preview" src="${esc(thumb)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
-                  : `<div class="drv-doc-icon-badge"><i data-lucide="car"></i></div>`}
-                <div class="drv-doc-meta-col">
-                  <div class="drv-doc-file-name" title="${esc(photoName || 'Vehicle photo')}">${esc(photoName || 'Vehicle photo')}</div>
-                  <div class="drv-doc-status-badge">
-                    <i data-lucide="check-circle-2" style="width:12px; height:12px; color:#16A34A;"></i>
-                    <span>Ready for verification</span>
-                  </div>
-                </div>
-              </div>
-              <div class="drv-doc-actions-right">
-                <label for="drvVehicleFile" class="btn-drv-doc-replace" title="Replace photo">
-                  <i data-lucide="refresh-cw" style="width:13px; height:13px;"></i>
-                  <span>Replace</span>
-                </label>
-                <button type="button" class="btn-drv-doc-delete" onclick="deleteDriverVehiclePhoto(event)" title="Delete photo">
-                  <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
-                </button>
-              </div>
-            </div>
-          ` : `
-            <label class="drv-doc-dropzone" for="drvVehicleFile">
-              <div class="drv-doc-dropzone-icon"><i data-lucide="camera"></i></div>
-              <div class="drv-doc-dropzone-title">Upload Vehicle Photo</div>
-              <div class="drv-doc-dropzone-hint">Take photo or choose JPG/PNG of exterior</div>
-            </label>
-          `}
-          <input type="file" accept="image/*" capture="environment" id="drvVehicleFile" class="drv-file-input" style="display:none;" onchange="onDriverVehiclePhoto(event)" />
+
+        <!-- Year & Colour -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="auth-input-group" style="margin-bottom:0;">
+            <div class="auth-input-icon"><i data-lucide="calendar" style="width:18px;height:18px;"></i></div>
+            <input class="auth-input" id="drvVYear" value="${esc(v.year || '')}" placeholder="Year (e.g. 2023)" />
+          </div>
+          <div class="auth-input-group" style="margin-bottom:0;">
+            <div class="auth-input-icon"><i data-lucide="palette" style="width:18px;height:18px;"></i></div>
+            <input class="auth-input" id="drvVColor" value="${esc(v.color || '')}" placeholder="Colour (Silver)" />
+          </div>
+        </div>
+
+        <!-- Plate & Seats -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="auth-input-group" style="margin-bottom:0;">
+            <div class="auth-input-icon"><i data-lucide="hash" style="width:18px;height:18px;"></i></div>
+            <input class="auth-input" id="drvVPlate" value="${esc(v.plate || '')}" placeholder="Plate (SCH-4091)" />
+          </div>
+          <div class="auth-input-group" style="margin-bottom:0;">
+            <div class="auth-input-icon"><i data-lucide="users" style="width:18px;height:18px;"></i></div>
+            <input class="auth-input" id="drvVSeats" type="number" min="1" max="8" value="${esc(v.capacity || '')}" placeholder="Seats (4)" />
+          </div>
         </div>
       </div>
+
+      <!-- Vehicle Photo -->
+      <div style="margin-bottom: 20px;">
+        <label style="font-size:13px; font-weight:700; color:#1E293B; margin-bottom:8px; display:block;">Vehicle photo</label>
+        ${(thumb || v.photoName) ? `
+          <div class="drv-doc-card-attached" style="border-radius:14px; border:1.5px solid #E2E8F0; background:#F8FAFC;">
+            <div class="drv-doc-info-left">
+              ${thumb
+                ? `<img class="drv-doc-thumb-preview" src="${esc(thumb)}" alt="" onerror="this.onerror=null;this.src='/assets/avatar_sadia.jpg';" />`
+                : `<div class="drv-doc-icon-badge"><i data-lucide="car"></i></div>`}
+              <div class="drv-doc-meta-col">
+                <div class="drv-doc-file-name" title="${esc(photoName || 'Vehicle photo')}">${esc(photoName || 'Vehicle photo')}</div>
+                <div class="drv-doc-status-badge">
+                  <i data-lucide="check-circle-2" style="width:12px; height:12px; color:#16A34A;"></i>
+                  <span>Ready for verification</span>
+                </div>
+              </div>
+            </div>
+            <div class="drv-doc-actions-right">
+              <label for="drvVehicleFile" class="btn-drv-doc-replace" title="Replace photo">
+                <i data-lucide="refresh-cw" style="width:13px; height:13px;"></i>
+                <span>Replace</span>
+              </label>
+              <button type="button" class="btn-drv-doc-delete" onclick="deleteDriverVehiclePhoto(event)" title="Delete photo">
+                <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+              </button>
+            </div>
+          </div>
+        ` : `
+          <label class="drv-doc-dropzone" for="drvVehicleFile" style="border-radius:14px; border:1.5px dashed #CBD5E1; background:#F8FAFC; padding: 20px 16px;">
+            <div class="drv-doc-dropzone-icon"><i data-lucide="camera"></i></div>
+            <div class="drv-doc-dropzone-title">Upload Vehicle Photo</div>
+            <div class="drv-doc-dropzone-hint">Take photo or choose JPG/PNG of exterior</div>
+          </label>
+        `}
+        <input type="file" accept="image/*" capture="environment" id="drvVehicleFile" class="drv-file-input" style="display:none;" onchange="onDriverVehiclePhoto(event)" />
+      </div>
+
       <div class="drv-actions-col">
-        <button type="button" class="btn-primary" onclick="saveDriverVehicle()" style="height: 48px; font-size: 15px; font-weight: 700; border-radius: 12px;">${editing ? 'Save Changes' : 'Save and Continue to Documents'}</button>
+        <button type="button" class="auth-btn-primary" onclick="completeDriverVehicleAndOpenHome()" style="height: 52px; font-size: 15px; font-weight: 700; border-radius: 14px;">
+          <span>${editing ? 'Save Changes' : 'Save & Enter Driver Dashboard'}</span>
+          <div class="auth-btn-arrow-circle">
+            <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+          </div>
+        </button>
+
+        ${editing ? '' : `
+          <button type="button" class="auth-btn-secondary" onclick="saveDriverVehicle()" style="margin-top:10px; width:100%; height:46px; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px; font-size:13.5px; font-weight:700; color:#1E293B; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <span>Continue to Verification Documents (Optional)</span>
+            <i data-lucide="chevron-right" style="width:15px;height:15px;color:#64748B;"></i>
+          </button>
+        `}
+
+        <div style="text-align:center; font-size:12px; color:#64748B; margin-top:12px; line-height:1.45; background:#F8FAFC; padding:10px 14px; border-radius:12px; border:1px dashed #CBD5E1;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:5px; font-weight:700; color:#1B2B68; margin-bottom:2px;">
+            <i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10B981;"></i>
+            <span>Flexible Setup</span>
+          </div>
+          Availability hours, pricing rates & verification docs can be customized anytime from your <b>Driver Profile</b>.
+        </div>
       </div>
     `;
     icons();
   }
+
+  window.completeDriverVehicleAndOpenHome = function () {
+    window.saveDriverVehicle(true);
+    window.completeDriverProfileAndOpenHome();
+  };
 
   window.deleteDriverVehiclePhoto = function (event) {
     if (event) {
@@ -1499,7 +1691,7 @@
     });
   };
 
-  window.saveDriverVehicle = function () {
+  window.saveDriverVehicle = function (skipNav) {
     const d = ensureDriver();
     const prevPlate = d.vehicle.plate;
     d.vehicle = {
@@ -1517,6 +1709,7 @@
     d.onboarding.vehicle = true;
     syncDriverToProviders();
     persist();
+    if (skipNav) return;
     if (finishNestedOr()) return;
     window.navigateTo(editingProfileChild() ? 'driverProfile' : 'driverOnboardDocs');
   };
