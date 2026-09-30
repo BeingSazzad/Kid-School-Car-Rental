@@ -6950,6 +6950,42 @@
             </div>
           </div>
 
+          <!-- 6. Alex Rivera (Driver - Gender: Other) -->
+          <div class="provider-result-card provider-card-figma" data-category="drivers" data-provider-id="alex" data-gender="other" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="4.9" data-verified="true" data-distance="1.0" data-price="65" onclick="openDriverProfile('alex', 'bookingSearchProviders')">
+            <div class="pcf-avatar-wrap">
+              <img src="/assets/avatar_arman.jpg" alt="Alex Rivera" class="pcf-avatar" onerror="this.src='/assets/avatar_tariq.jpg'" />
+            </div>
+            <div class="pcf-info-col">
+              <div class="pcf-name-row">
+                <span class="pcf-name">Alex Rivera</span>
+                <span class="pcf-verified-badge" title="Verified Driver">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#2563EB"/>
+                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="pcf-meta-row">
+                <span class="pcf-star">★</span>
+                <span class="pcf-rating">4.9</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-distance">1.0 km</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-zone">Midtown</span>
+              </div>
+              <div class="pcf-vehicle-row">
+                <span class="pcf-vehicle">Hyundai Ioniq 5</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-seats">4 seats</span>
+              </div>
+            </div>
+            <div class="pcf-action-col">
+              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('alex')">
+                Book
+              </button>
+            </div>
+          </div>
+
           <!-- 5. Sophie Bouchard (WalkShare Guide) -->
           <div class="provider-result-card provider-card-figma walkshare-card" data-category="walkshare" data-provider-id="elena" data-gender="female" data-triptype="roundtrip" data-freq="daily,monthly" data-rating="4.9" data-verified="true" data-distance="0.5" data-price="140" onclick="openDriverProfile('elena', 'bookingSearchProviders')">
             <div class="pcf-avatar-wrap">
@@ -12173,8 +12209,9 @@
           </div>
           <div class="sf-gender-pills-row" id="modalGenderChips">
             <button type="button" class="sf-gender-pill active" onclick="window.setModalGender('all', this)">All</button>
-            <button type="button" class="sf-gender-pill" onclick="window.setModalGender('male', this)">Male Only</button>
-            <button type="button" class="sf-gender-pill" onclick="window.setModalGender('female', this)">Female Only</button>
+            <button type="button" class="sf-gender-pill" onclick="window.setModalGender('male', this)">Male</button>
+            <button type="button" class="sf-gender-pill" onclick="window.setModalGender('female', this)">Female</button>
+            <button type="button" class="sf-gender-pill" onclick="window.setModalGender('other', this)">Other</button>
           </div>
         </div>
       </div>

@@ -384,6 +384,54 @@ window.appState = {
       lng: -79.3855
     },
     {
+      id: 'alex',
+      name: 'Alex Rivera',
+      roleTitle: 'School Ride Driver',
+      gender: 'other',
+      vehicle: 'Hyundai Ioniq 5 (2024)',
+      plate: 'EV-3091',
+      rating: 4.9,
+      reviewsCount: 78,
+      totalCapacity: 4,
+      bookedSeats: 1,
+      seats: 3,
+      tripTypes: ['oneway', 'roundtrip'],
+      frequencies: ['daily', 'weekly', 'monthly'],
+      pricing: {
+        daily: 15,
+        weekly: 65,
+        monthly: 230,
+        weeklyDiscount: 10,
+        monthlyDiscount: 18
+      },
+      baseWeekly: 65,
+      listedRate: 65,
+      ratePeriod: 'week',
+      oneTimeRate: 15,
+      negotiable: true,
+      preferredPayment: 'Protected Escrow',
+      paymentHandle: 'alex.rivera@interac.ca',
+      maxServiceDistanceKm: 15,
+      serviceArea: 'Downtown / Midtown',
+      photo: '/assets/avatar_arman.jpg',
+      phone: '+1 (416) 555-0187',
+      experience: '4+ Yrs',
+      onTimeRate: '99.7%',
+      quote: '"Alex is super punctual, kind, and provides a quiet, calming ride for our daughter every morning."',
+      reviewer: '— Karen White (Parent of 1)',
+      availability: {
+        weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        windows: [
+          { id: 'w1', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '07:00', end: '09:00', label: 'Morning', enabled: true },
+          { id: 'w2', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '14:00', end: '16:30', label: 'Afternoon', enabled: true }
+        ],
+        exceptions: []
+      },
+      zone: 'Midtown',
+      lat: 43.6680,
+      lng: -79.3950
+    },
+    {
       id: 'elena',
       name: 'Sophie Bouchard',
       category: 'walkshare',
