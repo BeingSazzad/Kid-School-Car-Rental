@@ -115,6 +115,9 @@
         skipDemoUnlock: !!w.skipDemoUnlock,
         activeWalkStage: w.activeWalkStage,
         activeWalk: w.activeWalk,
+        completedWalkIds: w.completedWalkIds || [],
+        bio: w.bio,
+        experience: w.experience,
         notifications: w.notifications
       }));
     } catch (err) { /* ignore */ }
@@ -179,18 +182,19 @@
         existing = list.find((d) => d.id === 'licence' || d.id === 'id');
       }
       const demoItem = demo.find((d) => d.id === spec.id) || {};
-      const src = useDemo ? demoItem : (existing || (demoItem.status === 'approved' && !list.length ? demoItem : {}));
+      const src = useDemo ? demoItem : (existing || {});
+      const fill = useDemo;
       return {
         id: spec.id,
         title: spec.title,
         status: src.status || (useDemo ? 'approved' : 'not_submitted'),
-        number: src.number || (spec.id === 'licence' ? (demoItem.number || '') : ''),
-        province: src.province || (spec.id === 'licence' ? 'Ontario' : ''),
-        expiry: src.expiry || (spec.id === 'licence' ? '2028-09-15' : ''),
-        residencyType: src.residencyType || (spec.id === 'residency_tax_tenancy' ? 'Property Tax Statement' : ''),
-        address: src.address || (spec.id.startsWith('residency') ? '124 Greenfield Ave, Toronto, ON M4B 1B3' : ''),
-        billDate: src.billDate || (spec.id === 'residency_utility' ? '2026-08-10' : ''),
-        issuer: src.issuer || demoItem.issuer || '',
+        number: src.number || (fill && spec.id === 'licence' ? (demoItem.number || '') : ''),
+        province: src.province || (fill && spec.id === 'licence' ? 'Ontario' : ''),
+        expiry: src.expiry || (fill && spec.id === 'licence' ? '2028-09-15' : ''),
+        residencyType: src.residencyType || (fill && spec.id === 'residency_tax_tenancy' ? 'Property Tax Statement' : ''),
+        address: src.address || (fill && spec.id.startsWith('residency') ? '124 Greenfield Ave, Toronto, ON M4B 1B3' : ''),
+        billDate: src.billDate || (fill && spec.id === 'residency_utility' ? '2026-08-10' : ''),
+        issuer: src.issuer || (fill ? demoItem.issuer || '' : ''),
         file: src.file || (useDemo ? demoItem.file : { name: '', attached: false }),
         rejectReason: src.rejectReason || ''
       };
@@ -228,7 +232,7 @@
       try {
         const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
         if (saved && typeof saved === 'object') {
-          ['name', 'phone', 'email', 'photo', 'serviceArea', 'verificationStatus', 'isOnline', 'activeWalkStage', 'skipDemoUnlock'].forEach((key) => {
+          ['name', 'phone', 'email', 'photo', 'serviceArea', 'verificationStatus', 'isOnline', 'activeWalkStage', 'skipDemoUnlock', 'bio', 'experience'].forEach((key) => {
             if (saved[key] !== undefined) w[key] = saved[key];
           });
           ['onboarding', 'group', 'availability', 'rate', 'subscription', 'activeWalk'].forEach((key) => {
@@ -236,6 +240,7 @@
           });
           if (Array.isArray(saved.documents)) w.documents = saved.documents;
           if (Array.isArray(saved.requests)) w.requests = saved.requests;
+          if (Array.isArray(saved.completedWalkIds)) w.completedWalkIds = saved.completedWalkIds;
           if (Array.isArray(saved.notifications)) w.notifications = saved.notifications;
         }
       } catch (err) { /* ignore */ }
@@ -342,6 +347,12 @@
     };
   }
 
+  const EMPTY_AVATAR = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#F0F3FA"/><circle cx="32" cy="25" r="11" fill="#6B7280" opacity=".45"/><path d="M12 56c3-11 11-17 20-17s17 6 20 17" fill="#6B7280" opacity=".45"/></svg>');
+
+  function walkerPhoto(w) {
+    return w.photo || (w.skipDemoUnlock ? EMPTY_AVATAR : '/assets/avatar_sarah.jpg');
+  }
+
   function isApproved(w) {
     return w.verificationStatus === 'approved' || w.verificationStatus === 'verified';
   }
@@ -360,7 +371,12 @@
     w.verificationStatus = 'not_submitted';
     w.isOnline = false;
     w.skipDemoUnlock = true;
-    w.group = { route: '', maxKids: 6, morningTime: '08:00', returnTime: '15:15', meetingPoint: '', school: '', pickupStops: [] };
+    w.group = { label: '', capacity: 0, route: '', safety: [] };
+    w.documents = normalizeWalkDocs(REQUIRED_DOCS.map((spec) => ({ id: spec.id, status: 'not_submitted' })), false);
+    w.activeWalk = null;
+    w.activeWalkStage = 0;
+    w.experience = '';
+    w.completedWalkIds = [];
     w.onboarding = { profile: false, group: false, docs: false, availability: false, rate: false };
     w.subscription = { status: 'trial', plan: 'monthly', priceMonthly: 19, priceAnnual: 179, trialDaysLeft: 14, history: [] };
     persist();
@@ -438,6 +454,17 @@
 
   function canAccept(w) {
     return isApproved(w) && hasAccess(w) && docsApproved(w);
+  }
+
+  function acceptGate(w) {
+    const missing = REQUIRED_DOCS.filter((spec) => {
+      const doc = (w.documents || []).find((d) => d.id === spec.id);
+      return !doc || !doc.status || doc.status === 'not_submitted' || doc.status === 'action_required';
+    }).length;
+    if (missing) return { docs: true, text: `Upload your documents to accept · ${missing} of ${REQUIRED_DOCS.length} still needed` };
+    if (!isApproved(w) || !docsApproved(w)) return { docs: false, text: 'Documents under review. You can accept once they are approved.' };
+    if (!hasAccess(w)) return { docs: false, text: 'Start your free trial to accept requests' };
+    return null;
   }
 
   function acceptedSeatsAt(timeStr, ignoreId) {
@@ -546,17 +573,6 @@
     return [formatCardDate(req), timeLineCard(req)].filter(Boolean).join(' · ');
   }
 
-  function toMinutes(label) {
-    const m = String(label || '').match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
-    if (!m) return 0;
-    let h = parseInt(m[1], 10);
-    const min = parseInt(m[2], 10);
-    const mer = (m[3] || '').toUpperCase();
-    if (mer === 'PM' && h < 12) h += 12;
-    if (mer === 'AM' && h === 12) h = 0;
-    return h * 60 + min;
-  }
-
   function dateParts(label) {
     const raw = String(label || 'Tue, Sep 9, 2026');
     const m = raw.match(/([A-Za-z]{3}),?\s*([A-Za-z]{3})\s*(\d{1,2})/);
@@ -630,6 +646,16 @@
           isActionableNow: false,
           when: r.dateLabel || 'Tue, Sep 9, 2026'
         });
+      }
+    });
+    const done = new Set(w.completedWalkIds || []);
+    const liveId = w.activeWalkStage > 0 && w.activeWalk ? w.activeWalk.id : null;
+    items.forEach((item) => {
+      if (done.has(item.id)) {
+        item.status = 'done';
+        item.isActionableNow = false;
+      } else if (item.id === liveId) {
+        item.status = 'active';
       }
     });
     return items.sort((a, b) => toMinutes(a.time) - toMinutes(b.time));
@@ -917,16 +943,16 @@
     if (greet) greet.textContent = `Hello, ${first}`;
     if (meta) {
       meta.textContent = isApproved(w)
-        ? `${w.group.label} · ${w.group.capacity} kids`
+        ? (w.group?.label && w.group?.capacity ? `${w.group.label} · ${w.group.capacity} kids` : 'Set up your walking group')
         : 'Finish setup to accept walking escorts';
     }
     syncWalkOnlineUi(w);
     if (avatar) {
-      avatar.src = w.photo || '/assets/avatar_sarah.jpg';
+      avatar.src = walkerPhoto(w);
       avatar.alt = w.name || 'WalkShare';
       avatar.onerror = function () { this.onerror = null; this.src = '/assets/avatar_sarah.jpg'; };
     }
-    const schedule = deriveSchedule();
+    const schedule = deriveSchedule().filter((item) => item.status !== 'done');
     const incoming = newRequests();
     let next = schedule[0] || null;
     const live = w.activeWalkStage > 0 && w.activeWalk;
@@ -997,7 +1023,7 @@
     const avatars = kidsList.slice(0, 2).map((c, i) => `<img src="${esc(c.photo || '/assets/avatar_arman.jpg')}" alt="" class="avatar-img-circle${i ? ' overlap' : ''}" onerror="this.src='/assets/avatar_arman.jpg'" />`).join('')
       || `<img src="/assets/avatar_arman.jpg" alt="" class="avatar-img-circle" onerror="this.src='/assets/avatar_arman.jpg'" />`;
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
-    const cap = ensureWalk().group?.capacity || 3;
+    const kidCount = kidsList.length || String(item.childNames || '').split(/\s*[+&,]\s*/).filter(Boolean).length || 1;
     return `<div class="drv-active-card">
       <div class="drv-active-head">
         <h3 class="drv-home-heading">${live ? 'Active walk' : 'Upcoming walk'}</h3>
@@ -1010,7 +1036,7 @@
           <div class="drv-active-route">${esc(item.route || '')}</div>
           <div class="drv-active-meta">
             <span><i data-lucide="clock"></i> ${esc(item.time)}</span>
-            <span><i data-lucide="users"></i> ${cap} kids</span>
+            <span><i data-lucide="users"></i> ${kidCount} ${kidCount === 1 ? 'kid' : 'kids'}</span>
           </div>
         </div>
       </div>
@@ -1220,18 +1246,11 @@
 
   window.acceptWalkShareRequest = function (id) {
     const w = ensureWalk();
-    (w.documents || []).forEach((doc) => {
-      if (doc && doc.status !== 'approved') {
-        doc.status = 'approved';
-        if (!doc.fileDoc) doc.fileDoc = { name: `${doc.id}.pdf`, attached: true };
-        else doc.fileDoc.attached = true;
-      }
-    });
-    if (!docsApproved(w)) w.verificationStatus = 'approved';
-    if (!canAccept(w)) {
-      w.subscription = w.subscription || {};
-      w.subscription.status = 'trial';
-      w.subscription.trialDaysLeft = w.subscription.trialDaysLeft || 14;
+    const gate = acceptGate(w);
+    if (gate) {
+      toast(gate.text, 'error');
+      if (gate.docs) openWsChild('wsOnboardDocs');
+      return;
     }
     const req = w.requests.find((r) => r.id === id);
     if (!req) {
@@ -1322,7 +1341,8 @@
     const back = screen?.querySelector('.back-btn');
     if (back) back.setAttribute('onclick', "navigateTo('wsRequests')");
 
-    const block = req.status === 'new' ? (canAccept(w) ? requestCapacityBlock(w, req) : (docsApproved(w) ? 'Start trial first' : 'Docs must be approved')) : '';
+    const gate = req.status === 'new' ? acceptGate(w) : null;
+    const block = req.status === 'new' ? (gate ? gate.text : requestCapacityBlock(w, req)) : '';
 
     const booking = (state().bookings || []).find((b) => b.id === req.bookingId || b.id === req.id || ('wreq-' + b.id) === req.id);
     const hasAgreedRate = booking && booking.agreedRate && booking.rateStatus === 'agreed';
@@ -1572,18 +1592,18 @@
             <div style="height:1px; background:#F1F5F9; margin:12px 0;"></div>
             <div style="font-size:12.5px; color:#475569; display:flex; align-items:center; gap:6px;">
               <i data-lucide="check-circle" style="width:14px; height:14px; color:#16A34A; flex-shrink:0;"></i>
-              <span>Direct Interac e-Transfer (${esc(w.email || 'sophie.bouchard@interac.ca')}) or Cash</span>
+              <span>Direct Interac e-Transfer (${esc(w.rate?.paymentHandle || w.email || 'your e-Transfer email')}) or Cash</span>
             </div>
           </div>
         </div>
 
-        ${block ? `<p class="drv-home-gate" style="margin-top:14px; margin-bottom:12px;">${esc(block)}</p>` : ''}
+        ${block ? `<p class="drv-home-gate" style="margin-top:14px; margin-bottom:12px;">${esc(block)}${gate && gate.docs ? ` <button type="button" class="ws-gate-link" onclick="openNestedScreen('wsOnboardDocs', event)">Upload documents</button>` : ''}</p>` : ''}
 
         <!-- 7. Bottom Actions / Status -->
         <div style="margin-top:8px;">
           ${isNew ? `
             <div style="display:flex; flex-direction:column; gap:10px;">
-              <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}')" ${(!canAccept(w) || block) ? 'disabled' : ''} style="height:50px; font-size:15px; font-weight:800; border-radius:14px; background:#1B2B68; color:#FFFFFF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(27,43,104,0.25);">
+              <button type="button" class="btn-primary" onclick="acceptWalkShareRequest('${esc(req.id)}')" ${block ? 'disabled' : ''} style="height:50px; font-size:15px; font-weight:800; border-radius:14px; background:#1B2B68; color:#FFFFFF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(27,43,104,0.25);">
                 <i data-lucide="check-circle-2" style="width:18px; height:18px;"></i>
                 <span>Accept Request (${displayRate}/${period})</span>
               </button>
@@ -1704,100 +1724,60 @@
   }
 
   function schedCard(item) {
-    const isReturn = item.leg === 'afternoon';
-    const open = !!item.isActionableNow || item.status === 'active';
-    
-    // Format Date & Time cleanly
-    const rawDate = item.when || item.dateLabel || 'Mon, Sep 7, 2026';
-    const displayDate = formatScheduleTitle(rawDate);
-    const timeText = item.time || '07:45 AM';
-    
-    const from = cleanPlace(item.from || item.pickupLocation) || 'Pickup';
+    const live = item.status === 'active';
+    const done = item.status === 'done';
+    const dateText = formatScheduleTitle(item.when || item.dateLabel || 'Mon, Sep 7, 2026')
+      .replace(/^starts\s+/i, '')
+      .replace(/,?\s*\d{4}$/, '')
+      .replace(/\s+weekly$/i, '');
+    const from = cleanPlace(item.from || item.pickupLocation) || 'Meetup';
     const to = cleanPlace(item.to || item.dropoffLocation || item.schoolLocation) || 'School';
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
-    const parentName = item.parentName || 'Sarah Tremblay';
+    const parentName = item.parentName || 'Parent';
     const kidsText = item.childNames || 'Children';
+    const walkType = item.leg === 'afternoon' ? 'Return' : (item.badge || 'Walk');
+    const id = esc(item.id);
 
-    let ctaHtml = '';
-    if (open) {
-      ctaHtml = `
-        <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(27,43,104,0.2);">
-            <span class="live-dot-pulse" style="width:6px; height:6px; background:#fff; border-radius:50%;"></span>
-            <span>Live Walk</span>
-          </button>
-        </div>`;
-    } else if (item.leg === 'morning') {
-      ctaHtml = `
-        <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#1B2B68; color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(27,43,104,0.2);">
-            <i data-lucide="navigation" style="width:11px; height:11px;"></i>
-            <span>Start</span>
-          </button>
-        </div>`;
-    } else {
-      ctaHtml = `
-        <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
-          <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
-        </div>`;
-    }
-
-    const legBadge = item.leg === 'afternoon' ? 'Return' : (isRound ? 'Round Walk' : 'Morning');
-    const rateVal = String(item.rate || '35').replace(/\D/g, '') || '35';
+    let cta;
+    if (done) cta = '<span class="dsc-done"><i data-lucide="check"></i>Done</span>';
+    else if (live) cta = `<button type="button" class="dsc-cta is-live" onclick="event.stopPropagation(); startWalkShareWalk('${id}')"><span class="dsc-live-dot"></span>Live</button>`;
+    else if (item.isActionableNow) cta = `<button type="button" class="dsc-cta" onclick="event.stopPropagation(); startWalkShareWalk('${id}')">Start</button>`;
+    else cta = '<i data-lucide="chevron-right" class="dsc-chev"></i>';
 
     return `
-      <article class="h2s-booking-card ws-sched-item" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:12px !important;">
-        <!-- Top Row: Date & Direction + Rate -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-          <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
-            <div style="width:38px; height:38px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i data-lucide="footprints" style="width:18px; height:18px;"></i>
-            </div>
-            <div style="min-width:0;">
-              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${displayDate}</div>
-              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${timeText}</div>
-            </div>
+      <article class="dsc-card${done ? ' is-done' : ''}" ${done ? '' : `onclick="startWalkShareWalk('${id}')"`}>
+        <div class="dsc-top">
+          <div class="dsc-when">
+            <div class="dsc-time">${esc(item.time || '07:45 AM')}</div>
+            <div class="dsc-meta">${esc(dateText)} &middot; ${esc(walkType)}</div>
           </div>
-          <div style="text-align:right; flex-shrink:0;">
-            <div style="font-size:18px; font-weight:900; color:#0F172A; letter-spacing:-0.5px; line-height:1.1;">$${rateVal}</div>
-            <div style="font-size:10.5px; font-weight:700; color:#64748B; margin-top:2px;">${legBadge}</div>
-          </div>
+          ${cta}
         </div>
-
-        <!-- Middle Row: Route Rail (Full width clean route without redundant kids count) -->
-        <div style="margin-bottom:12px; background:#F8FAFC; border-radius:12px; padding:10px 12px; border:1px solid #F1F5F9;">
-          <div style="display:flex; flex-direction:column; gap:8px; position:relative; padding-left:2px;">
-            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
-              <span style="width:8px; height:8px; border-radius:50%; background:#1B2B68; flex-shrink:0;"></span>
-              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
-            </div>
-            <div style="position:absolute; left:5.5px; top:8px; bottom:8px; width:1px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
-            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
-              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #1B2B68; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
-              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
-            </div>
-          </div>
+        <div class="dsc-route">
+          <div class="dsc-stop"><span class="dsc-dot"></span><span class="dsc-place">${esc(from)}</span></div>
+          <div class="dsc-stop"><span class="dsc-dot is-end"></span><span class="dsc-place">${esc(to)}</span></div>
         </div>
-
-        <!-- Footer Row: Parent & Kids Info & Action -->
-        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:10px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${parentPhoto}" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1.5px solid #E2E8F0;" onerror="this.src='/assets/avatar_sadia.jpg';" />
-            <div>
-              <div style="font-size:13px; font-weight:800; color:#0F172A; line-height:1.2;">${parentName}</div>
-              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:1px;">${kidsText}</div>
-            </div>
-          </div>
-          ${ctaHtml}
+        <div class="dsc-who">
+          <img src="${parentPhoto}" alt="" onerror="this.src='/assets/avatar_sadia.jpg';" />
+          <span>${esc(kidsText)} &middot; ${esc(parentName)}</span>
         </div>
       </article>`;
   }
 
   window.startWalkShareWalk = function (id) {
     const w = ensureWalk();
-    const item = deriveSchedule().find((x) => x.id === id) || deriveSchedule()[0];
+    if (w.activeWalk && w.activeWalkStage > 0 && (!id || w.activeWalk.id === id)) {
+      window.navigateTo('wsActiveWalk');
+      return;
+    }
+    const item = deriveSchedule().find((x) => x.id === id && x.status !== 'done');
     if (!item) {
       window.navigateTo('wsSchedule');
+      return;
+    }
+    if (w.activeWalk && w.activeWalkStage > 0) {
+      toast('Finish your current walk first');
+      window.navigateTo('wsActiveWalk');
       return;
     }
     w.activeWalk = item;
@@ -2029,15 +2009,21 @@
       return;
     }
     if (w.activeWalkStage >= WALK_STAGES.length - 1) {
-      w.activeWalkStage = 0;
+      const finished = w.activeWalk || {};
+      const req = (w.requests || []).find((r) => r.id === finished.requestId);
       const completedMeta = {
-        bookingId: 'WS-88421',
-        parentName: 'Sarah Tremblay',
-        parentId: 'PRNT-9042',
-        parentPhoto: '/assets/avatar_sadia.jpg',
-        childNames: 'Liam (Gr 4) & Emma (Gr 2)',
-        route: 'Annex Corridor → Sunshine Pre-school'
+        bookingId: req?.bookingId || finished.requestId || '',
+        parentName: finished.parentName || req?.parentName || 'Parent',
+        parentId: finished.parentId || req?.parentId || '',
+        parentPhoto: PARENTS[finished.parentId]?.photo || req?.parentPhoto || '/assets/avatar_sadia.jpg',
+        childNames: finished.childNames || '',
+        route: finished.route || ''
       };
+      if (finished.id) {
+        w.completedWalkIds = Array.from(new Set([...(w.completedWalkIds || []), finished.id]));
+      }
+      w.activeWalkStage = 0;
+      w.activeWalkChildState = {};
       w.activeWalk = null;
       persist();
       toast('Walk complete. Parent can see the drop-off update.');
@@ -2195,8 +2181,8 @@
     const el = feed('wsSetupFeed');
     if (!el) return;
     const steps = [
-      ['profile', '1. Profile', w.name + ' · ' + w.phone, 'wsOnboardProfile'],
-      ['group', '2. Walking group', `${w.group.label} · ${w.group.capacity} kids`, 'wsOnboardGroup'],
+      ['profile', '1. Profile', [w.name, w.phone].filter(Boolean).join(' · ') || 'Add your details', 'wsOnboardProfile'],
+      ['group', '2. Walking group', w.group?.label && w.group?.capacity ? `${w.group.label} · ${w.group.capacity} kids` : 'Not set up yet', 'wsOnboardGroup'],
       ['docs', '3. Documents', (w.documents.filter((d) => d.status === 'approved').length) + ' / ' + w.documents.length + ' approved', 'wsOnboardDocs'],
       ['availability', '4. Availability', availSummary(w.availability), 'wsOnboardAvailability'],
       ['rate', '5. Payment & Rates', `$${w.rate.amount} / week · ${w.rate.paymentMethod || 'Interac'}`, 'wsOnboardRate']
@@ -2242,13 +2228,13 @@
       <!-- 1. Escort Profile Hero Card -->
       <div class="profile-user-card" role="button" tabindex="0" onclick="openNestedScreen('wsOnboardProfile', event)" style="margin-bottom:12px;">
         <div style="position: relative; flex-shrink: 0;">
-          <img src="${esc(w.photo || '/assets/avatar_sarah.jpg')}" alt="${esc(w.name)}" class="profile-user-avatar" style="width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 2.5px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.25);" onerror="this.src='/assets/avatar_sarah.jpg'" />
+          <img src="${esc(walkerPhoto(w))}" alt="${esc(w.name)}" class="profile-user-avatar" style="width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 2.5px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.25);" onerror="this.src='/assets/avatar_sarah.jpg'" />
           <span style="position: absolute; bottom: 0; right: 0; background: ${w.isOnline ? '#10B981' : '#94A3B8'}; border: 2px solid #09122C; border-radius: 50%; width: 12px; height: 12px;" title="${w.isOnline ? 'Online' : 'Offline'}"></span>
         </div>
         <div class="profile-user-meta">
           <div class="profile-user-top">
             <div class="profile-user-name-row">
-              <h3 class="profile-user-name">${esc(w.name || 'Sarah Jenkins')}</h3>
+              <h3 class="profile-user-name">${esc(w.name || 'Your profile')}</h3>
               ${isApproved(w) ? `
                 <span class="profile-verified-badge-wrap" title="Verified Escort">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" style="vertical-align:middle;">
@@ -2262,10 +2248,10 @@
           <p class="profile-user-role" style="font-size:12.5px; color:#BAE6FD; margin:2px 0 0 0; font-weight:500;">
             WalkShare Guide
           </p>
-          <p class="profile-user-rating" style="margin:2px 0 0 0; font-size:12px; color:#FCD34D; font-weight:600; display:flex; align-items:center; gap:4px;">
+          ${w.skipDemoUnlock ? '' : `<p class="profile-user-rating" style="margin:2px 0 0 0; font-size:12px; color:#FCD34D; font-weight:600; display:flex; align-items:center; gap:4px;">
             <span>★ ${Number(w.rating || 4.9).toFixed(1)}</span>
-            <span style="color:rgba(255,255,255,0.75); font-weight:400;">(38 walks)</span>
-          </p>
+            <span style="color:rgba(255,255,255,0.75); font-weight:400;">(${Number(w.reviewsCount || 0)} reviews)</span>
+          </p>`}
         </div>
       </div>
 
@@ -2409,7 +2395,7 @@
 
       <div class="drv-actions-col">
         <button type="button" class="auth-btn-primary" onclick="completeWalkShareProfileAndOpenHome()" style="height: 52px; font-size: 15px; font-weight: 700; border-radius: 14px;">
-          <span>${editing ? 'Save Profile Changes' : 'Activate & Enter WalkShare Dashboard'}</span>
+          <span>${editing ? 'Save Profile Changes' : 'Save & go to dashboard'}</span>
           <div class="auth-btn-arrow-circle">
             <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
           </div>
@@ -2421,90 +2407,37 @@
             <i data-lucide="chevron-right" style="width:15px;height:15px;color:#64748B;"></i>
           </button>
         `}
-
-        <div style="text-align:center; font-size:12px; color:#64748B; margin-top:12px; line-height:1.45; background:#F8FAFC; padding:10px 14px; border-radius:12px; border:1px dashed #CBD5E1;">
-          <div style="display:flex; align-items:center; justify-content:center; gap:5px; font-weight:700; color:#1B2B68; margin-bottom:2px;">
-            <i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10B981;"></i>
-            <span>Quick Start Ready</span>
-          </div>
-          Availability schedule, walking corridors & student rates can be configured anytime from your <b>WalkShare Profile</b>.
-        </div>
       </div>
     `;
     icons();
   }
 
-  window.completeWalkShareProfileAndOpenHome = function () {
+  function finishWalkShareSetup() {
     const w = ensureWalk();
-    w.name = document.getElementById('wsProfileName')?.value || w.name || 'Sarah Jenkins';
-    w.phone = document.getElementById('wsProfilePhone')?.value || w.phone || '+1 (416) 555-0199';
-    w.email = document.getElementById('wsProfileEmail')?.value || w.email || 'sarah.jenkins@walkshare.ca';
-    w.serviceArea = document.getElementById('wsProfileArea')?.value || w.serviceArea || 'Elm St → Greenfield Public School';
-    w.experience = document.getElementById('wsProfileExp')?.value || w.experience || 'CPR & First Aid Certified, 4+ Years';
-    w.bio = document.getElementById('wsProfileBio')?.value || w.bio || 'Certified neighborhood walking school bus escort. Keeping children safe, attentive, and active on their morning and afternoon school walks.';
-    w.about = w.bio;
-
-    if (!w.group || !w.group.route) {
-      w.group = {
-        label: 'Greenfield Walking Group',
-        capacity: 6,
-        route: w.serviceArea || 'Elm St → Greenfield Public School',
-        ...w.group
-      };
-    }
-
-    if (!w.availability || !w.availability.weekly || !w.availability.weekly.length) {
-      w.availability = {
-        weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-        windows: [
-          { name: 'Morning Walk', start: '07:30', end: '08:45', enabled: true },
-          { name: 'Afternoon Return', start: '14:45', end: '16:00', enabled: true }
-        ],
-        ...w.availability
-      };
-    }
-
-    if (!w.rate || !w.rate.monthlyBase) {
-      w.rate = {
-        monthlyBase: 95,
-        perKm: 0.85,
-        siblingDiscount: 20,
-        ...w.rate
-      };
-    }
-
-    w.onboarding = {
-      profile: true,
-      group: true,
-      docs: true,
-      availability: true,
-      rate: true
-    };
     if (!w.subscription || !w.subscription.status) {
       w.subscription = { status: 'trial', trialDaysLeft: 14, plan: 'monthly' };
     }
-    w.isOnline = true;
-
-    const provider = (state().providers || []).find((p) => p.id === 'sarah');
-    if (provider) {
-      provider.name = w.name;
-      provider.phone = w.phone;
-      provider.email = w.email;
-      provider.bio = w.bio;
-      provider.about = w.bio;
-      provider.serviceArea = w.serviceArea;
-      provider.experience = w.experience;
-      provider.zone = window.H2SZone ? window.H2SZone.clean(w.group.route || w.serviceArea) : (w.group.route || w.serviceArea);
-      provider.seats = w.group.capacity || 6;
-    }
-
     persist();
     if (typeof window.syncRoleCapsuleUI === 'function') window.syncRoleCapsuleUI('walkshare');
-    toast('Account activated! You can update route, availability & rates anytime in Profile.', 'success');
-    if (window.navReturnStack && window.navReturnStack.length) {
-      window.navReturnStack.length = 0;
-    }
+    if (window.navReturnStack && window.navReturnStack.length) window.navReturnStack.length = 0;
+    toast('Saved. Finish the rest anytime from Profile.', 'success');
     window.navigateTo('wsHome', true);
+  }
+
+  window.completeWalkShareProfileAndOpenHome = function () {
+    if (editingProfileChild()) {
+      window.saveWalkShareProfile();
+      return;
+    }
+    const val = (id) => String(document.getElementById(id)?.value || '').trim();
+    const name = val('wsProfileName');
+    const phone = val('wsProfilePhone');
+    if (document.getElementById('wsProfileName') && (!name || !phone)) {
+      toast('Add your name and phone to continue', 'error');
+      return;
+    }
+    window.saveWalkShareProfile(true);
+    finishWalkShareSetup();
   };
 
   window.onWalkShareProfilePhoto = function (event) {
@@ -2522,7 +2455,7 @@
     reader.readAsDataURL(file);
   };
 
-  window.saveWalkShareProfile = function () {
+  window.saveWalkShareProfile = function (skipNav) {
     const w = ensureWalk();
     w.name = document.getElementById('wsProfileName')?.value || w.name;
     w.phone = document.getElementById('wsProfilePhone')?.value || w.phone;
@@ -2543,8 +2476,9 @@
         ? window.H2SZone.clean(w.group?.route || w.serviceArea)
         : (w.group?.route || w.serviceArea);
     }
-    w.onboarding.profile = true;
+    w.onboarding.profile = Boolean(String(w.name || '').trim() && String(w.phone || '').trim());
     persist();
+    if (skipNav === true) return;
     if (editingProfileChild()) {
       toast('Profile updated');
       window.backNested('wsProfile');
@@ -2579,25 +2513,25 @@
         <!-- Walking Group Name -->
         <div class="auth-input-group" style="margin-bottom:0;">
           <div class="auth-input-icon"><i data-lucide="users" style="width:18px;height:18px;"></i></div>
-          <input class="auth-input" id="wsGroupLabel" value="${esc(w.group.label || 'Neighborhood Walking Group')}" placeholder="Walking Group Name (e.g. Greenfield Walking Group)" />
+          <input class="auth-input" id="wsGroupLabel" value="${esc(w.group.label || '')}" placeholder="Group name" />
         </div>
 
         <!-- Max Student Capacity -->
         <div class="auth-input-group" style="margin-bottom:0;">
           <div class="auth-input-icon"><i data-lucide="user-check" style="width:18px;height:18px;"></i></div>
-          <input class="auth-input" type="number" min="2" max="10" id="wsGroupCap" value="${esc(w.group.capacity || 6)}" placeholder="Max Student Capacity (Kids)" />
+          <input class="auth-input" type="number" min="2" max="10" id="wsGroupCap" value="${esc(w.group.capacity || '')}" placeholder="How many kids can you walk?" />
         </div>
 
         <!-- Walking Corridor / Route -->
         <div class="auth-input-group" style="margin-bottom:0;">
           <div class="auth-input-icon"><i data-lucide="map-pin" style="width:18px;height:18px;"></i></div>
-          <input class="auth-input" id="wsGroupRoute" value="${esc(w.group.route || 'Elm St → Greenfield Public School')}" placeholder="Walking corridor / route" />
+          <input class="auth-input" id="wsGroupRoute" value="${esc(w.group.route || '')}" placeholder="Walking route (e.g. Elm St to Greenfield School)" />
         </div>
       </div>
 
       <div class="drv-actions-col">
         <button type="button" class="auth-btn-primary" onclick="completeWalkShareGroupAndOpenHome()" style="height: 52px; font-size: 15px; font-weight: 700; border-radius: 14px;">
-          <span>${editing ? 'Save Changes' : 'Save & Enter WalkShare Dashboard'}</span>
+          <span>${editing ? 'Save Changes' : 'Save & go to dashboard'}</span>
           <div class="auth-btn-arrow-circle">
             <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
           </div>
@@ -2609,35 +2543,31 @@
             <i data-lucide="chevron-right" style="width:15px;height:15px;color:#64748B;"></i>
           </button>
         `}
-
-        <div style="text-align:center; font-size:12px; color:#64748B; margin-top:12px; line-height:1.45; background:#F8FAFC; padding:10px 14px; border-radius:12px; border:1px dashed #CBD5E1;">
-          <div style="display:flex; align-items:center; justify-content:center; gap:5px; font-weight:700; color:#1B2B68; margin-bottom:2px;">
-            <i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10B981;"></i>
-            <span>Flexible Setup</span>
-          </div>
-          Availability hours, route exceptions & student pricing can be customized anytime from your <b>WalkShare Profile</b>.
-        </div>
       </div>
     `;
     icons();
   }
 
   window.completeWalkShareGroupAndOpenHome = function () {
+    if (editingProfileChild()) {
+      window.saveWalkShareGroup();
+      return;
+    }
     window.saveWalkShareGroup(true);
-    window.completeWalkShareProfileAndOpenHome();
+    finishWalkShareSetup();
   };
 
   window.saveWalkShareGroup = function (skipNav) {
     const w = ensureWalk();
-    w.group.label = document.getElementById('wsGroupLabel')?.value || w.group.label;
-    w.group.capacity = Number(document.getElementById('wsGroupCap')?.value || w.group.capacity);
-    w.group.route = document.getElementById('wsGroupRoute')?.value || w.group.route;
+    w.group.label = String(document.getElementById('wsGroupLabel')?.value || '').trim() || w.group.label || '';
+    w.group.capacity = Number(document.getElementById('wsGroupCap')?.value || w.group.capacity) || 0;
+    w.group.route = String(document.getElementById('wsGroupRoute')?.value || '').trim() || w.group.route || '';
     const provider = (state().providers || []).find((p) => p.id === 'sarah');
     if (provider) {
       provider.zone = window.H2SZone ? window.H2SZone.clean(w.group.route || w.serviceArea) : (w.group.route || w.serviceArea);
       provider.seats = w.group.capacity;
     }
-    w.onboarding.group = true;
+    w.onboarding.group = Boolean(w.group.label && w.group.capacity > 0);
     persist();
     if (skipNav) return;
     if (editingProfileChild()) {
@@ -4096,16 +4026,6 @@
     stream.scrollTop = stream.scrollHeight;
   }
 
-  function appendTheirs(text) {
-    const stream = document.getElementById('chatStream');
-    if (!stream) return;
-    const bubble = document.createElement('div');
-    bubble.className = 'chat-bubble provider';
-    bubble.innerHTML = `${esc(text)}<div class="chat-timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
-    stream.appendChild(bubble);
-    stream.scrollTop = stream.scrollHeight;
-  }
-
   const prevQuick = window.sendQuickReply;
   window.sendQuickReply = function (text) {
     if (state().activeRole === 'walkshare') {
@@ -4127,7 +4047,7 @@
     if (!input || !input.value.trim()) return;
     appendMine(input.value.trim());
     input.value = '';
-    setTimeout(() => appendTheirs('Got it — thanks Sarah.'), 900);
+    setTimeout(() => appendTheirs('Got it — thank you!'), 900);
   };
 
   function renderNotifications() {

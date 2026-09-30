@@ -4237,92 +4237,50 @@
   function scheduleCard(item) {
     const actionable = !!item.isActionableNow;
     const open = item.status === 'active';
-    
-    // Format Date & Time cleanly
+    const mode = open ? 'active' : (actionable ? 'soon' : 'prep');
+
     const rawDate = item.when || item.dateLabel || 'Mon, Sep 7, 2026';
-    const displayDate = formatScheduleTitle(rawDate);
+    const dateText = formatScheduleTitle(rawDate)
+      .replace(/^starts\s+/i, '')
+      .replace(/,?\s*\d{4}$/, '')
+      .replace(/\s+weekly$/i, '');
     const timeText = item.time || '07:30 AM';
-    
+
     const from = cleanPlace(item.from || item.pickupLocation) || 'Pickup';
     const to = cleanPlace(item.to || item.dropoffLocation || item.schoolLocation) || 'School';
     const parentPhoto = PARENTS[item.parentId]?.photo || '/assets/avatar_sadia.jpg';
     const parentName = item.parentName || 'Sarah Tremblay';
     const kidsText = item.childNames || 'Children';
 
-    let ctaHtml = '';
+    const booking = (state().bookings || []).find((b) => b.id === item.bookingId);
+    const isRound = item.isRoundTrip || (item.returnTime != null) || (booking && booking.direction === 'bothway') || (item.frequency === 'recurring');
+    const tripType = item.leg === 'afternoon' ? 'Return' : (isRound ? 'Round trip' : 'One way');
+
+    let cta;
     if (open) {
-      ctaHtml = `
-        <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startDriverTrip('${item.id}', 'active')" style="background:var(--color-primary, #1B2B68); color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(27,43,104,0.25);">
-            <span class="live-dot-pulse" style="width:6px; height:6px; background:#60A5FA; border-radius:50%;"></span>
-            <span>Live Trip</span>
-          </button>
-        </div>`;
+      cta = `<button type="button" class="dsc-cta is-live" onclick="event.stopPropagation(); startDriverTrip('${item.id}', 'active')"><span class="dsc-live-dot"></span>Live</button>`;
     } else if (actionable) {
-      ctaHtml = `
-        <div style="display:flex; align-items:center;" onclick="event.stopPropagation();">
-          <button type="button" onclick="startDriverTrip('${item.id}', 'soon')" style="background:var(--color-primary, #1B2B68); color:#FFFFFF; border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(27,43,104,0.2);">
-            <i data-lucide="send" style="width:11px; height:11px;"></i>
-            <span>Start</span>
-          </button>
-        </div>`;
+      cta = `<button type="button" class="dsc-cta" onclick="event.stopPropagation(); startDriverTrip('${item.id}', 'soon')">Start</button>`;
     } else {
-      ctaHtml = `
-        <div style="width:28px; height:28px; border-radius:50%; background:#F8FAFC; color:#94A3B8; display:flex; align-items:center; justify-content:center;">
-          <i data-lucide="chevron-right" style="width:15px; height:15px;"></i>
-        </div>`;
+      cta = `<i data-lucide="chevron-right" class="dsc-chev"></i>`;
     }
 
-    // Determine Round Trip vs 1-Way Trip
-    const booking = (state().bookings || []).find((b) => b.id === item.bookingId);
-    const isRound = item.isRoundTrip || (item.returnTime != null) || (item.leg === 'afternoon') || (booking && booking.direction === 'bothway') || (item.frequency === 'recurring');
-    const legBadge = item.leg === 'afternoon' ? 'Return' : (isRound ? 'Round Trip' : 'Morning');
-    const rateVal = String(item.rate || (booking?.rate || '45')).replace(/\D/g, '') || '45';
-
     return `
-      <article class="h2s-booking-card drv-sched-item" onclick="startDriverTrip('${item.id}', '${open ? 'active' : (actionable ? 'soon' : 'prep')}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:12px !important;">
-        <!-- Top Row: Date & Trip Type Pill + Rate -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-          <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
-            <div style="width:38px; height:38px; border-radius:10px; background:rgba(27,43,104,0.08); color:#1B2B68; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i data-lucide="calendar" style="width:18px; height:18px;"></i>
-            </div>
-            <div style="min-width:0;">
-              <div style="font-size:14px; font-weight:800; color:#0F172A; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${displayDate}</div>
-              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:2px;">${timeText}</div>
-            </div>
+      <article class="dsc-card" onclick="startDriverTrip('${item.id}', '${mode}')">
+        <div class="dsc-top">
+          <div class="dsc-when">
+            <div class="dsc-time">${esc(timeText)}</div>
+            <div class="dsc-meta">${esc(dateText)} &middot; ${tripType}</div>
           </div>
-          <div style="text-align:right; flex-shrink:0;">
-            <div style="font-size:18px; font-weight:900; color:#0F172A; letter-spacing:-0.5px; line-height:1.1;">$${rateVal}</div>
-            <div style="font-size:10.5px; font-weight:700; color:#64748B; margin-top:2px;">${legBadge}</div>
-          </div>
+          ${cta}
         </div>
-
-        <!-- Middle Row: Route Rail (Clean, full width without redundant seats count) -->
-        <div style="margin-bottom:12px; background:#F8FAFC; border-radius:12px; padding:10px 12px; border:1px solid #F1F5F9;">
-          <div style="display:flex; flex-direction:column; gap:8px; position:relative; padding-left:2px;">
-            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
-              <span style="width:8px; height:8px; border-radius:50%; background:#1B2B68; flex-shrink:0;"></span>
-              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${from}</span>
-            </div>
-            <div style="position:absolute; left:5.5px; top:8px; bottom:8px; width:1px; border-left:1.5px dashed #CBD5E1; z-index:1;"></div>
-            <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:2;">
-              <span style="width:8px; height:8px; border-radius:50%; border:2px solid #1B2B68; background:#FFFFFF; flex-shrink:0; box-sizing:border-box;"></span>
-              <span style="font-size:12.5px; font-weight:700; color:#1E293B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${to}</span>
-            </div>
-          </div>
+        <div class="dsc-route">
+          <div class="dsc-stop"><span class="dsc-dot"></span><span class="dsc-place">${esc(from)}</span></div>
+          <div class="dsc-stop"><span class="dsc-dot is-end"></span><span class="dsc-place">${esc(to)}</span></div>
         </div>
-
-        <!-- Footer Row: Parent & Kids Info & Action -->
-        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #F1F5F9; padding-top:10px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${parentPhoto}" alt="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1.5px solid #E2E8F0;" onerror="this.src='/assets/avatar_sadia.jpg';" />
-            <div>
-              <div style="font-size:13px; font-weight:800; color:#0F172A; line-height:1.2;">${parentName}</div>
-              <div style="font-size:11.5px; font-weight:600; color:#64748B; margin-top:1px;">${kidsText}</div>
-            </div>
-          </div>
-          ${ctaHtml}
+        <div class="dsc-who">
+          <img src="${parentPhoto}" alt="" onerror="this.src='/assets/avatar_sadia.jpg';" />
+          <span>${esc(kidsText)} &middot; ${esc(parentName)}</span>
         </div>
       </article>`;
   }

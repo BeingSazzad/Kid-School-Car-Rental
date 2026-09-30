@@ -24205,3 +24205,34 @@ label.drv-upload-tile {
 .hp-cam-frame span:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 8px; }
 .hp-cam-frame span:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 8px; }
 .hp-cam-frame span:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 8px; }
+
+/* ===== Driver + WalkShare schedule card: minimal ===== */
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-card { background: #FFFFFF; border: 1px solid #ECECF0; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; cursor: pointer; text-align: left; box-sizing: border-box; width: 100%; margin: 0; box-shadow: none; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-card:active { background: #F0F3FA; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-when { min-width: 0; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-time { font-size: 16px; font-weight: 700; color: #1A1D24; line-height: 1.25; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-meta { font-size: 12px; font-weight: 500; color: #6B7280; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-cta { flex-shrink: 0; height: 32px; padding: 0 16px; border-radius: 999px; border: 0; background: #1B2B68; color: #FFFFFF; font: 700 12px/1 Manrope, sans-serif; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: none; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-cta.is-live { background: #F0F3FA; color: #1B2B68; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #F2600C; animation: dscPulse 1.4s ease-in-out infinite; }
+@keyframes dscPulse { 50% { opacity: 0.35; } }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-chev { width: 16px; height: 16px; color: #6B7280; flex-shrink: 0; margin-top: 2px; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-route { display: flex; flex-direction: column; gap: 8px; position: relative; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-route::before { content: ''; position: absolute; left: 3px; top: 10px; bottom: 10px; width: 1px; background: #ECECF0; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-stop { display: flex; align-items: center; gap: 12px; min-width: 0; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-dot { position: relative; width: 7px; height: 7px; border-radius: 50%; background: #1B2B68; flex-shrink: 0; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-dot.is-end { border-radius: 2px; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-place { font-size: 14px; font-weight: 500; color: #1A1D24; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-who { display: flex; align-items: center; gap: 8px; min-width: 0; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-who img { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-who span { font-size: 12px; font-weight: 500; color: #6B7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-card.is-done { cursor: default; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-card.is-done .dsc-time,
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-card.is-done .dsc-place { color: #6B7280; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-done { flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #6B7280; }
+:is(#screen-driverSchedule, #screen-wsSchedule) .dsc-done svg { width: 14px; height: 14px; }
+#screen-wsSchedule .drv-sched-list { display: flex; flex-direction: column; gap: 12px; }
+
+/* ===== WalkShare request gate link ===== */
+#screen-wsRequestDetail .ws-gate-link { background: none; border: 0; padding: 0; margin-left: 4px; font: 700 12px/1.4 Manrope, sans-serif; color: #1B2B68; text-decoration: underline; cursor: pointer; }
