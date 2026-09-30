@@ -3751,7 +3751,7 @@
     }
 
     return `
-      <article class="h2s-booking-card" onclick="openDriverRequest('${req.id}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
+      <article class="h2s-booking-card drv-req-item" onclick="openDriverRequest('${req.id}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:10px !important;">
         <!-- Top Row: Date & Direction -->
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:10px;">
@@ -4461,7 +4461,7 @@
     const tripTypePill = '';
 
     return `
-      <article class="h2s-booking-card" onclick="startDriverTrip('${item.id}', '${open ? 'active' : (actionable ? 'soon' : 'prep')}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
+      <article class="h2s-booking-card drv-sched-item" onclick="startDriverTrip('${item.id}', '${open ? 'active' : (actionable ? 'soon' : 'prep')}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:10px !important;">
         <!-- Top Row: Date & Trip Type Pill -->
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
           <div style="display:flex; align-items:center; gap:10px;">
@@ -4746,6 +4746,12 @@
     if (d.activeTripStage >= TRIP_STAGES.length - 1) {
       d.activeTripStage = 0;
       if (d.activeTrip) d.activeTrip.completedLeg = d.activeTrip.leg;
+      if (window.photoProofData) {
+        const now = new Date();
+        window.photoProofData.dropoff.time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' (Live)';
+        window.photoProofData.dropoff.badge = '✓ Live Verified Drop-off';
+        if (typeof window.syncPhotoProofThumbnails === 'function') window.syncPhotoProofThumbnails();
+      }
       persist();
       window.navigateTo('driverRateParent');
       toast('Trip complete. Return leg stays on your schedule.');

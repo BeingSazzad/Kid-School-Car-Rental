@@ -1125,7 +1125,7 @@
     }
 
     return `
-      <article class="h2s-booking-card" onclick="openWalkShareRequest('${esc(req.id)}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
+      <article class="h2s-booking-card ws-req-item" onclick="openWalkShareRequest('${esc(req.id)}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(15,23,42,0.03); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:10px !important;">
         <!-- Top Row: Date & Direction -->
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:10px;">
@@ -1745,7 +1745,7 @@
     const dirPillHtml = '';
 
     return `
-      <article class="h2s-booking-card" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease;">
+      <article class="h2s-booking-card ws-sched-item" onclick="startWalkShareWalk('${esc(item.id)}')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; text-align:left; box-sizing:border-box; width:100%; transition: all 0.15s ease; display:flex !important; flex-direction:column !important; gap:10px !important;">
         <!-- Top Row: Date & Direction -->
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
           <div style="display:flex; align-items:center; gap:10px;">

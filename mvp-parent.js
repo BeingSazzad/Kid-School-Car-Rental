@@ -1557,6 +1557,7 @@
     } else {
       state().activeTrackingBookingId = null;
     }
+    if (typeof window.syncPhotoProofThumbnails === 'function') window.syncPhotoProofThumbnails();
     window.navigateTo('tracking');
   };
 
@@ -1670,6 +1671,7 @@
     renderRideSwitcher(live, booking.id);
     if (typeof originalTracking === 'function') originalTracking();
     bindTrackingCopy(booking);
+    if (typeof window.syncPhotoProofThumbnails === 'function') window.syncPhotoProofThumbnails();
     if (window.updateNavLiveBadges) window.updateNavLiveBadges();
     if (window.lucide) window.lucide.createIcons();
   };

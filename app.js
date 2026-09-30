@@ -4715,6 +4715,7 @@ function renderBookingConfirmation() {
 window.openBookingDetails = function (bookingId, returnScreen) {
   window.appState.activeBookingId = bookingId;
   window._bookingDetailsReturnScreen = returnScreen || (window.currentScreen !== 'bookingDetails' ? window.currentScreen : 'bookings');
+  if (typeof window.syncPhotoProofThumbnails === 'function') window.syncPhotoProofThumbnails();
   window.navigateTo('bookingDetails');
 };
 
@@ -10360,10 +10361,18 @@ window.switchPhotoProofTab = function (tab) {
   const img = document.getElementById('photoProofImg');
   const locTitle = document.getElementById('photoProofLocationTitle');
   const timeText = document.getElementById('photoProofTimeText');
+  const badgeText = document.getElementById('photoProofBadgeText');
+  const desc = document.getElementById('photoProofDesc');
   
-  if (img) img.src = data.photo;
-  if (locTitle) locTitle.textContent = data.location;
-  if (timeText) timeText.textContent = data.time;
+  if (img && data.photo) img.src = data.photo;
+  if (locTitle && data.location) locTitle.textContent = data.location;
+  if (timeText && data.time) timeText.textContent = data.time;
+  if (badgeText) badgeText.textContent = tab === 'dropoff' ? 'Verified Drop-off Proof' : 'Verified Pickup Proof';
+  if (desc) {
+    desc.textContent = tab === 'dropoff' 
+      ? 'Liam & Emma safely arrived at Greenfield International School gate.' 
+      : 'Liam & Emma safely boarded Robert MacDonald\'s Toyota Sienna.';
+  }
   
   if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 };
@@ -10373,19 +10382,35 @@ window.syncPhotoProofThumbnails = function () {
   const dropoffThumb = document.getElementById('trackingDropoffThumbImg');
   const pickupTime = document.getElementById('trackingPickupTimeLbl');
   const dropoffTime = document.getElementById('trackingDropoffTimeLbl');
+  const detailThumb = document.getElementById('detailProofThumbImg');
+  const detailCode = document.getElementById('detailSafetyPinBannerCode');
   
-  if (pickupThumb && window.photoProofData?.pickup?.photo) {
-    pickupThumb.src = window.photoProofData.pickup.photo;
+  const pData = window.photoProofData?.pickup;
+  const dData = window.photoProofData?.dropoff;
+
+  if (pickupThumb && pData?.photo) {
+    pickupThumb.src = pData.photo;
   }
-  if (dropoffThumb && window.photoProofData?.dropoff?.photo) {
-    dropoffThumb.src = window.photoProofData.dropoff.photo;
+  if (dropoffThumb && dData?.photo) {
+    dropoffThumb.src = dData.photo;
   }
-  if (pickupTime && window.photoProofData?.pickup?.time) {
-    pickupTime.textContent = window.photoProofData.pickup.time;
+  if (detailThumb) {
+    detailThumb.src = (dData?.photo && dData?.time && window.appState?.trackingStageIndex >= 4) ? dData.photo : (pData?.photo || '/assets/onboarding1.jpg');
   }
-  if (dropoffTime && window.photoProofData?.dropoff?.time) {
-    dropoffTime.textContent = window.photoProofData.dropoff.time;
+  if (pickupTime && pData?.time) {
+    pickupTime.textContent = pData.time;
   }
+  if (dropoffTime && dData?.time) {
+    dropoffTime.textContent = dData.time;
+  }
+  if (detailCode) {
+    if (dData?.time && (window.appState?.trackingStageIndex >= 4 || window.currentPhotoProofTab === 'dropoff')) {
+      detailCode.textContent = `Drop-off verified at ${dData.time} • Tap to view proof`;
+    } else if (pData?.time) {
+      detailCode.textContent = `Pickup verified at ${pData.time} • Tap to view proof`;
+    }
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 };
 
 window.handlePhotoProofUpload = function (input) {

@@ -693,27 +693,41 @@
     /* ==========================================================================
        Activity & Booking Cards — Standard Compact Spacing & Brand Palette
        ========================================================================== */
-    .h2s-booking-card,
-    .ub-booking-card {
+    .h2s-booking-card {
       background: #FFFFFF !important;
       border: 1px solid #E2E8F0 !important;
-      border-radius: 14px !important;
-      padding: 12px 14px !important;
-      margin-bottom: 10px !important;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03) !important;
+      border-radius: 16px !important;
+      padding: 14px 16px !important;
+      margin-bottom: 12px !important;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04) !important;
       cursor: pointer !important;
       text-align: left !important;
       box-sizing: border-box !important;
       width: 100% !important;
       display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 12px !important;
+      flex-direction: column !important;
+      gap: 10px !important;
       transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease !important;
       font-family: inherit !important;
     }
 
-    .h2s-booking-card:hover,
+    .h2s-booking-card:hover {
+      border-color: #CBD5E1 !important;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    .ub-booking-card {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+      padding: 12px 14px !important;
+      border-radius: 14px !important;
+      margin-bottom: 10px !important;
+    }
+
     .ub-booking-card:hover {
       border-color: #CBD5E1 !important;
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
@@ -7646,6 +7660,31 @@
           </div>
         </section>
 
+        <!-- 1B. Handover Verification & Photo Proof Card -->
+        <section class="trip-figma-item-card" id="detailSafetyPinBanner" onclick="openTripPhotoProofModal('pickup')" style="cursor: pointer; background: #FFFFFF; border-left: 4px solid #10B981; margin-bottom: 12px;" title="View Child Handover Photo Proof">
+          <div class="trip-figma-item-left" style="gap: 12px;">
+            <div style="position: relative; width: 42px; height: 42px; border-radius: 10px; overflow: hidden; border: 1.5px solid #E2E8F0; flex-shrink: 0; background: #0F172A;">
+              <img id="detailProofThumbImg" src="/assets/onboarding1.jpg" alt="Handover Proof" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='/assets/auth_hero.jpg';" />
+              <div style="position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; background: #10B981; border-radius: 4px 0 0 0; display: flex; align-items: center; justify-content: center; color: #FFF;">
+                <i data-lucide="check" style="width: 10px; height: 10px; stroke-width: 3;"></i>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div class="trip-figma-item-title" style="font-size: 13.5px; font-weight: 800; color: #0F172A;">Handover Photo Proof</div>
+                <span style="font-size: 10px; font-weight: 800; background: #DCFCE7; color: #15803D; padding: 1.5px 6px; border-radius: 9999px;">Verified</span>
+              </div>
+              <div class="trip-figma-item-sub" id="detailSafetyPinBannerCode" style="color: #64748B; font-size: 11.5px; margin-top: 2px;">
+                Pickup verified at 07:34 AM • Tap to view full photo
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px; color: #2563EB; font-size: 12px; font-weight: 700;">
+            <span>View</span>
+            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+          </div>
+        </section>
+
         <!-- 2. Driver Card (Figma 1:1) -->
         <section class="trip-figma-driver-card">
           <div class="trip-figma-driver-left" onclick="openDriverProfile(window.currentBookingProviderId || 'tariq', 'bookingDetails')">
@@ -8004,20 +8043,49 @@
             </div>
           </div>
 
-          <!-- Clutter-Free Quick Action: Jump to Full Ride Details (where photo proof & route live) -->
-          <div style="margin: 10px 0 6px;">
-            <button type="button" class="tracking-view-details-btn" onclick="openBookingDetails(window.appState.activeBookingId || 'H2S-84920', 'tracking')"
-              style="width: 100%; height: 42px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; cursor: pointer; transition: all 0.15s ease; box-shadow: 0 1px 3px rgba(15,23,42,0.03);"
-              title="View Ride Details &amp; Handover Photo Proof">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 26px; height: 26px; border-radius: 8px; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <i data-lucide="file-text" style="width: 14px; height: 14px;"></i>
+          <!-- Live Handover Photo Proof Strip (Direct Safe Handover Photo Access) -->
+          <div class="tracking-photo-proof-card" id="trackingPhotoProofCard" onclick="openTripPhotoProofModal(window.photoProofData?.dropoff?.time ? 'dropoff' : 'pickup')"
+            style="margin: 10px 0 6px; background: linear-gradient(135deg, #F0FDF4 0%, #EFF6FF 100%); border: 1.5px solid #BBF7D0; border-radius: 12px; padding: 8px 12px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.15s ease; box-shadow: 0 1px 4px rgba(16, 185, 129, 0.08);"
+            title="View Live Child Handover Photo Proof">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+              <div style="position: relative; width: 40px; height: 40px; border-radius: 9px; overflow: hidden; border: 1.5px solid #FFFFFF; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; background: #0F172A;">
+                <img id="trackingPickupThumbImg" src="/assets/onboarding1.jpg" alt="Pickup Photo" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='/assets/auth_hero.jpg';" />
+                <div style="position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; background: #10B981; border-radius: 4px 0 0 0; display: flex; align-items: center; justify-content: center; color: #FFF;">
+                  <i data-lucide="check" style="width: 9px; height: 9px; stroke-width: 3;"></i>
                 </div>
-                <span style="font-size: 13px; font-weight: 700; color: #0F172A;">Ride Details &amp; Verification</span>
+              </div>
+              <div style="min-width: 0; flex: 1;">
+                <div style="display: flex; align-items: center; gap: 5px;">
+                  <span style="font-size: 12.5px; font-weight: 800; color: #0F172A;">Photo Proof</span>
+                  <span style="font-size: 9.5px; font-weight: 800; background: #DCFCE7; color: #15803D; padding: 1.5px 6px; border-radius: 9999px;">Verified</span>
+                </div>
+                <div style="font-size: 11px; color: #059669; font-weight: 600; margin-top: 1px; display: flex; align-items: center; gap: 4px;">
+                  <i data-lucide="clock" style="width: 11px; height: 11px;"></i>
+                  <span id="trackingPickupTimeLbl">07:34 AM</span>
+                  <span style="color: #64748B;">• Liam &amp; Emma safely boarded</span>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 3px; color: #2563EB; font-size: 11.5px; font-weight: 700; flex-shrink: 0; padding-left: 6px;">
+              <span>View</span>
+              <i data-lucide="chevron-right" style="width: 13px; height: 13px;"></i>
+            </div>
+          </div>
+
+          <!-- Quick Action: Jump to Full Ride Details -->
+          <div style="margin: 0 0 6px;">
+            <button type="button" class="tracking-view-details-btn" onclick="openBookingDetails(window.appState.activeBookingId || 'H2S-84920', 'tracking')"
+              style="width: 100%; height: 38px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; cursor: pointer; transition: all 0.15s ease;"
+              title="View Ride Details &amp; Route Timeline">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 24px; height: 24px; border-radius: 7px; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <i data-lucide="file-text" style="width: 13px; height: 13px;"></i>
+                </div>
+                <span style="font-size: 12.5px; font-weight: 700; color: #0F172A;">Full Ride &amp; Route Details</span>
               </div>
               <div style="display: flex; align-items: center; gap: 4px; color: #64748B; font-size: 11.5px; font-weight: 600;">
-                <span>View</span>
-                <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+                <span>Details</span>
+                <i data-lucide="chevron-right" style="width: 13px; height: 13px;"></i>
               </div>
             </button>
           </div>
@@ -10012,30 +10080,49 @@
       </div>
     </div>
 
-    <!-- ================= TRIP HANDOVER PHOTO PROOF MODAL (MINIMAL & ZERO DUPLICATION) ================= -->
+    <!-- ================= TRIP HANDOVER PHOTO PROOF MODAL (PICKUP & DROP-OFF) ================= -->
     <div class="referral-modal-overlay" id="tripPhotoProofModal" onclick="if(event.target === this) closeTripPhotoProofModal()">
-      <div class="referral-modal-card" onclick="event.stopPropagation()" style="max-width: 380px; text-align: left; border-radius: 20px; padding: 18px 18px 20px;">
+      <div class="referral-modal-card" onclick="event.stopPropagation()" style="max-width: 390px; text-align: left; border-radius: 20px; padding: 18px 18px 20px;">
         
-        <!-- Minimal Header -->
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+        <!-- Header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <div style="width: 32px; height: 32px; border-radius: 9px; background: rgba(27, 43, 104, 0.08); display: flex; align-items: center; justify-content: center; color: #1B2B68;">
-              <i data-lucide="camera" style="width: 17px; height: 17px;"></i>
+            <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(27, 43, 104, 0.08); display: flex; align-items: center; justify-content: center; color: #1B2B68;">
+              <i data-lucide="camera" style="width: 18px; height: 18px;"></i>
             </div>
-            <h3 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0;" id="photoProofModalTitle">Pickup Photo Proof</h3>
+            <div>
+              <h3 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0;" id="photoProofModalTitle">Handover Photo Proof</h3>
+              <span style="font-size: 11px; color: #64748B;">Live Child Verification Record</span>
+            </div>
           </div>
           <button type="button" class="btn-close-modal" onclick="closeTripPhotoProofModal()" aria-label="Close" style="background: #F1F5F9; border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748B;">
             <i data-lucide="x" style="width: 15px; height: 15px;"></i>
           </button>
         </div>
 
-        <!-- Direct Image Frame with Single Clean Meta Line (Zero Duplication) -->
-        <div style="border-radius: 14px; overflow: hidden; border: 1px solid #E2E8F0; background: #0F172A;">
+        <!-- Mode Toggle Tabs (Pickup vs Drop-off) -->
+        <div class="photo-proof-tabs" style="display: flex; background: #F1F5F9; border-radius: 12px; padding: 3px; gap: 3px; margin-bottom: 12px;">
+          <button type="button" class="photo-proof-tab-btn active" id="tabPhotoPickup" onclick="switchPhotoProofTab('pickup')" style="flex: 1; padding: 7px 10px; border-radius: 9px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <i data-lucide="home" style="width: 13px; height: 13px;"></i>
+            <span>Pickup Handover</span>
+          </button>
+          <button type="button" class="photo-proof-tab-btn" id="tabPhotoDropoff" onclick="switchPhotoProofTab('dropoff')" style="flex: 1; padding: 7px 10px; border-radius: 9px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <i data-lucide="school" style="width: 13px; height: 13px;"></i>
+            <span>Drop-off Handover</span>
+          </button>
+        </div>
+
+        <!-- Direct Image Frame with Verified Tag -->
+        <div style="border-radius: 14px; overflow: hidden; border: 1px solid #E2E8F0; background: #0F172A; box-shadow: 0 2px 8px rgba(15,23,42,0.06);">
           <div style="height: 220px; position: relative; overflow: hidden; background: #0F172A;">
             <img id="photoProofImg" src="/assets/onboarding1.jpg" alt="Handover Photo" onerror="this.src='/assets/auth_hero.jpg';" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <div class="photo-proof-tag" id="photoProofBadge" style="position: absolute; top: 10px; left: 10px; background: rgba(16, 185, 129, 0.95); color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+              <i data-lucide="check-circle" style="width: 13px; height: 13px;"></i>
+              <span id="photoProofBadgeText">Verified Handover Proof</span>
+            </div>
           </div>
-          <!-- Single Non-Duplicated Meta Line -->
-          <div style="padding: 10px 12px; background: #FFFFFF; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F5F9;">
+          <!-- Clean Non-Duplicated Meta Line -->
+          <div style="padding: 10px 12px 4px; background: #FFFFFF; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #F1F5F9;">
             <div style="font-size: 12px; font-weight: 700; color: #0F172A;" id="photoProofLocationTitle">
               📍 12 Elm Street, Toronto
             </div>
@@ -10043,18 +10130,21 @@
               07:34 AM
             </div>
           </div>
+          <div style="padding: 0 12px 10px; background: #FFFFFF; font-size: 11px; color: #64748B;" id="photoProofDesc">
+            Liam &amp; Emma safely boarded Robert MacDonald's Toyota Sienna.
+          </div>
         </div>
 
-        <!-- Actions: Done and Recapture -->
+        <!-- Actions: Done and Recapture / Upload -->
         <div style="display: flex; gap: 8px; margin-top: 14px;">
           <button type="button" class="btn-primary" style="flex: 1.2; height: 44px; font-size: 13.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 12px; background: #1B2B68;" onclick="confirmPhotoProofDone()">
             <i data-lucide="check" style="width: 17px; height: 17px;"></i>
             <span>Done</span>
           </button>
           
-          <label class="btn-secondary-surface" style="flex: 1; height: 44px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; border: 1.5px solid #CBD5E1; border-radius: 12px; background: #FFFFFF; color: #1B2B68;">
+          <label class="btn-secondary-surface" style="flex: 1; height: 44px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; border: 1.5px solid #CBD5E1; border-radius: 12px; background: #FFFFFF; color: #1B2B68;" id="btnUploadProofLabelWrap">
             <i data-lucide="camera" style="width: 16px; height: 16px; color: #1B2B68;"></i>
-            <span>Recapture</span>
+            <span id="btnUploadProofLabel">Upload Photo</span>
             <input type="file" accept="image/*" capture="environment" style="display: none;" onchange="handlePhotoProofUpload(this)" />
           </label>
         </div>
