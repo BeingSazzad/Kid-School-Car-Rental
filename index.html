@@ -6643,284 +6643,181 @@
         </div>
 
         <div id="providersResultList" class="providers-result-list">
-          <!-- 1. Robert MacDonald -->
-          <div class="provider-result-card provider-card-slim" data-category="drivers" data-provider-id="tariq" data-gender="male" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="4.9" data-verified="true" data-distance="0.8" data-price="60">
-            <div class="pcm-top-row" onclick="openDriverProfile('tariq', 'bookingSearchProviders')">
-              <img src="/assets/avatar_tariq.jpg" alt="Robert MacDonald" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_tariq.jpg'" />
-              <div class="pcm-info-col provider-name-block">
-                <div class="pcm-name-row provider-name-verified">
-                  <span class="pcm-name">Robert MacDonald</span>
-                  <span class="pcm-verified-badge" title="Verified Provider">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                      <circle cx="12" cy="12" r="10" fill="#1D4ED8"/>
-                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span>
-                </div>
-                <div class="pcm-meta-row provider-meta-row">
-                  <span class="pcm-rating-val rating-badge"><span class="pcm-star pcs-star">★</span> 4.9</span>
-                  <span class="pcm-dot pcs-sep">•</span>
-                  <span class="pcm-location">
-                    <svg class="pcm-icon" viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                    </svg>
-                    <span class="pcm-zone-name pcs-zone">Greenfield</span>
-                  </span>
-                </div>
-                <div class="pcm-vehicle-row pcs-sub">
-                  <svg class="pcm-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.77l.11.34V17zM7.5 15.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S6 13.17 6 14s.67 1.5 1.5 1.5zm9 0c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5z"/>
+          <!-- 1. Tariq Ahmed -->
+          <div class="provider-result-card provider-card-figma" data-category="drivers" data-provider-id="tariq" data-gender="male" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="4.9" data-verified="true" data-distance="0.8" data-price="60" onclick="openDriverProfile('tariq', 'bookingSearchProviders')">
+            <div class="pcf-avatar-wrap">
+              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="pcf-avatar" onerror="this.src='/assets/avatar_tariq.jpg'" />
+            </div>
+            <div class="pcf-info-col">
+              <div class="pcf-name-row">
+                <span class="pcf-name">Tariq Ahmed</span>
+                <span class="pcf-verified-badge" title="Verified Driver">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#2563EB"/>
+                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <span class="pcm-vehicle-name">Toyota Sienna</span>
-                </div>
-                <!-- Dynamic Seat & Trip Type Pills -->
-                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
-                  <span class="seat-availability-pill available" id="seatBadge-tariq">
-                    <i data-lucide="users" style="width:11px;height:11px;"></i>
-                    <span>3 of 4 Seats Available</span>
-                  </span>
-                  <span style="font-size:10.5px; font-weight:700; background:#F1F5F9; color:#475569; padding:2px 7px; border-radius:6px;">One-way &amp; Round-trip</span>
-                </div>
+                </span>
+              </div>
+              <div class="pcf-meta-row">
+                <span class="pcf-star">★</span>
+                <span class="pcf-rating">4.9</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-distance">0.8 km</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-zone">Greenfield</span>
+              </div>
+              <div class="pcf-vehicle-row">
+                <span class="pcf-vehicle">Toyota Sienna</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-seats">4 seats</span>
               </div>
             </div>
-
-            <div class="pcm-divider"></div>
-
-            <div class="pcm-bottom-row">
-              <div class="pcm-price-col">
-                <div class="pcm-price-line">
-                  <span class="pcm-price-val">$240</span>
-                  <span class="pcm-price-unit">/mo</span>
-                </div>
-                <div class="pcm-price-status">Protected Escrow</div>
-              </div>
-              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('tariq')">
+            <div class="pcf-action-col">
+              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('tariq')">
                 Book
               </button>
             </div>
           </div>
 
-          <!-- 2. Emily Campbell -->
-          <div class="provider-result-card provider-card-slim" data-category="drivers" data-provider-id="farhana" data-gender="female" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="5.0" data-verified="true" data-distance="1.2" data-price="70">
-            <div class="pcm-top-row" onclick="openDriverProfile('farhana', 'bookingSearchProviders')">
-              <img src="/assets/avatar_farhana.jpg" alt="Emily Campbell" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_farhana.jpg'" />
-              <div class="pcm-info-col provider-name-block">
-                <div class="pcm-name-row provider-name-verified">
-                  <span class="pcm-name">Emily Campbell</span>
-                  <span class="pcm-verified-badge" title="Verified Provider">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                      <circle cx="12" cy="12" r="10" fill="#1D4ED8"/>
-                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span>
-                </div>
-                <div class="pcm-meta-row provider-meta-row">
-                  <span class="pcm-rating-val rating-badge"><span class="pcm-star pcs-star">★</span> 5.0</span>
-                  <span class="pcm-dot pcs-sep">•</span>
-                  <span class="pcm-location">
-                    <svg class="pcm-icon" viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                    </svg>
-                    <span class="pcm-zone-name pcs-zone">Annex</span>
-                  </span>
-                </div>
-                <div class="pcm-vehicle-row pcs-sub">
-                  <svg class="pcm-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.77l.11.34V17zM7.5 15.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S6 13.17 6 14s.67 1.5 1.5 1.5zm9 0c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5z"/>
+          <!-- 2. Farhana Yasmin -->
+          <div class="provider-result-card provider-card-figma" data-category="drivers" data-provider-id="farhana" data-gender="female" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="5.0" data-verified="true" data-distance="1.2" data-price="70" onclick="openDriverProfile('farhana', 'bookingSearchProviders')">
+            <div class="pcf-avatar-wrap">
+              <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="pcf-avatar" onerror="this.src='/assets/avatar_farhana.jpg'" />
+            </div>
+            <div class="pcf-info-col">
+              <div class="pcf-name-row">
+                <span class="pcf-name">Farhana Yasmin</span>
+                <span class="pcf-verified-badge" title="Verified Driver">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#2563EB"/>
+                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <span class="pcm-vehicle-name">Honda Odyssey</span>
-                </div>
-                <!-- Dynamic Seat & Trip Type Pills -->
-                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
-                  <span class="seat-availability-pill available" id="seatBadge-farhana">
-                    <i data-lucide="users" style="width:11px;height:11px;"></i>
-                    <span>3 of 5 Seats Available</span>
-                  </span>
-                  <span style="font-size:10.5px; font-weight:700; background:#F1F5F9; color:#475569; padding:2px 7px; border-radius:6px;">One-way &amp; Round-trip</span>
-                </div>
+                </span>
+              </div>
+              <div class="pcf-meta-row">
+                <span class="pcf-star">★</span>
+                <span class="pcf-rating">5.0</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-distance">1.2 km</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-zone">Annex</span>
+              </div>
+              <div class="pcf-vehicle-row">
+                <span class="pcf-vehicle">Honda Odyssey</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-seats">5 seats</span>
               </div>
             </div>
-
-            <div class="pcm-divider"></div>
-
-            <div class="pcm-bottom-row">
-              <div class="pcm-price-col">
-                <div class="pcm-price-line">
-                  <span class="pcm-price-val">$280</span>
-                  <span class="pcm-price-unit">/mo</span>
-                </div>
-                <div class="pcm-price-status">Protected Escrow</div>
-              </div>
-              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('farhana')">
+            <div class="pcf-action-col">
+              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('farhana')">
                 Book
               </button>
             </div>
           </div>
 
-          <!-- 3. Lucas Bennett -->
-          <div class="provider-result-card provider-card-slim" data-category="drivers" data-provider-id="kabir" data-gender="male" data-triptype="oneway" data-freq="daily,weekly" data-rating="4.8" data-verified="true" data-distance="1.5" data-price="55">
-            <div class="pcm-top-row" onclick="openDriverProfile('kabir', 'bookingSearchProviders')">
-              <img src="/assets/avatar_kabir.jpg" alt="Lucas Bennett" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_kabir.jpg'" />
-              <div class="pcm-info-col provider-name-block">
-                <div class="pcm-name-row provider-name-verified">
-                  <span class="pcm-name">Lucas Bennett</span>
-                  <span class="pcm-verified-badge" title="Verified Provider">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                      <circle cx="12" cy="12" r="10" fill="#1D4ED8"/>
-                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span>
-                </div>
-                <div class="pcm-meta-row provider-meta-row">
-                  <span class="pcm-rating-val rating-badge"><span class="pcm-star pcs-star">★</span> 4.8</span>
-                  <span class="pcm-dot pcs-sep">•</span>
-                  <span class="pcm-location">
-                    <svg class="pcm-icon" viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                    </svg>
-                    <span class="pcm-zone-name pcs-zone">East York</span>
-                  </span>
-                </div>
-                <div class="pcm-vehicle-row pcs-sub">
-                  <svg class="pcm-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.77l.11.34V17zM7.5 15.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S6 13.17 6 14s.67 1.5 1.5 1.5zm9 0c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5z"/>
+          <!-- 3. Kabir Hossain -->
+          <div class="provider-result-card provider-card-figma" data-category="drivers" data-provider-id="kabir" data-gender="male" data-triptype="oneway" data-freq="daily,weekly" data-rating="4.8" data-verified="true" data-distance="1.5" data-price="55" onclick="openDriverProfile('kabir', 'bookingSearchProviders')">
+            <div class="pcf-avatar-wrap">
+              <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="pcf-avatar" onerror="this.src='/assets/avatar_kabir.jpg'" />
+            </div>
+            <div class="pcf-info-col">
+              <div class="pcf-name-row">
+                <span class="pcf-name">Kabir Hossain</span>
+                <span class="pcf-verified-badge" title="Verified Driver">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#2563EB"/>
+                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <span class="pcm-vehicle-name">Toyota Highlander</span>
-                </div>
-                <!-- Dynamic Seat & Trip Type Pills -->
-                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
-                  <span class="seat-availability-pill low" id="seatBadge-kabir">
-                    <i data-lucide="users" style="width:11px;height:11px;"></i>
-                    <span>1 Seat Left</span>
-                  </span>
-                  <span style="font-size:10.5px; font-weight:700; background:#F1F5F9; color:#475569; padding:2px 7px; border-radius:6px;">One-way Only</span>
-                </div>
+                </span>
+              </div>
+              <div class="pcf-meta-row">
+                <span class="pcf-star">★</span>
+                <span class="pcf-rating">4.8</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-distance">1.5 km</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-zone">East York</span>
+              </div>
+              <div class="pcf-vehicle-row">
+                <span class="pcf-vehicle">Toyota Highlander</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-seats">4 seats</span>
               </div>
             </div>
-
-            <div class="pcm-divider"></div>
-
-            <div class="pcm-bottom-row">
-              <div class="pcm-price-col">
-                <div class="pcm-price-line">
-                  <span class="pcm-price-val">$220</span>
-                  <span class="pcm-price-unit">/mo</span>
-                </div>
-                <div class="pcm-price-status">Protected Escrow</div>
-              </div>
-              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('kabir')">
+            <div class="pcf-action-col">
+              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('kabir')">
                 Book
               </button>
             </div>
           </div>
 
           <!-- 4. Sarah Jenkins (WalkShare Guide) -->
-          <div class="provider-result-card provider-card-slim walkshare-card" data-category="walkshare" data-provider-id="sarah" data-gender="female" data-triptype="roundtrip" data-freq="daily,monthly" data-rating="4.9" data-verified="true" data-distance="0.4" data-price="140">
-            <div class="pcm-top-row" onclick="openDriverProfile('sarah', 'bookingSearchProviders')">
-              <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_sarah.jpg'" />
-              <div class="pcm-info-col provider-name-block">
-                <div class="pcm-name-row provider-name-verified">
-                  <span class="pcm-name">Sarah Jenkins</span>
-                  <span class="pcm-verified-badge" title="Verified WalkShare Guide">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                      <circle cx="12" cy="12" r="10" fill="#15803D"/>
-                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span>
-                </div>
-                <div class="pcm-meta-row provider-meta-row">
-                  <span class="pcm-rating-val rating-badge"><span class="pcm-star pcs-star">★</span> 4.9</span>
-                  <span class="pcm-dot pcs-sep">•</span>
-                  <span class="pcm-location">
-                    <svg class="pcm-icon" viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                    </svg>
-                    <span class="pcm-zone-name pcs-zone">High Park</span>
-                  </span>
-                </div>
-                <!-- Clean WalkShare Guide Info (NO VEHICLE) -->
-                <div class="pcs-sub" style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#15803D; font-weight:700; margin-top:2px;">
-                  <i data-lucide="footprints" style="width:13px;height:13px;"></i>
-                  <span>WalkShare Guide · Walking Escort</span>
-                </div>
-                <!-- Spots Pill -->
-                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
-                  <span class="seat-availability-pill available" id="seatBadge-sarah">
-                    <i data-lucide="users" style="width:11px;height:11px;"></i>
-                    <span>3 Escort Spots Open</span>
-                  </span>
-                  <span style="font-size:10.5px; font-weight:700; background:#DCFCE7; color:#15803D; padding:2px 7px; border-radius:6px;">Walking Route</span>
-                </div>
+          <div class="provider-result-card provider-card-figma walkshare-card" data-category="walkshare" data-provider-id="sarah" data-gender="female" data-triptype="roundtrip" data-freq="daily,monthly" data-rating="4.9" data-verified="true" data-distance="0.4" data-price="140" onclick="openDriverProfile('sarah', 'bookingSearchProviders')">
+            <div class="pcf-avatar-wrap">
+              <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="pcf-avatar" onerror="this.src='/assets/avatar_sarah.jpg'" />
+            </div>
+            <div class="pcf-info-col">
+              <div class="pcf-name-row">
+                <span class="pcf-name">Sarah Jenkins</span>
+                <span class="pcf-verified-badge" title="Verified WalkShare Guide">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#15803D"/>
+                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="pcf-meta-row">
+                <span class="pcf-star">★</span>
+                <span class="pcf-rating">4.9</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-distance">0.4 km</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-zone">High Park</span>
+              </div>
+              <div class="pcf-vehicle-row">
+                <span class="pcf-vehicle" style="color:#15803D;">Walking Escort</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-seats">4 spots</span>
               </div>
             </div>
-
-            <div class="pcm-divider"></div>
-
-            <div class="pcm-bottom-row">
-              <div class="pcm-price-col">
-                <div class="pcm-price-line">
-                  <span class="pcm-price-val">$140</span>
-                  <span class="pcm-price-unit">/mo</span>
-                </div>
-                <div class="pcm-price-status">Protected Escrow</div>
-              </div>
-              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('sarah')">
+            <div class="pcf-action-col">
+              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('sarah')">
                 Book
               </button>
             </div>
           </div>
 
           <!-- 5. Sophie Bouchard (WalkShare Guide) -->
-          <div class="provider-result-card provider-card-slim walkshare-card" data-category="walkshare" data-provider-id="elena" data-gender="female" data-triptype="roundtrip" data-freq="daily,monthly" data-rating="4.9" data-verified="true" data-distance="0.5" data-price="140">
-            <div class="pcm-top-row" onclick="openDriverProfile('elena', 'bookingSearchProviders')">
-              <img src="/assets/avatar_rehana.jpg" alt="Sophie Bouchard" class="provider-card-avatar pcm-avatar" onerror="this.src='/assets/avatar_rehana.jpg'" />
-              <div class="pcm-info-col provider-name-block">
-                <div class="pcm-name-row provider-name-verified">
-                  <span class="pcm-name">Sophie Bouchard</span>
-                  <span class="pcm-verified-badge" title="Verified WalkShare Guide">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                      <circle cx="12" cy="12" r="10" fill="#15803D"/>
-                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span>
-                </div>
-                <div class="pcm-meta-row provider-meta-row">
-                  <span class="pcm-rating-val rating-badge"><span class="pcm-star pcs-star">★</span> 4.9</span>
-                  <span class="pcm-dot pcs-sep">•</span>
-                  <span class="pcm-location">
-                    <svg class="pcm-icon" viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                    </svg>
-                    <span class="pcm-zone-name pcs-zone">Greenfield</span>
-                  </span>
-                </div>
-                <!-- Clean WalkShare Guide Info (NO VEHICLE) -->
-                <div class="pcs-sub" style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#15803D; font-weight:700; margin-top:2px;">
-                  <i data-lucide="footprints" style="width:13px;height:13px;"></i>
-                  <span>WalkShare Guide · Walking Escort</span>
-                </div>
-                <!-- Spots Pill -->
-                <div style="display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap;">
-                  <span class="seat-availability-pill available" id="seatBadge-elena">
-                    <i data-lucide="users" style="width:11px;height:11px;"></i>
-                    <span>2 Escort Spots Open</span>
-                  </span>
-                  <span style="font-size:10.5px; font-weight:700; background:#DCFCE7; color:#15803D; padding:2px 7px; border-radius:6px;">Walking Route</span>
-                </div>
+          <div class="provider-result-card provider-card-figma walkshare-card" data-category="walkshare" data-provider-id="elena" data-gender="female" data-triptype="roundtrip" data-freq="daily,monthly" data-rating="4.9" data-verified="true" data-distance="0.5" data-price="140" onclick="openDriverProfile('elena', 'bookingSearchProviders')">
+            <div class="pcf-avatar-wrap">
+              <img src="/assets/avatar_rehana.jpg" alt="Sophie Bouchard" class="pcf-avatar" onerror="this.src='/assets/avatar_rehana.jpg'" />
+            </div>
+            <div class="pcf-info-col">
+              <div class="pcf-name-row">
+                <span class="pcf-name">Sophie Bouchard</span>
+                <span class="pcf-verified-badge" title="Verified WalkShare Guide">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#15803D"/>
+                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="pcf-meta-row">
+                <span class="pcf-star">★</span>
+                <span class="pcf-rating">4.9</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-distance">0.5 km</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-zone">Greenfield</span>
+              </div>
+              <div class="pcf-vehicle-row">
+                <span class="pcf-vehicle" style="color:#15803D;">Walking Escort</span>
+                <span class="pcf-bullet">•</span>
+                <span class="pcf-seats">3 spots</span>
               </div>
             </div>
-
-            <div class="pcm-divider"></div>
-
-            <div class="pcm-bottom-row">
-              <div class="pcm-price-col">
-                <div class="pcm-price-line">
-                  <span class="pcm-price-val">$140</span>
-                  <span class="pcm-price-unit">/mo</span>
-                </div>
-                <div class="pcm-price-status">Protected Escrow</div>
-              </div>
-              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('elena')">
+            <div class="pcf-action-col">
+              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('elena')">
                 Book
               </button>
             </div>
@@ -6966,7 +6863,7 @@
             <img src="/assets/avatar_tariq.jpg" alt="Provider" class="profile-hero-avatar" id="detailsProviderImg" style="width:84px; height:84px; border-radius:50%; object-fit:cover; border:3px solid #FFFFFF; box-shadow:0 4px 14px rgba(15,23,42,0.1); display:block;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
           </div>
           <h3 class="profile-hero-name" style="margin:2px 0 4px; font-family:'Manrope',system-ui,sans-serif; font-size:20px; font-weight:800; color:#0F172A; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-            <span id="detailsProviderName">Robert MacDonald</span>
+            <span id="detailsProviderName">Tariq Ahmed</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;">
               <circle cx="12" cy="12" r="10" fill="#2563EB"/>
               <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -7158,7 +7055,7 @@
     </section>
 
     <!-- ================= 17. BOOKING STEP 4: SUMMARY ================= -->
-    <section class="screen-view" id="screen-bookingSummary" style="background-color: #FFFFFF;">
+    <section class="screen-view" id="screen-bookingSummary" style="background-color: #F8FAFC;">
       <div class="status-bar dark">
         <span class="sb-time">9:41</span>
         <div class="sb-icons">
@@ -7174,169 +7071,158 @@
         </div>
       </div>
 
-      <!-- Review Booking Screen -->
-      <div class="top-bar-sticky" style="background:#FFFFFF; border-bottom:1px solid #F1F5F9; position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:10px 16px; height:52px; box-sizing:border-box;">
+      <!-- Top Header Sticky -->
+      <div class="top-bar-sticky" style="background:#F8FAFC; border-bottom:none; position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:10px 16px; height:52px; box-sizing:border-box;">
         <button class="back-btn" onclick="navigateTo('bookingSearchProviders')" aria-label="Go back" style="background:none; border:none; padding:6px; cursor:pointer; display:flex; align-items:center; color:#0F172A;">
-          <i data-lucide="chevron-left" style="width:22px; height:22px;"></i>
+          <i data-lucide="chevron-left" style="width:24px; height:24px;"></i>
         </button>
-        <h2 class="top-bar-title" style="margin:0; font-family:'Manrope',system-ui,sans-serif; font-size:17px; font-weight:800; color:#0F172A; text-align:center; flex:1;">Review Booking</h2>
+        <h2 class="top-bar-title" style="margin:0; font-family:'Manrope',system-ui,sans-serif; font-size:18px; font-weight:800; color:#0F172A; text-align:center; flex:1;">Booking Summary</h2>
         <span style="width: 32px;"></span>
       </div>
 
-      <div class="screen-scroll-body rs-scroll" style="background:#F8FAFC; padding:14px 16px 100px; display:flex; flex-direction:column; gap:14px; overflow-y:auto; box-sizing:border-box;">
-        <!-- 1. Provider Card with Car Thumbnail -->
-        <div class="rs-provider-card" id="summaryProviderCard" onclick="openDriverProfile(window.appState.bookingDraft.providerId || 'tariq', 'bookingSummary')" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 1px 4px rgba(15,23,42,0.04); cursor:pointer; width:100%; box-sizing:border-box;">
-          <img src="/assets/avatar_tariq.jpg" alt="Provider" class="rs-provider-avatar" id="summaryProviderAvatar" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:1.5px solid #E2E8F0; flex-shrink:0;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
-          <div class="rs-provider-info" style="flex:1; min-width:0; text-align:left;">
-            <div class="rs-provider-name" id="summaryProviderText" style="font-family:'Manrope',system-ui,sans-serif; font-size:15px; font-weight:800; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Robert MacDonald</div>
-            <div class="rs-provider-meta" id="summaryVehicleText" style="font-size:12px; color:#64748B; font-weight:500; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Toyota Sienna (2023) · SCH-4091</div>
+      <div class="screen-scroll-body bs-figma-scroll" style="background:#F8FAFC; padding:14px 16px 100px; display:flex; flex-direction:column; gap:16px; overflow-y:auto; box-sizing:border-box;">
+        
+        <!-- Card 1: Trip Information -->
+        <div class="bs-figma-card">
+          <div class="bs-card-header">
+            <div class="bs-card-icon-badge">
+              <i data-lucide="users" style="width:18px; height:18px; color:#2563EB;"></i>
+            </div>
+            <h3 class="bs-card-title">Trip Information</h3>
           </div>
-          <div class="rs-provider-car-wrap" id="summaryVehicleThumbWrap" style="width:76px; height:44px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">
-            <img src="/assets/toyota_sienna_white.jpg" alt="Vehicle" class="rs-provider-car-img" id="summaryVehicleThumb" style="width:76px; height:42px; max-width:76px; max-height:42px; object-fit:contain; display:block;" onerror="this.style.display='none';" />
-          </div>
-          <span id="summaryPostedRateText" style="display:none;"></span>
-        </div>
 
-        <!-- 2. Route Section (Vertical Timeline) -->
-        <section class="rs-section" style="padding:0; border:none; margin-top:2px;">
-          <span class="rs-section-lbl" style="font-size:12.5px; font-weight:700; color:#64748B; margin:0 0 8px 2px; display:block;">Route</span>
-          <div class="rs-route-box" style="background:transparent; padding:0 4px; display:flex; flex-direction:column;">
-            <!-- Drop-off point (School) -->
-            <div class="rs-route-step" style="display:flex; align-items:center; gap:12px; position:relative;">
-              <span class="rs-route-dot dropoff" style="width:10px; height:10px; border-radius:50%; background:#EA580C; outline:3px solid #FFEDD5; flex-shrink:0; box-sizing:border-box;"></span>
-              <div class="rs-route-info" style="flex:1; min-width:0;">
-                <div class="rs-route-title" id="summaryDropoffText" style="font-family:'Manrope',system-ui,sans-serif; font-size:14.5px; font-weight:800; color:#0F172A; line-height:1.2;">School</div>
-                <div class="rs-route-sub" id="summaryDropoffSubText" style="font-size:10px; font-weight:700; color:#94A3B8; letter-spacing:0.6px; text-transform:uppercase; margin-top:2px;">DROP-OFF</div>
+          <div class="bs-info-rows">
+            <!-- Row 1: Children -->
+            <div class="bs-info-row">
+              <div class="bs-row-left">
+                <i data-lucide="users" class="bs-row-icon"></i>
+                <span class="bs-row-label">Children</span>
               </div>
-              <div class="rs-route-time" id="summaryOutboundText" style="display:none; font-family:'Manrope',system-ui,sans-serif; font-size:14px; font-weight:800; color:#0F172A;">07:30 AM</div>
+              <div class="bs-row-right" id="bsTripChildren">Arman Khan &amp; Emma Khan (2)</div>
             </div>
-            
-            <div class="rs-route-dashed-line" style="border-left:2px dashed #CBD5E1; height:18px; margin:2px 0 2px 4px;"></div>
 
-            <!-- Return point (Back home) -->
-            <div class="rs-route-step" id="summaryReturnRow" style="display:flex; align-items:center; gap:12px; position:relative;">
-              <span class="rs-route-dot return" style="width:10px; height:10px; border-radius:50%; background:#16A34A; outline:3px solid #DCFCE7; flex-shrink:0; box-sizing:border-box;"></span>
-              <div class="rs-route-info" style="flex:1; min-width:0;">
-                <div class="rs-route-title" id="summaryReturnTextDesc" style="font-family:'Manrope',system-ui,sans-serif; font-size:14.5px; font-weight:800; color:#0F172A; line-height:1.2;">Back home</div>
-                <div class="rs-route-sub" style="font-size:10px; font-weight:700; color:#94A3B8; letter-spacing:0.6px; text-transform:uppercase; margin-top:2px;">RETURN</div>
+            <!-- Row 2: Trip Direction -->
+            <div class="bs-info-row">
+              <div class="bs-row-left">
+                <i data-lucide="arrow-left-right" class="bs-row-icon"></i>
+                <span class="bs-row-label">Trip Direction</span>
               </div>
-              <div class="rs-route-time" id="summaryReturnText" style="font-family:'Manrope',system-ui,sans-serif; font-size:14px; font-weight:800; color:#0F172A; text-align:right; flex-shrink:0;">01:00 PM</div>
+              <div class="bs-row-right" id="bsTripDirection">Round Trip</div>
             </div>
-          </div>
-        </section>
 
-        <!-- 3. Details Bento List Card with Chevrons -->
-        <div class="rs-details-card" style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px; padding:0 16px; box-shadow:0 1px 4px rgba(15,23,42,0.04);">
-          <div class="rs-details-row" onclick="navigateTo('bookingTripSetup')" style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #F1F5F9; cursor:pointer;">
-            <div class="rs-details-left" style="display:flex; align-items:center; gap:12px;">
-              <i data-lucide="users" class="rs-details-icon" style="width:17px; height:17px; color:#1E293B; flex-shrink:0;"></i>
-              <span class="rs-details-lbl" style="font-size:13.5px; font-weight:600; color:#1E293B;">Children</span>
+            <!-- Row 3: Outbound Leg -->
+            <div class="bs-info-row">
+              <div class="bs-row-left">
+                <i data-lucide="navigation" class="bs-row-icon"></i>
+                <span class="bs-row-label">Outbound Leg</span>
+              </div>
+              <div class="bs-row-right" id="bsTripOutbound">Home &rarr; School (07:30 AM)</div>
             </div>
-            <div class="rs-details-right" style="display:flex; align-items:center; gap:6px; max-width:62%;">
-              <span class="rs-details-val" id="summaryChildrenText" style="font-size:13px; color:#334155; font-weight:500; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">No children selected</span>
-              <i data-lucide="chevron-right" class="rs-details-arrow" style="width:15px; height:15px; color:#94A3B8; flex-shrink:0;"></i>
-            </div>
-          </div>
 
-          <div class="rs-details-row" onclick="navigateTo('bookingTripSetup')" style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #F1F5F9; cursor:pointer;">
-            <div class="rs-details-left" style="display:flex; align-items:center; gap:12px;">
-              <i data-lucide="calendar" class="rs-details-icon" style="width:17px; height:17px; color:#1E293B; flex-shrink:0;"></i>
-              <span class="rs-details-lbl" style="font-size:13.5px; font-weight:600; color:#1E293B;">When</span>
+            <!-- Row 4: Return Leg -->
+            <div class="bs-info-row">
+              <div class="bs-row-left">
+                <i data-lucide="corner-down-left" class="bs-row-icon"></i>
+                <span class="bs-row-label">Return Leg</span>
+              </div>
+              <div class="bs-row-right" id="bsTripReturn">School &rarr; Home (01:00 PM)</div>
             </div>
-            <div class="rs-details-right" style="display:flex; align-items:center; gap:6px; max-width:62%;">
-              <span class="rs-details-val" id="summaryWhenText" style="font-size:13px; color:#334155; font-weight:500; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Mon, Sep 8 · Round Trip</span>
-              <i data-lucide="chevron-right" class="rs-details-arrow" style="width:15px; height:15px; color:#94A3B8; flex-shrink:0;"></i>
-            </div>
-          </div>
 
-          <div class="rs-details-row" onclick="navigateTo('bookingTripSetup')" style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; cursor:pointer;">
-            <div class="rs-details-left" style="display:flex; align-items:center; gap:12px;">
-              <i data-lucide="repeat" class="rs-details-icon" style="width:17px; height:17px; color:#1E293B; flex-shrink:0;"></i>
-              <span class="rs-details-lbl" style="font-size:13.5px; font-weight:600; color:#1E293B;">Repeat</span>
+            <!-- Row 5: Frequency -->
+            <div class="bs-info-row">
+              <div class="bs-row-left">
+                <i data-lucide="calendar" class="bs-row-icon"></i>
+                <span class="bs-row-label">Frequency</span>
+              </div>
+              <div class="bs-row-right" id="bsTripFrequency">Recurring (Mon &ndash; Fri Commute)</div>
             </div>
-            <div class="rs-details-right" style="display:flex; align-items:center; gap:6px; max-width:62%;">
-              <span class="rs-details-val" id="summaryFreqText" style="font-size:13px; color:#334155; font-weight:500; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">One-Time Ride (Single Day Pass)</span>
-              <i data-lucide="chevron-right" class="rs-details-arrow" style="width:15px; height:15px; color:#94A3B8; flex-shrink:0;"></i>
+
+            <!-- Row 6: Provider -->
+            <div class="bs-info-row">
+              <div class="bs-row-left">
+                <i data-lucide="car" class="bs-row-icon" id="bsProviderRowIcon"></i>
+                <span class="bs-row-label">Provider</span>
+              </div>
+              <div class="bs-row-right" id="bsTripProvider">Tariq Ahmed (Toyota Sienna)</div>
             </div>
           </div>
         </div>
 
-        <!-- 4. Total for this trip Section -->
-        <section class="rs-total-section" style="margin-top:2px;">
-          <h4 class="rs-total-heading" style="font-family:'Manrope',system-ui,sans-serif; font-size:15.5px; font-weight:800; color:#0F172A; margin:6px 0 10px 2px; letter-spacing:-0.01em;">Total for this trip</h4>
-          
-          <!-- Escrow Rate Card (Soft Mint Green Tint) -->
-          <div class="rs-escrow-rate-card" style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:18px; padding:13px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; box-sizing:border-box;">
-            <div class="rs-escrow-rate-left" style="display:flex; align-items:center; gap:12px; min-width:0;">
-              <div class="rs-rate-icon-badge" style="width:40px; height:40px; border-radius:12px; background:#DCFCE7; display:flex; align-items:center; justify-content:center; color:#16A34A; flex-shrink:0;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <path d="m9 15 2 2 4-4"/>
-                </svg>
-              </div>
-              <div>
-                <span class="rs-rate-title" style="font-family:'Manrope',system-ui,sans-serif; font-size:14.5px; font-weight:800; color:#0F172A; display:block; line-height:1.2; margin-bottom:2px;">Trip Escrow Rate</span>
-                <div class="rs-rate-held-line" style="display:flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:#16A34A;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
-                  <span>Held safely until ride is completed</span>
-                </div>
-              </div>
+        <!-- Card 2: Pricing Summary -->
+        <div class="bs-figma-card">
+          <div class="bs-card-header">
+            <div class="bs-card-icon-badge">
+              <i data-lucide="file-text" style="width:18px; height:18px; color:#2563EB;"></i>
             </div>
-            <div class="rs-rate-price-block" style="text-align:right; flex-shrink:0;">
-              <div class="rs-rate-amount" id="summaryTotalEscrowVal" style="font-family:'Manrope',system-ui,sans-serif; font-size:24px; font-weight:800; color:#0F172A; line-height:1.1;">$14.00</div>
-              <span class="rs-rate-unit" id="summaryPriceUnitText" style="font-size:11.5px; font-weight:600; color:#64748B; display:block; margin-top:1px;">/ trip</span>
-            </div>
+            <h3 class="bs-card-title">Pricing Summary</h3>
           </div>
 
-          <!-- Safe Arrival Escrow Protection Card (Soft Blue Tint) -->
-          <div class="rs-escrow-protection-card" style="background:#EFF6FF; border:1px solid #DBEAFE; border-radius:18px; padding:13px 15px; display:flex; align-items:flex-start; gap:12px; margin-top:10px; box-sizing:border-box;">
-            <div class="rs-protection-icon-badge" style="width:34px; height:34px; border-radius:50%; background:#DBEAFE; display:flex; align-items:center; justify-content:center; color:#2563EB; flex-shrink:0; margin-top:1px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#2563EB" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <path d="m9 12 2 2 4-4" stroke="#FFFFFF" stroke-width="2.5" fill="none"/>
-              </svg>
+          <div class="bs-pricing-rows">
+            <!-- Weekly Base Rate -->
+            <div class="bs-price-row">
+              <span class="bs-price-label" id="bsPricingBaseLabel">Weekly Base Rate</span>
+              <span class="bs-price-val" id="bsPricingBaseRate">$240.00</span>
             </div>
-            <div>
-              <h5 class="rs-protection-title" style="font-family:'Manrope',system-ui,sans-serif; font-size:13px; font-weight:800; color:#1E293B; margin:0 0 3px 0;">Safe Arrival Escrow Protection</h5>
-              <p class="rs-protection-desc" style="font-size:11.5px; color:#475569; line-height:1.45; margin:0; font-weight:500;">
-                Your payment is held safely in escrow. Funds are only released to your driver after your child arrives safely and you confirm drop-off.
-              </p>
+
+            <!-- Multi-Child Discount -->
+            <div class="bs-price-row discount" id="bsPricingDiscountRow">
+              <span class="bs-price-label" id="bsPricingDiscountLabel">Multi-Child Discount (2nd child 20% off)</span>
+              <span class="bs-price-val discount" id="bsPricingDiscount">-$24.00</span>
+            </div>
+
+            <div class="bs-price-divider"></div>
+
+            <!-- Total Weekly Amount -->
+            <div class="bs-price-row total">
+              <span class="bs-total-label" id="bsPricingTotalLabel">Total Weekly Amount</span>
+              <span class="bs-total-val" id="bsPricingTotal">$224.00 / week</span>
             </div>
           </div>
-        </section>
+        </div>
 
-        <!-- Hidden Fallback State Elements -->
-        <span id="summaryPickupText" style="display:none;">12 Elm Street</span>
-        <span id="summaryDateText" style="display:none;">Mon, Sep 8</span>
-        <span id="summaryTripTypeText" style="display:none;">Round trip</span>
-        <span id="summaryListedRateVal" style="display:none;">$14/trip</span>
-        <span id="summaryBaseRateVal" style="display:none;">$14.00</span>
-        <span id="summaryServiceFeeVal" style="display:none;">$0.00</span>
-        <span id="summaryStripeFeeVal" style="display:none;">$0.00</span>
+        <!-- Security Notice Pill -->
+        <div class="bs-security-banner">
+          <div class="bs-security-icon-wrap">
+            <i data-lucide="shield-check" style="width:18px; height:18px; color:#1E3A8A;"></i>
+          </div>
+          <span class="bs-security-text">You will not be charged until provider accepts your request.</span>
+        </div>
 
-        <!-- 5. Actions with Superior UX Copy -->
-        <div class="rs-actions-clean" style="display:flex; flex-direction:column; align-items:center; margin-top:8px; width:100%;">
-          <button type="button" class="rs-btn-primary" id="btnSubmitBookingRequest" onclick="submitBookingRequest()" style="width:100%; height:52px; border-radius:16px; background:#1B2B68; color:#FFFFFF; font-family:'Manrope',system-ui,sans-serif; font-size:15px; font-weight:800; border:none; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; box-shadow:0 4px 14px rgba(27,43,104,0.22);">
-            <span id="summaryActionBtnText">Confirm &amp; Request Booking</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        <!-- CTA Buttons -->
+        <div class="bs-action-col">
+          <button type="button" class="bs-btn-send" id="btnSubmitBookingRequest" onclick="submitBookingRequest()">
+            Send Booking Request
           </button>
           
-          <div class="rs-reassurance-line" style="display:flex; align-items:center; justify-content:center; gap:5px; margin-top:8px; font-size:11.5px; color:#64748B; font-weight:600;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-            <span>Safe Escrow Protection · Held securely until arrival</span>
-          </div>
-
-          <button type="button" class="rs-btn-edit-link" onclick="navigateTo('bookingTripSetup')" style="background:transparent; border:none; color:#2563EB; font-size:13.5px; font-weight:700; margin-top:6px; padding:6px 12px; cursor:pointer; text-decoration:none;">Edit details</button>
+          <button type="button" class="bs-btn-edit" onclick="navigateTo('bookingTripSetup')">
+            Edit Trip Details
+          </button>
         </div>
+
+        <!-- Hidden Fallbacks for Legacy Script Compatibility -->
+        <div style="display:none;">
+          <span id="summaryChildrenText">Arman Khan &amp; Emma Khan (2)</span>
+          <span id="summaryPickupText">Home</span>
+          <span id="summaryDropoffText">School</span>
+          <span id="summaryOutboundText">07:30 AM</span>
+          <span id="summaryReturnText">01:00 PM</span>
+          <span id="summaryDateText">Mon, Sep 8</span>
+          <span id="summaryTripTypeText">Round trip</span>
+          <span id="summaryWhenText">Mon, Sep 8 · Round Trip</span>
+          <span id="summaryFreqText">Recurring (Mon – Fri Commute)</span>
+          <span id="summaryProviderText">Tariq Ahmed</span>
+          <span id="summaryVehicleText">Toyota Sienna (2023)</span>
+          <span id="summaryListedRateVal">$240.00/week</span>
+          <span id="summaryBaseRateVal">$240.00</span>
+          <span id="summaryTotalEscrowVal">$224.00</span>
+          <span id="summaryPriceUnitText">/ week</span>
+          <span id="summaryActionBtnText">Send Booking Request</span>
+        </div>
+
       </div>
 
       <div class="home-indicator"></div>
     </section>
-
 
     <!-- ================= 18. BOOKING STATE: REQUEST SENT (PENDING) ================= -->
     <section class="screen-view" id="screen-bookingRequestSent" style="background-color: #FFFFFF;">
@@ -7430,7 +7316,7 @@
           </div>
           <div class="summary-item-row">
             <span class="summary-item-label">Provider</span>
-            <span class="summary-item-val" id="confirmedProviderText">Robert MacDonald (Toyota Sienna)</span>
+            <span class="summary-item-val" id="confirmedProviderText">Tariq Ahmed (Toyota Sienna)</span>
           </div>
           <div class="summary-item-row">
             <span class="summary-item-label">Children</span>
@@ -7569,7 +7455,7 @@
               <span class="trip-figma-driver-online-dot"></span>
             </div>
             <div>
-              <div class="trip-figma-driver-name" id="detailProviderName">Robert MacDonald</div>
+              <div class="trip-figma-driver-name" id="detailProviderName">Tariq Ahmed</div>
               <div class="trip-figma-driver-meta">
                 <i data-lucide="star" style="width: 13px; height: 13px; fill: #F59E0B; color: #F59E0B;"></i>
                 <span id="detailProviderRating" style="font-weight: 700; color: #0F172A;">4.8</span>
@@ -7894,10 +7780,10 @@
           <!-- Driver Mini Profile & Quick Contact -->
           <div class="active-driver-contact-row">
             <div class="driver-mini-info" id="trackingDriverProfileBtn" onclick="openDriverProfile('tariq', 'tracking')" style="cursor: pointer;" title="View Driver Profile">
-              <img src="/assets/avatar_tariq.jpg" alt="Robert MacDonald" class="driver-mini-avatar" id="trackingDriverPhoto" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
+              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="driver-mini-avatar" id="trackingDriverPhoto" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
               <div>
                 <div class="driver-mini-name" style="display: flex; align-items: center; gap: 4px;">
-                  <span id="trackingDriverName">Robert MacDonald</span>
+                  <span id="trackingDriverName">Tariq Ahmed</span>
                   <i data-lucide="chevron-right" style="width: 13px; height: 13px; color: var(--color-body);"></i>
                 </div>
                 <div class="driver-mini-sub" id="trackingDriverVehicle">Toyota Sienna • SCH-4091</div>
@@ -8040,7 +7926,7 @@
             <span class="chat-online-dot"></span>
           </div>
           <div class="chat-header-info">
-            <div class="chat-header-name" id="chatDriverName">Robert MacDonald</div>
+            <div class="chat-header-name" id="chatDriverName">Tariq Ahmed</div>
             <div class="chat-header-status" id="chatDriverSub">Verified Escort • In-app safe chat</div>
           </div>
         </div>
@@ -8509,7 +8395,7 @@
           <div class="rating-avatar-wrap">
             <img src="/assets/avatar_tariq.jpg" alt="Driver" id="ratingDriverAvatar" class="rating-avatar-img" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
           </div>
-          <div class="rating-provider-name" id="ratingDriverName">Robert MacDonald</div>
+          <div class="rating-provider-name" id="ratingDriverName">Tariq Ahmed</div>
           <div class="rating-provider-role">Your driver today</div>
         </div>
 
@@ -9830,7 +9716,7 @@
             </div>
             <div class="receipt-detail-row">
               <span>Assigned Driver</span>
-              <strong id="recModalProvider">Robert MacDonald (Toyota Sienna)</strong>
+              <strong id="recModalProvider">Tariq Ahmed (Toyota Sienna)</strong>
             </div>
             <div class="receipt-detail-row">
               <span>Payment Method</span>
@@ -10172,7 +10058,7 @@
           </div>
           <h3 class="clear-chat-modal-title">Clear Chat History?</h3>
           <p class="clear-chat-modal-desc">
-            All messages in this conversation with <strong id="clearChatPartyName">Robert MacDonald</strong> will be removed from your screen view.
+            All messages in this conversation with <strong id="clearChatPartyName">Tariq Ahmed</strong> will be removed from your screen view.
           </p>
           <div class="clear-chat-notice-card">
             <i data-lucide="shield-check" style="width:16px;height:16px;color:#2563EB;flex-shrink:0;"></i>
@@ -10349,7 +10235,7 @@
         <div class="home-header-row">
           <div class="user-profile-group" onclick="navigateTo('driverProfile')" style="cursor:pointer;">
             <div class="user-avatar-wrap">
-              <img src="/assets/avatar_tariq.jpg" alt="Robert MacDonald" class="user-avatar-img" id="driverHomeAvatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
+              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="user-avatar-img" id="driverHomeAvatar" onerror="this.src='/assets/avatar_tariq.jpg';" />
             </div>
             <div class="user-welcome-texts">
               <h2 class="user-greeting" id="driverHomeGreeting">Hello, Robert</h2>
@@ -11730,7 +11616,7 @@
               <div style="display:flex; gap:8px;">
                 <img src="/assets/avatar_tariq.jpg" style="width:36px; height:36px; border-radius:50%;" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
                 <div>
-                  <strong style="font-size:12px; color:#0F172A;">Robert MacDonald (Driver)</strong>
+                  <strong style="font-size:12px; color:#0F172A;">Tariq Ahmed (Driver)</strong>
                   <span style="display:block; font-size:10px; color:#64748B;">Toyota Sienna · Ontario Plate SCH-4091</span>
                 </div>
               </div>
@@ -11786,7 +11672,7 @@
               <span style="font-size:10px; font-weight:800; color:#D97706;">★ 2.0 Stars</span>
             </div>
             <p style="font-size:12px; color:#78350F; margin:6px 0;">"Driver was running 10 minutes late at morning pickup."</p>
-            <span style="font-size:10px; color:#92400E;">Reviewer: Parent #PRNT-4410 · Driver: Robert MacDonald</span>
+            <span style="font-size:10px; color:#92400E;">Reviewer: Parent #PRNT-4410 · Driver: Tariq Ahmed</span>
             <div style="display:flex; gap:6px; margin-top:8px;">
               <button type="button" class="btn-secondary-surface" onclick="alert('Review published');">Approve Review</button>
               <button type="button" class="btn-secondary-surface" style="color:#DC2626;" onclick="alert('Review hidden from provider profile');">Hide from Profile</button>

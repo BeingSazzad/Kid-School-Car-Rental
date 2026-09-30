@@ -192,7 +192,7 @@ window.appState = {
   providers: [
     {
       id: 'tariq',
-      name: 'Robert MacDonald',
+      name: 'Tariq Ahmed',
       roleTitle: 'School Ride Driver',
       gender: 'male',
       vehicle: 'Toyota Sienna (2023)',
@@ -217,14 +217,14 @@ window.appState = {
       oneTimeRate: 14,
       negotiable: true,
       preferredPayment: 'Protected Escrow',
-      paymentHandle: 'robert.macdonald@interac.ca',
+      paymentHandle: 'tariq.ahmed@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'Midtown Toronto',
       photo: '/assets/avatar_tariq.jpg',
       phone: '+1 (416) 555-0182',
       experience: '4+ Yrs',
       onTimeRate: '99.8%',
-      quote: '"Robert has safely driven our kids to Greenfield School for over 8 months. Very gentle, always punctual, and sends notifications right away."',
+      quote: '"Tariq has safely driven our kids to Greenfield School for over 8 months. Very gentle, always punctual, and sends notifications right away."',
       reviewer: '— Amanda Roy (Parent of 2)',
       availability: {
         weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
@@ -240,7 +240,7 @@ window.appState = {
     },
     {
       id: 'farhana',
-      name: 'Emily Campbell',
+      name: 'Farhana Yasmin',
       roleTitle: 'School Ride Driver',
       gender: 'female',
       vehicle: 'Honda Odyssey (2024)',
@@ -265,14 +265,14 @@ window.appState = {
       oneTimeRate: 16,
       negotiable: true,
       preferredPayment: 'Protected Escrow',
-      paymentHandle: 'emily.campbell@interac.ca',
+      paymentHandle: 'farhana.yasmin@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'Annex / Midtown',
       photo: '/assets/avatar_farhana.jpg',
       phone: '+1 (416) 555-0183',
       experience: '6+ Yrs',
       onTimeRate: '100%',
-      quote: '"Emily is amazing with younger kids! Emma always looks forward to her morning commute and arrives at school with a big smile."',
+      quote: '"Farhana is amazing with younger kids! Emma always looks forward to her morning commute and arrives at school with a big smile."',
       reviewer: '— David Miller (Parent of 1)',
       availability: {
         weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
@@ -288,7 +288,7 @@ window.appState = {
     },
     {
       id: 'kabir',
-      name: 'Lucas Bennett',
+      name: 'Kabir Hossain',
       roleTitle: 'School Ride Driver',
       gender: 'male',
       vehicle: 'Toyota Highlander (2022)',
@@ -313,14 +313,14 @@ window.appState = {
       oneTimeRate: 12,
       negotiable: false,
       preferredPayment: 'Protected Escrow',
-      paymentHandle: 'lucas.bennett@interac.ca',
+      paymentHandle: 'kabir.hossain@interac.ca',
       maxServiceDistanceKm: 15,
       serviceArea: 'East York',
       photo: '/assets/avatar_kabir.jpg',
       phone: '+1 (416) 555-0184',
       experience: '3+ Yrs',
       onTimeRate: '99.2%',
-      quote: '"Lucas is extremely reliable, always takes the safest routes and never speeds. Highly recommended for daily school carpool."',
+      quote: '"Kabir is extremely reliable, always takes the safest routes and never speeds. Highly recommended for daily school carpool."',
       reviewer: '— Jessica Taylor (Parent of 2)',
       availability: {
         weekly: ['Mon', 'Wed', 'Fri'],
@@ -530,7 +530,7 @@ window.appState = {
       ratePeriod: 'week',
       preferredPayment: 'e-Transfer · Cash',
       paymentHandleStatus: 'shared',
-      paymentHandle: 'robert.macdonald@interac.ca',
+      paymentHandle: 'tariq.ahmed@interac.ca',
       paymentMethod: 'Interac e-Transfer (Direct to Driver)',
       createdAt: 'May 20, 2026'
     },
@@ -560,7 +560,7 @@ window.appState = {
       ratePeriod: 'week',
       preferredPayment: 'e-Transfer · Cash',
       paymentHandleStatus: 'shared',
-      paymentHandle: 'emily.campbell@interac.ca',
+      paymentHandle: 'farhana.yasmin@interac.ca',
       paymentMethod: 'Interac e-Transfer (Direct to Driver)',
       createdAt: 'May 22, 2026'
     },
@@ -590,7 +590,7 @@ window.appState = {
       ratePeriod: 'trip',
       preferredPayment: 'e-Transfer · Cash',
       paymentHandleStatus: 'shared',
-      paymentHandle: 'lucas.bennett@interac.ca',
+      paymentHandle: 'kabir.hossain@interac.ca',
       paymentMethod: 'Cash at pickup',
       createdAt: 'May 23, 2026'
     },
@@ -643,7 +643,7 @@ window.appState = {
       ratePeriod: 'trip',
       preferredPayment: 'e-Transfer · Cash',
       paymentHandleStatus: 'not_requested',
-      paymentHandle: 'robert.macdonald@interac.ca',
+      paymentHandle: 'tariq.ahmed@interac.ca',
       paymentMethod: 'Direct to Driver',
       createdAt: 'Sep 9, 2026'
     },
@@ -801,7 +801,7 @@ window.appState = {
       date: 'Today • 08:30 AM',
       title: 'School Ride Escrow — Robert M.',
       subtitle: 'Funds secured in platform escrow',
-      provider: 'Robert MacDonald',
+      provider: 'Tariq Ahmed',
       baseAmount: 60.00,
       serviceFee: 4.50,
       stripeFee: 1.95,
@@ -819,7 +819,7 @@ window.appState = {
       date: 'Yesterday • 04:15 PM',
       title: 'Completed Commute — Emily C.',
       subtitle: 'Payout released to driver account',
-      provider: 'Emily Campbell',
+      provider: 'Farhana Yasmin',
       baseAmount: 70.00,
       serviceFee: 4.50,
       stripeFee: 2.25,
@@ -854,7 +854,7 @@ window.appState = {
       date: 'Sep 22, 2026 • 11:30 AM',
       title: 'Ride Dispute — Lucas B.',
       subtitle: 'Under safety team review',
-      provider: 'Lucas Bennett',
+      provider: 'Kabir Hossain',
       baseAmount: 55.00,
       serviceFee: 4.50,
       stripeFee: 1.80,
@@ -911,7 +911,7 @@ window.appState = {
   activeRole: localStorage.getItem('h2s_active_role') || 'parent',
   driver: {
     id: 'tariq',
-    name: 'Robert MacDonald',
+    name: 'Tariq Ahmed',
     phone: '+1 (416) 555-0182',
     email: 'robert.macdonald@torontoschoolrides.ca',
     photo: '/assets/avatar_tariq.jpg',
@@ -2690,7 +2690,7 @@ function renderHome() {
 }
 
 window.toggleNotificationAlert = function () {
-  alert('🔔 Home2School Updates:\n• Robert MacDonald scheduled for 07:30 AM tomorrow\n• Weekly recurring schedule active for Liam & Emma');
+  alert('🔔 Home2School Updates:\n• Tariq Ahmed scheduled for 07:30 AM tomorrow\n• Weekly recurring schedule active for Liam & Emma');
 };
 
 /* ==========================================================
@@ -3965,7 +3965,7 @@ window.renderParentReviewsScreen = function () {
     {
       id: 'rev-prnt-1',
       providerId: 'tariq',
-      providerName: 'Robert MacDonald',
+      providerName: 'Tariq Ahmed',
       providerPhoto: '/assets/avatar_tariq.jpg',
       rating: 5,
       date: 'Sep 15, 2026',
@@ -6154,7 +6154,7 @@ window.openChatWith = function (providerId) {
 };
 
 window.callCurrentChatParty = function () {
-  let partyName = 'Robert MacDonald';
+  let partyName = 'Tariq Ahmed';
   let partyPhone = '+1 (416) 555-0182';
 
   if (window.appState && window.appState.activeRole === 'driver') {
@@ -7883,7 +7883,7 @@ window.renderReportScreen = function (bookingId, role) {
     const booking = (window.appState?.bookings || []).find(b => b.id === bookingId) || (window.appState?.bookings || [])[0];
     const provider = (window.appState?.providers || []).find(p => p.id === booking?.providerId) || (window.appState?.providers || [])[0];
     const children = (booking?.childIds || []).map(id => (window.appState?.children || []).find(c => c.id === id)?.name).filter(Boolean);
-    passengerName = provider?.name || 'Robert MacDonald (Driver)';
+    passengerName = provider?.name || 'Tariq Ahmed (Driver)';
     kidsNames = children.join(' & ') || 'Child Commute';
     routeText = `${booking?.pickupLocation || 'Home'} → ${booking?.schoolLocation || 'School'}`;
     bookingBadge = booking?.id ? (booking.id.startsWith('#') ? booking.id : `#${booking.id}`) : '#84920';
@@ -8572,7 +8572,7 @@ window.requestDriverCallback = function () {
       </div>
       <div class="sos-card-content">
         <div class="sos-card-title" style="color:#15803D;">✓ Escort Cab Pinged Successfully</div>
-        <div class="sos-card-desc" style="color:#166534;">Robert MacDonald notified to initiate emergency safety callback</div>
+        <div class="sos-card-desc" style="color:#166534;">Tariq Ahmed notified to initiate emergency safety callback</div>
       </div>
     `;
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -8587,7 +8587,7 @@ window.requestDriverCallback = function () {
 window.shareEmergencyLiveTelemetry = function () {
   const shareText = '🚨 URGENT LIVE SAFETY TELEMETRY - Home2School\n' +
     'Children: Liam & Emma Tremblay (On Board)\n' +
-    'Vehicle: Toyota Sienna (SCH-4091) - Robert MacDonald\n' +
+    'Vehicle: Toyota Sienna (SCH-4091) - Tariq Ahmed\n' +
     'Current GPS: Bloor St W & Bay St, Toronto (Speed: 32 km/h)\n' +
     'Destination: Greenfield International School (ETA: 6 min)\n' +
     'Encrypted Live Route: https://home2school.app/live/H2S-84920?sos=true';

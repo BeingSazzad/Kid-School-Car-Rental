@@ -1052,6 +1052,100 @@
   const originalSummary = window.renderBookingSummary;
   window.renderBookingSummary = function () {
     ensureDraftDefaults();
+    const draft = state().bookingDraft || {};
+    const provider = (state().providers || []).find((p) => p.id === draft.providerId) || state().providers[0];
+    const children = selectedChildren();
+    const isWalk = provider?.category === 'walkshare' || provider?.id === 'sarah' || provider?.id === 'elena';
+
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
+    const setHtml = (id, htmlVal) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = htmlVal;
+    };
+
+    // 1. Children format: Arman Khan & Emma Khan (2)
+    const kidsCount = children.length || 2;
+    const kidsLabel = children.length
+      ? children.map((c) => c.name).join(' & ') + ` (${kidsCount})`
+      : 'Arman Khan & Emma Khan (2)';
+    setText('bsTripChildren', kidsLabel);
+    setText('summaryChildrenText', kidsLabel);
+
+    // 2. Trip Direction
+    const tripDirection = draft.direction === 'oneway' ? 'One Way' : 'Round Trip';
+    setText('bsTripDirection', tripDirection);
+    setText('summaryTripTypeText', tripDirection);
+
+    // 3. Outbound & Return Legs
+    const pickup = document.getElementById('setupPickupLocationInput')?.value || draft.pickupLocation || 'Home';
+    const school = document.getElementById('setupSchoolLocationInput')?.value || draft.schoolLocation || 'School';
+    const outboundTime = draft.outboundTime || '07:30 AM';
+    const returnTime = draft.returnTime || '01:00 PM';
+    
+    setHtml('bsTripOutbound', `${pickup} &rarr; ${school.includes('School') ? 'School' : school} (${outboundTime})`);
+    setHtml('bsTripReturn', `${school.includes('School') ? 'School' : school} &rarr; ${pickup} (${returnTime})`);
+    setText('summaryPickupText', pickup);
+    setText('summaryDropoffText', school);
+    setText('summaryOutboundText', outboundTime);
+    setText('summaryReturnText', returnTime);
+
+    // 4. Frequency
+    const isRecurring = draft.frequency === 'recurring';
+    const freqDays = (draft.selectedDays || []).join(' ') || 'Mon – Fri';
+    const freqLabel = isRecurring ? `Recurring (${freqDays} Commute)` : 'One-Time Ride (Single Day Pass)';
+    setText('bsTripFrequency', freqLabel);
+    setText('summaryFreqText', freqLabel);
+
+    // 5. Provider
+    const cleanName = String(provider?.name || 'Tariq Ahmed').replace(/\s*\(WalkShare\)/i, '');
+    const vehName = isWalk ? 'Walking Escort' : (provider?.vehicle?.split('(')[0]?.trim() || 'Toyota Sienna');
+    setText('bsTripProvider', `${cleanName} (${vehName})`);
+    setText('summaryProviderText', cleanName);
+    setText('summaryVehicleText', provider?.vehicle || 'Toyota Sienna (2023)');
+
+    const provIcon = document.getElementById('bsProviderRowIcon');
+    if (provIcon) {
+      provIcon.setAttribute('data-lucide', isWalk ? 'footprints' : 'car');
+    }
+
+    // 6. Pricing Summary (Weekly vs One-time)
+    const baseWeekly = isWalk ? 140 : 240.00;
+    const baseRate = isRecurring ? baseWeekly : (isWalk ? 25 : 45.00);
+    const multiChildDiscount = kidsCount > 1 ? Number((baseRate * 0.10).toFixed(2)) : 0; // 2nd child 20% of child fare = ~10% total
+    const discountVal = multiChildDiscount > 0 ? 24.00 : 0.00;
+    const totalAmount = baseRate - discountVal;
+
+    const rateLabel = isRecurring ? 'Weekly Base Rate' : 'Base Ride Fare';
+    const totalLabel = isRecurring ? 'Total Weekly Amount' : 'Total Amount';
+    const unitSuffix = isRecurring ? ' / week' : ' / ride';
+
+    setText('bsPricingBaseLabel', rateLabel);
+    setText('bsPricingBaseRate', `${baseRate.toFixed(2)}`);
+
+    const discountRow = document.getElementById('bsPricingDiscountRow');
+    if (discountRow) {
+      if (kidsCount > 1) {
+        discountRow.style.display = 'flex';
+        setText('bsPricingDiscount', `-$24.00`);
+      } else {
+        discountRow.style.display = 'none';
+      }
+    }
+
+    setText('bsPricingTotalLabel', totalLabel);
+    setText('bsPricingTotal', `${totalAmount.toFixed(2)}${unitSuffix}`);
+
+    setText('summaryTotalEscrowVal', `${totalAmount.toFixed(2)}`);
+    setText('summaryPriceUnitText', unitSuffix);
+
+    if (window.lucide) window.lucide.createIcons();
+  };
+
+  window.renderBookingSummary_legacy = function () {
+    ensureDraftDefaults();
     const draft = state().bookingDraft;
     const provider = (state().providers || []).find((p) => p.id === draft.providerId) || state().providers[0];
     const children = selectedChildren();
@@ -1086,7 +1180,7 @@
     }
 
     const cleanName = String(provider?.name || '').replace(/\s*\(WalkShare\)/i, '');
-    setText('summaryProviderText', cleanName || 'Robert MacDonald');
+    setText('summaryProviderText', cleanName || 'Tariq Ahmed');
     const vehInfo = isWalk 
       ? 'Neighborhood Walking Group · Sidewalks only' 
       : ([provider?.vehicle || 'Toyota Sienna (2023)', provider?.plate || 'SCH-4091'].filter(Boolean).join(' · '));
@@ -1149,7 +1243,7 @@
     setText('summaryOutboundText', draft.outboundTime || '07:30 AM');
     setText('summaryReturnText', draft.returnTime || '01:00 PM');
     setText('summaryWhenText', `${dateLabel} · ${tripType}`);
-    setText('summaryProviderText', cleanName || 'Robert MacDonald');
+    setText('summaryProviderText', cleanName || 'Tariq Ahmed');
     setText('summaryVehicleText', vehInfo);
     setText('summaryListedRateVal', `$${rateVal}/${rateUnit}`);
     setText('summaryTotalEscrowVal', `$${escrowNum.toFixed(2)}`);
@@ -1305,10 +1399,10 @@
     const wrap = document.getElementById('inboxThreadList');
     if (!wrap) return;
     const threads = [
-      { id: 'tariq', name: 'Robert MacDonald', photo: '/assets/avatar_tariq.jpg', preview: 'Got both of them buckled in safely! Heading to Greenfield.', time: '07:34 AM', unread: 2 },
+      { id: 'tariq', name: 'Tariq Ahmed', photo: '/assets/avatar_tariq.jpg', preview: 'Got both of them buckled in safely! Heading to Greenfield.', time: '07:34 AM', unread: 2 },
       { id: 'sarah', name: 'Sarah Jenkins', photo: '/assets/avatar_sarah.jpg', preview: 'Walking group is 2 minutes from Sunshine Pre-school.', time: '08:12 AM', unread: 1 },
-      { id: 'farhana', name: 'Emily Campbell', photo: '/assets/avatar_farhana.jpg', preview: 'Happy to cover Emma’s Friday return if Robert is full.', time: 'Yesterday', unread: 1 },
-      { id: 'kabir', name: 'Lucas Bennett', photo: '/assets/avatar_kabir.jpg', preview: 'Confirmed Mon–Wed backup for Liam’s soccer practice ride.', time: 'Mon', unread: 0 },
+      { id: 'farhana', name: 'Farhana Yasmin', photo: '/assets/avatar_farhana.jpg', preview: 'Happy to cover Emma’s Friday return if Robert is full.', time: 'Yesterday', unread: 1 },
+      { id: 'kabir', name: 'Kabir Hossain', photo: '/assets/avatar_kabir.jpg', preview: 'Confirmed Mon–Wed backup for Liam’s soccer practice ride.', time: 'Mon', unread: 0 },
       { id: 'elena', name: 'Sophie Bouchard', photo: '/assets/avatar_rehana.jpg', preview: 'West-gate walk group has space for Chloe next week.', time: 'Sun', unread: 0 }
     ];
     wrap.innerHTML = threads.map((t) => `
