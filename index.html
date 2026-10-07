@@ -225,15 +225,14 @@
       display: block !important;
     }
 
-        #screen-bookingSearchProviders .providers-result-list {
+    #screen-bookingSearchProviders .providers-result-list {
       display: flex !important;
       flex-direction: column !important;
-      gap: 0 !important;
-      background: #FFFFFF !important;
-      border-radius: 16px !important;
-      border: 1px solid #E5E7EB !important;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
-      overflow: hidden !important;
+      gap: 12px !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      overflow: visible !important;
       margin: 0 0 20px 0 !important;
       padding: 0 !important;
       clear: both !important;
@@ -250,28 +249,28 @@
       text-align: left !important;
       gap: 14px !important;
       background: #FFFFFF !important;
-      padding: 16px 16px !important;
-      border: none !important;
-      border-bottom: 1px solid #E5E7EB !important;
-      border-radius: 0 !important;
-      box-shadow: none !important;
+      padding: 14px 16px !important;
+      border: 1px solid #F1F5F9 !important;
+      border-radius: 16px !important;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04) !important;
       cursor: pointer !important;
       box-sizing: border-box !important;
       width: 100% !important;
       margin: 0 !important;
-      transform: none !important;
+      transition: all 0.15s ease !important;
     }
 
     #screen-bookingSearchProviders .provider-result-card:last-child,
     #screen-bookingSearchProviders .provider-card-figma:last-child {
-      border-bottom: none !important;
+      border: 1px solid #F1F5F9 !important;
     }
 
     #screen-bookingSearchProviders .provider-result-card:hover,
     #screen-bookingSearchProviders .provider-card-figma:hover {
-      background: #F8FAFC !important;
-      border-color: #E5E7EB !important;
-      transform: none !important;
+      background: #FFFFFF !important;
+      border-color: #CBD5E1 !important;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+      transform: translateY(-1px) !important;
     }
 
     #screen-bookingSearchProviders .pcf-avatar-wrap {
@@ -735,9 +734,11 @@
       align-items: center !important;
       justify-content: space-between !important;
       gap: 12px !important;
-      padding: 12px 14px !important;
-      border-radius: 14px !important;
+      padding: 14px 16px !important;
+      border: 1px solid #F1F5F9 !important;
+      border-radius: 16px !important;
       margin-bottom: 10px !important;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04) !important;
     }
 
     .ub-booking-card:hover {
@@ -755,15 +756,15 @@
     }
 
     .ub-thumb-box {
-      width: 50px !important;
-      height: 50px !important;
-      min-width: 50px !important;
-      min-height: 50px !important;
-      max-width: 50px !important;
-      max-height: 50px !important;
+      width: 48px !important;
+      height: 48px !important;
+      min-width: 48px !important;
+      min-height: 48px !important;
+      max-width: 48px !important;
+      max-height: 48px !important;
       border-radius: 12px !important;
-      background: #F1F5F9 !important;
-      border: 1px solid #E2E8F0 !important;
+      background: #F8FAFC !important;
+      border: none !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
@@ -783,9 +784,9 @@
     }
 
     .ub-thumb-box.is-walk {
-      background: #ECFDF5 !important;
-      border-color: #A7F3D0 !important;
-      color: #059669 !important;
+      background: #F0FDF4 !important;
+      border: none !important;
+      color: #16A34A !important;
     }
 
     .ub-card-info {
@@ -830,9 +831,9 @@
     .ub-rebook-btn {
       background: #F1F5F9 !important;
       color: #0F172A !important;
-      border: 1px solid #E2E8F0 !important;
+      border: none !important;
       border-radius: 999px !important;
-      padding: 7px 16px !important;
+      padding: 6px 14px !important;
       font-size: 13px !important;
       font-weight: 600 !important;
       cursor: pointer !important;
@@ -844,25 +845,24 @@
     }
 
     .ub-details-btn {
-      background: #F8FAFC !important;
+      background: #F1F5F9 !important;
       color: #1E293B !important;
-      border: 1px solid #E2E8F0 !important;
+      border: none !important;
       border-radius: 999px !important;
-      padding: 7px 16px !important;
+      padding: 6px 14px !important;
       font-size: 13px !important;
-      font-weight: 700 !important;
+      font-weight: 600 !important;
       cursor: pointer !important;
       display: inline-flex !important;
       align-items: center !important;
-      gap: 6px !important;
+      gap: 4px !important;
       transition: all 0.15s ease !important;
       font-family: inherit !important;
     }
 
     .ub-details-btn:hover {
-      background: #EFF6FF !important;
-      color: #1B2B68 !important;
-      border-color: #BFDBFE !important;
+      background: #E2E8F0 !important;
+      color: #0F172A !important;
     }
 
     .ub-track-btn {
@@ -5894,13 +5894,13 @@
         <div>
           <h3 class="home-figma-section-title">Quick Actions</h3>
           
-          <!-- Primary Full Width New Booking Button -->
-          <button type="button" class="home-figma-btn-new-booking" onclick="navigateTo('bookingTripSetup')">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <i data-lucide="calendar" style="width: 20px; height: 20px;"></i>
+          <!-- Single Hero New Booking Button -->
+          <button type="button" class="home-figma-btn-new-booking" style="margin-bottom: 12px;" onclick="navigateTo('bookingTripSetup')">
+            <span style="display: flex; align-items: center; gap: 10px;">
+              <i data-lucide="plus-circle" style="width: 20px; height: 20px;"></i>
               <span>New Booking</span>
-            </div>
-            <i data-lucide="chevron-right" style="width: 20px; height: 20px;"></i>
+            </span>
+            <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
           </button>
 
           <!-- 2 Action Cards Grid -->
@@ -6390,7 +6390,17 @@
       </div>
 
       <div class="screen-scroll-body bk-figma-body">
-        <!-- 1. Children Card (Figma 1:1) -->
+        <!-- Top Mode Switcher: On-Demand Single Ride vs Structured School Commute Pass -->
+        <div class="bk-top-mode-segmented" id="bkTopModeSegmented">
+          <button type="button" class="bk-top-mode-btn" id="btnModeOnDemand" onclick="setTripServiceMode('on-demand')">
+            <i data-lucide="zap"></i><span>On-Demand</span>
+          </button>
+          <button type="button" class="bk-top-mode-btn active" id="btnModeScheduled" onclick="setTripServiceMode('scheduled')">
+            <i data-lucide="calendar"></i><span>School Pass</span>
+          </button>
+        </div>
+
+        <!-- 1. Who: Children Card -->
         <div class="bk-figma-card-clickable" id="bookingChildrenTrigger" onclick="toggleChildrenDropdown()">
           <div style="display: flex; align-items: center; gap: 12px;">
             <i data-lucide="users" style="width: 22px; height: 22px; color: #0F172A; flex-shrink: 0;"></i>
@@ -6404,19 +6414,19 @@
         </div>
         <p class="mvp-hint-text" id="bookingChildrenHint" style="display:none;">Different schools need a separate booking for MVP.</p>
 
-        <!-- 2. Pickup & Drop-off Card (Figma 1:1) -->
-        <div class="bk-figma-card">
+        <!-- 2. Where: Pickup & Drop-off Card -->
+        <div class="bk-figma-card" id="bkRouteCard">
           <div class="bk-figma-card-head" style="margin-bottom: 10px;">
             <div class="bk-figma-head-left">
               <i data-lucide="map-pin" style="width: 18px; height: 18px; color: #0F172A;"></i>
-              <span>Pickup &amp; Drop-off</span>
+              <span id="bkRouteCardTitle">Pickup &amp; Drop-off</span>
             </div>
           </div>
           <div class="bk-figma-route-box">
             <!-- Pickup Stop -->
             <div class="bk-figma-route-row" onclick="document.getElementById('setupPickupLocationInput').focus()">
               <span style="width: 10px; height: 10px; border-radius: 50%; background: #2563EB; margin: 0 4px; flex-shrink: 0;"></span>
-              <input type="text" id="setupPickupLocationInput" class="bk-figma-route-input" value="" placeholder="Pickup location" oninput="syncLocationInput('pickup', this.value); updateBookingSearchCta();" />
+              <input type="text" id="setupPickupLocationInput" class="bk-figma-route-input" value="" placeholder="Pickup address (home or any location)" oninput="syncLocationInput('pickup', this.value); updateBookingSearchCta();" />
               <input type="hidden" id="setupPickupLocation" value="" />
               <button type="button" class="book-ride-clear" id="btnClearPickup" hidden onclick="event.stopPropagation(); clearBookingLocation('pickup')" title="Clear pickup" style="background: none; border: none; cursor: pointer; color: #94A3B8; padding: 2px;">
                 <i data-lucide="x" style="width: 14px; height: 14px;"></i>
@@ -6429,7 +6439,7 @@
             <!-- Drop-off Stop -->
             <div class="bk-figma-route-row" onclick="document.getElementById('setupSchoolLocationInput').focus()">
               <i data-lucide="map-pin" style="width: 16px; height: 16px; color: #0F172A; margin: 0 1px; flex-shrink: 0;"></i>
-              <input type="text" id="setupSchoolLocationInput" class="bk-figma-route-input" value="" placeholder="Drop-off location" oninput="syncLocationInput('school', this.value); updateBookingSearchCta();" />
+              <input type="text" id="setupSchoolLocationInput" class="bk-figma-route-input" value="" placeholder="Drop-off address (school or destination)" oninput="syncLocationInput('school', this.value); updateBookingSearchCta();" />
               <input type="hidden" id="setupSchoolLocation" value="" />
               <button type="button" class="book-ride-clear" id="btnClearDropoff" hidden onclick="event.stopPropagation(); clearBookingLocation('school')" title="Clear drop-off" style="background: none; border: none; cursor: pointer; color: #94A3B8; padding: 2px;">
                 <i data-lucide="x" style="width: 14px; height: 14px;"></i>
@@ -6439,22 +6449,64 @@
           </div>
         </div>
 
-        <!-- 3. Date & Time Card (Figma 1:1) -->
-        <div class="bk-figma-card">
+        <!-- 3. What Plan: Ride Package Card (3 School Commute Tiers) -->
+        <div class="bk-figma-card" id="bkCommutePackageCard">
+          <div class="bk-figma-card-head" style="margin-bottom: 10px;">
+            <div class="bk-figma-head-left">
+              <i data-lucide="layers" style="width: 18px; height: 18px; color: #0F172A;"></i>
+              <span>School Pass Tier</span>
+            </div>
+            <span class="bk-pkg-tag" id="activePackageBadge">Weekly Pass</span>
+          </div>
+
+          <!-- 3 Clean Segmented Tabs (Daily, Weekly, Monthly) -->
+          <div class="bk-packages-grid">
+            <button type="button" class="bk-package-tab" id="pkgTab-daily" onclick="selectTripPackage('daily')">
+              <div class="bk-pkg-top"><i data-lucide="sun"></i><span>Daily</span></div>
+            </button>
+            <button type="button" class="bk-package-tab active" id="pkgTab-weekly" onclick="selectTripPackage('weekly')">
+              <div class="bk-pkg-top"><i data-lucide="calendar"></i><span>Weekly</span></div>
+            </button>
+            <button type="button" class="bk-package-tab" id="pkgTab-monthly" onclick="selectTripPackage('monthly')">
+              <div class="bk-pkg-top"><i data-lucide="shield-check"></i><span>Monthly</span></div>
+            </button>
+          </div>
+
+          <!-- Repeating Weekday Selection (Only for Weekly / Monthly) -->
+          <div id="repeatDaysSection" class="book-ride-repeat-details" style="display: block; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #E2E8F0;">
+            <div style="font-family: 'Manrope', system-ui, sans-serif; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 8px;">Active School Days</div>
+            <div class="bk-figma-days-row" id="cleanDaysGrid" style="margin-bottom: 10px;">
+              <button type="button" class="bk-figma-day-btn active" data-day="Mon" onclick="toggleRepeatDay(this)">Mon</button>
+              <button type="button" class="bk-figma-day-btn active" data-day="Tue" onclick="toggleRepeatDay(this)">Tue</button>
+              <button type="button" class="bk-figma-day-btn active" data-day="Wed" onclick="toggleRepeatDay(this)">Wed</button>
+              <button type="button" class="bk-figma-day-btn active" data-day="Thu" onclick="toggleRepeatDay(this)">Thu</button>
+              <button type="button" class="bk-figma-day-btn active" data-day="Fri" onclick="toggleRepeatDay(this)">Fri</button>
+              <button type="button" class="bk-figma-day-btn" data-day="Sat" onclick="toggleRepeatDay(this)">Sat</button>
+              <button type="button" class="bk-figma-day-btn" data-day="Sun" onclick="toggleRepeatDay(this)">Sun</button>
+            </div>
+
+            <!-- Auto-Renew Pass Checkbox -->
+            <label class="bk-figma-checkbox-row" style="margin-bottom: 4px;">
+              <input type="checkbox" id="toggleUntilCancelled" checked style="display:none;" onchange="handleUntilCancelledChange(this.checked)" />
+              <span class="bk-figma-custom-checkbox" id="customCheckUi">
+                <i data-lucide="check" style="width: 12px; height: 12px; stroke-width: 3;"></i>
+              </span>
+              <span style="font-family: 'Manrope', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: #0F172A;">Auto-renew pass weekly until cancelled</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 4. When: Date & Time Schedule Card -->
+        <div class="bk-figma-card" id="bkDateTimeCard">
           <div class="bk-figma-card-head">
             <div class="bk-figma-head-left">
-              <i data-lucide="calendar" style="width: 18px; height: 18px; color: #0F172A;"></i>
+              <i data-lucide="clock" style="width: 18px; height: 18px; color: #0F172A;"></i>
               <span>Date &amp; Time</span>
             </div>
             <div class="bk-figma-segmented-wrap">
               <button type="button" class="bk-figma-segmented-btn" id="btnTripDirectionOneWay" onclick="handleDirectionToggle('oneway')">One way</button>
               <button type="button" class="bk-figma-segmented-btn active" id="btnTripDirectionRound" onclick="handleDirectionToggle('round')">Round trip</button>
             </div>
-          </div>
-
-          <div class="bk-figma-segmented-wrap bk-oneway-leg" id="oneWayLegRow" hidden>
-            <button type="button" class="bk-figma-segmented-btn active" id="btnOneWayToSchool" onclick="selectOneWayLeg('am')">To school</button>
-            <button type="button" class="bk-figma-segmented-btn" id="btnOneWayFromSchool" onclick="selectOneWayLeg('pm')">From school</button>
           </div>
 
           <!-- Select Date Box -->
@@ -6491,54 +6543,8 @@
           <input type="time" id="setupReturnTime" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" style="display:none;" onchange="updateTripTime('return', this.value); syncBookingTimeDisplays(); updateBookingSearchCta();" />
         </div>
 
-        <!-- 4. Repeat Card (Figma 1:1) -->
-        <div class="bk-figma-card">
-          <div class="bk-figma-card-head" style="margin-bottom: 8px;">
-            <div class="bk-figma-head-left">
-              <i data-lucide="repeat" style="width: 18px; height: 18px; color: #0F172A;"></i>
-              <span>Repeat</span>
-            </div>
-            <label class="book-ride-switch" style="cursor: pointer;">
-              <input type="checkbox" id="toggleRecurringRide" checked aria-label="Repeat this ride" onchange="handleRecurringToggleChange(this.checked)" />
-              <span class="book-ride-switch-ui" aria-hidden="true"></span>
-            </label>
-          </div>
-
-          <div id="repeatDaysSection" class="book-ride-repeat-details" style="display: block;">
-            <!-- 7 Days Row -->
-            <div class="bk-figma-days-row" id="cleanDaysGrid">
-              <button type="button" class="bk-figma-day-btn active" data-day="Mon" onclick="toggleRepeatDay(this)">Mon</button>
-              <button type="button" class="bk-figma-day-btn active" data-day="Tue" onclick="toggleRepeatDay(this)">Tue</button>
-              <button type="button" class="bk-figma-day-btn active" data-day="Wed" onclick="toggleRepeatDay(this)">Wed</button>
-              <button type="button" class="bk-figma-day-btn active" data-day="Thu" onclick="toggleRepeatDay(this)">Thu</button>
-              <button type="button" class="bk-figma-day-btn active" data-day="Fri" onclick="toggleRepeatDay(this)">Fri</button>
-              <button type="button" class="bk-figma-day-btn" data-day="Sat" onclick="toggleRepeatDay(this)">Sat</button>
-              <button type="button" class="bk-figma-day-btn" data-day="Sun" onclick="toggleRepeatDay(this)">Sun</button>
-            </div>
-
-            <!-- Until Cancelled Checkbox -->
-            <label class="bk-figma-checkbox-row">
-              <input type="checkbox" id="toggleUntilCancelled" checked style="display:none;" onchange="handleUntilCancelledChange(this.checked)" />
-              <span class="bk-figma-custom-checkbox" id="customCheckUi">
-                <i data-lucide="check" style="width: 12px; height: 12px; stroke-width: 3;"></i>
-              </span>
-              <span style="font-family: 'Manrope', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: #0F172A;">Until cancelled</span>
-            </label>
-
-            <!-- End Date Box -->
-            <div class="bk-figma-select-box" id="bookingEndDateTrigger" onclick="openBookingEndDateSheet()" style="opacity: 0.6; pointer-events: none;">
-              <div class="bk-figma-select-val" id="bookingEndDateValue">
-                <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748B;"></i>
-                <span>End date</span>
-              </div>
-              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
-            </div>
-            <input type="date" id="repeatEndDateInput" class="book-ride-until-native" tabindex="-1" aria-hidden="true" style="display:none;" onchange="setRecurrenceEndDate(this.value)" />
-          </div>
-        </div>
-
-        <!-- 5. Service Type Card (Figma 1:1) -->
-        <div class="bk-figma-card">
+        <!-- 5. How: Service Type Card -->
+        <div class="bk-figma-card" id="bkServiceTypeCard">
           <div class="bk-figma-card-head" style="margin-bottom: 8px;">
             <div class="bk-figma-head-left">
               <i data-lucide="car" style="width: 18px; height: 18px; color: #0F172A;"></i>
@@ -6568,8 +6574,8 @@
           </div>
         </div>
 
-        <!-- 6. Additional Notes Card (Figma 1:1) -->
-        <div class="bk-figma-card">
+        <!-- 6. Special Instructions: Additional Notes Card -->
+        <div class="bk-figma-card" id="bkNotesCard">
           <div class="bk-figma-card-head" style="margin-bottom: 8px;">
             <div class="bk-figma-head-left">
               <i data-lucide="file-text" style="width: 18px; height: 18px; color: #0F172A;"></i>
@@ -6579,7 +6585,34 @@
           <textarea id="setupBookingNotesInput" class="bk-figma-textarea" placeholder="e.g. Gate 2 pickup, booster seat required, handover PIN instructions..."></textarea>
         </div>
 
-        <!-- Search Available Providers CTA Button (Figma 1:1) -->
+        <!-- 7. Cost & Summary: Live Unified Fare & Distance Estimate Box -->
+        <div id="bkUnifiedEstimateBox" class="bk-unified-estimate-box">
+          <div class="bk-unified-est-left">
+            <div class="bk-unified-est-title" id="bkUnifiedEstTitle">Weekly Pass</div>
+            <div class="bk-unified-est-meta" id="bkUnifiedEstMeta">
+              <i data-lucide="navigation"></i>
+              <span id="bkUnifiedDistDurText">5.4 km</span>
+            </div>
+          </div>
+          <div class="bk-unified-est-right">
+            <div class="bk-unified-est-price" id="bkUnifiedEstPrice">$61.48</div>
+            <span class="bk-unified-est-label">Est. Total</span>
+          </div>
+
+          <!-- Hidden legacy alias elements to maintain full JS backward compatibility -->
+          <div style="display: none;">
+            <span id="bkPackageEstTitle"></span>
+            <span id="bkPackageEstSub"></span>
+            <span id="bkPackageEstPrice"></span>
+            <div id="bkOnDemandEstimateBox">
+              <span id="bkOnDemandDistText"></span>
+              <span id="bkOnDemandDurText"></span>
+              <span id="bkOnDemandPriceText"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Action: Search Available Providers CTA Button -->
         <button type="button" class="bk-figma-btn-search" id="btnSearchProviders" onclick="proceedFromTripSetup()">
           <i data-lucide="search" style="width: 18px; height: 18px;"></i>
           <span>Search Available Providers</span>
@@ -6790,18 +6823,12 @@
         <button class="back-btn" onclick="navigateTo('bookingTripSetup', true)">
           <i data-lucide="chevron-left"></i>
         </button>
-        <h2 class="top-bar-title">Transport providers</h2>
-        <button type="button" class="btn-icon-contact" onclick="window.openSearchFilterModal()" aria-label="Filters" title="Filters">
-          <i data-lucide="sliders-horizontal" style="width:18px;height:18px;"></i>
-        </button>
+        <h2 class="top-bar-title" style="font-size: 18px; font-weight: 800; color: #0F172A;">Transport Providers</h2>
+        <span style="width: 28px;"></span>
       </div>
 
-      <div class="screen-scroll-body" style="padding-bottom: 24px;">
-        <div class="providers-header-block">
-          <h1 class="providers-header-title">Transport providers</h1>
-        </div>
-
-        <!-- Clean 2-Box Search Controls (Sort & Filter) matching Design System -->
+      <div class="screen-scroll-body" style="padding-bottom: 24px; padding-top: 14px;">
+        <!-- 2-Box Search Controls (Sort & Filter) -->
         <div class="provider-search-controls-wrap">
           <div class="provider-search-controls-row">
             <!-- Box 1: Sort Control -->
@@ -6811,8 +6838,6 @@
               <select id="providerSortSelect" class="provider-sort-select" onchange="window.handleProviderSortChange(this.value)" aria-label="Sort providers">
                 <option value="nearest" selected>Nearest</option>
                 <option value="rating">Top Rated</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
               </select>
               <i data-lucide="chevron-down" class="ctrl-box-caret"></i>
             </div>
@@ -6828,9 +6853,8 @@
           </div>
 
           <!-- Matching Providers Count Info -->
-          <div class="search-results-summary-row">
-            <span id="searchResultCountBadge" class="search-count-highlight">5 Providers Matching</span>
-            <span class="search-alloc-text">Dynamic Seat Allocation Active</span>
+          <div class="search-results-summary-row" style="margin-bottom: 10px;">
+            <span id="searchResultCountBadge" class="search-count-highlight">Available Providers</span>
           </div>
         </div>
 
@@ -6839,218 +6863,212 @@
         </div>
 
         <div id="providersResultList" class="providers-result-list">
-          <!-- 1. Tariq Ahmed -->
+          <!-- 1. Tariq Ahmed (Driver) -->
           <div class="provider-result-card provider-card-figma" data-category="drivers" data-provider-id="tariq" data-gender="male" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="4.9" data-verified="true" data-distance="0.8" data-price="60" onclick="openDriverProfile('tariq', 'bookingSearchProviders')">
-            <div class="pcf-avatar-wrap">
-              <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="pcf-avatar" onerror="this.src='/assets/avatar_tariq.jpg'" />
-            </div>
-            <div class="pcf-info-col">
-              <div class="pcf-name-row">
-                <span class="pcf-name">Tariq Ahmed</span>
-                <span class="pcf-verified-badge" title="Verified Driver">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                    <circle cx="12" cy="12" r="10" fill="#2563EB"/>
-                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
+            <div class="pcf-main-row">
+              <div class="pcf-avatar-wrap">
+                <img src="/assets/avatar_tariq.jpg" alt="Tariq Ahmed" class="pcf-avatar" onerror="this.src='/assets/avatar_tariq.jpg'" />
               </div>
-              <div class="pcf-meta-row">
-                <span class="pcf-star">★</span>
-                <span class="pcf-rating">4.9</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-distance">0.8 km</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-zone">Greenfield</span>
-              </div>
-              <div class="pcf-vehicle-row">
-                <span class="pcf-vehicle">Toyota Sienna</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-seats">4 seats</span>
+              <div class="pcf-info-col">
+                <div class="pcf-name-row">
+                  <span class="pcf-name">Tariq Ahmed</span>
+                  <span class="pcf-verified-badge" title="Verified Driver">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                      <circle cx="12" cy="12" r="10" fill="#2563EB"/>
+                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="pcf-meta-row">
+                  <span class="pcf-star">★</span>
+                  <span class="pcf-rating">4.9</span>
+                  <span class="pcf-bullet">•</span>
+                  <span class="pcf-distance">0.8 km away</span>
+                </div>
               </div>
             </div>
-            <div class="pcf-action-col">
-              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('tariq')">
-                Book
+            <div class="pcf-bottom-row">
+              <div class="pcf-service-pill">
+                <i data-lucide="car"></i>
+                <span>Toyota Sienna · 4 seats</span>
+              </div>
+              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('tariq')">
+                Request Booking
               </button>
             </div>
           </div>
 
-          <!-- 2. Farhana Yasmin -->
+          <!-- 2. Farhana Yasmin (Driver) -->
           <div class="provider-result-card provider-card-figma" data-category="drivers" data-provider-id="farhana" data-gender="female" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="5.0" data-verified="true" data-distance="1.2" data-price="70" onclick="openDriverProfile('farhana', 'bookingSearchProviders')">
-            <div class="pcf-avatar-wrap">
-              <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="pcf-avatar" onerror="this.src='/assets/avatar_farhana.jpg'" />
-            </div>
-            <div class="pcf-info-col">
-              <div class="pcf-name-row">
-                <span class="pcf-name">Farhana Yasmin</span>
-                <span class="pcf-verified-badge" title="Verified Driver">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                    <circle cx="12" cy="12" r="10" fill="#2563EB"/>
-                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
+            <div class="pcf-main-row">
+              <div class="pcf-avatar-wrap">
+                <img src="/assets/avatar_farhana.jpg" alt="Farhana Yasmin" class="pcf-avatar" onerror="this.src='/assets/avatar_farhana.jpg'" />
               </div>
-              <div class="pcf-meta-row">
-                <span class="pcf-star">★</span>
-                <span class="pcf-rating">5.0</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-distance">1.2 km</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-zone">Annex</span>
-              </div>
-              <div class="pcf-vehicle-row">
-                <span class="pcf-vehicle">Honda Odyssey</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-seats">5 seats</span>
+              <div class="pcf-info-col">
+                <div class="pcf-name-row">
+                  <span class="pcf-name">Farhana Yasmin</span>
+                  <span class="pcf-verified-badge" title="Verified Driver">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                      <circle cx="12" cy="12" r="10" fill="#2563EB"/>
+                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="pcf-meta-row">
+                  <span class="pcf-star">★</span>
+                  <span class="pcf-rating">5.0</span>
+                  <span class="pcf-bullet">•</span>
+                  <span class="pcf-distance">1.2 km away</span>
+                </div>
               </div>
             </div>
-            <div class="pcf-action-col">
-              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('farhana')">
-                Book
+            <div class="pcf-bottom-row">
+              <div class="pcf-service-pill">
+                <i data-lucide="car"></i>
+                <span>Honda Odyssey · 5 seats</span>
+              </div>
+              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('farhana')">
+                Request Booking
               </button>
             </div>
           </div>
 
-          <!-- 3. Kabir Hossain -->
+          <!-- 3. Kabir Hossain (Driver) -->
           <div class="provider-result-card provider-card-figma" data-category="drivers" data-provider-id="kabir" data-gender="male" data-triptype="oneway" data-freq="daily,weekly" data-rating="4.8" data-verified="true" data-distance="1.5" data-price="55" onclick="openDriverProfile('kabir', 'bookingSearchProviders')">
-            <div class="pcf-avatar-wrap">
-              <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="pcf-avatar" onerror="this.src='/assets/avatar_kabir.jpg'" />
-            </div>
-            <div class="pcf-info-col">
-              <div class="pcf-name-row">
-                <span class="pcf-name">Kabir Hossain</span>
-                <span class="pcf-verified-badge" title="Verified Driver">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                    <circle cx="12" cy="12" r="10" fill="#2563EB"/>
-                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
+            <div class="pcf-main-row">
+              <div class="pcf-avatar-wrap">
+                <img src="/assets/avatar_kabir.jpg" alt="Kabir Hossain" class="pcf-avatar" onerror="this.src='/assets/avatar_kabir.jpg'" />
               </div>
-              <div class="pcf-meta-row">
-                <span class="pcf-star">★</span>
-                <span class="pcf-rating">4.8</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-distance">1.5 km</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-zone">East York</span>
-              </div>
-              <div class="pcf-vehicle-row">
-                <span class="pcf-vehicle">Toyota Highlander</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-seats">4 seats</span>
+              <div class="pcf-info-col">
+                <div class="pcf-name-row">
+                  <span class="pcf-name">Kabir Hossain</span>
+                  <span class="pcf-verified-badge" title="Verified Driver">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                      <circle cx="12" cy="12" r="10" fill="#2563EB"/>
+                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="pcf-meta-row">
+                  <span class="pcf-star">★</span>
+                  <span class="pcf-rating">4.8</span>
+                  <span class="pcf-bullet">•</span>
+                  <span class="pcf-distance">1.5 km away</span>
+                </div>
               </div>
             </div>
-            <div class="pcf-action-col">
-              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('kabir')">
-                Book
+            <div class="pcf-bottom-row">
+              <div class="pcf-service-pill">
+                <i data-lucide="car"></i>
+                <span>Toyota Highlander · 4 seats</span>
+              </div>
+              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('kabir')">
+                Request Booking
               </button>
             </div>
           </div>
 
           <!-- 4. Sarah Jenkins (WalkShare Guide) -->
           <div class="provider-result-card provider-card-figma walkshare-card" data-category="walkshare" data-provider-id="sarah" data-gender="female" data-triptype="roundtrip" data-freq="daily,monthly" data-rating="4.9" data-verified="true" data-distance="0.4" data-price="140" onclick="openDriverProfile('sarah', 'bookingSearchProviders')">
-            <div class="pcf-avatar-wrap">
-              <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="pcf-avatar" onerror="this.src='/assets/avatar_sarah.jpg'" />
-            </div>
-            <div class="pcf-info-col">
-              <div class="pcf-name-row">
-                <span class="pcf-name">Sarah Jenkins</span>
-                <span class="pcf-verified-badge" title="Verified WalkShare Guide">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                    <circle cx="12" cy="12" r="10" fill="#15803D"/>
-                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
+            <div class="pcf-main-row">
+              <div class="pcf-avatar-wrap">
+                <img src="/assets/avatar_sarah.jpg" alt="Sarah Jenkins" class="pcf-avatar" onerror="this.src='/assets/avatar_sarah.jpg'" />
               </div>
-              <div class="pcf-meta-row">
-                <span class="pcf-star">★</span>
-                <span class="pcf-rating">4.9</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-distance">0.4 km</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-zone">High Park</span>
-              </div>
-              <div class="pcf-vehicle-row">
-                <span class="pcf-vehicle" style="color:#15803D;">Walking Escort</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-seats">4 spots</span>
+              <div class="pcf-info-col">
+                <div class="pcf-name-row">
+                  <span class="pcf-name">Sarah Jenkins</span>
+                  <span class="pcf-verified-badge" title="Verified WalkShare Guide">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                      <circle cx="12" cy="12" r="10" fill="#15803D"/>
+                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="pcf-meta-row">
+                  <span class="pcf-star">★</span>
+                  <span class="pcf-rating">4.9</span>
+                  <span class="pcf-bullet">•</span>
+                  <span class="pcf-distance">0.4 km away</span>
+                </div>
               </div>
             </div>
-            <div class="pcf-action-col">
-              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('sarah')">
-                Book
+            <div class="pcf-bottom-row">
+              <div class="pcf-service-pill walkshare">
+                <i data-lucide="user-check"></i>
+                <span>Walking Escort · 4 spots</span>
+              </div>
+              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('sarah')">
+                Request Booking
               </button>
             </div>
           </div>
 
-          <!-- 6. Alex Rivera (Driver - Gender: Other) -->
+          <!-- 5. Alex Rivera (Driver) -->
           <div class="provider-result-card provider-card-figma" data-category="drivers" data-provider-id="alex" data-gender="other" data-triptype="roundtrip" data-freq="daily,weekly,monthly" data-rating="4.9" data-verified="true" data-distance="1.0" data-price="65" onclick="openDriverProfile('alex', 'bookingSearchProviders')">
-            <div class="pcf-avatar-wrap">
-              <img src="/assets/avatar_arman.jpg" alt="Alex Rivera" class="pcf-avatar" onerror="this.src='/assets/avatar_tariq.jpg'" />
-            </div>
-            <div class="pcf-info-col">
-              <div class="pcf-name-row">
-                <span class="pcf-name">Alex Rivera</span>
-                <span class="pcf-verified-badge" title="Verified Driver">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                    <circle cx="12" cy="12" r="10" fill="#2563EB"/>
-                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
+            <div class="pcf-main-row">
+              <div class="pcf-avatar-wrap">
+                <img src="/assets/avatar_arman.jpg" alt="Alex Rivera" class="pcf-avatar" onerror="this.src='/assets/avatar_tariq.jpg'" />
               </div>
-              <div class="pcf-meta-row">
-                <span class="pcf-star">★</span>
-                <span class="pcf-rating">4.9</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-distance">1.0 km</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-zone">Midtown</span>
-              </div>
-              <div class="pcf-vehicle-row">
-                <span class="pcf-vehicle">Hyundai Ioniq 5</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-seats">4 seats</span>
+              <div class="pcf-info-col">
+                <div class="pcf-name-row">
+                  <span class="pcf-name">Alex Rivera</span>
+                  <span class="pcf-verified-badge" title="Verified Driver">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                      <circle cx="12" cy="12" r="10" fill="#2563EB"/>
+                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="pcf-meta-row">
+                  <span class="pcf-star">★</span>
+                  <span class="pcf-rating">4.9</span>
+                  <span class="pcf-bullet">•</span>
+                  <span class="pcf-distance">1.0 km away</span>
+                </div>
               </div>
             </div>
-            <div class="pcf-action-col">
-              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('alex')">
-                Book
+            <div class="pcf-bottom-row">
+              <div class="pcf-service-pill">
+                <i data-lucide="car"></i>
+                <span>Hyundai Ioniq 5 · 4 seats</span>
+              </div>
+              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('alex')">
+                Request Booking
               </button>
             </div>
           </div>
 
-          <!-- 5. Sophie Bouchard (WalkShare Guide) -->
+          <!-- 6. Sophie Bouchard (WalkShare Guide) -->
           <div class="provider-result-card provider-card-figma walkshare-card" data-category="walkshare" data-provider-id="elena" data-gender="female" data-triptype="roundtrip" data-freq="daily,monthly" data-rating="4.9" data-verified="true" data-distance="0.5" data-price="140" onclick="openDriverProfile('elena', 'bookingSearchProviders')">
-            <div class="pcf-avatar-wrap">
-              <img src="/assets/avatar_rehana.jpg" alt="Sophie Bouchard" class="pcf-avatar" onerror="this.src='/assets/avatar_rehana.jpg'" />
-            </div>
-            <div class="pcf-info-col">
-              <div class="pcf-name-row">
-                <span class="pcf-name">Sophie Bouchard</span>
-                <span class="pcf-verified-badge" title="Verified WalkShare Guide">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                    <circle cx="12" cy="12" r="10" fill="#15803D"/>
-                    <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
+            <div class="pcf-main-row">
+              <div class="pcf-avatar-wrap">
+                <img src="/assets/avatar_rehana.jpg" alt="Sophie Bouchard" class="pcf-avatar" onerror="this.src='/assets/avatar_rehana.jpg'" />
               </div>
-              <div class="pcf-meta-row">
-                <span class="pcf-star">★</span>
-                <span class="pcf-rating">4.9</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-distance">0.5 km</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-zone">Greenfield</span>
-              </div>
-              <div class="pcf-vehicle-row">
-                <span class="pcf-vehicle" style="color:#15803D;">Walking Escort</span>
-                <span class="pcf-bullet">•</span>
-                <span class="pcf-seats">3 spots</span>
+              <div class="pcf-info-col">
+                <div class="pcf-name-row">
+                  <span class="pcf-name">Sophie Bouchard</span>
+                  <span class="pcf-verified-badge" title="Verified WalkShare Guide">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                      <circle cx="12" cy="12" r="10" fill="#15803D"/>
+                      <path d="M8.5 12.5L11 15L16 9.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="pcf-meta-row">
+                  <span class="pcf-star">★</span>
+                  <span class="pcf-rating">4.9</span>
+                  <span class="pcf-bullet">•</span>
+                  <span class="pcf-distance">0.5 km away</span>
+                </div>
               </div>
             </div>
-            <div class="pcf-action-col">
-              <button type="button" class="pcf-btn-book btn-request-booking" onclick="event.stopPropagation(); startBookingReview('elena')">
-                Book
+            <div class="pcf-bottom-row">
+              <div class="pcf-service-pill walkshare">
+                <i data-lucide="user-check"></i>
+                <span>Walking Escort · 3 spots</span>
+              </div>
+              <button type="button" class="btn-request-booking" onclick="event.stopPropagation(); startBookingReview('elena')">
+                Request Booking
               </button>
             </div>
           </div>
@@ -7390,26 +7408,76 @@
           </div>
 
           <div class="bs-pricing-rows">
-            <!-- Weekly Base Rate -->
+            <!-- Base Rate -->
             <div class="bs-price-row">
               <span class="bs-price-label" id="bsPricingBaseLabel">Weekly Base Rate</span>
-              <span class="bs-price-val" id="bsPricingBaseRate">$240.00</span>
+              <span class="bs-price-val" id="bsPricingBaseRate">$55.00</span>
+            </div>
+
+            <!-- Distance Commute Rate -->
+            <div class="bs-price-row" id="bsPricingDistanceRow">
+              <span class="bs-price-label" id="bsPricingDistanceLabel">Distance Fare (5.4 km · Round Trip)</span>
+              <span class="bs-price-val" id="bsPricingDistanceVal">$11.66</span>
             </div>
 
             <!-- Multi-Child Discount -->
             <div class="bs-price-row discount" id="bsPricingDiscountRow">
               <span class="bs-price-label" id="bsPricingDiscountLabel">Multi-Child Discount (2nd child 20% off)</span>
-              <span class="bs-price-val discount" id="bsPricingDiscount">-$24.00</span>
+              <span class="bs-price-val discount" id="bsPricingDiscount">-$12.00</span>
+            </div>
+
+            <!-- Platform Safety & Escrow Fee -->
+            <div class="bs-price-row" id="bsPricingPlatformFeeRow">
+              <span class="bs-price-label" id="bsPricingPlatformFeeLabel">Platform Safety &amp; Escrow</span>
+              <span class="bs-price-val" id="bsPricingPlatformFeeVal">$2.50</span>
+            </div>
+
+            <!-- Driver Tip Row -->
+            <div class="bs-price-row" id="bsPricingTipRow" style="display:none;">
+              <span class="bs-price-label" id="bsPricingTipLabel">Driver Tip</span>
+              <span class="bs-price-val" id="bsPricingTipVal" style="color:#2563EB; font-weight:800;">+$0.00</span>
             </div>
 
             <div class="bs-price-divider"></div>
 
-            <!-- Total Weekly Amount -->
+            <!-- Total Amount -->
             <div class="bs-price-row total">
-              <span class="bs-total-label" id="bsPricingTotalLabel">Total Weekly Amount</span>
-              <span class="bs-total-val" id="bsPricingTotal">$224.00 / week</span>
+              <span class="bs-total-label" id="bsPricingTotalLabel">Total Amount</span>
+              <span class="bs-total-val" id="bsPricingTotal">$57.16</span>
             </div>
           </div>
+        </div>
+
+        <!-- Card 3: Driver Tip Card (Hidden upfront to follow Global Market Standard: Tipping belongs after trip completion) -->
+        <div class="bs-figma-card" id="bsDriverTipCard" style="display:none;">
+          <div class="bs-card-header">
+            <div class="bs-card-icon-badge" style="background:#EFF6FF; color:#2563EB;">
+              <i data-lucide="heart" style="width:18px; height:18px; color:#2563EB;"></i>
+            </div>
+            <div style="flex:1;">
+              <h3 class="bs-card-title">Driver Tip</h3>
+              <p style="font-size:11.5px; color:#64748B; margin:2px 0 0 0;">100% of tips go directly to your driver</p>
+            </div>
+            <span class="bs-tip-active-pill" id="bsActiveTipPill" style="font-size:12px; font-weight:800; color:#2563EB;">$0 (None)</span>
+          </div>
+
+          <div class="bs-tip-pills-row">
+            <button type="button" class="bs-tip-pill active" id="tipBtn-0" onclick="selectBookingTip(0)">$0</button>
+            <button type="button" class="bs-tip-pill" id="tipBtn-2" onclick="selectBookingTip(2)">+$2</button>
+            <button type="button" class="bs-tip-pill" id="tipBtn-5" onclick="selectBookingTip(5)">+$5</button>
+            <button type="button" class="bs-tip-pill" id="tipBtn-10" onclick="selectBookingTip(10)">+$10</button>
+            <button type="button" class="bs-tip-pill" id="tipBtn-custom" onclick="promptCustomTip()">Custom</button>
+          </div>
+        </div>
+
+        <!-- Informative Driver Tip Clarification Notice (Global Standard: 100% Tips Go Directly to Driver After Ride) -->
+        <div class="bs-tip-info-pill" style="display: flex; align-items: center; gap: 10px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 10px 14px; margin-bottom: 12px;">
+          <div style="width: 24px; height: 24px; border-radius: 6px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #2563EB;">
+            <i data-lucide="heart" style="width: 14px; height: 14px;"></i>
+          </div>
+          <span style="font-size: 11.5px; color: #475569; line-height: 1.4;">
+            <strong>Driver Tips:</strong> Optional after ride completion — 100% of tips go directly to your driver.
+          </span>
         </div>
 
         <!-- Security Notice Pill -->
@@ -7765,7 +7833,7 @@
         </section>
 
         <!-- 5. Monthly Pass / Payment Card (Figma 1:1) -->
-        <section class="trip-figma-item-card" onclick="navigateTo('subscription')">
+        <section class="trip-figma-item-card">
           <div class="trip-figma-item-left">
             <div class="trip-figma-icon-square-green">
               <i data-lucide="credit-card" style="width: 20px; height: 20px;"></i>
@@ -7780,6 +7848,23 @@
               <i data-lucide="check" style="width: 12px; height: 12px;"></i>
               <span>Active</span>
             </span>
+            <i data-lucide="chevron-right" style="width: 18px; height: 18px; color: #94A3B8;"></i>
+          </div>
+        </section>
+
+        <!-- 5B. Driver Tip Card -->
+        <section class="trip-figma-item-card" onclick="openDriverTipModal()" id="detailTipItemCard">
+          <div class="trip-figma-item-left">
+            <div class="trip-figma-icon-square-blue" style="background:#EFF6FF; color:#2563EB;">
+              <i data-lucide="heart" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="trip-figma-item-title" id="detailTipCardTitle">Driver Tip: $5.00</div>
+              <div class="trip-figma-item-sub" id="detailTipCardSub">100% directly to your driver</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px; color:#2563EB; font-size:12px; font-weight:700;">
+            <span id="detailTipCardActionText">Edit Tip</span>
             <i data-lucide="chevron-right" style="width: 18px; height: 18px; color: #94A3B8;"></i>
           </div>
         </section>
@@ -7807,6 +7892,43 @@
             </div>
             <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #64748B;"></i>
           </div>
+        </div>
+
+        <!-- 7. Cancel Booking Button & Cancellation Status Banner -->
+        <div id="detailCancellationStatusCard" style="display:none; margin-top: 14px; margin-bottom: 20px; background: #FEF2F2; border: 1.5px solid #FECACA; border-radius: 16px; padding: 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 28px; height: 28px; border-radius: 8px; background: #FEE2E2; display: flex; align-items: center; justify-content: center; color: #DC2626;">
+                <i data-lucide="alert-circle" style="width: 16px; height: 16px;"></i>
+              </div>
+              <strong style="font-size: 13.5px; color: #991B1B;">Cancellation &amp; Refund Status</strong>
+            </div>
+            <span style="font-size: 11px; font-weight: 800; background: #DCFCE7; color: #15803D; padding: 2px 8px; border-radius: 6px;" id="detailCancelRefundBadge">Prorated Refund</span>
+          </div>
+          <div style="font-size: 12px; color: #7F1D1D; line-height: 1.45; margin-bottom: 8px;" id="detailCancelReasonMessage">
+            Reason: Child is sick / Doctor recommendation.
+          </div>
+          <div style="background: #FFFFFF; border: 1px solid #FCA5A5; border-radius: 10px; padding: 10px; font-size: 11.5px; color: #374151;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="color: #6B7280;">Completed school days:</span>
+              <span style="font-weight: 700;" id="detailCancelDaysUsed">2 of 20 days</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="color: #6B7280;">Refund amount:</span>
+              <strong style="color: #15803D; font-size: 12.5px;" id="detailCancelRefundAmount">$192.00</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-top: 1px dashed #E5E7EB; padding-top: 4px; margin-top: 4px;">
+              <span style="color: #6B7280;">Refund target:</span>
+              <span style="font-weight: 600; color: #1F2937;">Visa •••• 4242 (2–3 business days)</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="detailCancelBtnWrap" style="margin-top: 14px; margin-bottom: 24px;">
+          <button type="button" class="btn-cancel-trip-card" id="btnCancelBookingCard" onclick="openCancelBookingModal(window.appState.activeBookingId || 'H2S-84920')">
+            <i data-lucide="x-circle" style="width: 17px; height: 17px;"></i>
+            <span>Cancel This Booking</span>
+          </button>
         </div>
 
       </div>
@@ -8470,18 +8592,8 @@
           </div>
         </div>
 
-        <!-- Card 2: Membership & Referral -->
+        <!-- Card 2: Rewards & Referral -->
         <div class="profile-menu-section" style="margin-bottom: 0;">
-          <div class="profile-menu-item" onclick="openNestedScreen('subscription', event)">
-            <div class="menu-item-left">
-              <div class="menu-icon-wrap">
-                <i data-lucide="crown"></i>
-              </div>
-              <span class="menu-title-text">Parent Subscription</span>
-            </div>
-            <span style="background:rgba(16, 185, 129, 0.1); color:#059669; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px;">Trial Active</span>
-          </div>
-
           <div class="profile-menu-item" onclick="openReferralModal()">
             <div class="menu-item-left">
               <div class="menu-icon-wrap">
@@ -9135,18 +9247,17 @@
       </div>
 
       <div class="screen-scroll-body" style="padding: 14px 16px 80px; display: flex; flex-direction: column; gap: 14px;">
-        <!-- Platform Subscription Banner -->
-        <div style="background: linear-gradient(135deg, var(--color-brand-navy, #1B2B68) 0%, #2A3F8E 100%); border-radius: 16px; padding: 18px; color: #FFFFFF; box-shadow: 0 4px 16px rgba(27, 43, 104, 0.14); cursor: pointer;" onclick="openNestedScreen('subscription', event)">
+        <!-- Platform Guarantee Banner (Replaces monthly subscription) -->
+        <div style="background: linear-gradient(135deg, var(--color-brand-navy, #1B2B68) 0%, #2A3F8E 100%); border-radius: 16px; padding: 18px; color: #FFFFFF; box-shadow: 0 4px 16px rgba(27, 43, 104, 0.14);">
           <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
-              <div style="font-size: 11px; color: rgba(255,255,255,0.8); font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;">Platform Subscription</div>
-              <div style="font-size: 22px; font-weight: 800; margin: 4px 0 6px;">$9.99 / month</div>
+              <div style="font-size: 11px; color: rgba(255,255,255,0.8); font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;">Billing Protection</div>
+              <div style="font-size: 20px; font-weight: 800; margin: 4px 0 6px;">Zero Subscription Fees</div>
             </div>
-            <span style="background: rgba(255,255,255,0.2); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.3);">14 Days Trial Left</span>
+            <span style="background: rgba(16, 185, 129, 0.25); color: #6EE7B7; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; border: 1px solid rgba(110, 231, 183, 0.4);">✓ 100% Pay-Per-Ride</span>
           </div>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.45; display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
-            <span>Next billing: Sep 22, 2026</span>
-            <span style="font-weight:700; display:flex; align-items:center; gap:3px;">Manage <i data-lucide="chevron-right" style="width:13px;height:13px;"></i></span>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.45; margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15);">
+            <span>No recurring subscription. You only pay for rides you book, protected by platform escrow until child safe delivery.</span>
           </div>
         </div>
 
@@ -12020,6 +12131,7 @@
           <button type="button" class="clean-pill-btn" id="adminTabTrips" onclick="window.showAdminSection('trips', this)">Live Map</button>
           <button type="button" class="clean-pill-btn" id="adminTabReviews" onclick="window.showAdminSection('reviews', this)">Flagged (1)</button>
           <button type="button" class="clean-pill-btn" id="adminTabPricing" onclick="window.showAdminSection('pricing', this)">Pricing Config</button>
+          <button type="button" class="clean-pill-btn" id="adminTabRefunds" onclick="window.showAdminSection('refunds', this)">Cancellations &amp; Refunds <span id="adminRefundCountBadge" style="background:#EF4444; color:#fff; border-radius:10px; padding:1px 6px; font-size:9.5px; font-weight:800; margin-left:4px;">1</span></button>
         </div>
 
         <!-- Section A: Verification Queue -->
@@ -12093,23 +12205,86 @@
           </div>
         </div>
 
-        <!-- Section D: Subscription Pricing Config -->
+        <!-- Section D: Platform Commission & Centralized Pricing Config -->
         <div id="adminSectionPricing" style="display:none; flex-direction:column; gap:10px;">
           <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:12px;">
-            <strong style="font-size:12px; color:#0F172A; margin-bottom:8px; display:block;">Platform Subscription Pricing (RFP Sec 4.7)</strong>
+            <strong style="font-size:13px; color:#0F172A; margin-bottom:8px; display:block;">Platform Commission &amp; Ride Pricing Config</strong>
             <div class="form-group" style="margin-bottom:8px;">
-              <label class="form-label" style="font-size:10px;">Monthly Parent Fee ($)</label>
-              <input type="text" class="form-input" value="9.99" style="height:var(--control-height); font-size:var(--button-font-size);" />
+              <label class="form-label" style="font-size:11px;">Auto Platform Commission Rate (%)</label>
+              <input type="number" id="adminCommissionRate" class="form-input" value="15" style="height:var(--control-height); font-size:var(--button-font-size);" />
             </div>
-            <div class="form-group" style="margin-bottom:8px;">
-              <label class="form-label" style="font-size:10px;">Annual Parent Fee ($)</label>
-              <input type="text" class="form-input" value="79.00" style="height:var(--control-height); font-size:var(--button-font-size);" />
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+              <div class="form-group">
+                <label class="form-label" style="font-size:10px;">On-Demand Base ($)</label>
+                <input type="number" id="adminOnDemandBase" class="form-input" value="8.00" step="0.5" style="height:var(--control-height); font-size:var(--button-font-size);" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:10px;">Daily Commute Base ($)</label>
+                <input type="number" id="adminDailyBase" class="form-input" value="12.00" step="0.5" style="height:var(--control-height); font-size:var(--button-font-size);" />
+              </div>
             </div>
-            <div class="form-group" style="margin-bottom:10px;">
-              <label class="form-label" style="font-size:10px;">Free Trial Period (Days)</label>
-              <input type="number" class="form-input" value="14" style="height:var(--control-height); font-size:var(--button-font-size);" />
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+              <div class="form-group">
+                <label class="form-label" style="font-size:10px;">Weekly Pass Base ($)</label>
+                <input type="number" id="adminWeeklyBase" class="form-input" value="55.00" step="1" style="height:var(--control-height); font-size:var(--button-font-size);" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:10px;">Monthly Pass Base ($)</label>
+                <input type="number" id="adminMonthlyBase" class="form-input" value="190.00" step="5" style="height:var(--control-height); font-size:var(--button-font-size);" />
+              </div>
             </div>
-            <button type="button" class="btn-primary" onclick="alert('Platform pricing saved without code change!');">Save Pricing Changes</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+              <div class="form-group">
+                <label class="form-label" style="font-size:10px;">Per Kilometer Rate ($/km)</label>
+                <input type="number" id="adminPerKmRate" class="form-input" value="1.40" step="0.1" style="height:var(--control-height); font-size:var(--button-font-size);" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:10px;">Platform Safety Fee ($)</label>
+                <input type="number" id="adminSafetyFee" class="form-input" value="2.50" step="0.5" style="height:var(--control-height); font-size:var(--button-font-size);" />
+              </div>
+            </div>
+            <button type="button" class="btn-primary" onclick="alert('Pricing & Commission rates saved!');">Save Pricing Changes</button>
+          </div>
+        </div>
+
+        <!-- Section E: Cancellations & Prorated Refunds Queue -->
+        <div id="adminSectionRefunds" style="display:none; flex-direction:column; gap:10px;">
+          <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:14px;" id="adminRefundCard-H2S-84920">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div>
+                <strong style="font-size:13px; color:#0F172A;" id="adminRefundCardTitle">Trip #H2S-84920 · Cancellation &amp; Prorated Refund</strong>
+                <span style="display:block; font-size:11px; color:#64748B; margin-top:2px;" id="adminRefundCardMeta">Parent: Sarah Tremblay · Rider: Liam · Monthly School Pass</span>
+              </div>
+              <span style="background:#FEF2F2; color:#DC2626; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:6px; border:1px solid #FECACA;" id="adminRefundCardBadge">Pending Review</span>
+            </div>
+            
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:10px; margin:10px 0;">
+              <div style="display:flex; justify-content:space-between; font-size:11.5px; margin-bottom:4px;">
+                <span style="color:#64748B;">Reason Provided:</span>
+                <strong style="color:#0F172A;" id="adminRefundReasonText">Child is sick / Doctor recommendation</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:11.5px; margin-bottom:4px;">
+                <span style="color:#64748B;">Commute Progress:</span>
+                <span style="color:#0F172A; font-weight:700;" id="adminRefundProgressText">2 of 20 school days completed</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:11.5px; margin-bottom:4px;">
+                <span style="color:#64748B;">Completed Days Deducted:</span>
+                <span style="color:#DC2626; font-weight:700;" id="adminRefundDeductionText">-$28.00 (Driver Paid)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; border-top:1px dashed #CBD5E1; padding-top:6px; margin-top:4px;">
+                <span style="font-weight:800; color:#15803D;">Prorated Refund to Parent:</span>
+                <strong style="font-size:13px; color:#15803D;" id="adminRefundAmountText">$192.00 (to Visa •••• 4242)</strong>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:8px;" id="adminRefundActionsWrap">
+              <button type="button" class="btn-primary" style="background:#16A34A; border-color:#16A34A; height:38px; font-size:12px; display:flex; align-items:center; gap:6px;" onclick="window.adminApproveRefund('H2S-84920')">
+                <i data-lucide="check" style="width:14px; height:14px;"></i> Approve Prorated Refund
+              </button>
+              <button type="button" class="btn-secondary-surface" style="height:38px; font-size:12px;" onclick="window.adminContactParent('H2S-84920')">
+                Contact Parent
+              </button>
+            </div>
           </div>
         </div>
 
@@ -12183,6 +12358,144 @@
       <button class="btn-primary" style="margin-bottom:8px;" onclick="confirmSeriesAction('occurrence')">This occurrence</button>
       <button class="btn-primary" style="background:#1B2B68;" onclick="confirmSeriesAction('series')">Entire series</button>
       <button class="btn-secondary-link" onclick="closeSeriesActionSheet()">Cancel</button>
+  <!-- ================= 0A. CANCEL BOOKING MODAL (WITH PRORATED REFUND BUSINESS LOGIC) ================= -->
+  <div class="custom-modal-overlay" id="modal-cancelBooking" style="display:none;" onclick="if(event.target===this) window.closeCancelBookingModal()">
+    <div class="custom-modal-box" style="max-width: 410px; max-height: 90vh; overflow-y: auto; border-radius: 20px; padding: 20px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #E2E8F0; padding-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 34px; height: 34px; border-radius: 10px; background: #FEF2F2; display: flex; align-items: center; justify-content: center; color: #DC2626;">
+            <i data-lucide="alert-triangle" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 15px; font-weight: 800; color: #0F172A; margin: 0;">Cancel Booking</h3>
+            <span style="font-size: 11px; color: #64748B;" id="cancelModalBookingSub">Trip ID: #H2S-84920</span>
+          </div>
+        </div>
+        <button type="button" class="btn-icon-close" onclick="window.closeCancelBookingModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <!-- Prorated Refund Breakdown for Monthly/Weekly Bookings -->
+      <div class="cancel-refund-breakdown" id="cancelRefundBox">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-size: 12px; font-weight: 800; color: #166534;" id="cancelRefundPackageTitle">Monthly Pass Refund Breakdown</span>
+          <span class="bk-pkg-tag" style="background: #DCFCE7; color: #15803D;" id="cancelRefundStatusBadge">Prorated</span>
+        </div>
+        <div class="cancel-refund-row">
+          <span>Total Package Paid</span>
+          <span id="cancelRefundTotalPaid" style="font-weight: 700;">$220.00</span>
+        </div>
+        <div class="cancel-refund-row">
+          <span id="cancelRefundDaysUsedLabel">Completed Commute Days (4 of 20)</span>
+          <span id="cancelRefundUsedCharge" style="color: #DC2626;">-$56.00</span>
+        </div>
+        <div class="cancel-refund-row">
+          <span>Unused Balance</span>
+          <span id="cancelRefundUnusedBal">$164.00</span>
+        </div>
+        <div class="cancel-refund-row">
+          <span>Admin Processing Fee (5%)</span>
+          <span id="cancelRefundAdminFee" style="color: #64748B;">-$8.20</span>
+        </div>
+        <div class="cancel-refund-row total">
+          <span>Estimated Refund</span>
+          <span id="cancelRefundFinalAmt">$155.80</span>
+        </div>
+        <p style="font-size: 10.5px; color: #166534; margin: 6px 0 0 0; line-height: 1.35;">
+          Refund is credited back to your original payment card (Visa •••• 4242) in 2–3 business days.
+        </p>
+      </div>
+
+      <!-- Cancellation Reason Options -->
+      <div style="margin-top: 14px;">
+        <label style="font-size: 12.5px; font-weight: 700; color: #0F172A; display: block; margin-bottom: 6px;">
+          Please select a reason for cancellation:
+        </label>
+        <div class="cancel-reason-group">
+          <label class="cancel-reason-option selected" onclick="window.selectCancelReason(this, 'sick')">
+            <input type="radio" name="cancelReason" value="sick" checked style="display: none;" />
+            <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+            <span>Child is sick / School is closed</span>
+          </label>
+          <label class="cancel-reason-option" onclick="window.selectCancelReason(this, 'schedule')">
+            <input type="radio" name="cancelReason" value="schedule" style="display: none;" />
+            <i data-lucide="circle" style="width: 16px; height: 16px;"></i>
+            <span>Change of schedule / Family travel</span>
+          </label>
+          <label class="cancel-reason-option" onclick="window.selectCancelReason(this, 'alternative')">
+            <input type="radio" name="cancelReason" value="alternative" style="display: none;" />
+            <i data-lucide="circle" style="width: 16px; height: 16px;"></i>
+            <span>Found alternative transport / Carpooling</span>
+          </label>
+          <label class="cancel-reason-option" onclick="window.selectCancelReason(this, 'driver')">
+            <input type="radio" name="cancelReason" value="driver" style="display: none;" />
+            <i data-lucide="circle" style="width: 16px; height: 16px;"></i>
+            <span>Driver delayed or unresponsive</span>
+          </label>
+          <label class="cancel-reason-option" onclick="window.selectCancelReason(this, 'mistake')">
+            <input type="radio" name="cancelReason" value="mistake" style="display: none;" />
+            <i data-lucide="circle" style="width: 16px; height: 16px;"></i>
+            <span>Booked by mistake</span>
+          </label>
+          <label class="cancel-reason-option" onclick="window.selectCancelReason(this, 'other')">
+            <input type="radio" name="cancelReason" value="other" style="display: none;" />
+            <i data-lucide="circle" style="width: 16px; height: 16px;"></i>
+            <span>Other reason</span>
+          </label>
+        </div>
+
+        <div id="cancelCustomReasonWrap" style="display: none; margin-top: 8px;">
+          <textarea id="cancelCustomReasonText" class="form-input" placeholder="Please tell us more..." rows="2" style="font-size: 12px; resize: none;"></textarea>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: 10px; margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 12px;">
+        <button type="button" class="btn-secondary-surface" style="flex: 1; height: 44px;" onclick="window.closeCancelBookingModal()">
+          Keep Booking
+        </button>
+        <button type="button" class="btn-primary" style="flex: 1.3; height: 44px; background: #DC2626; border-color: #DC2626;" onclick="window.confirmCancelBooking()">
+          Cancel &amp; Refund
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 0B. DRIVER TIP MODAL ================= -->
+  <div class="custom-modal-overlay" id="modal-driverTip" style="display:none;" onclick="if(event.target===this) window.closeDriverTipModal()">
+    <div class="custom-modal-box" style="max-width: 380px; border-radius: 20px; padding: 20px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; color: #2563EB;">
+            <i data-lucide="heart" style="width: 18px; height: 18px;"></i>
+          </div>
+          <h3 style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 0;">Add Driver Tip</h3>
+        </div>
+        <button type="button" class="btn-icon-close" onclick="window.closeDriverTipModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <p style="font-size: 12px; color: #64748B; margin-bottom: 14px; line-height: 1.4;">
+        Reward your driver for safe, on-time driving. <strong>100% of tips go directly to the driver.</strong>
+      </p>
+
+      <div class="bs-tip-pills-row" style="margin-bottom: 16px;">
+        <button type="button" class="bs-tip-pill" id="modalTipBtn-0" onclick="window.selectModalTip(0)">$0</button>
+        <button type="button" class="bs-tip-pill" id="modalTipBtn-2" onclick="window.selectModalTip(2)">+$2</button>
+        <button type="button" class="bs-tip-pill active" id="modalTipBtn-5" onclick="window.selectModalTip(5)">+$5</button>
+        <button type="button" class="bs-tip-pill" id="modalTipBtn-10" onclick="window.selectModalTip(10)">+$10</button>
+        <button type="button" class="bs-tip-pill" id="modalTipBtn-custom" onclick="window.selectModalTip('custom')">Custom</button>
+      </div>
+
+      <div id="modalCustomTipInputWrap" style="display:none; margin-bottom: 14px;">
+        <label class="form-label" style="font-size:12px;">Custom Tip Amount ($)</label>
+        <input type="number" id="modalCustomTipVal" class="form-input" placeholder="e.g. 7" min="1" step="1" />
+      </div>
+
+      <button type="button" class="btn-primary" style="width: 100%;" onclick="window.saveModalDriverTip()">
+        Confirm Tip
+      </button>
     </div>
   </div>
 

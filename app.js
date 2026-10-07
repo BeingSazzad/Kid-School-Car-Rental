@@ -2190,6 +2190,14 @@ window.navigateTo = function (screenName, isBack = false) {
     }
   });
 
+  // Validate target element before hiding all screens to prevent blank white screens
+  let targetEl = document.getElementById(`screen-${screenName}`);
+  if (!targetEl) {
+    console.warn(`[Navigation] Screen "screen-${screenName}" not found. Falling back to home screen.`);
+    screenName = 'home';
+    targetEl = document.getElementById('screen-home');
+  }
+
   // Hide all screens, show target screen
   document.querySelectorAll('.screen-view').forEach(el => {
     el.classList.remove('active');
@@ -2199,7 +2207,6 @@ window.navigateTo = function (screenName, isBack = false) {
   const isAuthFlow = String(screenName).startsWith('auth') || screenName === 'splash' || String(screenName).startsWith('onboarding');
   document.body.classList.toggle('is-auth-flow', isAuthFlow);
 
-  const targetEl = document.getElementById(`screen-${screenName}`);
   if (targetEl) {
     targetEl.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -2303,6 +2310,12 @@ window.navigateTo = function (screenName, isBack = false) {
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
   }
+};
+
+window.navigateToScreen = function (screenName) {
+  if (!screenName) return;
+  const clean = String(screenName).replace(/^screen-/, '');
+  window.navigateTo(clean);
 };
 
 window.navigateBack = function (fallback = 'home') {
@@ -2590,7 +2603,7 @@ window.buildPhUpcomingRowHtml = function (trip) {
   return `
     <article class="h2s-booking-card ub-booking-card" onclick="openBookingDetails('${id}')">
       <div class="ub-card-left">
-        <div class="ub-thumb-box" style="width:50px; height:50px; min-width:50px; min-height:50px; max-width:50px; max-height:50px; border-radius:12px; background:#F1F5F9; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; padding:4px; overflow:hidden; flex-shrink:0; box-sizing:border-box;">
+        <div class="ub-thumb-box" style="width:50px; height:50px; min-width:50px; min-height:50px; max-width:50px; max-height:50px; border-radius:12px; background:#F1F5F9; border:none; display:flex; align-items:center; justify-content:center; padding:4px; overflow:hidden; flex-shrink:0; box-sizing:border-box;">
           <img src="/assets/toyota_sienna_white.jpg" alt="Vehicle" style="width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; display:block;" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
         </div>
         <div class="ub-card-info">
@@ -2602,7 +2615,6 @@ window.buildPhUpcomingRowHtml = function (trip) {
       </div>
       <div class="ub-card-right">
         <button type="button" class="ub-details-btn" onclick="event.stopPropagation(); openBookingDetails('${id}')">
-          <i data-lucide="calendar" style="width:13px; height:13px;"></i>
           <span>Details</span>
         </button>
       </div>
@@ -2616,6 +2628,7 @@ window.renderHomeUpcomingList = function (trips) {
   const derived = homeTripsFromBookings();
   const rows = Array.isArray(trips) && trips.length ? trips : (derived.length ? derived : window.HOME_UPCOMING_TRIPS);
   list.innerHTML = rows.map(window.buildPhUpcomingRowHtml).join('');
+  if (window.lucide) window.lucide.createIcons();
 };
 
 /** Home "Today's trips" cards, built from real bookings in the existing Figma card markup. */
@@ -2631,8 +2644,8 @@ function renderHomeFigmaTrips() {
     const from = t.fromSchool ? t.dropoff : t.pickup;
     const to = t.fromSchool ? t.pickup : t.dropoff;
     const badge = t.type === 'roundtrip'
-      ? '<span class="home-figma-badge-roundtrip">🔁 Round Trip</span>'
-      : `<span class="home-figma-badge-oneway">➔ ${t.fromSchool ? 'From school' : 'One-way'}</span>`;
+      ? '<span class="home-figma-badge-roundtrip" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="repeat" style="width:12px;height:12px;stroke-width:2.5;"></i><span>Round Trip</span></span>'
+      : `<span class="home-figma-badge-oneway" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="arrow-right" style="width:12px;height:12px;stroke-width:2.5;"></i><span>${t.fromSchool ? 'From school' : 'One-way'}</span></span>`;
     const status = t.statusLine
       ? `<div class="ub-card-status${/complete/i.test(t.statusLine) ? ' is-done' : /skipped/i.test(t.statusLine) ? ' is-skipped' : ''}">${t.statusLine}</div>`
       : '';
@@ -2657,6 +2670,7 @@ function renderHomeFigmaTrips() {
             </div>
           </div>`;
   }).join('');
+  if (window.lucide) window.lucide.createIcons();
 }
 
 function homeTripsFromBookings() {
@@ -3173,6 +3187,520 @@ window.applySavedBookingLocation = function (locId, btnEl) {
 };
 
 /* ==========================================================
+   Centralized Backend / System Pricing & Distance Engine
+   (Easily configurable mock rates as requested by client)
+   ========================================================== */
+window.SYSTEM_PRICING_CONFIG = {
+  baseFares: {
+    'on-demand': 8.00,
+    'daily': 12.00,
+    'weekly': 55.00,
+    'monthly': 190.00
+  },
+  perKmRate: {
+    'on-demand': 1.80,
+    'daily': 1.50,
+    'weekly': 1.20,
+    'monthly': 0.95
+  },
+  roundTripMultiplier: 1.8,
+  siblingDiscountPercent: 20,
+  platformFeePercent: 15, // 15% platform commission (replaces driver subscription)
+  driverPayoutPercent: 85, // 85% to driver
+  platformSafetyFee: 2.50
+};
+
+window.calculateTripDistance = function (pickup, dropoff) {
+  if (!pickup && !dropoff) return { km: 5.4, mins: 14 };
+  const str = ((pickup || '') + ' ' + (dropoff || '')).toLowerCase();
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = (hash << 5) - hash + str.charCodeAt(i);
+  const pseudoKm = 3.2 + (Math.abs(hash) % 85) / 10;
+  const km = Number(pseudoKm.toFixed(1));
+  const mins = Math.max(8, Math.round(km * 2.6));
+  return { km, mins };
+};
+
+window.calculateSystemPrice = function (packageType, isRoundTrip, childCount, distanceKm, tipAmount) {
+  const cfg = window.SYSTEM_PRICING_CONFIG;
+  const pkg = packageType || 'weekly';
+  const base = cfg.baseFares[pkg] || cfg.baseFares['weekly'];
+  const kmRate = cfg.perKmRate[pkg] || cfg.perKmRate['weekly'];
+  const km = distanceKm || 5.4;
+  const dirMult = isRoundTrip ? cfg.roundTripMultiplier : 1.0;
+
+  const firstChildFare = (base + (km * kmRate)) * dirMult;
+  const additionalChildren = Math.max(0, (childCount || 1) - 1);
+  const addlChildFare = additionalChildren * (firstChildFare * (1 - cfg.siblingDiscountPercent / 100));
+  const grossRideFare = Number((firstChildFare + addlChildFare).toFixed(2));
+  
+  const siblingDiscount = Number((additionalChildren * (firstChildFare * (cfg.siblingDiscountPercent / 100))).toFixed(2));
+  const safetyFee = cfg.platformSafetyFee;
+  const tip = Number(tipAmount || 0);
+  const totalCharged = Number((grossRideFare + safetyFee + tip).toFixed(2));
+
+  const platformCut = Number((grossRideFare * (cfg.platformFeePercent / 100) + safetyFee).toFixed(2));
+  const driverPayout = Number((grossRideFare * (cfg.driverPayoutPercent / 100) + tip).toFixed(2));
+
+  return {
+    packageType: pkg,
+    isRoundTrip,
+    childCount: childCount || 1,
+    distanceKm: km,
+    baseFare: Number(base.toFixed(2)),
+    grossRideFare,
+    siblingDiscount,
+    safetyFee,
+    tipAmount: tip,
+    totalCharged,
+    driverPayout,
+    platformCut
+  };
+};
+
+window.updateRouteDistanceDisplay = function () {
+  const draft = window.appState.bookingDraft || {};
+  const dist = window.calculateTripDistance(draft.pickupLocation, draft.schoolLocation);
+  draft.distanceKm = dist.km;
+  draft.estimatedMins = dist.mins;
+  const txt = document.getElementById('bkDistanceText');
+  const dur = document.getElementById('bkDurationText');
+  if (txt) txt.textContent = `${dist.km} km`;
+  if (dur) dur.textContent = `~${dist.mins} mins commute`;
+
+  if (typeof window.updatePackageEstimateBox === 'function') {
+    window.updatePackageEstimateBox();
+  }
+};
+
+window.updatePackageEstimateBox = function () {
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  const draft = window.appState.bookingDraft;
+  const isDemand = draft.tripServiceMode === 'on-demand' || draft.packageType === 'on-demand';
+  const pkg = draft.packageType || (isDemand ? 'on-demand' : 'weekly');
+  const distKm = draft.distanceKm || 5.4;
+  const durMins = draft.estimatedMins || 14;
+  const childCount = (draft.childIds && draft.childIds.length) ? draft.childIds.length : 1;
+  const isRound = Boolean(draft.isRoundTrip);
+
+  const price = window.calculateSystemPrice(pkg, isRound, childCount, distKm, 0);
+
+  const titles = {
+    'daily': 'Daily Pass',
+    'weekly': 'Weekly Pass',
+    'monthly': 'Monthly Pass',
+    'on-demand': 'On-Demand Ride'
+  };
+
+  const subs = {
+    'daily': `${distKm} km`,
+    'weekly': `${distKm} km`,
+    'monthly': `${distKm} km`,
+    'on-demand': `${distKm} km`
+  };
+
+  // Unified Live Estimate Box Elements
+  const unifiedBox = document.getElementById('bkUnifiedEstimateBox');
+  const uTitle = document.getElementById('bkUnifiedEstTitle');
+  const uDistDur = document.getElementById('bkUnifiedDistDurText');
+  const uPrice = document.getElementById('bkUnifiedEstPrice');
+
+  if (unifiedBox) {
+    unifiedBox.classList.toggle('mode-demand', pkg === 'on-demand' || pkg === 'daily');
+  }
+  if (uTitle) uTitle.textContent = titles[pkg] || 'Trip Estimate';
+  if (uDistDur) uDistDur.textContent = subs[pkg] || `${distKm} km (~${durMins} mins)`;
+  if (uPrice) uPrice.textContent = `$${price.totalCharged.toFixed(2)}`;
+
+  // Legacy fallback elements
+  const titleEl = document.getElementById('bkPackageEstTitle');
+  const subEl = document.getElementById('bkPackageEstSub');
+  const priceEl = document.getElementById('bkPackageEstPrice');
+
+  if (titleEl) titleEl.textContent = titles[pkg] || 'Commute Pass';
+  if (subEl) subEl.textContent = subs[pkg] || `Calculated on ${distKm} km`;
+  if (priceEl) priceEl.textContent = `$${price.totalCharged.toFixed(2)}`;
+
+  const demandDist = document.getElementById('bkOnDemandDistText');
+  const demandDur = document.getElementById('bkOnDemandDurText');
+  const demandPrice = document.getElementById('bkOnDemandPriceText');
+
+  if (demandDist) demandDist.textContent = `${distKm} km`;
+  if (demandDur) demandDur.textContent = `~${durMins} mins`;
+  if (demandPrice) {
+    demandPrice.textContent = `$${price.totalCharged.toFixed(2)}`;
+  }
+};
+
+window.selectTripPackage = function (pkg) {
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  const draft = window.appState.bookingDraft;
+  draft.packageType = pkg;
+
+  const btnOnDemand = document.getElementById('btnModeOnDemand');
+  const btnScheduled = document.getElementById('btnModeScheduled');
+  const commuteCard = document.getElementById('bkCommutePackageCard');
+
+  if (pkg === 'on-demand') {
+    draft.tripServiceMode = 'on-demand';
+    draft.frequency = 'onetime';
+    if (btnOnDemand) btnOnDemand.classList.add('active');
+    if (btnScheduled) btnScheduled.classList.remove('active');
+    if (commuteCard) commuteCard.style.display = 'none';
+  } else {
+    draft.tripServiceMode = 'scheduled';
+    if (btnScheduled) btnScheduled.classList.add('active');
+    if (btnOnDemand) btnOnDemand.classList.remove('active');
+    if (commuteCard) commuteCard.style.display = 'block';
+    if (pkg === 'daily') {
+      draft.frequency = 'onetime';
+    } else {
+      draft.frequency = 'recurring';
+    }
+  }
+
+  ['daily', 'weekly', 'monthly'].forEach((p) => {
+    document.getElementById(`pkgTab-${p}`)?.classList.toggle('active', p === pkg);
+  });
+
+  const badge = document.getElementById('activePackageBadge');
+  const pkgBadges = {
+    'on-demand': 'Single Ride',
+    'daily': 'Daily Pass',
+    'weekly': 'Weekly Pass',
+    'monthly': 'Monthly Pass (-25%)'
+  };
+  if (badge) badge.textContent = pkgBadges[pkg] || 'Weekly Pass';
+
+  const repeatSection = document.getElementById('repeatDaysSection');
+  const daysGrid = document.getElementById('cleanDaysGrid');
+  const recurringToggle = document.getElementById('toggleRecurringRide');
+
+  if (pkg === 'daily' || pkg === 'on-demand') {
+    if (recurringToggle) recurringToggle.checked = false;
+    if (repeatSection) repeatSection.style.display = 'none';
+  } else {
+    if (recurringToggle) recurringToggle.checked = true;
+    if (repeatSection) repeatSection.style.display = 'block';
+    if (daysGrid) daysGrid.style.display = 'flex';
+  }
+
+  window.updatePackageEstimateBox();
+
+  if (typeof window.updateBookingSearchCta === 'function') window.updateBookingSearchCta();
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.selectBookingTip = function (amt) {
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  const amount = Number(amt) || 0;
+  window.appState.bookingDraft.tipAmount = amount;
+
+  [0, 2, 5, 10].forEach((v) => {
+    const btn = document.getElementById(`tipBtn-${v}`);
+    if (btn) btn.classList.toggle('active', v === amount);
+  });
+  const customBtn = document.getElementById('tipBtn-custom');
+  if (customBtn) customBtn.classList.toggle('active', ![0, 2, 5, 10].includes(amount) && amount > 0);
+
+  const activePill = document.getElementById('bsActiveTipPill');
+  if (activePill) activePill.textContent = amount > 0 ? `+$${amount.toFixed(2)} Tip` : '$0 (None)';
+
+  if (typeof window.renderBookingSummary === 'function') window.renderBookingSummary();
+};
+
+window.promptCustomTip = function () {
+  const val = prompt('Enter custom tip amount for driver ($):', '7');
+  if (val !== null) {
+    const num = Math.max(0, parseFloat(val) || 0);
+    window.selectBookingTip(num);
+  }
+};
+
+/* ==========================================================
+   Service Mode Switcher (Unified with Top Segmented Control)
+   ========================================================== */
+window.setTripServiceMode = function (mode) {
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  const draft = window.appState.bookingDraft;
+  draft.tripServiceMode = mode;
+
+  const btnOnDemand = document.getElementById('btnModeOnDemand');
+  const btnScheduled = document.getElementById('btnModeScheduled');
+  const commuteCard = document.getElementById('bkCommutePackageCard');
+
+  if (mode === 'on-demand') {
+    if (btnOnDemand) btnOnDemand.classList.add('active');
+    if (btnScheduled) btnScheduled.classList.remove('active');
+    if (commuteCard) commuteCard.style.display = 'none';
+    draft.packageType = 'on-demand';
+    draft.frequency = 'onetime';
+  } else {
+    if (btnScheduled) btnScheduled.classList.add('active');
+    if (btnOnDemand) btnOnDemand.classList.remove('active');
+    if (commuteCard) commuteCard.style.display = 'block';
+    const pkg = draft.packageType && draft.packageType !== 'on-demand' ? draft.packageType : 'weekly';
+    window.selectTripPackage(pkg);
+  }
+
+  window.updateRouteDistanceDisplay();
+  if (typeof window.updateBookingSearchCta === 'function') window.updateBookingSearchCta();
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+/* ==========================================================
+   Cancellation Modal Controllers & Business Logic
+   ========================================================== */
+window._selectedCancelReason = 'sick';
+window.selectCancelReason = function (el, reason) {
+  window._selectedCancelReason = reason;
+  document.querySelectorAll('.cancel-reason-option').forEach(opt => {
+    opt.classList.remove('selected');
+    const radio = opt.querySelector('input[type="radio"]');
+    if (radio) radio.checked = false;
+    const icon = opt.querySelector('i, svg');
+    if (icon) icon.setAttribute('data-lucide', 'circle');
+  });
+
+  if (el) {
+    el.classList.add('selected');
+    const radio = el.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+    const icon = el.querySelector('i, svg');
+    if (icon) icon.setAttribute('data-lucide', 'check-circle');
+  }
+
+  const wrap = document.getElementById('cancelCustomReasonWrap');
+  if (wrap) wrap.style.display = reason === 'other' ? 'block' : 'none';
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window._pendingCancelBookingId = null;
+window.openCancelBookingModal = function (bookingId) {
+  const bId = bookingId || window.appState.activeBookingId || (window.appState.bookings[0] && window.appState.bookings[0].id) || 'H2S-84920';
+  window._pendingCancelBookingId = bId;
+  const booking = window.appState.bookings.find(b => b.id === bId) || window.appState.bookings[0] || {};
+
+  const sub = document.getElementById('cancelModalBookingSub');
+  if (sub) sub.textContent = `Trip ID: #${String(booking.id || bId).replace(/^H2S-?/i, '')}`;
+
+  const isMonthly = booking.packageType === 'monthly' || booking.frequency === 'recurring';
+  const refundBox = document.getElementById('cancelRefundBox');
+  const pkgTitle = document.getElementById('cancelRefundPackageTitle');
+  const badge = document.getElementById('cancelRefundStatusBadge');
+  const totalPaidEl = document.getElementById('cancelRefundTotalPaid');
+  const usedDaysEl = document.getElementById('cancelRefundDaysUsedLabel');
+  const usedChargeEl = document.getElementById('cancelRefundUsedCharge');
+  const unusedBalEl = document.getElementById('cancelRefundUnusedBal');
+  const adminFeeEl = document.getElementById('cancelRefundAdminFee');
+  const finalAmtEl = document.getElementById('cancelRefundFinalAmt');
+
+  if (refundBox) {
+    if (isMonthly) {
+      if (pkgTitle) pkgTitle.textContent = 'Monthly Pass Prorated Refund';
+      if (badge) badge.textContent = 'Prorated Refund';
+      const totalPaid = Number(booking.amount || 220);
+      const daysUsed = 2; // Real-world demonstration: cancelled 2 school days in
+      const dailyRate = 14.00;
+      const usedCharge = Number((daysUsed * dailyRate).toFixed(2));
+      const unusedBal = Math.max(0, Number((totalPaid - usedCharge).toFixed(2)));
+      const adminFee = Number((unusedBal * 0.05).toFixed(2));
+      const refundFinal = Number((unusedBal - adminFee).toFixed(2));
+
+      if (totalPaidEl) totalPaidEl.textContent = `$${totalPaid.toFixed(2)}`;
+      if (usedDaysEl) usedDaysEl.textContent = `Completed Commute Days (${daysUsed} of 20)`;
+      if (usedChargeEl) usedChargeEl.textContent = `-$${usedCharge.toFixed(2)}`;
+      if (unusedBalEl) unusedBalEl.textContent = `$${unusedBal.toFixed(2)}`;
+      if (adminFeeEl) adminFeeEl.textContent = `-$${adminFee.toFixed(2)}`;
+      if (finalAmtEl) finalAmtEl.textContent = `$${refundFinal.toFixed(2)}`;
+    } else {
+      if (pkgTitle) pkgTitle.textContent = 'Trip Cancellation Refund';
+      if (badge) badge.textContent = '100% Refund';
+      const totalPaid = Number(booking.amount || 18.50);
+      if (totalPaidEl) totalPaidEl.textContent = `$${totalPaid.toFixed(2)}`;
+      if (usedDaysEl) usedDaysEl.textContent = 'Trip Status: Not started';
+      if (usedChargeEl) usedChargeEl.textContent = '$0.00';
+      if (unusedBalEl) unusedBalEl.textContent = `$${totalPaid.toFixed(2)}`;
+      if (adminFeeEl) adminFeeEl.textContent = '$0.00 (Waived)';
+      if (finalAmtEl) finalAmtEl.textContent = `$${totalPaid.toFixed(2)}`;
+    }
+  }
+
+  const modal = document.getElementById('modal-cancelBooking');
+  if (modal) modal.style.display = 'flex';
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.closeCancelBookingModal = function () {
+  const modal = document.getElementById('modal-cancelBooking');
+  if (modal) modal.style.display = 'none';
+  window._pendingCancelBookingId = null;
+};
+
+window.confirmCancelBooking = function () {
+  const bId = window._pendingCancelBookingId || window.appState.activeBookingId || 'H2S-84920';
+  const booking = window.appState.bookings.find(b => b.id === bId);
+  const customReason = document.getElementById('cancelCustomReasonText')?.value?.trim();
+  const reasonMap = {
+    'sick': 'Child is sick / Doctor recommendation',
+    'schedule': 'Change of schedule / Family travel',
+    'alternative': 'Found alternative transport / Carpooling',
+    'driver': 'Driver delayed or unresponsive (Service Issue)',
+    'mistake': 'Booked by mistake',
+    'other': customReason || 'Other reason'
+  };
+  const reasonKey = window._selectedCancelReason || 'sick';
+  const reason = reasonMap[reasonKey] || reasonKey;
+
+  const isMonthly = booking ? (booking.packageType === 'monthly' || booking.frequency === 'recurring') : true;
+  const daysUsed = isMonthly ? 2 : 0;
+  const refundFinal = isMonthly ? (reasonKey === 'sick' || reasonKey === 'driver' ? 192.00 : 182.40) : (booking ? booking.amount : 18.50);
+
+  if (booking) {
+    booking.status = (reasonKey === 'driver' || reasonKey === 'other') ? 'cancellation_pending' : 'cancelled';
+    booking.cancelledAt = new Date().toISOString();
+    booking.cancelledBy = window.appState.userRole || 'parent';
+    booking.cancelReason = reason;
+    booking.refundAmount = refundFinal;
+    booking.daysUsed = daysUsed;
+    booking.totalDays = isMonthly ? 20 : 1;
+    booking.adminApprovalStatus = (reasonKey === 'driver' || reasonKey === 'other') ? 'Pending Review' : 'Prorated Refund Credited';
+    booking.activeLeg = null;
+    if (window.H2STrip && typeof window.H2STrip.syncToProviders === 'function') {
+      window.H2STrip.syncToProviders(booking);
+    }
+  }
+
+  // Update Admin portal cancellation queue
+  const adminBadge = document.getElementById('adminRefundCardBadge');
+  if (adminBadge) {
+    adminBadge.textContent = (reasonKey === 'driver' || reasonKey === 'other') ? 'Pending Review' : 'Auto-Approved';
+  }
+  const reasonEl = document.getElementById('adminRefundReasonText');
+  if (reasonEl) reasonEl.textContent = reason;
+  const amtEl = document.getElementById('adminRefundAmountText');
+  if (amtEl) amtEl.textContent = `$${refundFinal.toFixed(2)} (to Visa •••• 4242)`;
+
+  window.closeCancelBookingModal();
+  if (typeof renderBookingDetails === 'function') renderBookingDetails(bId);
+  if (typeof renderBookings === 'function') renderBookings();
+  if (typeof renderHome === 'function') renderHome();
+
+  if (typeof showToast === 'function') {
+    if (reasonKey === 'driver' || reasonKey === 'other') {
+      showToast('Cancellation submitted for Admin Review. Operations will verify within 2 hours.', 'info');
+    } else {
+      showToast(`Booking cancelled. Prorated refund of $${refundFinal.toFixed(2)} credited back to Visa •••• 4242.`, 'success');
+    }
+  } else {
+    alert(`Booking cancelled. Refund of $${refundFinal.toFixed(2)} credited.`);
+  }
+};
+
+window.adminApproveRefund = function (bookingId) {
+  const bId = bookingId || 'H2S-84920';
+  const booking = window.appState.bookings.find(b => b.id === bId);
+  if (booking) {
+    booking.adminApprovalStatus = 'Approved & Refund Credited';
+    booking.status = 'cancelled';
+  }
+  const badge = document.getElementById('adminRefundCardBadge');
+  if (badge) {
+    badge.textContent = 'Approved ✓';
+    badge.style.background = '#DCFCE7';
+    badge.style.color = '#15803D';
+    badge.style.borderColor = '#BBF7D0';
+  }
+  const actions = document.getElementById('adminRefundActionsWrap');
+  if (actions) {
+    actions.innerHTML = `
+      <div style="display:flex; align-items:center; gap:6px; color:#16A34A; font-weight:800; font-size:12px;">
+        <i data-lucide="check-circle" style="width:16px; height:16px;"></i> Prorated Refund Released &amp; Processed to Visa Card
+      </div>
+    `;
+  }
+  const countBadge = document.getElementById('adminRefundCountBadge');
+  if (countBadge) countBadge.textContent = '0';
+  if (typeof showToast === 'function') {
+    showToast(`✓ Cancellation approved & refund processed for #${bId}`, 'success');
+  }
+  if (window.lucide) window.lucide.createIcons();
+};
+
+window.adminContactParent = function (bookingId) {
+  const bId = bookingId || 'H2S-84920';
+  if (typeof showToast === 'function') {
+    showToast(`Support conversation opened for trip #${bId}`, 'info');
+  }
+  if (typeof navigateTo === 'function') navigateTo('inbox');
+};
+
+/* ==========================================================
+   Driver Tip Modal Controllers
+   ========================================================== */
+window._pendingTipBookingId = null;
+window._pendingModalTipVal = 5;
+
+window.openDriverTipModal = function (bookingId) {
+  const bId = bookingId || window.appState.activeBookingId || (window.appState.bookings[0] && window.appState.bookings[0].id) || 'H2S-84920';
+  window._pendingTipBookingId = bId;
+  const booking = window.appState.bookings.find(b => b.id === bId);
+  const currentTip = booking ? (booking.tipAmount || 0) : 5;
+  window.selectModalTip(currentTip || 5);
+
+  const modal = document.getElementById('modal-driverTip');
+  if (modal) modal.style.display = 'flex';
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+};
+
+window.closeDriverTipModal = function () {
+  const modal = document.getElementById('modal-driverTip');
+  if (modal) modal.style.display = 'none';
+  window._pendingTipBookingId = null;
+};
+
+window.selectModalTip = function (val) {
+  window._pendingModalTipVal = val;
+  [0, 2, 5, 10].forEach(n => {
+    document.getElementById(`modalTipBtn-${n}`)?.classList.toggle('active', n === val);
+  });
+  const customBtn = document.getElementById('modalTipBtn-custom');
+  if (customBtn) customBtn.classList.toggle('active', val === 'custom' || (![0, 2, 5, 10].includes(val) && val > 0));
+
+  const customWrap = document.getElementById('modalCustomTipInputWrap');
+  if (customWrap) {
+    customWrap.style.display = (val === 'custom' || (![0, 2, 5, 10].includes(val) && val > 0)) ? 'block' : 'none';
+    if (val !== 'custom' && val > 0) {
+      const input = document.getElementById('modalCustomTipVal');
+      if (input) input.value = val;
+    }
+  }
+};
+
+window.saveModalDriverTip = function () {
+  const bId = window._pendingTipBookingId || window.appState.activeBookingId || 'H2S-84920';
+  let tipAmt = window._pendingModalTipVal;
+  if (tipAmt === 'custom') {
+    tipAmt = parseFloat(document.getElementById('modalCustomTipVal')?.value) || 0;
+  }
+  tipAmt = Math.max(0, Number(tipAmt) || 0);
+
+  const booking = window.appState.bookings.find(b => b.id === bId);
+  if (booking) {
+    booking.tipAmount = tipAmt;
+  }
+
+  window.closeDriverTipModal();
+  if (typeof renderBookingDetails === 'function') renderBookingDetails(bId);
+
+  if (typeof showToast === 'function') {
+    showToast(tipAmt > 0 ? `Driver tip of $${tipAmt.toFixed(2)} updated!` : 'Tip removed.');
+  } else {
+    alert(tipAmt > 0 ? `Driver tip of $${tipAmt.toFixed(2)} updated!` : 'Tip removed.');
+  }
+};
+
+/* ==========================================================
    Map Picker & Location Live Input Sync (Senior UX Standard)
    ========================================================== */
 window.syncLocationInput = function (type, val) {
@@ -3186,6 +3714,7 @@ window.syncLocationInput = function (type, val) {
     if (hiddenS) hiddenS.value = value;
     window.appState.bookingDraft.schoolLocation = value;
   }
+  window.updateRouteDistanceDisplay();
 };
 
 window._currentMapPickerTarget = 'pickup';
@@ -3525,6 +4054,16 @@ window.initBookingSetupPage = function () {
   const notesInput = document.getElementById('setupBookingNotesInput');
   if (notesInput && window.appState && window.appState.bookingDraft) {
     notesInput.value = window.appState.bookingDraft.notes || '';
+  }
+  const currentPkg = window.appState?.bookingDraft?.packageType || (window.appState?.bookingDraft?.tripServiceMode === 'on-demand' ? 'on-demand' : 'weekly');
+  if (typeof window.selectTripPackage === 'function') {
+    window.selectTripPackage(currentPkg);
+  }
+  if (typeof window.updateRouteDistanceDisplay === 'function') {
+    window.updateRouteDistanceDisplay();
+  }
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
   }
 };
 
@@ -4582,21 +5121,74 @@ function renderBookingSummary() {
       : `${cleanFullName} (${provider.vehicle.split('(')[0].trim()})`;
   }
 
-  // Never write invented $/wk package numbers into parent UI
-  const baseEl = document.getElementById('summaryBasePriceText');
-  const discEl = document.getElementById('summaryDiscountPriceText');
-  const totalEl = document.getElementById('summaryTotalPriceText');
-  const baseLbl = document.getElementById('summaryBasePriceLabel');
-  const totalLbl = document.getElementById('summaryTotalPriceLabel');
-  const insLbl = document.getElementById('summaryInsuranceLabel');
-  const insVal = document.getElementById('summaryInsurancePriceText');
-  if (baseLbl) baseLbl.textContent = 'Ride fee';
-  if (baseEl) baseEl.textContent = 'Arrange with provider';
-  if (discEl) discEl.textContent = '—';
-  if (insLbl) insLbl.textContent = 'Platform fee';
-  if (insVal) insVal.textContent = 'Subscription / trial';
-  if (totalLbl) totalLbl.textContent = 'Ride payment';
-  if (totalEl) totalEl.textContent = 'Direct to provider';
+  // Calculate system price based on package, direction, children count, distance, and tip
+  const isRound = draft.direction === 'bothway';
+  const childCount = (window.appState.selectedChildIds || []).length || 1;
+  const distKm = draft.distanceKm || 5.4;
+  const tipAmt = draft.tipAmount || 0;
+  const pkg = draft.packageType || (draft.frequency === 'recurring' ? 'weekly' : 'on-demand');
+
+  const pricing = window.calculateSystemPrice(pkg, isRound, childCount, distKm, tipAmt);
+  draft.systemPricing = pricing;
+
+  // Update Summary UI fields
+  const baseEl = document.getElementById('bsPricingBaseRate');
+  const baseLbl = document.getElementById('bsPricingBaseLabel');
+  const distEl = document.getElementById('bsPricingDistanceVal');
+  const distLbl = document.getElementById('bsPricingDistanceLabel');
+  const discEl = document.getElementById('bsPricingDiscount');
+  const discRow = document.getElementById('bsPricingDiscountRow');
+  const feeEl = document.getElementById('bsPricingPlatformFeeVal');
+  const tipRow = document.getElementById('bsPricingTipRow');
+  const tipEl = document.getElementById('bsPricingTipVal');
+  const totalEl = document.getElementById('bsPricingTotal');
+  const totalLbl = document.getElementById('bsPricingTotalLabel');
+
+  const pkgNameMap = {
+    'on-demand': 'On-Demand Ride',
+    'daily': 'Daily Commute',
+    'weekly': 'Weekly Pass',
+    'monthly': 'Monthly Pass'
+  };
+  const pkgUnitMap = {
+    'on-demand': '/ ride',
+    'daily': '/ day',
+    'weekly': '/ week',
+    'monthly': '/ month'
+  };
+
+  if (baseLbl) baseLbl.textContent = `${pkgNameMap[pkg] || 'Package'} Base Fare`;
+  if (baseEl) baseEl.textContent = `$${pricing.baseFare.toFixed(2)}`;
+  if (distLbl) distLbl.textContent = `Distance Fare (${pricing.distanceKm} km · ${isRound ? 'Round Trip' : 'One-Way'})`;
+  if (distEl) distEl.textContent = `$${(pricing.grossRideFare - pricing.baseFare).toFixed(2)}`;
+
+  if (discRow && discEl) {
+    if (pricing.siblingDiscount > 0) {
+      discRow.style.display = 'flex';
+      discEl.textContent = `-$${pricing.siblingDiscount.toFixed(2)}`;
+    } else {
+      discRow.style.display = 'none';
+    }
+  }
+
+  if (feeEl) feeEl.textContent = `$${pricing.safetyFee.toFixed(2)}`;
+
+  if (tipRow && tipEl) {
+    if (pricing.tipAmount > 0) {
+      tipRow.style.display = 'flex';
+      tipEl.textContent = `+$${pricing.tipAmount.toFixed(2)}`;
+    } else {
+      tipRow.style.display = 'none';
+    }
+  }
+
+  if (totalLbl) totalLbl.textContent = `Total ${pkgNameMap[pkg] || 'Trip'} Amount`;
+  if (totalEl) totalEl.textContent = `$${pricing.totalCharged.toFixed(2)} ${pkgUnitMap[pkg] || ''}`;
+
+  const tipActivePill = document.getElementById('bsActiveTipPill');
+  if (tipActivePill) {
+    tipActivePill.textContent = pricing.tipAmount > 0 ? `+$${pricing.tipAmount.toFixed(2)} Tip` : '$0 (None)';
+  }
 }
 
 /* ==========================================================
@@ -4635,10 +5227,13 @@ window.submitBookingRequest = function () {
     }
   }
 
-  const baseFare = draft.frequency === 'recurring' ? (provider.listedRate || provider.baseWeekly || 60) : (provider.oneTimeRate || 35);
-  const platformFee = 4.50;
-  const stripeFee = Number(((baseFare + platformFee) * 0.029 + 0.30).toFixed(2));
-  const totalEscrow = Number((baseFare + platformFee + stripeFee).toFixed(2));
+  const pricing = draft.systemPricing || window.calculateSystemPrice(
+    draft.packageType || 'weekly',
+    draft.direction === 'bothway',
+    seatsNeeded,
+    draft.distanceKm || 5.4,
+    draft.tipAmount || 0
+  );
 
   const newBooking = {
     id: `H2S-${Math.floor(10000 + Math.random() * 90000)}`,
@@ -4651,6 +5246,7 @@ window.submitBookingRequest = function () {
     childIds: [...window.appState.selectedChildIds],
     direction: draft.direction === 'oneway' ? 'oneway' : 'bothway',
     oneWayLeg: draft.direction === 'oneway' ? (draft.oneWayLeg === 'pm' ? 'pm' : 'am') : null,
+    packageType: draft.packageType || 'weekly',
     frequency: draft.frequency,
     selectedDays: draft.frequency === 'recurring' ? (draft.selectedDays || []) : [],
     untilCancelled: draft.frequency === 'recurring' ? !!draft.untilCancelled : false,
@@ -4667,19 +5263,26 @@ window.submitBookingRequest = function () {
       if (draft.direction === 'bothway') return `${days} • ${draft.outboundTime} & ${draft.returnTime}`;
       return `${days} • ${draft.outboundTime} (${draft.oneWayLeg === 'pm' ? 'From school' : 'To school'})`;
     })(),
-    pickupLocation: draft.pickupLocation,
-    schoolLocation: draft.schoolLocation,
+    pickupLocation: draft.pickupLocation || '12 Elm Street, Toronto, ON',
+    schoolLocation: draft.schoolLocation || 'Greenfield International School',
+    distanceKm: pricing.distanceKm,
+    tipAmount: pricing.tipAmount,
+    baseFare: pricing.baseFare,
+    grossRideFare: pricing.grossRideFare,
+    safetyFee: pricing.safetyFee,
+    totalEscrow: pricing.totalCharged,
+    driverPayout: pricing.driverPayout,
+    platformCut: pricing.platformCut,
     notes: draft.notes || '',
     outboundTime: draft.outboundTime,
     returnTime: draft.direction === 'bothway' ? draft.returnTime : '',
     providerId: provider.id,
-    listedRate: baseFare,
-    ratePeriod: draft.frequency === 'recurring' ? 'week' : 'trip',
-    agreedRate: null,
-    rateStatus: 'listed',
-    negotiable: provider.negotiable !== false,
-    amount: baseFare,
-    totalEscrow: totalEscrow,
+    listedRate: pricing.totalCharged,
+    ratePeriod: draft.packageType === 'monthly' ? 'month' : draft.packageType === 'weekly' ? 'week' : 'trip',
+    agreedRate: pricing.totalCharged,
+    rateStatus: 'system_calculated',
+    negotiable: false,
+    amount: pricing.totalCharged,
     preferredPayment: 'Protected Escrow',
     paymentHandleStatus: 'escrow_held',
     paymentHandle: 'platform_escrow',
@@ -5755,13 +6358,61 @@ function renderBookingDetails(bookingId) {
         <button type="button" class="contact-menu-item" onclick="event.stopPropagation(); openTripReport('${booking.id}'); window.toggleTripDetailsMenu(false);">
           <i data-lucide="flag" style="width:14px;height:14px; color:#F59E0B;"></i>
           <span style="font-weight:600; font-size:13px; color:#0F172A;">Report an Issue</span>
-        </button>
         <div style="height:1px; background:#F1F5F9; margin:4px 0;"></div>
-        <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.toggleTripDetailsMenu(false); cancelBooking('${booking.id}');">
+        <button type="button" class="contact-menu-item danger" onclick="event.stopPropagation(); window.toggleTripDetailsMenu(false); openCancelBookingModal('${booking.id}');">
           <i data-lucide="x-circle" style="width:14px;height:14px; color:#EF4444;"></i>
           <span style="font-weight:600; font-size:13px; color:#EF4444;">Cancel Booking</span>
         </button>
       `;
+    }
+  }
+
+  // Driver Tip Card
+  const tipCard = document.getElementById('detailTipItemCard');
+  const tipTitle = document.getElementById('detailTipCardTitle');
+  const tipSub = document.getElementById('detailTipCardSub');
+  const tipAction = document.getElementById('detailTipCardActionText');
+  if (tipCard) {
+    tipCard.onclick = function () { openDriverTipModal(booking.id); };
+    if (booking.tipAmount > 0) {
+      if (tipTitle) tipTitle.textContent = `Driver Tip: $${Number(booking.tipAmount).toFixed(2)}`;
+      if (tipSub) tipSub.textContent = `100% paid directly to ${providerFirst}`;
+      if (tipAction) tipAction.textContent = 'Edit Tip';
+    } else {
+      if (tipTitle) tipTitle.textContent = `Add a tip for ${providerFirst}`;
+      if (tipSub) tipSub.textContent = '100% of tips go directly to the driver';
+      if (tipAction) tipAction.textContent = 'Add Tip';
+    }
+  }
+
+  // Cancel Booking Card & Cancellation Status Banner
+  const cancelWrap = document.getElementById('detailCancelBtnWrap');
+  const cancelBtn = document.getElementById('btnCancelBookingCard');
+  const cancelStatusCard = document.getElementById('detailCancellationStatusCard');
+
+  if (cancelWrap) {
+    cancelWrap.style.display = isCancelled ? 'none' : 'block';
+  }
+  if (cancelBtn) {
+    cancelBtn.onclick = function () { openCancelBookingModal(booking.id); };
+  }
+  if (cancelStatusCard) {
+    if (isCancelled || booking.status === 'cancellation_pending') {
+      cancelStatusCard.style.display = 'block';
+      const badge = document.getElementById('detailCancelRefundBadge');
+      const reasonMsg = document.getElementById('detailCancelReasonMessage');
+      const daysUsedEl = document.getElementById('detailCancelDaysUsed');
+      const refundAmtEl = document.getElementById('detailCancelRefundAmount');
+      if (badge) {
+        badge.textContent = booking.status === 'cancellation_pending' ? 'Admin Review Pending' : 'Prorated Refund Credited';
+        badge.style.background = booking.status === 'cancellation_pending' ? '#FEF3C7' : '#DCFCE7';
+        badge.style.color = booking.status === 'cancellation_pending' ? '#B45309' : '#15803D';
+      }
+      if (reasonMsg) reasonMsg.textContent = `Reason: ${booking.cancelReason || 'Child is sick / Doctor recommendation'}`;
+      if (daysUsedEl) daysUsedEl.textContent = `${booking.daysUsed || 2} of ${booking.totalDays || 20} school days`;
+      if (refundAmtEl) refundAmtEl.textContent = `$${Number(booking.refundAmount || 192).toFixed(2)}`;
+    } else {
+      cancelStatusCard.style.display = 'none';
     }
   }
 
@@ -5770,24 +6421,8 @@ function renderBookingDetails(bookingId) {
   }
 }
 
-
 window.cancelBooking = function (bookingId) {
-  if (confirm('Cancel this school ride booking? This ride will remain saved in your Ride History.')) {
-    const booking = window.appState.bookings.find(b => b.id === bookingId);
-    if (booking) {
-      booking.status = 'cancelled';
-      booking.cancelledBy = 'parent';
-      booking.activeLeg = null;
-      if (window.H2STrip) window.H2STrip.syncToProviders(booking);
-    }
-    renderBookingDetails(bookingId);
-    renderHome();
-    if (typeof showToast === 'function') {
-      showToast('Ride cancelled. Saved in Ride History.');
-    } else {
-      alert('Ride cancelled. Saved in Ride History.');
-    }
-  }
+  window.openCancelBookingModal(bookingId);
 };
 
 /* ==========================================================
@@ -5978,7 +6613,7 @@ function renderBookingsList(tab) {
       ? `<div class="ub-thumb-box is-walk">
           <i data-lucide="footprints" style="width:24px; height:24px;"></i>
         </div>`
-      : `<div class="ub-thumb-box" style="width:50px; height:50px; min-width:50px; min-height:50px; max-width:50px; max-height:50px; border-radius:12px; background:#F1F5F9; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; padding:4px; overflow:hidden; flex-shrink:0; box-sizing:border-box;">
+      : `<div class="ub-thumb-box" style="width:50px; height:50px; min-width:50px; min-height:50px; max-width:50px; max-height:50px; border-radius:12px; background:#F1F5F9; border:none; display:flex; align-items:center; justify-content:center; padding:4px; overflow:hidden; flex-shrink:0; box-sizing:border-box;">
           <img src="${vehPhoto}" alt="Vehicle" style="width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; display:block;" onerror="this.onerror=null;this.src='/assets/vehicle_hiace_white.jpg';" />
         </div>`;
 
@@ -5999,7 +6634,6 @@ function renderBookingsList(tab) {
     } else {
       actionBtnHtml = `
         <button type="button" class="ub-details-btn" onclick="event.stopPropagation(); openBookingDetails('${b.id}')">
-          <i data-lucide="calendar" style="width:13px; height:13px;"></i>
           <span>Details</span>
         </button>`;
     }
@@ -9406,7 +10040,7 @@ if (typeof document !== 'undefined') {
    Admin Portal & Search Filter Helpers (RFP Sec 4.2 & 4.10)
    ========================================================== */
 window.showAdminSection = function (sectionName, btn) {
-  const sections = ['kyc', 'trips', 'reviews', 'pricing'];
+  const sections = ['kyc', 'trips', 'reviews', 'pricing', 'refunds'];
   sections.forEach((s) => {
     const el = document.getElementById('adminSection' + s.charAt(0).toUpperCase() + s.slice(1));
     if (el) el.style.display = s === sectionName ? 'flex' : 'none';
@@ -9645,6 +10279,10 @@ window.applySearchFiltersAndClose = function () {
   }
 };
 
+window.initProviderSearchPage = function () {
+  window.applyCurrentProviderFiltersAndSort();
+};
+
 window.handleProviderSortChange = function (sortVal) {
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
   window.appState.bookingDraft.sortBy = sortVal || 'nearest';
@@ -9683,12 +10321,15 @@ window.applyCurrentProviderFiltersAndSort = function () {
     }
     if (provider && Number(provider.seats) > 0 && provider.seats < seatsNeeded) show = false;
 
-    card.style.display = show ? 'flex' : 'none';
     if (show) {
+      card.style.setProperty('display', 'flex', 'important');
       card.removeAttribute('data-hide-reason');
+      card.classList.remove('is-filtered-out');
       visibleCount++;
     } else {
+      card.style.setProperty('display', 'none', 'important');
       card.setAttribute('data-hide-reason', 'filtered');
+      card.classList.add('is-filtered-out');
     }
   });
 

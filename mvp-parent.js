@@ -224,7 +224,13 @@
 
   function setFieldPlaceholder(el, filled, filledText, placeholder) {
     if (!el) return;
-    el.textContent = filled ? filledText : placeholder;
+    const span = el.querySelector('span');
+    const text = filled ? filledText : placeholder;
+    if (span) {
+      span.textContent = text;
+    } else {
+      el.textContent = text;
+    }
     el.classList.toggle('is-placeholder', !filled);
   }
 
@@ -245,8 +251,8 @@
     const ret = document.getElementById('setupReturnTime')?.value || '';
     const draftNow = state().bookingDraft || {};
     const pmOneWay = draftNow.direction === 'oneway' && draftNow.oneWayLeg === 'pm';
-    setFieldPlaceholder(document.getElementById('setupOutboundTimeText'), !!out, formatTimeLabel(out), pmOneWay ? 'School pickup time' : 'Select pickup');
-    setFieldPlaceholder(document.getElementById('setupReturnTimeText'), !!ret, formatTimeLabel(ret), 'Select return');
+    setFieldPlaceholder(document.getElementById('setupOutboundTimeText'), !!out, formatTimeLabel(out), pmOneWay ? 'School pickup time' : 'Pickup time');
+    setFieldPlaceholder(document.getElementById('setupReturnTimeText'), !!ret, formatTimeLabel(ret), 'Return time');
     if (window.updateTripTime) {
       if (out) window.updateTripTime('outbound', out);
       if (ret) window.updateTripTime('return', ret);
@@ -773,20 +779,15 @@
     if (draft.direction !== 'oneway' && draft.direction !== 'bothway') draft.direction = 'bothway';
     if (!draft.frequency) draft.frequency = 'recurring';
 
-    // Pre-populate defaults so parent never sees an empty blocked form
-    if (!draft.childIds || !draft.childIds.length) {
-      draft.childIds = ['arman', 'emma'];
-      setBookingChildIds(['arman', 'emma']);
-    } else {
-      setBookingChildIds(draft.childIds);
-    }
+    // Start with empty selections by default — parent chooses children and enters locations
+    if (!draft.childIds) draft.childIds = [];
+    setBookingChildIds(draft.childIds);
 
-    if (!draft.pickupLocation) draft.pickupLocation = '12 Elm Street, Toronto, ON';
-    if (!draft.schoolLocation) draft.schoolLocation = 'Greenfield International School';
-    if (!draft.startDate) draft.startDate = '2026-05-23';
-    if (!draft.outboundTime) draft.outboundTime = draft.direction === 'oneway' && draft.oneWayLeg === 'pm' ? '15:30' : '07:30';
-    if (!draft.returnTime && draft.direction === 'bothway') draft.returnTime = '15:30';
-    if (draft.direction === 'oneway') draft.returnTime = '';
+    draft.pickupLocation = draft.pickupLocation || '';
+    draft.schoolLocation = draft.schoolLocation || '';
+    draft.startDate = draft.startDate || '';
+    draft.outboundTime = draft.outboundTime || '';
+    draft.returnTime = draft.returnTime || '';
     if (!draft.serviceType) draft.serviceType = 'drivers';
     if (!draft.selectedDays || !draft.selectedDays.length) {
       draft.selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];

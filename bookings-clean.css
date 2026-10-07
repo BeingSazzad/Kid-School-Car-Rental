@@ -1434,11 +1434,11 @@
 :is(#screen-bookings, #screen-home, #screen-parentHome, .screen-view) .ub-booking-card,
 .ub-booking-card {
   background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
-  border-radius: 14px !important;
-  padding: 12px 14px !important;
+  border: 1px solid #F1F5F9 !important;
+  border-radius: 16px !important;
+  padding: 14px 16px !important;
   margin-bottom: 10px !important;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03) !important;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04) !important;
   cursor: pointer !important;
   text-align: left !important;
   box-sizing: border-box !important;
@@ -1474,15 +1474,15 @@
 
 :is(#screen-bookings, #screen-home, #screen-parentHome, .screen-view) .ub-thumb-box,
 .ub-thumb-box {
-  width: 50px !important;
-  height: 50px !important;
-  min-width: 50px !important;
-  min-height: 50px !important;
-  max-width: 50px !important;
-  max-height: 50px !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
   border-radius: 12px !important;
-  background: #F1F5F9 !important;
-  border: 1px solid #E2E8F0 !important;
+  background: #F8FAFC !important;
+  border: none !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -1504,9 +1504,9 @@
 
 :is(#screen-bookings, #screen-home, #screen-parentHome, .screen-view) .ub-thumb-box.is-walk,
 .ub-thumb-box.is-walk {
-  background: #ECFDF5 !important;
-  border-color: #A7F3D0 !important;
-  color: #059669 !important;
+  background: #F0FDF4 !important;
+  border: none !important;
+  color: #16A34A !important;
 }
 
 :is(#screen-bookings, #screen-home, #screen-parentHome, .screen-view) .ub-card-info,
@@ -1539,9 +1539,9 @@
 
 :is(#screen-bookings, #screen-home, #screen-parentHome, .screen-view) .ub-card-price,
 .ub-card-price {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #475569 !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
   margin-top: 3px !important;
   line-height: 1.2 !important;
 }
@@ -1557,9 +1557,9 @@
 .ub-rebook-btn {
   background: #F1F5F9 !important;
   color: #0F172A !important;
-  border: 1px solid #E2E8F0 !important;
+  border: none !important;
   border-radius: 999px !important;
-  padding: 7px 16px !important;
+  padding: 6px 14px !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   cursor: pointer !important;
@@ -1578,26 +1578,25 @@
 
 :is(#screen-bookings, #screen-home, #screen-parentHome, .screen-view) .ub-details-btn,
 .ub-details-btn {
-  background: #F8FAFC !important;
+  background: #F1F5F9 !important;
   color: #1E293B !important;
-  border: 1px solid #E2E8F0 !important;
+  border: none !important;
   border-radius: 999px !important;
-  padding: 7px 16px !important;
+  padding: 6px 14px !important;
   font-size: 13px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   cursor: pointer !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;
+  gap: 4px !important;
   transition: all 0.15s ease !important;
   font-family: inherit !important;
 }
 
 :is(#screen-bookings, #screen-home, #screen-parentHome, .screen-view) .ub-details-btn:hover,
 .ub-details-btn:hover {
-  background: #EFF6FF !important;
-  color: #1B2B68 !important;
-  border-color: #BFDBFE !important;
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
 }
 
 :is(#screen-bookings, #screen-home, #screen-parentHome, .screen-view) .ub-track-btn,

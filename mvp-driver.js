@@ -779,7 +779,7 @@
   }
 
   function hasAccess(d) {
-    return d.subscription && (d.subscription.status === 'trial' || d.subscription.status === 'active');
+    return true; // No subscription required. Platform fee is deducted automatically per trip.
   }
 
   function isApproved(d) {
@@ -2285,39 +2285,28 @@
         </div>
       ` : stepIntro(5, 5, 'Posted rates & payment setup', 'Set your ride rates, service corridor, and where you will receive direct payments from parents.')}
 
-      <!-- Ride Rates Card -->
-      <div class="profile-form-section-card" style="margin-bottom: 14px;">
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #F1F5F9;">
-          <i data-lucide="banknote" style="width:16px; height:16px; color:#1B2B68;"></i>
-          <span style="font-size:14px; font-weight:700; color:#0F172A;">Ride Pricing & Rates</span>
+      <!-- Platform Guaranteed Payout Information Card -->
+      <div class="profile-form-section-card" style="margin-bottom: 14px; background: #F8FAFC; border: 1.5px solid #E2E8F0;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <i data-lucide="shield-check" style="width:18px; height:18px; color:#2563EB;"></i>
+          <span style="font-size:14px; font-weight:800; color:#0F172A;">Platform Guaranteed Earnings</span>
         </div>
-
-        <div class="form-group" style="margin-bottom:12px;">
-          <label class="form-label">Weekly posted rate ($ / child)</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" id="drvRateAmt" type="number" value="${esc(r.amount || 120)}" placeholder="120" />
+        <p style="font-size:12.5px; color:#475569; margin:0 0 10px 0; line-height:1.45;">
+          Fares are calculated automatically by Home2School based on trip distance, package type (Daily, Weekly, Monthly), and child count. <strong>No manual bidding or price disputes needed.</strong>
+        </p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:4px;">
+          <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:10px; padding:10px 12px;">
+            <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase;">Driver Take-Home</div>
+            <div style="font-size:18px; font-weight:800; color:#0F172A; margin-top:2px;">85% <span style="font-size:12px; font-weight:600; color:#10B981;">of ride fare</span></div>
+          </div>
+          <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:10px; padding:10px 12px;">
+            <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase;">Parent Tips</div>
+            <div style="font-size:18px; font-weight:800; color:#0F172A; margin-top:2px;">100% <span style="font-size:12px; font-weight:600; color:#2563EB;">kept by you</span></div>
           </div>
         </div>
-
-        <div class="form-group" style="margin-bottom:12px;">
-          <label class="form-label">Single ride / daily rate (optional $)</label>
-          <div class="input-box-wrapper">
-            <input class="form-input" id="drvDailyAmt" type="number" value="${esc(r.dailyAmount || 35)}" placeholder="35" />
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom:0;">
-          <label class="form-label">Rate Flexibility</label>
-          <div class="drv-toggle-row" style="display:flex; gap:8px; margin-top:4px;">
-            <button type="button" id="drvNegYes" class="avail-type-btn ${r.negotiable ? 'active' : ''}" style="height:42px; font-size:13px; font-weight:700;" onclick="setDriverNegotiable(true)">
-              <i data-lucide="message-circle" style="width:14px; height:14px;"></i>
-              <span>Yes, negotiable</span>
-            </button>
-            <button type="button" id="drvNegNo" class="avail-type-btn ${!r.negotiable ? 'active' : ''}" style="height:42px; font-size:13px; font-weight:700;" onclick="setDriverNegotiable(false)">
-              <i data-lucide="lock" style="width:14px; height:14px;"></i>
-              <span>Fixed rate</span>
-            </button>
-          </div>
+        <div style="font-size:11.5px; color:#64748B; margin-top:10px; display:flex; align-items:center; gap:6px;">
+          <i data-lucide="check-circle-2" style="width:14px; height:14px; color:#10B981; flex-shrink:0;"></i>
+          <span>Zero subscription fees. Platform fee (15%) is auto-deducted per completed trip.</span>
         </div>
       </div>
 
@@ -2325,23 +2314,23 @@
       <div class="profile-form-section-card" style="margin-bottom: 14px;">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #F1F5F9;">
           <i data-lucide="wallet" style="width:16px; height:16px; color:#1B2B68;"></i>
-          <span style="font-size:14px; font-weight:700; color:#0F172A;">Payment Collection & Payout</span>
+          <span style="font-size:14px; font-weight:700; color:#0F172A;">Payout Method & Bank Account</span>
         </div>
 
         <div class="form-group" style="margin-bottom:12px;">
-          <label class="form-label">Preferred payment method</label>
+          <label class="form-label">Preferred payout method</label>
           <div class="select-wrapper">
             <select class="form-select" id="drvPayMethod">
-              ${['Interac e-Transfer · Cash', 'Interac e-Transfer', 'Cash', 'Direct Deposit'].map((m) => `<option ${(r.paymentMethod || 'Interac e-Transfer · Cash') === m ? 'selected' : ''}>${m}</option>`).join('')}
+              ${['Direct Deposit (Bank Transfer)', 'Interac e-Transfer', 'Weekly Bank Wire'].map((m) => `<option ${(r.paymentMethod || 'Direct Deposit (Bank Transfer)') === m ? 'selected' : ''}>${m}</option>`).join('')}
             </select>
             <i data-lucide="chevron-down" class="select-chevron" style="width:18px;height:18px;color:currentColor;"></i>
           </div>
         </div>
 
         <div class="form-group" style="margin-bottom:0;">
-          <label class="form-label">Payment handle (e-Transfer email or phone)</label>
+          <label class="form-label">Payout handle (e-Transfer email or bank account)</label>
           <div class="input-box-wrapper">
-            <input class="form-input" id="drvPayHandle" value="${esc(r.paymentHandle || d.email || '')}" placeholder="driver@email.com or (416) 555-0199" />
+            <input class="form-input" id="drvPayHandle" value="${esc(r.paymentHandle || d.email || '')}" placeholder="driver@email.com or Account #" />
           </div>
         </div>
       </div>
@@ -2373,7 +2362,7 @@
 
       <!-- Action Button -->
       <button type="button" class="avail-save-btn" onclick="saveDriverPaymentAndRates()">
-        ${editing ? 'Save payment & rates' : 'Submit for review'}
+        ${editing ? 'Save payout & banking' : 'Submit for review'}
       </button>
     `;
     icons();
@@ -2387,26 +2376,9 @@
     renderDriverPaymentRates('driverPaymentFeed', true);
   }
 
-  window.setDriverNegotiable = function (yes) {
-    ensureDriver().rate.negotiable = yes;
-    const btnYes = document.getElementById('drvNegYes');
-    const btnNo = document.getElementById('drvNegNo');
-    if (btnYes && btnNo) {
-      if (yes) {
-        btnYes.classList.add('active');
-        btnNo.classList.remove('active');
-      } else {
-        btnYes.classList.remove('active');
-        btnNo.classList.add('active');
-      }
-    }
-  };
-
   window.saveDriverPaymentAndRates = function () {
     const d = ensureDriver();
     d.rate = d.rate || {};
-    d.rate.amount = Number(val('drvRateAmt') || d.rate.amount || 120);
-    d.rate.dailyAmount = Number(val('drvDailyAmt') || 35);
     const pay = val('drvPayMethod');
     if (pay) d.rate.paymentMethod = pay;
     d.rate.paymentHandle = val('drvPayHandle') || d.rate.paymentHandle || d.email || '';
@@ -2416,7 +2388,7 @@
     syncDriverToProviders();
     persist();
     if (editingProfileChild()) {
-      toast('Payment & rates updated');
+      toast('Payout & banking details updated');
       window.backNested('driverProfile');
     } else {
       if (finishNestedOr()) return;
@@ -2479,86 +2451,54 @@
 
   function renderSubscription() {
     const d = ensureDriver();
-    const sub = d.subscription;
     const el = feed('driverSubscriptionFeed');
     if (!el) return;
-    bindChildTitle(el, 'Platform access');
+    bindChildTitle(el, 'Payout & Commission');
     bindChildBack(el, "backNested('driverProfile')");
     const titleEl = el.closest('.screen-view')?.querySelector('.top-bar-title');
-    if (titleEl) titleEl.textContent = 'Platform access';
+    if (titleEl) titleEl.textContent = 'Payout & Commission';
     el.classList.add('sub-screen-body');
-    const failed = sub.status === 'failed';
-    const isTrial = sub.status === 'trial';
-    const isActive = sub.status === 'active';
-    const kicker = isTrial ? 'Free trial' : isActive ? 'Active' : failed ? 'Payment failed' : 'Not started';
-    const title = isTrial
-      ? `${sub.trialDaysLeft} days remaining`
-      : isActive
-        ? (sub.plan === 'annual' ? '$279 / year' : '$29 / month')
-        : 'Manage platform access';
-    const subtitle = sub.status === 'none' ? 'Monthly or annual platform access' : `Renews ${sub.renewal || 'Oct 8, 2026'}`;
-    
-    const planName = sub.plan === 'annual' ? 'annual' : 'monthly';
-    const planPrice = sub.plan === 'annual' ? '$279/yr' : '$29/mo';
-    
-    let ctaSection = '';
-    if (failed) {
-      ctaSection = `
-        <button type="button" class="btn-primary sub-btn-primary" onclick="recoverDriverPayment()">Retry payment</button>
-      `;
-    } else if (isActive) {
-      ctaSection = `
-        <button type="button" class="btn-primary sub-btn-primary" onclick="activateDriverSubscription()">Save ${planName} plan</button>
-        <button type="button" class="sub-cancel-link" onclick="cancelDriverSubscription()">Cancel subscription</button>
-      `;
-    } else if (isTrial) {
-      ctaSection = `
-        <button type="button" class="btn-primary sub-btn-primary" onclick="activateDriverSubscription()">Activate ${planName} access (${planPrice})</button>
-        <button type="button" class="sub-btn-secondary-link" onclick="continueDriverTrial()">Keep free trial for now</button>
-      `;
-    } else {
-      ctaSection = `
-        <button type="button" class="btn-primary sub-btn-primary" onclick="activateDriverSubscription()">Start 14-day free trial</button>
-      `;
-    }
 
     el.innerHTML = `
       <div class="sub-simple-intro">
-        <h3 class="sub-screen-lede">Choose your plan</h3>
-        <p class="sub-screen-note">Platform fee — not your ride rate.</p>
+        <h3 class="sub-screen-lede">Commission &amp; Earnings</h3>
+        <p class="sub-screen-note">Zero monthly subscriptions. 100% pay-per-trip model.</p>
       </div>
-      <div class="sub-status-strip" data-status="${esc(sub.status)}">
-        <span class="sub-status-kicker">${kicker}</span>
-        <strong class="sub-status-title">${title}</strong>
-        <span class="sub-status-sub">${subtitle}</span>
+
+      <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:14px; padding:16px; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <span style="font-size:11px; font-weight:800; color:#15803D; text-transform:uppercase; letter-spacing:0.5px;">Platform Fee</span>
+          <span style="background:#DCFCE7; color:#15803D; font-size:11px; font-weight:800; padding:2px 8px; border-radius:99px;">Zero Monthly Fee</span>
+        </div>
+        <div style="font-size:24px; font-weight:800; color:#14532D; margin-bottom:4px;">85% Net Payout</div>
+        <p style="font-size:12px; color:#166534; margin:0; line-height:1.4;">
+          Platform fee (15%) is auto-deducted upon trip completion. You keep 85% of all trip fares plus <strong>100% of parent tips</strong>.
+        </p>
       </div>
-      <div class="sub-plan-block" role="radiogroup" aria-label="Driver plan">
-        <button type="button" class="sub-plan-card ${sub.plan === 'annual' ? 'active' : ''}" onclick="selectDriverPlan('annual')">
-          <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
-          <span class="sub-plan-copy">
-            <span class="sub-plan-name">Annual</span>
-            <span class="sub-plan-desc">Best value for the school year</span>
-          </span>
-          <span class="sub-plan-pricing">
-            <span class="sub-plan-price">$279/year</span>
-            <span class="sub-plan-compare">$348/year</span>
-          </span>
-          <span class="sub-plan-badge sub-plan-badge-save">Save 20%</span>
-        </button>
-        <button type="button" class="sub-plan-card ${sub.plan === 'monthly' ? 'active' : ''}" onclick="selectDriverPlan('monthly')">
-          <span class="sub-plan-radio" aria-hidden="true"><i data-lucide="check"></i></span>
-          <span class="sub-plan-copy">
-            <span class="sub-plan-name">Monthly</span>
-            <span class="sub-plan-desc">Individual platform access</span>
-          </span>
-          <span class="sub-plan-pricing">
-            <span class="sub-plan-price">$29/month</span>
-          </span>
-        </button>
+
+      <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:14px; margin-bottom:18px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+          <span style="color:#64748B;">Monthly Platform Fee:</span>
+          <strong style="color:#16A34A;">$0.00 / month</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+          <span style="color:#64748B;">Platform Commission:</span>
+          <strong style="color:#0F172A;">15% per ride</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+          <span style="color:#64748B;">Driver Tips:</span>
+          <strong style="color:#16A34A;">100% to Driver</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:13px; border-top:1px dashed #CBD5E1; padding-top:8px;">
+          <span style="color:#64748B;">Payout Frequency:</span>
+          <strong style="color:#0F172A;">Weekly Direct Deposit</strong>
+        </div>
       </div>
 
       <div class="sub-actions">
-        ${ctaSection}
+        <button type="button" class="btn-primary sub-btn-primary" onclick="if(typeof openNestedScreen==='function'){openNestedScreen('driverPayment',event);}else{navigateTo('driverPayment');}">
+          Manage Payout &amp; Banking
+        </button>
       </div>
     `;
     icons();
@@ -3623,10 +3563,10 @@
         </section>` : ''}
 
         <section class="rqd-card">
-          <h3 class="rqd-head"><i data-lucide="credit-card"></i>Trip earnings &amp; payment</h3>
+          <h3 class="rqd-head"><i data-lucide="credit-card"></i>Guaranteed Trip Payout</h3>
           <div class="rqd-pay">
             <div class="rqd-amount">${esc(displayRate)} <span>/ ${period}</span></div>
-            <span class="rqd-pay-chip"><i data-lucide="banknote"></i>100% Direct payout</span>
+            <span class="rqd-pay-chip"><i data-lucide="banknote"></i>${booking && booking.tipAmount ? `Includes $${booking.tipAmount} Tip · ` : ''}85% Net Payout</span>
           </div>
         </section>
 
@@ -4478,13 +4418,13 @@
       ['vehicle', '2. Vehicle', `${d.vehicle.make} ${d.vehicle.model} · ${d.vehicle.capacity} seats`, 'driverOnboardVehicle'],
       ['docs', '3. Documents', d.documents.filter((doc) => doc.status === 'approved').length + ' / ' + d.documents.length + ' approved', 'driverOnboardDocs'],
       ['availability', '4. Availability', availSummary(d.availability), 'driverOnboardAvailability'],
-      ['rate', '5. Payment & Rates', `$${d.rate.amount} / week · ${d.rate.paymentMethod || 'Interac'}`, 'driverOnboardRate']
+      ['rate', '5. Payout & Banking', `${d.rate.paymentMethod || 'Direct Deposit'}`, 'driverOnboardRate']
     ];
     const ready = onboardingDone(d);
     el.innerHTML = `
       <div class="trip-card">
         <h3 class="section-heading" style="margin-bottom:0;">${isApproved(d) ? 'Verified driver' : ready ? 'Submitted for review' : 'Driver setup'}</h3>
-        <p class="drv-lede">${isApproved(d) ? 'You can go online and accept bookings.' : 'Profile, vehicle, docs, hours, then rate. Parents do not upload these.'}</p>
+        <p class="drv-lede">${isApproved(d) ? 'You can go online and accept bookings.' : 'Profile, vehicle, docs, hours, then payout. Parents do not upload these.'}</p>
       </div>
       <div class="profile-menu-section">
       ${steps.map(([key, title, sub, screen]) => `
@@ -4570,12 +4510,11 @@
         ${profileMenuRow('clock', 'Availability', "openDriverProfileChild('driverOnboardAvailability', event)")}
       </div>
 
-      <!-- Section 2: Earnings, Reviews & Subscription -->
+      <!-- Section 2: Earnings & Reviews -->
       <div class="profile-menu-section" style="margin-bottom:12px;">
-        ${profileMenuRow('wallet', 'Payment & Rates', "openDriverProfileChild('driverPayment', event)")}
+        ${profileMenuRow('wallet', 'Payout & Banking', "openDriverProfileChild('driverPayment', event)")}
         ${profileMenuRow('gift', 'Refer a Driver & Earn $15', "window.openReferralModal()", '', '<span style="background:#FEF3C7; color:#B45309; font-size:11px; font-weight:800; padding:2px 8px; border-radius:99px;">$15 Bonus</span>')}
         ${profileMenuRow('star', 'Ratings & reviews', "openDriverProfileChild('driverRatings', event)")}
-        ${profileMenuRow('crown', 'Driver subscription', "openDriverProfileChild('driverSubscription', event)")}
       </div>
 
       <!-- Section 3: FAQ, Support & Policies -->

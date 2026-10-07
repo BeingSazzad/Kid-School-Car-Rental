@@ -2097,30 +2097,26 @@
 
 .provider-result-card.provider-card-figma {
   display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 14px !important;
+  flex-direction: column !important;
+  gap: 12px !important;
   background: #FFFFFF !important;
-  padding: 16px 18px !important;
-  border: none !important;
-  border-bottom: 1px solid #E5E7EB !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  padding: 14px 16px !important;
+  border: 1.5px solid #E2E8F0 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
   cursor: pointer !important;
-  transition: background 0.15s ease !important;
+  transition: all 0.18s ease !important;
   position: relative !important;
   box-sizing: border-box !important;
   width: 100% !important;
-}
-
-.provider-result-card.provider-card-figma:last-child {
-  border-bottom: none !important;
+  margin-bottom: 10px !important;
 }
 
 .provider-result-card.provider-card-figma:hover {
-  background: #F8FAFC !important;
-  transform: none !important;
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+  transform: translateY(-1px) !important;
 }
 
 /* Avatar Wrap & Image */
@@ -2501,30 +2497,29 @@
   color: #0F172A !important;
 }
 
-/* FORCE HORIZONTAL FIGMA ROW LAYOUT ON ALL SCREENS */
+/* CLEAN TWO-TIER FIGMA LAYOUT */
 #screen-bookingSearchProviders .provider-result-card,
 #screen-bookingSearchProviders .provider-card-figma,
 #screen-bookingSearchProviders .provider-card-slim,
 #screen-bookingSearchProviders .mvp-compact,
 .provider-result-card.provider-card-figma {
   display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  text-align: left !important;
-  gap: 14px !important;
+  flex-direction: column !important;
   background: #FFFFFF !important;
-  padding: 16px 16px !important;
-  border: none !important;
-  border-bottom: 1px solid #E5E7EB !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  border: 1.5px solid #E2E8F0 !important;
+  border-radius: 16px !important;
+  padding: 14px 16px !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
   width: 100% !important;
-  margin: 0 !important;
+  margin: 0 0 10px 0 !important;
+  gap: 12px !important;
+  box-sizing: border-box !important;
 }
 
-#screen-bookingSearchProviders .provider-result-card:last-child {
-  border-bottom: none !important;
+#screen-bookingSearchProviders .provider-result-card[data-hide-reason="filtered"],
+#screen-bookingSearchProviders .provider-card-figma[data-hide-reason="filtered"],
+.provider-result-card.is-filtered-out {
+  display: none !important;
 }
 
 #screen-bookingSearchProviders .pcf-info-col {
