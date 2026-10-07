@@ -2287,6 +2287,8 @@ window.navigateTo = function (screenName, isBack = false) {
     window.renderParentReviewsScreen();
   } else if (screenName === 'tracking') {
     if (window.renderTrackingScreen) window.renderTrackingScreen();
+  } else if (screenName === 'rating') {
+    if (window.renderRatingScreen) window.renderRatingScreen();
   }
 
   // Update Bottom Tab Bar highlights
@@ -4495,7 +4497,29 @@ window.openParentRateDriverModal = function (providerId, bookingId) {
         </div>
       </div>
 
-      <!-- 2. Written Review (Optional) -->
+      <!-- 2. Driver Tip Section -->
+      <div style="margin-bottom:14px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:12px 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <label style="font-size:12px; font-weight:700; color:#475569; display:flex; align-items:center; gap:6px; margin:0;">
+            <i data-lucide="heart" style="width:14px;height:14px;color:#2563EB;"></i>
+            <span>Add Tip for ${driverName}</span>
+          </label>
+          <span id="pModalTipBadge" style="font-size:12px; font-weight:800; color:#2563EB;">$0 (None)</span>
+        </div>
+        <p style="font-size:11px; color:#64748B; margin:0 0 8px 0;">100% of tips go directly to your driver.</p>
+        <div class="bs-tip-pills-row" style="margin-top:0; margin-bottom:6px;">
+          <button type="button" class="bs-tip-pill active" id="pModalTip-0" onclick="setParentModalTip(0)">$0</button>
+          <button type="button" class="bs-tip-pill" id="pModalTip-2" onclick="setParentModalTip(2)">+$2</button>
+          <button type="button" class="bs-tip-pill" id="pModalTip-5" onclick="setParentModalTip(5)">+$5</button>
+          <button type="button" class="bs-tip-pill" id="pModalTip-10" onclick="setParentModalTip(10)">+$10</button>
+          <button type="button" class="bs-tip-pill" id="pModalTip-custom" onclick="setParentModalTip('custom')">Custom</button>
+        </div>
+        <div id="pModalCustomTipWrap" style="display:none; margin-top:6px;">
+          <input type="number" id="pModalCustomTipVal" placeholder="Enter tip amount in $" min="1" step="1" oninput="handleParentModalCustomTip(this.value)" style="width:100%; border-radius:10px; border:1px solid #CBD5E1; padding:6px 10px; font-size:12.5px; font-family:inherit; box-sizing:border-box;" />
+        </div>
+      </div>
+
+      <!-- 3. Written Review (Optional) -->
       <div style="margin-bottom:18px;">
         <label for="parentReviewComment" style="font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:6px;">
           Written Review <span style="font-weight:400; color:#94A3B8;">(Optional)</span>
@@ -4506,7 +4530,7 @@ window.openParentRateDriverModal = function (providerId, bookingId) {
       <!-- Submit Button -->
       <div style="display:flex; gap:10px;">
         <button type="button" onclick="closeParentRateDriverModal()" class="btn-secondary" style="flex:1; padding:13px; border-radius:14px; font-weight:700; font-size:13.5px;">Cancel</button>
-        <button type="button" onclick="submitParentDriverRating('${pId}', '${bookingId || 'H2S-84920'}')" class="btn-primary" style="flex:2; padding:13px; border-radius:14px; font-weight:800; font-size:14px; background:linear-gradient(135deg, #1B2B68 0%, #2A3F8E 100%);">
+        <button type="button" id="pModalSubmitBtn" onclick="submitParentDriverRating('${pId}', '${bookingId || 'H2S-84920'}')" class="btn-primary" style="flex:2; padding:13px; border-radius:14px; font-weight:800; font-size:14px; background:linear-gradient(135deg, #1B2B68 0%, #2A3F8E 100%);">
           Submit Review →
         </button>
       </div>
@@ -4514,6 +4538,7 @@ window.openParentRateDriverModal = function (providerId, bookingId) {
   `;
 
   modal.style.display = 'flex';
+  window.setParentModalTip(0);
   if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 };
 
@@ -4565,12 +4590,56 @@ window.toggleReviewTag = function (btn, tag) {
   }
 };
 
+window._parentModalTipVal = 0;
+
+window.setParentModalTip = function (amt) {
+  window._parentModalTipVal = amt;
+  [0, 2, 5, 10].forEach((n) => {
+    document.getElementById(`pModalTip-${n}`)?.classList.toggle('active', amt === n);
+  });
+  const customPill = document.getElementById('pModalTip-custom');
+  if (customPill) customPill.classList.toggle('active', amt === 'custom' || (![0, 2, 5, 10].includes(amt) && amt > 0));
+
+  const customWrap = document.getElementById('pModalCustomTipWrap');
+  if (customWrap) {
+    const isCustom = amt === 'custom' || (![0, 2, 5, 10].includes(amt) && amt > 0);
+    customWrap.style.display = isCustom ? 'block' : 'none';
+  }
+
+  window.updateParentModalSubmitBtn();
+};
+
+window.handleParentModalCustomTip = function (val) {
+  window._parentModalTipVal = Math.max(0, parseFloat(val) || 0);
+  window.updateParentModalSubmitBtn();
+};
+
+window.updateParentModalSubmitBtn = function () {
+  let tipAmt = window._parentModalTipVal;
+  if (tipAmt === 'custom') {
+    tipAmt = parseFloat(document.getElementById('pModalCustomTipVal')?.value) || 0;
+  }
+  tipAmt = Math.max(0, Number(tipAmt) || 0);
+
+  const badge = document.getElementById('pModalTipBadge');
+  if (badge) badge.textContent = tipAmt > 0 ? `+$${tipAmt.toFixed(2)}` : '$0 (None)';
+
+  const btn = document.getElementById('pModalSubmitBtn');
+  if (btn) btn.textContent = tipAmt > 0 ? `Submit Review & $${tipAmt.toFixed(2)} Tip →` : 'Submit Review →';
+};
+
 window.submitParentDriverRating = function (providerId, bookingId) {
   const stars = Number(window.activeRatingStars || 5);
   if (stars < 1 || stars > 5) {
     alert('Please select a star rating (1 to 5 stars).');
     return;
   }
+
+  let tipAmt = window._parentModalTipVal;
+  if (tipAmt === 'custom') {
+    tipAmt = parseFloat(document.getElementById('pModalCustomTipVal')?.value) || 0;
+  }
+  tipAmt = Math.max(0, Number(tipAmt) || 0);
 
   const comment = (document.getElementById('parentReviewComment')?.value || '').trim();
   const tags = (window.selectedReviewTags || []).slice();
@@ -4612,28 +4681,35 @@ window.submitParentDriverRating = function (providerId, bookingId) {
   provider.reviewsCount = visible.length;
 
   // Sync to driver state if Tariq
-  if (provider.id === 'tariq' && window.syncDriverToProviders) {
+  if (provider.id === 'tariq') {
     if (window.appState.driver) {
       window.appState.driver.rating = provider.rating;
       window.appState.driver.reviewsCount = provider.reviewsCount;
+      if (tipAmt > 0) {
+        window.appState.driver.totalTips = (window.appState.driver.totalTips || 0) + tipAmt;
+      }
     }
-    window.syncDriverToProviders();
+    if (window.syncDriverToProviders) window.syncDriverToProviders();
   }
 
   // Mark parent has rated the current trip
   window.appState.parentHasRatedTrip = true;
   if (bookingId && window.H2STrip) window.H2STrip.markRated(bookingId);
   const ratedBooking = (window.appState.bookings || []).find((b) => b.id === bookingId);
-  if (ratedBooking && ratedBooking.status === 'completed') ratedBooking.userRating = stars;
+  if (ratedBooking) {
+    if (ratedBooking.status === 'completed') ratedBooking.userRating = stars;
+    if (tipAmt > 0) ratedBooking.tipAmount = tipAmt;
+  }
   if (window.currentScreen === 'bookingDetails' && bookingId && window.renderBookingDetails) window.renderBookingDetails(bookingId);
   if (window.currentScreen === 'tracking' && window.renderTrackingScreen) window.renderTrackingScreen();
 
   window.closeParentRateDriverModal();
 
+  const tipNote = tipAmt > 0 ? ` and $${tipAmt.toFixed(2)} tip` : '';
   if (isFlagged) {
-    alert(`⚠️ Review Submitted (★ ${stars}/5):\n\nYour feedback has been saved. Per Section 4.8 system rules, ratings below 3.5 stars are automatically flagged for administrator quality review.`);
+    alert(`⚠️ Review Submitted (★ ${stars}/5):\n\nYour feedback${tipNote} has been saved. Per Section 4.8 system rules, ratings below 3.5 stars are automatically flagged for administrator quality review.`);
   } else {
-    alert(`🎉 Thank You!\n\nYour ${stars}-star review for ${provider.name.replace(/\s*\(WalkShare\)/i, '')} has been published.`);
+    alert(`🎉 Thank You!\n\nYour ${stars}-star review${tipNote} for ${provider.name.replace(/\s*\(WalkShare\)/i, '')} has been published.`);
   }
 
   // Refresh active screen
@@ -7393,30 +7469,64 @@ function simulateDriverReply() {
 window.currentRatingScore = 5;
 window._ratingBookingId = null;
 
-window.openRatingModal = function (bookingId) {
-  const booking = (window.appState.bookings || []).find((b) => b.id === bookingId)
-    || (window.appState.bookings || []).find((b) => b.status === 'completed')
+window.renderRatingScreen = function (bookingId) {
+  const bId = bookingId || window._ratingBookingId || window.appState?.activeBookingId || 'H2S-84920';
+  window._ratingBookingId = bId;
+
+  const booking = (window.appState?.bookings || []).find((b) => b.id === bId)
+    || (window.appState?.bookings || []).find((b) => b.status === 'completed')
+    || (window.appState?.bookings || [])[0]
     || null;
-  window._ratingBookingId = booking?.id || bookingId || null;
-  const provider = (window.appState.providers || []).find((p) => p.id === (booking?.providerId || 'tariq'))
-    || window.appState.providers?.[0];
-  const cleanName = String(provider?.name || 'Provider').replace(/\s*\(WalkShare\)/i, '');
-  const photo = document.getElementById('ratingProviderPhoto');
-  const nameEl = document.getElementById('ratingProviderName');
-  const tripEl = document.getElementById('ratingTripLine');
-  if (photo) {
-    photo.src = provider?.photo || '/assets/avatar_tariq.jpg';
-    photo.alt = cleanName;
-  }
+
+  const provider = (window.appState?.providers || []).find((p) => p.id === (booking?.providerId || 'tariq'))
+    || window.appState?.providers?.[0];
+
+  const cleanName = String(provider?.name || 'Tariq Ahmed').replace(/\s*\(WalkShare\)/i, '');
+  const firstName = cleanName.split(' ')[0] || 'Driver';
+  const photoUrl = provider?.photo || '/assets/avatar_tariq.jpg';
+  const vehTitle = provider?.vehicle ? `${provider.vehicle} · School Commute` : 'Toyota Sienna · School Commute';
+  const school = String(booking?.schoolLocation || 'St. Jude Academy').split(',')[0];
+
+  const photo = document.getElementById('ratingDriverAvatar');
+  const nameEl = document.getElementById('ratingDriverName');
+  const roleEl = document.getElementById('ratingDriverRole');
+  const subEl = document.getElementById('ratingTripSubTitle');
+  const tipHdr = document.getElementById('ratingTipHeader');
+
+  if (photo) { photo.src = photoUrl; photo.alt = cleanName; }
   if (nameEl) nameEl.textContent = cleanName;
-  if (tripEl) {
-    const school = String(booking?.schoolLocation || 'School').split(',')[0];
-    tripEl.textContent = school + ' · completed';
+  if (roleEl) roleEl.textContent = vehTitle;
+  if (subEl) subEl.textContent = `Safe arrival confirmed at ${school}`;
+  if (tipHdr) tipHdr.textContent = `Add a Tip for ${firstName}`;
+
+  // Reset rating score and sentiment
+  if (typeof window.setFigmaRating === 'function') {
+    window.setFigmaRating(5);
   }
-  window.setRatingScore(5);
-  const comment = document.getElementById('ratingCommentText');
-  if (comment) comment.value = '';
-  if (window.lucide) window.lucide.createIcons();
+
+  // Reset compliments
+  window.selectedFigmaCompliments = [];
+  document.querySelectorAll('#figmaComplimentChips .rating-compliment-chip').forEach((c) => {
+    c.classList.remove('selected');
+  });
+
+  // Reset tip to booking's existing tip or 0
+  const currentTip = booking ? (booking.tipAmount || 0) : 0;
+  if (typeof window.setPostTripTip === 'function') {
+    window.setPostTripTip(currentTip);
+  }
+
+  const feedbackInput = document.getElementById('figmaRatingFeedback');
+  if (feedbackInput) feedbackInput.value = '';
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.openRatingModal = function (bookingId) {
+  window._ratingBookingId = bookingId || null;
+  window.renderRatingScreen(bookingId);
   window.navigateTo('rating');
 };
 
@@ -11583,26 +11693,202 @@ window.handleReportBack = function () {
 
 // --- 3. Rate Your Trip Handlers ---
 window.currentFigmaRating = 5;
+window.selectedFigmaCompliments = [];
+window.currentPostTripTip = 0;
 
 window.setFigmaRating = function (score) {
-  window.currentFigmaRating = score;
+  window.currentFigmaRating = Number(score) || 5;
   const starButtons = document.querySelectorAll('#figmaRatingStars .rating-star-btn');
   starButtons.forEach((btn, index) => {
-    btn.classList.toggle('active', index < score);
+    btn.classList.toggle('active', index < window.currentFigmaRating);
   });
+
+  const sentiments = {
+    1: '1.0 · Unsatisfactory',
+    2: '2.0 · Needs Improvement',
+    3: '3.0 · Average Commute',
+    4: '4.0 · Very Good & Reliable',
+    5: '5.0 · Excellent & Safe'
+  };
+  const sentimentEl = document.getElementById('figmaRatingSentiment');
+  if (sentimentEl) {
+    sentimentEl.textContent = sentiments[window.currentFigmaRating] || `${window.currentFigmaRating}.0`;
+  }
+
+  const alertEl = document.getElementById('figmaLowRatingAlert');
+  if (alertEl) {
+    alertEl.style.display = window.currentFigmaRating < 3.5 ? 'block' : 'none';
+  }
+};
+
+window.toggleFigmaCompliment = function (btn, tag) {
+  if (!btn) return;
+  btn.classList.toggle('selected');
+  if (!window.selectedFigmaCompliments) window.selectedFigmaCompliments = [];
+  if (btn.classList.contains('selected')) {
+    if (!window.selectedFigmaCompliments.includes(tag)) {
+      window.selectedFigmaCompliments.push(tag);
+    }
+  } else {
+    window.selectedFigmaCompliments = window.selectedFigmaCompliments.filter((t) => t !== tag);
+  }
+};
+
+window.setPostTripTip = function (amt) {
+  window.currentPostTripTip = amt;
+  const pills = [0, 2, 5, 10];
+  pills.forEach((p) => {
+    document.getElementById(`rtTip-${p}`)?.classList.toggle('active', amt === p);
+  });
+  const customPill = document.getElementById('rtTip-custom');
+  if (customPill) {
+    customPill.classList.toggle('active', amt === 'custom' || (!pills.includes(amt) && amt > 0));
+  }
+
+  const customWrap = document.getElementById('rtCustomTipInputWrap');
+  if (customWrap) {
+    const isCustom = amt === 'custom' || (!pills.includes(amt) && amt > 0);
+    customWrap.style.display = isCustom ? 'block' : 'none';
+    if (isCustom && amt !== 'custom') {
+      const input = document.getElementById('rtCustomTipVal');
+      if (input) input.value = amt;
+    }
+  }
+
+  window.updatePostTripSubmitButton();
+};
+
+window.handlePostTripCustomTipInput = function (val) {
+  const num = Math.max(0, parseFloat(val) || 0);
+  window.currentPostTripTip = num;
+  window.updatePostTripSubmitButton();
+};
+
+window.updatePostTripSubmitButton = function () {
+  let tipVal = window.currentPostTripTip;
+  if (tipVal === 'custom') {
+    tipVal = parseFloat(document.getElementById('rtCustomTipVal')?.value) || 0;
+  }
+  tipVal = Math.max(0, Number(tipVal) || 0);
+
+  const badge = document.getElementById('ratingTipSelectedBadge');
+  if (badge) {
+    badge.textContent = tipVal > 0 ? `+$${tipVal.toFixed(2)}` : '$0 (None)';
+  }
+
+  const btn = document.getElementById('btnSubmitRatingAndTip');
+  if (btn) {
+    btn.textContent = tipVal > 0 ? `Submit Rating & $${tipVal.toFixed(2)} Tip` : 'Submit Rating';
+  }
 };
 
 window.submitFigmaRating = function () {
-  const feedback = (document.getElementById('figmaRatingFeedback') || {}).value || '';
+  const stars = Number(window.currentFigmaRating || 5);
+  let tipVal = window.currentPostTripTip;
+  if (tipVal === 'custom') {
+    tipVal = parseFloat(document.getElementById('rtCustomTipVal')?.value) || 0;
+  }
+  tipVal = Math.max(0, Number(tipVal) || 0);
+
+  const feedback = (document.getElementById('figmaRatingFeedback')?.value || '').trim();
+  const compliments = (window.selectedFigmaCompliments || []).slice();
+
+  const bId = window._ratingBookingId || window.appState?.activeBookingId || 'H2S-84920';
+  const booking = (window.appState?.bookings || []).find((b) => b.id === bId)
+    || (window.appState?.bookings || [])[0]
+    || null;
+
+  const provider = (window.appState?.providers || []).find((p) => p.id === (booking?.providerId || 'tariq'))
+    || window.appState?.providers?.[0];
+  const driverName = provider ? provider.name.replace(/\s*\(WalkShare\)/i, '') : 'Driver';
+
+  // 1. Update booking
+  if (booking) {
+    booking.userRating = stars;
+    booking.tipAmount = tipVal;
+    booking.compliments = compliments;
+    booking.feedback = feedback;
+    booking.rated = true;
+  }
+
+  // 2. Add review & recalculate score
+  if (provider) {
+    const parentName = window.appState?.user?.name || 'Sarah Tremblay';
+    const shortName = parentName.split(' ').map((p, i) => (i === 0 ? p : (p[0] ? p[0] + '.' : ''))).join(' ').trim();
+    const isFlagged = stars < 3.5;
+
+    const newReview = {
+      id: 'rev-' + Date.now(),
+      name: shortName,
+      fullName: parentName,
+      providerId: provider.id,
+      bookingId: bId,
+      rating: stars,
+      date: 'Today',
+      text: feedback || (stars >= 4 ? 'Great school commute, gentle driving and punctual arrival.' : 'Trip completed.'),
+      tags: compliments,
+      flaggedForAdmin: isFlagged,
+      flagReason: isFlagged ? `Low rating (${stars}/5 stars) automatically flagged for admin review.` : '',
+      hidden: false
+    };
+
+    const existing = typeof window.getProviderReviews === 'function' ? window.getProviderReviews(provider) : (provider.reviewsList || []);
+    provider.reviewsList = [newReview, ...existing];
+
+    if (!window.appState.parentReviews) window.appState.parentReviews = [];
+    window.appState.parentReviews.unshift(newReview);
+
+    const visible = provider.reviewsList.filter((r) => !r.hidden);
+    let sum = 0;
+    visible.forEach((r) => { sum += Number(r.rating || 5); });
+    provider.rating = Math.round((sum / visible.length) * 10) / 10;
+    provider.reviewsCount = visible.length;
+
+    // Sync to driver state if Tariq
+    if (provider.id === 'tariq' && window.appState.driver) {
+      window.appState.driver.rating = provider.rating;
+      window.appState.driver.reviewsCount = provider.reviewsCount;
+      if (tipVal > 0) {
+        window.appState.driver.totalTips = (window.appState.driver.totalTips || 0) + tipVal;
+      }
+      if (typeof window.syncDriverToProviders === 'function') window.syncDriverToProviders();
+    }
+  }
+
+  // 3. Update appState
   if (window.appState) {
-    window.appState.lastRatingFeedback = { rating: window.currentFigmaRating, feedback, time: new Date().toISOString() };
+    window.appState.parentHasRatedTrip = true;
+    window.appState.lastRatingFeedback = {
+      rating: stars,
+      tipAmount: tipVal,
+      compliments,
+      feedback,
+      time: new Date().toISOString()
+    };
   }
+
+  // 4. Notify parent
+  const toastMsg = tipVal > 0
+    ? `Thank you! Rated ${stars}★ and $${tipVal.toFixed(2)} tip sent to ${driverName}.`
+    : `Thank you! Rated ${stars}★ for ${driverName}.`;
+
   if (typeof window.showToast === 'function') {
-    window.showToast(`Thank you! Rating (${window.currentFigmaRating}★) submitted.`, 'success');
+    window.showToast(toastMsg, 'success');
+  } else {
+    alert(toastMsg);
   }
+
+  // 5. Navigate back
   setTimeout(() => {
     window.navigateTo('home', true);
-  }, 600);
+  }, 500);
+};
+
+window.handleRatingSkip = function () {
+  if (typeof window.showToast === 'function') {
+    window.showToast('Rating skipped. You can rate anytime from Booking History.', 'info');
+  }
+  window.navigateBack('home');
 };
 
 window.handleRatingBack = function () {

@@ -8812,46 +8812,102 @@
         </div>
       </div>
 
-      <div class="top-bar-sticky">
+      <div class="top-bar-sticky" style="display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
         <button type="button" class="back-btn" onclick="handleRatingBack()" aria-label="Go back">
           <i data-lucide="arrow-left"></i>
         </button>
-        <span style="width: 26px;"></span>
+        <span style="font-weight: 700; font-size: 16px; color: #0F172A;">Rate Your Experience</span>
+        <button type="button" onclick="handleRatingSkip()" style="background: none; border: none; color: #64748B; font-size: 13.5px; font-weight: 600; cursor: pointer; padding: 4px 8px;">Skip</button>
       </div>
 
       <div class="screen-scroll-body rating-figma-body">
-        <div class="rating-header-block">
-          <h2 class="rating-heading-title">Rate Your Trip</h2>
-          <p class="rating-heading-subtitle">How was your child's ride today?</p>
+        <div class="rating-header-block" style="text-align: center; margin-bottom: 16px;">
+          <h2 class="rating-heading-title" style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0;">How was the trip?</h2>
+          <p class="rating-heading-subtitle" id="ratingTripSubTitle" style="font-size: 13px; color: #64748B; margin: 4px 0 0;">Safe arrival confirmed at St. Jude Academy</p>
         </div>
 
         <!-- Driver Profile Card -->
-        <div class="rating-provider-card">
-          <div class="rating-avatar-wrap">
+        <div class="rating-provider-card" style="margin: 4px 0 16px;">
+          <div class="rating-avatar-wrap" style="width: 80px; height: 80px;">
             <img src="/assets/avatar_tariq.jpg" alt="Driver" id="ratingDriverAvatar" class="rating-avatar-img" onerror="this.onerror=null;this.src='/assets/avatar_tariq.jpg';" />
           </div>
           <div class="rating-provider-name" id="ratingDriverName">Tariq Ahmed</div>
-          <div class="rating-provider-role">Your driver today</div>
+          <div class="rating-provider-role" id="ratingDriverRole" style="font-size: 12.5px; color: #64748B; margin-top: 2px;">Toyota Sienna · School Commute</div>
         </div>
 
         <!-- 5 Interactive Star Rating Row -->
-        <div class="rating-stars-row" id="figmaRatingStars">
-          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(1)">★</button>
-          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(2)">★</button>
-          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(3)">★</button>
-          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(4)">★</button>
-          <button type="button" class="rating-star-btn active" onclick="setFigmaRating(5)">★</button>
+        <div style="text-align: center; margin-bottom: 16px;">
+          <div class="rating-stars-row" id="figmaRatingStars" style="margin-bottom: 4px; gap: 10px;">
+            <button type="button" class="rating-star-btn active" onclick="setFigmaRating(1)">★</button>
+            <button type="button" class="rating-star-btn active" onclick="setFigmaRating(2)">★</button>
+            <button type="button" class="rating-star-btn active" onclick="setFigmaRating(3)">★</button>
+            <button type="button" class="rating-star-btn active" onclick="setFigmaRating(4)">★</button>
+            <button type="button" class="rating-star-btn active" onclick="setFigmaRating(5)">★</button>
+          </div>
+          <div id="figmaRatingSentiment" style="font-size: 13.5px; font-weight: 700; color: #0F172A;">5.0 · Excellent &amp; Safe</div>
+        </div>
+
+        <!-- Low Rating Section 4.8 Alert -->
+        <div id="figmaLowRatingAlert" style="display: none; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; text-align: left;">
+          <div style="display: flex; gap: 8px; align-items: flex-start;">
+            <span style="font-size: 14px;">⚠️</span>
+            <div style="font-size: 11.5px; color: #92400E; line-height: 1.4;">
+              <strong>Administrator Review:</strong> Ratings below 3.5 stars are automatically flagged for admin quality review to maintain child safety standards.
+            </div>
+          </div>
+        </div>
+
+        <!-- Driver Highlights / Compliments -->
+        <div style="margin-bottom: 18px;">
+          <label style="font-size: 11.5px; font-weight: 700; color: #64748B; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Highlights</label>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="figmaComplimentChips">
+            <button type="button" class="rating-compliment-chip" onclick="toggleFigmaCompliment(this, '⏰ Punctual')">⏰ Punctual</button>
+            <button type="button" class="rating-compliment-chip" onclick="toggleFigmaCompliment(this, '🛡️ Safe Driving')">🛡️ Safe Driving</button>
+            <button type="button" class="rating-compliment-chip" onclick="toggleFigmaCompliment(this, '👶 Great with Kids')">👶 Great with Kids</button>
+            <button type="button" class="rating-compliment-chip" onclick="toggleFigmaCompliment(this, '🚗 Clean Car')">🚗 Clean Car</button>
+            <button type="button" class="rating-compliment-chip" onclick="toggleFigmaCompliment(this, '💬 Polite & Friendly')">💬 Polite & Friendly</button>
+            <button type="button" class="rating-compliment-chip" onclick="toggleFigmaCompliment(this, '🚪 Curbside Care')">🚪 Curbside Care</button>
+          </div>
+        </div>
+
+        <!-- Post-Trip Driver Tipping Section -->
+        <div class="rating-tip-card" style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 14px 16px; margin-bottom: 18px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 28px; height: 28px; border-radius: 8px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; color: #2563EB;">
+                <i data-lucide="heart" style="width: 15px; height: 15px;"></i>
+              </div>
+              <span style="font-size: 13.5px; font-weight: 800; color: #0F172A;" id="ratingTipHeader">Add a Tip for Tariq</span>
+            </div>
+            <span style="font-size: 12px; font-weight: 800; color: #2563EB;" id="ratingTipSelectedBadge">$0 (None)</span>
+          </div>
+          <p style="font-size: 11.5px; color: #64748B; margin: 0 0 10px 0;">100% of tips go directly to your driver.</p>
+
+          <div class="bs-tip-pills-row" style="margin-top: 0; margin-bottom: 8px;">
+            <button type="button" class="bs-tip-pill active" id="rtTip-0" onclick="setPostTripTip(0)">$0</button>
+            <button type="button" class="bs-tip-pill" id="rtTip-2" onclick="setPostTripTip(2)">+$2</button>
+            <button type="button" class="bs-tip-pill" id="rtTip-5" onclick="setPostTripTip(5)">+$5</button>
+            <button type="button" class="bs-tip-pill" id="rtTip-10" onclick="setPostTripTip(10)">+$10</button>
+            <button type="button" class="bs-tip-pill" id="rtTip-custom" onclick="setPostTripTip('custom')">Custom</button>
+          </div>
+
+          <div id="rtCustomTipInputWrap" style="display: none; margin-top: 8px;">
+            <input type="number" id="rtCustomTipVal" class="form-input" placeholder="Enter tip amount in $" min="1" step="1" oninput="handlePostTripCustomTipInput(this.value)" style="width: 100%; border-radius: 10px; border: 1.5px solid #CBD5E1; padding: 8px 12px; font-size: 13px; font-family: inherit; box-sizing: border-box;" />
+          </div>
         </div>
 
         <!-- Additional Feedback Container -->
-        <div class="rating-feedback-wrap">
-          <textarea id="figmaRatingFeedback" class="rating-feedback-textarea" placeholder="Share additional feedback (optional)" rows="4"></textarea>
+        <div class="rating-feedback-wrap" style="margin-bottom: 18px;">
+          <textarea id="figmaRatingFeedback" class="rating-feedback-textarea" placeholder="Share additional feedback or a thank you note (optional)..." rows="3"></textarea>
         </div>
 
-        <!-- Submit Rating Button -->
-        <div class="rating-submit-wrap">
-          <button type="button" class="rating-btn-primary" onclick="submitFigmaRating()">
+        <!-- Submit & Skip Action Buttons -->
+        <div class="rating-submit-wrap" style="display: flex; flex-direction: column; gap: 8px;">
+          <button type="button" class="rating-btn-primary" id="btnSubmitRatingAndTip" onclick="submitFigmaRating()">
             Submit Rating
+          </button>
+          <button type="button" onclick="handleRatingSkip()" style="background: none; border: none; font-size: 13px; font-weight: 600; color: #64748B; padding: 8px; cursor: pointer; text-align: center;">
+            Skip for now
           </button>
         </div>
       </div>
