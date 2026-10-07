@@ -234,16 +234,94 @@
     el.classList.toggle('is-placeholder', !filled);
   }
 
+  window.calculatePassEndDate = function (startIso, packageType) {
+    if (!startIso) return '';
+    const d = new Date(startIso + 'T00:00:00');
+    if (isNaN(d.getTime())) return '';
+    if (packageType === 'daily') return startIso;
+    const targetSchoolDays = packageType === 'monthly' ? 20 : 5;
+    let addedSchoolDays = 0;
+    const cur = new Date(d);
+    while (addedSchoolDays < targetSchoolDays) {
+      const dow = cur.getDay();
+      if (dow !== 0 && dow !== 6) {
+        addedSchoolDays++;
+        if (addedSchoolDays === targetSchoolDays) break;
+      }
+      cur.setDate(cur.getDate() + 1);
+    }
+    const y = cur.getFullYear();
+    const m = String(cur.getMonth() + 1).padStart(2, '0');
+    const day = String(cur.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
+  window.countSchoolDays = function (startIso, endIso) {
+    if (!startIso || !endIso) return 0;
+    const start = new Date(startIso + 'T00:00:00');
+    const end = new Date(endIso + 'T00:00:00');
+    if (isNaN(start.getTime()) || isNaN(end.getTime()) || start > end) return 0;
+    let count = 0;
+    const cur = new Date(start);
+    while (cur <= end) {
+      const dow = cur.getDay();
+      if (dow !== 0 && dow !== 6) {
+        count++;
+      }
+      cur.setDate(cur.getDate() + 1);
+    }
+    return count;
+  };
+
   window.syncBookingDateDisplay = function () {
     const iso = document.getElementById('setupStartDate')?.value || '';
     const label = formatIsoDateLabel(iso);
     const text = document.getElementById('setupOutboundDateText');
     const retText = document.getElementById('setupReturnDateText');
-    setFieldPlaceholder(text, !!iso, label, 'Select date');
-    if (retText) retText.value = label;
     ensureDraftDefaults();
-    state().bookingDraft.tripDate = label;
-    state().bookingDraft.startDate = iso;
+    const draft = state().bookingDraft;
+    const pkg = draft.packageType || (draft.tripServiceMode === 'on-demand' ? 'on-demand' : 'weekly');
+    
+    // Label for start date
+    const startPlaceholder = (pkg === 'weekly' || pkg === 'monthly') ? 'Start date' : (pkg === 'daily' ? 'Pass date' : 'Select date');
+    setFieldPlaceholder(text, !!iso, label, startPlaceholder);
+    if (retText) retText.value = label;
+    draft.tripDate = label;
+    draft.startDate = iso;
+
+    // Check pass mode
+    const isPass = pkg === 'weekly' || pkg === 'monthly';
+    const isDaily = pkg === 'daily';
+    const endTrigger = document.getElementById('bookingEndDateTrigger');
+    const durationRow = document.getElementById('bkPassDurationRow');
+    const untilCancelledLabel = document.getElementById('bkUntilCancelledLabel');
+    const durationText = document.getElementById('bkPassDurationText');
+
+    if (endTrigger) {
+      endTrigger.style.display = isPass ? 'flex' : 'none';
+    }
+    if (durationRow) {
+      durationRow.style.display = (isPass || isDaily) ? 'flex' : 'none';
+    }
+    if (untilCancelledLabel) {
+      untilCancelledLabel.style.display = isPass ? 'inline-flex' : 'none';
+    }
+
+    if (isPass) {
+      // If no end date set yet or end date is earlier than start, auto-calculate standard pass end date
+      if (!draft.untilCancelled && (!draft.untilDate || draft.untilDate < iso)) {
+        draft.untilDate = window.calculatePassEndDate(iso, pkg);
+        draft.recurrenceEndDate = draft.untilDate;
+      }
+      window.syncUntilCancelledUi();
+    } else if (isDaily) {
+      draft.untilCancelled = false;
+      draft.untilDate = iso;
+      draft.recurrenceEndDate = iso;
+      if (durationText) {
+        durationText.textContent = iso ? `1 School Day · ${label}` : '1 School Day (Daily Pass)';
+      }
+    }
   };
 
   window.syncBookingTimeDisplays = function () {
@@ -262,21 +340,46 @@
   window.syncUntilCancelledUi = function () {
     ensureDraftDefaults();
     const draft = state().bookingDraft;
+    const pkg = draft.packageType || 'weekly';
     const cancelled = !!draft.untilCancelled;
-    const iso = cancelled ? '' : (draft.untilDate || draft.recurrenceEndDate || '');
+    const startIso = draft.startDate || document.getElementById('setupStartDate')?.value || '';
+    const endIso = cancelled ? '' : (draft.untilDate || draft.recurrenceEndDate || '');
+    
     const cb = document.getElementById('toggleUntilCancelled');
     if (cb) cb.checked = cancelled;
+    
     const trigger = document.getElementById('bookingEndDateTrigger');
-    trigger?.classList.toggle('is-inactive', cancelled);
     if (trigger) {
-      // Always clickable: tap End date turns off Until cancelled and opens the date sheet
-      trigger.removeAttribute('disabled');
-      trigger.setAttribute('aria-disabled', 'false');
-      trigger.tabIndex = 0;
+      trigger.style.opacity = cancelled ? '0.6' : '1';
+      trigger.style.pointerEvents = cancelled ? 'none' : 'auto';
     }
-    setFieldPlaceholder(document.getElementById('bookingEndDateValue'), !!iso, formatIsoDateLabel(iso), 'End date');
-    const input = document.getElementById('repeatEndDateInput');
-    if (input) input.value = iso;
+    
+    const endValEl = document.getElementById('bookingEndDateValue');
+    if (cancelled) {
+      setFieldPlaceholder(endValEl, true, 'Ongoing', 'End date');
+    } else {
+      setFieldPlaceholder(endValEl, !!endIso, formatIsoDateLabel(endIso), 'End date');
+    }
+    
+    const durationText = document.getElementById('bkPassDurationText');
+    if (durationText) {
+      if (cancelled) {
+        durationText.textContent = pkg === 'monthly'
+          ? 'Auto-renews monthly until cancelled'
+          : 'Auto-renews weekly every Monday';
+      } else if (startIso && endIso) {
+        const schoolDays = window.countSchoolDays(startIso, endIso);
+        const weeks = Math.round(schoolDays / 5);
+        const weeksText = weeks > 1 ? ` (${weeks} Weeks)` : (weeks === 1 ? ' (1 Week)' : '');
+        durationText.textContent = `${schoolDays} School Days${weeksText} · Mon–Fri`;
+      } else if (startIso) {
+        durationText.textContent = pkg === 'monthly' ? '20 School Days (4 Weeks)' : '5 School Days (1 Week)';
+      } else {
+        durationText.textContent = 'Duration: Select start date';
+      }
+    }
+    const input = document.getElementById('setupEndDateInput');
+    if (input) input.value = endIso;
   };
 
   window.syncBookingEndsLabel = window.syncUntilCancelledUi;
@@ -285,26 +388,26 @@
     window.setRecurrenceEnds('until_cancelled');
   };
 
-  window.handleUntilCancelledChange = function (checked) {
+  window.handleUntilCancelledToggle = function (checked) {
+    ensureDraftDefaults();
+    const draft = state().bookingDraft;
+    draft.untilCancelled = !!checked;
     if (checked) {
-      window.setRecurrenceEnds('until_cancelled');
+      draft.recurrenceEnds = 'until_cancelled';
+      draft.untilDate = '';
+      draft.recurrenceEndDate = '';
     } else {
-      ensureDraftDefaults();
-      const draft = state().bookingDraft;
-      draft.untilCancelled = false;
       draft.recurrenceEnds = 'date';
-      // Seed a sensible end date so the field is ready to edit
-      if (!draft.untilDate && !draft.recurrenceEndDate) {
-        const start = document.getElementById('setupStartDate')?.value;
-        if (start) {
-          draft.untilDate = start;
-          draft.recurrenceEndDate = start;
-        }
-      }
-      window.syncUntilCancelledUi();
+      const startIso = draft.startDate || document.getElementById('setupStartDate')?.value || '';
+      const pkg = draft.packageType || 'weekly';
+      draft.untilDate = window.calculatePassEndDate(startIso, pkg);
+      draft.recurrenceEndDate = draft.untilDate;
     }
+    window.syncUntilCancelledUi();
     window.updateBookingSearchCta();
   };
+
+  window.handleUntilCancelledChange = window.handleUntilCancelledToggle;
 
   window.openRecurrenceEndDatePicker = function () {
     window.openBookingEndDateSheet();
@@ -376,7 +479,11 @@
     if (window.lucide) window.lucide.createIcons();
   }
 
-  window.openBookingDateSheet = function () {
+  window.openBookingDateSheet = function (target) {
+    if (target === 'end') {
+      window.openBookingEndDateSheet();
+      return;
+    }
     openCalendarSheet('start', document.getElementById('setupStartDate')?.value);
   };
 
@@ -392,8 +499,8 @@
       if (!draft.untilDate && !draft.recurrenceEndDate) {
         const start = document.getElementById('setupStartDate')?.value;
         if (start) {
-          draft.untilDate = start;
-          draft.recurrenceEndDate = start;
+          draft.untilDate = window.calculatePassEndDate(start, draft.packageType || 'weekly');
+          draft.recurrenceEndDate = draft.untilDate;
         }
       }
       window.syncUntilCancelledUi();
@@ -406,7 +513,12 @@
 
   window.confirmBookingDateSheet = function () {
     if (bookingCalTarget === 'end') {
+      const draft = state().bookingDraft;
+      draft.untilCancelled = false;
+      const cb = document.getElementById('toggleUntilCancelled');
+      if (cb) cb.checked = false;
       window.setRecurrenceEndDate(bookingCalPending);
+      window.syncUntilCancelledUi();
       window.updateBookingSearchCta();
       window.closeBookingSheet('bookingDateSheet');
       if (window.lucide) window.lucide.createIcons();
@@ -417,6 +529,15 @@
     if (start) start.value = bookingCalPending;
     if (ret) ret.value = bookingCalPending;
     if (window.handleScheduleDateChange) window.handleScheduleDateChange('outbound', bookingCalPending);
+    
+    // Auto-compute pass end date on start date selection if on recurring pass
+    const draft = state().bookingDraft;
+    if (draft.packageType === 'weekly' || draft.packageType === 'monthly') {
+      if (!draft.untilCancelled) {
+        draft.untilDate = window.calculatePassEndDate(bookingCalPending, draft.packageType);
+        draft.recurrenceEndDate = draft.untilDate;
+      }
+    }
     window.syncBookingDateDisplay();
     window.updateBookingSearchCta();
     window.closeBookingSheet('bookingDateSheet');
@@ -1115,9 +1236,31 @@
     setText('summaryOutboundText', outboundTime);
     setText('summaryReturnText', oneWay ? '' : returnTime);
 
-    // 4. Frequency
+    // 4. Frequency & Pass Period
     const isRecurring = draft.frequency === 'recurring';
     const freqDays = (draft.selectedDays || []).join(' ') || 'Mon – Fri';
+    const isPass = draft.packageType === 'weekly' || draft.packageType === 'monthly';
+    const isUntilCancelled = !!draft.untilCancelled;
+    const startIso = draft.startDate;
+    const endIso = draft.untilDate || draft.recurrenceEndDate;
+
+    let periodLabel = '';
+    if (isPass) {
+      if (isUntilCancelled) {
+        periodLabel = `${formatIsoDateLabel(startIso) || 'Start'} &rarr; Ongoing (Until cancelled)`;
+      } else if (startIso && endIso) {
+        const daysCount = window.countSchoolDays(startIso, endIso);
+        const weeks = Math.round(daysCount / 5);
+        const weeksTxt = weeks > 1 ? ` (${weeks} Weeks)` : '';
+        periodLabel = `${formatIsoDateLabel(startIso)} &rarr; ${formatIsoDateLabel(endIso)} (${daysCount} School Days${weeksTxt})`;
+      } else {
+        periodLabel = draft.packageType === 'monthly' ? '20 School Days (4 Weeks)' : '5 School Days (1 Week)';
+      }
+    } else {
+      periodLabel = `${draft.tripDate || 'Single Day'} (1 School Day)`;
+    }
+    setHtml('bsTripPeriodVal', periodLabel);
+
     const freqLabel = isRecurring ? `Recurring (${freqDays} Commute)` : 'One-Time Ride (Single Day Pass)';
     setText('bsTripFrequency', freqLabel);
     setText('summaryFreqText', freqLabel);

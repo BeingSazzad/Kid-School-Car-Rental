@@ -3385,6 +3385,10 @@ window.selectTripPackage = function (pkg) {
     if (daysGrid) daysGrid.style.display = 'flex';
   }
 
+  if (typeof window.syncBookingDateDisplay === 'function') {
+    window.syncBookingDateDisplay();
+  }
+
   window.updatePackageEstimateBox();
 
   if (typeof window.updateBookingSearchCta === 'function') window.updateBookingSearchCta();
@@ -3441,6 +3445,10 @@ window.setTripServiceMode = function (mode) {
     if (commuteCard) commuteCard.style.display = 'block';
     const pkg = draft.packageType && draft.packageType !== 'on-demand' ? draft.packageType : 'weekly';
     window.selectTripPackage(pkg);
+  }
+
+  if (typeof window.syncBookingDateDisplay === 'function') {
+    window.syncBookingDateDisplay();
   }
 
   window.updateRouteDistanceDisplay();

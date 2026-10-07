@@ -6509,15 +6509,43 @@
             </div>
           </div>
 
-          <!-- Select Date Box -->
-          <div class="bk-figma-select-box" id="bookingDateTrigger" onclick="openBookingDateSheet()">
-            <div class="bk-figma-select-val" id="setupOutboundDateText">
-              <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748B;"></i>
-              <span>Select date</span>
+          <!-- Date Row (Start Date & End Date for School Pass) -->
+          <div class="bk-figma-dates-grid" id="bkPassDatesWrap" style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <!-- Start Date Box -->
+            <div class="bk-figma-select-box" id="bookingDateTrigger" onclick="openBookingDateSheet('start')" style="flex: 1; margin-bottom: 0;">
+              <div class="bk-figma-select-val" id="setupOutboundDateText">
+                <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748B;"></i>
+                <span id="setupStartDateLabel">Start date</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
             </div>
-            <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+
+            <!-- End Date Box (Shown for Weekly & Monthly School Pass) -->
+            <div class="bk-figma-select-box" id="bookingEndDateTrigger" onclick="openBookingDateSheet('end')" style="flex: 1; margin-bottom: 0;">
+              <div class="bk-figma-select-val" id="bookingEndDateValue">
+                <i data-lucide="calendar-check" style="width: 16px; height: 16px; color: #64748B;"></i>
+                <span id="setupEndDateLabel">End date</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8;"></i>
+            </div>
           </div>
+
+          <!-- Pass Duration & "Until I cancel" Bar -->
+          <div id="bkPassDurationRow" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #F8FAFC; border-radius: 12px; border: 1px solid #F1F5F9; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
+              <i data-lucide="info" style="width: 14px; height: 14px; color: #64748B; flex-shrink: 0;"></i>
+              <span id="bkPassDurationText" style="font-size: 12px; font-weight: 600; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                Duration: Select start date
+              </span>
+            </div>
+            <label id="bkUntilCancelledLabel" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; margin: 0; font-size: 12px; font-weight: 700; color: #0F172A; user-select: none; flex-shrink: 0;">
+              <input type="checkbox" id="toggleUntilCancelled" style="width: 15px; height: 15px; accent-color: #1B2B68; cursor: pointer;" onchange="handleUntilCancelledToggle(this.checked)" />
+              <span>Until I cancel</span>
+            </label>
+          </div>
+
           <input type="date" id="setupStartDate" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" style="display:none;" onchange="handleScheduleDateChange('outbound', this.value); syncBookingDateDisplay(); updateBookingSearchCta();" />
+          <input type="date" id="setupEndDateInput" class="book-ride-native-input" value="" tabindex="-1" aria-hidden="true" style="display:none;" onchange="handleScheduleEndDateChange(this.value);" />
           <input type="hidden" id="setupReturnDate" value="" />
           <input type="hidden" id="setupReturnDateText" value="" />
 
@@ -7378,10 +7406,19 @@
               <div class="bs-row-right" id="bsTripReturn">School &rarr; Home (01:00 PM)</div>
             </div>
 
-            <!-- Row 5: Frequency -->
+            <!-- Row 5: Pass Period / Duration -->
+            <div class="bs-info-row" id="bsTripPeriodRow">
+              <div class="bs-row-left">
+                <i data-lucide="calendar-range" class="bs-row-icon"></i>
+                <span class="bs-row-label">Pass Period</span>
+              </div>
+              <div class="bs-row-right" id="bsTripPeriodVal">Sep 8 &ndash; Oct 5, 2026 (20 School Days)</div>
+            </div>
+
+            <!-- Row 6: Frequency -->
             <div class="bs-info-row">
               <div class="bs-row-left">
-                <i data-lucide="calendar" class="bs-row-icon"></i>
+                <i data-lucide="repeat" class="bs-row-icon"></i>
                 <span class="bs-row-label">Frequency</span>
               </div>
               <div class="bs-row-right" id="bsTripFrequency">Recurring (Mon &ndash; Fri Commute)</div>
