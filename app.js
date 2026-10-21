@@ -2796,6 +2796,9 @@ function renderHome() {
 
   syncHomeLiveCard();
   renderHomeFigmaTrips();
+  if (window.initHomeAbVariant) {
+    window.initHomeAbVariant();
+  }
 
   if (window.updateNavLiveBadges) {
     window.updateNavLiveBadges();
@@ -2805,6 +2808,57 @@ function renderHome() {
     window.lucide.createIcons();
   }
 }
+
+/* ==========================================================
+   Home Screen A/B Testing Suite:
+   Variant B (Streamlined Ride Hub - Safety & Children Removed) vs
+   Variant A (Control - Original Quick Actions with Children & Safety)
+   ========================================================== */
+window.initHomeAbVariant = function () {
+  const saved = localStorage.getItem('h2s_home_ab_variant') || 'variant-b';
+  window.applyHomeAbVariant(saved);
+};
+
+window.toggleHomeAbVariant = function () {
+  const current = localStorage.getItem('h2s_home_ab_variant') || 'variant-b';
+  const next = current === 'variant-b' ? 'variant-a' : 'variant-b';
+  localStorage.setItem('h2s_home_ab_variant', next);
+  window.applyHomeAbVariant(next);
+};
+
+window.applyHomeAbVariant = function (variant) {
+  const varA = document.getElementById('homeActionsVariantA');
+  const varB = document.getElementById('homeActionsVariantB');
+  const label = document.getElementById('abVariantLabel');
+  const tag = document.getElementById('abPillTag');
+
+  if (variant === 'variant-a') {
+    if (varA) varA.style.display = 'block';
+    if (varB) varB.style.display = 'none';
+    if (label) label.textContent = 'Variant A: Control';
+    if (tag) tag.textContent = 'A';
+  } else {
+    if (varA) varA.style.display = 'none';
+    if (varB) varB.style.display = 'block';
+    if (label) label.textContent = 'Variant B: Hero Button';
+    if (tag) tag.textContent = 'B';
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+};
+
+window.selectCommuteServiceAndBook = function (serviceType) {
+  if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
+  window.appState.bookingDraft.serviceType = serviceType;
+  if (serviceType === 'walk' && typeof window.setTripServiceMode === 'function') {
+    window.setTripServiceMode('scheduled');
+  }
+  if (typeof window.navigateTo === 'function') {
+    window.navigateTo('bookingTripSetup');
+  }
+};
 
 /** Home live card and floating tracker mirror the booking that is actually live right now. */
 function syncHomeLiveCard() {
@@ -3288,10 +3342,9 @@ window.updatePackageEstimateBox = function () {
   const price = window.calculateSystemPrice(pkg, isRound, childCount, distKm, 0);
 
   const titles = {
-    'daily': 'Daily Pass',
-    'weekly': 'Weekly Pass',
-    'monthly': 'Monthly Pass',
-    'on-demand': 'On-Demand Ride'
+    'weekly': 'Weekly',
+    'monthly': 'Monthly',
+    'on-demand': 'Single Ride'
   };
 
   const subs = {
@@ -3337,6 +3390,7 @@ window.updatePackageEstimateBox = function () {
 window.selectTripPackage = function (pkg) {
   if (!window.appState.bookingDraft) window.appState.bookingDraft = {};
   const draft = window.appState.bookingDraft;
+  if (pkg === 'daily') pkg = 'weekly';
   draft.packageType = pkg;
 
   const btnOnDemand = document.getElementById('btnModeOnDemand');
@@ -3354,31 +3408,26 @@ window.selectTripPackage = function (pkg) {
     if (btnScheduled) btnScheduled.classList.add('active');
     if (btnOnDemand) btnOnDemand.classList.remove('active');
     if (commuteCard) commuteCard.style.display = 'block';
-    if (pkg === 'daily') {
-      draft.frequency = 'onetime';
-    } else {
-      draft.frequency = 'recurring';
-    }
+    draft.frequency = 'recurring';
   }
 
-  ['daily', 'weekly', 'monthly'].forEach((p) => {
+  ['weekly', 'monthly'].forEach((p) => {
     document.getElementById(`pkgTab-${p}`)?.classList.toggle('active', p === pkg);
   });
 
   const badge = document.getElementById('activePackageBadge');
   const pkgBadges = {
     'on-demand': 'Single Ride',
-    'daily': 'Daily Pass',
-    'weekly': 'Weekly Pass',
-    'monthly': 'Monthly Pass (-25%)'
+    'weekly': 'Weekly',
+    'monthly': 'Monthly'
   };
-  if (badge) badge.textContent = pkgBadges[pkg] || 'Weekly Pass';
+  if (badge) badge.textContent = pkgBadges[pkg] || 'Weekly';
 
   const repeatSection = document.getElementById('repeatDaysSection');
   const daysGrid = document.getElementById('cleanDaysGrid');
   const recurringToggle = document.getElementById('toggleRecurringRide');
 
-  if (pkg === 'daily' || pkg === 'on-demand') {
+  if (pkg === 'on-demand') {
     if (recurringToggle) recurringToggle.checked = false;
     if (repeatSection) repeatSection.style.display = 'none';
   } else {

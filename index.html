@@ -5891,46 +5891,72 @@
         </div>
 
         <!-- Quick Actions Section -->
-        <div>
-          <h3 class="home-figma-section-title">Quick Actions</h3>
-          
-          <!-- Single Hero New Booking Button -->
-          <button type="button" class="home-figma-btn-new-booking" style="margin-bottom: 12px;" onclick="navigateTo('bookingTripSetup')">
-            <span style="display: flex; align-items: center; gap: 10px;">
-              <i data-lucide="plus-circle" style="width: 20px; height: 20px;"></i>
-              <span>New Booking</span>
-            </span>
-            <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-          </button>
+        <div class="home-quick-actions-section">
+          <div class="home-actions-header-row">
+            <h3 class="home-figma-section-title" style="margin: 0;">Quick Actions</h3>
+            <!-- Interactive A/B Test Switcher Pill -->
+            <button type="button" class="ab-test-switch-btn" id="abTestToggleBtn" onclick="toggleHomeAbVariant()" title="Switch A/B Test Variant">
+              <span class="ab-pill-tag" id="abPillTag">B</span>
+              <span id="abVariantLabel">Variant B: Hero Button</span>
+              <i data-lucide="arrow-left-right" style="width: 12px; height: 12px; opacity: 0.85;"></i>
+            </button>
+          </div>
 
-          <!-- 2 Action Cards Grid -->
-          <div class="home-figma-quick-grid">
-            <!-- Card 1: My Children -->
-            <div class="home-figma-quick-card" onclick="openNestedScreen('myChildren')">
-              <div class="home-figma-quick-left">
-                <div class="home-figma-icon-blue">
-                  <i data-lucide="users" style="width: 20px; height: 20px;"></i>
+          <!-- VARIANT B (Clean, Premium Hero Booking Button — Zero Unnecessary Text, No Distraction Cards) -->
+          <div id="homeActionsVariantB" class="home-variant-container active-variant">
+            <button type="button" class="home-hero-booking-btn" onclick="navigateTo('bookingTripSetup')" aria-label="New Booking">
+              <div class="hhb-left">
+                <div class="hhb-icon-glow">
+                  <i data-lucide="plus" style="width: 20px; height: 20px; color: #FFFFFF; stroke-width: 2.8;"></i>
                 </div>
-                <div style="min-width: 0;">
-                  <h4 class="home-figma-quick-title">My Children</h4>
-                  <p class="home-figma-quick-sub">View and manage</p>
-                </div>
+                <span class="hhb-title">New Booking</span>
               </div>
-              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8; flex-shrink: 0;"></i>
-            </div>
+              <div class="hhb-arrow-circle">
+                <i data-lucide="arrow-right" style="width: 17px; height: 17px; color: #FFFFFF; stroke-width: 2.6;"></i>
+              </div>
+            </button>
+          </div>
 
-            <!-- Card 2: Safety & Help -->
-            <div class="home-figma-quick-card" onclick="openNestedScreen('safetyHelp', event)">
-              <div class="home-figma-quick-left">
-                <div class="home-figma-icon-orange">
-                  <i data-lucide="shield" style="width: 20px; height: 20px;"></i>
+          <!-- VARIANT A (Control: Original with Single Button + My Children + Safety & Help) -->
+          <div id="homeActionsVariantA" class="home-variant-container" style="display: none;">
+            <!-- Single Hero New Booking Button -->
+            <button type="button" class="home-figma-btn-new-booking" style="margin-bottom: 12px;" onclick="navigateTo('bookingTripSetup')">
+              <span style="display: flex; align-items: center; gap: 10px;">
+                <i data-lucide="plus-circle" style="width: 20px; height: 20px;"></i>
+                <span>New Booking</span>
+              </span>
+              <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+            </button>
+
+            <!-- 2 Action Cards Grid -->
+            <div class="home-figma-quick-grid">
+              <!-- Card 1: My Children -->
+              <div class="home-figma-quick-card" onclick="openNestedScreen('myChildren')">
+                <div class="home-figma-quick-left">
+                  <div class="home-figma-icon-blue">
+                    <i data-lucide="users" style="width: 20px; height: 20px;"></i>
+                  </div>
+                  <div style="min-width: 0;">
+                    <h4 class="home-figma-quick-title">My Children</h4>
+                    <p class="home-figma-quick-sub">View and manage</p>
+                  </div>
                 </div>
-                <div style="min-width: 0;">
-                  <h4 class="home-figma-quick-title">Safety &amp; Help</h4>
-                  <p class="home-figma-quick-sub">Get support</p>
-                </div>
+                <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8; flex-shrink: 0;"></i>
               </div>
-              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8; flex-shrink: 0;"></i>
+
+              <!-- Card 2: Safety & Help -->
+              <div class="home-figma-quick-card" onclick="openNestedScreen('safetyHelp', event)">
+                <div class="home-figma-quick-left">
+                  <div class="home-figma-icon-orange">
+                    <i data-lucide="shield" style="width: 20px; height: 20px;"></i>
+                  </div>
+                  <div style="min-width: 0;">
+                    <h4 class="home-figma-quick-title">Safety &amp; Help</h4>
+                    <p class="home-figma-quick-sub">Get support</p>
+                  </div>
+                </div>
+                <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: #94A3B8; flex-shrink: 0;"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -6392,10 +6418,10 @@
       <div class="screen-scroll-body bk-figma-body">
         <!-- Top Mode Switcher: On-Demand Single Ride vs Structured School Commute Pass -->
         <div class="bk-top-mode-segmented" id="bkTopModeSegmented">
-          <button type="button" class="bk-top-mode-btn" id="btnModeOnDemand" onclick="setTripServiceMode('on-demand')">
-            <i data-lucide="zap"></i><span>On-Demand</span>
+          <button type="button" class="bk-top-mode-btn" id="btnModeOnDemand" onclick="setTripServiceMode('on-demand')" title="Book a single 1-time ride">
+            <i data-lucide="zap"></i><span>On-Demand (1 Ride)</span>
           </button>
-          <button type="button" class="bk-top-mode-btn active" id="btnModeScheduled" onclick="setTripServiceMode('scheduled')">
+          <button type="button" class="bk-top-mode-btn active" id="btnModeScheduled" onclick="setTripServiceMode('scheduled')" title="Recurring School Commute Pass">
             <i data-lucide="calendar"></i><span>School Pass</span>
           </button>
         </div>
@@ -6454,16 +6480,13 @@
           <div class="bk-figma-card-head" style="margin-bottom: 10px;">
             <div class="bk-figma-head-left">
               <i data-lucide="layers" style="width: 18px; height: 18px; color: #0F172A;"></i>
-              <span>School Pass Tier</span>
+              <span>Plan</span>
             </div>
-            <span class="bk-pkg-tag" id="activePackageBadge">Weekly Pass</span>
+            <span class="bk-pkg-tag" id="activePackageBadge">Weekly</span>
           </div>
 
-          <!-- 3 Clean Segmented Tabs (Daily, Weekly, Monthly) -->
+          <!-- 2 Clean Segmented Tabs (Weekly, Monthly) -->
           <div class="bk-packages-grid">
-            <button type="button" class="bk-package-tab" id="pkgTab-daily" onclick="selectTripPackage('daily')">
-              <div class="bk-pkg-top"><i data-lucide="sun"></i><span>Daily</span></div>
-            </button>
             <button type="button" class="bk-package-tab active" id="pkgTab-weekly" onclick="selectTripPackage('weekly')">
               <div class="bk-pkg-top"><i data-lucide="calendar"></i><span>Weekly</span></div>
             </button>
@@ -6616,7 +6639,7 @@
         <!-- 7. Cost & Summary: Live Unified Fare & Distance Estimate Box -->
         <div id="bkUnifiedEstimateBox" class="bk-unified-estimate-box">
           <div class="bk-unified-est-left">
-            <div class="bk-unified-est-title" id="bkUnifiedEstTitle">Weekly Pass</div>
+            <div class="bk-unified-est-title" id="bkUnifiedEstTitle">Weekly</div>
             <div class="bk-unified-est-meta" id="bkUnifiedEstMeta">
               <i data-lucide="navigation"></i>
               <span id="bkUnifiedDistDurText">5.4 km</span>

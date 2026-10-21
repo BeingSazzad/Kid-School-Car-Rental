@@ -217,12 +217,157 @@
 }
 
 /* Quick Actions Section */
+/* Quick Actions Section */
 .home-figma-section-title {
   font-family: 'Manrope', system-ui, sans-serif !important;
   font-size: 17px !important;
   font-weight: 800 !important;
   color: #0F172A !important;
   margin: 4px 0 10px 0 !important;
+}
+
+/* ==========================================================================
+   A/B VARIANT TESTING SUITE: CLEAN COMMUTE HUB (VARIANT B) vs CONTROL (VARIANT A)
+   ========================================================================== */
+.home-quick-actions-section {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+.home-actions-header-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 4px 0 2px 0 !important;
+}
+
+.home-actions-section-sub {
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  font-size: 12px !important;
+  color: #64748B !important;
+  font-weight: 500 !important;
+  margin: 2px 0 0 0 !important;
+}
+
+/* Interactive A/B Pill Switcher */
+.ab-test-switch-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #EFF6FF !important;
+  border: 1.5px solid #BFDBFE !important;
+  color: #1E40AF !important;
+  border-radius: 999px !important;
+  padding: 4px 10px !important;
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.08) !important;
+}
+
+.ab-test-switch-btn:hover {
+  background: #DBEAFE !important;
+  border-color: #93C5FD !important;
+  transform: translateY(-1px) !important;
+}
+
+.ab-pill-tag {
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  border-radius: 999px !important;
+  padding: 1px 6px !important;
+  font-size: 9.5px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+}
+
+/* ==========================================================================
+   HERO NEW BOOKING BUTTON (PREMIUM HIGH-CONVERSION CTA - ZERO CLUTTER)
+   ========================================================================== */
+.home-hero-booking-btn {
+  width: 100% !important;
+  height: 58px !important;
+  background: linear-gradient(135deg, #1E3176 0%, #152254 100%) !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 8px 22px rgba(27, 43, 104, 0.24), 0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+  padding: 0 14px 0 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  cursor: pointer !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-sizing: border-box !important;
+  user-select: none !important;
+  margin: 4px 0 2px 0 !important;
+}
+
+.home-hero-booking-btn:hover {
+  background: linear-gradient(135deg, #243B8C 0%, #1A2A68 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 30px rgba(27, 43, 104, 0.34), 0 4px 10px rgba(242, 96, 12, 0.2) !important;
+}
+
+.home-hero-booking-btn:active {
+  transform: scale(0.985) !important;
+  box-shadow: 0 4px 14px rgba(27, 43, 104, 0.2) !important;
+}
+
+.hhb-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 13px !important;
+}
+
+.hhb-icon-glow {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter: blur(8px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+  transition: transform 0.2s ease, background 0.2s ease !important;
+}
+
+.home-hero-booking-btn:hover .hhb-icon-glow {
+  transform: scale(1.06) rotate(90deg) !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+}
+
+.hhb-title {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+  font-size: 16.5px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  letter-spacing: -0.015em !important;
+  line-height: 1 !important;
+}
+
+.hhb-arrow-circle {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: #F2600C !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 4px 14px rgba(242, 96, 12, 0.42) !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+}
+
+.home-hero-booking-btn:hover .hhb-arrow-circle {
+  transform: translateX(3px) scale(1.06) !important;
+  box-shadow: 0 6px 18px rgba(242, 96, 12, 0.6) !important;
 }
 
 .home-figma-btn-new-booking {
